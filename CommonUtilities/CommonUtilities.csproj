@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2190E2EE-A185-4E75-9B91-FC36C8E2B9D8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>EasyPerformanceCountersHelper</RootNamespace>
+    <AssemblyName>Microshaoft.Common.Utilities.Net.4xx</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>CommonUtilities.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>CommonUtilities.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Serialization" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="00.Assembly\AssemblyHelper.cs" />
+    <Compile Include="00.Utilities\BytesHelper.cs" />
+    <Compile Include="00.Utilities\CodeTimerPerformance.cs" />
+    <Compile Include="00.Utilities\CompressHelper.cs" />
+    <Compile Include="00.Utilities\CryptographyHelper.cs" />
+    <Compile Include="00.Utilities\DateTimeHelper.cs" />
+    <Compile Include="00.Utilities\DynamicPropertyAccessor.cs" />
+    <Compile Include="00.Utilities\EasyTimer.cs" />
+    <Compile Include="00.Utilities\EncodingHelper.cs" />
+    <Compile Include="00.Utilities\FileLogHelper.cs" />
+    <Compile Include="00.Utilities\FtpWebRequestResponseHelper.cs" />
+    <Compile Include="00.Utilities\GCNotifier.cs" />
+    <Compile Include="02.PropertyAdditionalDefinitionAttribute\PropertyAdditionalDefinitionAttribute.cs" />
+    <Compile Include="06.Json\JTokenHelper.cs" />
+    <Compile Include="00.Utilities\PathFileHelper.cs" />
+    <Compile Include="00.Utilities\RemotingHelper.cs" />
+    <Compile Include="00.Utilities\SequenceSeedHelper.cs" />
+    <Compile Include="00.Utilities\SerializerHelper.cs" />
+    <Compile Include="00.Utilities\StreamDataHelper.cs" />
+    <Compile Include="00.Utilities\StringsHelper.cs" />
+    <Compile Include="00.Utilities\TryCatchFinallyHelper.cs" />
+    <Compile Include="00.Utilities\WindowsConsoleHelper.cs" />
+    <Compile Include="01.PerformanceCounter\PerformanceCountersAdditionalDefinition.cs" />
+    <Compile Include="01.PerformanceCounter\Containers\IPerformanceCountersValuesClearable.cs" />
+    <Compile Include="01.PerformanceCounter\Containers\00.AbstractPerformanceCountersContainer.cs" />
+    <Compile Include="01.PerformanceCounter\Containers\01.IPerformanceCountersContainer.cs" />
+    <Compile Include="01.PerformanceCounter\Containers\10.CommonPerformanceCountersContainer.cs" />
+    <Compile Include="01.PerformanceCounter\EasyPerformanceCountersHelper.cs" />
+    <Compile Include="01.PerformanceCounter\PerformanceCounterExtensionMethodsManager.cs" />
+    <Compile Include="01.PerformanceCounter\PerformanceCountersHelper.cs" />
+    <Compile Include="02.ConcurrentAsyncQueue\ConcurrentAsyncQueue.cs" />
+    <Compile Include="06.Json\JsonHelper.cs" />
+    <Compile Include="06.MEF\MEF.Contracts.cs" />
+    <Compile Include="06.MEF\MEFHelper.cs" />
+    <Compile Include="09.Socket\BufferManager.cs" />
+    <Compile Include="09.Socket\Microsoft.System.ServiceModel.Channels.SocketAsyncEventArgsPool.cs" />
+    <Compile Include="09.Socket\SocketAsyncDataHandler.01.cs" />
+    <Compile Include="09.Socket\SocketAsyncEventArgsPool.cs" />
+    <Compile Include="09.Socket\SocketHelper.cs" />
+    <Compile Include="10.Pools\QueuedObjectsPool.cs" />
+    <Compile Include="10.SingleThreadAsyncDequeueProcessor\SingleThreadAsyncDequeueProcessor.cs" />
+    <Compile Include="11.Caches\XmlSerializersCache.cs" />
+    <Compile Include="11.EventLog\EventLogHelper.cs" />
+    <Compile Include="11.ExceptionStackTrace\StackTraceHelper.cs" />
+    <Compile Include="12.ExtensionsMethods\ExtensionsMethodsManager.cs" />
+    <Compile Include="13.ReaderWriterLock\EasyReaderWriterLockSlim.cs" />
+    <Compile Include="13.ReaderWriterLock\ReaderWriterLockSlimHelper.cs" />
+    <Compile Include="20.DataTable\DataReaderHelper.cs" />
+    <Compile Include="20.DataTable\DataTableHelper.cs" />
+    <Compile Include="20.DataTable\DataTableList.ExtensionMethodsManager.cs" />
+    <Compile Include="30.DataAccess\SqlCommandExtensionsMethodsManager.cs" />
+    <Compile Include="40.流控\RateLimiters\FixedTokenBucket.cs" />
+    <Compile Include="40.流控\RateLimiters\IThrottleStrategy.cs" />
+    <Compile Include="40.流控\RateLimiters\SystemTime.cs" />
+    <Compile Include="40.流控\RateLimiters\Throttler.cs" />
+    <Compile Include="40.流控\RateLimiters\TokenBucket.cs" />
+    <Compile Include="40.流控\Throttler.cs" />
+    <Compile Include="90.HttpClientHelper\HttpClientHelper.cs" />
+    <Compile Include="90.Type\TypeHelper.cs" />
+    <Compile Include="99.NET35\ConcurrentQueue.Net35.cs" />
+    <Compile Include="99.NET35\HttpClient.cs" />
+    <Compile Include="99.NET35\Parallel.NET35.cs" />
+    <Compile Include="99.NET35\Tuple.Net35.cs" />
+    <Compile Include="99.NET35\WriteableTuple.cs" />
+    <Compile Include="Class1.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CommonUtilities.ruleset" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="30.DataAccess\Pager.StoreProcedure.Sample.sql" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
