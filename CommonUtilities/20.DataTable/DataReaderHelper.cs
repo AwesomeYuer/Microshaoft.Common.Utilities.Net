@@ -13,8 +13,8 @@
                             where TEntry : new()
         {
             return
-                DataReaderHelper
-                    .GetEnumerable<TEntry>
+
+                    GetEnumerable<TEntry>
                         (
                             target
                             , needDefinitionAttributeProcess
