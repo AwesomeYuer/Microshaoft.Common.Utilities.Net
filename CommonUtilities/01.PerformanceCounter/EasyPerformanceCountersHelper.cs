@@ -85,22 +85,25 @@ namespace Microshaoft
             //TPerformanceCountersContainer container = null;
             if (!_dictionary.TryGetValue(key, out container))
             {
-                container = new TPerformanceCountersContainer(); //default(TPerformanceCountersContainer);
-                _dictionary
-                        .Add
+                lock (_lockerObject)
+                {
+                    container = new TPerformanceCountersContainer(); //default(TPerformanceCountersContainer);
+                    _dictionary
+                            .Add
+                                (
+                                    key
+                                    , container
+                                );
+                    container
+                        .AttachPerformanceCountersToProperties
                             (
-                                key
-                                , container
-                            );
-                container
-                    .AttachPerformanceCountersToProperties
-                        (
-                            performanceCountersCategoryName
-                            , performanceCountersCategoryInstanceName
-                            , performanceCounterInstanceLifetime
-                            , initializePerformanceCounterInstanceRawValue
+                                performanceCountersCategoryName
+                                , performanceCountersCategoryInstanceName
+                                , performanceCounterInstanceLifetime
+                                , initializePerformanceCounterInstanceRawValue
 
-                        );
+                            ); 
+                }
             }
         }
         private static readonly object _lockerObject = new object();
