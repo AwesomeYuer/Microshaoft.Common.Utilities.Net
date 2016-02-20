@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="00.Assembly\AssemblyHelper.cs" />
     <Compile Include="00.Utilities\BytesHelper.cs" />
+    <Compile Include="00.Utilities\KeyedPriorityQueue.cs" />
     <Compile Include="00.Utilities\CodeTimerPerformance.cs" />
     <Compile Include="00.Utilities\CompressHelper.cs" />
     <Compile Include="00.Utilities\CryptographyHelper.cs" />
@@ -76,10 +77,10 @@
     <Compile Include="00.Utilities\TryCatchFinallyHelper.cs" />
     <Compile Include="00.Utilities\WindowsConsoleHelper.cs" />
     <Compile Include="01.PerformanceCounter\PerformanceCountersAdditionalDefinition.cs" />
-    <Compile Include="01.PerformanceCounter\Containers\IPerformanceCountersValuesClearable.cs" />
-    <Compile Include="01.PerformanceCounter\Containers\00.AbstractPerformanceCountersContainer.cs" />
-    <Compile Include="01.PerformanceCounter\Containers\01.IPerformanceCountersContainer.cs" />
-    <Compile Include="01.PerformanceCounter\Containers\10.CommonPerformanceCountersContainer.cs" />
+    <Compile Include="01.PerformanceCounter\Containers\00.IPerformanceCountersValuesClearable.cs" />
+    <Compile Include="01.PerformanceCounter\Containers\10.AbstractPerformanceCountersContainer.cs" />
+    <Compile Include="01.PerformanceCounter\Containers\00.IPerformanceCountersContainer.cs" />
+    <Compile Include="01.PerformanceCounter\Containers\20.CommonPerformanceCountersContainer.cs" />
     <Compile Include="01.PerformanceCounter\EasyPerformanceCountersHelper.cs" />
     <Compile Include="01.PerformanceCounter\PerformanceCounterExtensionMethodsManager.cs" />
     <Compile Include="01.PerformanceCounter\PerformanceCountersHelper.cs" />

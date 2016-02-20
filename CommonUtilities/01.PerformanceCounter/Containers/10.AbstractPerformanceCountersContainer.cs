@@ -5,7 +5,8 @@
     using System.Diagnostics;
     using System.Linq;
     public abstract class AbstractPerformanceCountersContainer
-                                : IPerformanceCountersContainer, IPerformanceCountersValuesClearable
+                                : IPerformanceCountersContainer
+                                    , IPerformanceCountersValuesClearable
     {
         private readonly object  _clearPerformanceCountersValueslocker = new object();
         public void ClearPerformanceCountersValues(int level)
