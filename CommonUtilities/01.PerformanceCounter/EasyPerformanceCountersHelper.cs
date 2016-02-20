@@ -460,7 +460,13 @@ namespace Microshaoft
                                                         }
                                                     }
                                                 }
-                                                , (x, y, z, w) =>        //catch
+                                                ,
+                                                    (
+                                                        senderPerformanceCounter
+                                                        , exception
+                                                        , newException
+                                                        , caughtInnerExceptionMessage
+                                                    ) =>        //catch
                                                 {
                                                     container
                                                         .CaughtExceptionsPerformanceCounter
@@ -468,11 +474,19 @@ namespace Microshaoft
                                                     var r = reThrowException;
                                                     if (onCaughtExceptionProcessFunc != null)
                                                     {
-                                                        r = onCaughtExceptionProcessFunc(y, z, w);
+                                                        r = onCaughtExceptionProcessFunc(exception, newException, caughtInnerExceptionMessage);
                                                     }
                                                     return r;
                                                 }
-                                                , (x, y, z, exception, newException, innerExceptionMessage) =>        //Finally
+                                                , 
+                                                    (
+                                                        senderPerformanceCounter
+                                                        , senderBasePerformanceCounter
+                                                        , isCaughtException
+                                                        , exception
+                                                        , newException
+                                                        , caughtInnerExceptionMessage
+                                                    ) =>        //Finally
                                                 {
                                                     if (enableProcessingCounter)
                                                     {

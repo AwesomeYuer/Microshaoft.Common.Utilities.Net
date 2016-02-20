@@ -96,7 +96,7 @@
                     Exception exception = null;
                     Exception newException = null;
                     var caughtException = false;
-                    var innerExceptionMessage = string.Empty;
+                    var caughtInnerExceptionMessage = string.Empty;
                     try
                     {
                         onTryProcessAction();
@@ -124,7 +124,7 @@
                         stackFrame = stackTrace.GetFrame(frame);
                         var originalCallerMethod = stackFrame.GetMethod();
                         var originalCallerType = originalCallerMethod.DeclaringType;
-                        innerExceptionMessage = string.Format
+                        caughtInnerExceptionMessage = string.Format
                                 (
                                     "Rethrow caught [{1}] Exception{0} at Callee Method: [{2}]{0} at Caller Method: [{3}]{0} at Original Caller Method: [{4}]"
                                     , "\r\n\t"
@@ -138,10 +138,10 @@
                         {
                             newException = new Exception
                                                 (
-                                                    innerExceptionMessage
+                                                    caughtInnerExceptionMessage
                                                     , e
                                                 );
-                            reThrowException = onCaughtExceptionProcessFunc(e, newException, innerExceptionMessage);
+                            reThrowException = onCaughtExceptionProcessFunc(e, newException, caughtInnerExceptionMessage);
                         }
                         if (reThrowException)
                         {
@@ -154,7 +154,7 @@
                         //Console.WriteLine("Finally");
                         if (onFinallyProcessAction != null)
                         {
-                            onFinallyProcessAction(caughtException, exception, newException, innerExceptionMessage);
+                            onFinallyProcessAction(caughtException, exception, newException, caughtInnerExceptionMessage);
                         }
                     }
                 }
@@ -164,5 +164,6 @@
                 }
             }
         }
+
     }
 }
