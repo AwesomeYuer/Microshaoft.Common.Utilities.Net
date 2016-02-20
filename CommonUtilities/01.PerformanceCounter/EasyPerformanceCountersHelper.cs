@@ -256,12 +256,15 @@ namespace Microshaoft
                 {
                     if (stopwatch != null)
                     {
-                        PerformanceCounter performanceCounter
-                                                = container.ProcessedAverageTimerPerformanceCounter;
-                        PerformanceCounter basePerformanceCounter
-                                                = container.ProcessedAverageBasePerformanceCounter;
+                        var performanceCounter
+                                        = container
+                                                .ProcessedAverageTimerPerformanceCounter;
+                        var basePerformanceCounter
+                                        = container
+                                                .ProcessedAverageBasePerformanceCounter;
 
-                        performanceCounter.IncrementBy(stopwatch.ElapsedTicks);
+                        performanceCounter
+                                    .IncrementBy(stopwatch.ElapsedTicks);
                         stopwatch.Reset();
                         var r = _stopwatchsPool.Put(stopwatch);
                         if (!r)
@@ -307,7 +310,9 @@ namespace Microshaoft
                                             );
                 if (enableProcessedPerformanceCounter)
                 {
-                    container.ProcessedPerformanceCounter.Increment();
+                    container
+                        .ProcessedPerformanceCounter
+                        .Increment();
                 }
                 var enableProcessedRateOfCountsPerSecondPerformanceCounter =
                             (
@@ -344,7 +349,8 @@ namespace Microshaoft
             {
                 if (onEnabledCountPerformanceProcessFunc != null)
                 {
-                    enabledCountPerformance = onEnabledCountPerformanceProcessFunc();
+                    enabledCountPerformance
+                            = onEnabledCountPerformanceProcessFunc();
                 }
             }
             if 
