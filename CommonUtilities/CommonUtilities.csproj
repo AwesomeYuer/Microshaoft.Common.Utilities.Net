@@ -118,7 +118,6 @@
     <Compile Include="99.NET35\Parallel.NET35.cs" />
     <Compile Include="99.NET35\Tuple.Net35.cs" />
     <Compile Include="99.NET35\WriteableTuple.cs" />
-    <Compile Include="Class1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

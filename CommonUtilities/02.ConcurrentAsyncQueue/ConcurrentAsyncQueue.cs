@@ -23,15 +23,26 @@
                                 , OnDequeueThreadStart
                                 , OnDequeueThreadEnd;
 
-        public delegate bool ExceptionEventHandler(ConcurrentAsyncQueue<T> sender, Exception exception, Exception newException, string innerExceptionMessage);
-        public event ExceptionEventHandler OnCaughtException
+        public delegate bool CaughtExceptionEventHandler
+                                    (
+                                        ConcurrentAsyncQueue<T> sender
+                                        , Exception exception
+                                        , Exception newException
+                                        , string innerExceptionMessage
+                                    );
+        public event CaughtExceptionEventHandler
+                                            OnCaughtException
                                             , OnEnqueueProcessCaughtException
                                             , OnDequeueProcessCaughtException;
         public ConcurrentAsyncQueue(long stopwatchsPoolMaxCapacity = 10 * 10000)
         {
-            _stopwatchsPool = new QueuedObjectsPool<Stopwatch>(stopwatchsPoolMaxCapacity);
+            _stopwatchsPool = new QueuedObjectsPool<Stopwatch>
+                                        (
+                                            stopwatchsPoolMaxCapacity
+                                        );
         }
-        private ConcurrentQueue<Tuple<Stopwatch, T>> _queue = new ConcurrentQueue<Tuple<Stopwatch, T>>();
+        private ConcurrentQueue<Tuple<Stopwatch, T>>
+                            _queue = new ConcurrentQueue<Tuple<Stopwatch, T>>();
 
         public ConcurrentQueue<Tuple<Stopwatch, T>> InternalQueue
         {
@@ -42,7 +53,8 @@
             //set { _queue = value; }
         }
         private ConcurrentQueue<Action> _callbackProcessBreaksActions;
-        private long _concurrentDequeueThreadsCount = 0; //Microshaoft 用于控制并发线程数
+        //Microshaoft 用于控制并发线程数
+        private long _concurrentDequeueThreadsCount = 0;
         private ConcurrentQueue<ThreadProcessor> _dequeueThreadsProcessorsPool;
         private int _dequeueIdleSleepSeconds = 10;
         public QueuePerformanceCountersContainer PerformanceCountersContainer
@@ -168,9 +180,9 @@
                 var queue = Sender.InternalQueue;
                 var reThrowException = false;
 
-                PerformanceCounter[] incrementCountersBeforeCountPerformanceForThread = null;
-                PerformanceCounter[] decrementCountersAfterCountPerformanceForThread = null;
-                PerformanceCounter[] incrementCountersAfterCountPerformanceForThread = null;
+                PerformanceCounter[] incrementCountersBeforeCountPerformanceInThread = null;
+                PerformanceCounter[] decrementCountersAfterCountPerformanceInThread = null;
+                PerformanceCounter[] incrementCountersAfterCountPerformanceInThread = null;
                 var enabledCountPerformance = true;
                 {
                     if (Sender._onEnabledCountPerformanceProcessFunc != null)
@@ -185,7 +197,7 @@
                         enabledCountPerformance
                     )
                 {
-                    incrementCountersBeforeCountPerformanceForThread =
+                    incrementCountersBeforeCountPerformanceInThread =
                         new PerformanceCounter[]
 									{
 										qpcc
@@ -193,289 +205,292 @@
 										, qpcc
 											.DequeueThreadsCountPerformanceCounter
 									};
-                    decrementCountersAfterCountPerformanceForThread =
-                        new PerformanceCounter[]
-									{
-										qpcc.DequeueThreadsCountPerformanceCounter
-									};
-                    incrementCountersAfterCountPerformanceForThread =
-                        new PerformanceCounter[]
-									{
-										qpcc.DequeueThreadEndPerformanceCounter	
-									};
+                    decrementCountersAfterCountPerformanceInThread
+                                    = new PerformanceCounter[]
+									        {
+										        qpcc
+                                                    .DequeueThreadsCountPerformanceCounter
+									        };
+                    incrementCountersAfterCountPerformanceInThread
+                                    = new PerformanceCounter[]
+									        {
+										        qpcc
+                                                    .DequeueThreadEndPerformanceCounter	
+									        };
                 }
 
                 PerformanceCountersHelper
-                    .TryCountPerformance
-                        (
-                            () =>
-                            {
-                                return enabledCountPerformance;
-                            }
-                            , reThrowException
-                            , incrementCountersBeforeCountPerformanceForThread
-                            , null
-                            , null
-                            , () =>
-                            {
-                                #region Try Process
-                                if (Sender.OnDequeueThreadStart != null)
+                        .TryCountPerformance
+                            (
+                                () =>
                                 {
-                                    l = Interlocked.Read(ref Sender._concurrentDequeueThreadsCount);
-                                    Sender
-                                        .OnDequeueThreadStart
-                                            (
-                                                string
-                                                    .Format
-                                                        (
-                                                            "{0} Threads Count {1},Queue Count {2},Current Thread: {3} at {4}"
-                                                            , "Threads ++ !"
-                                                            , l
-                                                            , queue.Count
-                                                            , Thread.CurrentThread.Name
-                                                            , DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffff")
-                                                        )
-                                            );
+                                    return enabledCountPerformance;
                                 }
-                                while (true)
+                                , reThrowException
+                                , incrementCountersBeforeCountPerformanceInThread
+                                , null
+                                , null
+                                , () =>
                                 {
-                                    #region while true loop
-                                    if (Break)
+                                    #region Try Process
+                                    if (Sender.OnDequeueThreadStart != null)
                                     {
-                                        break;
+                                        l = Interlocked.Read(ref Sender._concurrentDequeueThreadsCount);
+                                        Sender
+                                            .OnDequeueThreadStart
+                                                (
+                                                    string
+                                                        .Format
+                                                            (
+                                                                "{0} Threads Count {1},Queue Count {2},Current Thread: {3} at {4}"
+                                                                , "Threads ++ !"
+                                                                , l
+                                                                , queue.Count
+                                                                , Thread.CurrentThread.Name
+                                                                , DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffff")
+                                                            )
+                                                );
                                     }
-                                    while (!queue.IsEmpty)
+                                    while (true)
                                     {
-                                        #region while queue.IsEmpty loop
+                                        #region while true loop
                                         if (Break)
                                         {
                                             break;
                                         }
-                                        Tuple<Stopwatch, T> item = null;
-                                        if (queue.TryDequeue(out item))
+                                        while (!queue.IsEmpty)
                                         {
-                                            Stopwatch stopwatchDequeue = Sender._stopwatchsPool.Get();
-                                            Stopwatch stopwatchEnqueue = item.Item1;
-                                            PerformanceCounter[] incrementCountersBeforeCountPerformanceForDequeue = null;
-                                            PerformanceCounter[] decrementCountersBeforeCountPerformanceForDequeue = null;
-                                            PerformanceCounter[] incrementCountersAfterCountPerformanceForDequeue = null;
-                                            Tuple
-                                                <
-                                                    bool
-                                                    , Stopwatch
-                                                    , PerformanceCounter
-                                                    , PerformanceCounter
-                                                >[] timerCounters = null;
-
-                                            if
-                                                (
-                                                    qpcc != null
-                                                    &&
-                                                    enabledCountPerformance
-                                                )
+                                            #region while queue.IsEmpty loop
+                                            if (Break)
                                             {
-                                                incrementCountersBeforeCountPerformanceForDequeue =
-                                                    new PerformanceCounter[]
-																    {
-																	    qpcc
-																		    .DequeuePerformanceCounter
-																    };
-                                                decrementCountersBeforeCountPerformanceForDequeue
-                                                                    = new PerformanceCounter[]
-																            {
-																	            qpcc
-																		            .QueueLengthPerformanceCounter
-																            };
-                                                timerCounters = new Tuple
-                                                                    <
-                                                                        bool
-                                                                        , Stopwatch
-                                                                        , PerformanceCounter
-                                                                        , PerformanceCounter
-                                                                    >[]
-																{
+                                                break;
+                                            }
+                                            Tuple<Stopwatch, T> item = null;
+                                            if (queue.TryDequeue(out item))
+                                            {
+                                                Stopwatch stopwatchDequeue = Sender._stopwatchsPool.Get();
+                                                Stopwatch stopwatchEnqueue = item.Item1;
+                                                PerformanceCounter[] incrementCountersBeforeCountPerformanceForDequeue = null;
+                                                PerformanceCounter[] decrementCountersBeforeCountPerformanceForDequeue = null;
+                                                PerformanceCounter[] incrementCountersAfterCountPerformanceForDequeue = null;
+                                                Tuple
+                                                    <
+                                                        bool
+                                                        , Stopwatch
+                                                        , PerformanceCounter
+                                                        , PerformanceCounter
+                                                    >[] timerCounters = null;
 
-                                                                    Tuple
-                                                                        .Create
-                                                                            (
-																			    false
-																			    , stopwatchEnqueue
-                                                                                , qpcc
-																				    .QueuedWaitAverageTimerPerformanceCounter
-																			    , qpcc
-																				    .QueuedWaitAverageBasePerformanceCounter
-																		    )
-																	, Tuple
-                                                                            .Create
-                                                                                (
-																			        true
-																			        , stopwatchDequeue
-																			        , qpcc
-																				        .DequeueProcessedAverageTimerPerformanceCounter
-																			        , qpcc
-																				        .DequeueProcessedAverageBasePerformanceCounter
-																		        )
-																};
-
-                                                incrementCountersAfterCountPerformanceForDequeue
-                                                        = new PerformanceCounter[]
+                                                if
+                                                    (
+                                                        qpcc != null
+                                                        &&
+                                                        enabledCountPerformance
+                                                    )
+                                                {
+                                                    incrementCountersBeforeCountPerformanceForDequeue =
+                                                        new PerformanceCounter[]
 																        {
 																	        qpcc
-																		        .DequeueProcessedPerformanceCounter
-																	        , qpcc
-																		        .DequeueProcessedRateOfCountsPerSecondPerformanceCounter
+																		        .DequeuePerformanceCounter
 																        };
-                                            }
+                                                    decrementCountersBeforeCountPerformanceForDequeue
+                                                                        = new PerformanceCounter[]
+																                {
+																	                qpcc
+																		                .QueueLengthPerformanceCounter
+																                };
+                                                    timerCounters = new Tuple
+                                                                        <
+                                                                            bool
+                                                                            , Stopwatch
+                                                                            , PerformanceCounter
+                                                                            , PerformanceCounter
+                                                                        >[]
+																    {
 
-                                            //var enabledCountPerformance = true;
-                                            {
-                                                if (Sender._onEnabledCountPerformanceProcessFunc != null)
-                                                {
-                                                    enabledCountPerformance = Sender._onEnabledCountPerformanceProcessFunc();
+                                                                        Tuple
+                                                                            .Create
+                                                                                (
+																			        false
+																			        , stopwatchEnqueue
+                                                                                    , qpcc
+																				        .QueuedWaitAverageTimerPerformanceCounter
+																			        , qpcc
+																				        .QueuedWaitAverageBasePerformanceCounter
+																		        )
+																	    , Tuple
+                                                                                .Create
+                                                                                    (
+																			            true
+																			            , stopwatchDequeue
+																			            , qpcc
+																				            .DequeueProcessedAverageTimerPerformanceCounter
+																			            , qpcc
+																				            .DequeueProcessedAverageBasePerformanceCounter
+																		            )
+																    };
+
+                                                    incrementCountersAfterCountPerformanceForDequeue
+                                                            = new PerformanceCounter[]
+																            {
+																	            qpcc
+																		            .DequeueProcessedPerformanceCounter
+																	            , qpcc
+																		            .DequeueProcessedRateOfCountsPerSecondPerformanceCounter
+																            };
                                                 }
-                                            }
-                                            PerformanceCountersHelper
-                                                    .TryCountPerformance
-                                                        (
-                                                            () =>
-                                                            {
-                                                                return enabledCountPerformance;
-                                                            }
-                                                            , reThrowException
-                                                            , incrementCountersBeforeCountPerformanceForDequeue
-                                                            , decrementCountersBeforeCountPerformanceForDequeue
-                                                            , timerCounters
-                                                            , () =>			//try
-                                                            {
-                                                                if (Sender.OnDequeue != null)
+
+                                                //var enabledCountPerformance = true;
+                                                {
+                                                    if (Sender._onEnabledCountPerformanceProcessFunc != null)
+                                                    {
+                                                        enabledCountPerformance = Sender._onEnabledCountPerformanceProcessFunc();
+                                                    }
+                                                }
+                                                PerformanceCountersHelper
+                                                        .TryCountPerformance
+                                                            (
+                                                                () =>
                                                                 {
-                                                                    var element = item.Item2;
-                                                                    item = null;
-                                                                    Sender.OnDequeue(element);
+                                                                    return enabledCountPerformance;
                                                                 }
-                                                            }
-                                                            , (x, y, z) =>		//catch
-                                                            {
-                                                                qpcc
-                                                                   .CaughtExceptionsPerformanceCounter
-                                                                   .Increment();
-                                                                if (Sender.OnDequeueProcessCaughtException != null)
+                                                                , reThrowException
+                                                                , incrementCountersBeforeCountPerformanceForDequeue
+                                                                , decrementCountersBeforeCountPerformanceForDequeue
+                                                                , timerCounters
+                                                                , () =>			//try
                                                                 {
-                                                                    reThrowException = Sender.OnDequeueProcessCaughtException(Sender, x, y, z);
-                                                                }
-                                                                if (!reThrowException)
-                                                                {
-                                                                    if (Sender.OnCaughtException != null)
+                                                                    if (Sender.OnDequeue != null)
                                                                     {
-                                                                        reThrowException = Sender.OnCaughtException(Sender, x, y, z);
+                                                                        var element = item.Item2;
+                                                                        item = null;
+                                                                        Sender.OnDequeue(element);
                                                                     }
                                                                 }
-                                                                return reThrowException;
-                                                            }
-                                                            , null			//finally
-                                                            , null
-                                                            , incrementCountersAfterCountPerformanceForDequeue
-                                                        );
-                                            //池化
-                                            stopwatchDequeue.Reset();
+                                                                , (x, y, z) =>		//catch
+                                                                {
+                                                                    qpcc
+                                                                       .CaughtExceptionsPerformanceCounter
+                                                                       .Increment();
+                                                                    if (Sender.OnDequeueProcessCaughtException != null)
+                                                                    {
+                                                                        reThrowException = Sender.OnDequeueProcessCaughtException(Sender, x, y, z);
+                                                                    }
+                                                                    if (!reThrowException)
+                                                                    {
+                                                                        if (Sender.OnCaughtException != null)
+                                                                        {
+                                                                            reThrowException = Sender.OnCaughtException(Sender, x, y, z);
+                                                                        }
+                                                                    }
+                                                                    return reThrowException;
+                                                                }
+                                                                , null			//finally
+                                                                , null
+                                                                , incrementCountersAfterCountPerformanceForDequeue
+                                                            );
+                                                //池化
+                                                stopwatchDequeue.Reset();
                                             
-                                            var r = Sender._stopwatchsPool.Put(stopwatchDequeue);
-                                            if (!r)
-                                            {
-                                                stopwatchDequeue.Stop();
-                                                stopwatchDequeue = null;
-                                            }
-                                            stopwatchEnqueue.Reset();
+                                                var r = Sender._stopwatchsPool.Put(stopwatchDequeue);
+                                                if (!r)
+                                                {
+                                                    stopwatchDequeue.Stop();
+                                                    stopwatchDequeue = null;
+                                                }
+                                                stopwatchEnqueue.Reset();
 
-                                            r = Sender._stopwatchsPool.Put(stopwatchEnqueue); ;
-                                            if (!r)
-                                            {
-                                                stopwatchEnqueue.Stop();
-                                                stopwatchEnqueue = null;
+                                                r = Sender._stopwatchsPool.Put(stopwatchEnqueue); ;
+                                                if (!r)
+                                                {
+                                                    stopwatchEnqueue.Stop();
+                                                    stopwatchEnqueue = null;
+                                                }
                                             }
+                                            #endregion while queue.IsEmpty loop
                                         }
-                                        #endregion while queue.IsEmpty loop
+                                        #region wait
+                                        Sender
+                                            ._dequeueThreadsProcessorsPool
+                                            .Enqueue(this);
+                                        if (Break)
+                                        {
+                                        }
+                                        if (!Waiter.WaitOne(Sender.DequeueIdleSleepSeconds * 1000))
+                                        {
+                                        }
+                                        #endregion wait
+                                        #endregion while true loop
                                     }
-                                    #region wait
-                                    Sender
-                                        ._dequeueThreadsProcessorsPool
-                                        .Enqueue(this);
-                                    if (Break)
+                                    #endregion
+                                }
+                                , (x, y, z) =>			//catch
+                                {
+                                    #region Catch Process
+                                    if (Sender.OnCaughtException != null)
                                     {
+                                        reThrowException = Sender.OnCaughtException(Sender, x, y, z);
                                     }
-                                    if (!Waiter.WaitOne(Sender.DequeueIdleSleepSeconds * 1000))
+                                    return reThrowException;
+                                    #endregion
+                                }
+                                , (x, y, z, w) =>		//finally
+                                {
+                                    #region Finally Process
+                                    l = Interlocked.Decrement(ref Sender._concurrentDequeueThreadsCount);
+                                    if (l < 0)
                                     {
+                                        Interlocked.Exchange(ref Sender._concurrentDequeueThreadsCount, 0);
                                     }
-                                    #endregion wait
-                                    #endregion while true loop
+                                    if (Sender.OnDequeueThreadEnd != null)
+                                    {
+                                        Sender
+                                            .OnDequeueThreadEnd
+                                                (
+                                                    string.Format
+                                                            (
+                                                                "{0} Threads Count {1},Queue Count {2},Current Thread: {3} at {4}"
+                                                                , "Threads--"
+                                                                , l
+                                                                , Sender.InternalQueue.Count
+                                                                , Thread.CurrentThread.Name
+                                                                , DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffff")
+                                                            )
+                                                );
+                                    }
+                                    if (!Break)
+                                    {
+                                        Sender.StartIncreaseDequeueProcessThreads(1);
+                                    }
+                                    Break = false;
+                                    #endregion
                                 }
-                                #endregion
-                            }
-                            , (x, y, z) =>			//catch
-                            {
-                                #region Catch Process
-                                if (Sender.OnCaughtException != null)
-                                {
-                                    reThrowException = Sender.OnCaughtException(Sender, x, y, z);
-                                }
-                                return reThrowException;
-                                #endregion
-                            }
-                            , (x, y, z, w) =>		//finally
-                            {
-                                #region Finally Process
-                                l = Interlocked.Decrement(ref Sender._concurrentDequeueThreadsCount);
-                                if (l < 0)
-                                {
-                                    Interlocked.Exchange(ref Sender._concurrentDequeueThreadsCount, 0);
-                                }
-                                if (Sender.OnDequeueThreadEnd != null)
-                                {
-                                    Sender
-                                        .OnDequeueThreadEnd
-                                            (
-                                                string.Format
-                                                        (
-                                                            "{0} Threads Count {1},Queue Count {2},Current Thread: {3} at {4}"
-                                                            , "Threads--"
-                                                            , l
-                                                            , Sender.InternalQueue.Count
-                                                            , Thread.CurrentThread.Name
-                                                            , DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffff")
-                                                        )
-                                            );
-                                }
-                                if (!Break)
-                                {
-                                    Sender.StartIncreaseDequeueProcessThreads(1);
-                                }
-                                Break = false;
-                                #endregion
-                            }
-                            , decrementCountersAfterCountPerformanceForThread
-                            , incrementCountersAfterCountPerformanceForThread
+                                , decrementCountersAfterCountPerformanceInThread
+                                , incrementCountersAfterCountPerformanceInThread
                                 
-                        );
+                            );
             }
         }
         public void AttachPerformanceCounters
-                            (
-                                string instanceNamePrefix
-                                , string categoryName
-                                , QueuePerformanceCountersContainer performanceCounters
-                                , Func<bool> onEnabledCountPerformanceProcessFunc = null
-                                , PerformanceCounterInstanceLifetime performanceCounterInstanceLifetime = PerformanceCounterInstanceLifetime.Global
-                                , long? initializePerformanceCounterInstanceRawValue = null
-                            )
+                        (
+                            string instanceNamePrefix
+                            , string categoryName
+                            , QueuePerformanceCountersContainer performanceCounters
+                            , Func<bool> onEnabledCountPerformanceProcessFunc = null
+                            , PerformanceCounterInstanceLifetime performanceCounterInstanceLifetime = PerformanceCounterInstanceLifetime.Global
+                            , long? initializePerformanceCounterInstanceRawValue = null
+                        )
         {
             var process = Process.GetCurrentProcess();
             var processName = process.ProcessName;
-            var instanceName = string.Format
-                                    (
-                                        "{0}-{1}"
-                                        , instanceNamePrefix
-                                        , processName
-                                    );
+            var instanceName = string
+                                    .Format
+                                        (
+                                            "{0}-{1}"
+                                            , instanceNamePrefix
+                                            , processName
+                                        );
             PerformanceCountersContainer = performanceCounters;
             PerformanceCountersContainer
                 .AttachPerformanceCountersToProperties
@@ -502,7 +517,6 @@
                 return _concurrentDequeueThreadsCount;
             }
         }
-
         public QueuedObjectsPool<Stopwatch> StopwatchsPool
         {
             get
@@ -510,10 +524,6 @@
                 return _stopwatchsPool;
             }
         }
-
-
-
-
         private void DecreaseDequeueProcessThreads(int count)
         {
             Action action;
@@ -655,7 +665,12 @@
                                 stopwatchEnqueue = _stopwatchsPool.Get();
                             }
                             stopwatchEnqueue.Start();
-                            var element = Tuple.Create(stopwatchEnqueue, item);
+                            var element = Tuple
+                                            .Create
+                                                (
+                                                    stopwatchEnqueue
+                                                    , item
+                                                );
                             _queue.Enqueue(element);
                             r = true;
                         }
@@ -686,7 +701,11 @@
                                 )
                             {
                                 ThreadProcessor processor;
-                                if (_dequeueThreadsProcessorsPool.TryDequeue(out processor))
+                                if 
+                                    (
+                                        _dequeueThreadsProcessorsPool
+                                                .TryDequeue(out processor)
+                                    )
                                 {
                                     processor.Waiter.Set();
                                     processor = null;
