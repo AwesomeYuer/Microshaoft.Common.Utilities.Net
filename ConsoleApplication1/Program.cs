@@ -38,6 +38,7 @@
                             , new ParallelOptions() {  MaxDegreeOfParallelism = 10 }
                             , (x) =>
                             {
+
                                 EasyPerformanceCountersHelper<CommonPerformanceCountersContainer>
                                     .TryCountPerformance
                                         (
