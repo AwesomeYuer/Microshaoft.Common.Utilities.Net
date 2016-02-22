@@ -6,9 +6,9 @@
     using System.IO;
     using System.Linq;
     using System.Xml.Linq;
+    using System.Collections.Generic;
     public static class JsonHelper
     {
-
         public static string XmlToJson
                                 (
                                     string xml
@@ -88,7 +88,12 @@
                         .Deserialize<T>(jsonReader);
             }
         }
-        public static string Serialize(object target, bool keyQuoteName = false)
+        public static string Serialize
+                                (
+                                    object target
+                                    , bool formattingIndented = false
+                                    , bool keyQuoteName = false
+                                )
         {
             string json = string.Empty;
             using (StringWriter stringWriter = new StringWriter())
@@ -96,6 +101,7 @@
                 using (var jsonTextWriter = new JsonTextWriter(stringWriter))
                 {
                     jsonTextWriter.QuoteName = keyQuoteName;
+                    jsonTextWriter.Formatting = (formattingIndented ? Formatting.Indented : Formatting.None);
                     var jsonSerializer = new JsonSerializer();
                     jsonSerializer.Serialize(jsonTextWriter, target);
                     json = stringWriter.ToString();
@@ -145,6 +151,26 @@
                     }
                 }
             }
+        }
+        public static IEnumerable<TElement>
+                            DeserializeToFromDictionary<TKey, TValue, TElement>
+                                        (
+                                            string json
+                                            , Func<TKey, TValue, TElement> OnOneElementProcessFunc
+                                        )
+        {
+            //IEnumerable<TElement> r = default(IEnumerable<TElement>);
+            return
+                    DeserializeByJTokenPath<Dictionary<TKey, TValue>>(json)
+                        .Select
+                            (
+                                (x) =>
+                                {
+                                    var rr = OnOneElementProcessFunc(x.Key, x.Value);
+                                    return rr;
+                                }
+                            );
+            //return r;
         }
     }
 }

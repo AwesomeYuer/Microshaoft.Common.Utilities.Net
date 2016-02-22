@@ -6,6 +6,59 @@
 
     public static class SqlCommandExtensionsMethodsManager
     {
+        public static void ExecuteDataReader
+                (
+                    this SqlCommand command
+                    , Func<int, IDataReader, bool> onReadProcessFunc
+                )
+        {
+            bool needBreak = false;
+            SqlConnection sqlConnection = null;
+            try
+            {
+                sqlConnection = command.Connection;
+                if (sqlConnection.State == ConnectionState.Closed)
+                {
+                    sqlConnection.Open();
+                }
+
+                using
+                    (
+                        IDataReader dataReader
+                                        = command
+                                                .ExecuteReader
+                                                        (
+                                                            CommandBehavior.CloseConnection
+                                                        )
+                    )
+                {
+                    int i = 0;
+                    while (dataReader.Read())
+                    {
+                        if (onReadProcessFunc != null)
+                        {
+                            needBreak = onReadProcessFunc(++i, dataReader);
+                        }
+                        if (needBreak)
+                        {
+                            break;
+                        }
+                    }
+                    dataReader.Close();
+                }
+            }
+            finally
+            {
+                if (sqlConnection.State != ConnectionState.Closed)
+                {
+                    sqlConnection.Close();
+                }
+            }
+        }
+
+
+
+
         public static void ExecuteDataReaderPager
                 (
                     this SqlCommand command

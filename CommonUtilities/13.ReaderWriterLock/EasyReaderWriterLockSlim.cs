@@ -98,7 +98,7 @@ namespace ConsoleApplication
     using System.Threading;
     using System.Threading.Tasks;
     using System.Diagnostics;
-    //using Microsoft.Boc;
+    //using Microshaoft;
     using Microshaoft;
     /// <summary>
     /// Class1 的摘要说明。

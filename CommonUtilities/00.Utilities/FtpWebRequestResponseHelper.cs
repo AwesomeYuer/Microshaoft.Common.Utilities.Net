@@ -31,7 +31,7 @@
                     //}
                                             );
             }
-            url = "ftp://ftp.BOCCOS.boc.com";
+            url = "ftp://ftp.microshaoft.com";
             List<string> list = new List<string>();
             using (Stream stream = new MemoryStream())
             {

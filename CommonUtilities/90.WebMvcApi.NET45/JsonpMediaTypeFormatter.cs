@@ -1,5 +1,5 @@
 ﻿// WebAPI.JsonpMediaTypeFormatter.cs
-namespace Microsoft.Boc.WebApi
+namespace Microshaoft.WebApi
 {
     using System;
     using System.IO;
