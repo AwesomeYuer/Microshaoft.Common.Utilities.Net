@@ -1,7 +1,9 @@
 ﻿namespace Microshaoft
 {
+    using System;
     using System.Collections.Concurrent;
     using System.Threading;
+    using System.Diagnostics;
     public class QueuedObjectsPool<T> where T: new()
     {
         private readonly ConcurrentQueue<T> _pool = new ConcurrentQueue<T>();
@@ -53,11 +55,73 @@
                 return _maxCapacity;
             }
         }
+
+
+
+
         private long _maxCapacity = 0;
+
+        private CommonPerformanceCountersContainer _performanceCountersContainer = null;
         public QueuedObjectsPool(long maxCapacity)
         {
             _pool = new ConcurrentQueue<T>();
             _maxCapacity = maxCapacity;
+
+        }
+        private bool _isAttachPerformanceCounters = false;
+        public void AttachPerformanceCountersCategoryInstance
+                                (
+                                    string performanceCountersCategoryName
+                                    , string performanceCountersCategoryInstanceNamePrefix
+                                    , MultiPerformanceCountersTypeFlags enablePerformanceCounters = MultiPerformanceCountersTypeFlags.ProcessNonTimeBasedCounters
+                                    , PerformanceCounterInstanceLifetime performanceCounterInstanceLifetime = PerformanceCounterInstanceLifetime.Process
+                                )
+        {
+            if (!_isAttachPerformanceCounters)
+            {
+                _isAttachPerformanceCounters = true;
+            }
+            else
+            {
+                CommonPerformanceCountersContainer container = null;
+                EasyPerformanceCountersHelper<CommonPerformanceCountersContainer>
+                        .AttachPerformanceCountersCategoryInstance
+                            (
+                                performanceCountersCategoryName
+                                , string.Format
+                                            (
+                                                "{1}{0}{2}"
+                                                , "-"
+                                                , "Non-Pooled Objects"
+                                                , performanceCountersCategoryInstanceNamePrefix
+                                            ) 
+                                , out container
+                                , PerformanceCounterInstanceLifetime.Process
+                                , initializePerformanceCounterInstanceRawValue: 1009
+                            );
+                EasyPerformanceCountersHelper<CommonPerformanceCountersContainer>
+                        .AttachPerformanceCountersCategoryInstance
+                            (
+                                performanceCountersCategoryName
+                                , string.Format
+                                            (
+                                                "{1}{0}{2}"
+                                                , "-"
+                                                , "Pooled Objects"
+                                                , performanceCountersCategoryInstanceNamePrefix
+                                            )
+                                , out container
+                                , PerformanceCounterInstanceLifetime.Process
+                                , initializePerformanceCounterInstanceRawValue: 1009
+                            );
+
+            }
+        }
+
+        public Func<bool> onEnablePerformanceCountersProcessFunc
+        {
+            get;
+            set;
         }
         public void PutNew()
         {

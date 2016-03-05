@@ -4,6 +4,42 @@
     using System.Diagnostics;
     public static class PerformanceCounterExtensionMethodsManager
     {
+        //public static void CountBeginAverageTimerCounter
+        //                        (
+        //                            this PerformanceCounter performanceCounter
+        //                            , PerformanceCounter basePerformanceCounter
+        //                            , Stopwatch stopwatch
+        //                        )
+        //{
+        //        //stopwatch.Reset();
+        //        //stopwatch.Start();
+        //        stopwatch.Restart();
+            
+        //}
+
+        public static void CountEndAverageTimerCounter
+                        (
+                            this PerformanceCounter performanceCounter
+                            , PerformanceCounter basePerformanceCounter
+                            , Stopwatch stopwatch
+                        )
+        {
+            if
+                (
+                    stopwatch != null
+                )
+            {
+                if (stopwatch.IsRunning)
+                {
+                    stopwatch.Stop();
+                }
+                performanceCounter
+                        .IncrementBy(stopwatch.ElapsedTicks);
+                //stopwatch = null;
+                basePerformanceCounter.Increment();
+            }
+        }
+
         public static void TryChangeAverageTimerCounterValue
                                 (
                                     this PerformanceCounter performanceCounter
@@ -23,8 +59,9 @@
             }
             if (enabledCountPerformance)
             {
-                stopwatch.Reset();
-                stopwatch.Start();
+                //stopwatch.Reset();
+                //stopwatch.Start();
+                stopwatch.Restart();
             }
             if (onCountPerformanceInnerProcessAction != null)
             {
@@ -58,16 +95,14 @@
                                 if 
                                     (
                                         enabledCountPerformance
-                                        &&
-                                        stopwatch != null
-                                        &&
-                                        stopwatch.IsRunning
                                     )
                                 {
-                                    stopwatch.Stop();
-                                    performanceCounter.IncrementBy(stopwatch.ElapsedTicks);
-                                    //stopwatch = null;
-                                    basePerformanceCounter.Increment();
+                                    CountEndAverageTimerCounter
+                                        (
+                                            performanceCounter
+                                            , basePerformanceCounter
+                                            , stopwatch
+                                        );
                                 }
                                 if (onFinallyProcessAction != null)
                                 {

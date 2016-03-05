@@ -4,6 +4,25 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+    using System.Reflection;
+    public class PerformanceCountersPair
+    {
+        public PerformanceCounter Counter
+        {
+            get;
+            set;
+           
+        }
+
+        public PerformanceCounter BaseCounter
+        {
+            get;
+            set;
+        }
+    }
+
+
+
     public abstract class AbstractPerformanceCountersContainer
                                 : IPerformanceCountersContainer
                                     , IPerformanceCountersValuesClearable
@@ -170,11 +189,7 @@
             return r;
         }
 
-        protected IEnumerable<PerformanceCounter>
-                        GetPropertiesPerformanceCounters<TPerformanceCountersContainer>
-                            (
-                                TPerformanceCountersContainer target
-                            )
+        protected IEnumerable<PropertyInfo> GetPerformanceCountersProperties<TPerformanceCountersContainer, TProperty>()
         {
             return
                 typeof(TPerformanceCountersContainer)
@@ -187,10 +202,23 @@
                                     (
                                         x.PropertyType
                                         ==
-                                        typeof(PerformanceCounter)
+                                        typeof(TProperty)
                                     );
                             }
-                        ).Select
+                        );
+
+        }
+
+
+        protected IEnumerable<PerformanceCounter>
+                        GetPropertiesPerformanceCounters<TPerformanceCountersContainer>
+                            (
+                                TPerformanceCountersContainer target
+                            )
+        {
+            return
+                GetPerformanceCountersProperties<TPerformanceCountersContainer, PerformanceCounter>()
+                    .Select
                             (
                                 (x) =>
                                 {
@@ -208,5 +236,190 @@
         {
             get;
         }
+
+        public abstract PerformanceCounter[] IncrementOnBeginPerformanceCounters
+        {
+            get;
+            set;
+        }
+        public abstract PerformanceCounter[] DecrementOnBeginPerformanceCounters
+        {
+            get;
+            set;
+        }
+        public abstract PerformanceCounter[] IncrementOnEndPerformanceCounters
+        {
+            get;
+            set;
+        }
+        public abstract PerformanceCounter[] DecrementOnEndPerformanceCounters
+        {
+            get;
+            set;
+        }
+        public abstract PerformanceCounter[] IncrementOnBeginDecrementOnEndPerformanceCounters
+        {
+            get;
+            set;
+        }
+        public abstract PerformanceCounter[] TimeBasedOnBeginOnEndPerformanceCounters
+        {
+            get;
+            set;
+        }
+        public abstract PerformanceCountersPair[] TimeBasedOnBeginOnEndPerformanceCountersPairs
+        {
+            get;
+            set;
+        }
+        protected void
+                        InitializeProcessingTypedPerformanceCounters<TPerformanceCountersContainer>
+                            (
+                                TPerformanceCountersContainer target
+                                , PerformanceCounterProcessingFlagsType
+                                            inclusivePerformanceCounterProcessingFlagsType
+                                , PerformanceCounterProcessingFlagsType
+                                            exclusivePerformanceCounterProcessingFlagsType
+                                                    = PerformanceCounterProcessingFlagsType.None
+                            )
+            where TPerformanceCountersContainer : AbstractPerformanceCountersContainer
+        {
+            var properties = GetPerformanceCountersProperties<TPerformanceCountersContainer, PerformanceCounter>();
+            var propertyName =
+                                string
+                                    .Format
+                                        (
+                                            "{0}{1}"
+                                            , Enum
+                                                .GetName
+                                                    (
+                                                        typeof(PerformanceCounterProcessingFlagsType)
+                                                        , inclusivePerformanceCounterProcessingFlagsType
+                                                    )
+                                            , "PerformanceCounters"
+                                        );
+           var setter = DynamicPropertyAccessor
+                                .CreateTargetSetPropertyValueAction
+                                        <TPerformanceCountersContainer, PerformanceCounter[]>
+                                            (
+                                                propertyName
+                                            );
+            var setterValue = properties
+                                    .Where
+                                        (
+                                            (x) =>
+                                            {
+                                                var r = false;
+                                                var attribute = x
+                                                                    .GetCustomAttribute
+                                                                        <PerformanceCounterDefinitionAttribute>();
+                                                if (attribute != null)
+                                                {
+                                                    r = attribute
+                                                            .CounterProcessingType
+                                                            .HasFlag(inclusivePerformanceCounterProcessingFlagsType);
+                                                    //if
+                                                    //      (
+                                                    //          r
+                                                    //          &&
+                                                    //          (
+                                                    //              exclusivePerformanceCounterProcessingFlagsType
+                                                    //              !=
+                                                    //              PerformanceCounterProcessingFlagsType.None
+                                                    //          )
+                                                    //      )
+                                                    //{
+                                                    //    r = !attribute
+                                                    //                .CounterProcessingType
+                                                    //                .HasFlag(exclusivePerformanceCounterProcessingFlagsType);
+                                                    //}
+                                                }
+                                                return r;
+                                            }
+                                        )
+                                    .Select
+                                        (
+                                            (x) =>
+                                            {
+                                                return
+                                                    DynamicPropertyAccessor
+                                                        .CreateGetPropertyValueFunc
+                                                            <TPerformanceCountersContainer, PerformanceCounter>
+                                                                (
+                                                                    x.Name
+                                                                )(target);
+                                            }
+                                        )
+                                    .ToArray();
+            setter(target,setterValue);
+        }
+        protected void
+                        InitializeProcessingTypedPerformanceCountersPairs<TPerformanceCountersContainer>
+                            (
+                                TPerformanceCountersContainer target
+                                , PerformanceCounterProcessingFlagsType
+                                            inclusivePerformanceCounterProcessingFlagsType
+                                , PerformanceCounterProcessingFlagsType
+                                            exclusivePerformanceCounterProcessingFlagsType
+                                                    = PerformanceCounterProcessingFlagsType.None
+                            )
+            where TPerformanceCountersContainer : AbstractPerformanceCountersContainer
+        {
+            var properties = GetPerformanceCountersProperties<TPerformanceCountersContainer, PerformanceCountersPair>();
+            var propertyName =
+                                string
+                                    .Format
+                                        (
+                                            "{0}{1}"
+                                            , Enum
+                                                .GetName
+                                                    (
+                                                        typeof(PerformanceCounterProcessingFlagsType)
+                                                        , inclusivePerformanceCounterProcessingFlagsType
+                                                    )
+                                            , "PerformanceCountersPairs"
+                                        );
+            var setter = DynamicPropertyAccessor
+                                 .CreateTargetSetPropertyValueAction
+                                         <TPerformanceCountersContainer, PerformanceCountersPair[]>
+                                             (
+                                                 propertyName
+                                             );
+            var setterValue = properties
+                                    .Where
+                                        (
+                                            (x) =>
+                                            {
+                                                var r = false;
+                                                var attribute = x
+                                                                    .GetCustomAttribute
+                                                                        <PerformanceCounterDefinitionAttribute>();
+                                                if (attribute != null)
+                                                {
+                                                    r = attribute
+                                                            .CounterProcessingType
+                                                            .HasFlag(inclusivePerformanceCounterProcessingFlagsType);
+                                                }
+                                                return r;
+                                            }
+                                        )
+                                    .Select
+                                        (
+                                            (x) =>
+                                            {
+                                                return
+                                                    DynamicPropertyAccessor
+                                                        .CreateGetPropertyValueFunc
+                                                            <TPerformanceCountersContainer, PerformanceCountersPair>
+                                                                (
+                                                                    x.Name
+                                                                )(target);
+                                            }
+                                        )
+                                    .ToArray();
+            setter(target, setterValue);
+        }
+
+
     }
 }

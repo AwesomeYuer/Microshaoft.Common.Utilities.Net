@@ -37,7 +37,7 @@ namespace Microshaoft
     using System.Linq;
     //using System.Collections.Concurrent;
 
-    public static class EasyPerformanceCountersHelper<TPerformanceCountersContainer>
+    public static partial class EasyPerformanceCountersHelper<TPerformanceCountersContainer>
                                         where TPerformanceCountersContainer :
                                                                 AbstractPerformanceCountersContainer
                                                                 //, class
@@ -101,7 +101,6 @@ namespace Microshaoft
                                 , performanceCountersCategoryInstanceName
                                 , performanceCounterInstanceLifetime
                                 , initializePerformanceCounterInstanceRawValue
-
                             ); 
                 }
             }
@@ -394,16 +393,13 @@ namespace Microshaoft
                     }
                     if (enabledCountPerformance)
                     {
-                        var enableProcessCounter =
-                                                    (
-                                                        (
-                                                            enabledPerformanceCounters
-                                                            &
-                                                            MultiPerformanceCountersTypeFlags
-                                                                .ProcessCounter
-                                                        )
-                                                        != MultiPerformanceCountersTypeFlags.None
-                                                    );
+                        var enableProcessCounter = enabledPerformanceCounters
+                                                        .HasFlag
+                                                            (
+                                                                MultiPerformanceCountersTypeFlags
+                                                                    .ProcessCounter
+                                                            );
+                                                    
                         if (enableProcessCounter)
                         {
                             container
@@ -411,15 +407,12 @@ namespace Microshaoft
                                 .Increment();
                         }
                         var enableProcessingCounter =
-                                                    (
-                                                        (
-                                                            enabledPerformanceCounters
-                                                            &
-                                                            MultiPerformanceCountersTypeFlags
-                                                                .ProcessingCounter
-                                                        )
-                                                        != MultiPerformanceCountersTypeFlags.None
-                                                    );
+                                                    enabledPerformanceCounters
+                                                        .HasFlag
+                                                            (
+                                                                MultiPerformanceCountersTypeFlags
+                                                                    .ProcessingCounter
+                                                            );
                         if (enableProcessingCounter)
                         {
                             container
@@ -427,15 +420,12 @@ namespace Microshaoft
                                 .Increment();
                         }
                         var enableProcessedAverageTimerCounter =
-                                                    (
-                                                        (
-                                                            enabledPerformanceCounters
-                                                            &
-                                                            MultiPerformanceCountersTypeFlags
-                                                                .ProcessedAverageTimerCounter
-                                                        )
-                                                        != MultiPerformanceCountersTypeFlags.None
-                                                    );
+                                                    enabledPerformanceCounters
+                                                            .HasFlag
+                                                                (
+                                                                    MultiPerformanceCountersTypeFlags
+                                                                            .ProcessedAverageTimerCounter
+                                                                );
                         var reThrowException = false;
                         var stopwatch = _stopwatchsPool.Get();
                         //stopwatch.Reset();

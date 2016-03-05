@@ -41,6 +41,43 @@
                         );
             }
         }
+
+        public override PerformanceCounter[] IncrementOnBeginPerformanceCounters
+        {
+            get;
+            set;
+        }
+        public override PerformanceCounter[] DecrementOnBeginPerformanceCounters
+        {
+            get;
+            set;
+        }
+        public override PerformanceCounter[] IncrementOnEndPerformanceCounters
+        {
+            get;
+            set;
+        }
+        public override PerformanceCounter[] DecrementOnEndPerformanceCounters
+        {
+            get;
+            set;
+        }
+        public override PerformanceCounter[] TimeBasedOnBeginOnEndPerformanceCounters
+        {
+            get;
+            set;
+        }
+        public override PerformanceCounter[] IncrementOnBeginDecrementOnEndPerformanceCounters
+        {
+            get;
+            set;
+        }
+        public override PerformanceCountersPair[] TimeBasedOnBeginOnEndPerformanceCountersPairs
+        {
+            get;
+            set;
+        }
+
         public override void AttachPerformanceCountersToProperties
                                 (
                                     string categoryName
@@ -57,6 +94,43 @@
                         , performanceCounterInstanceLifetime
                         , initializePerformanceCounterInstanceRawValue
                     );
+            InitializeProcessingTypedPerformanceCounters
+                    <CommonPerformanceCountersContainer>
+                        (
+                            this
+                            , PerformanceCounterProcessingFlagsType
+                                    .IncrementOnBegin
+                        );
+         
+            InitializeProcessingTypedPerformanceCounters
+                    <CommonPerformanceCountersContainer>
+                        (
+                            this
+                            , PerformanceCounterProcessingFlagsType
+                                    .IncrementOnEnd
+                        );
+            InitializeProcessingTypedPerformanceCounters
+                    <CommonPerformanceCountersContainer>
+                        (
+                            this
+                            , PerformanceCounterProcessingFlagsType
+                                    .DecrementOnEnd
+                            
+                        );
+            InitializeProcessingTypedPerformanceCounters
+                    <CommonPerformanceCountersContainer>
+                        (
+                            this
+                            , PerformanceCounterProcessingFlagsType
+                                    .TimeBasedOnBeginOnEnd
+                        );
+            InitializeProcessingTypedPerformanceCountersPairs
+                    <CommonPerformanceCountersContainer>
+                            (
+                                this
+                                , PerformanceCounterProcessingFlagsType
+                                        .TimeBasedOnBeginOnEnd
+                            );
         }
 
         #region PerformanceCounters
@@ -67,6 +141,7 @@
                     CounterType = PerformanceCounterType.NumberOfItems64
                     , CounterName = "99.捕获异常次数(次)"
                     , Level = 10
+                    , CounterProcessingType = PerformanceCounterProcessingFlagsType.Increment
                 )
         ]
         public PerformanceCounter CaughtExceptionsPerformanceCounter
@@ -86,6 +161,7 @@
                 (
                     CounterType = PerformanceCounterType.NumberOfItems64
                     , CounterName = "01.接收处理笔数(笔)"
+                    , CounterProcessingType = PerformanceCounterProcessingFlagsType.IncrementOnBegin
                 )
         ]
         public PerformanceCounter PrcocessPerformanceCounter
@@ -106,7 +182,7 @@
                     CounterType = PerformanceCounterType.NumberOfItems64
                     , CounterName = "02.正在处理笔数(笔)"
                     , Level = 10
-                    
+                    , CounterProcessingType = PerformanceCounterProcessingFlagsType.IncrementOnBeginDecrementOnEnd
                 )
         ]
         public PerformanceCounter ProcessingPerformanceCounter
@@ -126,6 +202,7 @@
                 (
                     CounterType = PerformanceCounterType.NumberOfItems64
                     , CounterName = "03.完成处理笔数(笔)"
+                    , CounterProcessingType = PerformanceCounterProcessingFlagsType.IncrementOnEnd
                 )
         ]
         public PerformanceCounter ProcessedPerformanceCounter
@@ -145,6 +222,7 @@
                 (
                     CounterType = PerformanceCounterType.RateOfCountsPerSecond64
                     , CounterName = "04.每秒完成处理笔数(笔/秒)"
+                    , CounterProcessingType = PerformanceCounterProcessingFlagsType.IncrementOnEnd
                 )
         ]
         public PerformanceCounter ProcessedRateOfCountsPerSecondPerformanceCounter
@@ -164,6 +242,7 @@
                 (
                     CounterType = PerformanceCounterType.AverageTimer32
                     , CounterName = "05.平均每笔处理耗时秒数(秒/笔)"
+                    , CounterProcessingType = PerformanceCounterProcessingFlagsType.TimeBasedOnBeginOnEnd
                 )
         ]
         public PerformanceCounter ProcessedAverageTimerPerformanceCounter
@@ -195,6 +274,33 @@
                 return _processedAverageBasePerformanceCounter;
             }
         }
+
+
+
+        private PerformanceCountersPair _processedPerformanceCountersPair;
+        [
+            PerformanceCounterDefinitionAttribute
+                (
+                    CounterType = PerformanceCounterType.AverageTimer32
+                    , CounterName = "05.新平均每笔处理耗时秒数(秒/笔)"
+                    , BaseCounterType = PerformanceCounterType.AverageBase
+                    
+                    , CounterProcessingType = PerformanceCounterProcessingFlagsType.TimeBasedOnBeginOnEnd
+                )
+        ]
+        public PerformanceCountersPair ProcessedPerformanceCountersPair
+        {
+            private set
+            {
+                _processedPerformanceCountersPair = value;
+            }
+            get
+            {
+                return _processedPerformanceCountersPair;
+            }
+        }
+
+
         #endregion
 
     }

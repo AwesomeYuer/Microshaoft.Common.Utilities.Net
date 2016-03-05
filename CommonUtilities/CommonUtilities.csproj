@@ -126,6 +126,9 @@
     <Compile Include="00.Utilities\FileLogHelper.cs" />
     <Compile Include="00.Utilities\FtpWebRequestResponseHelper.cs" />
     <Compile Include="00.Utilities\GCNotifier.cs" />
+    <Compile Include="01.PerformanceCounter\Containers\20.CountPerformanceCountersContainer - Copy.cs" />
+    <Compile Include="01.PerformanceCounter\EasyPerformanceCountersHelper.Partial.01.cs" />
+    <Compile Include="01.PerformanceCounter\EasyPerformanceCountersHelper.Partial.02.cs" />
     <Compile Include="02.PropertyAdditionalDefinitionAttribute\PropertyAdditionalDefinitionAttribute.cs" />
     <Compile Include="06.Json\JTokenHelper.cs" />
     <Compile Include="00.Utilities\PathFileHelper.cs" />
@@ -141,7 +144,6 @@
     <Compile Include="01.PerformanceCounter\Containers\10.AbstractPerformanceCountersContainer.cs" />
     <Compile Include="01.PerformanceCounter\Containers\00.IPerformanceCountersContainer.cs" />
     <Compile Include="01.PerformanceCounter\Containers\20.CommonPerformanceCountersContainer.cs" />
-    <Compile Include="01.PerformanceCounter\EasyPerformanceCountersHelper.cs" />
     <Compile Include="01.PerformanceCounter\PerformanceCounterExtensionMethodsManager.cs" />
     <Compile Include="01.PerformanceCounter\PerformanceCountersHelper.cs" />
     <Compile Include="02.ConcurrentAsyncQueue\ConcurrentAsyncQueue.cs" />
@@ -176,6 +178,8 @@
     <Compile Include="40.流控\RateLimiters\Throttler.cs" />
     <Compile Include="40.流控\RateLimiters\TokenBucket.cs" />
     <Compile Include="40.流控\Throttler.cs" />
+    <Compile Include="50.CRC\CRC16.cs" />
+    <Compile Include="50.CRC\CRC32.cs" />
     <Compile Include="90.HttpClientHelper\HttpClientHelper.cs" />
     <Compile Include="90.Type\TypeHelper.cs" />
     <Compile Include="90.WebMvcApi.NET45\JsonpMediaTypeFormatter.cs" />

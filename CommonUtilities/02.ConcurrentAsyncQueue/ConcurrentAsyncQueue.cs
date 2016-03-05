@@ -720,6 +720,7 @@
 }
 namespace Microshaoft
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     public class QueuePerformanceCountersContainer :
@@ -1027,6 +1028,51 @@ namespace Microshaoft
                     );
             }
         }
+
+        public override PerformanceCounter[] IncrementOnBeginPerformanceCounters
+        {
+            get;
+            set;
+        }
+        public override PerformanceCounter[] DecrementOnBeginPerformanceCounters
+        {
+            get;
+            set;
+        }
+        public override PerformanceCounter[] IncrementOnEndPerformanceCounters
+        {
+            get;
+            set;
+        }
+        public override PerformanceCounter[] DecrementOnEndPerformanceCounters
+        {
+            get;
+            set;
+        }
+        public override PerformanceCounter[] IncrementOnBeginDecrementOnEndPerformanceCounters
+        {
+            get;
+            set;
+        }
+        public override PerformanceCounter[] TimeBasedOnBeginOnEndPerformanceCounters
+        {
+            get;
+            set;
+        }
+
+        public override PerformanceCountersPair[] TimeBasedOnBeginOnEndPerformanceCountersPairs
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         public override IEnumerable<PerformanceCounter> GetPerformanceCountersByLevel(int level)
         {
             //throw new NotImplementedException();

@@ -10,7 +10,20 @@
     {
         static void Main(string[] args)
         {
-            var category = "Microshaoft-Test-Category-001";
+            //var rrr =
+            //BytesHelper
+            //    .BytesArrayToHexString
+            //        (
+            //            Crc16Helper
+            //                .ComputeChecksumBytes
+            //                    (
+            //                        BytesHelper.HexStringToBytesArray("0123456789ABCDEF")
+            //                    )
+            //        );
+
+            //Console.WriteLine(rrr);
+
+            var category = "Microshaoft-Test-Category-002";
             var instance = "Instance-001";
             var enabledCountPerformance = false;
             CommonPerformanceCountersContainer container = null;
@@ -21,36 +34,29 @@
                             , instance
                             , out container
                             , PerformanceCounterInstanceLifetime.Process
-                            , initializePerformanceCounterInstanceRawValue: 1009
+                            //, initializePerformanceCounterInstanceRawValue: 1009
                         );
-            //EasyPerformanceCountersHelper<CommonPerformanceCountersContainer>
-            //         .AttachPerformanceCountersCategoryInstance
-            //             (
-            //                 category
-            //                 , instance
-            //                 , out container
-            //             );
-
-            Parallel.For
+            Parallel
+                    .For
                         (
-                            1
-                            , 10
-                            , new ParallelOptions() {  MaxDegreeOfParallelism = 10 }
+                            0
+                            , 10000
+                            , new ParallelOptions() {  MaxDegreeOfParallelism = 1 }
                             , (x) =>
                             {
-
                                 EasyPerformanceCountersHelper<CommonPerformanceCountersContainer>
-                                    .TryCountPerformance
+                                    .TryCountPerformance2
                                         (
-                                            MultiPerformanceCountersTypeFlags.ProcessAllCounters
+                                            PerformanceCounterProcessingFlagsType.All
+                                            //MultiPerformanceCountersTypeFlags.ProcessAllCounters
                                             , category
                                             , instance
                                             , () => true
                                             , null
                                             , () =>
                                             {
-                                                Thread.Sleep(10);
-                                                throw new Exception();
+                                                Thread.Sleep(1000);
+                                                //throw new Exception();
                                             }
                                         );
                             }
@@ -78,7 +84,7 @@
                                 {
                                     //int sleep = random.Next(0, 9) * 5;
                                     //Console.WriteLine(sleep);
-                                    //Thread.Sleep(sleep);
+                                    Thread.Sleep(50);
                                     //if (sleep > 400)
                                     //{
                                     //    throw new Exception();
