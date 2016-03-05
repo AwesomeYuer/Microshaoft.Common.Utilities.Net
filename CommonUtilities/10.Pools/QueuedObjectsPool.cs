@@ -61,13 +61,14 @@
 
         private long _maxCapacity = 0;
 
-        private CommonPerformanceCountersContainer _performanceCountersContainer = null;
+        
         public QueuedObjectsPool(long maxCapacity)
         {
             _pool = new ConcurrentQueue<T>();
             _maxCapacity = maxCapacity;
 
         }
+        private CommonPerformanceCountersContainer _performanceCountersContainer = null;
         private bool _isAttachPerformanceCounters = false;
         public void AttachPerformanceCountersCategoryInstance
                                 (
