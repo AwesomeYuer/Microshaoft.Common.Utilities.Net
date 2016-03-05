@@ -40,22 +40,22 @@
                     .For
                         (
                             0
-                            , 10000
-                            , new ParallelOptions() {  MaxDegreeOfParallelism = 1 }
+                            , 100000
+                            , new ParallelOptions() {  MaxDegreeOfParallelism = 32 }
                             , (x) =>
                             {
                                 EasyPerformanceCountersHelper<CommonPerformanceCountersContainer>
-                                    .TryCountPerformance2
+                                    .TryCountPerformance
                                         (
                                             PerformanceCounterProcessingFlagsType.All
                                             //MultiPerformanceCountersTypeFlags.ProcessAllCounters
                                             , category
                                             , instance
                                             , () => true
-                                            , null
+                                            //, null
                                             , () =>
                                             {
-                                                Thread.Sleep(1000);
+                                                Thread.Sleep(1);
                                                 //throw new Exception();
                                             }
                                         );

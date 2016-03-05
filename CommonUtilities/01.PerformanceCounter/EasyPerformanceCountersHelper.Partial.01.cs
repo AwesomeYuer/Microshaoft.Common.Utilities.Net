@@ -37,17 +37,24 @@ namespace Microshaoft
     using System.Linq;
     //using System.Collections.Concurrent;
 
-    public static partial class EasyPerformanceCountersHelper<TPerformanceCountersContainer>
-                                        where TPerformanceCountersContainer :
-                                                                AbstractPerformanceCountersContainer
-                                                                //, class
-                                                                , IPerformanceCountersContainer
-                                                                , ICommonPerformanceCountersContainer
-                                                                , new()
+    public static partial class 
+                            EasyPerformanceCountersHelper
+                                    <TPerformanceCountersContainer>
+                                        where
+                                            TPerformanceCountersContainer
+                                                :
+                                                    AbstractPerformanceCountersContainer
+                                                    //, class
+                                                    , IPerformanceCountersContainer
+                                                    , ICommonPerformanceCountersContainer
+                                                    , new()
     {
-        private static readonly QueuedObjectsPool<Stopwatch> _stopwatchsPool = new QueuedObjectsPool<Stopwatch>(10 * 10000);
-        private static Dictionary<string, TPerformanceCountersContainer> _dictionary
-                        = new Dictionary<string, TPerformanceCountersContainer>();
+        private static readonly QueuedObjectsPool<Stopwatch>
+                                _stopwatchsPool
+                                        = new QueuedObjectsPool<Stopwatch>(10 * 10000);
+        private static Dictionary<string, TPerformanceCountersContainer>
+                                _dictionary
+                                        = new Dictionary<string, TPerformanceCountersContainer>();
 
         public static IEnumerable<TPerformanceCountersContainer> Containers
         {
@@ -112,7 +119,9 @@ namespace Microshaoft
                                         , string performanceCountersCategoryName
                                         , string performanceCountersCategoryInstanceName
                                         , Func<bool> onEnabledCountPerformanceProcessFunc = null
-                                        , PerformanceCounterInstanceLifetime performanceCounterInstanceLifetime = PerformanceCounterInstanceLifetime.Global
+                                        , PerformanceCounterInstanceLifetime
+                                                    performanceCounterInstanceLifetime
+                                                            = PerformanceCounterInstanceLifetime.Global
                                         , long? initializePerformanceCounterInstanceRawValue = null
                                     )
         {
@@ -160,44 +169,35 @@ namespace Microshaoft
                                     );
                     }
                 }
-                var enableProcessCounter =
-                                            (
-                                                (
-                                                    enabledPerformanceCounters
-                                                    &
-                                                    MultiPerformanceCountersTypeFlags
-                                                        .ProcessCounter
-                                                )
-                                                != MultiPerformanceCountersTypeFlags.None
-                                            );
+                var enableProcessCounter = enabledPerformanceCounters
+                                                .HasFlag
+                                                    (
+                                                        MultiPerformanceCountersTypeFlags
+                                                            .ProcessCounter
+                                                    );
                 if (enableProcessCounter)
                 {
-                    container.PrcocessPerformanceCounter.Increment();
+                    container
+                            .PrcocessPerformanceCounter
+                            .Increment();
                 }
-                var enableProcessingCounter =
-                                            (
-                                                (
-                                                    enabledPerformanceCounters
-                                                    &
-                                                    MultiPerformanceCountersTypeFlags
-                                                        .ProcessingCounter
-                                                )
-                                                != MultiPerformanceCountersTypeFlags.None
-                                            );
+                var enableProcessingCounter = enabledPerformanceCounters
+                                                    .HasFlag
+                                                        (
+                                                            MultiPerformanceCountersTypeFlags
+                                                                .ProcessingCounter
+                                                        );
                 if (enableProcessingCounter)
                 {
                     container.ProcessingPerformanceCounter.Increment();
                 }
-                var enableProcessedAverageTimerCounter =
-                                            (
+                var enableProcessedAverageTimerCounter
+                                    = enabledPerformanceCounters
+                                            .HasFlag
                                                 (
-                                                    enabledPerformanceCounters
-                                                    &
                                                     MultiPerformanceCountersTypeFlags
-                                                        .ProcessedAverageTimerCounter
-                                                )
-                                                != MultiPerformanceCountersTypeFlags.None
-                                            );
+                                                            .ProcessedAverageTimerCounter
+                                                );
                 if (enableProcessedAverageTimerCounter)
                 {
                     r = _stopwatchsPool.Get(); //Stopwatch.StartNew();
@@ -241,15 +241,12 @@ namespace Microshaoft
                 {
                     return;
                 }
-                var enableProcessedAverageTimerCounter =
+                var enableProcessedAverageTimerCounter
+                                = enabledPerformanceCounters
+                                        .HasFlag
                                             (
-                                                (
-                                                    enabledPerformanceCounters
-                                                    &
-                                                    MultiPerformanceCountersTypeFlags
+                                                MultiPerformanceCountersTypeFlags
                                                         .ProcessedAverageTimerCounter
-                                                )
-                                                != MultiPerformanceCountersTypeFlags.None
                                             );
                 if (enableProcessedAverageTimerCounter)
                 {
@@ -275,15 +272,12 @@ namespace Microshaoft
                         //stopwatch = null;
                     }
                 }
-                var enableProcessingCounter =
+                var enableProcessingCounter
+                                = enabledPerformanceCounters
+                                        .HasFlag
                                             (
-                                                (
-                                                    enabledPerformanceCounters
-                                                    &
-                                                    MultiPerformanceCountersTypeFlags
-                                                        .ProcessingCounter
-                                                )
-                                                != MultiPerformanceCountersTypeFlags.None
+                                                MultiPerformanceCountersTypeFlags
+                                                    .ProcessingCounter
                                             );
                 if (enableProcessingCounter)
                 {
@@ -297,15 +291,12 @@ namespace Microshaoft
                                 .RawValue = 0;
                     }
                 }
-                var enableProcessedPerformanceCounter =
+                var enableProcessedPerformanceCounter
+                                = enabledPerformanceCounters
+                                        .HasFlag
                                             (
-                                                (
-                                                    enabledPerformanceCounters
-                                                    &
-                                                    MultiPerformanceCountersTypeFlags
+                                                MultiPerformanceCountersTypeFlags
                                                         .ProcessedCounter
-                                                )
-                                                != MultiPerformanceCountersTypeFlags.None
                                             );
                 if (enableProcessedPerformanceCounter)
                 {
@@ -313,16 +304,13 @@ namespace Microshaoft
                         .ProcessedPerformanceCounter
                         .Increment();
                 }
-                var enableProcessedRateOfCountsPerSecondPerformanceCounter =
-                            (
-                                (
-                                    enabledPerformanceCounters
-                                    &
-                                    MultiPerformanceCountersTypeFlags
-                                        .ProcessedRateOfCountsPerSecondCounter
-                                )
-                                != MultiPerformanceCountersTypeFlags.None
-                            );
+                var enableProcessedRateOfCountsPerSecondPerformanceCounter
+                            = enabledPerformanceCounters
+                                    .HasFlag
+                                        (
+                                            MultiPerformanceCountersTypeFlags
+                                                .ProcessedRateOfCountsPerSecondCounter
+                                        );
                 if (enableProcessedRateOfCountsPerSecondPerformanceCounter)
                 {
                     container

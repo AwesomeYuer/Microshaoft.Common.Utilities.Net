@@ -50,9 +50,92 @@ namespace Microshaoft
                                         , Action onCountPerformanceInnerProcessAction = null
                                         , Func<Exception, Exception, string, bool> onCaughtExceptionProcessFunc = null
                                         , Action<bool, Exception, Exception, string> onFinallyProcessAction = null
+                                        , PerformanceCounterInstanceLifetime
+                                                        performanceCounterInstanceLifetime
+                                                                = PerformanceCounterInstanceLifetime.Global
+                                        , long? initializePerformanceCounterInstanceRawValue = null
                                     )
         {
             var enabledCountPerformance = true;
+            var stopwatches = CountPerformanceBegin
+                                    (
+                                        enabledPerformanceCounterProcessingFlagsType
+                                        , performanceCountersCategoryName
+                                        , performanceCountersCategoryInstanceName
+                                        , out enabledCountPerformance
+                                        , onEnabledCountPerformanceProcessFunc
+                                        , performanceCounterInstanceLifetime
+                                        , initializePerformanceCounterInstanceRawValue
+                                    );
+            var reThrowException = false;
+
+            #region Count Inner TryCatchFinally
+            TryCatchFinallyProcessHelper
+                    .TryProcessCatchFinally
+                        (
+                            true
+                            , () =>
+                            {
+                                onCountPerformanceInnerProcessAction();
+                            }
+                            , reThrowException
+                            , (x, y, z) =>
+                            {
+                                var r = reThrowException;
+                                if (onCaughtExceptionProcessFunc != null)
+                                {
+                                    r = onCaughtExceptionProcessFunc
+                                            (
+                                                x
+                                                , y
+                                                , z
+                                            );
+                                }
+                                return r;
+                            }
+                            , (x, y, z, w) =>
+                            {
+                                if (onFinallyProcessAction != null)
+                                {
+                                    onFinallyProcessAction
+                                        (
+                                            x
+                                            , y
+                                            , z
+                                            , w
+                                        );
+                                }
+                            }
+                        );
+            #endregion
+
+            if (enabledCountPerformance)
+            {
+                CountPerformanceEnd
+                    (
+                        enabledPerformanceCounterProcessingFlagsType
+                        , performanceCountersCategoryName
+                        , performanceCountersCategoryInstanceName
+                        , stopwatches
+                    );
+            }
+        }
+        public static Stopwatch[] CountPerformanceBegin
+                            (
+                                PerformanceCounterProcessingFlagsType enabledPerformanceCounterProcessingFlagsType
+                                , string performanceCountersCategoryName
+                                , string performanceCountersCategoryInstanceName
+                                , out bool enabledCountPerformance
+                                , Func<bool> onEnabledCountPerformanceProcessFunc = null
+                                , PerformanceCounterInstanceLifetime
+                                            performanceCounterInstanceLifetime
+                                                    = PerformanceCounterInstanceLifetime.Global
+                                , long? initializePerformanceCounterInstanceRawValue = null
+
+                            )
+        {
+            Stopwatch[] stopwatches = null;
+            enabledCountPerformance = true;
             {
                 if (onEnabledCountPerformanceProcessFunc != null)
                 {
@@ -67,220 +150,219 @@ namespace Microshaoft
                         enabledPerformanceCounterProcessingFlagsType
                         !=
                         PerformanceCounterProcessingFlagsType.None
-                    &&
-                        onCountPerformanceInnerProcessAction != null
                 )
             {
-                if (onCountPerformanceInnerProcessAction != null)
+                var enableTimeBasedOnBeginOnEnd = false;
+                PerformanceCountersPair[] performanceCountersPairs = null;
+
+                var stopwatchIndex = 0;
+                TPerformanceCountersContainer container = null;
+                if (enabledCountPerformance)
                 {
-                    var enableTimeBasedOnBeginOnEnd = false;
-                    PerformanceCountersPair[] performanceCountersPairs = null;
-                    Stopwatch[] stopwatches = null;
-                    var stopwatchesIndex = 0;
-                    TPerformanceCountersContainer container = null;
-                    if (enabledCountPerformance)
+                    #region get Container
+                    string key = string
+                                    .Format
+                                        (
+                                            "{1}{0}{2}"
+                                            , "-"
+                                            , performanceCountersCategoryName
+                                            , performanceCountersCategoryInstanceName
+                                        );
+                    if (!_dictionary.TryGetValue(key, out container))
                     {
-                        #region get Container
-                        string key = string
-                                        .Format
-                                            (
-                                                "{1}{0}{2}"
-                                                , "-"
-                                                , performanceCountersCategoryName
-                                                , performanceCountersCategoryInstanceName
-                                            );
-                        if (!_dictionary.TryGetValue(key, out container))
+                        lock (_lockerObject)
                         {
-                            lock (_lockerObject)
-                            {
-                                container = new TPerformanceCountersContainer();
-                                _dictionary
-                                        .Add
-                                            (
-                                                key
-                                                , container
-                                            );
-                                container
-                                    .AttachPerformanceCountersToProperties
-                                            (
-                                                performanceCountersCategoryName
-                                                , performanceCountersCategoryInstanceName
-                                            );
-                            }
-                        } 
-                        #endregion
-
-                        var enableIncrementOnBegin
-                                = enabledPerformanceCounterProcessingFlagsType
-                                                        .HasFlag
-                                                            (
-                                                                PerformanceCounterProcessingFlagsType
-                                                                        .IncrementOnBegin
-                                                            );
-                        if (enableIncrementOnBegin)
-                        {
-                            Array
-                                .ForEach
-                                    (
-                                        container
-                                                .IncrementOnBeginPerformanceCounters
-                                        , (x) =>
-                                        {
-                                            x.Increment();
-                                        }
-                                    );
-                        }
-                        enableTimeBasedOnBeginOnEnd
-                                    = enabledPerformanceCounterProcessingFlagsType
-                                                .HasFlag
-                                                    (
-                                                        PerformanceCounterProcessingFlagsType
-                                                            .TimeBasedOnBeginOnEnd
-                                                    );
-
-                        if (enableTimeBasedOnBeginOnEnd)
-                        {
-                            performanceCountersPairs
-                                            = container
-                                                    .TimeBasedOnBeginOnEndPerformanceCountersPairs;
-                            stopwatches = new Stopwatch[performanceCountersPairs.Length];
-                            Array
-                                .ForEach
-                                    (
-                                        performanceCountersPairs
-                                        , (x) =>
-                                        {
-                                            var stopwatch = _stopwatchsPool.Get();
-                                            stopwatches[stopwatchesIndex++] = stopwatch;
-                                            stopwatch.Restart();
-                                        }
-                                    );
+                            container = new TPerformanceCountersContainer();
+                            _dictionary
+                                    .Add
+                                        (
+                                            key
+                                            , container
+                                        );
+                            container
+                                .AttachPerformanceCountersToProperties
+                                        (
+                                            performanceCountersCategoryName
+                                            , performanceCountersCategoryInstanceName
+                                        );
                         }
                     }
-                    var reThrowException = false;
-
-                    #region Count Inner TryCatchFinally
-                    TryCatchFinallyProcessHelper
-                            .TryProcessCatchFinally
+                    #endregion
+                    var enableIncrementOnBegin
+                            = enabledPerformanceCounterProcessingFlagsType
+                                                    .HasFlag
+                                                        (
+                                                            PerformanceCounterProcessingFlagsType
+                                                                    .IncrementOnBegin
+                                                        );
+                    if (enableIncrementOnBegin)
+                    {
+                        Array
+                            .ForEach
                                 (
-                                    true
-                                    , () =>
+                                    container
+                                            .IncrementOnBeginPerformanceCounters
+                                    , (x) =>
                                     {
-                                        onCountPerformanceInnerProcessAction();
-                                    }
-                                    , reThrowException
-                                    , (x, y, z) =>
-                                    {
-                                        var r = reThrowException;
-                                        if (onCaughtExceptionProcessFunc != null)
-                                        {
-                                            r = onCaughtExceptionProcessFunc
-                                                    (
-                                                        x
-                                                        , y
-                                                        , z
-                                                    );
-                                        }
-                                        return r;
-                                    }
-                                    , (x, y, z, w) =>
-                                    {
-                                        if (onFinallyProcessAction != null)
-                                        {
-                                            onFinallyProcessAction
-                                                (
-                                                    x
-                                                    , y
-                                                    , z
-                                                    , w
-                                                );
-                                        }
+                                        x.Increment();
                                     }
                                 );
-                    #endregion
-
-                    if (enabledCountPerformance)
-                    { 
-                        if (enableTimeBasedOnBeginOnEnd)
-                        {
-                            if (stopwatchesIndex > 0)
-                            {
-                                stopwatchesIndex = 0;
-                                Array
-                                    .ForEach
-                                        (
-                                            performanceCountersPairs
-                                            , (x) =>
-                                            {
-                                                var stopwatch
-                                                        = stopwatches[stopwatchesIndex++];
-                                                x
-                                                    .Counter
-                                                    .CountEndAverageTimerCounter
-                                                        (
-                                                            x.BaseCounter
-                                                            , stopwatch
-                                                        );
-                                                var rr = _stopwatchsPool.Put(stopwatch);
-                                                if (!rr)
-                                                {
-                                                    stopwatch.Stop();
-                                                    stopwatch = null;
-                                                }
-                                            }
-                                        );
-                                stopwatches = null;
-                            }
-                        }
-                        var enableIncrementOnEnd
-                                    = enabledPerformanceCounterProcessingFlagsType
+                    }
+                    enableTimeBasedOnBeginOnEnd
+                                = enabledPerformanceCounterProcessingFlagsType
                                             .HasFlag
                                                 (
                                                     PerformanceCounterProcessingFlagsType
-                                                                                .IncrementOnEnd
+                                                        .TimeBasedOnBeginOnEnd
                                                 );
-                        if (enableIncrementOnEnd)
-                        {
-                            Array
-                               .ForEach
-                                   (
-                                       container
-                                               .IncrementOnEndPerformanceCounters
-                                       , (x) =>
-                                       {
-                                           x.Increment();
-                                       }
-                                   );
-                        }
-                        var enableDecrementOnEnd
-                                    = enabledPerformanceCounterProcessingFlagsType
-                                                .HasFlag
-                                                    (
-                                                        PerformanceCounterProcessingFlagsType
-                                                                    .DecrementOnEnd
-                                                    );
-                        if (enableDecrementOnEnd)
-                        {
-                            Array
-                               .ForEach
-                                   (
-                                       container
-                                               .DecrementOnEndPerformanceCounters
-                                       , (x) =>
-                                       {
-                                           x.Decrement();
-                                       }
-                                   );
-                        }
+
+                    if (enableTimeBasedOnBeginOnEnd)
+                    {
+                        performanceCountersPairs
+                                        = container
+                                                .TimeBasedOnBeginOnEndPerformanceCountersPairs;
+                        stopwatches = new Stopwatch[performanceCountersPairs.Length];
+                        Array
+                            .ForEach
+                                (
+                                    performanceCountersPairs
+                                    , (x) =>
+                                    {
+                                        var stopwatch = _stopwatchsPool.Get();
+                                        stopwatches[stopwatchIndex++] = stopwatch;
+                                        stopwatch.Restart();
+                                    }
+                                );
                     }
                 }
             }
-            else
+            return stopwatches;
+        }
+        public static void CountPerformanceEnd
+                                    (
+                                        PerformanceCounterProcessingFlagsType enabledPerformanceCounterProcessingFlagsType
+                                        , string performanceCountersCategoryName
+                                        , string performanceCountersCategoryInstanceName
+                                        , Stopwatch[] stopwatches
+                                    )
+        {
+            var stopwatchesCount = 0;
+            if (stopwatches != null)
             {
-                if (onCountPerformanceInnerProcessAction != null)
+                stopwatchesCount = stopwatches.Length;
+            }
+            var enableTimeBasedOnBeginOnEnd
+                        = enabledPerformanceCounterProcessingFlagsType
+                                    .HasFlag
+                                        (
+                                            PerformanceCounterProcessingFlagsType
+                                                .TimeBasedOnBeginOnEnd
+                                        );
+
+            #region get Container
+            TPerformanceCountersContainer container = null;
+            string key = string
+                            .Format
+                                (
+                                    "{1}{0}{2}"
+                                    , "-"
+                                    , performanceCountersCategoryName
+                                    , performanceCountersCategoryInstanceName
+                                );
+            if (!_dictionary.TryGetValue(key, out container))
+            {
+                return;
+                //lock (_lockerObject)
+                //{
+                //    container = new TPerformanceCountersContainer();
+                //    _dictionary
+                //            .Add
+                //                (
+                //                    key
+                //                    , container
+                //                );
+                //    container
+                //        .AttachPerformanceCountersToProperties
+                //                (
+                //                    performanceCountersCategoryName
+                //                    , performanceCountersCategoryInstanceName
+                //                );
+                //}
+            }
+            #endregion
+            if (enableTimeBasedOnBeginOnEnd)
+            {
+                if (stopwatchesCount > 0)
                 {
-                    onCountPerformanceInnerProcessAction();
+                    var stopwatchIndex = 0;
+                    var performanceCountersPairs
+                                = container
+                                        .TimeBasedOnBeginOnEndPerformanceCountersPairs;
+                    Array
+                        .ForEach
+                            (
+                                performanceCountersPairs
+                                , (x) =>
+                                {
+                                    var stopwatch
+                                            = stopwatches[stopwatchIndex++];
+                                    x
+                                        .Counter
+                                        .CountEndAverageTimerCounter
+                                            (
+                                                x.BaseCounter
+                                                , stopwatch
+                                            );
+                                    var rr = _stopwatchsPool.Put(stopwatch);
+                                    if (!rr)
+                                    {
+                                        stopwatch.Stop();
+                                        stopwatch = null;
+                                    }
+                                }
+                            );
+                    stopwatches = null;
                 }
+            }
+            var enableIncrementOnEnd
+                        = enabledPerformanceCounterProcessingFlagsType
+                                .HasFlag
+                                    (
+                                        PerformanceCounterProcessingFlagsType
+                                                                    .IncrementOnEnd
+                                    );
+            if (enableIncrementOnEnd)
+            {
+                Array
+                   .ForEach
+                       (
+                           container
+                                   .IncrementOnEndPerformanceCounters
+                           , (x) =>
+                           {
+                               x.Increment();
+                           }
+                       );
+            }
+            var enableDecrementOnEnd
+                        = enabledPerformanceCounterProcessingFlagsType
+                                    .HasFlag
+                                        (
+                                            PerformanceCounterProcessingFlagsType
+                                                        .DecrementOnEnd
+                                        );
+            if (enableDecrementOnEnd)
+            {
+                Array
+                   .ForEach
+                       (
+                           container
+                                   .DecrementOnEndPerformanceCounters
+                           , (x) =>
+                           {
+                               x.Decrement();
+                           }
+                       );
             }
         }
     }
