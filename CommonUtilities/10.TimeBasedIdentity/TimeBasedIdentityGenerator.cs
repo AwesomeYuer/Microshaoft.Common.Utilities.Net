@@ -100,13 +100,24 @@
                             , PeriodModID
 
                             , "PeriodSeedsBucket"
-                            , PeriodSeedsBucket.Length
+                            ,
+                                (
+                                    PeriodSeedsBucket != null
+                                    ?
+                                    -1 : PeriodSeedsBucket.Length
+                                )
 
                             , "SecondID"
                             , SecondID
 
                             , "CurrentSeedInCurrentBucket"
                             , PeriodSeedsBucket[SecondID]
+                            ,
+                                (
+                                    PeriodSeedsBucket != null
+                                    ?
+                                    -1 : PeriodSeedsBucket[SecondID]
+                                )
 
 
                             , "IdentityTime"
