@@ -155,7 +155,8 @@
     <Compile Include="09.Socket\SocketAsyncDataHandler.01.cs" />
     <Compile Include="09.Socket\SocketAsyncEventArgsPool.cs" />
     <Compile Include="09.Socket\SocketHelper.cs" />
-    <Compile Include="10.Pools\QueuedObjectsPool.cs" />
+    <Compile Include="10.Pools\QueuedObjectsPool.Partial.02.cs" />
+    <Compile Include="10.Pools\QueuedObjectsPool.Partial.01.cs" />
     <Compile Include="10.SingleThreadAsyncDequeueProcessor\SingleThreadAsyncDequeueProcessor.cs" />
     <Compile Include="10.TimeBasedIdentity\TimeBasedIdentityGenerator.cs" />
     <Compile Include="11.Caches\CacheItemEntryRemovedNotifier.cs" />

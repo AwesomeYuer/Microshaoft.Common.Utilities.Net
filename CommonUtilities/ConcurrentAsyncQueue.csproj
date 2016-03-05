@@ -7,8 +7,8 @@
     <ProjectGuid>{0F9EFE8B-40F1-4E2C-9DF9-809514A8ECDB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ClassLibrary2</RootNamespace>
-    <AssemblyName>ConcurrentAsyncQueue</AssemblyName>
+    <RootNamespace>Microshaoft</RootNamespace>
+    <AssemblyName>Microshaoft.ConcurrentAsyncQueue.Net.4xx</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

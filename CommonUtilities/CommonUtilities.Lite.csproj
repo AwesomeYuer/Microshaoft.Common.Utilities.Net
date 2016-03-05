@@ -143,6 +143,7 @@
     <Compile Include="09.Socket\SocketAsyncDataHandler.01.cs" />
     <Compile Include="09.Socket\SocketAsyncEventArgsPool.cs" />
     <Compile Include="09.Socket\SocketHelper.cs" />
+    <Compile Include="10.Pools\QueuedObjectsPool.Partial.01.cs" />
     <Compile Include="10.SingleThreadAsyncDequeueProcessor\SingleThreadAsyncDequeueProcessor.cs" />
     <Compile Include="10.TimeBasedIdentity\TimeBasedIdentityGenerator.cs" />
     <Compile Include="11.Caches\CacheItemEntryRemovedNotifier.cs" />
@@ -191,9 +192,7 @@
     <Content Include="TraceEvent.ReadMe.txt" />
     <Content Include="TraceEvent.ReleaseNotes.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="10.Pools\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Diagnostics.Tracing.TraceEvent.1.0.41\build\Microsoft.Diagnostics.Tracing.TraceEvent.targets" Condition="Exists('..\packages\Microsoft.Diagnostics.Tracing.TraceEvent.1.0.41\build\Microsoft.Diagnostics.Tracing.TraceEvent.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

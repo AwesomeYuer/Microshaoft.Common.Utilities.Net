@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Microshaoft</RootNamespace>
-    <AssemblyName>EasyPerformanceCountersHelper</AssemblyName>
+    <AssemblyName>Microshaoft.EasyPerformanceCountersHelper.Net.4.xxx</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -47,7 +47,6 @@
     <Compile Include="01.PerformanceCounter\PerformanceCounterExtensionMethodsManager.cs" />
     <Compile Include="01.PerformanceCounter\PerformanceCountersAdditionalDefinition.cs" />
     <Compile Include="01.PerformanceCounter\PerformanceCountersHelper.cs" />
-    <Compile Include="10.Pools\QueuedObjectsPool.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
