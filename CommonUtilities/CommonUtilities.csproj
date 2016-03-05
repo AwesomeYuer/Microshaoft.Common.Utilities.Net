@@ -180,6 +180,7 @@
     <Compile Include="40.流控\Throttler.cs" />
     <Compile Include="50.CRC\CRC16.cs" />
     <Compile Include="50.CRC\CRC32.cs" />
+    <Compile Include="50.CRC\CrcHelper.cs" />
     <Compile Include="90.HttpClientHelper\HttpClientHelper.cs" />
     <Compile Include="90.Type\TypeHelper.cs" />
     <Compile Include="90.WebMvcApi.NET45\JsonpMediaTypeFormatter.cs" />

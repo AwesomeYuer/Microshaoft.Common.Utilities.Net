@@ -1,15 +1,6 @@
 ﻿namespace Microshaoft
 {
     using System;
-    public static class Crc16Helper
-    {
-        private static Crc16 _crc16 = new Crc16();
-        public static byte[] ComputeChecksumBytes(byte[] bytes)
-        {
-            return
-                _crc16.ComputeChecksumBytes(bytes);
-        }
-    }
     public class Crc16
     {
         const ushort polynomial = 0xA001;
