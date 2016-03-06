@@ -11,18 +11,13 @@
         {
             get;
             set;
-           
         }
-
         public PerformanceCounter BaseCounter
         {
             get;
             set;
         }
     }
-
-
-
     public abstract class AbstractPerformanceCountersContainer
                                 : IPerformanceCountersContainer
                                     , IPerformanceCountersValuesClearable
@@ -104,7 +99,6 @@
                                 }
                             );
         }
-
         protected void AttachPerformanceCountersToProperties<TContainer>
                             (
                                 string categoryName
@@ -143,7 +137,6 @@
                                                     , string performanceCounterName
                                                 )
         {
-            
             var propertyInfo
                     = typeof(TPerformanceCountersContainer)
                             .GetProperties()
@@ -188,7 +181,6 @@
             }
             return r;
         }
-
         protected IEnumerable<PropertyInfo> GetPerformanceCountersProperties<TPerformanceCountersContainer, TProperty>()
         {
             return
@@ -208,8 +200,6 @@
                         );
 
         }
-
-
         protected IEnumerable<PerformanceCounter>
                         GetPropertiesPerformanceCounters<TPerformanceCountersContainer>
                             (
@@ -217,8 +207,9 @@
                             )
         {
             return
-                GetPerformanceCountersProperties<TPerformanceCountersContainer, PerformanceCounter>()
-                    .Select
+                GetPerformanceCountersProperties
+                    <TPerformanceCountersContainer, PerformanceCounter>()
+                        .Select
                             (
                                 (x) =>
                                 {
@@ -273,20 +264,21 @@
             set;
         }
         protected void
-                        InitializeProcessingTypedPerformanceCounters<TPerformanceCountersContainer>
-                            (
-                                TPerformanceCountersContainer target
-                                , PerformanceCounterProcessingFlagsType
-                                            inclusivePerformanceCounterProcessingFlagsType
-                                , PerformanceCounterProcessingFlagsType
-                                            exclusivePerformanceCounterProcessingFlagsType
-                                                    = PerformanceCounterProcessingFlagsType.None
-                            )
-            where TPerformanceCountersContainer : AbstractPerformanceCountersContainer
+                        InitializeProcessingTypedPerformanceCounters
+                            <TPerformanceCountersContainer>
+                                (
+                                    TPerformanceCountersContainer target
+                                    , PerformanceCounterProcessingFlagsType
+                                                inclusivePerformanceCounterProcessingFlagsType
+                                    , PerformanceCounterProcessingFlagsType
+                                                exclusivePerformanceCounterProcessingFlagsType
+                                                        = PerformanceCounterProcessingFlagsType.None
+                                )
+                            where
+                                TPerformanceCountersContainer : AbstractPerformanceCountersContainer
         {
             var properties = GetPerformanceCountersProperties<TPerformanceCountersContainer, PerformanceCounter>();
-            var propertyName =
-                                string
+            var propertyName = string
                                     .Format
                                         (
                                             "{0}{1}"
@@ -298,13 +290,13 @@
                                                     )
                                             , "PerformanceCounters"
                                         );
-           var setter = DynamicPropertyAccessor
-                                .CreateTargetSetPropertyValueAction
-                                        <TPerformanceCountersContainer, PerformanceCounter[]>
-                                            (
-                                                propertyName
-                                            );
-            var setterValue = properties
+           var propertySetter = DynamicPropertyAccessor
+                                        .CreateTargetSetPropertyValueAction
+                                                <TPerformanceCountersContainer, PerformanceCounter[]>
+                                                    (
+                                                        propertyName
+                                                    );
+            var propertyValue = properties
                                     .Where
                                         (
                                             (x) =>
@@ -351,23 +343,24 @@
                                             }
                                         )
                                     .ToArray();
-            setter(target,setterValue);
+            propertySetter(target, propertyValue);
         }
         protected void
-                        InitializeProcessingTypedPerformanceCountersPairs<TPerformanceCountersContainer>
-                            (
-                                TPerformanceCountersContainer target
-                                , PerformanceCounterProcessingFlagsType
-                                            inclusivePerformanceCounterProcessingFlagsType
-                                , PerformanceCounterProcessingFlagsType
-                                            exclusivePerformanceCounterProcessingFlagsType
-                                                    = PerformanceCounterProcessingFlagsType.None
-                            )
-            where TPerformanceCountersContainer : AbstractPerformanceCountersContainer
+                        InitializeProcessingTypedPerformanceCountersPairs
+                            <TPerformanceCountersContainer>
+                                (
+                                    TPerformanceCountersContainer target
+                                    , PerformanceCounterProcessingFlagsType
+                                                inclusivePerformanceCounterProcessingFlagsType
+                                    , PerformanceCounterProcessingFlagsType
+                                                exclusivePerformanceCounterProcessingFlagsType
+                                                        = PerformanceCounterProcessingFlagsType.None
+                                )
+                            where
+                                TPerformanceCountersContainer : AbstractPerformanceCountersContainer
         {
             var properties = GetPerformanceCountersProperties<TPerformanceCountersContainer, PerformanceCountersPair>();
-            var propertyName =
-                                string
+            var propertyName = string
                                     .Format
                                         (
                                             "{0}{1}"
@@ -379,13 +372,13 @@
                                                     )
                                             , "PerformanceCountersPairs"
                                         );
-            var setter = DynamicPropertyAccessor
-                                 .CreateTargetSetPropertyValueAction
+            var propertySetter = DynamicPropertyAccessor
+                                    .CreateTargetSetPropertyValueAction
                                          <TPerformanceCountersContainer, PerformanceCountersPair[]>
                                              (
                                                  propertyName
                                              );
-            var setterValue = properties
+            var propertyValue = properties
                                     .Where
                                         (
                                             (x) =>
@@ -417,9 +410,7 @@
                                             }
                                         )
                                     .ToArray();
-            setter(target, setterValue);
+            propertySetter(target, propertyValue);
         }
-
-
     }
 }
