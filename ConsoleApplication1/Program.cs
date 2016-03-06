@@ -40,7 +40,7 @@
                     .For
                         (
                             0
-                            , 100000
+                            , 5
                             , new ParallelOptions() {  MaxDegreeOfParallelism = 32 }
                             , (x) =>
                             {

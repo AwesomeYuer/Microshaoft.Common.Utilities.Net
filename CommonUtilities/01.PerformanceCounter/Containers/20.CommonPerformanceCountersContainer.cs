@@ -282,7 +282,7 @@
             PerformanceCounterDefinitionAttribute
                 (
                     CounterType = PerformanceCounterType.AverageTimer32
-                    , CounterName = "05.新平均每笔处理耗时秒数(秒/笔)"
+                    , CounterName = "06.平均每笔处理耗时秒数(秒/笔)"
                     , BaseCounterType = PerformanceCounterType.AverageBase
                     
                     , CounterProcessingType = PerformanceCounterProcessingFlagsType.TimeBasedOnBeginOnEnd
