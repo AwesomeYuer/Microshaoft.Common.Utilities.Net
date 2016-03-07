@@ -41,7 +41,6 @@
     <Compile Include="01.PerformanceCounter\Containers\00.IPerformanceCountersValuesClearable.cs" />
     <Compile Include="01.PerformanceCounter\Containers\10.AbstractPerformanceCountersContainer.cs" />
     <Compile Include="01.PerformanceCounter\Containers\20.CommonPerformanceCountersContainer.cs" />
-    <Compile Include="01.PerformanceCounter\Containers\20.CountPerformanceCountersContainer - Copy.cs" />
     <Compile Include="01.PerformanceCounter\EasyPerformanceCountersHelper.Partial.01.cs" />
     <Compile Include="01.PerformanceCounter\EasyPerformanceCountersHelper.Partial.02.cs" />
     <Compile Include="01.PerformanceCounter\PerformanceCounterExtensionMethodsManager.cs" />
