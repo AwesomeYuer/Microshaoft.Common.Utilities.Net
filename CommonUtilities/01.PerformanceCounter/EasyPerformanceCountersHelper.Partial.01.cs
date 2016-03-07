@@ -50,7 +50,7 @@ namespace Microshaoft
                                                     , new()
     {
         private static readonly QueuedObjectsPool<Stopwatch>
-                                _stopwatchsPool
+                                    _stopwatchsPool
                                         = new QueuedObjectsPool<Stopwatch>(10 * 10000);
         private static Dictionary<string, TPerformanceCountersContainer>
                                 _dictionary
@@ -72,7 +72,6 @@ namespace Microshaoft
                             );
             }
         }
-
         public static void AttachPerformanceCountersCategoryInstance
                             (
                                 string performanceCountersCategoryName
@@ -502,16 +501,16 @@ namespace Microshaoft
                                                             .Increment();
                                                     }
                                                     var enableProcessedRateOfCountsPerSecondPerformanceCounter
-                                                                        =
-                                                                            (
-                                                                                (
-                                                                                    enabledPerformanceCounters
-                                                                                    &
-                                                                                    MultiPerformanceCountersTypeFlags
-                                                                                        .ProcessedRateOfCountsPerSecondCounter
-                                                                                )
-                                                                                != MultiPerformanceCountersTypeFlags.None
-                                                                            );
+                                                            =
+                                                                (
+                                                                    (
+                                                                        enabledPerformanceCounters
+                                                                        &
+                                                                        MultiPerformanceCountersTypeFlags
+                                                                            .ProcessedRateOfCountsPerSecondCounter
+                                                                    )
+                                                                    != MultiPerformanceCountersTypeFlags.None
+                                                                );
                                                     if (enableProcessedRateOfCountsPerSecondPerformanceCounter)
                                                     {
                                                         container

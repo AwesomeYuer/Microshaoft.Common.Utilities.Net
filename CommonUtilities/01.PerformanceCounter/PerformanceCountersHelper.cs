@@ -4,7 +4,6 @@
     using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
-
     public static class PerformanceCountersHelper
     {
         public static void TryCountPerformance
@@ -297,7 +296,7 @@
                 var performanceCounterName = propertyName;
                 //var performanceCounterInstanceLifetime = defaultPerformanceCounterInstanceLifetime;
                 long? performanceCounterInstanceInitializeRawValue
-                                                = instanceInitializeRawValue;
+                                        = instanceInitializeRawValue;
                 var attribute
                             = propertyInfo
                                 .GetCustomAttribute

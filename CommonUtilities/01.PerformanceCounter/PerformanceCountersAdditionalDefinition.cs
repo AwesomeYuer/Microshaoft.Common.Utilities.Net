@@ -2,7 +2,7 @@
 {
     using System;
     using System.Diagnostics;
-    [FlagsAttribute]
+    [Flags]
     public enum MultiPerformanceCountersTypeFlags : ushort
     {
         None = 0,
@@ -27,8 +27,6 @@
         //OnBegin  = 4,
         //OnEnd  = 8,
 
-
-
         IncrementOnBegin = 4,
         DecrementOnBegin = 8,
 
@@ -48,12 +46,15 @@
                 | IncrementOnEnd
                 | DecrementOnEnd
                 | TimeBasedOnBeginOnEnd
-                
-
-
-
     }
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
+    [
+        AttributeUsage
+            (
+                AttributeTargets.Property
+                , AllowMultiple = false
+                , Inherited = false
+            )
+    ]
     public class PerformanceCounterDefinitionAttribute : Attribute
     {
         public PerformanceCounterType CounterType;

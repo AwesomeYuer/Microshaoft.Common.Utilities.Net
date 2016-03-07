@@ -14,9 +14,7 @@
         //        //stopwatch.Reset();
         //        //stopwatch.Start();
         //        stopwatch.Restart();
-            
         //}
-
         public static void CountEndAverageTimerCounter
                         (
                             this PerformanceCounter performanceCounter
@@ -39,7 +37,6 @@
                 basePerformanceCounter.Increment();
             }
         }
-
         public static void TryChangeAverageTimerCounterValue
                                 (
                                     this PerformanceCounter performanceCounter
@@ -119,9 +116,6 @@
                             }
                         );
             }
-
         }
-        
     }
 }
-

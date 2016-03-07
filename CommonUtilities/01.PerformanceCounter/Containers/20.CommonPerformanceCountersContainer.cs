@@ -41,7 +41,6 @@
                         );
             }
         }
-
         public override PerformanceCounter[] IncrementOnBeginPerformanceCounters
         {
             get;
@@ -77,7 +76,6 @@
             get;
             set;
         }
-
         public override void AttachPerformanceCountersToProperties
                                 (
                                     string categoryName
@@ -86,14 +84,15 @@
                                     , long? initializePerformanceCounterInstanceRawValue = null
                                 )
         {
-            AttachPerformanceCountersToProperties<CommonPerformanceCountersContainer>
-                    (
-                        categoryName
-                        , instanceName
-                        , this
-                        , performanceCounterInstanceLifetime
-                        , initializePerformanceCounterInstanceRawValue
-                    );
+            AttachPerformanceCountersToProperties
+                    <CommonPerformanceCountersContainer>
+                        (
+                            categoryName
+                            , instanceName
+                            , this
+                            , performanceCounterInstanceLifetime
+                            , initializePerformanceCounterInstanceRawValue
+                        );
             InitializeProcessingTypedPerformanceCounters
                     <CommonPerformanceCountersContainer>
                         (
@@ -115,7 +114,6 @@
                             this
                             , PerformanceCounterProcessingFlagsType
                                     .DecrementOnEnd
-                            
                         );
             InitializeProcessingTypedPerformanceCounters
                     <CommonPerformanceCountersContainer>

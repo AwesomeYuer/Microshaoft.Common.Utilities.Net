@@ -34,7 +34,8 @@ namespace Microshaoft
     using System;
     using System.Diagnostics;
     public static partial class
-                    EasyPerformanceCountersHelper<TPerformanceCountersContainer>
+                    EasyPerformanceCountersHelper
+                        <TPerformanceCountersContainer>
                             where TPerformanceCountersContainer :
                                                     AbstractPerformanceCountersContainer
                                                     //, class
@@ -43,33 +44,33 @@ namespace Microshaoft
                                                     , new()
     {
         public static void TryCountPerformance
-                                    (
-                                        PerformanceCounterProcessingFlagsType enabledProcessingFlagsType
-                                        , string categoryName
-                                        , string instanceName
-                                        , Func<bool> onGetEnableCountProcessFunc = null
-                                        , Action onCountPerformanceInnerProcessAction = null
-                                        , Func<Exception, Exception, string, bool> onCaughtExceptionProcessFunc = null
-                                        , Action<bool, Exception, Exception, string> onFinallyProcessAction = null
-                                        , PerformanceCounterInstanceLifetime
-                                                        instanceLifetime
-                                                                = PerformanceCounterInstanceLifetime.Global
-                                        , long? initializeInstanceRawValue = null
-                                    )
+                                (
+                                    PerformanceCounterProcessingFlagsType enabledProcessingFlagsType
+                                    , string categoryName
+                                    , string instanceName
+                                    , Func<bool> onGetEnableCountProcessFunc = null
+                                    , Action onCountPerformanceInnerProcessAction = null
+                                    , Func<Exception, Exception, string, bool> onCaughtExceptionProcessFunc = null
+                                    , Action<bool, Exception, Exception, string> onFinallyProcessAction = null
+                                    , PerformanceCounterInstanceLifetime
+                                                    instanceLifetime
+                                                            = PerformanceCounterInstanceLifetime.Global
+                                    , long? initializeInstanceRawValue = null
+                                )
         {
             var enabledCountPerformance = true;
             Stopwatch[] stopwatches = null;
             var container = CountPerformanceBegin
-                                    (
-                                        enabledProcessingFlagsType
-                                        , categoryName
-                                        , instanceName
-                                        , out enabledCountPerformance
-                                        , out stopwatches
-                                        , onGetEnableCountProcessFunc
-                                        , instanceLifetime
-                                        , initializeInstanceRawValue
-                                    );
+                                (
+                                    enabledProcessingFlagsType
+                                    , categoryName
+                                    , instanceName
+                                    , out enabledCountPerformance
+                                    , out stopwatches
+                                    , onGetEnableCountProcessFunc
+                                    , instanceLifetime
+                                    , initializeInstanceRawValue
+                                );
             var reThrowException = false;
 
             #region Count Inner TryCatchFinally
@@ -129,12 +130,14 @@ namespace Microshaoft
         public static TPerformanceCountersContainer
                             CountPerformanceBegin
                                 (
-                                    PerformanceCounterProcessingFlagsType enabledProcessingFlagsType
+                                    PerformanceCounterProcessingFlagsType
+                                                enabledProcessingFlagsType
                                     , string categoryName
                                     , string instanceName
                                     , out bool enabledCount
                                     , out Stopwatch[] stopwatches 
-                                    , Func<bool> onGetEnableCountProcessFunc = null
+                                    , Func<bool> 
+                                                onGetEnableCountProcessFunc = null
                                     , PerformanceCounterInstanceLifetime
                                                 instanceLifetime
                                                         = PerformanceCounterInstanceLifetime.Global
@@ -162,9 +165,7 @@ namespace Microshaoft
             {
                 var enableTimeBasedOnBeginOnEnd = false;
                 PerformanceCountersPair[] performanceCountersPairs = null;
-
                 var stopwatchIndex = 0;
-                
                 if (enabledCount)
                 {
                     #region get Container
@@ -198,11 +199,11 @@ namespace Microshaoft
                     #endregion
                     var enableIncrementOnBegin
                             = enabledProcessingFlagsType
-                                                    .HasFlag
-                                                        (
-                                                            PerformanceCounterProcessingFlagsType
-                                                                    .IncrementOnBegin
-                                                        );
+                                    .HasFlag
+                                        (
+                                            PerformanceCounterProcessingFlagsType
+                                                    .IncrementOnBegin
+                                        );
                     if (enableIncrementOnBegin)
                     {
                         Array
@@ -217,13 +218,12 @@ namespace Microshaoft
                                 );
                     }
                     enableTimeBasedOnBeginOnEnd
-                                = enabledProcessingFlagsType
-                                            .HasFlag
-                                                (
-                                                    PerformanceCounterProcessingFlagsType
-                                                        .TimeBasedOnBeginOnEnd
-                                                );
-
+                            = enabledProcessingFlagsType
+                                        .HasFlag
+                                            (
+                                                PerformanceCounterProcessingFlagsType
+                                                    .TimeBasedOnBeginOnEnd
+                                            );
                     if (enableTimeBasedOnBeginOnEnd)
                     {
                         performanceCountersPairs
@@ -248,12 +248,13 @@ namespace Microshaoft
             return container;
         }
         public static void CountPerformanceEnd
-                                    (
-                                        PerformanceCounterProcessingFlagsType enabledProcessingFlagsType
-                                        , string categoryName
-                                        , string instanceName
-                                        , Stopwatch[] stopwatches
-                                    )
+                                (
+                                    PerformanceCounterProcessingFlagsType
+                                                    enabledProcessingFlagsType
+                                    , string categoryName
+                                    , string instanceName
+                                    , Stopwatch[] stopwatches
+                                )
         {
             var stopwatchesCount = 0;
             if (stopwatches != null)
@@ -262,11 +263,11 @@ namespace Microshaoft
             }
             var enableTimeBasedOnBeginOnEnd
                         = enabledProcessingFlagsType
-                                    .HasFlag
-                                        (
-                                            PerformanceCounterProcessingFlagsType
-                                                .TimeBasedOnBeginOnEnd
-                                        );
+                                .HasFlag
+                                    (
+                                        PerformanceCounterProcessingFlagsType
+                                            .TimeBasedOnBeginOnEnd
+                                    );
 
             #region get Container
             TPerformanceCountersContainer container = null;
