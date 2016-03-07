@@ -26,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcurrentAsyncQueue", "Com
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonUtilities.Lite", "CommonUtilities\CommonUtilities.Lite.csproj", "{36C8666B-5E7D-4875-BD64-325605806105}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuget.Packages", "packages\Nuget.Packages.csproj", "{C8F1CA51-7600-40B0-B17E-B6D445B2E57C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,6 +54,10 @@ Global
 		{36C8666B-5E7D-4875-BD64-325605806105}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{36C8666B-5E7D-4875-BD64-325605806105}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{36C8666B-5E7D-4875-BD64-325605806105}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8F1CA51-7600-40B0-B17E-B6D445B2E57C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8F1CA51-7600-40B0-B17E-B6D445B2E57C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8F1CA51-7600-40B0-B17E-B6D445B2E57C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8F1CA51-7600-40B0-B17E-B6D445B2E57C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -62,5 +68,6 @@ Global
 		{29D0E20B-A8FB-4050-B742-FA8E4148C5B2} = {2BF72D41-4D94-48C4-A5E7-5CEC2D351BEB}
 		{0F9EFE8B-40F1-4E2C-9DF9-809514A8ECDB} = {2BF72D41-4D94-48C4-A5E7-5CEC2D351BEB}
 		{36C8666B-5E7D-4875-BD64-325605806105} = {0EE1D776-1D48-4B71-9586-E9EF96A0FCB3}
+		{C8F1CA51-7600-40B0-B17E-B6D445B2E57C} = {CAD60DFA-15EF-4DE0-9EEC-1BFD6B8D955F}
 	EndGlobalSection
 EndGlobal
