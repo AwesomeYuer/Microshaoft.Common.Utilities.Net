@@ -59,6 +59,7 @@
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Runtime.DurableInstancing" />
     <Reference Include="System.Runtime.Remoting" />
@@ -169,6 +170,7 @@
     <Compile Include="50.CRC\CRC16.cs" />
     <Compile Include="50.CRC\CRC32.cs" />
     <Compile Include="50.CRC\CrcHelper.cs" />
+    <Compile Include="50.LongInteger\LongIntegerHelper.cs" />
     <Compile Include="90.HttpClientHelper\HttpClientHelper.cs" />
     <Compile Include="90.Type\TypeHelper.cs" />
     <Compile Include="90.WebMvcApi.NET45\JsonpMediaTypeFormatter.cs" />

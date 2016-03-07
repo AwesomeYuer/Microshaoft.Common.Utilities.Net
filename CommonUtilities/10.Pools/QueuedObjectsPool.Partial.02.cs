@@ -3,7 +3,6 @@
     using System.Diagnostics;
     public partial class QueuedObjectsPool<T> where T: new()
     {
-        
         private CommonPerformanceCountersContainer _performanceCountersContainer = null;
         private bool _isAttachPerformanceCounters = false;
         public void AttachPerformanceCountersCategoryInstance
