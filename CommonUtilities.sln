@@ -14,7 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "000.Solution Items", "000.S
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "001.Nuget.Packages", "001.Nuget.Packages", "{CAD60DFA-15EF-4DE0-9EEC-1BFD6B8D955F}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "99.Test", "99.Test", "{4FC8E928-8816-40E5-AA0E-CD31AE0E5C29}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "999.Test", "999.Test", "{4FC8E928-8816-40E5-AA0E-CD31AE0E5C29}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyPerformanceCountersHelper", "CommonUtilities\EasyPerformanceCountersHelper.csproj", "{29D0E20B-A8FB-4050-B742-FA8E4148C5B2}"
 EndProject
