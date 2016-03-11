@@ -50,8 +50,12 @@ namespace Microshaoft
                                     , string instanceName
                                     , Func<bool> onGetEnableCountProcessFunc = null
                                     , Action onCountPerformanceInnerProcessAction = null
-                                    , Func<Exception, Exception, string, bool> onCaughtExceptionProcessFunc = null
-                                    , Action<bool, Exception, Exception, string> onFinallyProcessAction = null
+                                    , Func<PerformanceCounterProcessingFlagsType, PerformanceCounter, long>
+                                                                onPerformanceCounterChangeValueProcessFunc = null
+                                    , Func<Exception, Exception, string, bool>
+                                                                onCaughtExceptionProcessFunc = null
+                                    , Action<bool, Exception, Exception, string>
+                                                                onFinallyProcessAction = null
                                     , PerformanceCounterInstanceLifetime
                                                     instanceLifetime
                                                             = PerformanceCounterInstanceLifetime.Global
@@ -68,6 +72,7 @@ namespace Microshaoft
                                     , out enabledCountPerformance
                                     , out stopwatches
                                     , onGetEnableCountProcessFunc
+                                    , onPerformanceCounterChangeValueProcessFunc
                                     , instanceLifetime
                                     , initializeInstanceRawValue
                                 );
@@ -124,6 +129,7 @@ namespace Microshaoft
                         , categoryName
                         , instanceName
                         , stopwatches
+                        , onPerformanceCounterChangeValueProcessFunc
                     );
             }
         }
@@ -138,6 +144,8 @@ namespace Microshaoft
                                     , out Stopwatch[] stopwatches 
                                     , Func<bool> 
                                                 onGetEnableCountProcessFunc = null
+                                    , Func<PerformanceCounterProcessingFlagsType , PerformanceCounter, long>
+                                                                onPerformanceCounterChangeValueProcessFunc = null
                                     , PerformanceCounterInstanceLifetime
                                                 instanceLifetime
                                                         = PerformanceCounterInstanceLifetime.Global
@@ -213,7 +221,23 @@ namespace Microshaoft
                                             .IncrementOnBeginPerformanceCounters
                                     , (x) =>
                                     {
-                                        x.Increment();
+                                        var increment = 1L;
+                                        if (onPerformanceCounterChangeValueProcessFunc != null)
+                                        {
+                                            increment = onPerformanceCounterChangeValueProcessFunc
+                                                                (
+                                                                    PerformanceCounterProcessingFlagsType.IncrementOnBegin
+                                                                    , x
+                                                                );
+                                        }
+                                        if (increment == 1)
+                                        {
+                                            x.Increment();
+                                        }
+                                        else
+                                        {
+                                            x.IncrementBy(increment);
+                                        }
                                     }
                                 );
                     }
@@ -254,6 +278,8 @@ namespace Microshaoft
                                     , string categoryName
                                     , string instanceName
                                     , Stopwatch[] stopwatches
+                                    , Func<PerformanceCounterProcessingFlagsType, PerformanceCounter, long>
+                                                                onPerformanceCounterChangeValueProcessFunc = null
                                 )
         {
             var stopwatchesCount = 0;
@@ -322,6 +348,7 @@ namespace Microshaoft
                                             (
                                                 x.BaseCounter
                                                 , stopwatch
+                                                , onPerformanceCounterChangeValueProcessFunc
                                             );
                                     var rr = _stopwatchsPool.Put(stopwatch);
                                     if (!rr)
@@ -350,7 +377,24 @@ namespace Microshaoft
                                    .IncrementOnEndPerformanceCounters
                            , (x) =>
                            {
-                               x.Increment();
+                               var increment = 1L;
+                               if (onPerformanceCounterChangeValueProcessFunc != null)
+                               {
+                                   increment = onPerformanceCounterChangeValueProcessFunc
+                                                       (
+                                                           PerformanceCounterProcessingFlagsType
+                                                                    .IncrementOnEnd
+                                                           , x
+                                                       );
+                               }
+                               if (increment == 1)
+                               {
+                                   x.Increment();
+                               }
+                               else
+                               {
+                                   x.IncrementBy(increment);
+                               }
                            }
                        );
             }
@@ -370,7 +414,25 @@ namespace Microshaoft
                                    .DecrementOnEndPerformanceCounters
                            , (x) =>
                            {
-                               x.Decrement();
+                               var decrement = 1L;
+                               if (onPerformanceCounterChangeValueProcessFunc != null)
+                               {
+                                   decrement = onPerformanceCounterChangeValueProcessFunc
+                                                       (
+                                                           PerformanceCounterProcessingFlagsType
+                                                                    .DecrementOnEnd
+                                                           , x
+                                                       );
+                               }
+                               if (decrement == 1)
+                               {
+                                   x.Decrement();
+                               }
+                               else
+                               {
+                                   decrement *= -1;
+                                   x.IncrementBy(decrement);
+                               }
                            }
                        );
             }

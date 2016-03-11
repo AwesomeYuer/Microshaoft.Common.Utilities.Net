@@ -35,7 +35,11 @@
 
         //TimeBased = 16,
 
-        TimeBasedOnBeginOnEnd = 64,
+        TimeBasedOnBegin = 64,
+
+        TimeBasedOnEnd = 128,
+
+        TimeBasedOnBeginOnEnd = TimeBasedOnBegin | TimeBasedOnEnd,
 
         IncrementOnBeginDecrementOnEnd = IncrementOnBegin | DecrementOnEnd,
 

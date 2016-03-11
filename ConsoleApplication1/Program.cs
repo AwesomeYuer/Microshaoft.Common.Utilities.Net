@@ -24,7 +24,7 @@
             //Console.WriteLine(rrr);
 
             var category = "Microshaoft-Test-Category-002";
-            var instance = "Instance-001";
+            var instance = "Instance-002";
             var enabledCountPerformance = false;
             CommonPerformanceCountersContainer container = null;
             EasyPerformanceCountersHelper<CommonPerformanceCountersContainer>
@@ -56,14 +56,19 @@
                                             , () =>
                                             {
                                                 Thread.Sleep(1);
-                                                //throw new Exception();
+                                                throw new Exception();
+                                            }
+                                            , (xx, yy) =>
+                                            {
+                                                Console.WriteLine("on {0}, counterName {1} ", xx, yy.CounterName);
+                                                return 1;
                                             }
                                         );
                             }
                         );
 
 
-           
+            //return;
             var q = new ConcurrentAsyncQueue<int>();
             q.AttachPerformanceCounters
                     (

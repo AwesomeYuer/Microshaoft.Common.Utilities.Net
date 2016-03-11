@@ -20,6 +20,7 @@
                             this PerformanceCounter performanceCounter
                             , PerformanceCounter basePerformanceCounter
                             , Stopwatch stopwatch
+                            , Func<PerformanceCounterProcessingFlagsType, PerformanceCounter, long> onBasePerformanceCounterChangeValueProcessFunc = null
                         )
         {
             if
@@ -34,7 +35,24 @@
                 performanceCounter
                         .IncrementBy(stopwatch.ElapsedTicks);
                 //stopwatch = null;
-                basePerformanceCounter.Increment();
+                var increment = 1L;
+                if (onBasePerformanceCounterChangeValueProcessFunc != null)
+                {
+                    increment = onBasePerformanceCounterChangeValueProcessFunc
+                                        (
+                                            PerformanceCounterProcessingFlagsType.TimeBasedOnEnd
+                                            , basePerformanceCounter
+                                        );
+                }
+                if (increment == 1)
+                {
+                    basePerformanceCounter.Increment();
+                }
+                else
+                {
+                    basePerformanceCounter.IncrementBy(increment);
+                }
+                
             }
         }
         public static void TryChangeAverageTimerCounterValue
