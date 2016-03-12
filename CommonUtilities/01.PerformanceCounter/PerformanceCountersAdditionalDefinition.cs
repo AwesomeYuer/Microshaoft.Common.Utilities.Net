@@ -43,6 +43,13 @@
 
         IncrementOnBeginDecrementOnEnd = IncrementOnBegin | DecrementOnEnd,
 
+        NonTimeBased = Increment
+                            | Decrement
+                            | IncrementOnBegin
+                            | DecrementOnBegin
+                            | IncrementOnEnd
+                            | DecrementOnEnd,
+
         All = Increment 
                 | Decrement
                 | IncrementOnBegin
