@@ -391,16 +391,14 @@
                                                                 , incrementCountersAfterCountPerformanceForDequeue
                                                             );
                                                 //池化
+                                                stopwatchEnqueue.Reset();
                                                 stopwatchDequeue.Reset();
-                                            
                                                 var r = Sender._stopwatchsPool.Put(stopwatchDequeue);
                                                 if (!r)
                                                 {
                                                     stopwatchDequeue.Stop();
                                                     stopwatchDequeue = null;
                                                 }
-                                                stopwatchEnqueue.Reset();
-
                                                 r = Sender._stopwatchsPool.Put(stopwatchEnqueue); ;
                                                 if (!r)
                                                 {

@@ -41,7 +41,7 @@
                         (
                             0
                             , 5
-                            , new ParallelOptions() {  MaxDegreeOfParallelism = 32 }
+                            , new ParallelOptions() {  MaxDegreeOfParallelism = 1 }
                             , (x) =>
                             {
                                 EasyPerformanceCountersHelper<CommonPerformanceCountersContainer>
@@ -171,11 +171,22 @@
                     var s = string.Format
                                     (
                                         "Pool.Count: [{0}], PooledObjectsCount Got:[{1}]-Return:[{2}], NonPooledObjectsCount Got:[{3}]-Release:[{4}]"
-                                       , q.StopwatchsPool.Pool.Count
-                                       , q.StopwatchsPool.PooledObjectsGotCount
-                                       , q.StopwatchsPool.PooledObjectsReturnCount
-                                       , q.StopwatchsPool.NonPooledObjectsGotCount
-                                       , q.StopwatchsPool.NonPooledObjectsReleaseCount
+                                       , q
+                                            .StopwatchsPool
+                                            .Pool
+                                            .Count
+                                       , q
+                                            .StopwatchsPool
+                                            .PooledObjectsGotCount
+                                       , q
+                                            .StopwatchsPool
+                                            .PooledObjectsReturnCount
+                                       , q
+                                            .StopwatchsPool
+                                            .NonPooledObjectsGotCount
+                                       , q
+                                            .StopwatchsPool
+                                            .NonPooledObjectsReleaseCount
                                     );
                     Console.WriteLine(s);
                     

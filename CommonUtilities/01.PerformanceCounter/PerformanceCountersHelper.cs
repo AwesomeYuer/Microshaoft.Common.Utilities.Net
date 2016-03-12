@@ -139,7 +139,7 @@
                                                             {
                                                                 if (xx.Item2 != null)
                                                                 {
-                                                                    Stopwatch stopwatch = xx.Item2;
+                                                                    var stopwatch = xx.Item2;
                                                                     stopwatch.Stop();
                                                                     long elapsedTicks = stopwatch.ElapsedTicks;
                                                                     var counter = xx.Item3;
@@ -195,7 +195,9 @@
                                         string categoryName
                                         , string instanceName
                                         , T target//= default(T)
-                                        , PerformanceCounterInstanceLifetime instanceLifetime = PerformanceCounterInstanceLifetime.Global
+                                        , PerformanceCounterInstanceLifetime
+                                                    instanceLifetime
+                                                            = PerformanceCounterInstanceLifetime.Global
                                         , long? instanceInitializeRawValue = null
                                     )
         {
