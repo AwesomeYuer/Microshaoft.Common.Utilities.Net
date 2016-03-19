@@ -37,7 +37,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="02.ConcurrentAsyncQueue\ConcurrentAsyncQueue.cs" />
+    <Compile Include="ConcurrentAsyncQueue\ConcurrentAsyncQueue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -37,15 +37,15 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="01.PerformanceCounter\Containers\00.IPerformanceCountersContainer.cs" />
-    <Compile Include="01.PerformanceCounter\Containers\00.IPerformanceCountersValuesClearable.cs" />
-    <Compile Include="01.PerformanceCounter\Containers\10.AbstractPerformanceCountersContainer.cs" />
-    <Compile Include="01.PerformanceCounter\Containers\20.CommonPerformanceCountersContainer.cs" />
-    <Compile Include="01.PerformanceCounter\EasyPerformanceCountersHelper.Partial.01.cs" />
-    <Compile Include="01.PerformanceCounter\EasyPerformanceCountersHelper.Partial.02.cs" />
-    <Compile Include="01.PerformanceCounter\PerformanceCounterExtensionMethodsManager.cs" />
-    <Compile Include="01.PerformanceCounter\PerformanceCountersAdditionalDefinition.cs" />
-    <Compile Include="01.PerformanceCounter\PerformanceCountersHelper.cs" />
+    <Compile Include="PerformanceCounter\Containers\00.IPerformanceCountersContainer.cs" />
+    <Compile Include="PerformanceCounter\Containers\00.IPerformanceCountersValuesClearable.cs" />
+    <Compile Include="PerformanceCounter\Containers\10.AbstractPerformanceCountersContainer.cs" />
+    <Compile Include="PerformanceCounter\Containers\20.CommonPerformanceCountersContainer.cs" />
+    <Compile Include="PerformanceCounter\EasyPerformanceCountersHelper.Partial.01.cs" />
+    <Compile Include="PerformanceCounter\EasyPerformanceCountersHelper.Partial.02.cs" />
+    <Compile Include="PerformanceCounter\PerformanceCounterExtensionMethodsManager.cs" />
+    <Compile Include="PerformanceCounter\PerformanceCountersAdditionalDefinition.cs" />
+    <Compile Include="PerformanceCounter\PerformanceCountersHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
