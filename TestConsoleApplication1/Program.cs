@@ -11,8 +11,8 @@
         static void Main(string[] args)
         {
             //Test Runtime Setting
-            var appSettings = ConfigurationAppSettingsHelper
-                                    .GetAppSettingsFormConfig<TestRuntimeSettings>();
+            //var appSettings = ConfigurationAppSettingsHelper
+            //                        .GetAppSettingsFormConfig<TestRuntimeSettings>();
 
 
             Main1_Test_PerformanceCounter_ConcurrentAsyncQueue(args);
