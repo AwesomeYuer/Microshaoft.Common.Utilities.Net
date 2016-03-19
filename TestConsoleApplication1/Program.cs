@@ -15,6 +15,7 @@
                                     .GetAppSettingsFormConfig<TestRuntimeSettings>();
 
 
+            Main1_Test_PerformanceCounter_ConcurrentAsyncQueue(args);
             Console.ReadLine();
 
         }
