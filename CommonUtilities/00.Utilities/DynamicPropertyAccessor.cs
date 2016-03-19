@@ -340,11 +340,12 @@
 
         public static Action<TTarget, object> CreateTargetSetPropertyValueAction<TTarget>
                 (
-                    Type type
-                    , string propertyName
+                    //Type type
+                    string propertyName
                 )
         {
             Action<TTarget, object> action = null;
+            var type = typeof(TTarget);
             var property = type.GetProperty(propertyName);
             if (property == null)
             {

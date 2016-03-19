@@ -4,6 +4,12 @@
     using System.Text;
     public static class StringHelper
     {
+        public static bool IsNullOrEmptyOrWhiteSpace(this string target)
+        {
+            return 
+                    string.IsNullOrEmpty(target)
+                    || string.IsNullOrWhiteSpace(target);
+        }
         public static bool IsValidString(string text)
         {
             return (text != string.Empty && text != null && text.Trim().Length > 0);

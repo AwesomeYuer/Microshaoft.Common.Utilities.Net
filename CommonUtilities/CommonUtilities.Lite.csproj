@@ -54,6 +54,7 @@
     <Reference Include="System.Activities" />
     <Reference Include="System.Activities.DurableInstancing" />
     <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
@@ -116,6 +117,8 @@
     </Compile>
     <Compile Include="00.Assembly\AssemblyHelper.cs" />
     <Compile Include="00.Utilities\BytesHelper.cs" />
+    <Compile Include="00.Utilities\ConfigurationAppSettingsHelper.cs" />
+    <Compile Include="00.Utilities\DynamicCallMethodExpressionTreeInvokerHelper.cs" />
     <Compile Include="00.Utilities\KeyedPriorityQueue.cs" />
     <Compile Include="00.Utilities\CompressHelper.cs" />
     <Compile Include="00.Utilities\CryptographyHelper.cs" />

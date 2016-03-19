@@ -10,6 +10,17 @@
     {
         static void Main(string[] args)
         {
+            //Test Runtime Setting
+            var appSettings = ConfigurationAppSettingsHelper
+                                    .GetAppSettingsFormConfig<TestRuntimeSettings>();
+
+
+            Console.ReadLine();
+
+        }
+        static void Main1_Test_PerformanceCounter_ConcurrentAsyncQueue(string[] args)
+        {
+            //Test: Main1_Test_PerformanceCounter_ConcurrentAsyncQueue
             //var rrr =
             //BytesHelper
             //    .BytesArrayToHexString
