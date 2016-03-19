@@ -119,18 +119,18 @@
     </Compile>
     <Compile Include="00.Assembly\AssemblyHelper.cs" />
     <Compile Include="00.Utilities\BytesHelper.cs" />
-    <Compile Include="00.Utilities\ConfigurationAppSettingsHelper.cs" />
-    <Compile Include="00.Utilities\DynamicCallMethodExpressionTreeInvokerHelper.cs" />
+    <Compile Include="01.DynamicExpression\DynamicCallMethodExpressionTreeInvokerHelper.cs" />
     <Compile Include="00.Utilities\KeyedPriorityQueue.cs" />
     <Compile Include="00.Utilities\CompressHelper.cs" />
     <Compile Include="00.Utilities\CryptographyHelper.cs" />
     <Compile Include="00.Utilities\DateTimeHelper.cs" />
-    <Compile Include="00.Utilities\DynamicPropertyAccessor.cs" />
+    <Compile Include="01.DynamicExpression\DynamicPropertyAccessor.cs" />
     <Compile Include="00.Utilities\EasyTimer.cs" />
     <Compile Include="00.Utilities\EncodingHelper.cs" />
     <Compile Include="00.Utilities\FileLogHelper.cs" />
     <Compile Include="00.Utilities\FtpWebRequestResponseHelper.cs" />
     <Compile Include="00.Utilities\GCNotifier.cs" />
+    <Compile Include="00.Utilities\TaskProcesserHelper.cs" />
     <Compile Include="02.PropertyAdditionalDefinitionAttribute\PropertyAdditionalDefinitionAttribute.cs" />
     <Compile Include="06.Json\JTokenHelper.cs" />
     <Compile Include="00.Utilities\PathFileHelper.cs" />
@@ -144,6 +144,8 @@
     <Compile Include="06.Json\JsonHelper.cs" />
     <Compile Include="06.MEF\MEF.Contracts.cs" />
     <Compile Include="06.MEF\MEFHelper.cs" />
+    <Compile Include="06.Xml\XmlCDATA.cs" />
+    <Compile Include="06.Xml\XmlValidationHelper.cs" />
     <Compile Include="09.Socket\BufferManager.cs" />
     <Compile Include="09.Socket\Microsoft.System.ServiceModel.Channels.SocketAsyncEventArgsPool.cs" />
     <Compile Include="09.Socket\SocketAsyncDataHandler.01.cs" />
@@ -176,8 +178,10 @@
     <Compile Include="50.CRC\CRC32.cs" />
     <Compile Include="50.CRC\CrcHelper.cs" />
     <Compile Include="50.LongInteger\LongIntegerHelper.cs" />
+    <Compile Include="90.Configuration\ConfigurationAppSettingsHelper.cs" />
     <Compile Include="90.HttpClientHelper\HttpClientHelper.cs" />
     <Compile Include="90.Type\TypeHelper.cs" />
+    <Compile Include="90.WebMvcApi.NET45\TraceSoapMessagesLoggerSoapExtension.cs" />
     <Compile Include="90.WebMvcApi.NET45\JsonpMediaTypeFormatter.cs" />
     <Compile Include="90.WebMvcApi.NET45\WebMvcApiLogFilter.cs" />
     <Compile Include="90.WorkFlow\WorkFlowHelper.cs" />
