@@ -4,21 +4,22 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2695F7A3-DC58-478F-8C0A-2ACB52192C5C}</ProjectGuid>
+    <ProjectGuid>{5B714F3B-D252-4254-8A7D-7017CD19F29F}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ConsoleApplication1</RootNamespace>
     <AssemblyName>ConsoleApplication1</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\NET45x\</OutputPath>
+    <OutputPath>bin\Debug\NET46x\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -28,7 +29,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\NET45x\</OutputPath>
+    <OutputPath>bin\Release\NET46x\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -55,13 +56,17 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CommonUtilities\ConcurrentAsyncQueue.NET4.5.x.csproj">
-      <Project>{0f9efe8b-40f1-4e2c-9df9-809514a8ecdb}</Project>
-      <Name>ConcurrentAsyncQueue.NET4.5.x</Name>
+    <ProjectReference Include="..\..\CommonUtilities\CommonUtilities.NET4.6.x.Lite.csproj">
+      <Project>{b509d9ba-92fa-45f6-877c-adc80f14f785}</Project>
+      <Name>CommonUtilities.NET4.6.x.Lite</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CommonUtilities\EasyPerformanceCountersHelper.NET4.5.x.csproj">
-      <Project>{29d0e20b-a8fb-4050-b742-fa8e4148c5b2}</Project>
-      <Name>EasyPerformanceCountersHelper.NET4.5.x</Name>
+    <ProjectReference Include="..\..\CommonUtilities\ConcurrentAsyncQueue.NET4.6.x.csproj">
+      <Project>{01940f78-f528-4c0e-8f1a-d14c7cf26bc1}</Project>
+      <Name>ConcurrentAsyncQueue.NET4.6.x</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\CommonUtilities\EasyPerformanceCountersHelper.NET4.6.x.csproj">
+      <Project>{4cd2bad2-478f-4294-a210-8cb601c04f55}</Project>
+      <Name>EasyPerformanceCountersHelper.NET4.6.x</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

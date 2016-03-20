@@ -10,81 +10,7 @@
     {
         static void Main(string[] args)
         {
-            //Test Runtime Setting
-            //var appSettings = ConfigurationAppSettingsHelper
-            //                        .GetAppSettingsFormConfig<TestRuntimeSettings>();
-
-
-            Main1_Test_PerformanceCounter_ConcurrentAsyncQueue(args);
-            Console.ReadLine();
-
-        }
-        static void Main1_Test_PerformanceCounter_ConcurrentAsyncQueue(string[] args)
-        {
-            //Test: Main1_Test_PerformanceCounter_ConcurrentAsyncQueue
-            //var rrr =
-            //BytesHelper
-            //    .BytesArrayToHexString
-            //        (
-            //            Crc16Helper
-            //                .ComputeChecksumBytes
-            //                    (
-            //                        BytesHelper.HexStringToBytesArray("0123456789ABCDEF")
-            //                    )
-            //        );
-
-            //Console.WriteLine(rrr);
-
-            var category = "Microshaoft-Test-Category-002";
-            var instance = "Instance-002";
             var enabledCountPerformance = false;
-            CommonPerformanceCountersContainer container = null;
-            EasyPerformanceCountersHelper<CommonPerformanceCountersContainer>
-                    .AttachPerformanceCountersCategoryInstance
-                        (
-                            category
-                            , instance
-                            , out container
-                            , PerformanceCounterInstanceLifetime.Process
-                            //, initializePerformanceCounterInstanceRawValue: 1009
-                        );
-            Parallel
-                    .For
-                        (
-                            0
-                            , 5000
-                            , new ParallelOptions() {  MaxDegreeOfParallelism = 32 }
-                            , (x) =>
-                            {
-                                EasyPerformanceCountersHelper
-                                        <CommonPerformanceCountersContainer>
-                                            .TryCountPerformance
-                                                (
-                                                    PerformanceCounterProcessingFlagsType
-                                                                    .All
-                                                                    //.NonTimeBased
-                                                                    //.TimeBasedOnBeginOnEnd
-                                                    //MultiPerformanceCountersTypeFlags.ProcessAllCounters
-                                                    , category
-                                                    , instance
-                                                    , () => true
-                                                    //, null
-                                                    , () =>
-                                                    {
-                                                        //Thread.Sleep(1);
-                                                        //throw new Exception();
-                                                    }
-                                                    , (xx, yy) =>
-                                                    {
-                                                        //Console.WriteLine("on {0}, counterName {1} ", xx, yy.CounterName);
-                                                        return 1;
-                                                    }
-                                                );
-                            }
-                        );
-
-
-            //return;
             var q = new ConcurrentAsyncQueue<int>();
             q.AttachPerformanceCounters
                     (
@@ -212,8 +138,6 @@
                     Console.WriteLine("please input Number!");
                 }
             }
-
-
             Console.ReadLine();
         }
     }

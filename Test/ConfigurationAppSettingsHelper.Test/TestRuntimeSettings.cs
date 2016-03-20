@@ -1,6 +1,4 @@
-﻿
-
-namespace Test
+﻿namespace Test
 {
     using Microshaoft;
     using System;
