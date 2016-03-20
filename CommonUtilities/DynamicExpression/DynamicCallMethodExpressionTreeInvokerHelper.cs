@@ -67,25 +67,32 @@
             var newExpression = Expression.New(constructorInfo, constructorParametersExpressions);
             var inner = Expression.Lambda(newExpression, constructorParametersExpressions);
             var args = Expression.Parameter(typeof(object[]), "args");
-            var body = Expression.Invoke
-                                    (
-                                        inner
-                                        , constructorParametersExpressions.Select
-                                                                    (
-                                                                        (p, ii) =>
-                                                                        {
-                                                                            return Expression.Convert
-                                                                                            (
-                                                                                                Expression.ArrayIndex
-                                                                                                                (
-                                                                                                                    args
-                                                                                                                    , Expression.Constant(ii)
-                                                                                                                )
-                                                                                                , p.Type
-                                                                                            );
-                                                                        }
-                                                                    ).ToArray()
-                                    );
+            var body = Expression
+                            .Invoke
+                                (
+                                    inner
+                                    , constructorParametersExpressions
+                                        .Select
+                                            (
+                                                (p, ii) =>
+                                                {
+                                                    return
+                                                        Expression
+                                                            .Convert
+                                                                (
+                                                                    Expression
+                                                                        .ArrayIndex
+                                                                            (
+                                                                                args
+                                                                                , Expression
+                                                                                    .Constant(ii)
+                                                                            )
+                                                                    , p.Type
+                                                                );
+                                                }
+                                            )
+                                        .ToArray()
+                                );
             var outer = Expression.Lambda<Func<object[], T>>(body, args);
             var func = outer.Compile();
             return func;
@@ -98,10 +105,10 @@
         {
             var methodInfo = getMethodInfoFunc();
             return CreateMethodCallInvokerAction<T>
-                                                (
-                                                    type
-                                                    , methodInfo
-                                                );
+                                    (
+                                        type
+                                        , methodInfo
+                                    );
         }
         public static Action<T, object[]> CreateMethodCallInvokerAction<T>
                                                             (
@@ -111,47 +118,61 @@
         {
             ParameterExpression instanceParameterExpression;
             MethodCallExpression methodCallExpression;
-            ParameterExpression argumentsParameterExpression = GetMethodArgumentsParameterExpression
+            ParameterExpression argumentsParameterExpression
+                                    = GetMethodArgumentsParameterExpression
+                                            (
+                                                type
+                                                , methodInfo
+                                                , out instanceParameterExpression
+                                                , out methodCallExpression
+                                            );
+            var lambda = Expression
+                            .Lambda
+                                <Action<T, object[]>>
                                     (
-                                        type
-                                        , methodInfo
-                                        , out instanceParameterExpression
-                                        , out methodCallExpression
+                                        methodCallExpression
+                                        , instanceParameterExpression
+                                        , argumentsParameterExpression
                                     );
-            var lambda = Expression.Lambda<Action<T, object[]>>(methodCallExpression, instanceParameterExpression, argumentsParameterExpression);
             var action = lambda.Compile();
             return action;
         }
-        public static Func<TTarget, object[], TResult> CreateTargetMethodCallInvokerFunc<TTarget, TResult>
-                                                            (
-                                                                //Type type
-                                                                Func<MethodInfo> getMethodInfoFunc
-                                                            )
+        public static Func<TTarget, object[], TResult>
+                            CreateTargetMethodCallInvokerFunc
+                                    <TTarget, TResult>
+                                            (
+                                                //Type type
+                                                Func<MethodInfo> getMethodInfoFunc
+                                            )
         {
             Type type = typeof(TTarget);
             var methodInfo = getMethodInfoFunc();
             return
-                CreateTargetMethodCallInvokerFunc<TTarget, TResult>
-                                                    (
-                                                        methodInfo
-                                                    );
+                CreateTargetMethodCallInvokerFunc
+                        <TTarget, TResult>
+                                (
+                                    methodInfo
+                                );
         }
-        public static Func<TTarget, object[], TResult> CreateTargetMethodCallInvokerFunc<TTarget, TResult>
-                                                            (
-                                                                //Type type
-                                                                MethodInfo methodInfo
-                                                            )
+        public static Func<TTarget, object[], TResult>
+                            CreateTargetMethodCallInvokerFunc
+                                    <TTarget, TResult>
+                                            (
+                                                //Type type
+                                                MethodInfo methodInfo
+                                            )
         {
             var type = typeof(TTarget);
             ParameterExpression instanceParameterExpression;
             MethodCallExpression methodCallExpression;
-            ParameterExpression argumentsParameterExpression = GetMethodArgumentsParameterExpression
-                                    (
-                                        type
-                                        , methodInfo
-                                        , out instanceParameterExpression
-                                        , out methodCallExpression
-                                    );
+            ParameterExpression argumentsParameterExpression
+                                    = GetMethodArgumentsParameterExpression
+                                            (
+                                                type
+                                                , methodInfo
+                                                , out instanceParameterExpression
+                                                , out methodCallExpression
+                                            );
             var lambda = Expression
                                 .Lambda<Func<TTarget, object[], TResult>>
                                         (
@@ -162,8 +183,6 @@
             var func = lambda.Compile();
             return func;
         }
-
-
         public static Delegate CreateDelegate
                                         (
                                             MethodInfo methodInfo
@@ -184,15 +203,10 @@
                                                         )
                                                     .ToArray()
                                             );
-
-            var r = methodInfo.CreateDelegate(delegateType);
+            var r = methodInfo
+                        .CreateDelegate(delegateType);
             return r;
-
-
-
         }
-
-
         public static Func<object, object[], TResult> CreateTargetMethodCallInvokerFunc<TResult>
                                                             (
                                                                 MethodInfo methodInfo
@@ -235,26 +249,37 @@
             var parametersParameterExpressionList = new List<Expression>();
             int i = 0;
             var parametersInfos = methodInfo.GetParameters();
-            Array.ForEach
+            Array
+                .ForEach
                     (
                         parametersInfos
                         , (x) =>
                         {
-                            BinaryExpression valueObject = Expression.ArrayIndex
-                                                                        (
-                                                                            argumentsParameterExpression
-                                                                            , Expression.Constant(i)
-                                                                        );
-                            UnaryExpression valueCast = Expression.Convert
-                                                                        (
-                                                                            valueObject
-                                                                            , x.ParameterType
-                                                                        );
+                            BinaryExpression valueObject
+                                                = Expression
+                                                        .ArrayIndex
+                                                            (
+                                                                argumentsParameterExpression
+                                                                , Expression.Constant(i)
+                                                            );
+                            UnaryExpression valueCast
+                                                = Expression
+                                                        .Convert
+                                                            (
+                                                                valueObject
+                                                                , x.ParameterType
+                                                            );
                             parametersParameterExpressionList.Add(valueCast);
                             i++;
                         }
                     );
-            methodCallExpression = Expression.Call(instanceConvertUnaryExpression, methodInfo, parametersParameterExpressionList);
+            methodCallExpression = Expression
+                                            .Call
+                                                (
+                                                    instanceConvertUnaryExpression
+                                                    , methodInfo
+                                                    , parametersParameterExpressionList
+                                                );
             return argumentsParameterExpression;
         }
     }
