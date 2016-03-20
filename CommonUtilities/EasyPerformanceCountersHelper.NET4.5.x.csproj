@@ -48,12 +48,6 @@
     <Compile Include="PerformanceCounter\PerformanceCountersHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="CommonUtilities.NET4.5.x.Lite.csproj">
-      <Project>{36c8666b-5e7d-4875-bd64-325605806105}</Project>
-      <Name>CommonUtilities.NET4.5.x.Lite</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

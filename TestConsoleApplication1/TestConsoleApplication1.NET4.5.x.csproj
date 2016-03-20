@@ -55,10 +55,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CommonUtilities\CommonUtilities.NET4.5.x.Lite.csproj">
-      <Project>{36c8666b-5e7d-4875-bd64-325605806105}</Project>
-      <Name>CommonUtilities.NET4.5.x.Lite</Name>
-    </ProjectReference>
     <ProjectReference Include="..\CommonUtilities\ConcurrentAsyncQueue.NET4.5.x.csproj">
       <Project>{0f9efe8b-40f1-4e2c-9df9-809514a8ecdb}</Project>
       <Name>ConcurrentAsyncQueue.NET4.5.x</Name>
