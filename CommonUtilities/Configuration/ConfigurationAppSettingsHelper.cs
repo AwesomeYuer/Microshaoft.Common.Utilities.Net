@@ -77,7 +77,7 @@
                                 Func<string, T> parseProcessFunc
                                 , Func<T> defaultValueFactoryProcessFunc
                                 , [CallerMemberName]
-                                  string settingKeyPropertyName = ""
+                                  string settingKeyPropertyName = null
                             )
         {
             return

@@ -106,23 +106,26 @@
                                 )
                     )
                 {
+                    var propertyName = property.Name;
+                    var propertyType = property.PropertyType;
                     var accessor = new PropertyAccessor()
                     {
                         Getter = DynamicPropertyAccessor
-                                    .CreateGetPropertyValueFunc(type, property.Name)
+                                    .CreateGetPropertyValueFunc(type, propertyName)
                         , Setter = DynamicPropertyAccessor
-                                    .CreateSetPropertyValueAction(type, property.Name)
+                                    .CreateSetPropertyValueAction(type, propertyName)
                         , Property = property
                         , PropertyName = property.Name
                         , PropertyKey = property.Name
-                        , PropertyValueType = GetNullableTypeUnderlyingType(property.PropertyType)
+                        , PropertyValueType = GetNullableTypeUnderlyingType(propertyType)
                     };
                     if (needDefinitionAttributeProcess)
                     {
-                        var attribute = property.GetCustomAttributes
+                        var attribute = property
+                                            .GetCustomAttributes
                                                 (
                                                     typeof(PropertyAdditionalDefinitionAttribute)
-                                                    , false
+                                                    , true
                                                 )
                                                 .FirstOrDefault(); //as DataTableColumnIDAttribute;
                         if (attribute != null)
@@ -141,12 +144,9 @@
                                         .DefinitionAttribute = asAttribute;
                                 if
                                     (
-                                        !string
-                                            .IsNullOrEmpty
-                                                (
-                                                    asAttribute
-                                                        .DataTableColumnName
-                                                )
+                                        !asAttribute
+                                                .DataTableColumnName
+                                                .IsNullOrEmptyOrWhiteSpace()
                                     )
                                 {
                                     accessor
