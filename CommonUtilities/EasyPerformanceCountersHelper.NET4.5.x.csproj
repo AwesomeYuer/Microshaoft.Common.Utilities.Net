@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0F9EFE8B-40F1-4E2C-9DF9-809514A8ECDB}</ProjectGuid>
+    <ProjectGuid>{29D0E20B-A8FB-4050-B742-FA8E4148C5B2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Microshaoft</RootNamespace>
-    <AssemblyName>Microshaoft.ConcurrentAsyncQueue.Net.4xx</AssemblyName>
+    <AssemblyName>Microshaoft.EasyPerformanceCountersHelper.Net.4.5.x</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\Debug\NET45x\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -26,7 +26,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\Release\NET45x\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -37,17 +37,21 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConcurrentAsyncQueue\ConcurrentAsyncQueue.cs" />
+    <Compile Include="PerformanceCounter\Containers\00.IPerformanceCountersContainer.cs" />
+    <Compile Include="PerformanceCounter\Containers\00.IPerformanceCountersValuesClearable.cs" />
+    <Compile Include="PerformanceCounter\Containers\10.AbstractPerformanceCountersContainer.cs" />
+    <Compile Include="PerformanceCounter\Containers\20.CommonPerformanceCountersContainer.cs" />
+    <Compile Include="PerformanceCounter\EasyPerformanceCountersHelper.Partial.01.cs" />
+    <Compile Include="PerformanceCounter\EasyPerformanceCountersHelper.Partial.02.cs" />
+    <Compile Include="PerformanceCounter\PerformanceCounterExtensionMethodsManager.cs" />
+    <Compile Include="PerformanceCounter\PerformanceCountersAdditionalDefinition.cs" />
+    <Compile Include="PerformanceCounter\PerformanceCountersHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="CommonUtilities.Lite.csproj">
+    <ProjectReference Include="CommonUtilities.NET4.5.x.Lite.csproj">
       <Project>{36c8666b-5e7d-4875-bd64-325605806105}</Project>
-      <Name>CommonUtilities.Lite</Name>
-    </ProjectReference>
-    <ProjectReference Include="EasyPerformanceCountersHelper.csproj">
-      <Project>{29d0e20b-a8fb-4050-b742-fa8e4148c5b2}</Project>
-      <Name>EasyPerformanceCountersHelper</Name>
+      <Name>CommonUtilities.NET4.5.x.Lite</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

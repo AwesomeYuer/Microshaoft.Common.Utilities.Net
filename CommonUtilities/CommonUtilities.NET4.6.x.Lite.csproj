@@ -4,21 +4,22 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2190E2EE-A185-4E75-9B91-FC36C8E2B9D8}</ProjectGuid>
+    <ProjectGuid>{B509D9BA-92FA-45F6-877C-ADC80F14F785}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>EasyPerformanceCountersHelper</RootNamespace>
-    <AssemblyName>Microshaoft.Common.Utilities.Net.4xx</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <AssemblyName>Microshaoft.Common.Utilities.Lite.Net.4.6.x</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\Debug\NET46x\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -27,7 +28,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\Release\NET46x\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -46,9 +47,8 @@
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+    <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Activities" />
@@ -117,11 +117,12 @@
     <Compile Include="..\Solution.All.Projects.Common.AssemblyInfo.cs">
       <Link>Properties\Solution.All.Projects.Common.AssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Assembly\AssemblyHelper.cs" />
+    <Compile Include=".NET35\ConcurrentQueue.Net35.cs" />
+    <Compile Include=".NET35\HttpClient.cs" />
+    <Compile Include=".NET35\Parallel.NET35.cs" />
+    <Compile Include=".NET35\Tuple.Net35.cs" />
+    <Compile Include=".NET35\WriteableTuple.cs" />
     <Compile Include="00.Utilities\BytesHelper.cs" />
-    <Compile Include="00.Utilities\TaskProcesserHelper.cs" />
-    <Compile Include="Configuration\ConfigurationAppSettingsHelper.cs" />
-    <Compile Include="00.Utilities\KeyedPriorityQueue.cs" />
     <Compile Include="00.Utilities\CompressHelper.cs" />
     <Compile Include="00.Utilities\CryptographyHelper.cs" />
     <Compile Include="00.Utilities\DateTimeHelper.cs" />
@@ -130,80 +131,67 @@
     <Compile Include="00.Utilities\FileLogHelper.cs" />
     <Compile Include="00.Utilities\FtpWebRequestResponseHelper.cs" />
     <Compile Include="00.Utilities\GCNotifier.cs" />
-    <Compile Include="DynamicExpression\DynamicCallMethodExpressionTreeInvokerHelper.cs" />
-    <Compile Include="DynamicExpression\DynamicPropertyAccessor.cs" />
-    <Compile Include="Etw\TraceEventsTrackerHelper.cs" />
-    <Compile Include="PerformanceCounter\EasyPerformanceCountersHelper.Partial.01.cs" />
-    <Compile Include="PerformanceCounter\EasyPerformanceCountersHelper.Partial.02.cs" />
-    <Compile Include="PropertyAdditionalDefinitionAttribute\PropertyAdditionalDefinitionAttribute.cs" />
-    <Compile Include="Json\JTokenHelper.cs" />
+    <Compile Include="00.Utilities\KeyedPriorityQueue.cs" />
     <Compile Include="00.Utilities\PathFileHelper.cs" />
     <Compile Include="00.Utilities\RemotingHelper.cs" />
     <Compile Include="00.Utilities\SequenceSeedHelper.cs" />
     <Compile Include="00.Utilities\SerializerHelper.cs" />
     <Compile Include="00.Utilities\StreamDataHelper.cs" />
     <Compile Include="00.Utilities\StringsHelper.cs" />
+    <Compile Include="00.Utilities\TaskProcesserHelper.cs" />
     <Compile Include="00.Utilities\TryCatchFinallyHelper.cs" />
     <Compile Include="00.Utilities\WindowsConsoleHelper.cs" />
-    <Compile Include="PerformanceCounter\PerformanceCountersAdditionalDefinition.cs" />
-    <Compile Include="PerformanceCounter\Containers\00.IPerformanceCountersValuesClearable.cs" />
-    <Compile Include="PerformanceCounter\Containers\10.AbstractPerformanceCountersContainer.cs" />
-    <Compile Include="PerformanceCounter\Containers\00.IPerformanceCountersContainer.cs" />
-    <Compile Include="PerformanceCounter\Containers\20.CommonPerformanceCountersContainer.cs" />
-    <Compile Include="PerformanceCounter\PerformanceCounterExtensionMethodsManager.cs" />
-    <Compile Include="PerformanceCounter\PerformanceCountersHelper.cs" />
-    <Compile Include="ConcurrentAsyncQueue\ConcurrentAsyncQueue.cs" />
+    <Compile Include="Assembly\AssemblyHelper.cs" />
+    <Compile Include="Caches\CacheItemEntryRemovedNotifier.cs" />
+    <Compile Include="Caches\RefreshableCache.cs" />
+    <Compile Include="Caches\XmlSerializersCache.cs" />
+    <Compile Include="Configuration\ConfigurationAppSettingsHelper.cs" />
+    <Compile Include="CRC\CRC16.cs" />
+    <Compile Include="CRC\CRC32.cs" />
+    <Compile Include="CRC\CrcHelper.cs" />
+    <Compile Include="DataAccess\SqlCommandExtensionsMethodsManager.cs" />
+    <Compile Include="DataTable\DataReaderHelper.cs" />
+    <Compile Include="DataTable\DataTableHelper.cs" />
+    <Compile Include="DataTable\DataTableList.ExtensionMethodsManager.cs" />
+    <Compile Include="DynamicExpression\DynamicCallMethodExpressionTreeInvokerHelper.cs" />
+    <Compile Include="DynamicExpression\DynamicPropertyAccessor.cs" />
+    <Compile Include="Etw\EventSourceProvider.cs" />
+    <Compile Include="Etw\TraceEventsTrackerHelper.cs" />
+    <Compile Include="EventLog\EventLogHelper.cs" />
+    <Compile Include="ExceptionStackTrace\StackTraceHelper.cs" />
+    <Compile Include="ExtensionsMethods\ConcurrentDictionaryExtensionsMethodsManager.cs" />
+    <Compile Include="HttpClientHelper\HttpClientHelper.cs" />
     <Compile Include="Json\JsonHelper.cs" />
+    <Compile Include="Json\JTokenHelper.cs" />
+    <Compile Include="LongInteger\LongIntegerHelper.cs" />
     <Compile Include="MEF\MEF.Contracts.cs" />
     <Compile Include="MEF\MEFHelper.cs" />
-    <Compile Include="Xml\XmlCDATA.cs" />
-    <Compile Include="Xml\XmlValidationHelper.cs" />
+    <Compile Include="Pools\00.PoolManager\PoolsManager.cs" />
+    <Compile Include="Pools\QueuedObjectsPool.Partial.01.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PropertyAdditionalDefinitionAttribute\PropertyAdditionalDefinitionAttribute.cs" />
+    <Compile Include="ReaderWriterLock\EasyReaderWriterLockSlim.cs" />
+    <Compile Include="ReaderWriterLock\ReaderWriterLockSlimHelper.cs" />
+    <Compile Include="SingleThreadAsyncDequeueProcessor\SingleThreadAsyncDequeueProcessor.cs" />
     <Compile Include="Socket\BufferManager.cs" />
     <Compile Include="Socket\Microsoft.System.ServiceModel.Channels.SocketAsyncEventArgsPool.cs" />
     <Compile Include="Socket\SocketAsyncDataHandler.01.cs" />
     <Compile Include="Socket\SocketAsyncEventArgsPool.cs" />
     <Compile Include="Socket\SocketHelper.cs" />
-    <Compile Include="Pools\QueuedObjectsPool.Partial.02.cs" />
-    <Compile Include="Pools\QueuedObjectsPool.Partial.01.cs" />
-    <Compile Include="SingleThreadAsyncDequeueProcessor\SingleThreadAsyncDequeueProcessor.cs" />
     <Compile Include="TimeBasedIdentity\TimeBasedIdentityGenerator.cs" />
-    <Compile Include="Caches\CacheItemEntryRemovedNotifier.cs" />
-    <Compile Include="Caches\RefreshableCache.cs" />
-    <Compile Include="Caches\XmlSerializersCache.cs" />
-    <Compile Include="Etw\EventSourceProvider.cs" />
-    <Compile Include="EventLog\EventLogHelper.cs" />
-    <Compile Include="ExceptionStackTrace\StackTraceHelper.cs" />
-    <Compile Include="ExtensionsMethods\ConcurrentDictionaryExtensionsMethodsManager.cs" />
-    <Compile Include="ReaderWriterLock\EasyReaderWriterLockSlim.cs" />
-    <Compile Include="ReaderWriterLock\ReaderWriterLockSlimHelper.cs" />
-    <Compile Include="DataTable\DataReaderHelper.cs" />
-    <Compile Include="DataTable\DataTableHelper.cs" />
-    <Compile Include="DataTable\DataTableList.ExtensionMethodsManager.cs" />
-    <Compile Include="DataAccess\SqlCommandExtensionsMethodsManager.cs" />
+    <Compile Include="Type\TypeHelper.cs" />
+    <Compile Include="WebMvcApi.NET45\JsonpMediaTypeFormatter.cs" />
+    <Compile Include="WebMvcApi.NET45\TraceSoapMessagesLoggerSoapExtension.cs" />
+    <Compile Include="WebMvcApi.NET45\WebMvcApiLogFilter.cs" />
+    <Compile Include="WorkFlow\WorkFlowHelper.cs" />
+    <Compile Include="Xml\XmlCDATA.cs" />
+    <Compile Include="Xml\XmlValidationHelper.cs" />
     <Compile Include="流控\RateLimiters\FixedTokenBucket.cs" />
     <Compile Include="流控\RateLimiters\IThrottleStrategy.cs" />
     <Compile Include="流控\RateLimiters\SystemTime.cs" />
     <Compile Include="流控\RateLimiters\Throttler.cs" />
     <Compile Include="流控\RateLimiters\TokenBucket.cs" />
     <Compile Include="流控\Throttler.cs" />
-    <Compile Include="CRC\CRC16.cs" />
-    <Compile Include="CRC\CRC32.cs" />
-    <Compile Include="CRC\CrcHelper.cs" />
-    <Compile Include="LongInteger\LongIntegerHelper.cs" />
-    <Compile Include="HttpClientHelper\HttpClientHelper.cs" />
-    <Compile Include="Type\TypeHelper.cs" />
-    <Compile Include="WebMvcApi.NET45\JsonpMediaTypeFormatter.cs" />
-    <Compile Include="WebMvcApi.NET45\TraceSoapMessagesLoggerSoapExtension.cs" />
-    <Compile Include="WebMvcApi.NET45\WebMvcApiLogFilter.cs" />
-    <Compile Include="WebMvcApi.NET45\WebMvcApiPerformanceCounterFilter.cs" />
-    <Compile Include="WebMvcApi.NET45\WebMvcApiPerformanceCountersHelper.cs" />
-    <Compile Include="WorkFlow\WorkFlowHelper.cs" />
-    <Compile Include=".NET35\ConcurrentQueue.Net35.cs" />
-    <Compile Include=".NET35\HttpClient.cs" />
-    <Compile Include=".NET35\Parallel.NET35.cs" />
-    <Compile Include=".NET35\Tuple.Net35.cs" />
-    <Compile Include=".NET35\WriteableTuple.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

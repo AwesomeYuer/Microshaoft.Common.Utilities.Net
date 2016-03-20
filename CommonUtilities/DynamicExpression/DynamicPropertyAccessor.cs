@@ -8,28 +8,31 @@
     {
         private static Assembly GetAssemblyByTypeName(string typeName)
         {
-            return AppDomain
-                        .CurrentDomain
-                        .GetAssemblies()
-                        .First
-                            (
-                                (a) =>
-                                {
-                                    return a
-                                            .GetTypes()
-                                                .Any
-                                                    (
-                                                        (t) =>
-                                                        {
-                                                            return
-                                                                (
-                                                                    t.FullName
-                                                                    == typeName
-                                                                );
-                                                        }
-                                                    );
-                                }
-                            );
+            return
+                AppDomain
+                    .CurrentDomain
+                    .GetAssemblies()
+                    .First
+                        (
+                            (a) =>
+                            {
+                                return
+                                    a
+                                        .GetTypes()
+                                            .Any
+                                                (
+                                                    (t) =>
+                                                    {
+                                                        return
+                                                            (
+                                                                t.FullName
+                                                                ==
+                                                                typeName
+                                                            );
+                                                    }
+                                                );
+                            }
+                        );
         }
         public static Func<object, object> CreateGetPropertyValueFunc
                         (
@@ -171,7 +174,8 @@
             var property = type.GetProperty(propertyName);
             if (property == null)
             {
-                property = type
+                property =
+                            type
                                 .GetProperties()
                                 .FirstOrDefault
                                     (
@@ -250,7 +254,6 @@
                                         }
                                     );
             }
-
             if (property.CanWrite)
             {
                 if (property != null)
@@ -337,7 +340,6 @@
             }
             return action;
         }
-
         public static Action<TTarget, object> CreateTargetSetPropertyValueAction<TTarget>
                 (
                     //Type type

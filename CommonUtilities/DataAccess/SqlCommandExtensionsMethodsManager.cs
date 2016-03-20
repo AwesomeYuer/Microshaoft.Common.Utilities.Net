@@ -12,7 +12,7 @@
                     , Func<int, IDataReader, bool> onReadProcessFunc
                 )
         {
-            bool needBreak = false;
+            var needBreak = false;
             SqlConnection sqlConnection = null;
             try
             {
@@ -55,25 +55,22 @@
                 }
             }
         }
-
-
-
-
         public static void ExecuteDataReaderPager
                 (
                     this SqlCommand command
                     , int pageFetchRows
                     , string idColumnName
-                    , Func<int, int, int, IDataReader, bool> onReadProcessFunc
+                    , Func<int, int, int, IDataReader, bool>
+                            onReadProcessFunc
                 )
         {
             //总序号
-            int i = 0;
+            var i = 0;
             //页码
-            int page = 0;
-            bool needBreak = false;
-            bool isLast = false;
-            long id = 0;
+            var page = 0;
+            var needBreak = false;
+            var isLast = false;
+            var id = 0L;
             command.Parameters["@Top"].Value = pageFetchRows;
             do
             {

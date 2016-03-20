@@ -1005,7 +1005,7 @@ namespace Microshaoft
             get
             {
                 return
-                    GetPerformanceCounterByName<QueuePerformanceCountersContainer>
+                    GetPerformanceCounterByName//<QueuePerformanceCountersContainer>
                         (
                             this
                             , name
@@ -1019,7 +1019,7 @@ namespace Microshaoft
                 //throw new NotImplementedException();
                 return
                     (
-                        GetPropertiesPerformanceCounters<QueuePerformanceCountersContainer>
+                        GetPropertiesPerformanceCounters//<QueuePerformanceCountersContainer>
                             (
                                 this
                             )

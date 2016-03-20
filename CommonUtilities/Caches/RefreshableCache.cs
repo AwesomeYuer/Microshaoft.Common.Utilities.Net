@@ -11,7 +11,6 @@
                 .Default
                 .Remove(CacheKey);
         }
-
         public TData CachedData
         {
             get
@@ -25,18 +24,15 @@
             set;
             get;
         }
-
         public DateTime LastRefreshedTime
         {
             set;
             get;
         }
-
         public RefreshableCache()
         {
 
         }
-
         public RefreshableCache
                     (
                         string cacheKey
@@ -52,32 +48,32 @@
             _cachedData = onRefreshingCacheDataProcessFunc();
             LastRefreshedTime = DateTime.Now;
             var cacheItemEntryRemovedNotifier
-                              = new CacheItemEntryRemovedNotifier
-                                      (
-                                             CacheKey
-                                             , refreshIntervalInSeconds
-                                             , (x) =>
-                                             {
-                                                 TData refreshedData = default(TData);
-                                                 if
-                                                    (
-                                                        TryGetRefreshedCacheData
-                                                            (
-                                                                onRefreshingCacheDataProcessFunc
-                                                                , out refreshedData
-                                                                , needTryProcess
-                                                                , reThrowException
-                                                                , onCaughtExceptionProcessFunc
-                                                                , onFinallyProcessAction
-                                                            )
-                                                    )
-                                                 {
-                                                     _cachedData = refreshedData;
-                                                     LastRefreshedTime = DateTime.Now;
-                                                 }
-                                                 return true;
-                                             }
-                                      );
+                    = new CacheItemEntryRemovedNotifier
+                            (
+                                    CacheKey
+                                    , refreshIntervalInSeconds
+                                    , (x) =>
+                                    {
+                                        TData refreshedData = default(TData);
+                                        if
+                                        (
+                                            TryGetRefreshedCacheData
+                                                (
+                                                    onRefreshingCacheDataProcessFunc
+                                                    , out refreshedData
+                                                    , needTryProcess
+                                                    , reThrowException
+                                                    , onCaughtExceptionProcessFunc
+                                                    , onFinallyProcessAction
+                                                )
+                                        )
+                                        {
+                                            _cachedData = refreshedData;
+                                            LastRefreshedTime = DateTime.Now;
+                                        }
+                                        return true;
+                                    }
+                            );
         }
         private static bool TryGetRefreshedCacheData
                             (
@@ -94,22 +90,22 @@
             if (needTryProcess)
             {
                 TryCatchFinallyProcessHelper
-                         .TryProcessCatchFinally
-                             (
-                                 needTryProcess
-                                 , () =>
-                                 {
-                                     refreshingData
-                                            = onRefreshingCacheDataProcessFunc();
-                                     r = true;
-                                 }
-                                 , reThrowException
-                                 , (xx, yy, zz) =>
-                                 {
-                                     return
+                        .TryProcessCatchFinally
+                            (
+                                needTryProcess
+                                , () =>
+                                {
+                                    refreshingData
+                                        = onRefreshingCacheDataProcessFunc();
+                                    r = true;
+                                }
+                                , reThrowException
+                                , (xx, yy, zz) =>
+                                {
+                                    return
                                         onCaughtExceptionProcessFunc(xx, yy, zz);
-                                 }
-                             );
+                                }
+                            );
                 refreshedData = refreshingData;
             }
             else

@@ -20,36 +20,36 @@
     public static class TypeHelper
     {
         private static IEnumerable<Type>
-                                _typesWhiteList
-                                    = new List<Type>()
-                                                {
-                                                    typeof(int)
-                                                    //, typeof(int?)
-                                                    , typeof(long)
-                                                    //, typeof(long?)
-                                                    , typeof(string)
-                                                    , typeof(DateTime)
-                                                    , typeof(Guid)
-                                                    //, typeof(DateTime?)
-                                                }
-                                            .Union
-                                                (
-                                                    AssemblyHelper
-                                                        .GetAssembliesTypes
-                                                            (
-                                                                (x, y) =>
-                                                                {
-                                                                    return
-                                                                        (
-                                                                            x.Namespace == "System.Data.SqlTypes"
-                                                                            &&
-                                                                            x.IsValueType
-                                                                            &&
-                                                                            typeof(INullable).IsAssignableFrom(x)
-                                                                        );
-                                                                }
-                                                            )
-                                                );
+                            _typesWhiteList
+                                = new List<Type>()
+                                            {
+                                                typeof(int)
+                                                //, typeof(int?)
+                                                , typeof(long)
+                                                //, typeof(long?)
+                                                , typeof(string)
+                                                , typeof(DateTime)
+                                                , typeof(Guid)
+                                                //, typeof(DateTime?)
+                                            }
+                                        .Concat
+                                            (
+                                                AssemblyHelper
+                                                    .GetAssembliesTypes
+                                                        (
+                                                            (x, y) =>
+                                                            {
+                                                                return
+                                                                    (
+                                                                        x.Namespace == "System.Data.SqlTypes"
+                                                                        &&
+                                                                        x.IsValueType
+                                                                        &&
+                                                                        typeof(INullable).IsAssignableFrom(x)
+                                                                    );
+                                                            }
+                                                        )
+                                            );
         public static IEnumerable<PropertyAccessor>
                         GetTypePropertiesAccessors
                                 (
@@ -59,18 +59,18 @@
                                 
         {
             var properties = type.GetProperties();
-            foreach (var x in properties)
+            foreach (var property in properties)
             {
                 if 
                     (
                         _typesWhiteList
                             .Any
                                 (
-                                    (xx) =>
+                                    (x) =>
                                     {
                                         var r = false;
-                                        var propertyType = x.PropertyType;
-                                        if (xx == propertyType)
+                                        var propertyType = property.PropertyType;
+                                        if (x == propertyType)
                                         {
                                             r = true;
                                         }
@@ -91,10 +91,9 @@
                                             {
                                                 if
                                                     (
-                                                        xx
+                                                        x
                                                         ==
-
-                                                            GetNullableTypeUnderlyingType
+                                                        GetNullableTypeUnderlyingType
                                                                 (propertyType)
                                                     )
                                                 {
@@ -110,17 +109,17 @@
                     var accessor = new PropertyAccessor()
                     {
                         Getter = DynamicPropertyAccessor
-                                    .CreateGetPropertyValueFunc(type, x.Name)
+                                    .CreateGetPropertyValueFunc(type, property.Name)
                         , Setter = DynamicPropertyAccessor
-                                    .CreateSetPropertyValueAction(type, x.Name)
-                        , Property = x
-                        , PropertyName = x.Name
-                        , PropertyKey = x.Name
-                        , PropertyValueType = GetNullableTypeUnderlyingType(x.PropertyType)
+                                    .CreateSetPropertyValueAction(type, property.Name)
+                        , Property = property
+                        , PropertyName = property.Name
+                        , PropertyKey = property.Name
+                        , PropertyValueType = GetNullableTypeUnderlyingType(property.PropertyType)
                     };
                     if (needDefinitionAttributeProcess)
                     {
-                        var attribute = x.GetCustomAttributes
+                        var attribute = property.GetCustomAttributes
                                                 (
                                                     typeof(PropertyAdditionalDefinitionAttribute)
                                                     , false
@@ -138,7 +137,6 @@
                                         .PropertyValueType = asAttribute
                                                                     .DataTableColumnDataType; 
                                 }
-                                
                                 accessor
                                         .DefinitionAttribute = asAttribute;
                                 if
@@ -168,11 +166,11 @@
             //return dictionary;
         }
         public static Dictionary<string, PropertyAccessor>
-                        GetTypeKeyedPropertiesAccessors
-                                (
-                                    Type type
-                                    , bool needDefinitionAttributeProcess = false
-                                )
+                                GetTypeKeyedPropertiesAccessors
+                                        (
+                                            Type type
+                                            , bool needDefinitionAttributeProcess = false
+                                        )
         {
             Dictionary<string, PropertyAccessor> dictionary = null;
             var result = GetTypePropertiesAccessors(type, needDefinitionAttributeProcess);
@@ -228,17 +226,16 @@
                     typeCode == TypeCode.Decimal
                 );
         }
-
         public static bool IsNumericOrNullableNumericType(Type type)
         {
             return
                 (
-                    TypeHelper.IsNumericType(type)
+                    IsNumericType(type)
                     ||
                     (
-                        TypeHelper.IsNullableType(type)
+                        IsNullableType(type)
                         && 
-                        TypeHelper.IsNumericType
+                        IsNumericType
                                 (
                                     //type.GetGenericArguments()[0]
                                     Nullable.GetUnderlyingType(type)
