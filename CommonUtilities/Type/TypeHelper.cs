@@ -19,37 +19,37 @@
 
     public static class TypeHelper
     {
-        private static IEnumerable<Type> _typesWhiteList
-                = new List<Type>()
-                            {
-                                typeof(int)
-                                //, typeof(int?)
-                                , typeof(long)
-                                //, typeof(long?)
-                                , typeof(string)
-                                , typeof(DateTime)
-                                , typeof(Guid)
-                                //, typeof(DateTime?)
-                            }
-                        .Union
-                            (
-                                AssemblyHelper
-                                    .GetAssembliesTypes
-                                        (
-                                            (x, y) =>
-                                            {
-                                                return
-                                                    (
-                                                        x.Namespace == "System.Data.SqlTypes"
-                                                        &&
-                                                        x.IsValueType
-                                                        &&
-                                                        typeof(INullable).IsAssignableFrom(x)
-                                                    );
-                                            }
-                                        )
-                            );
-
+        private static IEnumerable<Type>
+                                _typesWhiteList
+                                    = new List<Type>()
+                                                {
+                                                    typeof(int)
+                                                    //, typeof(int?)
+                                                    , typeof(long)
+                                                    //, typeof(long?)
+                                                    , typeof(string)
+                                                    , typeof(DateTime)
+                                                    , typeof(Guid)
+                                                    //, typeof(DateTime?)
+                                                }
+                                            .Union
+                                                (
+                                                    AssemblyHelper
+                                                        .GetAssembliesTypes
+                                                            (
+                                                                (x, y) =>
+                                                                {
+                                                                    return
+                                                                        (
+                                                                            x.Namespace == "System.Data.SqlTypes"
+                                                                            &&
+                                                                            x.IsValueType
+                                                                            &&
+                                                                            typeof(INullable).IsAssignableFrom(x)
+                                                                        );
+                                                                }
+                                                            )
+                                                );
         public static IEnumerable<PropertyAccessor>
                         GetTypePropertiesAccessors
                                 (
@@ -93,8 +93,8 @@
                                                     (
                                                         xx
                                                         ==
-                                                        TypeHelper
-                                                            .GetNullableTypeUnderlyingType
+
+                                                            GetNullableTypeUnderlyingType
                                                                 (propertyType)
                                                     )
                                                 {
@@ -111,17 +111,12 @@
                     {
                         Getter = DynamicPropertyAccessor
                                     .CreateGetPropertyValueFunc(type, x.Name)
-                        ,
-                        Setter = DynamicPropertyAccessor
+                        , Setter = DynamicPropertyAccessor
                                     .CreateSetPropertyValueAction(type, x.Name)
-                        ,
-                        Property = x
-                        ,
-                        PropertyName = x.Name
-                        ,
-                        PropertyKey = x.Name
-                        ,
-                        PropertyValueType = TypeHelper.GetNullableTypeUnderlyingType(x.PropertyType)
+                        , Property = x
+                        , PropertyName = x.Name
+                        , PropertyKey = x.Name
+                        , PropertyValueType = GetNullableTypeUnderlyingType(x.PropertyType)
                     };
                     if (needDefinitionAttributeProcess)
                     {
@@ -139,10 +134,13 @@
                             {
                                 if (asAttribute.DataTableColumnDataType != null)
                                 {
-                                    accessor.PropertyValueType = asAttribute.DataTableColumnDataType; 
+                                    accessor
+                                        .PropertyValueType = asAttribute
+                                                                    .DataTableColumnDataType; 
                                 }
                                 
-                                accessor.DefinitionAttribute = asAttribute;
+                                accessor
+                                        .DefinitionAttribute = asAttribute;
                                 if
                                     (
                                         !string
@@ -154,7 +152,8 @@
                                     )
                                 {
                                     accessor
-                                        .PropertyKey = asAttribute
+                                        .PropertyKey
+                                                = asAttribute
                                                         .DataTableColumnName;
                                 }
                             }
@@ -168,9 +167,6 @@
             //);
             //return dictionary;
         }
-
-
-
         public static Dictionary<string, PropertyAccessor>
                         GetTypeKeyedPropertiesAccessors
                                 (
@@ -195,9 +191,6 @@
             }
             return dictionary;
         }
-
-
-
         public static bool IsNullableType(Type type)
         {
             return
@@ -209,7 +202,6 @@
                     )
                 );
         }
-        
         public static Type GetNullableTypeUnderlyingType(Type type)
         {
             //Type r = null;
@@ -219,8 +211,6 @@
             }
             return type;
         }
-
-
         public static bool IsNumericType(Type type)
         {
             var typeCode = Type.GetTypeCode(type);
@@ -263,21 +253,17 @@
         {
             return TypeHelper.IsNullableType(type);
         }
-
         public static Type GetNullableTypeUnderlyingType(this Type type)
         {
             return TypeHelper.GetNullableTypeUnderlyingType(type);
         }
-
         public static bool IsNumericType(this Type type)
         {
             return TypeHelper.IsNumericType(type);
         }
-
         public static bool IsNumericOrNullableNumericType(this Type type)
         {
             return TypeHelper.IsNumericOrNullableNumericType(type);
         }
-    
     }
 }

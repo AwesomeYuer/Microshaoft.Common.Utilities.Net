@@ -82,11 +82,15 @@
                 Directory.CreateDirectory(path);
             }
             string fileName = string.Format(filePath, title, DateTime.Now.ToString("yyyy-MM-dd.HH"));
-            using (FileStream fs = new FileStream
-                                        (
-                                            fileName
-                                            , FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite
-                                         )
+            using 
+                    (
+                        FileStream fs = new FileStream
+                                                (
+                                                    fileName
+                                                    , FileMode.OpenOrCreate
+                                                    , FileAccess.ReadWrite
+                                                    , FileShare.ReadWrite
+                                                 )
                     )
             {
                 StreamWriter w = new StreamWriter(fs);
