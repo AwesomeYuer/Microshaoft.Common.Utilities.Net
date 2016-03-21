@@ -5,13 +5,13 @@
     public class TestRuntimeSettings
     {
         [ConfigurationAppSetting(SettingKey = "TimeStamp")]
-        public DateTime MyTimeStamp
+        public DateTime? RuntimeTimeStamp
         {
             set;
             get;
         }
         [ConfigurationAppSetting(SettingKey = "Int")]
-        public int MyInt
+        public int RuntimeInt
         {
             set;
             get;

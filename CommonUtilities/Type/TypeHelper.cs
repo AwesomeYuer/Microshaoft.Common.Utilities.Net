@@ -93,7 +93,7 @@
                                                     (
                                                         x
                                                         ==
-                                                        GetNullableTypeUnderlyingType
+                                                        GetNullableUnderlyingType
                                                                 (propertyType)
                                                     )
                                                 {
@@ -117,7 +117,7 @@
                         , Property = property
                         , PropertyName = property.Name
                         , PropertyKey = property.Name
-                        , PropertyValueType = GetNullableTypeUnderlyingType(propertyType)
+                        , PropertyValueType = GetNullableUnderlyingType(propertyType)
                     };
                     if (needDefinitionAttributeProcess)
                     {
@@ -181,11 +181,11 @@
                     dictionary = new Dictionary<string, PropertyAccessor>();
                 }
                 dictionary
-                    .Add
-                    (
-                        x.PropertyKey
-                        , x
-                    );
+                        .Add
+                            (
+                                x.PropertyKey
+                                , x
+                            );
             }
             return dictionary;
         }
@@ -200,7 +200,7 @@
                     )
                 );
         }
-        public static Type GetNullableTypeUnderlyingType(Type type)
+        public static Type GetNullableUnderlyingType(Type type)
         {
             //Type r = null;
             if (IsNullableType(type))
@@ -250,9 +250,9 @@
         {
             return TypeHelper.IsNullableType(type);
         }
-        public static Type GetNullableTypeUnderlyingType(this Type type)
+        public static Type GetNullableUnderlyingType(this Type type)
         {
-            return TypeHelper.GetNullableTypeUnderlyingType(type);
+            return TypeHelper.GetNullableUnderlyingType(type);
         }
         public static bool IsNumericType(this Type type)
         {

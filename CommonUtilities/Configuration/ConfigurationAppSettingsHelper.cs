@@ -15,10 +15,10 @@
         public static T GetAppSettingsFormConfig<T>() where T : new()
         {
             T r = new T();
-            var propertyType = typeof(T);
-            ConfigurationAppSettingAttribute attribute = null; 
-            var properties 
-                    = propertyType
+            Type type = typeof(T);
+            ConfigurationAppSettingAttribute attribute = null;
+            var properties
+                        = type
                             .GetProperties()
                             .Where
                                 (
@@ -39,9 +39,26 @@
                                         return rr;
                                     }
                                 );
+                            //.Select
+                            //    (
+                            //        (x) =>
+                            //        {
+                            //            Type rr = x.PropertyType;
+                            //            if (rr.IsNullableType())
+                            //            {
+                            //                rr = rr.GetNullableTypeUnderlyingType();
+                            //            }
+                            //            return rr;
+                            //        }
+                            //    );
             foreach (var property in properties)
             {
-                propertyType = property.PropertyType;
+                var propertyType = property.PropertyType;
+                if (propertyType.IsNullableType())
+                {
+                    propertyType = propertyType
+                                        .GetNullableUnderlyingType();
+                }
                 var methodInfo = propertyType
                                     .GetMethod
                                         (
@@ -65,7 +82,8 @@
                                                         (
                                                             methodInfo
                                                         );
-                    var settingValue = delegateInvoker.DynamicInvoke(settingValueText);
+                    var settingValue = delegateInvoker
+                                            .DynamicInvoke(settingValueText);
                     propertySetter(r, settingValue);
                  }
             }
