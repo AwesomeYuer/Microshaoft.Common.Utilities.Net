@@ -10,7 +10,7 @@
     {
         static void Main(string[] args)
         {
-            var category = "Microshaoft-Test-Category-002";
+            var category = "Microshaoft-Test-Category-002"; 
             var instance = "Instance-002";
             //var enabledCountPerformance = false;
             CommonPerformanceCountersContainer container = null;
