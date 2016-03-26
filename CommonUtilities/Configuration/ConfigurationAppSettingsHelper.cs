@@ -4,6 +4,7 @@
     using System.Configuration;
     using System.Linq;
     using System.Runtime.CompilerServices;
+    using System.Reflection;
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, Inherited = true)]
     public class ConfigurationAppSettingAttribute : Attribute
     {
@@ -16,67 +17,52 @@
         {
             T r = new T();
             Type type = typeof(T);
-            ConfigurationAppSettingAttribute attribute = null;
-            var properties
-                        = type
-                            .GetProperties()
-                            .Where
-                                (
-                                    (x) =>
-                                    {
-                                        var rr = false;
-                                        attribute = x
-                                                        .GetCustomAttributes
-                                                            (typeof(ConfigurationAppSettingAttribute), true)
-                                                        .FirstOrDefault() as ConfigurationAppSettingAttribute;
-                                        if (attribute != null)
-                                        {
-                                            if (!attribute.SettingKey.IsNullOrEmptyOrWhiteSpace())
+            string settingKey = string.Empty;
+            var members = type
+                            .GetCustomAttributedPropertiesOrFields
+                                    <ConfigurationAppSettingAttribute>
+                                        (
+                                            (x, y, z) =>
                                             {
-                                                rr = true;
+                                                settingKey = z.SettingKey;
+                                                if (settingKey.IsNullOrEmptyOrWhiteSpace())
+                                                {
+                                                    settingKey = y.Name;
+                                                }
+                                                return true;
                                             }
-                                        }
-                                        return rr;
-                                    }
-                                );
-                            //.Select
-                            //    (
-                            //        (x) =>
-                            //        {
-                            //            Type rr = x.PropertyType;
-                            //            if (rr.IsNullableType())
-                            //            {
-                            //                rr = rr.GetNullableTypeUnderlyingType();
-                            //            }
-                            //            return rr;
-                            //        }
-                            //    );
-            foreach (var property in properties)
+                                        );
+            foreach (var member in members)
             {
-                var propertyType = property.PropertyType;
-                if (propertyType.IsNullableType())
+                var settingValueText = ConfigurationManager.AppSettings[settingKey];
+                Type memberValueType = null;
+                if (member.MemberType == MemberTypes.Field)
                 {
-                    propertyType = propertyType
+                    var fieldInfo = (FieldInfo)member;
+                    memberValueType = fieldInfo.FieldType;
+                }
+                else if (member.MemberType == MemberTypes.Property)
+                {
+                    var propertyInfo = (PropertyInfo)member;
+                    memberValueType = propertyInfo.PropertyType;
+                }
+                if (memberValueType.IsNullableType())
+                {
+                    memberValueType = memberValueType
                                         .GetNullableUnderlyingType();
                 }
-                var methodInfo = propertyType
-                                    .GetMethod
-                                        (
-                                            "Parse"
-                                            , new Type[] { typeof(string) }
-                                        );
-                var propertyName = property.Name;
-                var key = attribute.SettingKey;
-                if (key.IsNullOrEmptyOrWhiteSpace())
-                {
-                    key = propertyName;
-                }
+                var methodInfo = memberValueType
+                                        .GetMethod
+                                            (
+                                                "Parse"
+                                                , new Type[] { typeof(string) }
+                                            );
                 if (methodInfo != null)
                 {
-                    var settingValueText = ConfigurationManager.AppSettings[key];
-                    var propertySetter = DynamicPropertyAccessor
-                                                .CreateTargetSetPropertyValueAction<T>
-                                                    (propertyName);
+                    var memberName = member.Name;
+                    var memberSetter = DynamicMemberAccessor
+                                                .CreateSetter<T,object>
+                                                    (memberName);
                     var delegateInvoker = DynamicCallMethodExpressionTreeInvokerHelper
                                                 .CreateDelegate
                                                         (
@@ -84,8 +70,8 @@
                                                         );
                     var settingValue = delegateInvoker
                                             .DynamicInvoke(settingValueText);
-                    propertySetter(r, settingValue);
-                 }
+                    memberSetter(r, settingValue);
+                }
             }
             return r;
         }

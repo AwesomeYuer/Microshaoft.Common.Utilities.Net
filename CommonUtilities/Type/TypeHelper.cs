@@ -50,6 +50,83 @@
                                                             }
                                                         )
                                             );
+
+
+        public static IEnumerable<MemberInfo>
+                       GetCustomAttributedPropertiesOrFields<TAttribute>
+                               (
+                                   Type type
+                                   , Func<MemberTypes, MemberInfo, TAttribute, bool> onAttributeProcessFunc = null
+                                   //, BindingFlags bindingFlags = BindingFlags.
+                               )
+                            where TAttribute : Attribute
+
+        {
+            return
+                type
+                    .GetFields()
+                    .Where
+                        (
+                            (x) =>
+                            {
+                                var rr = false;
+                                var attribute = x
+                                                .GetCustomAttributes
+                                                    (typeof(TAttribute), true)
+                                                .FirstOrDefault() as TAttribute;
+                                if (attribute != null)
+                                {
+                                    rr = true;
+                                    if (onAttributeProcessFunc != null)
+                                    {
+                                        rr = onAttributeProcessFunc(MemberTypes.Field, x, attribute);
+                                    }
+                                }
+                                return rr;
+                            }
+                        )
+                    .Select
+                        (
+                            (x) =>
+                            {
+                                return x as MemberInfo;
+                            }
+                        )
+                    .Concat
+                        (
+                            type
+                                .GetProperties()
+                                .Where
+                                    (
+                                        (x) =>
+                                        {
+                                            var rr = false;
+                                            var attribute = x
+                                                            .GetCustomAttributes
+                                                                (typeof(TAttribute), true)
+                                                            .FirstOrDefault() as TAttribute;
+                                            if (attribute != null)
+                                            {
+                                                rr = true;
+                                                if (onAttributeProcessFunc != null)
+                                                {
+                                                    rr = onAttributeProcessFunc(MemberTypes.Field, x, attribute);
+                                                }
+                                            }
+                                            return rr;
+                                        }
+                                    )
+                                    .Select
+                                        (
+                                            (x) =>
+                                            {
+                                                return x as MemberInfo;
+                                            }
+                                        )
+                        );
+        }
+
+
         public static IEnumerable<PropertyAccessor>
                         GetTypePropertiesAccessors
                                 (
@@ -246,6 +323,27 @@
     }
     public static class TypesExtensionsMethodsManager
     {
+
+        public static IEnumerable<MemberInfo>
+                       GetCustomAttributedPropertiesOrFields<TAttribute>
+                               (
+                                   this Type type
+                                   , Func<MemberTypes, MemberInfo, TAttribute, bool> onAttributeProcessFunc = null
+                                   //, BindingFlags bindingFlags = BindingFlags.Public
+                               )
+                            where TAttribute : Attribute
+
+        {
+            return
+                TypeHelper
+                    .GetCustomAttributedPropertiesOrFields<TAttribute>
+                        (
+                            type
+                            , onAttributeProcessFunc
+                            
+                        );
+        }
+
         public static bool IsNullableType(this Type type)
         {
             return TypeHelper.IsNullableType(type);

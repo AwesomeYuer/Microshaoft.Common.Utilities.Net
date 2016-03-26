@@ -5,16 +5,26 @@
     public class TestRuntimeSettings
     {
         [ConfigurationAppSetting(SettingKey = "TimeStamp")]
-        public DateTime? RuntimeTimeStamp
-        {
-            set;
-            get;
-        }
+        public DateTime? RuntimeNullableTimeStamp;
+        //{
+        //    set;
+        //    get;
+        //}
         [ConfigurationAppSetting(SettingKey = "Int")]
-        public int RuntimeInt
+        public int? RuntimeNullableInt
         {
             set;
             get;
         }
+
+        [ConfigurationAppSetting(SettingKey = "Int")]
+        public int? RuntimeInt;
+        
+
+        [ConfigurationAppSetting]
+        public  DateTime? TimeStamp;
+
+        [ConfigurationAppSetting]
+        public  DateTime RuntimeTimeStamp;
     }
 }
