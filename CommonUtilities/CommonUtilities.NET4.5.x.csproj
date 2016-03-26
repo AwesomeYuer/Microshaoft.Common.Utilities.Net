@@ -120,6 +120,7 @@
     <Compile Include="Assembly\AssemblyHelper.cs" />
     <Compile Include="00.Utilities\BytesHelper.cs" />
     <Compile Include="00.Utilities\TaskProcesserHelper.cs" />
+    <Compile Include="Caches\MruCache.cs" />
     <Compile Include="Configuration\ConfigurationAppSettingsHelper.cs" />
     <Compile Include="00.Utilities\KeyedPriorityQueue.cs" />
     <Compile Include="00.Utilities\CompressHelper.cs" />
@@ -134,6 +135,7 @@
     <Compile Include="DynamicExpression\DynamicMemberAccessor.cs" />
     <Compile Include="DynamicExpression\DynamicPropertyAccessor.cs" />
     <Compile Include="DynamicExpression\ExpressionHelper.cs" />
+    <Compile Include="DynamicExpression\MethodCallExpressionHelper.cs" />
     <Compile Include="Etw\TraceEventsTrackerHelper.cs" />
     <Compile Include="PerformanceCounter\EasyPerformanceCountersHelper.Partial.01.cs" />
     <Compile Include="PerformanceCounter\EasyPerformanceCountersHelper.Partial.02.cs" />
