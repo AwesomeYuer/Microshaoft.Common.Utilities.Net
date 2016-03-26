@@ -16,7 +16,7 @@
         {
             //Test Runtime Setting
             var appSettings = ConfigurationAppSettingsHelper
-                                    .GetAppSettingsFormConfig<TestRuntimeSettings>();
+                                    .GetAppSettingsByMapFromConfig<TestRuntimeSettings>();
 
 
             var memberGetter = DynamicMemberAccessor

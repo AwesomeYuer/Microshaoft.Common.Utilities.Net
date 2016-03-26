@@ -13,7 +13,7 @@
 
     public static class ConfigurationAppSettingsHelper
     {
-        public static T GetAppSettingsFormConfig<T>() where T : new()
+        public static T GetAppSettingsByMapFromConfig<T>() where T : new()
         {
             T r = new T();
             Type type = typeof(T);
@@ -76,12 +76,12 @@
             return r;
         }
 
-        public static T GetAppSettingValueByPropertyName<T>
+        public static T GetAppSettingValueByKeyMapToMemberName<T>
                             (
                                 Func<string, T> parseProcessFunc
                                 , Func<T> defaultValueFactoryProcessFunc
                                 , [CallerMemberName]
-                                  string settingKeyPropertyName = null
+                                  string settingKeyMemberName = null
                             )
         {
             return
@@ -89,7 +89,7 @@
                     (
                         parseProcessFunc
                         , defaultValueFactoryProcessFunc
-                        , settingKeyPropertyName
+                        , settingKeyMemberName
                     );
         }
         public static T GetAppSettingValueByKey<T>
