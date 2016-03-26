@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Data;
     using System.Data.SqlClient;
+    using System.Linq;
     public static class DataReaderHelper
     {
         public static IEnumerable<TEntry> AsEnumerable<TEntry>
@@ -13,12 +14,11 @@
                             where TEntry : new()
         {
             return
-
-                    GetEnumerable<TEntry>
-                        (
-                            target
-                            , needDefinitionAttributeProcess
-                        );
+                GetEnumerable<TEntry>
+                    (
+                        target
+                        , needDefinitionAttributeProcess
+                    );
         }
 
         public static IEnumerable<TEntry> GetEnumerable<TEntry>
@@ -29,30 +29,46 @@
                             where TEntry : new()
         {
             var type = typeof(TEntry);
-            var accessors = TypeHelper
-                                .GetTypePropertiesAccessors
-                                        (
-                                            type
-                                            , needDefinitionAttributeProcess
-                                        );
+            MemberAdditionalDefinitionAttribute attribute = null;
+            var members = TypeHelper
+                                .GetModelMembers(type)
+                                .Select
+                                    (
+                                        (x) =>
+                                        {
+                                            attribute = 
+                                                        x
+                                                            .GetCustomAttributes
+                                                                (typeof(MemberAdditionalDefinitionAttribute), true)
+                                                            .FirstOrDefault() as MemberAdditionalDefinitionAttribute;
+                                            return x;
+                                        }
+                                    );
             while (dataReader.Read())
             {
                 TEntry entry = new TEntry();
-                foreach (var accessor in accessors)
+                foreach (var x in members)
                 {
-                    var propertyName = accessor.PropertyName;
-                    var columnName = propertyName;
+                    var dataColumnName = x.Name;
                     if (needDefinitionAttributeProcess)
                     {
-                        columnName = accessor
-                                        .DefinitionAttribute
-                                        .DataTableColumnName;
+                        if (attribute != null)
+                        {
+                            if (!attribute.DataTableColumnName.IsNullOrEmptyOrWhiteSpace())
+                            {
+                                dataColumnName = attribute.DataTableColumnName;
+                            }
+                        }
                     }
-                    accessor
-                        .Setter
+                    var setter = DynamicMemberAccessor
+                                            .CreateSetter<TEntry, object>
+                                                (
+                                                    x.Name
+                                                );
+                    setter
                             (
                                 entry
-                                , dataReader[columnName]
+                                , dataReader[dataColumnName]
                             );
                 }
                 yield

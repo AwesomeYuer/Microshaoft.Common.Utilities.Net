@@ -3,7 +3,7 @@
     using System;
     using System.Data;
     using System.Linq;
-
+    using System.Reflection;
     public static class DataTableHelper
     {
         public static DataTable GenerateEmptyDataTable<T>(bool needDefinitionAttributeProcess = false)
@@ -18,44 +18,85 @@
                     , bool needDefinitionAttributeProcess = false
                 )
         {
-            var accessors = TypeHelper
-                                .GetTypePropertiesAccessors
-                                        (
-                                            type
-                                            , needDefinitionAttributeProcess
-                                        );
-            if (needDefinitionAttributeProcess)
-            {
-                accessors = accessors
+            MemberAdditionalDefinitionAttribute attribute = null;
+            var members = TypeHelper
+                                .GetModelMembers(type)
                                 .OrderBy
                                     (
                                         (x) =>
                                         {
-                                            return
-                                                    x
-                                                        .DefinitionAttribute
-                                                        .DataTableColumnID;
+                                            int r = int.MinValue;
+                                            attribute = x
+                                                            .GetCustomAttributes
+                                                                (typeof(MemberAdditionalDefinitionAttribute), true)
+                                                            .FirstOrDefault() as MemberAdditionalDefinitionAttribute;
+                                            if (attribute != null)
+                                            {
+                                                if (attribute.DataTableColumnID.HasValue)
+                                                {
+                                                    r = attribute.DataTableColumnID.Value;
+                                                }
+                                            }
+                                            return r;
                                         }
                                     );
-            }
             DataTable dataTable = null;
             DataColumnCollection dataColumnsCollection = null;
-            foreach (var x in accessors)
+            foreach (var x in members)
             {
                 if (dataTable == null)
                 {
                     dataTable = new DataTable();
+                    if (dataColumnsCollection == null)
+                    {
+                        dataColumnsCollection = dataTable.Columns;
+                    }
                 }
-                if (dataColumnsCollection == null)
+                var dataColumnName = x.Name;
+                if (needDefinitionAttributeProcess)
                 {
-                    dataColumnsCollection = dataTable.Columns;
+                    if (attribute != null)
+                    {
+                        if (!attribute.DataTableColumnName.IsNullOrEmptyOrWhiteSpace())
+                        {
+                            dataColumnName = attribute.DataTableColumnName;
+                        }
+                    }
                 }
+                Type dataColumnType = null;
+                if (x is FieldInfo)
+                {
+                    var fieldInfo = x as FieldInfo;
+                    dataColumnType = fieldInfo.FieldType;
+                }
+                else if (x is PropertyInfo)
+                {
+                    var propertyInfo = x as PropertyInfo;
+                    dataColumnType = propertyInfo.PropertyType;
+                }
+                if (needDefinitionAttributeProcess)
+                {
+                    if (attribute != null)
+                    {
+                        if (attribute.DataTableColumnDataType != null)
+                        {
+                            dataColumnType = attribute.DataTableColumnDataType;
+                        }
+                    }
+                }
+                if (dataColumnType.IsNullableType())
+                {
+                    dataColumnType = TypeHelper.GetNullableUnderlyingType(dataColumnType);
+
+                }
+
                 dataColumnsCollection
                     .Add
                         (
-                            x.PropertyKey
-                            , x.PropertyValueType
+                            dataColumnName
+                            , dataColumnType
                         );
+
             }
             return dataTable;
         }

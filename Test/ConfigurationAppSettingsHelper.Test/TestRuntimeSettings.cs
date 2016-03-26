@@ -11,6 +11,16 @@
         //    get;
         //}
         [ConfigurationAppSetting(SettingKey = "Int")]
+        [
+            MemberAdditionalDefinition
+                (
+                    10
+                    ,
+                    DataTableColumnDataType = typeof(int)
+                    ,  DataTableColumnName = "ColumnRuntimeNullableInt"
+                    
+                )
+        ]
         public int? RuntimeNullableInt
         {
             set;
@@ -18,10 +28,21 @@
         }
 
         [ConfigurationAppSetting(SettingKey = "Int")]
+
         public int? RuntimeInt;
         
 
         [ConfigurationAppSetting]
+        [
+            MemberAdditionalDefinition
+                (
+                    12
+                    ,
+                    DataTableColumnDataType = typeof(int)
+                    , DataTableColumnName = "ColumnTimeStamp"
+
+                )
+        ]
         public  DateTime? TimeStamp;
 
         [ConfigurationAppSetting]

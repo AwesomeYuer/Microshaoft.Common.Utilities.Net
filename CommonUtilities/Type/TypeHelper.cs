@@ -6,15 +6,16 @@
     using System.Linq;
     using System.Reflection;
 
-    public class PropertyAccessor//<TContext>
+    public class MemberAccessor//<TContext>
     {
         public Func<object, object> Getter;
         public Action<object, object> Setter;
-        public PropertyInfo Property;
-        public PropertyAdditionalDefinitionAttribute DefinitionAttribute;
-        public string PropertyName;
-        public string PropertyKey;
-        public Type PropertyValueType;
+        public MemberInfo Member;
+        public MemberTypes? Types;
+        public MemberAdditionalDefinitionAttribute DefinitionAttribute;
+        public string Name;
+        public string Key;
+        public Type MemberType;
     }
 
     public static class TypeHelper
@@ -50,6 +51,72 @@
                                                             }
                                                         )
                                             );
+
+        public static IEnumerable<Type> ModelMemberTypes
+        {
+            get
+            {
+                return _typesWhiteList;
+            }
+
+            //set
+            //{
+            //    _typesWhiteList = value;
+            //}
+        }
+
+        public static IEnumerable<MemberInfo>
+                       GetModelMembers
+                               (
+                                   Type type
+                                )
+        {
+            return
+                type
+                    .GetMembers()
+                    .Where
+                        (
+                            (x) =>
+                            {
+                                var r = false;
+                                Type memberType = null;
+                                if (x is FieldInfo)
+                                {
+                                    var fieldInfo = x as FieldInfo;
+                                    memberType = fieldInfo.FieldType;
+                                    r = true;
+                                }
+                                else if (x is PropertyInfo)
+                                {
+                                    var propertyInfo = x as PropertyInfo;
+                                    memberType = propertyInfo.PropertyType;
+                                    r = true;
+                                }
+                                else
+                                {
+                                    r = false;
+                                }
+                                if (r)
+                                {
+                                    if (memberType.IsNullableType())
+                                    {
+                                        memberType = memberType.GetNullableUnderlyingType();
+                                    }
+                                    r = ModelMemberTypes
+                                            .Any
+                                                (
+                                                    (xx) =>
+                                                    {
+                                                        return
+                                                            (xx == memberType);
+                                                    }
+                                                );
+                                }
+                                return r;
+                            }
+                        );
+        }
+
 
 
         public static IEnumerable<MemberInfo>
@@ -127,140 +194,230 @@
         }
 
 
-        public static IEnumerable<PropertyAccessor>
-                        GetTypePropertiesAccessors
+        public static IEnumerable<MemberAccessor>
+                        GetModelMembersAccessors
                                 (
                                     Type type
                                     , bool needDefinitionAttributeProcess = false
                                 )
                                 
         {
-            var properties = type.GetProperties();
-            foreach (var property in properties)
-            {
-                if 
-                    (
-                        _typesWhiteList
-                            .Any
-                                (
-                                    (x) =>
-                                    {
-                                        var r = false;
-                                        var propertyType = property.PropertyType;
-                                        if (x == propertyType)
-                                        {
-                                            r = true;
-                                        }
-                                        if (!r)
-                                        {
-                                            if
-                                                (
-                                                    propertyType
-                                                        .IsGenericType
-                                                    &&
-                                                    propertyType
-                                                        .GetGenericTypeDefinition()
-                                                        .Equals
-                                                            (
-                                                                typeof(Nullable<>)
-                                                            )
-                                                )
-                                            {
-                                                if
-                                                    (
-                                                        x
-                                                        ==
-                                                        GetNullableUnderlyingType
-                                                                (propertyType)
-                                                    )
-                                                {
-                                                    r = true;
-                                                }
-                                            }
-                                        }
-                                        return r;
-                                    }
-                                )
-                    )
-                {
-                    var propertyName = property.Name;
-                    var propertyType = property.PropertyType;
-                    var accessor = new PropertyAccessor()
-                    {
-                        Getter = DynamicPropertyAccessor
-                                    .CreateGetPropertyValueFunc(type, propertyName)
-                        , Setter = DynamicPropertyAccessor
-                                    .CreateSetPropertyValueAction(type, propertyName)
-                        , Property = property
-                        , PropertyName = property.Name
-                        , PropertyKey = property.Name
-                        , PropertyValueType = GetNullableUnderlyingType(propertyType)
-                    };
-                    if (needDefinitionAttributeProcess)
-                    {
-                        var attribute = property
-                                            .GetCustomAttributes
-                                                (
-                                                    typeof(PropertyAdditionalDefinitionAttribute)
-                                                    , true
-                                                )
-                                                .FirstOrDefault(); //as DataTableColumnIDAttribute;
-                        if (attribute != null)
-                        {
-                            var asAttribute =
-                                            attribute as PropertyAdditionalDefinitionAttribute;
-                            if (asAttribute != null)
-                            {
-                                if (asAttribute.DataTableColumnDataType != null)
-                                {
-                                    accessor
-                                        .PropertyValueType = asAttribute
-                                                                    .DataTableColumnDataType; 
-                                }
-                                accessor
-                                        .DefinitionAttribute = asAttribute;
-                                if
+            var members = TypeHelper
+                                .GetModelMembers
                                     (
-                                        !asAttribute
-                                                .DataTableColumnName
-                                                .IsNullOrEmptyOrWhiteSpace()
-                                    )
-                                {
-                                    accessor
-                                        .PropertyKey
-                                                = asAttribute
-                                                        .DataTableColumnName;
-                                }
+                                        type
+                                    );
+
+
+
+            foreach (var member in members)
+            {
+                var memberName = member.Name;
+
+                Type memberType = null;
+                MemberTypes? memberTypes = null;
+                if (member is FieldInfo)
+                {
+                    var fieldInfo = member as FieldInfo;
+                    memberType = fieldInfo.FieldType;
+                }
+                else if (member is PropertyInfo)
+                {
+                    var propertyInfo = member as PropertyInfo;
+                    memberType = propertyInfo.PropertyType;
+                }
+
+
+                var accessor = new MemberAccessor()
+                {
+                    Getter = DynamicMemberAccessor
+                                .CreateGetter(memberType, memberName)
+                    ,
+                    Setter = DynamicMemberAccessor
+                                .CreateSetter(type, memberName)
+                    ,
+                    Member = member
+                    ,
+                    Types = memberTypes
+                 
+                    ,
+                    Name = memberName
+                    ,
+                    Key = memberName
+                    ,
+                    MemberType = GetNullableUnderlyingType(memberType)
+                };
+                if (needDefinitionAttributeProcess)
+                {
+                    var attribute = member
+                                        .GetCustomAttributes
+                                            (
+                                                typeof(MemberAdditionalDefinitionAttribute)
+                                                , true
+                                            )
+                                            .FirstOrDefault(); //as DataTableColumnIDAttribute;
+                    if (attribute != null)
+                    {
+                        var asAttribute =
+                                        attribute as MemberAdditionalDefinitionAttribute;
+                        if (asAttribute != null)
+                        {
+                            //if (asAttribute.DataTableColumnDataType != null)
+                            //{
+                            //    accessor
+                            //        .MemberType = asAttribute
+                            //                                    .DataTableColumnDataType;
+                            //}
+                            accessor
+                                    .DefinitionAttribute = asAttribute;
+                            if
+                                (
+                                    !asAttribute
+                                            .DataTableColumnName
+                                            .IsNullOrEmptyOrWhiteSpace()
+                                )
+                            {
+                                accessor
+                                    .Key
+                                            = asAttribute
+                                                    .DataTableColumnName;
                             }
                         }
                     }
-                    yield
-                        return
-                            accessor;
                 }
+                yield
+                    return
+                        accessor;
+
+
             }
+
+            //var properties = type.GetProperties();
+            //foreach (var property in properties)
+            //{
+            //    if 
+            //        (
+            //            ModelMemberTypes
+            //                .Any
+            //                    (
+            //                        (x) =>
+            //                        {
+            //                            var r = false;
+            //                            var propertyType = property.PropertyType;
+            //                            if (x == propertyType)
+            //                            {
+            //                                r = true;
+            //                            }
+            //                            if (!r)
+            //                            {
+            //                                if
+            //                                    (
+            //                                        propertyType
+            //                                            .IsGenericType
+            //                                        &&
+            //                                        propertyType
+            //                                            .GetGenericTypeDefinition()
+            //                                            .Equals
+            //                                                (
+            //                                                    typeof(Nullable<>)
+            //                                                )
+            //                                    )
+            //                                {
+            //                                    if
+            //                                        (
+            //                                            x
+            //                                            ==
+            //                                            GetNullableUnderlyingType
+            //                                                    (propertyType)
+            //                                        )
+            //                                    {
+            //                                        r = true;
+            //                                    }
+            //                                }
+            //                            }
+            //                            return r;
+            //                        }
+            //                    )
+            //        )
+            //    {
+            //        var propertyName = property.Name;
+            //        var propertyType = property.PropertyType;
+            //        var accessor = new MemberAccessor()
+            //        {
+            //            Getter = DynamicPropertyAccessor
+            //                        .CreateGetPropertyValueFunc(type, propertyName)
+            //            , Setter = DynamicPropertyAccessor
+            //                        .CreateSetPropertyValueAction(type, propertyName)
+            //            , Member = property
+            //            , Name = property.Name
+            //            , Key = property.Name
+            //            , MemberType = GetNullableUnderlyingType(propertyType)
+            //        };
+            //        if (needDefinitionAttributeProcess)
+            //        {
+            //            var attribute = property
+            //                                .GetCustomAttributes
+            //                                    (
+            //                                        typeof(MemberAdditionalDefinitionAttribute)
+            //                                        , true
+            //                                    )
+            //                                    .FirstOrDefault(); //as DataTableColumnIDAttribute;
+            //            if (attribute != null)
+            //            {
+            //                var asAttribute =
+            //                                attribute as MemberAdditionalDefinitionAttribute;
+            //                if (asAttribute != null)
+            //                {
+            //                    if (asAttribute.DataTableColumnDataType != null)
+            //                    {
+            //                        accessor
+            //                            .MemberType = asAttribute
+            //                                                        .DataTableColumnDataType; 
+            //                    }
+            //                    accessor
+            //                            .DefinitionAttribute = asAttribute;
+            //                    if
+            //                        (
+            //                            !asAttribute
+            //                                    .DataTableColumnName
+            //                                    .IsNullOrEmptyOrWhiteSpace()
+            //                        )
+            //                    {
+            //                        accessor
+            //                            .Key
+            //                                    = asAttribute
+            //                                            .DataTableColumnName;
+            //                    }
+            //                }
+            //            }
+            //        }
+            //        yield
+            //            return
+            //                accessor;
+            //    }
+            //}
             //);
             //return dictionary;
         }
-        public static Dictionary<string, PropertyAccessor>
-                                GetTypeKeyedPropertiesAccessors
+        public static Dictionary<string, MemberAccessor>
+                                GenerateTypeKeyedCachedMembersAccessors
                                         (
                                             Type type
                                             , bool needDefinitionAttributeProcess = false
                                         )
         {
-            Dictionary<string, PropertyAccessor> dictionary = null;
-            var result = GetTypePropertiesAccessors(type, needDefinitionAttributeProcess);
+            Dictionary<string, MemberAccessor> dictionary = null;
+            var result = GetModelMembersAccessors(type, needDefinitionAttributeProcess);
             foreach (var x in result)
             {
                 if (dictionary == null)
                 {
-                    dictionary = new Dictionary<string, PropertyAccessor>();
+                    dictionary = new Dictionary<string, MemberAccessor>();
                 }
                 dictionary
                         .Add
                             (
-                                x.PropertyKey
+                                x.Key
                                 , x
                             );
             }

@@ -5,22 +5,26 @@
     /// PropertyDefinitionAttribute
     /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, Inherited = true)]
-    public class PropertyAdditionalDefinitionAttribute : Attribute
+    public class MemberAdditionalDefinitionAttribute : Attribute
     {
+        public MemberAdditionalDefinitionAttribute()
+        {
+            //DataTableColumnID = dataTableColumnID;
+        }
         /// <summary>
         /// PropertyDefinitionAttribute 构造函数
         /// </summary>
         /// <param name="dataTableColumnID">列序号</param>
-        public PropertyAdditionalDefinitionAttribute(int dataTableColumnID)
+        public MemberAdditionalDefinitionAttribute(int dataTableColumnID)
         {
             DataTableColumnID = dataTableColumnID;
         }
-        public PropertyAdditionalDefinitionAttribute(int dataTableColumnID, string dataTableColumnName)
+        public MemberAdditionalDefinitionAttribute(int dataTableColumnID, string dataTableColumnName)
             : this(dataTableColumnID)
         {
             DataTableColumnName = dataTableColumnName;
         }
-        public PropertyAdditionalDefinitionAttribute
+        public MemberAdditionalDefinitionAttribute
                         (
                             int dataTableColumnID
                             , string dataTableColumnName
@@ -33,17 +37,17 @@
         public int? DataTableColumnID
         {
             get;
-            private set;
+            set;
         }
         public string DataTableColumnName
         {
             get;
-            private set;
+            set;
         }
         public Type DataTableColumnDataType
         {
             get;
-            private set;
+            set;
         }
     }
 }

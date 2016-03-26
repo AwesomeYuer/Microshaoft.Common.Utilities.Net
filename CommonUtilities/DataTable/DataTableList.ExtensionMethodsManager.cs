@@ -6,7 +6,7 @@ namespace Microshaoft
     using System.Data;
     using System.Linq;
 
-    public static partial class ExtensionMethodsManager
+    public static partial class DataTableListExtensionMethodsManager
     {
         
         public static DataRow[] FullTextSearch(this DataTable dataTable, string[] keyWords)
@@ -49,7 +49,7 @@ namespace Microshaoft
         public static DataTable ToDataTable<TEntry>(this IEnumerable<TEntry> target, bool needDefinitionAttributeProcess = false)
         {
             var type = typeof(TEntry);
-            var accessors = TypeHelper.GetTypeKeyedPropertiesAccessors(type, needDefinitionAttributeProcess);
+            var accessors = TypeHelper.GenerateTypeKeyedCachedMembersAccessors(type, needDefinitionAttributeProcess);
             var dataTable = DataTableHelper
                                         .GenerateEmptyDataTable<TEntry>
                                                 (needDefinitionAttributeProcess);
@@ -61,7 +61,7 @@ namespace Microshaoft
                     var row = dataTable.NewRow();
                     foreach (DataColumn dataColumn in dataColumns)
                     {
-                        PropertyAccessor accessor = null;
+                        MemberAccessor accessor = null;
                         if (accessors.TryGetValue(dataColumn.ColumnName, out accessor))
                         {
                             object v = accessor
@@ -100,8 +100,8 @@ namespace Microshaoft
             foreach (DataColumn c in columns)
             {
                 var columnName = c.ColumnName;
-                var action = DynamicPropertyAccessor
-                                    .CreateSetPropertyValueAction
+                var action = DynamicMemberAccessor
+                                    .CreateSetter
                                                 (
                                                     typeof(TEntry)
                                                     , columnName

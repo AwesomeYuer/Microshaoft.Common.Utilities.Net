@@ -25,6 +25,10 @@
 
            var  settingValue = memberGetter(appSettings);
 
+
+           var dataTable =  DataTableHelper
+                                    .GenerateEmptyDataTable<TestRuntimeSettings>(true);
+
             Console.ReadLine();
         }
     }
