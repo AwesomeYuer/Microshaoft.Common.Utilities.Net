@@ -182,6 +182,12 @@
     <Compile Include="Socket\SocketAsyncDataHandler.01.cs" />
     <Compile Include="Socket\SocketAsyncEventArgsPool.cs" />
     <Compile Include="Socket\SocketHelper.cs" />
+    <Compile Include="Throttler\RateLimiters\FixedTokenBucket.cs" />
+    <Compile Include="Throttler\RateLimiters\IThrottleStrategy.cs" />
+    <Compile Include="Throttler\RateLimiters\SystemTime.cs" />
+    <Compile Include="Throttler\RateLimiters\Throttler.cs" />
+    <Compile Include="Throttler\RateLimiters\TokenBucket.cs" />
+    <Compile Include="Throttler\Throttler.cs" />
     <Compile Include="TimeBasedIdentity\TimeBasedIdentityGenerator.cs" />
     <Compile Include="Type\TypeHelper.cs" />
     <Compile Include="WebMvcApi.NET45\JsonpMediaTypeFormatter.cs" />
@@ -190,12 +196,6 @@
     <Compile Include="WorkFlow\WorkFlowHelper.cs" />
     <Compile Include="Xml\XmlCDATA.cs" />
     <Compile Include="Xml\XmlValidationHelper.cs" />
-    <Compile Include="流控\RateLimiters\FixedTokenBucket.cs" />
-    <Compile Include="流控\RateLimiters\IThrottleStrategy.cs" />
-    <Compile Include="流控\RateLimiters\SystemTime.cs" />
-    <Compile Include="流控\RateLimiters\Throttler.cs" />
-    <Compile Include="流控\RateLimiters\TokenBucket.cs" />
-    <Compile Include="流控\Throttler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
