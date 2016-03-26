@@ -2,7 +2,6 @@
 {
     using System;
     using System.Configuration;
-    using System.Linq;
     using System.Runtime.CompilerServices;
     using System.Reflection;
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, Inherited = true)]
