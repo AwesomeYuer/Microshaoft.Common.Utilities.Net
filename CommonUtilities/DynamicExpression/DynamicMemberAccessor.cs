@@ -58,8 +58,8 @@
                                     .GetMember
                                         (
                                             memberName
-                                        //, MemberTypes.Field | MemberTypes.Property
-                                        //, BindingFlags.Default
+                                            //, MemberTypes.Field | MemberTypes.Property
+                                            //, BindingFlags.Default
                                         ).Single();
             var isStatic = false;
             if (memberInfo is FieldInfo)
@@ -76,15 +76,9 @@
             {
                 targetParameter = null;
             }
-
-
-
             var targetMember = Expression.MakeMemberAccess(targetParameter, memberInfo);
             var targetMemberConverter = Expression.Convert(targetMemberParameter, targetMember.Type);
             var body = Expression.Assign(targetMember, targetMemberConverter);
-
-
-
             Expression<Action<object, object>> lambda = null;
             //if (!isStatic)
             //{
@@ -94,14 +88,8 @@
             //{
             //    lambda = Expression.Lambda<Action<TTarget, TMember>>(body, targetParameter, targetMemberParameter);
             //}
-
-
-
-
             return lambda.Compile();
-
         }
-
         public static Func<TTarget, TMember> CreateGetter<TTarget, TMember>(string memberName)
         {
             var targetType = typeof(TTarget);
@@ -121,6 +109,5 @@
             var lambda = Expression.Lambda<Func<object, object>>(body, targetParameter);
             return lambda.Compile();
         }
-
     }
 }
