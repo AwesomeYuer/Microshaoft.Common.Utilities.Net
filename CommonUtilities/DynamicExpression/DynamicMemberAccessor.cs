@@ -34,15 +34,9 @@
             {
                 targetParameter = null;
             }
-
-
-
             var targetMember = Expression.MakeMemberAccess(targetParameter, memberInfo);
             var targetMemberConverter = Expression.Convert(targetMemberParameter, targetMember.Type);
             var body = Expression.Assign(targetMember, targetMemberConverter);
-
-
-
             Expression<Action<TTarget, TMember>> lambda = null;
             //if (!isStatic)
             //{
@@ -52,15 +46,8 @@
             //{
             //    lambda = Expression.Lambda<Action<TTarget, TMember>>(body, targetParameter, targetMemberParameter);
             //}
-
-
-
-
             return lambda.Compile();
-
         }
-
-
         public static Action<object, object> CreateSetter(Type targetType, string memberName)
         {
             //var targetType = typeof(TTarget);
