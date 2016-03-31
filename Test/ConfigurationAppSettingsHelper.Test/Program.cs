@@ -19,8 +19,8 @@
                                     .GetAppSettingsByMapFromConfig<TestRuntimeSettings>();
 
 
-            var memberGetter = DynamicMemberAccessor
-                            .CreateGetter<TestRuntimeSettings, object>
+            var memberGetter = DynamicExpressionTreeHelper
+                            .CreateMemberGetter<TestRuntimeSettings, object>
                                 ("RuntimeTimeStamp");
 
            var  settingValue = memberGetter(appSettings);

@@ -154,10 +154,10 @@
     <Compile Include="DataTable\DataReaderHelper.cs" />
     <Compile Include="DataTable\DataTableHelper.cs" />
     <Compile Include="DataTable\DataTableList.ExtensionMethodsManager.cs" />
-    <Compile Include="DynamicExpression\DynamicCallMethodExpressionTreeInvokerHelper.cs" />
-    <Compile Include="DynamicExpression\DynamicMemberAccessor.cs" />
-    <Compile Include="DynamicExpression\DynamicPropertyAccessor.cs" />
-    <Compile Include="DynamicExpression\ExpressionHelper.cs" />
+    <Compile Include="DynamicExpression\ExpressionTreeHelper.cs" />
+    <Compile Include="DynamicExpression\ExpressTreeHelper.DynamicCallMethodExpressionTreeInvokerHelper.cs" />
+    <Compile Include="DynamicExpression\ExpressTreeHelper.DynamicMemberAccessor.cs" />
+    <Compile Include="DynamicExpression\ExpressTreeHelper.DynamicPropertyAccessor.cs" />
     <Compile Include="DynamicExpression\MethodCallExpressionHelper.cs" />
     <Compile Include="Etw\EventSourceProvider.cs" />
     <Compile Include="Etw\TraceEventsTrackerHelper.cs" />

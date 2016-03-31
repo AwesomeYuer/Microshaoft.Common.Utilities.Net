@@ -59,10 +59,10 @@
                 if (methodInfo != null)
                 {
                     var memberName = member.Name;
-                    var memberSetter = DynamicMemberAccessor
-                                                .CreateSetter<T,object>
+                    var memberSetter = DynamicExpressionTreeHelper
+                                                .CreateMemberSetter<T,object>
                                                     (memberName);
-                    var delegateInvoker = DynamicCallMethodExpressionTreeInvokerHelper
+                    var delegateInvoker = DynamicExpressionTreeHelper
                                                 .CreateDelegate
                                                         (
                                                             methodInfo

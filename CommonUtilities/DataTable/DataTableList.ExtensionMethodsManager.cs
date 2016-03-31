@@ -100,8 +100,8 @@ namespace Microshaoft
             foreach (DataColumn c in columns)
             {
                 var columnName = c.ColumnName;
-                var action = DynamicMemberAccessor
-                                    .CreateSetter
+                var action = DynamicExpressionTreeHelper
+                                    .CreateMemberSetter
                                                 (
                                                     typeof(TEntry)
                                                     , columnName

@@ -89,7 +89,7 @@
                                 (pi) =>
                                 {
                                     var func =
-                                            DynamicPropertyAccessor
+                                            DynamicExpressionTreeHelper
                                                 .CreateGetPropertyValueFunc
                                                     <TPerformanceCountersContainer, PerformanceCounter>
                                                         (
@@ -171,7 +171,7 @@
             Func<TPerformanceCountersContainer, PerformanceCounter> func = null;
             if (propertyInfo != null)
             {
-                func = DynamicPropertyAccessor
+                func = DynamicExpressionTreeHelper
                             .CreateGetPropertyValueFunc
                                 <TPerformanceCountersContainer, PerformanceCounter>
                                     (
@@ -214,7 +214,7 @@
                                 (x) =>
                                 {
                                     return
-                                            DynamicPropertyAccessor
+                                            DynamicExpressionTreeHelper
                                                 .CreateGetPropertyValueFunc
                                                     <TPerformanceCountersContainer, PerformanceCounter>
                                                         (
@@ -290,7 +290,7 @@
                                                     )
                                             , "PerformanceCounters"
                                         );
-           var propertySetter = DynamicPropertyAccessor
+           var propertySetter = DynamicExpressionTreeHelper
                                         .CreateTargetSetPropertyValueAction
                                                 <TPerformanceCountersContainer, PerformanceCounter[]>
                                                     (
@@ -334,7 +334,7 @@
                                             (x) =>
                                             {
                                                 return
-                                                    DynamicPropertyAccessor
+                                                    DynamicExpressionTreeHelper
                                                         .CreateGetPropertyValueFunc
                                                             <TPerformanceCountersContainer, PerformanceCounter>
                                                                 (
@@ -372,7 +372,7 @@
                                                     )
                                             , "PerformanceCountersPairs"
                                         );
-            var propertySetter = DynamicPropertyAccessor
+            var propertySetter = DynamicExpressionTreeHelper
                                     .CreateTargetSetPropertyValueAction
                                          <TPerformanceCountersContainer, PerformanceCountersPair[]>
                                              (
@@ -401,7 +401,7 @@
                                             (x) =>
                                             {
                                                 return
-                                                    DynamicPropertyAccessor
+                                                    DynamicExpressionTreeHelper
                                                         .CreateGetPropertyValueFunc
                                                             <TPerformanceCountersContainer, PerformanceCountersPair>
                                                                 (

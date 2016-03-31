@@ -4,9 +4,9 @@
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
-    public class DynamicMemberAccessor
+    public static partial class DynamicExpressionTreeHelper
     {
-		public static Action<TTarget, TMember> CreateSetter<TTarget, TMember>(string memberName)
+		public static Action<TTarget, TMember> CreateMemberSetter<TTarget, TMember>(string memberName)
         {
             var targetType = typeof(TTarget);
             var targetParameter = Expression.Parameter(targetType, "target");
@@ -48,7 +48,7 @@
             //}
             return lambda.Compile();
         }
-        public static Action<object, object> CreateSetter(Type targetType, string memberName)
+        public static Action<object, object> CreateMemberSetter(Type targetType, string memberName)
         {
             //var targetType = typeof(TTarget);
             var targetParameter = Expression.Parameter(targetType, "target");
@@ -90,7 +90,7 @@
             //}
             return lambda.Compile();
         }
-        public static Func<TTarget, TMember> CreateGetter<TTarget, TMember>(string memberName)
+        public static Func<TTarget, TMember> CreateMemberGetter<TTarget, TMember>(string memberName)
         {
             var targetType = typeof(TTarget);
             var targetParameter = Expression.Parameter(targetType, "target");
@@ -100,7 +100,7 @@
             var lambda = Expression.Lambda<Func<TTarget, TMember>>(body, targetParameter);
             return lambda.Compile();
         }
-        public static Func<object, object> CreateGetter(Type targetType, string memberName)
+        public static Func<object, object> CreateMemberGetter(Type targetType, string memberName)
         {
             var targetParameter = Expression.Parameter(targetType, "target");
             var targetMember = Expression.PropertyOrField(targetParameter, memberName);

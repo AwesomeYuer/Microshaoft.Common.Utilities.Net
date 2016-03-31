@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Microshaoft
+﻿namespace Microshaoft
 {
-    public static class ExpressionHelper
+    using System;
+    using System.Linq;
+    using System.Linq.Expressions;
+
+    public static partial class ExpressionHelper
     {
         public static Expression<Func<TTarget, bool>> CreateMemberEqualsToExpression<TTarget>
             (

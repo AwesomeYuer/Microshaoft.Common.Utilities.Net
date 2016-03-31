@@ -5,7 +5,7 @@
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
-    public static class DynamicCallMethodExpressionTreeInvokerHelper
+    public static partial class DynamicExpressionTreeHelper //DynamicCallMethodExpressionTreeInvokerHelper
     {
         public static Func<object[], object> CreateNewInstanceConstructorInvokerFunc
                                                         (

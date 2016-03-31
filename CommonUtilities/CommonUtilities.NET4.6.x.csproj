@@ -132,10 +132,10 @@
     <Compile Include="00.Utilities\FileLogHelper.cs" />
     <Compile Include="00.Utilities\FtpWebRequestResponseHelper.cs" />
     <Compile Include="00.Utilities\GCNotifier.cs" />
-    <Compile Include="DynamicExpression\ExpressionHelper.cs" />
-    <Compile Include="DynamicExpression\DynamicCallMethodExpressionTreeInvokerHelper.cs" />
-    <Compile Include="DynamicExpression\DynamicMemberAccessor.cs" />
-    <Compile Include="DynamicExpression\DynamicPropertyAccessor.cs" />
+    <Compile Include="DynamicExpression\ExpressionTreeHelper.cs" />
+    <Compile Include="DynamicExpression\ExpressTreeHelper.DynamicCallMethodExpressionTreeInvokerHelper.cs" />
+    <Compile Include="DynamicExpression\ExpressTreeHelper.DynamicMemberAccessor.cs" />
+    <Compile Include="DynamicExpression\ExpressTreeHelper.DynamicPropertyAccessor.cs" />
     <Compile Include="DynamicExpression\MethodCallExpressionHelper.cs" />
     <Compile Include="Etw\TraceEventsTrackerHelper.cs" />
     <Compile Include="PerformanceCounter\EasyPerformanceCountersHelper.Partial.01.cs" />

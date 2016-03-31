@@ -230,11 +230,11 @@
 
                 var accessor = new MemberAccessor()
                 {
-                    Getter = DynamicMemberAccessor
-                                .CreateGetter(memberType, memberName)
+                    Getter = DynamicExpressionTreeHelper
+                                .CreateMemberGetter(memberType, memberName)
                     ,
-                    Setter = DynamicMemberAccessor
-                                .CreateSetter(type, memberName)
+                    Setter = DynamicExpressionTreeHelper
+                                .CreateMemberSetter(type, memberName)
                     ,
                     Member = member
                     ,

@@ -4,7 +4,7 @@
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
-    public class DynamicPropertyAccessor
+    public static partial class DynamicExpressionTreeHelper
     {
         private static Assembly GetAssemblyByTypeName(string typeName)
         {

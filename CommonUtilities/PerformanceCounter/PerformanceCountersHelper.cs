@@ -397,7 +397,7 @@
             string propertyName = propertyInfo.Name;
             if (propertyInfo.GetGetMethod().IsStatic)
             {
-                var setter = DynamicPropertyAccessor
+                var setter = DynamicExpressionTreeHelper
                                     .CreateTargetSetStaticPropertyValueAction
                                             <TTarget, TProperty>
                                                 (
@@ -409,7 +409,7 @@
             {
                 if (target != null)
                 {
-                    var setter = DynamicPropertyAccessor
+                    var setter = DynamicExpressionTreeHelper
                                            .CreateTargetSetPropertyValueAction
                                                 <TTarget, TProperty>
                                                    (

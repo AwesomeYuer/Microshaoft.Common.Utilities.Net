@@ -60,8 +60,8 @@
                             }
                         }
                     }
-                    var setter = DynamicMemberAccessor
-                                            .CreateSetter<TEntry, object>
+                    var setter = DynamicExpressionTreeHelper
+                                            .CreateMemberSetter<TEntry, object>
                                                 (
                                                     x.Name
                                                 );
