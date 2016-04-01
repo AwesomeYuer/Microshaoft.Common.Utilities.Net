@@ -169,10 +169,10 @@
     <Compile Include="LongInteger\LongIntegerHelper.cs" />
     <Compile Include="MEF\MEF.Contracts.cs" />
     <Compile Include="MEF\MEFHelper.cs" />
+    <Compile Include="MemberAdditionalDefinitionAttribute\MemberAdditionalDefinitionAttribute.cs" />
     <Compile Include="Pools\00.PoolManager\PoolsManager.cs" />
     <Compile Include="Pools\QueuedObjectsPool.Partial.01.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PropertyAdditionalDefinitionAttribute\PropertyAdditionalDefinitionAttribute.cs" />
     <Compile Include="ReaderWriterLock\EasyReaderWriterLockSlim.cs" />
     <Compile Include="ReaderWriterLock\ReaderWriterLockSlimHelper.cs" />
     <Compile Include="SingleThreadAsyncDequeueProcessor\SingleThreadAsyncDequeueProcessor.cs" />

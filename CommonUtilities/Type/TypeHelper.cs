@@ -52,6 +52,52 @@
                                                         )
                                             );
 
+        public static IEnumerable<MemberInfo> GetMembersByMemberType<TTarget, TMember>()
+        {
+            var targetType = typeof(TTarget);
+            var memberType = typeof(TMember);
+            return
+                GetMembersByMemberType
+                        (
+                            targetType
+                            , memberType
+                        );
+        }
+        public static IEnumerable<MemberInfo> GetMembersByMemberType(Type targetType, Type memberType)
+        {
+            return
+                targetType
+                    .GetMembers()
+                    .Where
+                        (
+                            (x) =>
+                            {
+                                Type type = null;
+                                var r = false;
+                                if (x is PropertyInfo)
+                                {
+                                    var propertyInfo = x as PropertyInfo;
+                                    type = propertyInfo.PropertyType;
+                                }
+                                else if (x is FieldInfo)
+                                {
+                                    var fieldInfo = x as FieldInfo;
+                                    type = fieldInfo.FieldType;
+                                }
+                                if (type != null)
+                                {
+                                    r =
+                                        (
+                                            type
+                                            ==
+                                            memberType
+                                        );
+                                }
+                                return r;
+                            }
+                        );
+            }
+
         public static IEnumerable<Type> ModelMemberTypes
         {
             get
@@ -116,11 +162,8 @@
                             }
                         );
         }
-
-
-
         public static IEnumerable<MemberInfo>
-                       GetCustomAttributedPropertiesOrFields<TAttribute>
+                       GetCustomAttributedMembers<TAttribute>
                                (
                                    Type type
                                    , Func<MemberTypes, MemberInfo, TAttribute, bool> onAttributeProcessFunc = null
@@ -192,8 +235,6 @@
                                         )
                         );
         }
-
-
         public static IEnumerable<MemberAccessor>
                         GetModelMembersAccessors
                                 (
@@ -207,9 +248,6 @@
                                     (
                                         type
                                     );
-
-
-
             foreach (var member in members)
             {
                 var memberName = member.Name;
@@ -226,7 +264,6 @@
                     var propertyInfo = member as PropertyInfo;
                     memberType = propertyInfo.PropertyType;
                 }
-
 
                 var accessor = new MemberAccessor()
                 {
@@ -288,8 +325,6 @@
                 yield
                     return
                         accessor;
-
-
             }
 
             //var properties = type.GetProperties();
@@ -481,8 +516,45 @@
     public static class TypesExtensionsMethodsManager
     {
 
+            public static IEnumerable<MemberInfo> GetMembersByMemberType<TMember>(this Type target)
+            {
+                var type = target.GetType();
+                return
+                    type
+                        .GetMembers()
+                        .Where
+                            (
+                                (x) =>
+                                {
+                                    Type memberType = null;
+                                    var r = false;
+                                    if (x is PropertyInfo)
+                                    {
+                                        var propertyInfo = x as PropertyInfo;
+                                        memberType = propertyInfo.PropertyType;
+                                    }
+                                    else if (x is FieldInfo)
+                                    {
+                                        var fieldInfo = x as FieldInfo;
+                                        memberType = fieldInfo.FieldType;
+                                    }
+                                    if (type != null)
+                                    {
+                                        r =
+                                            (
+                                                memberType
+                                                ==
+                                                typeof(TMember)
+                                            );
+                                    }
+                                    return r;
+                                }
+                            );
+
+            }
+
         public static IEnumerable<MemberInfo>
-                       GetCustomAttributedPropertiesOrFields<TAttribute>
+                       GetCustomAttributedMembers<TAttribute>
                                (
                                    this Type type
                                    , Func<MemberTypes, MemberInfo, TAttribute, bool> onAttributeProcessFunc = null
@@ -493,7 +565,7 @@
         {
             return
                 TypeHelper
-                    .GetCustomAttributedPropertiesOrFields<TAttribute>
+                    .GetCustomAttributedMembers<TAttribute>
                         (
                             type
                             , onAttributeProcessFunc

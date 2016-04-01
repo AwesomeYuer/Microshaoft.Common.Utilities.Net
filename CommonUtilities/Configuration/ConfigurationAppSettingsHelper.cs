@@ -18,7 +18,7 @@
             Type type = typeof(T);
             string settingKey = string.Empty;
             var members = type
-                            .GetCustomAttributedPropertiesOrFields
+                            .GetCustomAttributedMembers
                                     <ConfigurationAppSettingAttribute>
                                         (
                                             (x, y, z) =>

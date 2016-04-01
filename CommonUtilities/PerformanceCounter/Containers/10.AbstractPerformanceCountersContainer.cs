@@ -54,29 +54,14 @@
                                 , int level
                             )
         {
+            var type = typeof(TPerformanceCountersContainer);
             return
-                typeof(TPerformanceCountersContainer)
-                    .GetProperties()
-                    .Where
+                type
+                    .GetCustomAttributedMembers<PerformanceCounterDefinitionAttribute>
                         (
-                            (pi) =>
+                            (memberTypes, memberInfo, attribute) =>
                             {
                                 var r = false;
-                                var attribute
-                                        = pi
-                                            .GetCustomAttributes(false)
-                                            .FirstOrDefault
-                                                (
-                                                    (x) =>
-                                                    {
-                                                        return
-                                                            (
-                                                                x as PerformanceCounterDefinitionAttribute
-                                                                !=
-                                                                null
-                                                            );
-                                                    }
-                                                ) as PerformanceCounterDefinitionAttribute;
                                 if (attribute != null)
                                 {
                                     r = (attribute.Level == level);
@@ -85,19 +70,62 @@
                             }
                         )
                         .Select
-                            (
-                                (pi) =>
-                                {
-                                    var func =
-                                            DynamicExpressionTreeHelper
-                                                .CreateGetPropertyValueFunc
+                        (
+                            (x) =>
+                            {
+                                var func = DynamicExpressionTreeHelper
+                                                .CreateMemberGetter
                                                     <TPerformanceCountersContainer, PerformanceCounter>
                                                         (
-                                                            pi.Name
+                                                            x.Name
                                                         );
-                                    return func(container);
-                                }
-                            );
+                                return func(container);
+                            }
+                        );
+            //return
+            //    typeof(TPerformanceCountersContainer)
+            //        .GetProperties()
+            //        .Where
+            //            (
+            //                (pi) =>
+            //                {
+            //                    var r = false;
+            //                    var attribute
+            //                            = pi
+            //                                .GetCustomAttributes(false)
+            //                                .FirstOrDefault
+            //                                    (
+            //                                        (x) =>
+            //                                        {
+            //                                            return
+            //                                                (
+            //                                                    x as PerformanceCounterDefinitionAttribute
+            //                                                    !=
+            //                                                    null
+            //                                                );
+            //                                        }
+            //                                    ) as PerformanceCounterDefinitionAttribute;
+            //                    if (attribute != null)
+            //                    {
+            //                        r = (attribute.Level == level);
+            //                    }
+            //                    return r;
+            //                }
+            //            )
+            //            .Select
+            //                (
+            //                    (pi) =>
+            //                    {
+            //                        var func =
+            //                                DynamicExpressionTreeHelper
+            //                                    .CreateGetPropertyValueFunc
+            //                                        <TPerformanceCountersContainer, PerformanceCounter>
+            //                                            (
+            //                                                pi.Name
+            //                                            );
+            //                        return func(container);
+            //                    }
+            //                );
         }
         protected void AttachPerformanceCountersToProperties<TContainer>
                             (
@@ -137,85 +165,99 @@
                                                     , string performanceCounterName
                                                 )
         {
-            var propertyInfo
-                    = typeof(TPerformanceCountersContainer)
-                            .GetProperties()
-                            .FirstOrDefault
-                                (
-                                    (pi) =>
-                                    {
-                                        var rr = false;
-                                        var attribute
-                                                = pi
-                                                    .GetCustomAttributes(false)
-                                                    .FirstOrDefault
-                                                        (
-                                                            (x) =>
-                                                            {
-                                                                return
-                                                                    (
-                                                                        x as PerformanceCounterDefinitionAttribute
-                                                                        !=
-                                                                        null
-                                                                    );
-                                                            }
-                                                        ) as PerformanceCounterDefinitionAttribute;
-                                        if (attribute != null)
+            //var propertyInfo
+            //        = typeof(TPerformanceCountersContainer)
+            //                .GetProperties()
+            //                .FirstOrDefault
+            //                    (
+            //                        (pi) =>
+            //                        {
+            //                            var rr = false;
+            //                            var attribute
+            //                                    = pi
+            //                                        .GetCustomAttributes(false)
+            //                                        .FirstOrDefault
+            //                                            (
+            //                                                (x) =>
+            //                                                {
+            //                                                    return
+            //                                                        (
+            //                                                            x as PerformanceCounterDefinitionAttribute
+            //                                                            !=
+            //                                                            null
+            //                                                        );
+            //                                                }
+            //                                            ) as PerformanceCounterDefinitionAttribute;
+            //                            if (attribute != null)
+            //                            {
+            //                                rr = (attribute.CounterName == performanceCounterName);
+            //                            }
+            //                            return rr;
+            //                        }
+            //                    );
+
+            var type = typeof(TPerformanceCountersContainer);
+            //return
+            var memberInfo = type
+                                .GetCustomAttributedMembers<PerformanceCounterDefinitionAttribute>
+                                    (
+                                        (memberTypes, x, attribute) =>
                                         {
-                                            rr = (attribute.CounterName == performanceCounterName);
+                                            var rr = false;
+                                            if (attribute != null)
+                                            {
+                                                rr = true;
+                                            }
+                                            return rr;
                                         }
-                                        return rr;
-                                    }
-                                );
+                                    )
+                                .SingleOrDefault();
+
             PerformanceCounter r = null;
             Func<TPerformanceCountersContainer, PerformanceCounter> func = null;
-            if (propertyInfo != null)
+            if (memberInfo != null)
             {
                 func = DynamicExpressionTreeHelper
-                            .CreateGetPropertyValueFunc
+                            .CreateMemberGetter
                                 <TPerformanceCountersContainer, PerformanceCounter>
                                     (
-                                        propertyInfo.Name
+                                        memberInfo.Name
                                     );
                 r = func(target);
             }
             return r;
         }
-        protected IEnumerable<PropertyInfo> GetPerformanceCountersProperties<TPerformanceCountersContainer, TProperty>()
+        protected IEnumerable<MemberInfo> GetPerformanceCountersMembers<TPerformanceCountersContainer>()
         {
             return
-                typeof(TPerformanceCountersContainer)
-                    .GetProperties()
-                    .Where
-                        (
-                            (x) =>
-                            {
-                                return
-                                    (
-                                        x.PropertyType
-                                        ==
-                                        typeof(TProperty)
-                                    );
-                            }
-                        );
-
+                TypeHelper
+                    .GetMembersByMemberType<TPerformanceCountersContainer, PerformanceCounter>();
         }
+
+        protected IEnumerable<MemberInfo> GetPerformanceCountersPairsMembers<TPerformanceCountersContainer>()
+        {
+            return
+                TypeHelper
+                    .GetMembersByMemberType<TPerformanceCountersContainer, PerformanceCountersPair>();
+        }
+
         protected IEnumerable<PerformanceCounter>
-                        GetPropertiesPerformanceCounters<TPerformanceCountersContainer>
+                        GetMembersPerformanceCounters<TPerformanceCountersContainer>
                             (
                                 TPerformanceCountersContainer target
                             )
         {
             return
-                GetPerformanceCountersProperties
-                    <TPerformanceCountersContainer, PerformanceCounter>()
+                //GetPerformanceCountersPropertiesOrFields
+                GetPerformanceCountersMembers
+                    <TPerformanceCountersContainer>()
                         .Select
                             (
                                 (x) =>
                                 {
                                     return
                                             DynamicExpressionTreeHelper
-                                                .CreateGetPropertyValueFunc
+                                                .CreateMemberGetter
                                                     <TPerformanceCountersContainer, PerformanceCounter>
                                                         (
                                                             x.Name
@@ -277,73 +319,73 @@
                             where
                                 TPerformanceCountersContainer : AbstractPerformanceCountersContainer
         {
-            var properties = GetPerformanceCountersProperties<TPerformanceCountersContainer, PerformanceCounter>();
-            var propertyName = string
-                                    .Format
-                                        (
-                                            "{0}{1}"
-                                            , Enum
-                                                .GetName
-                                                    (
-                                                        typeof(PerformanceCounterProcessingFlagsType)
-                                                        , inclusivePerformanceCounterProcessingFlagsType
-                                                    )
-                                            , "PerformanceCounters"
-                                        );
-           var propertySetter = DynamicExpressionTreeHelper
-                                        .CreateTargetSetPropertyValueAction
-                                                <TPerformanceCountersContainer, PerformanceCounter[]>
-                                                    (
-                                                        propertyName
-                                                    );
-            var propertyValue = properties
-                                    .Where
-                                        (
-                                            (x) =>
+            var members = GetPerformanceCountersMembers<TPerformanceCountersContainer>(); 
+            var memberName = string
+                                .Format
+                                    (
+                                        "{0}{1}"
+                                        , Enum
+                                            .GetName
+                                                (
+                                                    typeof(PerformanceCounterProcessingFlagsType)
+                                                    , inclusivePerformanceCounterProcessingFlagsType
+                                                )
+                                        , "PerformanceCounters"
+                                    );
+           var setter = DynamicExpressionTreeHelper
+                                .CreateMemberSetter
+                                        <TPerformanceCountersContainer, PerformanceCounter[]>
+                                            (
+                                                memberName
+                                            );
+           var targetValue = members
+                                .Where
+                                    (
+                                        (x) =>
+                                        {
+                                            var r = false;
+                                            var attribute = x
+                                                                .GetCustomAttribute
+                                                                    <PerformanceCounterDefinitionAttribute>();
+                                            if (attribute != null)
                                             {
-                                                var r = false;
-                                                var attribute = x
-                                                                    .GetCustomAttribute
-                                                                        <PerformanceCounterDefinitionAttribute>();
-                                                if (attribute != null)
-                                                {
-                                                    r = attribute
-                                                            .CounterProcessingType
-                                                            .HasFlag(inclusivePerformanceCounterProcessingFlagsType);
-                                                    //if
-                                                    //      (
-                                                    //          r
-                                                    //          &&
-                                                    //          (
-                                                    //              exclusivePerformanceCounterProcessingFlagsType
-                                                    //              !=
-                                                    //              PerformanceCounterProcessingFlagsType.None
-                                                    //          )
-                                                    //      )
-                                                    //{
-                                                    //    r = !attribute
-                                                    //                .CounterProcessingType
-                                                    //                .HasFlag(exclusivePerformanceCounterProcessingFlagsType);
-                                                    //}
-                                                }
-                                                return r;
+                                                r = attribute
+                                                        .CounterProcessingType
+                                                        .HasFlag(inclusivePerformanceCounterProcessingFlagsType);
+                                                //if
+                                                //      (
+                                                //          r
+                                                //          &&
+                                                //          (
+                                                //              exclusivePerformanceCounterProcessingFlagsType
+                                                //              !=
+                                                //              PerformanceCounterProcessingFlagsType.None
+                                                //          )
+                                                //      )
+                                                //{
+                                                //    r = !attribute
+                                                //                .CounterProcessingType
+                                                //                .HasFlag(exclusivePerformanceCounterProcessingFlagsType);
+                                                //}
                                             }
-                                        )
-                                    .Select
-                                        (
-                                            (x) =>
-                                            {
-                                                return
-                                                    DynamicExpressionTreeHelper
-                                                        .CreateGetPropertyValueFunc
-                                                            <TPerformanceCountersContainer, PerformanceCounter>
-                                                                (
-                                                                    x.Name
-                                                                )(target);
-                                            }
-                                        )
-                                    .ToArray();
-            propertySetter(target, propertyValue);
+                                            return r;
+                                        }
+                                    )
+                                .Select
+                                    (
+                                        (x) =>
+                                        {
+                                            return
+                                                DynamicExpressionTreeHelper
+                                                    .CreateMemberGetter
+                                                        <TPerformanceCountersContainer, PerformanceCounter>
+                                                            (
+                                                                x.Name
+                                                            )(target);
+                                        }
+                                    )
+                                .ToArray();
+            setter(target, targetValue);
         }
         protected void
                         InitializeProcessingTypedPerformanceCountersPairs
@@ -359,8 +401,9 @@
                             where
                                 TPerformanceCountersContainer : AbstractPerformanceCountersContainer
         {
-            var properties = GetPerformanceCountersProperties<TPerformanceCountersContainer, PerformanceCountersPair>();
-            var propertyName = string
+            //var properties = GetPerformanceCountersPropertiesOrFields<TPerformanceCountersContainer, PerformanceCountersPair>();
+            var members = GetPerformanceCountersPairsMembers<TPerformanceCountersContainer>();
+            var memberName = string
                                     .Format
                                         (
                                             "{0}{1}"
@@ -372,13 +415,13 @@
                                                     )
                                             , "PerformanceCountersPairs"
                                         );
-            var propertySetter = DynamicExpressionTreeHelper
-                                    .CreateTargetSetPropertyValueAction
+            var setter = DynamicExpressionTreeHelper
+                                    .CreateMemberSetter
                                          <TPerformanceCountersContainer, PerformanceCountersPair[]>
                                              (
-                                                 propertyName
+                                                 memberName
                                              );
-            var propertyValue = properties
+            var targetValue = members
                                     .Where
                                         (
                                             (x) =>
@@ -402,7 +445,7 @@
                                             {
                                                 return
                                                     DynamicExpressionTreeHelper
-                                                        .CreateGetPropertyValueFunc
+                                                        .CreateMemberGetter
                                                             <TPerformanceCountersContainer, PerformanceCountersPair>
                                                                 (
                                                                     x.Name
@@ -410,7 +453,7 @@
                                             }
                                         )
                                     .ToArray();
-            propertySetter(target, propertyValue);
+            setter(target, targetValue);
         }
     }
 }

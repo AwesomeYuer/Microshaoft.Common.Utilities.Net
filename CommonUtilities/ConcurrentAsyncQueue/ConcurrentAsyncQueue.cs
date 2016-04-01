@@ -1019,7 +1019,7 @@ namespace Microshaoft
                 //throw new NotImplementedException();
                 return
                     (
-                        GetPropertiesPerformanceCounters//<QueuePerformanceCountersContainer>
+                        GetMembersPerformanceCounters//<QueuePerformanceCountersContainer>
                             (
                                 this
                             )

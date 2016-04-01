@@ -138,9 +138,9 @@
     <Compile Include="DynamicExpression\ExpressTreeHelper.DynamicPropertyAccessor.cs" />
     <Compile Include="DynamicExpression\MethodCallExpressionHelper.cs" />
     <Compile Include="Etw\TraceEventsTrackerHelper.cs" />
+    <Compile Include="MemberAdditionalDefinitionAttribute\MemberAdditionalDefinitionAttribute.cs" />
     <Compile Include="PerformanceCounter\EasyPerformanceCountersHelper.Partial.01.cs" />
     <Compile Include="PerformanceCounter\EasyPerformanceCountersHelper.Partial.02.cs" />
-    <Compile Include="PropertyAdditionalDefinitionAttribute\PropertyAdditionalDefinitionAttribute.cs" />
     <Compile Include="Json\JTokenHelper.cs" />
     <Compile Include="00.Utilities\PathFileHelper.cs" />
     <Compile Include="00.Utilities\RemotingHelper.cs" />
