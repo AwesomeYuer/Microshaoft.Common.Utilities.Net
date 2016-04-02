@@ -23,6 +23,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>CommonUtilities.ruleset</CodeAnalysisRuleSet>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -160,6 +161,7 @@
     <Compile Include="Json\JsonHelper.cs" />
     <Compile Include="MEF\MEF.Contracts.cs" />
     <Compile Include="MEF\MEFHelper.cs" />
+    <Compile Include="System.Buffers.ArrayPool\ArrayPool.cs" />
     <Compile Include="Xml\XmlCDATA.cs" />
     <Compile Include="Xml\XmlValidationHelper.cs" />
     <Compile Include="Socket\BufferManager.cs" />
