@@ -190,7 +190,7 @@
                                 );
             }
         }
-        public static void AttachPerformanceCountersToProperties<T>
+        public static void AttachPerformanceCountersToMembers<T>
                                     (
                                         string categoryName
                                         , string instanceName
@@ -202,35 +202,42 @@
                                     )
         {
             var type = typeof(T);
-            var properties = type
-                                .GetProperties()
-                                .Where
-                                    (
-                                        (pi) =>
-                                        {
-                                            var parameters = pi.GetIndexParameters();
-                                            return
-                                                (
-                                                    (
-                                                        pi.PropertyType == typeof(PerformanceCounter)
-                                                        ||
-                                                        pi.PropertyType == typeof(PerformanceCountersPair)
-                                                    )
-                                                    && (parameters == null ? 0 : parameters.Length) <= 0
-                                                );
-                                        }
-                                    );
+            var members = type
+                            .GetMembersByMemberType<PerformanceCounter>()
+                            .Concat
+                                (
+                                    type
+                                        .GetMembersByMemberType<PerformanceCountersPair>()
+                                );
+
+                                //.GetProperties()
+                                //.Where
+                                //    (
+                                //        (pi) =>
+                                //        {
+                                //            var parameters = pi.GetIndexParameters();
+                                //            return
+                                //                (
+                                //                    (
+                                //                        pi.PropertyType == typeof(PerformanceCounter)
+                                //                        ||
+                                //                        pi.PropertyType == typeof(PerformanceCountersPair)
+                                //                    )
+                                //                    && (parameters == null ? 0 : parameters.Length) <= 0
+                                //                );
+                                //        }
+                                //    );
             if (!PerformanceCounterCategory.Exists(categoryName))
             {
                 var ccdc = new CounterCreationDataCollection();
-                foreach (var propertyInfo in properties)
+                foreach (var memberInfo in members)
                 {
-                    var propertyName = propertyInfo.Name;
+                    var memberName = memberInfo.Name;
                     var performanceCounterType = PerformanceCounterType
                                                                 .NumberOfItems64;
-                    var performanceCounterName = propertyName;
+                    var performanceCounterName = memberName;
                     var attribute
-                            = propertyInfo
+                            = memberInfo
                                 .GetCustomAttribute
                                         <PerformanceCounterDefinitionAttribute>
                                             ();
@@ -253,7 +260,20 @@
                                         , performanceCounterType
                                     );
                     ccdc.Add(ccd);
-                    if (propertyInfo.PropertyType == typeof(PerformanceCountersPair))
+                    Type memberType = null;
+                    if (memberInfo is FieldInfo)
+                    {
+                        var fieldInfo = memberInfo as FieldInfo;
+                        memberType = fieldInfo.FieldType;
+                    }
+                    else if (memberInfo is PropertyInfo)
+                    {
+                        var propertyInfo = memberInfo as PropertyInfo;
+                        memberType = propertyInfo.PropertyType;
+                    }
+                    
+
+                    if (memberType == typeof(PerformanceCountersPair))
                     {
                         performanceCounterName = string.Format("{0}.(Base)", performanceCounterName);
                         var counterName = attribute.BaseCounterName;
@@ -289,18 +309,18 @@
                                     , ccdc
                                 );
             }
-            foreach (var propertyInfo in properties)
+            foreach (var memberInfo in members)
             {
                 //PerformanceCounter performanceCounter = null;
-                var propertyName = propertyInfo.Name;
+                var memberName = memberInfo.Name;
                 var performanceCounterType = PerformanceCounterType
                                                             .NumberOfItems64;
-                var performanceCounterName = propertyName;
+                var performanceCounterName = memberName;
                 //var performanceCounterInstanceLifetime = defaultPerformanceCounterInstanceLifetime;
                 long? performanceCounterInstanceInitializeRawValue
-                                        = instanceInitializeRawValue;
+                                            = instanceInitializeRawValue;
                 var attribute
-                            = propertyInfo
+                            = memberInfo
                                 .GetCustomAttribute
                                         <PerformanceCounterDefinitionAttribute>
                                             ();
@@ -336,7 +356,8 @@
                             counterInstanceInitializeRawValue.HasValue
                         )
                     {
-                        performanceCounterInstanceInitializeRawValue = counterInstanceInitializeRawValue.Value;
+                        performanceCounterInstanceInitializeRawValue
+                                    = counterInstanceInitializeRawValue.Value;
                     }
                 }
                 var performanceCounter
@@ -348,11 +369,22 @@
                                                 , instanceLifetime
                                                 , performanceCounterInstanceInitializeRawValue
                                             );
-                if (propertyInfo.PropertyType == typeof(PerformanceCounter))
+                Type memberType = null;
+                if (memberInfo is FieldInfo)
                 {
-                    SetPropertyValueToTarget(target, propertyInfo, performanceCounter);
+                    var fieldInfo = memberInfo as FieldInfo;
+                    memberType = fieldInfo.FieldType;
                 }
-                else if (propertyInfo.PropertyType == typeof(PerformanceCountersPair))
+                else if (memberInfo is PropertyInfo)
+                {
+                    var propertyInfo = memberInfo as PropertyInfo;
+                    memberType = propertyInfo.PropertyType;
+                }
+                if (memberType == typeof(PerformanceCounter))
+                {
+                    SetMemberValueToTarget(target, memberInfo, performanceCounter);
+                }
+                else if (memberType == typeof(PerformanceCountersPair))
                 {
                     performanceCounterName = string.Format("{0}.(Base)", performanceCounterName);
                     var baseCounterName = attribute.BaseCounterName;
@@ -378,46 +410,56 @@
                         Counter = performanceCounter
                         , BaseCounter = basePerformanceCounter
                     };
-                    SetPropertyValueToTarget
+                    SetMemberValueToTarget
                             (
                                 target
-                                , propertyInfo
+                                , memberInfo
                                 , performanceCountersPair
                             );
                 }
             }
         }
-        private static void SetPropertyValueToTarget<TTarget, TProperty>
+        private static void SetMemberValueToTarget<TTarget, TMember>
                                 (
                                     TTarget target
-                                    , PropertyInfo propertyInfo
-                                    , TProperty propertyValue
+                                    , MemberInfo memberInfo
+                                    , TMember memberValue
                                 )
         {
-            string propertyName = propertyInfo.Name;
-            if (propertyInfo.GetGetMethod().IsStatic)
-            {
-                var setter = DynamicExpressionTreeHelper
-                                    .CreateTargetSetStaticPropertyValueAction
-                                            <TTarget, TProperty>
-                                                (
-                                                    propertyName
-                                                );
-                setter(propertyValue);
-            }
-            else
-            {
+            string memberName = memberInfo.Name;
+            
+            //not support static member
+            //
+            //if (memberInfo.GetGetMethod().IsStatic)
+            //{
+            //    var setter = DynamicExpressionTreeHelper
+            //                        .CreateTargetSetStaticPropertyValueAction
+            //                                <TTarget, TProperty>
+            //                                    (
+            //                                        memberName
+            //                                    );
+            //    setter(propertyValue);
+            //}
+            //else
+            //{
+
                 if (target != null)
                 {
+                    //var setter = DynamicExpressionTreeHelper
+                    //                       .CreateTargetSetPropertyValueAction
+                    //                            <TTarget, TProperty>
+                    //                               (
+                    //                                   propertyName
+                    //                               );
+
                     var setter = DynamicExpressionTreeHelper
-                                           .CreateTargetSetPropertyValueAction
-                                                <TTarget, TProperty>
-                                                   (
-                                                       propertyName
-                                                   );
-                    setter(target, propertyValue);
+                                            .CreateMemberSetter<TTarget, TMember>
+                                                    (
+                                                        memberName
+                                                    );
+                    setter(target, memberValue);
                 }
-            }
+            //}
         }
         private static PerformanceCounter CreatePerformanceCounter
                                         (

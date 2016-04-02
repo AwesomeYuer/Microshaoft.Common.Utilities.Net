@@ -197,7 +197,7 @@ namespace Microshaoft
                                             , container
                                         );
                             container
-                                .AttachPerformanceCountersToProperties
+                                .AttachPerformanceCountersToMembers
                                         (
                                             categoryName
                                             , instanceName

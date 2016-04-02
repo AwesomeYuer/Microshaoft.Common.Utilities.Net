@@ -466,7 +466,6 @@
                                 }
                                 , decrementCountersAfterCountPerformanceInThread
                                 , incrementCountersAfterCountPerformanceInThread
-                                
                             );
             }
         }
@@ -491,7 +490,7 @@
                                         );
             PerformanceCountersContainer = performanceCounters;
             PerformanceCountersContainer
-                .AttachPerformanceCountersToProperties
+                .AttachPerformanceCountersToMembers
                         (
                             categoryName
                             , instanceName
@@ -1083,18 +1082,19 @@ namespace Microshaoft
         }
 
         private bool _isAttachedPerformanceCounters = false;
-        public override void AttachPerformanceCountersToProperties
+        public override void AttachPerformanceCountersToMembers
                                 (
                                     string categoryName
                                     , string instanceName
-                                    , PerformanceCounterInstanceLifetime performanceCounterInstanceLifetime = PerformanceCounterInstanceLifetime.Global
+                                    , PerformanceCounterInstanceLifetime
+                                            performanceCounterInstanceLifetime = PerformanceCounterInstanceLifetime.Global
                                     , long? initializePerformanceCounterInstanceRawValue = null
                                 )
         {
             if (!_isAttachedPerformanceCounters)
             {
                 //var type = this.GetType();
-                AttachPerformanceCountersToProperties<QueuePerformanceCountersContainer>
+                AttachPerformanceCountersToMembers<QueuePerformanceCountersContainer>
                         (
                             categoryName
                             , instanceName

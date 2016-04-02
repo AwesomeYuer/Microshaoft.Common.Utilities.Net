@@ -516,9 +516,9 @@
     public static class TypesExtensionsMethodsManager
     {
 
-            public static IEnumerable<MemberInfo> GetMembersByMemberType<TMember>(this Type target)
+            public static IEnumerable<MemberInfo> GetMembersByMemberType<TMember>(this Type type, bool includeIndexer = false)
             {
-                var type = target.GetType();
+                //var type = target.GetType();
                 return
                     type
                         .GetMembers()
@@ -532,6 +532,15 @@
                                     {
                                         var propertyInfo = x as PropertyInfo;
                                         memberType = propertyInfo.PropertyType;
+                                        //indexer
+                                        var parameters = propertyInfo.GetIndexParameters();
+                                        if (!includeIndexer)
+                                        {
+                                            if (parameters != null && parameters.Length > 0)
+                                            {
+                                                type = null;
+                                            }
+                                        }
                                     }
                                     else if (x is FieldInfo)
                                     {

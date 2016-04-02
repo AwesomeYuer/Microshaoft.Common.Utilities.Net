@@ -101,7 +101,7 @@ namespace Microshaoft
                                     , container
                                 );
                     container
-                        .AttachPerformanceCountersToProperties
+                        .AttachPerformanceCountersToMembers
                             (
                                 performanceCountersCategoryName
                                 , performanceCountersCategoryInstanceName
@@ -159,7 +159,7 @@ namespace Microshaoft
                                         , container
                                     );
                         container
-                            .AttachPerformanceCountersToProperties
+                            .AttachPerformanceCountersToMembers
                                     (
                                         performanceCountersCategoryName
                                         , performanceCountersCategoryInstanceName
@@ -371,7 +371,7 @@ namespace Microshaoft
                                             , container
                                         );
                             container
-                                .AttachPerformanceCountersToProperties
+                                .AttachPerformanceCountersToMembers
                                         (
                                             performanceCountersCategoryName
                                             , performanceCountersCategoryInstanceName

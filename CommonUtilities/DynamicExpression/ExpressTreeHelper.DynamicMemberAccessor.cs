@@ -16,9 +16,10 @@
                                     .GetMember
                                         (
                                             memberName
-                                        //, MemberTypes.Field | MemberTypes.Property
-                                        //, BindingFlags.Default
+                                            //, MemberTypes.Field | MemberTypes.Property
+                                            //, BindingFlags.Default
                                         ).Single();
+            //not support static member because bug
             var isStatic = false;
             if (memberInfo is FieldInfo)
             {
@@ -28,7 +29,7 @@
             else if (memberInfo is PropertyInfo)
             {
                 var propertyInfo = memberInfo as PropertyInfo;
-                isStatic = propertyInfo.GetSetMethod().IsStatic;
+                isStatic = propertyInfo.GetGetMethod().IsStatic;
             }
             if (isStatic)
             {
@@ -40,10 +41,18 @@
             Expression<Action<TTarget, TMember>> lambda = null;
             //if (!isStatic)
             //{
-            lambda = Expression.Lambda<Action<TTarget, TMember>>(body, targetParameter, targetMemberParameter);
+            lambda = Expression
+                            .Lambda
+                                <Action<TTarget, TMember>>
+                                    (
+                                        body
+                                        , targetParameter
+                                        , targetMemberParameter
+                                    );
             //}
             //else
             //{
+                    //not support static member because bug
             //    lambda = Expression.Lambda<Action<TTarget, TMember>>(body, targetParameter, targetMemberParameter);
             //}
             return lambda.Compile();
@@ -70,7 +79,7 @@
             else if (memberInfo is PropertyInfo)
             {
                 var propertyInfo = memberInfo as PropertyInfo;
-                isStatic = propertyInfo.GetSetMethod().IsStatic;
+                isStatic = propertyInfo.GetGetMethod().IsStatic;
             }
             if (isStatic)
             {

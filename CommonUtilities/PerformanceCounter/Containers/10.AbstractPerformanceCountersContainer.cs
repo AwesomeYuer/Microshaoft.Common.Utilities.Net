@@ -127,7 +127,7 @@
             //                    }
             //                );
         }
-        protected void AttachPerformanceCountersToProperties<TContainer>
+        protected void AttachPerformanceCountersToMembers<TContainer>
                             (
                                 string categoryName
                                 , string instanceName
@@ -137,7 +137,7 @@
                             )
         {
             PerformanceCountersHelper
-                .AttachPerformanceCountersToProperties<TContainer>
+                .AttachPerformanceCountersToMembers<TContainer>
                     (
                         categoryName
                         , instanceName
@@ -147,7 +147,7 @@
 
                     );
         }
-        public abstract void AttachPerformanceCountersToProperties
+        public abstract void AttachPerformanceCountersToMembers
                                 (
                                     string categoryName
                                     , string instanceName

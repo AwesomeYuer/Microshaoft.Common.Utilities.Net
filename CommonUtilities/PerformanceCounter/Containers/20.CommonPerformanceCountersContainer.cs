@@ -76,7 +76,7 @@
             get;
             set;
         }
-        public override void AttachPerformanceCountersToProperties
+        public override void AttachPerformanceCountersToMembers
                                 (
                                     string categoryName
                                     , string instanceName
@@ -84,7 +84,7 @@
                                     , long? initializePerformanceCounterInstanceRawValue = null
                                 )
         {
-            AttachPerformanceCountersToProperties
+            AttachPerformanceCountersToMembers
                     <CommonPerformanceCountersContainer>
                         (
                             categoryName
