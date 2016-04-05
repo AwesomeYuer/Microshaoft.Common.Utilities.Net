@@ -9,7 +9,7 @@
     using System.Reflection.Emit;
 #endif
 
-    internal static class TypeExtensions
+    public static class TypeExtensions
     {
         public static Expression ToObject(this Expression expression)
         {
