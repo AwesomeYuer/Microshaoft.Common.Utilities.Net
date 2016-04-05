@@ -56,17 +56,17 @@
                                     {
                                         TData refreshedData = default(TData);
                                         if
-                                        (
-                                            TryGetRefreshedCacheData
-                                                (
-                                                    onRefreshingCacheDataProcessFunc
-                                                    , out refreshedData
-                                                    , needTryProcess
-                                                    , reThrowException
-                                                    , onCaughtExceptionProcessFunc
-                                                    , onFinallyProcessAction
-                                                )
-                                        )
+                                            (
+                                                TryGetRefreshedCacheData
+                                                    (
+                                                        onRefreshingCacheDataProcessFunc
+                                                        , out refreshedData
+                                                        , needTryProcess
+                                                        , reThrowException
+                                                        , onCaughtExceptionProcessFunc
+                                                        , onFinallyProcessAction
+                                                    )
+                                            )
                                         {
                                             _cachedData = refreshedData;
                                             LastRefreshedTime = DateTime.Now;
@@ -81,12 +81,15 @@
                                 , out TData refreshedData
                                 , bool needTryProcess = true
                                 , bool reThrowException = false
-                                , Func<Exception, Exception, string, bool> onCaughtExceptionProcessFunc = null
-                                , Action<bool, Exception, Exception, string> onFinallyProcessAction = null
+                                , Func<Exception, Exception, string, bool>
+                                                    onCaughtExceptionProcessFunc = null
+                                , Action<bool, Exception, Exception, string>
+                                                    onFinallyProcessAction = null
                             )
         {
             var r = false;
             TData refreshingData = default(TData);
+            refreshedData = default(TData);
             if (needTryProcess)
             {
                 TryCatchFinallyProcessHelper
@@ -106,7 +109,10 @@
                                         onCaughtExceptionProcessFunc(xx, yy, zz);
                                 }
                             );
-                refreshedData = refreshingData;
+                if (r)
+                {
+                    refreshedData = refreshingData;
+                }
             }
             else
             {
