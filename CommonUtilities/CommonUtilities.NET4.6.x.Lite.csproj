@@ -191,6 +191,7 @@
     <Compile Include="Throttler\RateLimiters\TokenBucket.cs" />
     <Compile Include="Throttler\Throttler.cs" />
     <Compile Include="TimeBasedIdentity\TimeBasedIdentityGenerator.cs" />
+    <Compile Include="Type\TypeExtensions.cs" />
     <Compile Include="Type\TypeHelper.cs" />
     <Compile Include="WebMvcApi.NET45\JsonpMediaTypeFormatter.cs" />
     <Compile Include="WebMvcApi.NET45\TraceSoapMessagesLoggerSoapExtension.cs" />

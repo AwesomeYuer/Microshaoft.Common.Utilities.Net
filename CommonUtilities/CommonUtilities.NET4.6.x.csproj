@@ -169,6 +169,7 @@
     <Compile Include="Throttler\RateLimiters\Throttler.cs" />
     <Compile Include="Throttler\RateLimiters\TokenBucket.cs" />
     <Compile Include="Throttler\Throttler.cs" />
+    <Compile Include="Type\TypeExtensions.cs" />
     <Compile Include="Xml\XmlCDATA.cs" />
     <Compile Include="Xml\XmlValidationHelper.cs" />
     <Compile Include="Socket\BufferManager.cs" />

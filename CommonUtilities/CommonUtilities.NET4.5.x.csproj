@@ -162,6 +162,7 @@
     <Compile Include="MEF\MEF.Contracts.cs" />
     <Compile Include="MEF\MEFHelper.cs" />
     <Compile Include="System.Buffers.ArrayPool\ArrayPool.cs" />
+    <Compile Include="Type\TypeExtensions.cs" />
     <Compile Include="Xml\XmlCDATA.cs" />
     <Compile Include="Xml\XmlValidationHelper.cs" />
     <Compile Include="Socket\BufferManager.cs" />
