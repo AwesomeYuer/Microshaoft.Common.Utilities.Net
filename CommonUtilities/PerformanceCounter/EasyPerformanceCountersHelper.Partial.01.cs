@@ -129,7 +129,7 @@ namespace Microshaoft
             {
                 if (onEnabledCountPerformanceProcessFunc != null)
                 {
-                    enabledCountPerformance = onEnabledCountPerformanceProcessFunc();
+                    enabledCountPerformance = onEnabledCountPerformanceProcessFunc.Invoke();
                 }
             }
             if
@@ -484,16 +484,12 @@ namespace Microshaoft
                                                         }
                                                     }
                                                     var enableProcessedPerformanceCounter
-                                                            =
-                                                                (
-                                                                    (
-                                                                        enabledPerformanceCounters
-                                                                        &
-                                                                        MultiPerformanceCountersTypeFlags
-                                                                            .ProcessedCounter
-                                                                    )
-                                                                    != MultiPerformanceCountersTypeFlags.None
-                                                                );
+                                                            = enabledPerformanceCounters
+                                                                    .HasFlag
+                                                                        (
+                                                                            MultiPerformanceCountersTypeFlags
+                                                                                    .ProcessedCounter
+                                                                        );
                                                     if (enableProcessedPerformanceCounter)
                                                     {
                                                         container
@@ -501,16 +497,12 @@ namespace Microshaoft
                                                             .Increment();
                                                     }
                                                     var enableProcessedRateOfCountsPerSecondPerformanceCounter
-                                                            =
-                                                                (
-                                                                    (
-                                                                        enabledPerformanceCounters
-                                                                        &
-                                                                        MultiPerformanceCountersTypeFlags
-                                                                            .ProcessedRateOfCountsPerSecondCounter
-                                                                    )
-                                                                    != MultiPerformanceCountersTypeFlags.None
-                                                                );
+                                                            = enabledPerformanceCounters
+                                                                        .HasFlag
+                                                                            (
+                                                                                MultiPerformanceCountersTypeFlags
+                                                                                        .ProcessedRateOfCountsPerSecondCounter
+                                                                            );
                                                     if (enableProcessedRateOfCountsPerSecondPerformanceCounter)
                                                     {
                                                         container
@@ -531,10 +523,7 @@ namespace Microshaoft
             }
             else
             {
-                if (onCountPerformanceInnerProcessAction != null)
-                {
-                    onCountPerformanceInnerProcessAction();
-                }
+                onCountPerformanceInnerProcessAction?.Invoke();
             }
         }
     }
