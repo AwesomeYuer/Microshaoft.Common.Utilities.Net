@@ -14,7 +14,7 @@
                                             IncrementCountersBeforeCountPerformance = null
                                 , PerformanceCounter[]
                                             DecrementCountersBeforeCountPerformance = null
-                                , Tuple
+                                , WriteableTuple
                                         <
                                             bool						//before时是否已经启动
                                             , Stopwatch

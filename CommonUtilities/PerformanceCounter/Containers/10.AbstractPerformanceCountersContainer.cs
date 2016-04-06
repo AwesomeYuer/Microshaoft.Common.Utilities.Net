@@ -144,7 +144,6 @@
                         , container
                         , performanceCounterInstanceLifetime
                         , initializePerformanceCounterInstanceRawValue
-
                     );
         }
         public abstract void AttachPerformanceCountersToMembers
