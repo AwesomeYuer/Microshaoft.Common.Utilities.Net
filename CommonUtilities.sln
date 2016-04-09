@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "000.Solution Items", "000.Solution Items", "{85BAAC83-9159-4E88-929C-FC9A98556042}"
 	ProjectSection(SolutionItems) = preProject
@@ -79,6 +79,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "001.ManualTests", "001.ManualTests", "{81E64B53-D821-4B6F-B03C-1854DC875A2E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "100.UnitTests", "100.UnitTests", "{09571CF2-8180-4E47-BE20-62F930A14FE1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "900.Samples", "900.Samples", "{4D0D143C-B43C-41F0-89AF-EDA121770B37}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "001.WebApplication", "001.WebApplication", "{38FF2F59-C5A3-4996-B35B-10F276D73856}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication", "Samples\WebApplication\WebApplication.csproj", "{1340B17B-0719-448D-8C5E-053C7020C315}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -162,6 +168,10 @@ Global
 		{5AE094D4-EA6A-415D-B17B-745B7AEE3E33}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5AE094D4-EA6A-415D-B17B-745B7AEE3E33}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5AE094D4-EA6A-415D-B17B-745B7AEE3E33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1340B17B-0719-448D-8C5E-053C7020C315}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1340B17B-0719-448D-8C5E-053C7020C315}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1340B17B-0719-448D-8C5E-053C7020C315}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1340B17B-0719-448D-8C5E-053C7020C315}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -198,5 +208,7 @@ Global
 		{5AE094D4-EA6A-415D-B17B-745B7AEE3E33} = {09571CF2-8180-4E47-BE20-62F930A14FE1}
 		{81E64B53-D821-4B6F-B03C-1854DC875A2E} = {4FC8E928-8816-40E5-AA0E-CD31AE0E5C29}
 		{09571CF2-8180-4E47-BE20-62F930A14FE1} = {4FC8E928-8816-40E5-AA0E-CD31AE0E5C29}
+		{38FF2F59-C5A3-4996-B35B-10F276D73856} = {4D0D143C-B43C-41F0-89AF-EDA121770B37}
+		{1340B17B-0719-448D-8C5E-053C7020C315} = {38FF2F59-C5A3-4996-B35B-10F276D73856}
 	EndGlobalSection
 EndGlobal

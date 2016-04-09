@@ -163,6 +163,9 @@
     <Compile Include="MEF\MEFHelper.cs" />
     <Compile Include="System.Buffers.ArrayPool\ArrayPool.cs" />
     <Compile Include="Type\TypeExtensions.cs" />
+    <Compile Include="WebMvcApi.NET45\AcceptHeaderControllerSelector.cs" />
+    <Compile Include="WebMvcApi.NET45\ApiVersioningSelector.cs" />
+    <Compile Include="WebMvcApi.NET45\WebApiVersionAttribute.cs" />
     <Compile Include="Xml\XmlCDATA.cs" />
     <Compile Include="Xml\XmlValidationHelper.cs" />
     <Compile Include="Socket\BufferManager.cs" />
