@@ -10,6 +10,7 @@
     using Microshaoft.Web;
     using Microshaoft.WebApi;
     using System.Web.Http.Dispatcher;
+    using System.Web.Http.Dispatcher;
     public static class WebApiConfig
     {
         public static void Register(HttpConfiguration config)
@@ -31,33 +32,35 @@
 
             //return;
 
+            
+
             config
                 .Services
                 .Replace
                     (
                         typeof(IHttpControllerSelector)
-                        , //new EasyHttpControllerSelector(config)
+                        , new EasyHttpControllerSelector(config)
 
 
-                        new AcceptHeaderControllerSelector
-                                (
-                                    config
-                                    , (accept) =>
-                                    {
-                                        var r = string.Empty;
-                                        foreach (var parameter in accept.Parameters)
-                                        {
-                                            if (parameter.Name.Equals("version", StringComparison.InvariantCultureIgnoreCase))
-                                            {
-                                                r = parameter.Value;
-                                                break;
-                                            }
+                        //new AcceptHeaderControllerSelector
+                        //        (
+                        //            config
+                        //            , (accept) =>
+                        //            {
+                        //                var r = string.Empty;
+                        //                foreach (var parameter in accept.Parameters)
+                        //                {
+                        //                    if (parameter.Name.Equals("version", StringComparison.InvariantCultureIgnoreCase))
+                        //                    {
+                        //                        r = parameter.Value;
+                        //                        break;
+                        //                    }
 
-                                        }
-                                        return r;
-                                        //return "v2"; // default namespace, return null to throw 404 when namespace not given
-                                    }
-                                )
+                        //                }
+                        //                return r;
+                        //                //return "v2"; // default namespace, return null to throw 404 when namespace not given
+                        //            }
+                        //        )
                     );
 
         }

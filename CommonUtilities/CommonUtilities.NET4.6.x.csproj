@@ -133,6 +133,7 @@
     <Compile Include="00.Utilities\FileLogHelper.cs" />
     <Compile Include="00.Utilities\FtpWebRequestResponseHelper.cs" />
     <Compile Include="00.Utilities\GCNotifier.cs" />
+    <Compile Include="DynamicExpression\LamadaExtention.cs" />
     <Compile Include="DynamicExpression\ExpressionTreeHelper.cs" />
     <Compile Include="DynamicExpression\ExpressTreeHelper.DynamicCallMethodExpressionTreeInvokerHelper.cs" />
     <Compile Include="DynamicExpression\ExpressTreeHelper.DynamicMemberAccessor.cs" />
