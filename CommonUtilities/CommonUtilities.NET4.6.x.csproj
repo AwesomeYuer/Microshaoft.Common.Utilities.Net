@@ -184,6 +184,7 @@
     <Compile Include="Json\JsonHelper.cs" />
     <Compile Include="MEF\MEF.Contracts.cs" />
     <Compile Include="MEF\MEFHelper.cs" />
+    <Compile Include="Pools\ObjectsPool.cs" />
     <Compile Include="System.Buffers.ArrayPool\ArrayPool.cs" />
     <Compile Include="Throttler\RateLimiters\FixedTokenBucket.cs" />
     <Compile Include="Throttler\RateLimiters\IThrottleStrategy.cs" />
