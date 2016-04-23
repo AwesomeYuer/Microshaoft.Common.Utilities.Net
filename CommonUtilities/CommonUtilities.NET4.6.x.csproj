@@ -197,11 +197,8 @@
     <Compile Include="WebApiVersionedRoute\SemanticVersionedRouteAttribute.cs" />
     <Compile Include="WebApiVersionedRoute\VersionedRouteAttribute.cs" />
     <Compile Include="WebApiVersionedRoute\VersionConstraint.cs" />
-    <Compile Include="WebMvcApi.NET45\AcceptHeaderControllerSelector.cs" />
-    <Compile Include="WebMvcApi.NET45\EasyApiControllerActionSelector.cs" />
-    <Compile Include="WebMvcApi.NET45\EasyControllerSelector.cs" />
-    <Compile Include="WebMvcApi.NET45\ApiVersioningSelector.cs" />
-    <Compile Include="WebMvcApi.NET45\WebApiVersionAttribute.cs" />
+    <Compile Include="WebApiVersionedRoute\WebApiVersionedControllerActionSelector.cs" />
+    <Compile Include="WebApiVersionedRoute\WebApiVersionedControllerSelector.cs" />
     <Compile Include="WebMvcApi.NET45\WebMvcApiRoutePrefixGroupingHelper.cs" />
     <Compile Include="Xml\XmlCDATA.cs" />
     <Compile Include="Xml\XmlValidationHelper.cs" />

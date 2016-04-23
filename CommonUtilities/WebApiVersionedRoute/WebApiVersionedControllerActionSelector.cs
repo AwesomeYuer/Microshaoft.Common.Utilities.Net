@@ -2,7 +2,6 @@
 
 namespace Microshaoft.WebApi
 {
-
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -19,12 +18,12 @@ namespace Microshaoft.WebApi
     using System.Web.Http.Routing;
     /// <summary>
     /// Reflection based action selector.
-    /// We optimize for the case where we have an <see cref="EasyApiControllerActionSelector"/> instance per <see cref="HttpControllerDescriptor"/>
+    /// We optimize for the case where we have an <see cref="WebApiVersionedControllerActionSelector"/> instance per <see cref="HttpControllerDescriptor"/>
     /// instance but can support cases where there are many <see cref="HttpControllerDescriptor"/> instances for one
-    /// <see cref="EasyApiControllerActionSelector"/> as well. In the latter case the lookup is slightly slower because it goes through
+    /// <see cref="WebApiVersionedControllerActionSelector"/> as well. In the latter case the lookup is slightly slower because it goes through
     /// the <see cref="P:HttpControllerDescriptor.Properties"/> dictionary.
     /// </summary>
-    public class EasyApiControllerActionSelector : IHttpActionSelector
+    public class WebApiVersionedControllerActionSelector : IHttpActionSelector
     {
         private ActionSelectorCacheItem _fastCache;
         private readonly object _cacheKey = new object();
@@ -462,10 +461,28 @@ namespace Microshaoft.WebApi
                 foreach (var candidate in candidatesFound)
                 {
                     HttpActionDescriptor descriptor = candidate.ActionDescriptor;
-                    if (IsSubset(_actionParameterNames[descriptor], candidate.CombinedParameterNames))
+                    //2016-04-24 于溪玥 Microshaoft
+                    string[] a = null;
+                    if
+                        (
+                            _actionParameterNames
+                                    .TryGetValue
+                                        (
+                                            descriptor
+                                            , out a
+                                        )
+                        )
                     {
-                        matches.Add(candidate);
+                        if (IsSubset(a, candidate.CombinedParameterNames))
+                        {
+                            matches.Add(candidate);
+                        }
                     }
+
+                    //if (IsSubset(_actionParameterNames[descriptor], candidate.CombinedParameterNames))
+                    //{
+                    //    matches.Add(candidate);
+                    //}
                 }
 
                 return matches;

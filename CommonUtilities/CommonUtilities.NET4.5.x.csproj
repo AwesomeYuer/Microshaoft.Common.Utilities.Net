@@ -138,6 +138,27 @@
     <Compile Include="DynamicExpression\ExpressionTreeHelper.cs" />
     <Compile Include="DynamicExpression\MethodCallExpressionHelper.cs" />
     <Compile Include="Etw\TraceEventsTrackerHelper.cs" />
+    <Compile Include="NuGet.Versioning\FloatRange.cs" />
+    <Compile Include="NuGet.Versioning\GlobalSuppressions.cs" />
+    <Compile Include="NuGet.Versioning\HashCodeCombiner.cs" />
+    <Compile Include="NuGet.Versioning\INuGetVersionable.cs" />
+    <Compile Include="NuGet.Versioning\IVersionComparer.cs" />
+    <Compile Include="NuGet.Versioning\IVersionRangeComparer.cs" />
+    <Compile Include="NuGet.Versioning\NuGetVersion.cs" />
+    <Compile Include="NuGet.Versioning\NuGetVersionFactory.cs" />
+    <Compile Include="NuGet.Versioning\NuGetVersionFloatBehavior.cs" />
+    <Compile Include="NuGet.Versioning\SemanticVersion.cs" />
+    <Compile Include="NuGet.Versioning\SemanticVersionBase.cs" />
+    <Compile Include="NuGet.Versioning\SemanticVersionFactory.cs" />
+    <Compile Include="NuGet.Versioning\VersionComparer.cs" />
+    <Compile Include="NuGet.Versioning\VersionComparison.cs" />
+    <Compile Include="NuGet.Versioning\VersionExtensions.cs" />
+    <Compile Include="NuGet.Versioning\VersionFormatter.cs" />
+    <Compile Include="NuGet.Versioning\VersionRange.cs" />
+    <Compile Include="NuGet.Versioning\VersionRangeBase.cs" />
+    <Compile Include="NuGet.Versioning\VersionRangeComparer.cs" />
+    <Compile Include="NuGet.Versioning\VersionRangeFactory.cs" />
+    <Compile Include="NuGet.Versioning\VersionRangeFormatter.cs" />
     <Compile Include="PerformanceCounter\EasyPerformanceCountersHelper.Partial.01.cs" />
     <Compile Include="PerformanceCounter\EasyPerformanceCountersHelper.Partial.02.cs" />
     <Compile Include="MemberAdditionalDefinitionAttribute\MemberAdditionalDefinitionAttribute.cs" />
@@ -163,9 +184,15 @@
     <Compile Include="MEF\MEFHelper.cs" />
     <Compile Include="System.Buffers.ArrayPool\ArrayPool.cs" />
     <Compile Include="Type\TypeExtensions.cs" />
-    <Compile Include="WebMvcApi.NET45\AcceptHeaderControllerSelector.cs" />
-    <Compile Include="WebMvcApi.NET45\ApiVersioningSelector.cs" />
-    <Compile Include="WebMvcApi.NET45\WebApiVersionAttribute.cs" />
+    <Compile Include="WebApiVersionedRoute\SemanticVersionConstraint.cs" />
+    <Compile Include="WebApiVersionedRoute\SemanticVersionedAttribute.cs" />
+    <Compile Include="WebApiVersionedRoute\SemanticVersionedRouteAttribute.cs" />
+    <Compile Include="WebApiVersionedRoute\VersionConstraint.cs" />
+    <Compile Include="WebApiVersionedRoute\VersionedRouteAttribute.cs" />
+    <Compile Include="WebApiVersionedRoute\WebApiVersionAttribute.cs" />
+    <Compile Include="WebApiVersionedRoute\WebApiVersionedControllerActionSelector.cs" />
+    <Compile Include="WebApiVersionedRoute\WebApiVersionedControllerSelector.cs" />
+    <Compile Include="WebMvcApi.NET45\WebMvcApiRoutePrefixGroupingHelper.cs" />
     <Compile Include="Xml\XmlCDATA.cs" />
     <Compile Include="Xml\XmlValidationHelper.cs" />
     <Compile Include="Socket\BufferManager.cs" />
@@ -226,7 +253,6 @@
     <Content Include="TraceEvent.ReadMe.txt" />
     <Content Include="TraceEvent.ReleaseNotes.txt" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Diagnostics.Tracing.TraceEvent.1.0.41\build\Microsoft.Diagnostics.Tracing.TraceEvent.targets" Condition="Exists('..\packages\Microsoft.Diagnostics.Tracing.TraceEvent.1.0.41\build\Microsoft.Diagnostics.Tracing.TraceEvent.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

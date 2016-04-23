@@ -27,16 +27,16 @@ namespace Microshaoft.WebApi
     /// Default <see cref="IHttpControllerSelector"/> instance for choosing a <see cref="HttpControllerDescriptor"/> given a <see cref="HttpRequestMessage"/>
     /// A different implementation can be registered via the <see cref="HttpConfiguration.Services"/>.
     /// </summary>
-    public class EasyHttpControllerSelector : DefaultHttpControllerSelector
+    public class WebApiVersionedHttpControllerSelector : DefaultHttpControllerSelector
     {
        
         private readonly HttpConfiguration _configuration;
-        private readonly Dictionary<string, Dictionary<string, HttpActionDescriptor>> _webMvcApiVersionedRoutesCache;
+        //private readonly Dictionary<string, Dictionary<string, HttpActionDescriptor>> _webMvcApiVersionedRoutesCache;
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultHttpControllerSelector1"/> class.
         /// </summary>
         /// <param name="configuration">The configuration.</param>
-        public EasyHttpControllerSelector(HttpConfiguration configuration) : 
+        public WebApiVersionedHttpControllerSelector(HttpConfiguration configuration) : 
                                                                                 base(configuration)
         {
             //_webMvcApiVersionedRoutesCache = WebMvcApiVersionedRoutesHelper.LoadRoutes(configuration);
@@ -75,52 +75,57 @@ namespace Microshaoft.WebApi
 
             
         }
-        public override IDictionary<string, HttpControllerDescriptor> GetControllerMapping()
-        {
-            return base.GetControllerMapping();
-        }
+        
         private static HttpControllerDescriptor GetVersionedRouteController(IHttpRouteData routeData, string versionText)
         {
-            HttpControllerDescriptor r = null;
+            HttpControllerDescriptor httpControllerDescriptor = null;
             CandidateAction[] candidates = routeData.GetDirectRouteCandidates();
             var version = NuGetVersion.Parse(versionText);
             if (candidates != null)
             {
+                //闭包
                 SemanticVersionedAttribute semanticVersionedAttribute = null;
-                r = candidates
+                var q = candidates
                             .Where
                                 (
                                     (x) =>
                                     {
                                         var rr = false;
+                                        //闭包
                                         semanticVersionedAttribute = x
                                                         .ActionDescriptor
                                                         .GetCustomAttributes<SemanticVersionedAttribute>()
-                                                        .FirstOrDefault() as SemanticVersionedAttribute;
+                                                        .FirstOrDefault();
                                         if (semanticVersionedAttribute != null)
                                         {
-                                            rr = semanticVersionedAttribute
-                                                        .AllowedVersionRange
-                                                        .Satisfies(version);
+                                            //rr = semanticVersionedAttribute
+                                            //            .AllowedVersionRange
+                                            //            .Satisfies(version);
+
+                                            rr = true;
                                         }
                                         return rr;
                                     }
-                                )
-                                .OrderByDescending
-                                    (
-                                        (x) =>
-                                        {
-                                            return semanticVersionedAttribute
-                                                        .Version;
-                                        }
-                                        , new VersionComparer()
-                                    )
-                                .First()
-                                .ActionDescriptor
-                                .ControllerDescriptor;
+                                );
+                q = q.OrderByDescending
+                    (
+                        (x) =>
+                        {
+                            return
+                                     x
+                                        .ActionDescriptor
+                                        .GetCustomAttributes<SemanticVersionedAttribute>()
+                                        .First()
+                                        .Version;
+                        }
+                        , new VersionComparer()
+                    );
+                httpControllerDescriptor = q
+                                            .First()
+                                            .ActionDescriptor
+                                            .ControllerDescriptor;
             }
-
-            return r;
+            return httpControllerDescriptor;
         }
         private string GetVersionFromMediaType(HttpRequestMessage request)
         {

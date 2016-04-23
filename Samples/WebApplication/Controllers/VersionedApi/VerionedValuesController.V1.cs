@@ -1,20 +1,13 @@
-﻿
-namespace WebApplication.Controllers.V1
+﻿namespace WebApplication.Controllers.Versioned
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
-    using System.Net.Http;
-    using System.Web.Http;
-    using Microshaoft.Web;
     using Microshaoft;
+    using System.Web.Http;
     //[Authorize]
 
-    [RoutePrefix("api/values")]
+    [RoutePrefix("versioned-api/values")]
     //[WebApiVersion("1.0.0.10")]
-
-    public class BValues777777Controller : ApiController
+    //Controller Name 必须 唯一
+    public class AController : ApiController
     {
         // GET api/values
         //[Route]

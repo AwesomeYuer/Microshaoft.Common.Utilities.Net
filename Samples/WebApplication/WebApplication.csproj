@@ -233,8 +233,11 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
-    <Compile Include="Controllers\ValuesController.V2.cs" />
-    <Compile Include="Controllers\ValuesController.V1.cs" />
+    <Compile Include="Controllers\VersionedApi\VerionedValuesController.V4.cs" />
+    <Compile Include="Controllers\VersionedApi\VerionedValuesController.V5.cs" />
+    <Compile Include="Controllers\VersionedApi\VerionedValuesController.V3.cs" />
+    <Compile Include="Controllers\VersionedApi\VerionedValuesController.V2.cs" />
+    <Compile Include="Controllers\VersionedApi\VerionedValuesController.V1.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
