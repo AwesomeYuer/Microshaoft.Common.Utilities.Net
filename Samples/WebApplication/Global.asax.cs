@@ -8,7 +8,8 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using Microshaoft.Web;
 using System.Web.Http.Dispatcher;
-
+using System.Web.Http;
+using System.Web.Http.Description;
 
 namespace WebApplication
 {
@@ -22,11 +23,10 @@ namespace WebApplication
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            
-           
 
-            //WebMvcApiRoutePrefixGroupingHelper
-            //            .Load(GlobalConfiguration.Configuration);
+       
+            //var dic = WebMvcApiVersionedRoutesHelper
+            //                .LoadRoutes(GlobalConfiguration.Configuration);
         }
     }
 }

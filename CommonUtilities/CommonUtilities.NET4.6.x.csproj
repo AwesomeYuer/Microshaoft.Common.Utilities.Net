@@ -193,10 +193,12 @@
     <Compile Include="Throttler\Throttler.cs" />
     <Compile Include="Type\TypeExtensions.cs" />
     <Compile Include="WebApiVersionedRoute\SemanticVersionConstraint.cs" />
+    <Compile Include="WebApiVersionedRoute\SemanticVersionedAttribute.cs" />
     <Compile Include="WebApiVersionedRoute\SemanticVersionedRouteAttribute.cs" />
     <Compile Include="WebApiVersionedRoute\VersionedRouteAttribute.cs" />
     <Compile Include="WebApiVersionedRoute\VersionConstraint.cs" />
     <Compile Include="WebMvcApi.NET45\AcceptHeaderControllerSelector.cs" />
+    <Compile Include="WebMvcApi.NET45\EasyApiControllerActionSelector.cs" />
     <Compile Include="WebMvcApi.NET45\EasyControllerSelector.cs" />
     <Compile Include="WebMvcApi.NET45\ApiVersioningSelector.cs" />
     <Compile Include="WebMvcApi.NET45\WebApiVersionAttribute.cs" />

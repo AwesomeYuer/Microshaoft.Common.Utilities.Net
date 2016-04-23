@@ -97,10 +97,10 @@
             "",
             function (target) {
                 target.setRequestHeader(
-                    //"Accept",
-                    //"application/json;version=" + y
-                    "api-version",
-                    y
+                    "Accept",
+                    "application/json;version=" + y
+                    //"api-version",
+                    //y
                 );
             },
             function (data) {
@@ -117,7 +117,7 @@
     </script>
 </head>
 <body>
-    <input type="text" id="text1" value="1.0.0.10" />
+    <input type="text" id="text1" value="1.1.0.10" />
     <button onclick="get_Test('/api/values/getone/1','1.0')">click Me</button>
 </body>
 </html>
