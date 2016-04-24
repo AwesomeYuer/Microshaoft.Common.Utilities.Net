@@ -119,7 +119,7 @@
                 )
             {
                 Version = semanticVersion;
-                int i = 0;
+                //int i = 0;
                 //long order = 0;
                 int[] a =
                             {

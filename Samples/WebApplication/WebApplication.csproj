@@ -322,9 +322,13 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CommonUtilities\CommonUtilities.NET4.6.x.csproj">
-      <Project>{f93b643f-2254-434b-a42a-d2a7155152ca}</Project>
-      <Name>CommonUtilities.NET4.6.x</Name>
+    <ProjectReference Include="..\..\CommonUtilities\CommonUtilities.NET4.6.x.Lite.csproj">
+      <Project>{b509d9ba-92fa-45f6-877c-adc80f14f785}</Project>
+      <Name>CommonUtilities.NET4.6.x.Lite</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\CommonUtilities\WebApiUtilities.NET4.6.x.Lite.csproj">
+      <Project>{ba49793a-4b18-4aa5-b118-b003f73bea2b}</Project>
+      <Name>WebApiUtilities.NET4.6.x.Lite</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

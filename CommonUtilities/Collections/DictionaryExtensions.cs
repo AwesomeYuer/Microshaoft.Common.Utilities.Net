@@ -11,7 +11,7 @@ namespace Microshaoft
     /// Extension methods for <see cref="IDictionary{TKey,TValue}"/>.
     /// </summary>
     //[EditorBrowsable(EditorBrowsableState.Never)]
-    internal static class DictionaryExtensions
+    public static class DictionaryExtensions
     {
         /// <summary>
         /// Remove entries from dictionary that match the removeCondition.

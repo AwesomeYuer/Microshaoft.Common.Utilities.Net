@@ -138,7 +138,8 @@ namespace Microshaoft.WebApi
                     _actionParameterNames.Add(
                         actionDescriptor,
                         actionBinding.ParameterBindings
-                            .Where(binding => !binding.Descriptor.IsOptional && TypeHelper.CanConvertFromString(binding.Descriptor.ParameterType) && binding.WillReadUri())
+                            .Where
+                                (binding => !binding.Descriptor.IsOptional && TypeHelper.CanConvertFromString(binding.Descriptor.ParameterType) && binding.WillReadUri())
                             .Select(binding => binding.Descriptor.Prefix ?? binding.Descriptor.ParameterName).ToArray());
                 }
 
@@ -463,6 +464,12 @@ namespace Microshaoft.WebApi
                 {
                     HttpActionDescriptor descriptor = candidate.ActionDescriptor;
                     //2016-04-24 于溪玥 Microshaoft
+                    // 2016-04-23 modified Microsoft original source code
+                    #warning 2016-04-23 modified Microsoft original source code
+                    //if (IsSubset(_actionParameterNames[descriptor], candidate.CombinedParameterNames))
+                    //{
+                    //    matches.Add(candidate);
+                    //}
                     string[] a = null;
                     if
                         (
@@ -480,10 +487,6 @@ namespace Microshaoft.WebApi
                         }
                     }
 
-                    //if (IsSubset(_actionParameterNames[descriptor], candidate.CombinedParameterNames))
-                    //{
-                    //    matches.Add(candidate);
-                    //}
                 }
 
                 return matches;
@@ -631,7 +634,7 @@ namespace Microshaoft.WebApi
                     return false;
                 }
 
-                if (methodInfo.GetBaseDefinition().DeclaringType.IsAssignableFrom(TypeHelper.ApiControllerType))
+                if (methodInfo.GetBaseDefinition().DeclaringType.IsAssignableFrom(WebApiControllerTypeHelper.ApiControllerType))
                 {
                     // is a method on Object, IHttpController, ApiController
                     return false;

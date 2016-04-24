@@ -6,9 +6,9 @@ namespace Microshaoft
     /// <summary>
     /// A static class that provides various <see cref="Type"/> related helpers.
     /// </summary>
-    public static partial class TypeHelper
+    public static partial class WebApiControllerTypeHelper
     {
         //private static readonly Type TaskGenericType = typeof(Task<>);
-        internal static readonly Type ApiControllerType = typeof(ApiController);
+        public static readonly Type ApiControllerType = typeof(ApiController);
     }
 }

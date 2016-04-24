@@ -7,7 +7,7 @@
     <ProjectGuid>{2190E2EE-A185-4E75-9B91-FC36C8E2B9D8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EasyPerformanceCountersHelper</RootNamespace>
+    <RootNamespace>Microshaoft</RootNamespace>
     <AssemblyName>Microshaoft.Common.Utilities.Net.4.5.x</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -194,7 +194,7 @@
     <Compile Include="WebApiVersionedRoute\ActionSelector\NonActionAttribute.cs" />
     <Compile Include="WebApiVersionedRoute\ActionSelector\WebApiVersionedControllerActionSelector.cs" />
     <Compile Include="WebApiVersionedRoute\ControllerSelector\HttpControllerDescriptorExtensions.cs" />
-    <Compile Include="WebApiVersionedRoute\ControllerSelector\TypeHelper.cs" />
+    <Compile Include="WebApiVersionedRoute\ControllerSelector\WebApiControllerTypeHelper.cs" />
     <Compile Include="WebApiVersionedRoute\ControllerSelector\WebApiVersionedControllerSelector.cs" />
     <Compile Include="WebApiVersionedRoute\Route\HttpRouteDataExtensions.cs" />
     <Compile Include="WebApiVersionedRoute\Route\HttpRouteExtensions.cs" />

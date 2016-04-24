@@ -7,7 +7,7 @@
     <ProjectGuid>{F93B643F-2254-434B-A42A-D2A7155152CA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EasyPerformanceCountersHelper</RootNamespace>
+    <RootNamespace>Microshaoft</RootNamespace>
     <AssemblyName>Microshaoft.Common.Utilities.Net.4.6.x</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -200,13 +200,13 @@
     <Compile Include="WebApiVersionedRoute\ActionSelector\HttpActionDescriptorExtensions.cs" />
     <Compile Include="WebApiVersionedRoute\ActionSelector\HttpParameterBindingExtensions.cs" />
     <Compile Include="WebApiVersionedRoute\ActionSelector\NonActionAttribute.cs" />
+    <Compile Include="WebApiVersionedRoute\ControllerSelector\WebApiControllerTypeHelper.cs" />
     <Compile Include="WebApiVersionedRoute\Route\RouteValueKeys.cs" />
     <Compile Include="WebApiVersionedRoute\Route\RouteCollectionRoute.cs" />
     <Compile Include="WebApiVersionedRoute\ControllerSelector\HttpControllerDescriptorExtensions.cs" />
     <Compile Include="WebApiVersionedRoute\Route\HttpRouteDataExtensions.cs" />
     <Compile Include="WebApiVersionedRoute\Route\HttpRouteExtensions.cs" />
     <Compile Include="WebApiVersionedRoute\Route\RouteDataTokenKeys.cs" />
-    <Compile Include="WebApiVersionedRoute\ControllerSelector\TypeHelper.cs" />
     <Compile Include="WebApiVersionedRoute\SemanticVersionConstraint.cs" />
     <Compile Include="WebApiVersionedRoute\SemanticVersionedAttribute.cs" />
     <Compile Include="WebApiVersionedRoute\SemanticVersionedRouteAttribute.cs" />

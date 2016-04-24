@@ -7,7 +7,7 @@ namespace Microshaoft
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
 
-    internal class EmptyReadOnlyDictionary<TKey, TValue>
+    public class EmptyReadOnlyDictionary<TKey, TValue>
     {
         private static readonly ReadOnlyDictionary<TKey, TValue> _value = new ReadOnlyDictionary<TKey, TValue>(new Dictionary<TKey, TValue>());
 

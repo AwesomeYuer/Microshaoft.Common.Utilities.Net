@@ -7,7 +7,7 @@
     <ProjectGuid>{B509D9BA-92FA-45F6-877C-ADC80F14F785}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EasyPerformanceCountersHelper</RootNamespace>
+    <RootNamespace>Microshaoft</RootNamespace>
     <AssemblyName>Microshaoft.Common.Utilities.Lite.Net.4.6.x</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -147,6 +147,9 @@
     <Compile Include="Caches\MruCache.cs" />
     <Compile Include="Caches\RefreshableCache.cs" />
     <Compile Include="Caches\XmlSerializersCache.cs" />
+    <Compile Include="Collections\CollectionExtensions.cs" />
+    <Compile Include="Collections\DictionaryExtensions.cs" />
+    <Compile Include="Collections\EmptyReadOnlyDictionary.cs" />
     <Compile Include="Configuration\ConfigurationAppSettingsHelper.cs" />
     <Compile Include="CRC\CRC16.cs" />
     <Compile Include="CRC\CRC32.cs" />
@@ -172,6 +175,27 @@
     <Compile Include="MEF\MEF.Contracts.cs" />
     <Compile Include="MEF\MEFHelper.cs" />
     <Compile Include="MemberAdditionalDefinitionAttribute\MemberAdditionalDefinitionAttribute.cs" />
+    <Compile Include="NuGet.Versioning\FloatRange.cs" />
+    <Compile Include="NuGet.Versioning\GlobalSuppressions.cs" />
+    <Compile Include="NuGet.Versioning\HashCodeCombiner.cs" />
+    <Compile Include="NuGet.Versioning\INuGetVersionable.cs" />
+    <Compile Include="NuGet.Versioning\IVersionComparer.cs" />
+    <Compile Include="NuGet.Versioning\IVersionRangeComparer.cs" />
+    <Compile Include="NuGet.Versioning\NuGetVersion.cs" />
+    <Compile Include="NuGet.Versioning\NuGetVersionFactory.cs" />
+    <Compile Include="NuGet.Versioning\NuGetVersionFloatBehavior.cs" />
+    <Compile Include="NuGet.Versioning\SemanticVersion.cs" />
+    <Compile Include="NuGet.Versioning\SemanticVersionBase.cs" />
+    <Compile Include="NuGet.Versioning\SemanticVersionFactory.cs" />
+    <Compile Include="NuGet.Versioning\VersionComparer.cs" />
+    <Compile Include="NuGet.Versioning\VersionComparison.cs" />
+    <Compile Include="NuGet.Versioning\VersionExtensions.cs" />
+    <Compile Include="NuGet.Versioning\VersionFormatter.cs" />
+    <Compile Include="NuGet.Versioning\VersionRange.cs" />
+    <Compile Include="NuGet.Versioning\VersionRangeBase.cs" />
+    <Compile Include="NuGet.Versioning\VersionRangeComparer.cs" />
+    <Compile Include="NuGet.Versioning\VersionRangeFactory.cs" />
+    <Compile Include="NuGet.Versioning\VersionRangeFormatter.cs" />
     <Compile Include="Pools\00.PoolManager\PoolsManager.cs" />
     <Compile Include="Pools\ObjectsPool.cs" />
     <Compile Include="Pools\QueuedObjectsPool.Partial.01.cs" />
@@ -194,9 +218,6 @@
     <Compile Include="TimeBasedIdentity\TimeBasedIdentityGenerator.cs" />
     <Compile Include="Type\TypeExtensions.cs" />
     <Compile Include="Type\TypeHelper.cs" />
-    <Compile Include="WebMvcApi.NET45\JsonpMediaTypeFormatter.cs" />
-    <Compile Include="WebMvcApi.NET45\TraceSoapMessagesLoggerSoapExtension.cs" />
-    <Compile Include="WebMvcApi.NET45\WebMvcApiLogFilter.cs" />
     <Compile Include="WorkFlow\WorkFlowHelper.cs" />
     <Compile Include="Xml\XmlCDATA.cs" />
     <Compile Include="Xml\XmlValidationHelper.cs" />
@@ -212,7 +233,6 @@
     <Content Include="TraceEvent.ReadMe.txt" />
     <Content Include="TraceEvent.ReleaseNotes.txt" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Diagnostics.Tracing.TraceEvent.1.0.41\build\Microsoft.Diagnostics.Tracing.TraceEvent.targets" Condition="Exists('..\packages\Microsoft.Diagnostics.Tracing.TraceEvent.1.0.41\build\Microsoft.Diagnostics.Tracing.TraceEvent.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
