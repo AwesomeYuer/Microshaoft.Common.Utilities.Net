@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{BA8F9D65-925C-49EE-851A-A0CFBD93A80A}</ProjectGuid>
+    <ProjectGuid>{F6AC27EC-0479-475D-A6D0-617AAB9365D5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Microshaoft</RootNamespace>
@@ -123,9 +123,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="CommonUtilities.NET4.6.x.Lite.csproj">
-      <Project>{b509d9ba-92fa-45f6-877c-adc80f14f785}</Project>
-      <Name>CommonUtilities.NET4.6.x.Lite</Name>
+    <ProjectReference Include="CommonUtilities.NET4.5.x.Lite.csproj">
+      <Project>{36c8666b-5e7d-4875-bd64-325605806105}</Project>
+      <Name>CommonUtilities.NET4.5.x.Lite</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
