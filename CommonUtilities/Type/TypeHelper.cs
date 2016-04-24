@@ -2,10 +2,12 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
     using System.Data.SqlTypes;
     using System.Linq;
     using System.Reflection;
-
+    using System.Threading.Tasks;
     public class MemberAccessor//<TContext>
     {
         public Func<object, object> Getter;
@@ -18,7 +20,7 @@
         public Type MemberType;
     }
 
-    public static class TypeHelper
+    public static partial class TypeHelper
     {
         private static IEnumerable<Type>
                             _typesWhiteList
@@ -512,6 +514,108 @@
                     )
                 );
         }
+        private static readonly Type TaskGenericType = typeof(Task<>);
+
+        
+
+        public static Type GetTaskInnerTypeOrNull(Type type)
+        {
+            //Contract.Assert(type != null);
+            if (type.IsGenericType && !type.IsGenericTypeDefinition)
+            {
+                Type genericTypeDefinition = type.GetGenericTypeDefinition();
+
+                if (TaskGenericType == genericTypeDefinition)
+                {
+                    return type.GetGenericArguments()[0];
+                }
+            }
+
+            return null;
+        }
+
+        public static Type[] GetTypeArgumentsIfMatch(Type closedType, Type matchingOpenType)
+        {
+            if (!closedType.IsGenericType)
+            {
+                return null;
+            }
+
+            Type openType = closedType.GetGenericTypeDefinition();
+            return (matchingOpenType == openType) ? closedType.GetGenericArguments() : null;
+        }
+
+        public static bool IsCompatibleObject(Type type, object value)
+        {
+            return (value == null && TypeAllowsNullValue(type)) || type.IsInstanceOfType(value);
+        }
+
+        public static bool IsNullableValueType(Type type)
+        {
+            return Nullable.GetUnderlyingType(type) != null;
+        }
+
+        public static bool TypeAllowsNullValue(Type type)
+        {
+            return !type.IsValueType || IsNullableValueType(type);
+        }
+
+        public static bool IsSimpleType(Type type)
+        {
+            return type.IsPrimitive ||
+                   type.Equals(typeof(string)) ||
+                   type.Equals(typeof(DateTime)) ||
+                   type.Equals(typeof(Decimal)) ||
+                   type.Equals(typeof(Guid)) ||
+                   type.Equals(typeof(DateTimeOffset)) ||
+                   type.Equals(typeof(TimeSpan));
+        }
+
+        public static bool IsSimpleUnderlyingType(Type type)
+        {
+            Type underlyingType = Nullable.GetUnderlyingType(type);
+            if (underlyingType != null)
+            {
+                type = underlyingType;
+            }
+
+            return TypeHelper.IsSimpleType(type);
+        }
+
+        public static bool CanConvertFromString(Type type)
+        {
+            return TypeHelper.IsSimpleUnderlyingType(type) ||
+                TypeHelper.HasStringConverter(type);
+        }
+
+        public static bool HasStringConverter(Type type)
+        {
+            return TypeDescriptor.GetConverter(type).CanConvertFrom(typeof(string));
+        }
+
+        /// <summary>
+        /// Fast implementation to get the subset of a given type.
+        /// </summary>
+        /// <typeparam name="T">type to search for</typeparam>
+        /// <returns>subset of objects that can be assigned to T</returns>
+        public static ReadOnlyCollection<T> OfType<T>(object[] objects) where T : class
+        {
+            int max = objects.Length;
+            List<T> list = new List<T>(max);
+            int idx = 0;
+            for (int i = 0; i < max; i++)
+            {
+                T attr = objects[i] as T;
+                if (attr != null)
+                {
+                    list.Add(attr);
+                    idx++;
+                }
+            }
+            list.Capacity = idx;
+
+            return new ReadOnlyCollection<T>(list);
+        }
     }
     public static class TypesExtensionsMethodsManager
     {
@@ -598,5 +702,10 @@
         {
             return TypeHelper.IsNumericOrNullableNumericType(type);
         }
+
+
+        
+
+
     }
 }
