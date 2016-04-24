@@ -193,6 +193,7 @@
     <Compile Include="WebApiVersionedRoute\WebApiVersionAttribute.cs" />
     <Compile Include="WebApiVersionedRoute\WebApiVersionedControllerActionSelector.cs" />
     <Compile Include="WebApiVersionedRoute\WebApiVersionedControllerSelector.cs" />
+    <Compile Include="WebMvcApi.NET45\WebApiExceptionsHandlerFilter.cs" />
     <Compile Include="WebMvcApi.NET45\WebMvcApiRoutePrefixGroupingHelper.cs" />
     <Compile Include="Xml\XmlCDATA.cs" />
     <Compile Include="Xml\XmlValidationHelper.cs" />
