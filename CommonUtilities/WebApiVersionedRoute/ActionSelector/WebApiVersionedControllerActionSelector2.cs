@@ -24,41 +24,38 @@ namespace Microshaoft.WebApi
     /// <see cref="WebApiVersionedControllerActionSelector"/> as well. In the latter case the lookup is slightly slower because it goes through
     /// the <see cref="P:HttpControllerDescriptor.Properties"/> dictionary.
     /// </summary>
-    public class WebApiVersionedControllerActionSelector : IHttpActionSelector
+    public class WebApiVersionedControllerActionSelector2 : 
+                                                            ApiControllerActionSelector
+                                                            //IHttpActionSelector
     {
         private ActionSelectorCacheItem _fastCache;
         private readonly object _cacheKey = new object();
 
-        public virtual HttpActionDescriptor SelectAction(HttpControllerContext controllerContext)
+        public override HttpActionDescriptor SelectAction(HttpControllerContext controllerContext)
         {
             if (controllerContext == null)
             {
                 throw
                     new Exception
-                    (
-                        @"Error.ArgumentNull(""controllerContext"")"
-                    );
+                            (
+                                @"Error.ArgumentNull(""controllerContext"")"
+                            );
             }
 
             ActionSelectorCacheItem internalSelector = GetInternalSelector(controllerContext.ControllerDescriptor);
             return internalSelector.SelectAction(controllerContext);
         }
 
-        public virtual ILookup<string, HttpActionDescriptor> GetActionMapping(HttpControllerDescriptor controllerDescriptor)
-        {
-            if (controllerDescriptor == null)
-            {
-                throw
-                    new Exception
-                            (
-                                @"Error.ArgumentNull(""controllerDescriptor"");"
-                            );
-                    
-            }
+        //public virtual ILookup<string, HttpActionDescriptor> GetActionMapping(HttpControllerDescriptor controllerDescriptor)
+        //{
+        //    if (controllerDescriptor == null)
+        //    {
+        //        //throw Error.ArgumentNull("controllerDescriptor");
+        //    }
 
-            ActionSelectorCacheItem internalSelector = GetInternalSelector(controllerDescriptor);
-            return internalSelector.GetActionMapping();
-        }
+        //    ActionSelectorCacheItem internalSelector = GetInternalSelector(controllerDescriptor);
+        //    return internalSelector.GetActionMapping();
+        //}
 
         private ActionSelectorCacheItem GetInternalSelector(HttpControllerDescriptor controllerDescriptor)
         {
@@ -239,7 +236,7 @@ namespace Microshaoft.WebApi
                                     (
                                         "Error.InvalidOperation(SRResources.ApiControllerActionSelector_AmbiguousMatch, ambiguityList);"
                                     );
-                                
+
                 }
             }
 

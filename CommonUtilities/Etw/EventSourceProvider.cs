@@ -1,139 +1,139 @@
-﻿//namespace Microshaoft.EventSources
-//{
-//    using System;
-//    using Microsoft.Diagnostics.Tracing;
-//    //
-//    // Shows how to use EventSouces to send messages to the Windows EventLog
-//    //
-//    // * EventLogEventSource
-//    //	 * Uses the new 'Channel' attribute to indicate that certain events
-//    //	   should go to the Windows Event Log.   Note that the EventSource
-//    //	   has to be registered with the Windows OS for this to work.  
-//    //	   In this example we send messages to the 'Admin' channel.   
-//    //
-//    // * EventLogEventSourceDemo 
-//    //	 * simulates a deployment step needed to register the event source's 
-//    //	   manifest on the machine. If running unelevated it will prompt the user
-//    //	   to allow running wevtutil.exe, the tool that performs the registration.
-//    //
-//    //	 * simulates processing multiple requests by calling the methods on 
-//    //	   EventLogEventSource to fire events.
-//    //	 * pauses to allow the user to examine the event logs created under 
-//    //	   'Application and Services Logs/Microsoft/EventSourceDemos/Channeled'
-//    //
-//    //	 * undoes the registration steps performed earlier.
-//    //
-//    [
-//        EventSource
-//            (
-//                Name = "Microsoft-EventLogEventSource-Uttm" //"Samples-EventSourceDemos-EventLog"
-//            )
-//    ]
-//    public sealed class EventLogEventSource : EventSource
-//    {
-//        #region Singleton instance
-//        public static EventLogEventSource Log = new EventLogEventSource();
-//        #endregion
-//        [
-//            Event
-//                (
-//                    1
-//                    , ActivityOptions = EventActivityOptions.None
-//                    , Channel = EventChannel.Admin
-//                    , Keywords = Keywords.EventKeyword1
-//                    //, Level = EventLevel.LogAlways
-//                    , Message =
-//@"
-//	sequenceID : ""{0}""
-//	, contextID : ""{1}""
-//	, operatorID : ""{2}""
-//	, data : ""{3}""
-//"
-//                    , Opcode = EventOpcode.Info
-//                    , Tags = EventTags.None
-//                    , Task = EventTasks.EventTask1
-//                    , Version = 1
-//                )
-//        ]
-//        public void WriteEvent1Log
-//                    (
-//                        int sequenceID
-//                        , Guid contextID
-//                        , string operatorID
-//                        , string data
-//                    )
-//        {
-//            WriteEvent
-//                (
-//                    1
-//                    , (object)sequenceID
-//                    , (object)contextID
-//                    , (object)operatorID
-//                    , (object)data
-//                );
-//        }
-//        [
-//            Event
-//                (
-//                    2
-//                    , ActivityOptions = EventActivityOptions.None
-//                    , Channel = EventChannel.Admin
-//                    , Keywords = Keywords.EventKeyword2
-//                    //, Level = EventLevel.LogAlways
-//                    , Message =
-//@"
-//	sequenceID : ""{0}""
-//	, contextID : ""{1}""
-//	, operatorID : ""{2}""
-//	, data : ""{3}""
-//"
-//                    , Opcode = EventOpcode.Info
-//                    , Tags = Tags.EventTag2
-//                    , Task = EventTasks.EventTask2
-//                    , Version = 1
-//                )
-//        ]
-//        public void WriteEvent2Log
-//            (
-//                int sequenceID
-//                , Guid contextID
-//                , string operatorID
-//                , string data
-//            )
-//        {
-//            WriteEvent
-//                (
-//                    2
-//                    , (object)sequenceID
-//                    , (object)contextID
-//                    , (object)operatorID
-//                    , (object)data
-//                );
-//        }
-//        #region Keywords / Tasks / Opcodes
-//        public class Keywords   // This is a bitvector
-//        {
-//            public const EventKeywords EventKeyword1 = (EventKeywords)0x00000001;
-//            public const EventKeywords EventKeyword2 = (EventKeywords)0x00000002;
-//        }
-//        public class EventTasks
-//        {
-//            //[1,65534]
-//            public const EventTask EventTask1 = (EventTask)1;
-//            public const EventTask EventTask2 = (EventTask)2;
-//        }
-//        public class EventOpcodes
-//        {
-//            public const EventOpcode EventOpcode_0x0b = (EventOpcode)0x0b;
-//        }
-//        public class Tags
-//        {
-//            public const EventTags EventTag1 = (EventTags)1;
-//            public const EventTags EventTag2 = (EventTags)2;
-//        }
-//        #endregion
-//    }
-//}
+﻿namespace Microshaoft.EventSources
+{
+    using System;
+    using Microsoft.Diagnostics.Tracing;
+    //
+    // Shows how to use EventSouces to send messages to the Windows EventLog
+    //
+    // * EventLogEventSource
+    //	 * Uses the new 'Channel' attribute to indicate that certain events
+    //	   should go to the Windows Event Log.   Note that the EventSource
+    //	   has to be registered with the Windows OS for this to work.  
+    //	   In this example we send messages to the 'Admin' channel.   
+    //
+    // * EventLogEventSourceDemo 
+    //	 * simulates a deployment step needed to register the event source's 
+    //	   manifest on the machine. If running unelevated it will prompt the user
+    //	   to allow running wevtutil.exe, the tool that performs the registration.
+    //
+    //	 * simulates processing multiple requests by calling the methods on 
+    //	   EventLogEventSource to fire events.
+    //	 * pauses to allow the user to examine the event logs created under 
+    //	   'Application and Services Logs/Microsoft/EventSourceDemos/Channeled'
+    //
+    //	 * undoes the registration steps performed earlier.
+    //
+    [
+        EventSource
+            (
+                Name = "Microsoft-EventLogEventSource-Uttm" //"Samples-EventSourceDemos-EventLog"
+            )
+    ]
+    public sealed class EventLogEventSource : EventSource
+    {
+        #region Singleton instance
+        public static EventLogEventSource Log = new EventLogEventSource();
+        #endregion
+        [
+            Event
+                (
+                    1
+                    , ActivityOptions = EventActivityOptions.None
+                    , Channel = EventChannel.Admin
+                    , Keywords = Keywords.EventKeyword1
+                    //, Level = EventLevel.LogAlways
+                    , Message =
+@"
+	sequenceID : ""{0}""
+	, contextID : ""{1}""
+	, operatorID : ""{2}""
+	, data : ""{3}""
+"
+                    , Opcode = EventOpcode.Info
+                    , Tags = EventTags.None
+                    , Task = EventTasks.EventTask1
+                    , Version = 1
+                )
+        ]
+        public void WriteEvent1Log
+                    (
+                        int sequenceID
+                        , Guid contextID
+                        , string operatorID
+                        , string data
+                    )
+        {
+            WriteEvent
+                (
+                    1
+                    , (object)sequenceID
+                    , (object)contextID
+                    , (object)operatorID
+                    , (object)data
+                );
+        }
+        [
+            Event
+                (
+                    2
+                    , ActivityOptions = EventActivityOptions.None
+                    , Channel = EventChannel.Admin
+                    , Keywords = Keywords.EventKeyword2
+                    //, Level = EventLevel.LogAlways
+                    , Message =
+@"
+	sequenceID : ""{0}""
+	, contextID : ""{1}""
+	, operatorID : ""{2}""
+	, data : ""{3}""
+"
+                    , Opcode = EventOpcode.Info
+                    , Tags = Tags.EventTag2
+                    , Task = EventTasks.EventTask2
+                    , Version = 1
+                )
+        ]
+        public void WriteEvent2Log
+            (
+                int sequenceID
+                , Guid contextID
+                , string operatorID
+                , string data
+            )
+        {
+            WriteEvent
+                (
+                    2
+                    , (object)sequenceID
+                    , (object)contextID
+                    , (object)operatorID
+                    , (object)data
+                );
+        }
+        #region Keywords / Tasks / Opcodes
+        public class Keywords   // This is a bitvector
+        {
+            public const EventKeywords EventKeyword1 = (EventKeywords)0x00000001;
+            public const EventKeywords EventKeyword2 = (EventKeywords)0x00000002;
+        }
+        public class EventTasks
+        {
+            //[1,65534]
+            public const EventTask EventTask1 = (EventTask)1;
+            public const EventTask EventTask2 = (EventTask)2;
+        }
+        public class EventOpcodes
+        {
+            public const EventOpcode EventOpcode_0x0b = (EventOpcode)0x0b;
+        }
+        public class Tags
+        {
+            public const EventTags EventTag1 = (EventTags)1;
+            public const EventTags EventTag2 = (EventTags)2;
+        }
+        #endregion
+    }
+}
 //namespace Microshaoft.EventListeners
 //{
 //    using System;

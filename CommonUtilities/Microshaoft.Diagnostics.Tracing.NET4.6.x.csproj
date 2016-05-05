@@ -4,12 +4,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F6AC27EC-0479-475D-A6D0-617AAB9365D5}</ProjectGuid>
+    <ProjectGuid>{7A64006A-8BF9-4401-BD7E-84228947C1C2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Microshaoft</RootNamespace>
-    <AssemblyName>Microshaoft.WebApi.Utilities.Lite.Net.4.5.x</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <AssemblyName>Microshaoft.Diagnostics.Tracing.NET4.6.x</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
@@ -36,6 +36,14 @@
     <CodeAnalysisRuleSet>CommonUtilities.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Diagnostics.Tracing.EventSource, Version=1.1.28.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Diagnostics.Tracing.EventSource.Redist.1.1.28\lib\net40\Microsoft.Diagnostics.Tracing.EventSource.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Diagnostics.Tracing.TraceEvent, Version=1.0.41.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Diagnostics.Tracing.TraceEvent.1.0.41\lib\net40\Microsoft.Diagnostics.Tracing.TraceEvent.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
@@ -44,15 +52,23 @@
       <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
+    <Reference Include="System.Activities" />
+    <Reference Include="System.Activities.DurableInstancing" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Runtime.DurableInstancing" />
+    <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -88,46 +104,49 @@
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Serialization" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Solution.All.Projects.Common.AssemblyInfo.cs">
       <Link>Properties\Solution.All.Projects.Common.AssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Etw\EventSourceProvider.cs" />
+    <Compile Include="Etw\System.Diagnostics.Tracing\MetroEventSource.cs" />
+    <Compile Include="Etw\System.Diagnostics.Tracing\StorageFileEventListener.cs" />
+    <Compile Include="Etw\TraceEventsTrackerHelper.cs" />
+    <Compile Include="Microsoft.Diagnostics.Tracing.Logging\ActivityID.cs" />
+    <Compile Include="Microsoft.Diagnostics.Tracing.Logging\Assert.cs" />
+    <Compile Include="Microsoft.Diagnostics.Tracing.Logging\Configuration.cs" />
+    <Compile Include="Microsoft.Diagnostics.Tracing.Logging\ETWEvent.cs" />
+    <Compile Include="Microsoft.Diagnostics.Tracing.Logging\ETWFileProcessor.cs" />
+    <Compile Include="Microsoft.Diagnostics.Tracing.Logging\ETWProcessor.cs" />
+    <Compile Include="Microsoft.Diagnostics.Tracing.Logging\ETWRealtimeProcessor.cs" />
+    <Compile Include="Microsoft.Diagnostics.Tracing.Logging\Events.cs" />
+    <Compile Include="Microsoft.Diagnostics.Tracing.Logging\EventSourceCatalog.cs" />
+    <Compile Include="Microsoft.Diagnostics.Tracing.Logging\ExpiringCompositeEventCollection.cs" />
+    <Compile Include="Microsoft.Diagnostics.Tracing.Logging\Logger.cs" />
+    <Compile Include="Microsoft.Diagnostics.Tracing.Logging\Manager.cs" />
+    <Compile Include="Microsoft.Diagnostics.Tracing.Logging\MockETWProcessor.cs" />
+    <Compile Include="Microsoft.Diagnostics.Tracing.Logging\NativeMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WebApiVersionedRoute\ActionSelector\CandidateAction.cs" />
-    <Compile Include="WebApiVersionedRoute\ActionSelector\HttpActionDescriptorExtensions.cs" />
-    <Compile Include="WebApiVersionedRoute\ActionSelector\HttpParameterBindingExtensions.cs" />
-    <Compile Include="WebApiVersionedRoute\ActionSelector\NonActionAttribute.cs" />
-    <Compile Include="WebApiVersionedRoute\ActionSelector\WebApiVersionedControllerActionSelector2.cs" />
-    <Compile Include="WebApiVersionedRoute\ActionSelector\WebApiVersionedControllerActionSelector.cs" />
-    <Compile Include="WebApiVersionedRoute\ControllerSelector\HttpControllerDescriptorExtensions.cs" />
-    <Compile Include="WebApiVersionedRoute\ControllerSelector\WebApiControllerTypeHelper.cs" />
-    <Compile Include="WebApiVersionedRoute\ControllerSelector\WebApiVersionedControllerSelector.cs" />
-    <Compile Include="WebApiVersionedRoute\Route\HttpRouteDataExtensions.cs" />
-    <Compile Include="WebApiVersionedRoute\Route\HttpRouteExtensions.cs" />
-    <Compile Include="WebApiVersionedRoute\Route\RouteCollectionRoute.cs" />
-    <Compile Include="WebApiVersionedRoute\Route\RouteDataTokenKeys.cs" />
-    <Compile Include="WebApiVersionedRoute\Route\RouteValueKeys.cs" />
-    <Compile Include="WebApiVersionedRoute\SemanticVersionConstraint.cs" />
-    <Compile Include="WebApiVersionedRoute\SemanticVersionedAttribute.cs" />
-    <Compile Include="WebApiVersionedRoute\SemanticVersionedRouteAttribute.cs" />
-    <Compile Include="WebApiVersionedRoute\VersionConstraint.cs" />
-    <Compile Include="WebApiVersionedRoute\VersionedRouteAttribute.cs" />
-    <Compile Include="WebApiVersionedRoute\WebApiVersionAttribute.cs" />
-    <Compile Include="WebMvcApi.NET45\JsonpMediaTypeFormatter.cs" />
-    <Compile Include="WebMvcApi.NET45\TraceSoapMessagesLoggerSoapExtension.cs" />
-    <Compile Include="WebMvcApi.NET45\WebMvcApiLogFilter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="CommonUtilities.ruleset" />
     <None Include="packages.config" />
+    <None Include="_TraceEventProgrammersGuide.docx" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="CommonUtilities.NET4.5.x.Lite.csproj">
-      <Project>{36c8666b-5e7d-4875-bd64-325605806105}</Project>
-      <Name>CommonUtilities.NET4.5.x.Lite</Name>
-    </ProjectReference>
+    <Content Include="TraceEvent.ReadMe.txt" />
+    <Content Include="TraceEvent.ReleaseNotes.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Diagnostics.Tracing.TraceEvent.1.0.41\build\Microsoft.Diagnostics.Tracing.TraceEvent.targets" Condition="Exists('..\packages\Microsoft.Diagnostics.Tracing.TraceEvent.1.0.41\build\Microsoft.Diagnostics.Tracing.TraceEvent.targets')" />

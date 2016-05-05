@@ -105,6 +105,7 @@
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
@@ -142,8 +143,24 @@
     <Compile Include="DynamicExpression\ExpressTreeHelper.DynamicMemberAccessor.cs" />
     <Compile Include="DynamicExpression\ExpressTreeHelper.DynamicPropertyAccessor.cs" />
     <Compile Include="DynamicExpression\MethodCallExpressionHelper.cs" />
+    <Compile Include="Etw\System.Diagnostics.Tracing\MetroEventSource.cs" />
+    <Compile Include="Etw\System.Diagnostics.Tracing\StorageFileEventListener.cs" />
     <Compile Include="Etw\TraceEventsTrackerHelper.cs" />
     <Compile Include="MemberAdditionalDefinitionAttribute\MemberAdditionalDefinitionAttribute.cs" />
+    <Compile Include="Microsoft.Diagnostics.Tracing.Logging\ActivityID.cs" />
+    <Compile Include="Microsoft.Diagnostics.Tracing.Logging\Assert.cs" />
+    <Compile Include="Microsoft.Diagnostics.Tracing.Logging\Configuration.cs" />
+    <Compile Include="Microsoft.Diagnostics.Tracing.Logging\ETWEvent.cs" />
+    <Compile Include="Microsoft.Diagnostics.Tracing.Logging\ETWFileProcessor.cs" />
+    <Compile Include="Microsoft.Diagnostics.Tracing.Logging\ETWProcessor.cs" />
+    <Compile Include="Microsoft.Diagnostics.Tracing.Logging\ETWRealtimeProcessor.cs" />
+    <Compile Include="Microsoft.Diagnostics.Tracing.Logging\Events.cs" />
+    <Compile Include="Microsoft.Diagnostics.Tracing.Logging\EventSourceCatalog.cs" />
+    <Compile Include="Microsoft.Diagnostics.Tracing.Logging\ExpiringCompositeEventCollection.cs" />
+    <Compile Include="Microsoft.Diagnostics.Tracing.Logging\Logger.cs" />
+    <Compile Include="Microsoft.Diagnostics.Tracing.Logging\Manager.cs" />
+    <Compile Include="Microsoft.Diagnostics.Tracing.Logging\MockETWProcessor.cs" />
+    <Compile Include="Microsoft.Diagnostics.Tracing.Logging\NativeMethods.cs" />
     <Compile Include="NuGet.Versioning\FloatRange.cs" />
     <Compile Include="NuGet.Versioning\GlobalSuppressions.cs" />
     <Compile Include="NuGet.Versioning\HashCodeCombiner.cs" />
@@ -200,6 +217,7 @@
     <Compile Include="WebApiVersionedRoute\ActionSelector\HttpActionDescriptorExtensions.cs" />
     <Compile Include="WebApiVersionedRoute\ActionSelector\HttpParameterBindingExtensions.cs" />
     <Compile Include="WebApiVersionedRoute\ActionSelector\NonActionAttribute.cs" />
+    <Compile Include="WebApiVersionedRoute\ActionSelector\WebApiVersionedControllerActionSelector2.cs" />
     <Compile Include="WebApiVersionedRoute\ControllerSelector\WebApiControllerTypeHelper.cs" />
     <Compile Include="WebApiVersionedRoute\Route\RouteValueKeys.cs" />
     <Compile Include="WebApiVersionedRoute\Route\RouteCollectionRoute.cs" />
