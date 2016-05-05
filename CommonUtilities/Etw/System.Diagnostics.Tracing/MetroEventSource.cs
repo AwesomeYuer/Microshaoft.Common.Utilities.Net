@@ -3,7 +3,7 @@
     using System;
     using System.Diagnostics.Tracing;
     using System.IO;
-
+ 
     sealed class MetroEventSource : EventSource
     {
         public static MetroEventSource Log = new MetroEventSource();

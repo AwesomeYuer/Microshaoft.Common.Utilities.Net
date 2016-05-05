@@ -28,7 +28,7 @@
 //        /// The format to be used by logging.
 //        /// </summary>
 //        private string m_Format = "{0:yyyy-MM-dd HH\\:mm\\:ss\\:ffff}\tType: {1}\tId: {2}\tMessage: '{3}'";
-
+ 
 //        private SemaphoreSlim m_SemaphoreSlim = new SemaphoreSlim(1);
 
 //        public StorageFileEventListener(string name)
