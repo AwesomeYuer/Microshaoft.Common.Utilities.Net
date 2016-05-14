@@ -52,7 +52,7 @@ namespace Microshaoft
 
         public T GetValue<T>()
         {
-            return (T)_value;
+            return (T) Value;
         }
 
         public DynamicJson this[string key]
