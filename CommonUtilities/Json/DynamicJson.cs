@@ -25,16 +25,34 @@ namespace Microshaoft
     using System.Xml.Linq;
     public class DynamicJson : DynamicObject
     {
-
+        public object _value = null;
         public object Value
         {
-            get;
-            private set;
+            get
+            {
+                if (_isValue)
+                {
+                    return _value;
+                }
+                else
+                {
+                    throw new Exception("It is not a Value!");
+                }
+            }
+        }
+        private bool _isValue = false;
+        public bool IsValue
+        {
+            get
+            {
+                return _isValue;
+            }
+           
         }
 
         public T GetValue<T>()
         {
-            return (T)Value;
+            return (T) _value;
         }
 
         public DynamicJson this[string key]
@@ -46,8 +64,9 @@ namespace Microshaoft
                 DynamicJson r = XElementToDynamicJson(x, out value);
                 if (r == null)
                 {
-                    Value = value;
+                    _value = value;
                     r = this;
+                    _isValue = true;
                 }
                 return r;
             }
@@ -63,8 +82,9 @@ namespace Microshaoft
                 DynamicJson r = XElementToDynamicJson(x, out value);
                 if (r == null)
                 {
-                    Value = value;
+                    _value = value;
                     r = this;
+                    _isValue = true;
                 }
                 return r;
             }
