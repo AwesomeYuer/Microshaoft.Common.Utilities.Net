@@ -47,12 +47,12 @@ namespace Microshaoft
             {
                 return _isValue;
             }
-           
+
         }
 
         public T GetValue<T>()
         {
-            return (T) _value;
+            return (T)_value;
         }
 
         public DynamicJson this[string key]
@@ -60,8 +60,8 @@ namespace Microshaoft
             get
             {
                 var x = xml.Element(key);
-                dynamic value = default(dynamic);
-                DynamicJson r = XElementToDynamicJson(x, out value);
+                var value = default(dynamic);
+                var r = XElementToDynamicJson(x, out value);
                 if (r == null)
                 {
                     _value = value;
@@ -78,8 +78,8 @@ namespace Microshaoft
                 var x = xml
                             .Elements()
                             .ElementAt(index);
-                dynamic value = default(dynamic);
-                DynamicJson r = XElementToDynamicJson(x, out value);
+                var value = default(dynamic);
+                var r = XElementToDynamicJson(x, out value);
                 if (r == null)
                 {
                     _value = value;
