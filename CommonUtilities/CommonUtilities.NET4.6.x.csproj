@@ -146,6 +146,7 @@
     <Compile Include="Etw\System.Diagnostics.Tracing\MetroEventSource.cs" />
     <Compile Include="Etw\System.Diagnostics.Tracing\StorageFileEventListener.cs" />
     <Compile Include="Etw\TraceEventsTrackerHelper.cs" />
+    <Compile Include="Json\DynamicJson.cs" />
     <Compile Include="MemberAdditionalDefinitionAttribute\MemberAdditionalDefinitionAttribute.cs" />
     <Compile Include="Microsoft.Diagnostics.Tracing.Logging\ActivityID.cs" />
     <Compile Include="Microsoft.Diagnostics.Tracing.Logging\Assert.cs" />

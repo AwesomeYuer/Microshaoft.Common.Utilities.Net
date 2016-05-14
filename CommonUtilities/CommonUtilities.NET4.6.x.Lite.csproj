@@ -167,6 +167,7 @@
     <Compile Include="ExceptionStackTrace\StackTraceHelper.cs" />
     <Compile Include="ExtensionsMethods\ConcurrentDictionaryExtensionsMethodsManager.cs" />
     <Compile Include="HttpClientHelper\HttpClientHelper.cs" />
+    <Compile Include="Json\DynamicJson.cs" />
     <Compile Include="Json\JsonHelper.cs" />
     <Compile Include="Json\JTokenHelper.cs" />
     <Compile Include="LongInteger\LongIntegerHelper.cs" />
