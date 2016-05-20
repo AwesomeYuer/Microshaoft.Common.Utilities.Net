@@ -33,6 +33,9 @@
                                                 , typeof(string)
                                                 , typeof(DateTime)
                                                 , typeof(Guid)
+                                                , typeof(bool)
+                                                , typeof(double)
+                                                , typeof(float)
                                                 //, typeof(DateTime?)
                                             }
                                         .Concat
@@ -65,7 +68,7 @@
                             , memberType
                         );
         }
-        public static IEnumerable<MemberInfo> GetMembersByMemberType(Type targetType, Type memberType)
+        public static IEnumerable<MemberInfo> GetMembersByMemberType(Type targetType, Type memberType, bool includeIndexer = false)
         {
             return
                 targetType
@@ -80,6 +83,14 @@
                                 {
                                     var propertyInfo = x as PropertyInfo;
                                     type = propertyInfo.PropertyType;
+                                    var parameters = propertyInfo.GetIndexParameters();
+                                    if (!includeIndexer)
+                                    {
+                                        if (parameters != null && parameters.Length > 0)
+                                        {
+                                            type = null;
+                                        }
+                                    }
                                 }
                                 else if (x is FieldInfo)
                                 {
@@ -240,7 +251,7 @@
         public static IEnumerable<MemberAccessor>
                         GetModelMembersAccessors
                                 (
-                                    Type type
+                                    Type targetType
                                     , bool needDefinitionAttributeProcess = false
                                 )
                                 
@@ -248,7 +259,7 @@
             var members = TypeHelper
                                 .GetModelMembers
                                     (
-                                        type
+                                        targetType
                                     );
             foreach (var member in members)
             {
@@ -270,10 +281,10 @@
                 var accessor = new MemberAccessor()
                 {
                     Getter = DynamicExpressionTreeHelper
-                                .CreateMemberGetter(memberType, memberName)
+                                .CreateMemberGetter(targetType, memberName)
                     ,
                     Setter = DynamicExpressionTreeHelper
-                                .CreateMemberSetter(type, memberName)
+                                .CreateMemberSetter(targetType, memberName)
                     ,
                     Member = member
                     ,
@@ -620,50 +631,18 @@
     public static class TypesExtensionsMethodsManager
     {
 
-            public static IEnumerable<MemberInfo> GetMembersByMemberType<TMember>(this Type type, bool includeIndexer = false)
+            public static IEnumerable<MemberInfo> GetMembersByMemberType<TMember>(this Type targetType, bool includeIndexer = false)
             {
                 //var type = target.GetType();
+                var memberType = typeof(TMember);
                 return
-                    type
-                        .GetMembers()
-                        .Where
-                            (
-                                (x) =>
-                                {
-                                    Type memberType = null;
-                                    var r = false;
-                                    if (x is PropertyInfo)
-                                    {
-                                        var propertyInfo = x as PropertyInfo;
-                                        memberType = propertyInfo.PropertyType;
-                                        //indexer
-                                        var parameters = propertyInfo.GetIndexParameters();
-                                        if (!includeIndexer)
-                                        {
-                                            if (parameters != null && parameters.Length > 0)
-                                            {
-                                                type = null;
-                                            }
-                                        }
-                                    }
-                                    else if (x is FieldInfo)
-                                    {
-                                        var fieldInfo = x as FieldInfo;
-                                        memberType = fieldInfo.FieldType;
-                                    }
-                                    if (type != null)
-                                    {
-                                        r =
-                                            (
-                                                memberType
-                                                ==
-                                                typeof(TMember)
-                                            );
-                                    }
-                                    return r;
-                                }
-                            );
-
+                    TypeHelper
+                        .GetMembersByMemberType
+                                (
+                                    targetType
+                                    , memberType
+                                    , includeIndexer
+                                );
             }
 
         public static IEnumerable<MemberInfo>
@@ -682,7 +661,6 @@
                         (
                             type
                             , onAttributeProcessFunc
-                            
                         );
         }
 

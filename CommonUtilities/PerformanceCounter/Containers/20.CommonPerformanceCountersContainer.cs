@@ -85,7 +85,7 @@
                                 )
         {
             AttachPerformanceCountersToMembers
-                    <CommonPerformanceCountersContainer>
+                    //<CommonPerformanceCountersContainer>
                         (
                             categoryName
                             , instanceName
@@ -94,7 +94,7 @@
                             , initializePerformanceCounterInstanceRawValue
                         );
             InitializeProcessingTypedPerformanceCounters
-                    <CommonPerformanceCountersContainer>
+                    //<CommonPerformanceCountersContainer>
                         (
                             this
                             , PerformanceCounterProcessingFlagsType
@@ -102,7 +102,7 @@
                         );
          
             InitializeProcessingTypedPerformanceCounters
-                    <CommonPerformanceCountersContainer>
+                    //<CommonPerformanceCountersContainer>
                         (
                             this
                             , PerformanceCounterProcessingFlagsType

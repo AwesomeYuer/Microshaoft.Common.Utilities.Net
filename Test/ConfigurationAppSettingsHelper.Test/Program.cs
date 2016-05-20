@@ -4,8 +4,12 @@
     using System;
     //using System;
     using System.Linq.Expressions;
-
-
+    using System.Collections.Generic;
+    public class Foo1
+    {
+        public long ID { set; get; }
+        public string Name;
+    }
     class Program
     {
         static void Main(string[] args)
@@ -21,8 +25,22 @@
 
            var  settingValue = memberGetter(appSettings);
 
+            
+            var f = new Foo1() { ID = 10 };
+            var list = new List<Foo1>();
+            list.Add(f);
 
-           var dataTable =  DataTableHelper
+            var getter = DynamicExpressionTreeHelper
+                                .CreateMemberGetter(typeof(Foo1), "ID");
+
+            var r = getter(f);
+
+            var setter = DynamicExpressionTreeHelper
+                                .CreateMemberSetter(typeof(Foo1), "ID");
+
+            setter(f, 1001);
+
+            var dataTable =  DataTableHelper
                                     .GenerateEmptyDataTable<TestRuntimeSettings>(true);
 
             Console.ReadLine();
