@@ -202,7 +202,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReaderWriterLock\EasyReaderWriterLockSlim.cs" />
     <Compile Include="ReaderWriterLock\ReaderWriterLockSlimHelper.cs" />
-    <Compile Include="SingleThreadAsyncDequeueProcessor\SingleThreadAsyncDequeueProcessor.cs" />
     <Compile Include="Socket\BufferManager.cs" />
     <Compile Include="Socket\Microsoft.System.ServiceModel.Channels.SocketAsyncEventArgsPool.cs" />
     <Compile Include="Socket\SocketAsyncDataHandler.01.cs" />

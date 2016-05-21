@@ -22,11 +22,16 @@
         public float? F11;
         public Guid F12;
         public Guid? F13;
+        public static DateTime? F0 = null;
     }
     class Program
     {
         static void Main(string[] args)
         {
+
+
+
+
             var entry = new XxxEntry()
             {
                 F1 = "a"
@@ -58,6 +63,15 @@
 
             var list = new List<XxxEntry>();
             list.Add(entry);
+
+           
+
+
+
+            var s1 = DynamicExpressionTreeHelper
+                .CreateMemberGetter<XxxEntry, DateTime?>("F0")(entry);
+            //var o = DynamicExpressionTreeHelper
+            //    .CreateMemberGetter<XxxEntry, object>("F4")(entry);
 
 
             //Action<out object, object> action = (Action<object, object>) new Action<XxxEntry, object>((xx, yy) => { Console.WriteLine(xx); Console.WriteLine(yy); });
