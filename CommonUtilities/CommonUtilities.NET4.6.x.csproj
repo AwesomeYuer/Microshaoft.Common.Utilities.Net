@@ -139,9 +139,9 @@
     <Compile Include="00.Utilities\GCNotifier.cs" />
     <Compile Include="DynamicExpression\LamadaExtention.cs" />
     <Compile Include="DynamicExpression\ExpressionTreeHelper.cs" />
-    <Compile Include="DynamicExpression\ExpressTreeHelper.DynamicCallMethodExpressionTreeInvokerHelper.cs" />
-    <Compile Include="DynamicExpression\ExpressTreeHelper.DynamicMemberAccessor.cs" />
-    <Compile Include="DynamicExpression\ExpressTreeHelper.DynamicPropertyAccessor.cs" />
+    <Compile Include="DynamicExpression\ExpressionTreeHelper.DynamicCallMethodExpressionTreeInvokerHelper.cs" />
+    <Compile Include="DynamicExpression\ExpressionTreeHelper.DynamicMemberAccessor.cs" />
+    <Compile Include="DynamicExpression\ExpressionTreeHelper.DynamicPropertyAccessor.cs" />
     <Compile Include="DynamicExpression\MethodCallExpressionHelper.cs" />
     <Compile Include="Etw\System.Diagnostics.Tracing\MetroEventSource.cs" />
     <Compile Include="Etw\System.Diagnostics.Tracing\StorageFileEventListener.cs" />
