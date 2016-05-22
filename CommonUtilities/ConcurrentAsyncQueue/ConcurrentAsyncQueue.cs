@@ -6,11 +6,6 @@
     using System.Diagnostics;
     using System.Threading;
 
-    //private static class QueuedObjectsPoolManager
-    //{
-    //    public static readonly QueuedObjectsPool<Stopwatch> StopwatchsPool = new QueuedObjectsPool<Stopwatch>(0);
-    //}
-
     public class ConcurrentAsyncQueue<T> :
                                             IPerformanceCountersValuesClearable
     {
@@ -50,12 +45,11 @@
             {
                 return _queue;
             }
-            //set { _queue = value; }
         }
         private ConcurrentQueue<Action> _callbackProcessBreaksActions;
         //Microshaoft 用于控制并发线程数
         private long _concurrentDequeueThreadsCount = 0;
-        private ConcurrentQueue<ThreadProcessor> _dequeueThreadsProcessorsPool;
+        private KeyedStack<ThreadProcessor> _waitingDequeueThreadsProcessorsStack;
         private int _dequeueIdleSleepSeconds = 10;
         public QueuePerformanceCountersContainer PerformanceCountersContainer
         {
@@ -76,14 +70,8 @@
         private bool _isAttachedPerformanceCounters = false;
         private readonly object _clearPerformanceCountersValueslocker = new object();
 
-        //public void ClearPerformanceCountersValues(int level)
-        //{
-        //    //if (this != null)
-        //    //ClearPerformanceCountersValues(ref _enabledCountPerformance, level);
-        //}
         public void ClearPerformanceCountersValues(int level)
         {
-            ////if (this != null)
             lock (_clearPerformanceCountersValueslocker)
             {
                 var func = _onEnabledCountPerformanceProcessFunc;
@@ -170,13 +158,13 @@
             //public readonly PerformanceCounter[] _incrementCountersAfterCountPerformanceInThread = null;
             //public readonly PerformanceCounter[] _incrementCountersAfterCountPerformanceForDequeue = null;
 
-            //public readonly WriteableTuple
-            //                        <
-            //                            bool
-            //                            , Stopwatch
-            //                            , PerformanceCounter
-            //                            , PerformanceCounter
-            //                        >[] _timerCounters = null;
+            private readonly WriteableTuple
+                                    <
+                                        bool
+                                        , Stopwatch
+                                        , PerformanceCounter
+                                        , PerformanceCounter
+                                    >[] _timerCounters = null;
 
             public ThreadProcessor
                             (
@@ -184,97 +172,57 @@
                                 , EventWaitHandle wait
                             )
             {
+                Break = false;
                 Waiter = wait;
                 Sender = queue;
                 QueuePerformanceCountersContainer qpcc = Sender
                                                             .PerformanceCountersContainer;
-                //_incrementCountersBeforeCountPerformanceInThread
-                //                = new PerformanceCounter[]
-                //                        {
-                //                            qpcc
-                //                                .DequeueThreadStartPerformanceCounter
-                //                            , qpcc
-                //                                .DequeueThreadsCountPerformanceCounter
-                //                        };
-                //_decrementCountersAfterCountPerformanceInThread
-                //                = new PerformanceCounter[]
-                //                        {
-                //                                qpcc
-                //                                    .DequeueThreadsCountPerformanceCounter
-                //                        };
-                //_incrementCountersAfterCountPerformanceInThread
-                //                = new PerformanceCounter[]
-                //                        {
-                //                            qpcc
-                //                                .DequeueThreadEndPerformanceCounter
-                //                        };
-                //_incrementCountersBeforeCountPerformanceForDequeue
-                //                = new PerformanceCounter[]
-                //                        {
-                //                            qpcc
-                //                                .DequeuePerformanceCounter
-                //                        };
-                //_decrementCountersBeforeCountPerformanceForDequeue
-                //                = new PerformanceCounter[]
-                //                        {
-                //                            qpcc
-                //                                .QueueLengthPerformanceCounter
-                //                        };
-                //_timerCounters = new WriteableTuple
-                //                    <
-                //                        bool
-                //                        , Stopwatch
-                //                        , PerformanceCounter
-                //                        , PerformanceCounter
-                //                    >[]
-                //                {
-                //                    WriteableTuple
-                //                        .Create
-                //                            <
-                //                                bool
-                //                                , Stopwatch
-                //                                , PerformanceCounter
-                //                                , PerformanceCounter
-                //                            >
-                //                            (
-                //                                false
-                //                                , null
-                //                                , qpcc
-                //                                    .QueuedWaitAverageTimerPerformanceCounter
-                //                                , qpcc
-                //                                    .QueuedWaitAverageBasePerformanceCounter
-                //                            )
-                //                    , WriteableTuple
-                //                            .Create
-                //                                <
-                //                                    bool
-                //                                    , Stopwatch
-                //                                    , PerformanceCounter
-                //                                    , PerformanceCounter
-                //                                >
-                //                                (
-                //                                    true
-                //                                    , null
-                //                                    , qpcc
-                //                                        .DequeueProcessedAverageTimerPerformanceCounter
-                //                                    , qpcc
-                //                                        .DequeueProcessedAverageBasePerformanceCounter
-                //                                )
-                //                };
-                //_incrementCountersAfterCountPerformanceForDequeue
-                //                = new PerformanceCounter[]
-                //                                {
-                //                                    qpcc
-                //                                        .DequeueProcessedPerformanceCounter
-                //                                    , qpcc
-                //                                        .DequeueProcessedRateOfCountsPerSecondPerformanceCounter
-                //                                };
+                _timerCounters = new WriteableTuple
+                                    <
+                                        bool
+                                        , Stopwatch
+                                        , PerformanceCounter
+                                        , PerformanceCounter
+                                    >[]
+                                {
+                                    WriteableTuple
+                                        .Create
+                                            <
+                                                bool
+                                                , Stopwatch
+                                                , PerformanceCounter
+                                                , PerformanceCounter
+                                            >
+                                            (
+                                                false
+                                                , null
+                                                , qpcc
+                                                    .QueuedWaitAverageTimerPerformanceCounter
+                                                , qpcc
+                                                    .QueuedWaitAverageBasePerformanceCounter
+                                            )
+                                    , WriteableTuple
+                                            .Create
+                                                <
+                                                    bool
+                                                    , Stopwatch
+                                                    , PerformanceCounter
+                                                    , PerformanceCounter
+                                                >
+                                                (
+                                                    true
+                                                    , null
+                                                    , qpcc
+                                                        .DequeueProcessedAverageTimerPerformanceCounter
+                                                    , qpcc
+                                                        .DequeueProcessedAverageBasePerformanceCounter
+                                                )
+                                };
             }
             public void ThreadProcess()
             {
                 long l = 0;
                 Interlocked.Increment(ref Sender._concurrentDequeueThreadsCount);
-                //bool counterEnabled = Sender._isAttachedPerformanceCounters;
                 QueuePerformanceCountersContainer qpcc = Sender.PerformanceCountersContainer;
                 var queue = Sender.InternalQueue;
                 var reThrowException = false;
@@ -286,26 +234,6 @@
                         enabledCountPerformance = Sender._onEnabledCountPerformanceProcessFunc();
                     }
                 }
-
-                //PerformanceCounter[] incrementCountersBeforeCountPerformanceInThread = null;
-                //PerformanceCounter[] decrementCountersAfterCountPerformanceInThread = null;
-                //PerformanceCounter[] incrementCountersAfterCountPerformanceInThread = null;
-
-                //if 
-                //    (
-                //        qpcc != null
-                //        &&
-                //        enabledCountPerformance
-                //    )
-                //{
-                //    incrementCountersBeforeCountPerformanceInThread
-                //                = _incrementCountersBeforeCountPerformanceInThread;
-                //    decrementCountersAfterCountPerformanceInThread
-                //                = _decrementCountersAfterCountPerformanceInThread;
-                //    incrementCountersAfterCountPerformanceInThread
-                //                = _incrementCountersAfterCountPerformanceInThread;
-                //}
-
                 PerformanceCountersHelper
                         .TryCountPerformance
                             (
@@ -355,45 +283,21 @@
                                             Tuple<Stopwatch, T> item = null;
                                             if (queue.TryDequeue(out item))
                                             {
-                                                Stopwatch stopwatchDequeue = Sender
-                                                                                ._stopwatchsPool
-                                                                                .Get();
+                                                Stopwatch stopwatchDequeue = null; 
                                                 Stopwatch stopwatchEnqueue = item.Item1;
-                                                //PerformanceCounter[] incrementCountersBeforeCountPerformanceForDequeue = null;
-                                                //PerformanceCounter[] decrementCountersBeforeCountPerformanceForDequeue = null;
-                                                //PerformanceCounter[] incrementCountersAfterCountPerformanceForDequeue = null;
-                                                //WriteableTuple
-                                                //    <
-                                                //        bool
-                                                //        , Stopwatch
-                                                //        , PerformanceCounter
-                                                //        , PerformanceCounter
-                                                //    >[] timerCounters = null;
-                                                //if
-                                                //    (
-                                                //        qpcc != null
-                                                //        &&
-                                                //        enabledCountPerformance
-                                                //    )
-                                                //{
-                                                //    incrementCountersBeforeCountPerformanceForDequeue =
-                                                //            _incrementCountersBeforeCountPerformanceForDequeue;
-                                                //    decrementCountersBeforeCountPerformanceForDequeue =
-                                                //            _decrementCountersBeforeCountPerformanceForDequeue;
-                                                //    _timerCounters[0].Item2 = stopwatchEnqueue;
-                                                //    _timerCounters[1].Item2 = stopwatchDequeue;
-                                                //    timerCounters = _timerCounters;
-                                                //    incrementCountersAfterCountPerformanceForDequeue =
-                                                //            _incrementCountersAfterCountPerformanceForDequeue;
-                                                   
-                                                //}
-
-                                                //var enabledCountPerformance = true;
+                                                if (enabledCountPerformance)
                                                 {
-                                                    if (Sender._onEnabledCountPerformanceProcessFunc != null)
-                                                    {
-                                                        enabledCountPerformance = Sender._onEnabledCountPerformanceProcessFunc();
-                                                    }
+                                                    stopwatchDequeue = Sender
+                                                                            ._stopwatchsPool
+                                                                            .Get();
+                                                }
+                                                
+                                                _timerCounters[0].Item2 = stopwatchEnqueue;
+                                                _timerCounters[1].Item2 = stopwatchDequeue;
+
+                                                if (Sender._onEnabledCountPerformanceProcessFunc != null)
+                                                {
+                                                    enabledCountPerformance = Sender._onEnabledCountPerformanceProcessFunc();
                                                 }
                                                 PerformanceCountersHelper
                                                         .TryCountPerformance
@@ -407,7 +311,7 @@
                                                                     qpcc.IncrementCountersBeforeCountPerformanceForDequeue
                                                                 , //decrementCountersBeforeCountPerformanceForDequeue
                                                                     qpcc.DecrementCountersBeforeCountPerformanceForDequeue
-                                                                , null //timerCounters
+                                                                , _timerCounters
                                                                     //qpcc.TimerCounters
                                                                 , () =>			//try
                                                                 {
@@ -467,14 +371,18 @@
                                             #endregion while queue.IsEmpty loop
                                         }
                                         #region wait
+
                                         Sender
-                                            ._dequeueThreadsProcessorsPool
-                                            .Enqueue(this);
+                                            ._waitingDequeueThreadsProcessorsStack
+                                            .TryPush(this);
+                                        //Console.WriteLine("Enqueue(this), {0}", Sender._waitingDequeueThreadsProcessorsStack.Count);
+                                        //Console.WriteLine("Enqueue(this), {0}", Sender._waitingDequeueThreadsProcessorsStack.Count);
                                         if (Break)
                                         {
                                         }
                                         if (!Waiter.WaitOne(Sender.DequeueIdleSleepSeconds * 1000))
                                         {
+
                                         }
                                         #endregion wait
                                         #endregion while true loop
@@ -538,8 +446,8 @@
         }
         public void AttachPerformanceCounters
                         (
-                            string instanceNamePrefix
-                            , string categoryName
+                            string categoryName
+                            , string instanceNamePrefix
                             , QueuePerformanceCountersContainer performanceCounters
                             , Func<bool> onEnabledCountPerformanceProcessFunc = null
                             , PerformanceCounterInstanceLifetime
@@ -634,10 +542,9 @@
         {
             for (int i = 0; i < count; i++)
             {
-                Interlocked.Increment(ref _concurrentDequeueThreadsCount);
-                if (_dequeueThreadsProcessorsPool == null)
+                if (_waitingDequeueThreadsProcessorsStack == null)
                 {
-                    _dequeueThreadsProcessorsPool = new ConcurrentQueue<ThreadProcessor>();
+                    _waitingDequeueThreadsProcessorsStack = new KeyedStack<ThreadProcessor>();
                 }
                 var processor = new ThreadProcessor
                                                 (
@@ -660,38 +567,25 @@
                                                             processor.StopOne
                                                         );
                 _callbackProcessBreaksActions.Enqueue(callbackProcessBreakAction);
-                _dequeueThreadsProcessorsPool.Enqueue(processor);
+                _waitingDequeueThreadsProcessorsStack.TryPush(processor);
+                //Console.WriteLine(_dequeueThreadsProcessorsPool.Count);
                 thread.Start();
             }
         }
-        //private bool _enabledCountPerformance = false;
-
-        //public bool EnabledCountPerformance
-        //{
-        //    get { return _enabledCountPerformance; }
-        //    set { _enabledCountPerformance = value; }
-        //}
-
-        //private bool _enabledCountPerformance = false;
 
         private Func<bool> _onEnabledCountPerformanceProcessFunc;
-        //{
-        //    get;
-        //    set;
-        //}
-
 
         public bool Enqueue(T item)
         {
             var r = false;
             var reThrowException = false;
-            //var enableCount = _isAttachedPerformanceCounters;
 
             var enabledCountPerformance = true;
             if (_onEnabledCountPerformanceProcessFunc != null)
             {
                 enabledCountPerformance = _onEnabledCountPerformanceProcessFunc();
             }
+
             var qpcc = PerformanceCountersContainer;
             PerformanceCountersHelper
                 .TryCountPerformance
@@ -745,20 +639,20 @@
                         {
                             if
                                 (
-                                    _dequeueThreadsProcessorsPool != null
-                                    && !_dequeueThreadsProcessorsPool.IsEmpty
+                                    _waitingDequeueThreadsProcessorsStack != null
+                                    && _waitingDequeueThreadsProcessorsStack.Count > 0
                                 )
                             {
-                                ThreadProcessor processor;
+                                ThreadProcessor processor = null;
                                 if 
                                     (
-                                        _dequeueThreadsProcessorsPool
-                                                .TryDequeue(out processor)
+                                        _waitingDequeueThreadsProcessorsStack
+                                                .TryPop(out processor)
                                     )
                                 {
                                     processor.Waiter.Set();
                                     processor = null;
-                                    //Console.WriteLine("processor = null;");
+                                    //Console.WriteLine("processor = null; {0}", _waitingDequeueThreadsProcessorsStack.Count);
                                 }
                             }
                         }
@@ -767,4 +661,3 @@
         }
     }
 }
-

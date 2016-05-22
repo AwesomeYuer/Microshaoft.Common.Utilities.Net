@@ -125,6 +125,7 @@
     <Compile Include="Collections\CollectionExtensions.cs" />
     <Compile Include="Collections\DictionaryExtensions.cs" />
     <Compile Include="Collections\EmptyReadOnlyDictionary.cs" />
+    <Compile Include="ConcurrentAsyncQueue\KeyedStack.cs" />
     <Compile Include="Configuration\ConfigurationAppSettingsHelper.cs" />
     <Compile Include="00.Utilities\KeyedPriorityQueue.cs" />
     <Compile Include="00.Utilities\CompressHelper.cs" />

@@ -6,21 +6,23 @@
     using System.Diagnostics;
     using System.Threading;
     public class SingleThreadAsyncDequeueProcessor<T>
-                        where T : class
+                        //where T : class
     {
-        private Func<bool> _onEnabledCountPerformanceProcessFunc;
+        public Func<bool> OnGetEnabledCountPerformanceProcessFunc
+        {
+            private set;
+            get;
+        }
+
         private bool _isAttachedPerformanceCounters = false;
         private readonly QueuedObjectsPool<Stopwatch> _stopwatchsPool = null;
         private ConcurrentQueue<Tuple<Stopwatch, T>>
                             _queue = new ConcurrentQueue<Tuple<Stopwatch, T>>();
 
         private QueuePerformanceCountersContainer
-                    _performanceCountersContainer
+                    _queuePerformanceCountersContainer
                         = new QueuePerformanceCountersContainer();
-        //public ConcurrentQueue<T> InternalQueue
-        //{
-        //    get { return _queue; }
-        //}
+
         public delegate bool CaughtExceptionEventHandler
                                     (
                                         SingleThreadAsyncDequeueProcessor<T> sender
@@ -30,10 +32,77 @@
                                     );
         public event CaughtExceptionEventHandler
                                             OnCaughtException
-                                            , OnEnqueueProcessCaughtException
-                                            , OnDequeueProcessCaughtException;
+                                            , OnEnqueueProcessCaughtException;
+                                            //, OnDequeueProcessCaughtException
+                                            //, OnBatchProcessCaughtException;
 
 
+        private string _performanceCountersCategoryNameForQueueProcess = string.Empty;
+        private string _performanceCountersCategoryNameForBatchProcess = string.Empty;
+        private string _performanceCountersCategoryInstanceNameForQueueProcess = string.Empty;
+        private string _performanceCountersCategoryInstanceNameForBatchProcess = string.Empty;
+
+
+        public SingleThreadAsyncDequeueProcessor(long stopwatchsPoolMaxCapacity = 10 * 100)
+        {
+            _stopwatchsPool = new QueuedObjectsPool<Stopwatch>
+                                        (
+                                            stopwatchsPoolMaxCapacity
+                                        );
+            
+        }
+        public void AttachPerformanceCountersCategoryInstance
+                            (
+                                string performanceCountersCategoryNamePrefix
+                                , string performanceCountersCategoryInstanceNamePrefix
+                                , Func<bool> onGetEnabledCountPerformanceProcessFunc = null
+                                , PerformanceCounterInstanceLifetime
+                                        performanceCounterInstanceLifetime
+                                            = PerformanceCounterInstanceLifetime.Process
+                            )
+        {
+            //EasyPerformanceCountersHelper<CommonPerformanceCountersContainer>.AttachPerformanceCountersCategoryInstance
+            var process = Process.GetCurrentProcess();
+            var processName = process.ProcessName;
+            var instanceNamePrefix = string
+                                    .Format
+                                        (
+                                            "{0}-{1}"
+                                            , processName
+                                            , performanceCountersCategoryInstanceNamePrefix
+                                        );
+            var suffix = "-Queue";
+            _performanceCountersCategoryNameForQueueProcess = performanceCountersCategoryNamePrefix + suffix;
+            _performanceCountersCategoryInstanceNameForQueueProcess = instanceNamePrefix + suffix;
+            var qpcc = _queuePerformanceCountersContainer;
+            qpcc
+                .AttachPerformanceCountersToMembers
+                        (
+                            _performanceCountersCategoryNameForQueueProcess
+                            , _performanceCountersCategoryInstanceNameForQueueProcess
+                            , performanceCounterInstanceLifetime
+                        );
+            qpcc
+                .RegisterCountersUsage();
+
+            suffix = "-BatchProcess";
+
+            _performanceCountersCategoryNameForBatchProcess = performanceCountersCategoryNamePrefix + suffix;
+            _performanceCountersCategoryInstanceNameForBatchProcess = instanceNamePrefix + suffix;
+            CommonPerformanceCountersContainer container = null;
+            EasyPerformanceCountersHelper<CommonPerformanceCountersContainer>
+                .AttachPerformanceCountersCategoryInstance
+                    (
+                        _performanceCountersCategoryNameForBatchProcess
+                        , _performanceCountersCategoryInstanceNameForBatchProcess
+                        , out container
+                        , performanceCounterInstanceLifetime
+                    );
+            
+
+            _isAttachedPerformanceCounters = true;
+            OnGetEnabledCountPerformanceProcessFunc = onGetEnabledCountPerformanceProcessFunc;
+        }
 
         public bool Enqueue(T item)
         {
@@ -42,29 +111,10 @@
             //var enableCount = _isAttachedPerformanceCounters;
 
             var enabledCountPerformance = true;
-            if (_onEnabledCountPerformanceProcessFunc != null)
+            var qpcc = _queuePerformanceCountersContainer;
+            if (OnGetEnabledCountPerformanceProcessFunc != null)
             {
-                enabledCountPerformance = _onEnabledCountPerformanceProcessFunc();
-            }
-            PerformanceCounter[] incrementCountersBeforeCountPerformance = null;
-            var qpcc = _performanceCountersContainer;
-            if
-                (
-                    qpcc != null
-                    &&
-                    enabledCountPerformance
-                )
-            {
-                incrementCountersBeforeCountPerformance =
-                   new PerformanceCounter[]
-                            {
-                                qpcc
-                                    .EnqueuePerformanceCounter
-                                , qpcc
-                                    .EnqueueRateOfCountsPerSecondPerformanceCounter
-                                , qpcc
-                                    .QueueLengthPerformanceCounter
-                            };
+                enabledCountPerformance = OnGetEnabledCountPerformanceProcessFunc();
             }
 
             PerformanceCountersHelper
@@ -75,7 +125,9 @@
                             return enabledCountPerformance;
                         }
                         , reThrowException
-                        , incrementCountersBeforeCountPerformance
+                        , //incrementCountersBeforeCountPerformance
+                            qpcc
+                                .IncrementCountersBeforeCountPerformanceForEnqueue
                         , null
                         , null
                         , () =>
@@ -118,9 +170,6 @@
             return r;
         }
 
-
-
-
         public void StartRunDequeuesThreadProcess
              (
                 Action<long, T> onOnceDequeueProcessAction = null
@@ -128,8 +177,10 @@
                 , Action<long, List<Tuple<long, T>>> onBatchDequeuesProcessAction = null
                 , int waitOneBatchTimeOutInMilliseconds = 1000
                 , int waitOneBatchMaxDequeuedTimes = 100
-                , Func<Exception, Exception, string, bool> onCaughtExceptionProcessFunc = null
-                , Action<bool, Exception, Exception, string> onFinallyProcessAction = null
+                , Func<Exception, Exception, string, bool> onDequeueProcessCaughtExceptionProcessFunc = null
+                , Action<bool, Exception, Exception, string> onDequeueProcessFinallyProcessAction = null
+                , Func<Exception, Exception, string, bool> onDequeuesBatchProcessCaughtExceptionProcessFunc = null
+                , Action<bool, Exception, Exception, string> onDequeuesBatchProcessFinallyProcessAction = null
             )
         {
             new Thread
@@ -143,12 +194,16 @@
                                     , onBatchDequeuesProcessAction
                                     , waitOneBatchTimeOutInMilliseconds
                                     , waitOneBatchMaxDequeuedTimes
-                                    , onCaughtExceptionProcessFunc
-                                    , onFinallyProcessAction
+                                    , onDequeueProcessCaughtExceptionProcessFunc
+                                    , onDequeueProcessFinallyProcessAction
+                                    , onDequeuesBatchProcessCaughtExceptionProcessFunc
+                                    , onDequeuesBatchProcessFinallyProcessAction
+
                                 );
                         }
                     ).Start();
         }
+        private bool _isStartedDequeueProcess = false;
         private void DequeueProcess
             (
                 Action<long, T> onOnceDequeueProcessAction = null
@@ -156,56 +211,60 @@
                 , Action<long, List<Tuple<long, T>>> onBatchDequeuesProcessAction = null
                 , int waitOneBatchTimeOutInMilliseconds = 1000
                 , int waitOneBatchMaxDequeuedTimes = 100
-                , Func<Exception, Exception, string, bool> onCaughtExceptionProcessFunc = null
-                , Action<bool, Exception, Exception, string> onFinallyProcessAction = null
+                , Func<Exception, Exception, string, bool> onDequeueProcessCaughtExceptionProcessFunc = null
+                , Action<bool, Exception, Exception, string> onDequeueProcessFinallyProcessAction = null
+                , Func<Exception, Exception, string, bool> onDequeuesBatchProcessCaughtExceptionProcessFunc = null
+                , Action<bool, Exception, Exception, string> onDequeuesBatchProcessFinallyProcessAction = null
             )
         {
+            if (!_isStartedDequeueProcess)
+            {
+                return;
+            }
             List<Tuple<long, T>> list = null;
             long i = 0;
             Stopwatch stopwatch = null;
-
-
             var timerCounters = new WriteableTuple
-                                <
-                                    bool
-                                    , Stopwatch
-                                    , PerformanceCounter
-                                    , PerformanceCounter
-                                >[]
-                            {
-                                WriteableTuple
-                                    .Create
                                         <
                                             bool
                                             , Stopwatch
                                             , PerformanceCounter
                                             , PerformanceCounter
-                                        >
-                                        (
-                                            false
-                                            , null
-                                            , _performanceCountersContainer
-                                                .QueuedWaitAverageTimerPerformanceCounter
-                                            , _performanceCountersContainer
-                                                .QueuedWaitAverageBasePerformanceCounter
-                                        )
-                                , WriteableTuple
-                                        .Create
-                                            <
-                                                bool
-                                                , Stopwatch
-                                                , PerformanceCounter
-                                                , PerformanceCounter
-                                            >
-                                            (
-                                                true
-                                                , null
-                                                , _performanceCountersContainer
-                                                    .DequeueProcessedAverageTimerPerformanceCounter
-                                                , _performanceCountersContainer
-                                                    .DequeueProcessedAverageBasePerformanceCounter
-                                            )
-                            };
+                                        >[]
+                                    {
+                                        WriteableTuple
+                                            .Create
+                                                <
+                                                    bool
+                                                    , Stopwatch
+                                                    , PerformanceCounter
+                                                    , PerformanceCounter
+                                                >
+                                                (
+                                                    false
+                                                    , null
+                                                    , _queuePerformanceCountersContainer
+                                                        .QueuedWaitAverageTimerPerformanceCounter
+                                                    , _queuePerformanceCountersContainer
+                                                        .QueuedWaitAverageBasePerformanceCounter
+                                                )
+                                        , WriteableTuple
+                                                .Create
+                                                    <
+                                                        bool
+                                                        , Stopwatch
+                                                        , PerformanceCounter
+                                                        , PerformanceCounter
+                                                    >
+                                                    (
+                                                        true
+                                                        , null
+                                                        , _queuePerformanceCountersContainer
+                                                            .DequeueProcessedAverageTimerPerformanceCounter
+                                                        , _queuePerformanceCountersContainer
+                                                            .DequeueProcessedAverageBasePerformanceCounter
+                                                    )
+                                    };
 
             if (onBatchDequeuesProcessAction != null)
             {
@@ -223,7 +282,6 @@
                                 {
                                     if (!_queue.IsEmpty)
                                     {
-
                                         Tuple<Stopwatch, T> element = null;
                                         if (_queue.TryDequeue(out element))
                                         {
@@ -232,25 +290,23 @@
                                                 #region while queue.IsEmpty loop
                                                 var enabledCountPerformance = true;
                                                 {
-                                                    if (_onEnabledCountPerformanceProcessFunc != null)
+                                                    if (OnGetEnabledCountPerformanceProcessFunc != null)
                                                     {
-                                                        enabledCountPerformance = _onEnabledCountPerformanceProcessFunc();
+                                                        enabledCountPerformance = OnGetEnabledCountPerformanceProcessFunc();
                                                     }
                                                 }
-                                                var qpcc = _performanceCountersContainer;
+                                                var qpcc = _queuePerformanceCountersContainer;
                                                 
                                                 var stopwatchDequeue = _stopwatchsPool.Get();
                                                 var stopwatchEnqueue = element.Item1;
-                                                //timerCounters[0].Item2 = stopwatchEnqueue;
-                                                //timerCounters[1].Item2 = stopwatchDequeue;
+                                                timerCounters[0].Item2 = stopwatchEnqueue;
+                                                timerCounters[1].Item2 = stopwatchDequeue;
 
-                                                //var enabledCountPerformance = true;
+                                                if (OnGetEnabledCountPerformanceProcessFunc != null)
                                                 {
-                                                    if (_onEnabledCountPerformanceProcessFunc != null)
-                                                    {
-                                                        enabledCountPerformance = _onEnabledCountPerformanceProcessFunc();
-                                                    }
+                                                    enabledCountPerformance = OnGetEnabledCountPerformanceProcessFunc();
                                                 }
+
                                                 var reThrowException = false;
                                                 PerformanceCountersHelper
                                                             .TryCountPerformance
@@ -278,12 +334,11 @@
                                                                         qpcc
                                                                            .CaughtExceptionsPerformanceCounter
                                                                            .Increment();
-                                                                        if (OnDequeueProcessCaughtException != null)
+                                                                        if (onDequeueProcessCaughtExceptionProcessFunc != null)
                                                                         {
-                                                                            reThrowException = OnDequeueProcessCaughtException
+                                                                            reThrowException = onDequeueProcessCaughtExceptionProcessFunc
                                                                                                             (
-                                                                                                                this
-                                                                                                                , x
+                                                                                                                x
                                                                                                                 , y
                                                                                                                 , z
                                                                                                             );
@@ -297,13 +352,14 @@
                                                                         }
                                                                         return reThrowException;
                                                                     }
-                                                                    , null          //finally
+                                                                    , onDequeueProcessFinallyProcessAction          //finally
                                                                     , null
                                                                     , qpcc.IncrementCountersAfterCountPerformanceForDequeue
                                                                 );
                                                     //池化
                                                     stopwatchEnqueue.Reset();
                                                     stopwatchDequeue.Reset();
+
                                                     var r = _stopwatchsPool.Put(stopwatchDequeue);
                                                     if (!r)
                                                     {
@@ -356,10 +412,16 @@
                                                 {
                                                     stopwatch.Stop();
                                                 }
-                                                TryCatchFinallyProcessHelper
-                                                    .TryProcessCatchFinally
+                                                EasyPerformanceCountersHelper<CommonPerformanceCountersContainer>
+                                                    .TryCountPerformance
                                                         (
-                                                            true
+                                                            PerformanceCounterProcessingFlagsType.All
+                                                            , _performanceCountersCategoryNameForBatchProcess
+                                                            , _performanceCountersCategoryInstanceNameForBatchProcess
+                                                            , () =>
+                                                            {
+                                                                return OnGetEnabledCountPerformanceProcessFunc();
+                                                            }
                                                             , () =>
                                                             {
                                                                 onBatchDequeuesProcessAction
@@ -368,13 +430,13 @@
                                                                         , list
                                                                     );
                                                             }
-                                                            , false
+                                                            , null
                                                             , (xx, yy, zz) =>
                                                             {
                                                                 var rrr = false;
-                                                                if (onCaughtExceptionProcessFunc != null)
+                                                                if (onDequeuesBatchProcessCaughtExceptionProcessFunc != null)
                                                                 {
-                                                                    rrr = onCaughtExceptionProcessFunc
+                                                                    rrr = onDequeuesBatchProcessCaughtExceptionProcessFunc
                                                                             (
                                                                                 xx, yy, zz
                                                                             );
@@ -389,13 +451,8 @@
                                                                 {
                                                                     stopwatch.Restart();
                                                                 }
-                                                                if (onFinallyProcessAction != null)
-                                                                {
-                                                                    onFinallyProcessAction
-                                                                            (
-                                                                                xx, yy, zz, ww
-                                                                            );
-                                                                }
+                                                                onDequeuesBatchProcessFinallyProcessAction?
+                                                                        .Invoke(xx, yy, zz, ww);
                                                             }
                                                         );
                                             }
@@ -406,11 +463,11 @@
                            , (x, y, z) =>
                                {
                                    var rr = false;
-                                   if (onCaughtExceptionProcessFunc != null)
+                                   if (OnCaughtException != null)
                                    {
-                                       rr = onCaughtExceptionProcessFunc
+                                       rr = OnCaughtException
                                                (
-                                                   x, y, z
+                                                   this, x, y, z
                                                );
                                    }
                                    return rr;

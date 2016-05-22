@@ -1,6 +1,5 @@
 ﻿namespace Microshaoft
 {
-    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     public class QueuePerformanceCountersContainer :
@@ -11,13 +10,13 @@
     {
         public void RegisterCountersUsage()
         {
-            IncrementCountersBeforeCountPerformanceForEnqueue =
-                   new PerformanceCounter[]
-                            {
-                                EnqueuePerformanceCounter
-                                , EnqueueRateOfCountsPerSecondPerformanceCounter
-                                , QueueLengthPerformanceCounter
-                            };
+            IncrementCountersBeforeCountPerformanceForEnqueue
+                                = new PerformanceCounter[]
+                                        {
+                                            EnqueuePerformanceCounter
+                                            , EnqueueRateOfCountsPerSecondPerformanceCounter
+                                            , QueueLengthPerformanceCounter
+                                        };
 
             IncrementCountersBeforeCountPerformanceInThread
                                 = new PerformanceCounter[]
@@ -52,59 +51,7 @@
                                                     DequeueProcessedPerformanceCounter
                                                     , DequeueProcessedRateOfCountsPerSecondPerformanceCounter
                                             };
-            //TimerCounters = new WriteableTuple
-            //                        <
-            //                            bool
-            //                            , Stopwatch
-            //                            , PerformanceCounter
-            //                            , PerformanceCounter
-            //                        >[]
-            //                    {
-            //                        WriteableTuple
-            //                            .Create
-            //                                <
-            //                                    bool
-            //                                    , Stopwatch
-            //                                    , PerformanceCounter
-            //                                    , PerformanceCounter
-            //                                >
-            //                                (
-            //                                    false
-            //                                    , null
-            //                                    , QueuedWaitAverageTimerPerformanceCounter
-            //                                    , QueuedWaitAverageBasePerformanceCounter
-            //                                )
-            //                        , WriteableTuple
-            //                                .Create
-            //                                    <
-            //                                        bool
-            //                                        , Stopwatch
-            //                                        , PerformanceCounter
-            //                                        , PerformanceCounter
-            //                                    >
-            //                                    (
-            //                                        true
-            //                                        , null
-            //                                        , DequeueProcessedAverageTimerPerformanceCounter
-            //                                        , DequeueProcessedAverageBasePerformanceCounter
-            //                                    )
-            //                    };
-
         }
-
-
-        //public WriteableTuple
-        //        <
-        //            bool
-        //            , Stopwatch
-        //            , PerformanceCounter
-        //            , PerformanceCounter
-        //        >[] TimerCounters
-        //{
-        //    get;
-        //    private set;
-
-        //}
 
         public PerformanceCounter[] IncrementCountersBeforeCountPerformanceForEnqueue
         {
