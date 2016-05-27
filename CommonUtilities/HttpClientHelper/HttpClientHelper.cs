@@ -5,8 +5,131 @@
     using System.Threading.Tasks;
     using System.Net.Http;
     using System.Net.Http.Handlers;
+    using System.IO;
     public static class HttpClientHelper
     {
+        public async static Task PostUploadFile
+                            (
+                                string file
+                                , string url
+                                , Action
+                                    <
+                                        HttpClient
+                                        , bool
+                                        , HttpProgressEventArgs
+                                    >
+                                    onProgressProcessAction = null
+                                , bool reThrowException = false
+                                , Func<Exception, Exception, string, bool> onCaughtExceptionProcessFunc = null
+                                , Action<bool, Exception, Exception, string> onFinallyProcessAction = null
+                                , int httpClientTimeOutInSeconds = 200
+                                , int bufferSize = 1024
+                            )
+        {
+            HttpClient httpClient = null;
+            using
+                (
+                    var httpClientHandler
+                                    = new HttpClientHandler()
+                                    {
+                                        UseDefaultCredentials = true
+                                    }
+                )
+            {
+                ProgressMessageHandler progressMessageHandler = null;
+                if (onProgressProcessAction != null)
+                {
+                    progressMessageHandler = new ProgressMessageHandler(httpClientHandler);
+                    progressMessageHandler
+                                .HttpSendProgress
+                                        +=
+                                            (sender, httpProgressEventArgs) =>
+                                            {
+                                                onProgressProcessAction
+                                                        (
+                                                            httpClient
+                                                            , true
+                                                            , httpProgressEventArgs
+                                                        );
+                                            };
+                    progressMessageHandler
+                                .HttpReceiveProgress
+                                        +=
+                                            (sender, httpProgressEventArgs) =>
+                                            {
+                                                onProgressProcessAction
+                                                        (
+                                                            httpClient
+                                                            , false
+                                                            , httpProgressEventArgs
+                                                        );
+                                            };
+                }
+                using
+                        (
+                            httpClient = new HttpClient(httpClientHandler)
+                            {
+                                Timeout = TimeSpan
+                                                                .FromSeconds
+                                                                    (
+                                                                        httpClientTimeOutInSeconds
+                                                                    )
+
+                            }
+                        )
+                {
+                    try
+                    {
+
+                        HttpResponseMessage response = null;
+                        using (FileStream fileStream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize,  true))
+                        {
+                            // Create a stream content for the file
+                            StreamContent content = new StreamContent(fileStream, bufferSize);
+
+                            // Create Multipart form data content, add our submitter data and our stream content
+                            MultipartFormDataContent formData = new MultipartFormDataContent();
+                            formData.Add(new StringContent("Me"), "submitter");
+                            formData.Add(content, "filename", file);
+
+                            // Post the MIME multipart form data upload with the file
+                            Uri address = new Uri(url);
+                            response = await httpClient.PostAsync(address, formData);
+
+                            //FileResult result = await response.Content.ReadAsAsync<FileResult>();
+                            //Console.WriteLine("{0}Result:{0}  Filename:  {1}{0}  Submitter: {2}", Environment.NewLine, result.FileNames.FirstOrDefault(), result.Submitter);
+                        }
+
+
+
+                        //Console.WriteLine("await ed");
+                        response.EnsureSuccessStatusCode();
+                    }
+                    catch (Exception e)
+                    {
+                        var innerExceptionMessage = "Caught Exception";
+                        var newException = new Exception
+                                                    (
+                                                        innerExceptionMessage
+                                                        , e
+                                                    );
+                        if (onCaughtExceptionProcessFunc != null)
+                        {
+                            reThrowException = onCaughtExceptionProcessFunc(e, newException, innerExceptionMessage);
+                        }
+                        if (reThrowException)
+                        {
+                            throw
+                                newException;
+                        }
+                    }
+                }
+
+            }
+        }
+
+
+
         public static void TryParallelHttpClientsSendData
                      (
                         IEnumerable<string> urls
