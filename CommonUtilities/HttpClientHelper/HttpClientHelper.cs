@@ -1,14 +1,156 @@
-﻿namespace Microshaoft
+﻿
+namespace Test
+{
+    using System;
+    using Microshaoft;
+    class Program1
+    {
+        const int BufferSize = 1024;
+
+        static readonly string _baseAddress = "http://localhost:50231/";
+        static readonly string _filename = "Sample.xml";
+        static void Main(string[] args)
+        {
+            HttpClientHelper
+                .PostUploadFile
+                    (
+                        @"E:\download\PerfView.zip"
+                        , @"http://localhost:10281/api/restful/Files/upload"
+                        , (x, y, z) =>
+                        {
+                            Console.WriteLine("{1}{0}{2}", ":", y, z.ProgressPercentage);
+                        }
+                        //, null
+                        , false
+                        , (x, y, z) =>
+                        {
+                            return false;
+                        }
+                        , null
+
+                    );
+            Console.ReadLine();
+        }
+
+    }
+}
+
+
+namespace Microshaoft
 {
     using System;
     using System.Collections.Generic;
-    using System.Threading.Tasks;
+    using System.IO;
     using System.Net.Http;
     using System.Net.Http.Handlers;
-    using System.IO;
+    using System.Threading.Tasks;
     public static class HttpClientHelper
     {
-        public async static Task PostUploadFile
+
+        public static void RegisterHttpClientProgressMessageHandler
+                                (
+                                    Action<HttpClient> onHttpClientSendReceiveProcessAction
+                                    , Action
+                                        <
+                                            HttpClient
+                                            , bool
+                                            , HttpProgressEventArgs
+                                        >
+                                            onProgressProcessAction = null
+                                    , bool reThrowException = false
+                                    , Func<Exception, Exception, string, bool> onCaughtExceptionProcessFunc = null
+                                    , Action<bool, Exception, Exception, string> onFinallyProcessAction = null
+                                )
+        {
+            HttpClientHandler httpClientHandler = null;
+            HttpClient httpClient = null;
+            ProgressMessageHandler progressMessageHandler = null;
+            EventHandler<HttpProgressEventArgs> httpSendProgress = null;
+            EventHandler<HttpProgressEventArgs> httpReceiveProgress = null;
+            var needProgress = false;
+            try
+            {
+                if (onProgressProcessAction != null)
+                {
+                    needProgress = true;
+                    httpClientHandler = new HttpClientHandler();
+                    progressMessageHandler = new ProgressMessageHandler(httpClientHandler);
+                    httpSendProgress = new EventHandler<HttpProgressEventArgs>
+                                            (
+                                                (sender, httpProgressEventArgs) =>
+                                                {
+                                                    onProgressProcessAction
+                                                        (
+                                                            httpClient
+                                                            , true
+                                                            , httpProgressEventArgs
+                                                        );
+                                                }
+                                            );
+                    httpReceiveProgress = new EventHandler<HttpProgressEventArgs>
+                                            (
+                                                (sender, httpProgressEventArgs) =>
+                                                {
+                                                    onProgressProcessAction
+                                                        (
+                                                            httpClient
+                                                            , false
+                                                            , httpProgressEventArgs
+                                                        );
+                                                }
+                                            );
+                    progressMessageHandler.HttpSendProgress += httpSendProgress;
+                    progressMessageHandler.HttpReceiveProgress += httpReceiveProgress;
+                }
+                using
+                    (
+                        httpClient = (needProgress ? new HttpClient(progressMessageHandler) : new HttpClient())
+                    )
+                {
+                    try
+                    {
+                        onHttpClientSendReceiveProcessAction(httpClient);
+                    }
+                    catch (Exception e)
+                    {
+                        var innerExceptionMessage = "Caught Exception";
+                        var newException = new Exception
+                                                    (
+                                                        innerExceptionMessage
+                                                        , e
+                                                    );
+                        if (onCaughtExceptionProcessFunc != null)
+                        {
+                            reThrowException = onCaughtExceptionProcessFunc
+                                                    (
+                                                        e
+                                                        , newException
+                                                        , innerExceptionMessage
+                                                    );
+                        }
+                        if (reThrowException)
+                        {
+                            throw
+                                newException;
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                if (progressMessageHandler != null)
+                {
+                    progressMessageHandler.HttpSendProgress -= httpSendProgress;
+                    progressMessageHandler.HttpReceiveProgress -= httpReceiveProgress;
+                    progressMessageHandler.Dispose();
+                }
+                if (httpClientHandler != null)
+                {
+                    httpClientHandler.Dispose();
+                }
+            }
+        }
+        public static void PostUploadFile
                             (
                                 string file
                                 , string url
@@ -23,113 +165,36 @@
                                 , Func<Exception, Exception, string, bool> onCaughtExceptionProcessFunc = null
                                 , Action<bool, Exception, Exception, string> onFinallyProcessAction = null
                                 , int httpClientTimeOutInSeconds = 200
-                                , int bufferSize = 1024
+                                , int bufferSize = 64 * 1024
                             )
         {
-            HttpClient httpClient = null;
-            using
-                (
-                    var httpClientHandler
-                                    = new HttpClientHandler()
-                                    {
-                                        UseDefaultCredentials = true
-                                    }
-                )
-            {
-                ProgressMessageHandler progressMessageHandler = null;
-                if (onProgressProcessAction != null)
-                {
-                    progressMessageHandler = new ProgressMessageHandler(httpClientHandler);
-                    progressMessageHandler
-                                .HttpSendProgress
-                                        +=
-                                            (sender, httpProgressEventArgs) =>
-                                            {
-                                                onProgressProcessAction
-                                                        (
-                                                            httpClient
-                                                            , true
-                                                            , httpProgressEventArgs
-                                                        );
-                                            };
-                    progressMessageHandler
-                                .HttpReceiveProgress
-                                        +=
-                                            (sender, httpProgressEventArgs) =>
-                                            {
-                                                onProgressProcessAction
-                                                        (
-                                                            httpClient
-                                                            , false
-                                                            , httpProgressEventArgs
-                                                        );
-                                            };
-                }
-                using
-                        (
-                            httpClient = new HttpClient(httpClientHandler)
+            RegisterHttpClientProgressMessageHandler
+                    (
+                        (httpClient) =>
+                        {
+                            HttpResponseMessage response = null;
+                            using (var fileStream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize, true))
                             {
-                                Timeout = TimeSpan
-                                                                .FromSeconds
-                                                                    (
-                                                                        httpClientTimeOutInSeconds
-                                                                    )
-
-                            }
-                        )
-                {
-                    try
-                    {
-
-                        HttpResponseMessage response = null;
-                        using (FileStream fileStream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize,  true))
-                        {
-                            // Create a stream content for the file
-                            StreamContent content = new StreamContent(fileStream, bufferSize);
-
-                            // Create Multipart form data content, add our submitter data and our stream content
-                            MultipartFormDataContent formData = new MultipartFormDataContent();
-                            formData.Add(new StringContent("Me"), "submitter");
-                            formData.Add(content, "filename", file);
-
-                            // Post the MIME multipart form data upload with the file
-                            Uri address = new Uri(url);
-                            response = await httpClient.PostAsync(address, formData);
-
-                            //FileResult result = await response.Content.ReadAsAsync<FileResult>();
-                            //Console.WriteLine("{0}Result:{0}  Filename:  {1}{0}  Submitter: {2}", Environment.NewLine, result.FileNames.FirstOrDefault(), result.Submitter);
-                        }
-
-
-
-                        //Console.WriteLine("await ed");
-                        response.EnsureSuccessStatusCode();
-                    }
-                    catch (Exception e)
-                    {
-                        var innerExceptionMessage = "Caught Exception";
-                        var newException = new Exception
+                                var streamContent = new StreamContent(fileStream, bufferSize);
+                                var multipartFormDataContent = new MultipartFormDataContent();
+                                multipartFormDataContent.Add(new StringContent("Me"), "submitter");
+                                multipartFormDataContent.Add(streamContent, "filename", file);
+                                var uri = new Uri(url);
+                                response = httpClient
+                                                .PostAsync
                                                     (
-                                                        innerExceptionMessage
-                                                        , e
-                                                    );
-                        if (onCaughtExceptionProcessFunc != null)
-                        {
-                            reThrowException = onCaughtExceptionProcessFunc(e, newException, innerExceptionMessage);
+                                                        uri
+                                                        , multipartFormDataContent
+                                                    ).Result;
+                            }
+                            response.EnsureSuccessStatusCode();
                         }
-                        if (reThrowException)
-                        {
-                            throw
-                                newException;
-                        }
-                    }
-                }
-
-            }
+                        , onProgressProcessAction
+                        , reThrowException
+                        , onCaughtExceptionProcessFunc
+                        , onFinallyProcessAction
+                    );
         }
-
-
-
         public static void TryParallelHttpClientsSendData
                      (
                         IEnumerable<string> urls
@@ -172,11 +237,8 @@
                                         , contentData
                                         , onProgressProcessAction
                                         , reThrowException
-                                        , (xx, yy, zz) =>
-                                        {
-                                            return onCaughtExceptionProcessFunc(xx, yy, zz);
-                                        }
-                                        , null
+                                        , onCaughtExceptionProcessFunc
+                                        , onFinallyProcessAction
                                         , httpClientTimeOutInSeconds
                                     );
 
@@ -190,6 +252,9 @@
                                         , httpMethod
                                         , contentData
                                         , onProgressProcessAction
+                                        , reThrowException
+                                        , onCaughtExceptionProcessFunc
+                                        , onFinallyProcessAction
                                         , httpClientTimeOutInSeconds
                                     );
                             }
@@ -223,62 +288,10 @@
                                         , int httpClientTimeOutInSeconds = 5
                                     )
         {
-            HttpClient httpClient = null;
-            using
-                (
-                    var httpClientHandler
-                                    = new HttpClientHandler()
-                                    {
-                                        UseDefaultCredentials = true
-                                    }
-                )
-            {
-                ProgressMessageHandler progressMessageHandler = null;
-                if (onProgressProcessAction != null)
-                {
-                    progressMessageHandler = new ProgressMessageHandler(httpClientHandler);
-                    progressMessageHandler
-                                .HttpSendProgress
-                                        +=
-                                            (sender, httpProgressEventArgs) =>
-                                            {
-                                                onProgressProcessAction
-                                                        (
-                                                            httpClient
-                                                            , true
-                                                            , httpProgressEventArgs
-                                                        );
-                                            };
-                    progressMessageHandler
-                                .HttpReceiveProgress
-                                        +=
-                                            (sender, httpProgressEventArgs) =>
-                                            {
-                                                onProgressProcessAction
-                                                        (
-                                                            httpClient
-                                                            , false
-                                                            , httpProgressEventArgs
-                                                        );
-                                            };
-                }
-
-                using
-                        (
-                            httpClient = new HttpClient(httpClientHandler)
-                            {
-                                Timeout = TimeSpan
-                                                                .FromSeconds
-                                                                    (
-                                                                        httpClientTimeOutInSeconds
-                                                                    )
-
-                            }
-                        )
-                {
-                    try
+            RegisterHttpClientProgressMessageHandler
+                 (
+                    async (httpClient) =>
                     {
-
                         HttpResponseMessage response = null;
                         //Task<HttpResponseMessage> task = null;
                         if (httpMethod.Trim().ToLower() == "get")
@@ -326,26 +339,11 @@
                         Console.WriteLine("await ed");
                         response.EnsureSuccessStatusCode();
                     }
-                    catch (Exception e)
-                    {
-                        var innerExceptionMessage = "Caught Exception";
-                        var newException = new Exception
-                                                    (
-                                                        innerExceptionMessage
-                                                        , e
-                                                    );
-                        if (onCaughtExceptionProcessFunc != null)
-                        {
-                            reThrowException = onCaughtExceptionProcessFunc(e, newException, innerExceptionMessage);
-                        }
-                        if (reThrowException)
-                        {
-                            throw
-                                newException;
-                        }
-                    }
-                }
-            }
+                    , onProgressProcessAction
+                    , reThrowException
+                    , onCaughtExceptionProcessFunc
+                    , onFinallyProcessAction
+                 );
         }
 
         /// <summary>
@@ -368,92 +366,47 @@
                                             , HttpProgressEventArgs
                                         >
                                     onProgressProcessAction = null
+                                , bool reThrowException = false
+                                , Func<Exception, Exception, string, bool> onCaughtExceptionProcessFunc = null
+                                , Action<bool, Exception, Exception, string> onFinallyProcessAction = null
                                 , int httpClientTimeOutInSeconds = 5
                             )
         {
-            HttpClient httpClient = null;
-            using
-                (
-                    var httpClientHandler
-                                    = new HttpClientHandler()
-                                    {
-                                        UseDefaultCredentials = true
-                                    }
-
-                )
-            {
-                ProgressMessageHandler progressMessageHandler = null;
-                if (onProgressProcessAction != null)
-                {
-                    progressMessageHandler
-                                = new ProgressMessageHandler(httpClientHandler);
-                    progressMessageHandler
-                                .HttpSendProgress
-                                        +=
-                                            (sender, httpProgressEventArgs) =>
-                                            {
-                                                onProgressProcessAction
-                                                        (
-                                                            httpClient
-                                                            , true
-                                                            , httpProgressEventArgs
-                                                        );
-                                            };
-                    progressMessageHandler
-                                .HttpReceiveProgress
-                                        +=
-                                            (sender, httpProgressEventArgs) =>
-                                            {
-                                                onProgressProcessAction
-                                                        (
-                                                            httpClient
-                                                            , false
-                                                            , httpProgressEventArgs
-                                                        );
-                                            };
-                }
-                using
-                        (
-                            httpClient
-                                        =
-                                            new HttpClient(httpClientHandler)
-                                            {
-                                                Timeout = TimeSpan
-                                                                .FromSeconds
-                                                                    (
-                                                                        httpClientTimeOutInSeconds
-                                                                    )
-                                            }
-                        )
-                {
-                    HttpResponseMessage response = null;
-                    if (httpMethod.Trim().ToLower() == "get")
-                    {
-                        response = httpClient
-                                            .GetAsync
-                                                (
-                                                    url
-                                                )
-                                            .Result;
-                    }
-                    else if (httpMethod.Trim().ToLower() == "post")
-                    {
-                        StringContent stringContent = null;
-                        if (!string.IsNullOrEmpty(contentData))
+            RegisterHttpClientProgressMessageHandler
+                     (
+                        (httpClient) =>
                         {
-                            stringContent = new StringContent(contentData);
+                            HttpResponseMessage response = null;
+                            if (httpMethod.Trim().ToLower() == "get")
+                            {
+                                response = httpClient
+                                                    .GetAsync
+                                                        (
+                                                            url
+                                                        )
+                                                    .Result;
+                            }
+                            else if (httpMethod.Trim().ToLower() == "post")
+                            {
+                                StringContent stringContent = null;
+                                if (!string.IsNullOrEmpty(contentData))
+                                {
+                                    stringContent = new StringContent(contentData);
+                                }
+                                response = httpClient
+                                                    .PostAsync
+                                                        (
+                                                            url
+                                                            , stringContent
+                                                        )
+                                                    .Result;
+                            }
                         }
-                        response = httpClient
-                                            .PostAsync
-                                                (
-                                                    url
-                                                    , stringContent
-                                                )
-                                            .Result;
-                    }
-                }
-            }
+                        , onProgressProcessAction
+                        , reThrowException
+                        , onCaughtExceptionProcessFunc
+                        , onFinallyProcessAction
+                     );
         }
-
     }
 }
