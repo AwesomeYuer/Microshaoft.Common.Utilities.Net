@@ -235,6 +235,7 @@
     <Compile Include="WebApiVersionedRoute\VersionConstraint.cs" />
     <Compile Include="WebApiVersionedRoute\ActionSelector\WebApiVersionedControllerActionSelector.cs" />
     <Compile Include="WebApiVersionedRoute\ControllerSelector\WebApiVersionedControllerSelector.cs" />
+    <Compile Include="WebMvcApi.NET45\FileUploadController.cs" />
     <Compile Include="WebMvcApi.NET45\WebApiExceptionsHandlerFilter.cs" />
     <Compile Include="WebMvcApi.NET45\WebMvcApiRoutePrefixGroupingHelper.cs" />
     <Compile Include="Xml\XmlCDATA.cs" />

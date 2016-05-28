@@ -115,6 +115,7 @@
     <Compile Include="WebApiVersionedRoute\VersionConstraint.cs" />
     <Compile Include="WebApiVersionedRoute\VersionedRouteAttribute.cs" />
     <Compile Include="WebApiVersionedRoute\WebApiVersionAttribute.cs" />
+    <Compile Include="WebMvcApi.NET45\FileUploadController.cs" />
     <Compile Include="WebMvcApi.NET45\JsonpMediaTypeFormatter.cs" />
     <Compile Include="WebMvcApi.NET45\TraceSoapMessagesLoggerSoapExtension.cs" />
     <Compile Include="WebMvcApi.NET45\WebMvcApiLogFilter.cs" />
