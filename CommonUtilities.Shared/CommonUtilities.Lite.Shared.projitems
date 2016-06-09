@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>f9418680-7641-49aa-a72a-32408f111947</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>CommonUtilities.Lite.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory).NET35\ConcurrentQueue.Net35.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory).NET35\HttpClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory).NET35\Parallel.NET35.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory).NET35\Tuple.Net35.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory).NET35\WriteableTuple.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\BytesHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\CompressHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\CryptographyHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\DateTimeHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\EasyTimer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\EncodingHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\FileLogHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\FtpWebRequestResponseHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\GCNotifier.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\KeyedPriorityQueue.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\PathFileHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\RemotingHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\SequenceSeedHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\SerializerHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\StreamDataHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\StringsHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\TaskProcesserHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\TryCatchFinallyHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\WindowsConsoleHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Assembly\AssemblyHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Caches\CacheItemEntryRemovedNotifier.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Caches\MruCache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Caches\RefreshableCache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Caches\XmlSerializersCache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Collections\CollectionExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Collections\DictionaryExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Collections\EmptyReadOnlyDictionary.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuration\ConfigurationAppSettingsHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CRC\CRC16.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CRC\CRC32.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CRC\CrcHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataAccess\SqlCommandExtensionsMethodsManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataTable\DataReaderHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataTable\DataTableHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataTable\DataTableList.ExtensionMethodsManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DynamicExpression\ExpressionTreeHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DynamicExpression\ExpressionTreeHelper.DynamicCallMethodExpressionTreeInvokerHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DynamicExpression\ExpressionTreeHelper.DynamicMemberAccessor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DynamicExpression\ExpressionTreeHelper.DynamicPropertyAccessor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DynamicExpression\LamadaExtention.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DynamicExpression\MethodCallExpressionHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EventLog\EventLogHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ExceptionStackTrace\StackTraceHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ExtensionsMethods\ConcurrentDictionaryExtensionsMethodsManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HttpClientHelper\HttpClientHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\DynamicJson.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\JTokenHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LongInteger\LongIntegerHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MEF\MEF.Contracts.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MEF\MEFHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MemberAdditionalDefinitionAttribute\MemberAdditionalDefinitionAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\FloatRange.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\GlobalSuppressions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\HashCodeCombiner.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\INuGetVersionable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\IVersionComparer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\IVersionRangeComparer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\NuGetVersion.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\NuGetVersionFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\NuGetVersionFloatBehavior.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\Properties\Resources.Designer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\SemanticVersion.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\SemanticVersionBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\SemanticVersionFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\VersionComparer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\VersionComparison.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\VersionExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\VersionFormatter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\VersionRange.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\VersionRangeBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\VersionRangeComparer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\VersionRangeFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\VersionRangeFormatter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pools\00.PoolManager\PoolsManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pools\ObjectsPool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pools\QueuedObjectsPool.Partial.01.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ReaderWriterLock\EasyReaderWriterLockSlim.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ReaderWriterLock\ReaderWriterLockSlimHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socket\BufferManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socket\Microsoft.System.ServiceModel.Channels.SocketAsyncEventArgsPool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socket\SocketAsyncDataHandler.01.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socket\SocketAsyncEventArgsPool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socket\SocketHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System.Buffers.ArrayPool\ArrayPool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Throttler\RateLimiters\FixedTokenBucket.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Throttler\RateLimiters\IThrottleStrategy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Throttler\RateLimiters\SystemTime.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Throttler\RateLimiters\Throttler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Throttler\RateLimiters\TokenBucket.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Throttler\Throttler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TimeBasedIdentity\TimeBasedIdentityGenerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Type\TypeExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Type\TypeHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WorkFlow\WorkFlowHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Xml\XmlCDATA.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Xml\XmlValidationHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)DataAccess\Pager.StoreProcedure.Sample.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)NuGet.Versioning\Resources.resx" />
+  </ItemGroup>
+</Project>

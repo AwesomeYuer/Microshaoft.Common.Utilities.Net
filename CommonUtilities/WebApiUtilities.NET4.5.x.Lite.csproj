@@ -95,41 +95,18 @@
       <Link>Properties\Solution.All.Projects.Common.AssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WebApiVersionedRoute\ActionSelector\CandidateAction.cs" />
-    <Compile Include="WebApiVersionedRoute\ActionSelector\HttpActionDescriptorExtensions.cs" />
-    <Compile Include="WebApiVersionedRoute\ActionSelector\HttpParameterBindingExtensions.cs" />
-    <Compile Include="WebApiVersionedRoute\ActionSelector\NonActionAttribute.cs" />
-    <Compile Include="WebApiVersionedRoute\ActionSelector\WebApiVersionedControllerActionSelector2.cs" />
-    <Compile Include="WebApiVersionedRoute\ActionSelector\WebApiVersionedControllerActionSelector.cs" />
-    <Compile Include="WebApiVersionedRoute\ControllerSelector\HttpControllerDescriptorExtensions.cs" />
-    <Compile Include="WebApiVersionedRoute\ControllerSelector\WebApiControllerTypeHelper.cs" />
-    <Compile Include="WebApiVersionedRoute\ControllerSelector\WebApiVersionedControllerSelector.cs" />
-    <Compile Include="WebApiVersionedRoute\Route\HttpRouteDataExtensions.cs" />
-    <Compile Include="WebApiVersionedRoute\Route\HttpRouteExtensions.cs" />
-    <Compile Include="WebApiVersionedRoute\Route\RouteCollectionRoute.cs" />
-    <Compile Include="WebApiVersionedRoute\Route\RouteDataTokenKeys.cs" />
-    <Compile Include="WebApiVersionedRoute\Route\RouteValueKeys.cs" />
-    <Compile Include="WebApiVersionedRoute\SemanticVersionConstraint.cs" />
-    <Compile Include="WebApiVersionedRoute\SemanticVersionedAttribute.cs" />
-    <Compile Include="WebApiVersionedRoute\SemanticVersionedRouteAttribute.cs" />
-    <Compile Include="WebApiVersionedRoute\VersionConstraint.cs" />
-    <Compile Include="WebApiVersionedRoute\VersionedRouteAttribute.cs" />
-    <Compile Include="WebApiVersionedRoute\WebApiVersionAttribute.cs" />
-    <Compile Include="WebMvcApi.NET45\FileUploadController.cs" />
-    <Compile Include="WebMvcApi.NET45\JsonpMediaTypeFormatter.cs" />
-    <Compile Include="WebMvcApi.NET45\TraceSoapMessagesLoggerSoapExtension.cs" />
-    <Compile Include="WebMvcApi.NET45\WebMvcApiLogFilter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="CommonUtilities.NET4.5.x.Lite.csproj">
-      <Project>{36c8666b-5e7d-4875-bd64-325605806105}</Project>
-      <Name>CommonUtilities.NET4.5.x.Lite</Name>
+    <ProjectReference Include="EasyPerformanceCountersHelper.NET4.5.x.csproj">
+      <Project>{29d0e20b-a8fb-4050-b742-fa8e4148c5b2}</Project>
+      <Name>EasyPerformanceCountersHelper.NET4.5.x</Name>
     </ProjectReference>
   </ItemGroup>
+  <Import Project="..\CommonUtilities.Shared\WebApiUtilities.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Diagnostics.Tracing.TraceEvent.1.0.41\build\Microsoft.Diagnostics.Tracing.TraceEvent.targets" Condition="Exists('..\packages\Microsoft.Diagnostics.Tracing.TraceEvent.1.0.41\build\Microsoft.Diagnostics.Tracing.TraceEvent.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

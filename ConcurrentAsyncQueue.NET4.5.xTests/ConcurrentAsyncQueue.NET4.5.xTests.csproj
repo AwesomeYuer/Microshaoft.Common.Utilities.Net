@@ -54,12 +54,6 @@
     <Compile Include="ConcurrentAsyncQueue\ConcurrentAsyncQueueTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CommonUtilities\ConcurrentAsyncQueue.NET4.5.x.csproj">
-      <Project>{0F9EFE8B-40F1-4E2C-9DF9-809514A8ECDB}</Project>
-      <Name>ConcurrentAsyncQueue.NET4.5.x</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

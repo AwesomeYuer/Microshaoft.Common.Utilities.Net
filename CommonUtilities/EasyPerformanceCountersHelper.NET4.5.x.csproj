@@ -37,24 +37,9 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PerformanceCounter\Containers\00.IPerformanceCountersContainer.cs" />
-    <Compile Include="PerformanceCounter\Containers\00.IPerformanceCountersValuesClearable.cs" />
-    <Compile Include="PerformanceCounter\Containers\10.AbstractPerformanceCountersContainer.cs" />
-    <Compile Include="PerformanceCounter\Containers\20.CommonPerformanceCountersContainer.cs" />
-    <Compile Include="PerformanceCounter\Containers\21.QueuePerformanceCountersContainer.cs" />
-    <Compile Include="PerformanceCounter\EasyPerformanceCountersHelper.Partial.01.cs" />
-    <Compile Include="PerformanceCounter\EasyPerformanceCountersHelper.Partial.02.cs" />
-    <Compile Include="PerformanceCounter\PerformanceCounterExtensionMethodsManager.cs" />
-    <Compile Include="PerformanceCounter\PerformanceCountersAdditionalDefinition.cs" />
-    <Compile Include="PerformanceCounter\PerformanceCountersHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="CommonUtilities.NET4.5.x.Lite.csproj">
-      <Project>{36c8666b-5e7d-4875-bd64-325605806105}</Project>
-      <Name>CommonUtilities.NET4.5.x.Lite</Name>
-    </ProjectReference>
-  </ItemGroup>
+  <Import Project="..\CommonUtilities.Shared\EasyPerformanceCountersHelper.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

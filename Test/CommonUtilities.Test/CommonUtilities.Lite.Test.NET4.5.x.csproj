@@ -54,16 +54,12 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CommonUtilities\CommonUtilities.NET4.5.x.Lite.csproj">
-      <Project>{36c8666b-5e7d-4875-bd64-325605806105}</Project>
-      <Name>CommonUtilities.NET4.5.x.Lite</Name>
+    <ProjectReference Include="..\..\CommonUtilities\CommonUtilities.Lite.NET4.5.x\CommonUtilities.Lite.NET4.5.x.csproj">
+      <Project>{ed69bfa0-d533-42a0-8ad3-af1e64c84bef}</Project>
+      <Name>CommonUtilities.Lite.NET4.5.x</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\CommonUtilities\ConcurrentAsyncQueue.NET4.5.x.csproj">
-      <Project>{0f9efe8b-40f1-4e2c-9df9-809514a8ecdb}</Project>
-      <Name>ConcurrentAsyncQueue.NET4.5.x</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\CommonUtilities\EasyPerformanceCountersHelper.NET4.5.x.csproj">
-      <Project>{29d0e20b-a8fb-4050-b742-fa8e4148c5b2}</Project>
+    <ProjectReference Include="..\..\CommonUtilities\EasyPerformanceCountersHelper.NET4.5.x\EasyPerformanceCountersHelper.NET4.5.x.csproj">
+      <Project>{729ca5eb-e09a-4812-b7ae-0fac3e5d8daf}</Project>
       <Name>EasyPerformanceCountersHelper.NET4.5.x</Name>
     </ProjectReference>
   </ItemGroup>

@@ -37,21 +37,15 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConcurrentAsyncQueue\ConcurrentAsyncQueue.cs" />
-    <Compile Include="ConcurrentAsyncQueue\KeyedStack.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SingleThreadAsyncDequeueProcessor\SingleThreadAsyncDequeueProcessor.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="CommonUtilities.NET4.5.x.Lite.csproj">
-      <Project>{36c8666b-5e7d-4875-bd64-325605806105}</Project>
-      <Name>CommonUtilities.NET4.5.x.Lite</Name>
-    </ProjectReference>
     <ProjectReference Include="EasyPerformanceCountersHelper.NET4.5.x.csproj">
       <Project>{29d0e20b-a8fb-4050-b742-fa8e4148c5b2}</Project>
       <Name>EasyPerformanceCountersHelper.NET4.5.x</Name>
     </ProjectReference>
   </ItemGroup>
+  <Import Project="..\CommonUtilities.Shared\ConcurrentAsyncQueue.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

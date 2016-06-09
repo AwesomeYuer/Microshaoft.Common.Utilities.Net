@@ -56,17 +56,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CommonUtilities\CommonUtilities.NET4.6.x.Lite.csproj">
-      <Project>{b509d9ba-92fa-45f6-877c-adc80f14f785}</Project>
-      <Name>CommonUtilities.NET4.6.x.Lite</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\CommonUtilities\ConcurrentAsyncQueue.NET4.6.x.csproj">
-      <Project>{01940f78-f528-4c0e-8f1a-d14c7cf26bc1}</Project>
-      <Name>ConcurrentAsyncQueue.NET4.6.x</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\CommonUtilities\EasyPerformanceCountersHelper.NET4.6.x.csproj">
-      <Project>{4cd2bad2-478f-4294-a210-8cb601c04f55}</Project>
-      <Name>EasyPerformanceCountersHelper.NET4.6.x</Name>
+    <ProjectReference Include="..\..\CommonUtilities\CommonUtilities.Lite.NET4.6.x\CommonUtilities.Lite.NET4.6.x.csproj">
+      <Project>{214a20f4-f017-42d8-8cc1-e35054a42e30}</Project>
+      <Name>CommonUtilities.Lite.NET4.6.x</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
