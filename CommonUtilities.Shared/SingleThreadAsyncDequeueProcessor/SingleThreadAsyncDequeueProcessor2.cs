@@ -5,7 +5,7 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Threading;
-    public class SingleThreadAsyncDequeueProcessor<T>
+    public class SingleThreadAsyncDequeueProcessor<TQueueElement, TDequeueElement>
     //where T : class
     {
         public Func<bool> OnGetEnabledCountPerformanceProcessFunc
@@ -23,20 +23,18 @@
             }
 
         }
-
-
         private bool _isAttachedPerformanceCounters = false;
         private readonly QueuedObjectsPool<Stopwatch> _stopwatchsPool = null;
-        private ConcurrentQueue<Tuple<Stopwatch, T>>
-                            _queue = new ConcurrentQueue<Tuple<Stopwatch, T>>();
-
+        private ConcurrentQueue<Tuple<Stopwatch, TQueueElement>>
+                            _queue
+                                    = new ConcurrentQueue<Tuple<Stopwatch, TQueueElement>>();
         private QueuePerformanceCountersContainer
-                    _queuePerformanceCountersContainer
-                        = new QueuePerformanceCountersContainer();
+                            _queuePerformanceCountersContainer
+                                    = new QueuePerformanceCountersContainer();
 
         public delegate bool CaughtExceptionEventHandler
                                     (
-                                        SingleThreadAsyncDequeueProcessor<T> sender
+                                        SingleThreadAsyncDequeueProcessor<TQueueElement, TDequeueElement> sender
                                         , Exception exception
                                         , Exception newException
                                         , string innerExceptionMessage
@@ -46,14 +44,10 @@
                                             , OnEnqueueProcessCaughtException;
         //, OnDequeueProcessCaughtException
         //, OnBatchProcessCaughtException;
-
-
         private string _performanceCountersCategoryNameForQueueProcess = string.Empty;
         private string _performanceCountersCategoryNameForBatchProcess = string.Empty;
         private string _performanceCountersCategoryInstanceNameForQueueProcess = string.Empty;
         private string _performanceCountersCategoryInstanceNameForBatchProcess = string.Empty;
-
-
         public SingleThreadAsyncDequeueProcessor(long stopwatchsPoolMaxCapacity = 10 * 100)
         {
             _stopwatchsPool = new QueuedObjectsPool<Stopwatch>
@@ -72,26 +66,19 @@
                                             = PerformanceCounterInstanceLifetime.Process
                             )
         {
-
             var process = Process.GetCurrentProcess();
             var processName = process.ProcessName;
             var instanceNamePrefix = string
-                                    .Format
-                                        (
-                                            "{0}-{1}"
-                                            , processName
-                                            , performanceCountersCategoryInstanceNamePrefix
-                                        );
+                                        .Format
+                                            (
+                                                "{0}-{1}"
+                                                , processName
+                                                , performanceCountersCategoryInstanceNamePrefix
+                                            );
             instanceNamePrefix = performanceCountersCategoryInstanceNamePrefix;
             var suffix = "-Queue";
             _performanceCountersCategoryNameForQueueProcess = performanceCountersCategoryNamePrefix + suffix;
             _performanceCountersCategoryInstanceNameForQueueProcess = instanceNamePrefix + suffix;
-
-
-
-
-
-
 
             var qpcc = _queuePerformanceCountersContainer;
             qpcc
@@ -162,13 +149,11 @@
                                                     )
                                     };
             }
-
-
             _isAttachedPerformanceCounters = true;
             OnGetEnabledCountPerformanceProcessFunc = onGetEnabledCountPerformanceProcessFunc;
         }
 
-        public bool Enqueue(T item)
+        public bool Enqueue(TQueueElement item)
         {
             var r = false;
             var reThrowException = false;
@@ -234,11 +219,11 @@
             return r;
         }
 
-        public void StartRunDequeuesThreadProcess
+        public void StartRunDequeueThreadProcess
              (
-                Action<long, T> onOnceDequeueProcessAction = null
+                Func<long, TQueueElement, TDequeueElement> onOnceDequeueProcessFunc = null
                 , int sleepInMilliseconds = 1000
-                , Action<long, List<Tuple<long, T>>> onBatchDequeuesProcessAction = null
+                , Action<long, List<Tuple<long, TDequeueElement>>> onBatchDequeuesProcessAction = null
                 , int waitOneBatchTimeOutInMilliseconds = 1000
                 , int waitOneBatchMaxDequeuedTimes = 100
                 , Func<Exception, Exception, string, bool> onDequeueProcessCaughtExceptionProcessFunc = null
@@ -253,7 +238,7 @@
                         {
                             DequeueProcess
                                 (
-                                    onOnceDequeueProcessAction
+                                    onOnceDequeueProcessFunc
                                     , sleepInMilliseconds
                                     , onBatchDequeuesProcessAction
                                     , waitOneBatchTimeOutInMilliseconds
@@ -262,7 +247,6 @@
                                     , onDequeueProcessFinallyProcessAction
                                     , onDequeuesBatchProcessCaughtExceptionProcessFunc
                                     , onDequeuesBatchProcessFinallyProcessAction
-
                                 );
                         }
                     ).Start();
@@ -277,9 +261,9 @@
         private bool _isStartedDequeueProcess = false;
         private void DequeueProcess
             (
-                Action<long, T> onOnceDequeueProcessAction = null
+                Func<long, TQueueElement, TDequeueElement> onOnceDequeueProcessFunc
                 , int sleepInMilliseconds = 100
-                , Action<long, List<Tuple<long, T>>> onBatchDequeuesProcessAction = null
+                , Action<long, List<Tuple<long, TDequeueElement>>> onBatchDequeuesProcessAction = null
                 , int waitOneBatchTimeOutInMilliseconds = 1000
                 , int waitOneBatchMaxDequeuedTimes = 100
                 , Func<Exception, Exception, string, bool> onDequeueProcessCaughtExceptionProcessFunc = null
@@ -292,16 +276,12 @@
             {
                 return;
             }
-            List<Tuple<long, T>> list = null;
+            List<Tuple<long, TDequeueElement>> list = null;
             long i = 0;
             Stopwatch stopwatch = null;
-
-
-
-
             if (onBatchDequeuesProcessAction != null)
             {
-                list = new List<Tuple<long, T>>();
+                list = new List<Tuple<long, TDequeueElement>>();
                 stopwatch = new Stopwatch();
                 stopwatch.Start();
             }
@@ -315,7 +295,7 @@
                             {
                                 if (!_queue.IsEmpty)
                                 {
-                                    Tuple<Stopwatch, T> element = null;
+                                    Tuple<Stopwatch, TQueueElement> element = null;
                                     if (_queue.TryDequeue(out element))
                                     {
                                         var enabledCountPerformance = true;
@@ -339,6 +319,7 @@
 
                                         #region while queue.IsEmpty loop
                                         var reThrowException = false;
+                                        TDequeueElement elementWrapper = default(TDequeueElement);
                                         PerformanceCountersHelper
                                                     .TryCountPerformance
                                                         (
@@ -352,10 +333,10 @@
                                                             , _timerCounters
                                                             , () =>         //try
                                                             {
-                                                                if (onOnceDequeueProcessAction != null)
+                                                                if (onOnceDequeueProcessFunc != null)
                                                                 {
                                                                     var item = element.Item2;
-                                                                    onOnceDequeueProcessAction
+                                                                    elementWrapper = onOnceDequeueProcessFunc
                                                                         (i, item);
                                                                 }
                                                             }
@@ -413,13 +394,13 @@
                                         if (onBatchDequeuesProcessAction != null)
                                         {
                                             i++;
-                                            var item = element.Item2;
+                                            //var item = element.Item2;
                                             var tuple
                                                     = Tuple
-                                                        .Create<long, T>
+                                                        .Create<long, TDequeueElement>
                                                               (
                                                                 i
-                                                                , item
+                                                                , elementWrapper
                                                               );
                                             list.Add(tuple);
                                         }

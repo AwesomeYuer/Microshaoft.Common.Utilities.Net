@@ -11,6 +11,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)ConcurrentAsyncQueue\ConcurrentAsyncQueue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConcurrentAsyncQueue\KeyedStack.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SingleThreadAsyncDequeueProcessor\SingleThreadAsyncDequeueProcessor2.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SingleThreadAsyncDequeueProcessor\SingleThreadAsyncDequeueProcessor.cs" />
   </ItemGroup>
 </Project>
