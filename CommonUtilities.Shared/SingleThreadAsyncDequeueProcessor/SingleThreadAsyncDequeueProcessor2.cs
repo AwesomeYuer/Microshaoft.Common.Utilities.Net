@@ -6,7 +6,6 @@
     using System.Diagnostics;
     using System.Threading;
     public class SingleThreadAsyncDequeueProcessor<TQueueElement, TDequeueElement>
-    //where T : class
     {
         public Func<bool> OnGetEnabledCountPerformanceProcessFunc
         {
