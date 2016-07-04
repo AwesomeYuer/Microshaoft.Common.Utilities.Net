@@ -49,69 +49,8 @@ namespace Microshaoft
                                                     , ICommonPerformanceCountersContainer
                                                     , new()
     {
-        private static readonly QueuedObjectsPool<Stopwatch>
-                                    _stopwatchsPool
-                                        = new QueuedObjectsPool<Stopwatch>(10 * 10000);
-        private static Dictionary<string, TPerformanceCountersContainer>
-                                _dictionary
-                                        = new Dictionary<string, TPerformanceCountersContainer>();
-
-        public static IEnumerable<TPerformanceCountersContainer> Containers
-        {
-            get
-            {
-                return
-                    _dictionary
-                        .Select
-                            (
-                                (x) =>
-                                {
-                                    return
-                                        x.Value;
-                                }
-                            );
-            }
-        }
-        public static void AttachPerformanceCountersCategoryInstance
-                            (
-                                string performanceCountersCategoryName
-                                , string performanceCountersCategoryInstanceName
-                                , out TPerformanceCountersContainer container
-                                , PerformanceCounterInstanceLifetime performanceCounterInstanceLifetime = PerformanceCounterInstanceLifetime.Global
-                                , long? initializePerformanceCounterInstanceRawValue = null
-                            )
-        {
-            string key = string.Format
-                                    (
-                                        "{1}{0}{2}"
-                                        , "-"
-                                        , performanceCountersCategoryName
-                                        , performanceCountersCategoryInstanceName
-                                    );
-            //TPerformanceCountersContainer container = null;
-            if (!_dictionary.TryGetValue(key, out container))
-            {
-                lock (_lockerObject)
-                {
-                    container = new TPerformanceCountersContainer(); //default(TPerformanceCountersContainer);
-                    _dictionary
-                            .Add
-                                (
-                                    key
-                                    , container
-                                );
-                    container
-                        .AttachPerformanceCountersToMembers
-                            (
-                                performanceCountersCategoryName
-                                , performanceCountersCategoryInstanceName
-                                , performanceCounterInstanceLifetime
-                                , initializePerformanceCounterInstanceRawValue
-                            ); 
-                }
-            }
-        }
-        private static readonly object _lockerObject = new object();
+        
+        
         public static Stopwatch CountPerformanceBegin
                                     (
                                         MultiPerformanceCountersTypeFlags enabledPerformanceCounters

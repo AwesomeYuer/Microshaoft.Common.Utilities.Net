@@ -124,6 +124,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)PerformanceCounter\Containers\10.AbstractPerformanceCountersContainer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PerformanceCounter\Containers\20.CommonPerformanceCountersContainer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PerformanceCounter\Containers\21.QueuePerformanceCountersContainer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PerformanceCounter\EasyPerformanceCountersHelper.Partial.00.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PerformanceCounter\EasyPerformanceCountersHelper.Partial.01.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PerformanceCounter\EasyPerformanceCountersHelper.Partial.02.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PerformanceCounter\PerformanceCounterExtensionMethodsManager.cs" />
