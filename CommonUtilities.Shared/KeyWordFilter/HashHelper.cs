@@ -1,6 +1,7 @@
 ﻿namespace Microshaoft
 {
     using System;
+
     /// <summary>
     /// 从.net 编译出来的.
     /// </summary>

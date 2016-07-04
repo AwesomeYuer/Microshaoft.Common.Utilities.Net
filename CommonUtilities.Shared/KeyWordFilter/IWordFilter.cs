@@ -1,5 +1,6 @@
 ﻿namespace Microshaoft
 {
+
     using System.Collections.Generic;
     public interface IWordFilter
     {
