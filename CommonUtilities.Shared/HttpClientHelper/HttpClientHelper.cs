@@ -27,11 +27,9 @@ namespace Test
                             return false;
                         }
                         , null
-
                     );
             Console.ReadLine();
         }
-
     }
 }
 
@@ -107,33 +105,47 @@ namespace Microshaoft
                         httpClient = (needProgress ? new HttpClient(progressMessageHandler) : new HttpClient())
                     )
                 {
-                    try
-                    {
-                        onHttpClientSendReceiveProcessAction(httpClient);
-                    }
-                    catch (Exception e)
-                    {
-                        var innerExceptionMessage = "Caught Exception";
-                        var newException = new Exception
-                                                    (
-                                                        innerExceptionMessage
-                                                        , e
-                                                    );
-                        if (onCaughtExceptionProcessFunc != null)
-                        {
-                            reThrowException = onCaughtExceptionProcessFunc
-                                                    (
-                                                        e
-                                                        , newException
-                                                        , innerExceptionMessage
-                                                    );
-                        }
-                        if (reThrowException)
-                        {
-                            throw
-                                newException;
-                        }
-                    }
+
+                    TryCatchFinallyProcessHelper
+                        .TryProcessCatchFinally
+                            (
+                                true
+                                , () =>
+                                {
+                                    onHttpClientSendReceiveProcessAction(httpClient);
+                                }
+                                , false
+                                , (exception, newException, message) =>
+                                {
+
+                                    if (onCaughtExceptionProcessFunc != null)
+                                    {
+                                        reThrowException = onCaughtExceptionProcessFunc
+                                                                (
+                                                                    exception
+                                                                    , newException
+                                                                    , message
+                                                                );
+                                    }
+                                    if (reThrowException)
+                                    {
+                                        throw
+                                            newException;
+                                    }
+                                    return false;
+                                }
+                                , (caughtException, Exception, newException, message) =>
+                                {
+                                    onFinallyProcessAction?
+                                        .Invoke
+                                            (
+                                                caughtException
+                                                , Exception
+                                                , newException
+                                                , message
+                                            );
+                                }
+                            );
                 }
             }
             finally
@@ -336,7 +348,7 @@ namespace Microshaoft
                             //            );
                         }
 
-                        Console.WriteLine("await ed");
+                        //Console.WriteLine("await ed");
                         response.EnsureSuccessStatusCode();
                     }
                     , onProgressProcessAction

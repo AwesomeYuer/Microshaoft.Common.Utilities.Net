@@ -64,10 +64,11 @@
                         .WriteEventLogEntry
                             (
                                 ""
-                                , log
-                                , EventLogEntryType.Error
                                 , 1001
-                                , 0
+                                , log
+                                , 101
+                                , EventLogEntryType.Error
+                                
                             );
                     r = false;
                 }

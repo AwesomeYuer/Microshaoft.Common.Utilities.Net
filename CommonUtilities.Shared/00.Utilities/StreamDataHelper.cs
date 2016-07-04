@@ -1,8 +1,57 @@
 ﻿namespace Microshaoft
 {
     using System.IO;
+    using System;
+    using System.Collections.Generic;
     public static class StreamDataHelper
     {
+
+        public static IEnumerable<byte[]> ReadDataToBuffers(Stream stream, int bufferSize)
+        {
+            int l = bufferSize;
+            int r = 1;
+            while (r > 0)
+            {
+                var buffer = new byte[l];
+                r = stream
+                            .Read
+                                (
+                                    buffer
+                                    , 0
+                                    , buffer.Length
+                                );
+                if (r > 0)
+                {
+                    if (r != buffer.Length)
+                    {
+                        Array.Resize(ref buffer, r);
+                    }
+                    yield return buffer;
+                }
+            }
+        }
+
+
+        public static byte[] ReadDataToFixedLengthBytes
+                            (
+                                Stream stream,
+                                int length
+                            )
+        {
+            int p = 0;
+            byte[] data = new byte[length];
+            while (p < length)
+            {
+                int r = stream.Read
+                                    (
+                                        data
+                                        , p
+                                        , length - p
+                                    );
+                p += r;
+            }
+            return data;
+        }
         public static byte[] ReadDataToBytes(Stream stream)
         {
             byte[] buffer = new byte[64 * 1024];
