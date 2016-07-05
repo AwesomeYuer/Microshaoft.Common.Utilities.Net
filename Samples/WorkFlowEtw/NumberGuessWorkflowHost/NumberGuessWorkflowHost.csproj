@@ -84,9 +84,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\CommonUtilities\CommonUtilities.NET4.6.x\CommonUtilities.NET4.6.x.csproj">
-      <Project>{a6b57925-e9ad-4e09-bc4c-32a2bd1164a6}</Project>
-      <Name>CommonUtilities.NET4.6.x</Name>
+    <ProjectReference Include="..\..\..\CommonUtilities\CommonUtilities.Lite\CommonUtilities.Lite.NET4.6.x\CommonUtilities.Lite.NET4.6.x.csproj">
+      <Project>{214a20f4-f017-42d8-8cc1-e35054a42e30}</Project>
+      <Name>CommonUtilities.Lite.NET4.6.x</Name>
     </ProjectReference>
     <ProjectReference Include="..\NumberGuessWorkflowActivities\NumberGuessWorkflowActivities.csproj">
       <Project>{98ec024c-6439-44b1-8b1e-29e457b2201f}</Project>

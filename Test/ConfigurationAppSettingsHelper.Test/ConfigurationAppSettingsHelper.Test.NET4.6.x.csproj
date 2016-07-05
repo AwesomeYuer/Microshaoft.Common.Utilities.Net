@@ -56,7 +56,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CommonUtilities\CommonUtilities.Lite.NET4.6.x\CommonUtilities.Lite.NET4.6.x.csproj">
+    <ProjectReference Include="..\..\CommonUtilities\CommonUtilities.Lite\CommonUtilities.Lite.NET4.6.x\CommonUtilities.Lite.NET4.6.x.csproj">
       <Project>{214a20f4-f017-42d8-8cc1-e35054a42e30}</Project>
       <Name>CommonUtilities.Lite.NET4.6.x</Name>
     </ProjectReference>
