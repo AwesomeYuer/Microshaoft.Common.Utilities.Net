@@ -24,7 +24,7 @@
                                     directory
                                     , fileName
                                 );
-            var destFileNamePattern = fileName + ".{0}.{1}." + fileExtensionName + fileExtensionNameSuffix;
+            var destFileNamePattern = fileName + ".{0}.{1}" + fileExtensionName + fileExtensionNameSuffix;
             var fileInfo = new FileInfo(originalFile);
             //var list = new List<string>();
             var length = fileInfo.Length;
@@ -78,7 +78,7 @@
                     }
                 }
                 File.Delete(originalFile);
-                File.Delete(fileName);
+                //File.Delete(fileName);
             }
             else
             {
@@ -123,9 +123,10 @@
                                             {
                                                 var fileName = Path.GetFileName(x);
                                                 var fileNameSegments = fileName.Split('.');
+                                                var take = fileNameSegments.Length - 2;
                                                 return
                                                     fileNameSegments
-                                                        .Take(5)
+                                                        .Take(take)
                                                         .Aggregate
                                                             (
                                                                 (xx, yy) =>
@@ -156,18 +157,24 @@
                                         {
                                             var fileName = Path.GetFileName(x);
                                             var fileNameSegments = fileName.Split('.');
-                                            var r = int.Parse(fileNameSegments[5]);
+                                            var i = fileNameSegments.Length - 2;
+                                            var r = int.Parse(fileNameSegments[i]);
                                             return r;
                                         }
                                     );
                 var segments = filesGroup.Key.Split('.');
-                var parts = int.Parse(segments[4]);
-                //var i = 0;
+                var ii = segments.Length - 1;
+                var parts = int.Parse(segments[ii]);
                 if (File.Exists(filePartsName))
                 {
                     File.Delete(filePartsName);
                 }
-                var mergedZipFiles = MergePartialFilesGroupProcess(filePartsName, orderdFilesGroup, parts);
+                var mergedZipFiles = MergePartialFilesGroupProcess
+                                            (
+                                                filePartsName
+                                                , orderdFilesGroup
+                                                , parts
+                                            );
                 foreach (var mergedZipFile in mergedZipFiles)
                 {
                     yield return mergedZipFile;
@@ -189,7 +196,8 @@
                 i++;
                 var fileName = Path.GetFileName(file);
                 var fileNameSegments = fileName.Split('.');
-                int part = int.Parse(fileNameSegments[5]);
+                var ii = fileNameSegments.Length - 2;
+                int part = int.Parse(fileNameSegments[ii]);
                 if (part == i)
                 {
                     using

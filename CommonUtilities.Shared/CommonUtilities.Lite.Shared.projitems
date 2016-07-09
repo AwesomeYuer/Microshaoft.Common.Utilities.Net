@@ -120,6 +120,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)WorkFlow\WorkFlowHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Xml\XmlCDATA.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Xml\XmlValidationHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Zip\ZipHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)DataAccess\Pager.StoreProcedure.Sample.sql" />
