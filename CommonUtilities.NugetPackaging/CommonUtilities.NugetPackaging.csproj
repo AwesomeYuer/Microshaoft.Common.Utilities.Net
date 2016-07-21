@@ -37,7 +37,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="CommonUtilities.NET4.5.x.Nuspec" />
+    <None Include="CommonUtilities.NET4.5.x.Nuspec00" />
+    <None Include="CommonUtilities.pack.cmd" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

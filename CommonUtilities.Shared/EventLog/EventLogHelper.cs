@@ -125,7 +125,6 @@
                     EventLogEntryType.Error //设计时指定
                 );
         }
-
         /// <summary>
         /// 通用 EventLog API
         /// </summary>
@@ -144,53 +143,110 @@
                     EventLogEntryType logEntryType = EventLogEntryType.Information //设计时指定
                 )
         {
-            EventLog eventLog = new EventLog();
-            eventLog.Source = sourceName;
-            logMessage = string
-                            .Format
-                                (
-                                    "{1}{0}Process [{3}] @ {4}{0}{5}{0}{2}"
-                                    , "\r\n"
-                                    , "begin ========="
-                                    , "end ==========="
-                                    , _processNameID
-                                    , DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffff")
-                                    , logMessage
-                                );
-            EventLogEntryType? eventLogEntryType = null;
-            if
+            WriteEventLogEntry
                 (
-                    TryGetLevelBySourceEventID
-                        (
-                            sourceName
-                            , eventID
-                            , out eventLogEntryType
-                        )
+                    sourceName
+                    , eventID
+                    , logMessage
+                    , category
+                    , logEntryType
+                    , null
+                );
+        }
+        /// <summary>
+        /// 通用 EventLog API
+        /// </summary>
+        /// <param name="sourceName">事件源 设计时按规范指定粒度：组件</param>
+        /// <param name="eventID">事件ID 设计时指定 , EventID > 1000 在本事件源中不重复</param>
+        /// <param name="logMessage">日志内容 设计时指定或运行时(如：捕获到的异常)调用方动态赋值</param>
+        /// <param name="category">任务分类Category 设计时指定</param>
+        /// <param name="logEntryType">条目类型用于报警级别 设计时指定默认值, 运行时可能被替换为动态分级</param>
+        public static void WriteEventLogEntry
+                (
+                    //string logName,
+                    string sourceName, //设计时指定
+                    int eventID, //设计时指定
+                    string logMessage,
+                    short category,
+                    EventLogEntryType logEntryType = EventLogEntryType.Information, //设计时指定
+                    byte[] rawData = null
                 )
+        {
+            if (logEntryType <= _enabledMaxEventLogEntryTypeLevel)
             {
-                logEntryType = eventLogEntryType.Value;
-            }
-            eventLog
-                .WriteEntry
+                EventLog eventLog = new EventLog();
+                eventLog.Source = sourceName;
+                logMessage = string
+                                .Format
+                                    (
+                                        "{1}{0}Process [{3}] @ {4}{0}{5}{0}{2}"
+                                        , "\r\n"
+                                        , "begin ========="
+                                        , "end ==========="
+                                        , _processNameID
+                                        , DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffff")
+                                        , logMessage
+                                    );
+                EventLogEntryType? eventLogEntryType = null;
+                if
                     (
-                        logMessage
-                        , logEntryType
-                        , eventID
-                        , category
-                    );
+                        TryGetLevelBySourceEventID
+                            (
+                                sourceName
+                                , eventID
+                                , out eventLogEntryType
+                            )
+                    )
+                {
+                    logEntryType = eventLogEntryType.Value;
+                }
+                if (rawData == null)
+                {
+                    eventLog
+                        .WriteEntry
+                            (
+                                logMessage
+                                , logEntryType
+                                , eventID
+                                , category
+                            );
+                }
+                else
+                {
+                    eventLog
+                        .WriteEntry
+                            (
+                                logMessage
+                                , logEntryType
+                                , eventID
+                                , category
+                                , rawData
+                            );
+                }
+            }
         }
         private class KeyValueEntry
         {
             public string Key;
             public EventLogEntryType Value;
+        }
+
+        private static EventLogEntryType _enabledMaxEventLogEntryTypeLevel = EventLogEntryType.Error;
+
+        public static EventLogEntryType EnabledMaxEventLogEntryTypeLevel
+        {
+            get
+            {
+                return _enabledMaxEventLogEntryTypeLevel;
+            }
+            set
+            {
+                _enabledMaxEventLogEntryTypeLevel = value;
+            }
 
         }
 
-        //public static string EventLogLevelEntryTypeLevelAddressUrl
-        //{
-        //    get;
-        //    set;
-        //}
+
 
         private static ConcurrentDictionary<string, EventLogEntryType> _sourceEventIDLevels
                         = null;

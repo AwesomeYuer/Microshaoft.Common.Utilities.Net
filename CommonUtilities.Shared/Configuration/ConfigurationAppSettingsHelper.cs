@@ -4,14 +4,71 @@
     using System.Configuration;
     using System.Runtime.CompilerServices;
     using System.Reflection;
+    using System.Linq;
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, Inherited = true)]
     public class ConfigurationAppSettingAttribute : Attribute
     {
         public string SettingKey;
     }
 
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, Inherited = true)]
+    public class AllowRunTimeOverrideValueAttribute : Attribute
+    {
+
+    }
+
     public static class ConfigurationAppSettingsHelper
     {
+        public static bool SetAppSettingValue<T>
+                                (
+                                    T target
+                                    , string settingKey
+                                    , string settingValueText
+                                    , bool needPredictAllowRunTimeOverrideValue = true
+                                )
+                                    where T : new()
+        {
+            var r = false;
+            
+            var member = typeof(T)
+                            .GetCustomAttributedMembers
+                                    <ConfigurationAppSettingAttribute>
+                                        (
+                                            (x, y, z) =>
+                                            {
+                                                var rr = false;
+                                                settingKey = z.SettingKey;
+                                                if (settingKey.IsNullOrEmptyOrWhiteSpace())
+                                                {
+                                                    settingKey = y.Name;
+                                                }
+                                                if (rr)
+                                                {
+                                                    if (needPredictAllowRunTimeOverrideValue)
+                                                    {
+                                                        var attributeType = typeof(AllowRunTimeOverrideValueAttribute);
+                                                        var attribute = y.GetCustomAttribute(attributeType);
+                                                        if (attribute == null)
+                                                        {
+                                                            rr = false;
+                                                        }
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    rr = false;
+                                                }
+                                                return rr;
+                                            }
+                                        ).FirstOrDefault();
+            if (member != null)
+            {
+                SetMemberValue<T>(target, member, settingValueText);
+            }
+            return r;
+        }
+
+
         public static T GetAppSettingsByMapFromConfig<T>() where T : new()
         {
             T r = new T();
@@ -34,43 +91,51 @@
             foreach (var member in members)
             {
                 var settingValueText = ConfigurationManager.AppSettings[settingKey];
-                Type memberValueType = null;
-                if (member.MemberType == MemberTypes.Field)
-                {
-                    var fieldInfo = (FieldInfo)member;
-                    memberValueType = fieldInfo.FieldType;
-                }
-                else if (member.MemberType == MemberTypes.Property)
-                {
-                    var propertyInfo = (PropertyInfo)member;
-                    memberValueType = propertyInfo.PropertyType;
-                }
-                if (memberValueType.IsNullableType())
-                {
-                    memberValueType = memberValueType
-                                        .GetNullableUnderlyingType();
-                }
-                var methodInfo = memberValueType
-                                        .GetMethod
-                                            (
-                                                "Parse"
-                                                , new Type[] { typeof(string) }
-                                            );
-                if (methodInfo != null)
-                {
-                    var memberName = member.Name;
-                    var memberSetter = DynamicExpressionTreeHelper
-                                                .CreateMemberSetter<T,object>
-                                                    (memberName);
-                    var delegateInvoker = DynamicExpressionTreeHelper
-                                                .CreateDelegate
-                                                        (
-                                                            methodInfo
-                                                        );
-                    var settingValue = delegateInvoker
-                                            .DynamicInvoke(settingValueText);
-                    memberSetter(r, settingValue);
-                }
+                SetMemberValue(r, member, settingValueText);
+            }
+            return r;
+        }
+
+        private static bool SetMemberValue<T>(T target, MemberInfo member, string settingValueText) where T : new()
+        {
+            var r = false;
+            Type memberValueType = null;
+            if (member.MemberType == MemberTypes.Field)
+            {
+                var fieldInfo = (FieldInfo)member;
+                memberValueType = fieldInfo.FieldType;
+            }
+            else if (member.MemberType == MemberTypes.Property)
+            {
+                var propertyInfo = (PropertyInfo)member;
+                memberValueType = propertyInfo.PropertyType;
+            }
+            if (memberValueType.IsNullableType())
+            {
+                memberValueType = memberValueType
+                                    .GetNullableUnderlyingType();
+            }
+            var methodInfo = memberValueType
+                                    .GetMethod
+                                        (
+                                            "Parse"
+                                            , new Type[] { typeof(string) }
+                                        );
+            if (methodInfo != null)
+            {
+                var memberName = member.Name;
+                var memberSetter = DynamicExpressionTreeHelper
+                                            .CreateMemberSetter<T, object>
+                                                (memberName);
+                var delegateInvoker = DynamicExpressionTreeHelper
+                                            .CreateDelegate
+                                                    (
+                                                        methodInfo
+                                                    );
+                var settingValue = delegateInvoker
+                                        .DynamicInvoke(settingValueText);
+                memberSetter(target, settingValue);
+                r = true;
             }
             return r;
         }
