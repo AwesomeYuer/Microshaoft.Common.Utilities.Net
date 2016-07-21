@@ -117,8 +117,8 @@
             }
             var memberName = member.Name;
             var memberSetter = DynamicExpressionTreeHelper
-                                        .CreateMemberSetter<T, object>
-                                            (memberName);
+                                        .CreateMemberSetter//<T, object>
+                                            (typeof(T), memberName);
             var methodInfo = memberValueType
                                     .GetMethod
                                         (
