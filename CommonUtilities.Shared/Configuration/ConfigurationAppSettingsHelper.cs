@@ -91,7 +91,36 @@
             foreach (var member in members)
             {
                 var settingValueText = ConfigurationManager.AppSettings[settingKey];
-                SetMemberValue(r, member, settingValueText);
+                var needSet = true;
+                if (settingValueText.IsNullOrEmptyOrWhiteSpace())
+                {
+                    Type memberType = null;
+                    if (member is PropertyInfo)
+                    {
+                        var propertyInfo = member as PropertyInfo;
+                        memberType = propertyInfo.PropertyType;
+                        var parameters = propertyInfo.GetIndexParameters();
+                        if (parameters != null && parameters.Length > 0)
+                        {
+                            memberType = null;
+                        }
+                    }
+                    else if (member is FieldInfo)
+                    {
+                        var fieldInfo = member as FieldInfo;
+                        memberType = fieldInfo.FieldType;
+                    }
+                    if (memberType.IsValueType)
+                    {
+                        needSet = false;
+                    }
+
+                }
+                if (needSet)
+                {
+                    SetMemberValue(r, member, settingValueText);
+                }
+                
             }
             return r;
         }

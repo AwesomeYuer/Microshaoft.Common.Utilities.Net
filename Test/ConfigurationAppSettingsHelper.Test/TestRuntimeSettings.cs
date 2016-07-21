@@ -29,7 +29,7 @@
 
         [ConfigurationAppSetting(SettingKey = "Int")]
 
-        public int? RuntimeInt;
+        public int RuntimeInt = -1;
         
 
         [ConfigurationAppSetting]

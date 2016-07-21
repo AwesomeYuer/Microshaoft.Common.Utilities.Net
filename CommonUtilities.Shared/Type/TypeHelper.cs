@@ -36,6 +36,7 @@
                                                 , typeof(bool)
                                                 , typeof(double)
                                                 , typeof(float)
+                                                , typeof(uint)
                                                 //, typeof(DateTime?)
                                             }
                                         .Concat
