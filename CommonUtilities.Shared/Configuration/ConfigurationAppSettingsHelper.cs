@@ -29,7 +29,7 @@
                                     where T : new()
         {
             var r = false;
-            
+
             var member = typeof(T)
                             .GetCustomAttributedMembers
                                     <ConfigurationAppSettingAttribute>
@@ -115,6 +115,10 @@
                 memberValueType = memberValueType
                                     .GetNullableUnderlyingType();
             }
+            var memberName = member.Name;
+            var memberSetter = DynamicExpressionTreeHelper
+                                        .CreateMemberSetter<T, object>
+                                            (memberName);
             var methodInfo = memberValueType
                                     .GetMethod
                                         (
@@ -123,10 +127,7 @@
                                         );
             if (methodInfo != null)
             {
-                var memberName = member.Name;
-                var memberSetter = DynamicExpressionTreeHelper
-                                            .CreateMemberSetter<T, object>
-                                                (memberName);
+
                 var delegateInvoker = DynamicExpressionTreeHelper
                                             .CreateDelegate
                                                     (
