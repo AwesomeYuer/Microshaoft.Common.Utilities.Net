@@ -120,12 +120,18 @@
                 {
                     SetMemberValue(r, member, settingValueText);
                 }
-                
+
             }
             return r;
         }
 
-        private static bool SetMemberValue<T>(T target, MemberInfo member, string settingValueText) where T : new()
+        private static bool SetMemberValue<T>
+                                (
+                                    T target
+                                    , MemberInfo member
+                                    , string settingValueText
+                                )
+                                    where T : new()
         {
             var r = false;
             Type memberValueType = null;
@@ -154,9 +160,9 @@
                                             "Parse"
                                             , new Type[] { typeof(string) }
                                         );
+
             if (methodInfo != null)
             {
-
                 var delegateInvoker = DynamicExpressionTreeHelper
                                             .CreateDelegate
                                                     (
@@ -165,8 +171,13 @@
                 var settingValue = delegateInvoker
                                         .DynamicInvoke(settingValueText);
                 memberSetter(target, settingValue);
-                r = true;
             }
+            else
+            {
+                memberSetter(target, (object)settingValueText);
+            }
+
+            r = true;
             return r;
         }
 
@@ -187,11 +198,11 @@
                     );
         }
         public static T GetAppSettingValueByKey<T>
-                    (
-                        Func<string, T> parseProcessFunc
-                        , Func<T> defaultValueFactoryProcessFunc
-                        , string settingKey
-                    )
+                                (
+                                    Func<string, T> parseProcessFunc
+                                    , Func<T> defaultValueFactoryProcessFunc
+                                    , string settingKey
+                                )
         {
             var r = default(T);
             var settingValue = ConfigurationManager.AppSettings[settingKey];

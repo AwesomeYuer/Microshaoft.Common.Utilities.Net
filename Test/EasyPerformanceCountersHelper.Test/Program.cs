@@ -22,7 +22,7 @@
         public float? F11;
         public Guid F12;
         public Guid? F13;
-        public static DateTime? F0 = null;
+       // public static DateTime? F0 = null;
     }
     class Program
     {
@@ -64,28 +64,28 @@
             var list = new List<XxxEntry>();
             list.Add(entry);
 
-           
+            
 
 
 
-            var s1 = DynamicExpressionTreeHelper
-                .CreateMemberGetter<XxxEntry, DateTime?>("F0")(entry);
-            //var o = DynamicExpressionTreeHelper
-            //    .CreateMemberGetter<XxxEntry, object>("F4")(entry);
+             //var s1 = DynamicExpressionTreeHelper
+             //    .CreateMemberGetter<XxxEntry, DateTime?>("F0")(entry);
+             //var o = DynamicExpressionTreeHelper
+             //    .CreateMemberGetter<XxxEntry, object>("F4")(entry);
 
 
-            //Action<out object, object> action = (Action<object, object>) new Action<XxxEntry, object>((xx, yy) => { Console.WriteLine(xx); Console.WriteLine(yy); });
+             //Action<out object, object> action = (Action<object, object>) new Action<XxxEntry, object>((xx, yy) => { Console.WriteLine(xx); Console.WriteLine(yy); });
 
-            //action(entry, "asdsad");
+             //action(entry, "asdsad");
 
-            var s = DynamicExpressionTreeHelper
+             var s = DynamicExpressionTreeHelper
                 .CreateMemberGetter<XxxEntry, int>("F4")(entry);
             var o = DynamicExpressionTreeHelper
                 .CreateMemberGetter<XxxEntry, object>("F4")(entry);
 
             //o1 报错
-            var o1 = DynamicExpressionTreeHelper
-               .CreateMemberGetter<object, object>("F2")(entry);
+            //var o1 = DynamicExpressionTreeHelper
+            //   .CreateMemberGetter<object, object>("F2")(entry);
 
             var o2 = DynamicExpressionTreeHelper
                .CreateMemberGetter(typeof(XxxEntry),"F2")(entry);
