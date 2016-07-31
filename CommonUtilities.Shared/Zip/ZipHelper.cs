@@ -35,7 +35,7 @@
                         var entryName = onCreateEntryProcessFunc(file);
                         archive.CreateEntryFromFile(file, entryName);
                     }
-                    archive.Dispose();
+                    //archive.Dispose();
                 }
             }
         }
