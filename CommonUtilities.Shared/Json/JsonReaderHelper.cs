@@ -60,7 +60,7 @@ namespace Microshaoft
         public static IEnumerable<IEnumerable<T>> ReadMultipleContent<T>
                         (
                             this JsonReader target
-                            , int pageSize = 3
+                            , int pageSize = 10
                         )
         {
             if (!target.SupportMultipleContent)
