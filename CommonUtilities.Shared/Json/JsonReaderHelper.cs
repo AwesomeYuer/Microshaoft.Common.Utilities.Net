@@ -6,9 +6,40 @@
     using System.IO;
     using System.Linq;
     using Microshaoft;
-    class Program11
+    using Newtonsoft.Json.Linq;
+    class Program12
     {
+
         static void Main(string[] args)
+        {
+
+            string json = @"{ 'name10': 
+'Admin' }
+[{ 'name9': 'Publisher' }][
+{ 'name4': 'Admin' },{ 'name8': ['Admin'] }]{ 'name7': 
+'Admin' }
+[{ 'name3': ['Publisher','Publisher'] }]{ 'name5': 
+'Admin' }
+[{ 'name2': 'Publisher' }]{ 'name6': 
+'Admin' }
+[{ 'name1': 'Publisher' }]";
+
+            JsonTextReader reader = new JsonTextReader(new StringReader(json));
+            var r = reader.ReadAllMultipleContent<JObject>().ToArray();
+            reader = new JsonTextReader(new StringReader(json));
+            r = reader
+                    .ReadMultipleContent<JObject>(3)
+                    .SelectMany
+                        (
+                            (x) =>
+                            {
+                                return x;
+                            }
+                        ).ToArray();
+            Console.ReadLine();
+        }
+
+        static void Main1(string[] args)
         {
 
             string json = @"{ 'name': 
