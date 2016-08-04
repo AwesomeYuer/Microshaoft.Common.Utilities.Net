@@ -366,7 +366,7 @@ namespace Microshaoft
         /// <param name="contentData"></param>
         /// <param name="onProgressProcessAction"></param>
         /// <param name="httpClientTimeOutInSeconds"></param>
-        public static void SendData
+        public static HttpResponseMessage SendData
                             (
                                 string url
                                 , string httpMethod = "Get"
@@ -384,11 +384,12 @@ namespace Microshaoft
                                 , int httpClientTimeOutInSeconds = 5
                             )
         {
+            HttpResponseMessage response = null;
             RegisterHttpClientProgressMessageHandler
                      (
                         (httpClient) =>
                         {
-                            HttpResponseMessage response = null;
+
                             if (httpMethod.Trim().ToLower() == "get")
                             {
                                 response = httpClient
@@ -412,6 +413,8 @@ namespace Microshaoft
                                                             , stringContent
                                                         )
                                                     .Result;
+
+                                
                             }
                         }
                         , onProgressProcessAction
@@ -419,6 +422,8 @@ namespace Microshaoft
                         , onCaughtExceptionProcessFunc
                         , onFinallyProcessAction
                      );
+            return response;
         }
+
     }
 }

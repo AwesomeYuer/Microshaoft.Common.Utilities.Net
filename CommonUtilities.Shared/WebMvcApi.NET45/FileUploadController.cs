@@ -7,6 +7,7 @@
     using System.Threading.Tasks;
     using System.Web.Http;
     using System.Collections.Generic;
+    using System.Collections.Specialized;
     using System;
     /// <summary>
     /// This sample controller reads the contents of an HTML file upload asynchronously and writes one or more body parts to a local file.
@@ -23,7 +24,16 @@
         {
             if (!Request.Content.IsMimeMultipartContent("form-data"))
             {
-                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.UnsupportedMediaType));
+                throw
+                    new HttpResponseException
+                                (
+                                    Request
+                                        .CreateResponse
+                                            (
+                                                HttpStatusCode
+                                                        .UnsupportedMediaType
+                                            )
+                                );
             }
             var streamProvider = new MultipartFormDataStreamProvider(ServerUploadFolder);
             await Request
@@ -32,25 +42,28 @@
             var r = new FileResult
             {
                 FileNames = streamProvider
-                                .FileData
-                                .Select
-                                    (
-                                        (entry) =>
-                                        {
-                                            string fileName = entry.Headers.ContentDisposition.FileName;
-                                            if (fileName.StartsWith("\"") && fileName.EndsWith("\""))
+                                    .FileData
+                                    .Select
+                                        (
+                                            (entry) =>
                                             {
-                                                fileName = fileName.Trim('"');
+                                                string fileName = entry.Headers.ContentDisposition.FileName;
+                                                if (fileName.StartsWith("\"") && fileName.EndsWith("\""))
+                                                {
+                                                    fileName = fileName.Trim('"');
+                                                }
+                                                if (fileName.Contains(@"/") || fileName.Contains(@"\"))
+                                                {
+                                                    fileName = Path.GetFileName(fileName);
+                                                }
+                                                File.Move(entry.LocalFileName, Path.Combine(ServerUploadFolder, Guid.NewGuid().ToString("N") + "." + fileName));
+                                                return fileName;
                                             }
-                                            if (fileName.Contains(@"/") || fileName.Contains(@"\"))
-                                            {
-                                                fileName = Path.GetFileName(fileName);
-                                            }
-                                            File.Move(entry.LocalFileName, Path.Combine(ServerUploadFolder, Guid.NewGuid().ToString("N") + "." + fileName));
-                                            return fileName;
-                                        }
-                                    )
-                , Submitter = streamProvider.FormData["submitter"]
+                                        )
+                , FormData = streamProvider
+                                    .FormData
+                , Submitter = streamProvider
+                                    .FormData["submitter"]
             };
             return
                 Request
@@ -62,6 +75,8 @@
     /// </summary>
     public class FileResult
     {
+
+        public  NameValueCollection FormData { get; set; }
         /// <summary>
         /// Gets or sets the local path of the file saved on the server.
         /// </summary>
