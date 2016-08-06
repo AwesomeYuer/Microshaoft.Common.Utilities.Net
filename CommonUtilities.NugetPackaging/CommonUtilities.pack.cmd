@@ -1,0 +1,3 @@
+d:\nuget\nuget.exe pack "..\CommonUtilities\CommonUtilities.Full\CommonUtilities.NET4.6.x\CommonUtilities.NET4.6.x.csproj"  -verbose
+d:\nuget\nuget.exe pack "..\CommonUtilities\CommonUtilities.Lite\CommonUtilities.Lite.NET4.6.x\CommonUtilities.Lite.NET4.6.x.csproj"  -verbose
+d:\nuget\nuget.exe pack "..\CommonUtilities\EasyPerformanceCountersHelper\EasyPerformanceCountersHelper.NET4.6.x\EasyPerformanceCountersHelper.NET4.6.x.csproj"  -IncludeReferencedProjects -verbose

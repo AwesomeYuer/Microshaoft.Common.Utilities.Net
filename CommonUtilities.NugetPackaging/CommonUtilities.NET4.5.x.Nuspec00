@@ -1,0 +1,12 @@
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Microshaoft.Common.Utilities.Net.4.5.x</id>
+    <version>1.0.0.2</version>
+    <authors>Microshaoft</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Microshaoft.Common.Utilities.Net.4.5.x</description>
+  </metadata>
+  <files>
+    <file src="..\EventLogMonClientAgent\" target="content\" exclude="**\*.xml;**\*.config" />
+  </files>
+</package>

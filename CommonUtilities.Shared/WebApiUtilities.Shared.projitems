@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>1fbd68b8-839e-4c54-a00c-beac21119371</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>WebApiUtilities.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)WebApiVersionedRoute\ActionSelector\CandidateAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApiVersionedRoute\ActionSelector\HttpActionDescriptorExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApiVersionedRoute\ActionSelector\HttpParameterBindingExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApiVersionedRoute\ActionSelector\NonActionAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApiVersionedRoute\ActionSelector\WebApiVersionedControllerActionSelector.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApiVersionedRoute\ActionSelector\WebApiVersionedControllerActionSelector2.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApiVersionedRoute\ControllerSelector\HttpControllerDescriptorExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApiVersionedRoute\ControllerSelector\WebApiControllerTypeHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApiVersionedRoute\ControllerSelector\WebApiVersionedControllerSelector.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApiVersionedRoute\Route\HttpRouteDataExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApiVersionedRoute\Route\HttpRouteExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApiVersionedRoute\Route\RouteCollectionRoute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApiVersionedRoute\Route\RouteDataTokenKeys.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApiVersionedRoute\Route\RouteValueKeys.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApiVersionedRoute\SemanticVersionConstraint.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApiVersionedRoute\SemanticVersionedAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApiVersionedRoute\SemanticVersionedRouteAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApiVersionedRoute\VersionConstraint.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApiVersionedRoute\VersionedRouteAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApiVersionedRoute\WebApiVersionAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebMvcApi.NET45\FileUploadController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebMvcApi.NET45\JsonpMediaTypeFormatter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebMvcApi.NET45\TraceSoapMessagesLoggerSoapExtension.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebMvcApi.NET45\WebApiExceptionsHandlerFilter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebMvcApi.NET45\WebMvcApiLogFilter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebMvcApi.NET45\WebMvcApiPerformanceCounterFilter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebMvcApi.NET45\WebMvcApiPerformanceCountersHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebMvcApi.NET45\WebMvcApiRoutePrefixGroupingHelper.cs" />
+  </ItemGroup>
+</Project>

@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ConsoleApplication1</RootNamespace>
-    <AssemblyName>ConsoleApplication1</AssemblyName>
+    <AssemblyName>ConcurrentAsyncQueue.Test.NET4.6.x</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -55,17 +55,17 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CommonUtilities\CommonUtilities.NET4.6.x.Lite.csproj">
-      <Project>{b509d9ba-92fa-45f6-877c-adc80f14f785}</Project>
-      <Name>CommonUtilities.NET4.6.x.Lite</Name>
+    <ProjectReference Include="..\..\CommonUtilities\CommonUtilities.Lite.NET4.5.x\CommonUtilities.Lite.NET4.5.x.csproj">
+      <Project>{ed69bfa0-d533-42a0-8ad3-af1e64c84bef}</Project>
+      <Name>CommonUtilities.Lite.NET4.5.x</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\CommonUtilities\ConcurrentAsyncQueue.NET4.6.x.csproj">
-      <Project>{01940f78-f528-4c0e-8f1a-d14c7cf26bc1}</Project>
-      <Name>ConcurrentAsyncQueue.NET4.6.x</Name>
+    <ProjectReference Include="..\..\CommonUtilities\ConcurrentAsyncQueue.NET4.5.x\ConcurrentAsyncQueue.NET4.5.x.csproj">
+      <Project>{e327761d-39b8-4d0a-8451-20aa9f53b14a}</Project>
+      <Name>ConcurrentAsyncQueue.NET4.5.x</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\CommonUtilities\EasyPerformanceCountersHelper.NET4.6.x.csproj">
-      <Project>{4cd2bad2-478f-4294-a210-8cb601c04f55}</Project>
-      <Name>EasyPerformanceCountersHelper.NET4.6.x</Name>
+    <ProjectReference Include="..\..\CommonUtilities\EasyPerformanceCountersHelper.NET4.5.x\EasyPerformanceCountersHelper.NET4.5.x.csproj">
+      <Project>{729ca5eb-e09a-4812-b7ae-0fac3e5d8daf}</Project>
+      <Name>EasyPerformanceCountersHelper.NET4.5.x</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

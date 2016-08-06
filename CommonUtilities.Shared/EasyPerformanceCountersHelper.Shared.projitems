@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>b1913205-1d01-4a59-b0ca-b5c7460fb644</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>EasyPerformanceCountersHelper.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)PerformanceCounter\Containers\00.IPerformanceCountersContainer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PerformanceCounter\Containers\00.IPerformanceCountersValuesClearable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PerformanceCounter\Containers\10.AbstractPerformanceCountersContainer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PerformanceCounter\Containers\20.CommonPerformanceCountersContainer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PerformanceCounter\Containers\21.QueuePerformanceCountersContainer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PerformanceCounter\EasyPerformanceCountersHelper.Partial.00.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PerformanceCounter\EasyPerformanceCountersHelper.Partial.01.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PerformanceCounter\EasyPerformanceCountersHelper.Partial.02.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PerformanceCounter\PerformanceCounterExtensionMethodsManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PerformanceCounter\PerformanceCountersAdditionalDefinition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PerformanceCounter\PerformanceCountersHelper.cs" />
+  </ItemGroup>
+</Project>

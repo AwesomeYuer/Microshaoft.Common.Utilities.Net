@@ -29,7 +29,7 @@
 
         [ConfigurationAppSetting(SettingKey = "Int")]
 
-        public int? RuntimeInt;
+        public int RuntimeInt = -1;
         
 
         [ConfigurationAppSetting]
@@ -47,5 +47,16 @@
 
         [ConfigurationAppSetting]
         public  DateTime RuntimeTimeStamp;
+
+
+        [ConfigurationAppSetting]
+        public string RuntimeTimeStampS;
+
+        [ConfigurationAppSetting]
+        public Guid GuidV;
+
+        [ConfigurationAppSetting]
+        public Guid? GuidNullable;
+
     }
 }
