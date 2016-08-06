@@ -9,8 +9,36 @@
     using Newtonsoft.Json.Linq;
     class Program12
     {
-
         static void Main(string[] args)
+        {
+            string json = @"{ 'name10': 
+'Admin',c:1111,d:[{a:'aaaa'}] ,e:[1,]}
+[{ 'name9': 'Publisher' }]
+
+
+[
+{ 'name4': 'Admin' },{ 'name8': ['Admin'] }]{ 'name7': 
+'Admin' }
+[{ 'name3': ['Publisher','Publisher'] }]{ 'name5': 
+'Admin' }
+[{ 'name2': 'Publisher' }]{ 'name6': 
+'Admin' }
+[[{ 'name1': 'Publisher' }]]";
+
+            JsonReader reader = new JsonTextReader(new StringReader(json));
+            reader.ReadAllMultipleContents();
+            //reader.re
+
+
+
+            //foreach (var i in r)
+            //{
+
+            //    Console.WriteLine(i);
+            //}
+            Console.ReadLine();
+        }
+        static void Main2(string[] args)
         {
 
             string json = @"{ 'name10': 
@@ -25,10 +53,10 @@
 [{ 'name1': 'Publisher' }]";
 
             JsonTextReader reader = new JsonTextReader(new StringReader(json));
-            var r = reader.ReadAllMultipleContent<JObject>().ToArray();
+            var r = reader.ReadAllMultipleContentsAsEnumerable<JObject>().ToArray();
             reader = new JsonTextReader(new StringReader(json));
             r = reader
-                    .ReadMultipleContent<JObject>(3)
+                    .ReadMultipleContentsAsEnumerable<JObject>(3)
                     .SelectMany
                         (
                             (x) =>
@@ -43,7 +71,7 @@
         {
 
             string json = @"{ 'name': 
-'Admin' }
+'Admin',c:1111111 }
 [{ 'name': 'Publisher' }][
 { 'name': 'Admin' },{ 'name': 'Admin' }]{ 'name': 
 'Admin' }
@@ -56,11 +84,11 @@
             IList<Role> roles = new List<Role>();
 
             JsonTextReader reader = new JsonTextReader(new StringReader(json));
-            var r = reader.ReadAllMultipleContent<Role>().ToArray();
+            var r = reader.ReadAllMultipleContentsAsEnumerable<Role>().ToArray();
 
             reader = new JsonTextReader(new StringReader(json));
             r = reader
-                    .ReadMultipleContent<Role>(3)
+                    .ReadMultipleContentsAsEnumerable<Role>(3)
                     .SelectMany
                         (
                             (x) =>
@@ -76,8 +104,14 @@
 
     public class Role
     {
+
         public string Name { get; set; }
     }
+
+
+
+
+
 }
 
 
@@ -85,10 +119,66 @@
 namespace Microshaoft
 {
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
     using System.Collections.Generic;
+    using System;
     public static class JsonReaderHelper
     {
-        public static IEnumerable<IEnumerable<T>> ReadMultipleContent<T>
+
+        public static void ReadAllMultipleContents
+                                         (
+                 this JsonReader target)
+        {
+            if (!target.SupportMultipleContent)
+            {
+                target.SupportMultipleContent = true;
+            }
+            var serializer = new JsonSerializer();
+            while (target.Read())
+            {
+                Console.WriteLine(target.TokenType);
+                var r = serializer.Deserialize(target);
+                Console.WriteLine(r.GetType());
+                Console.WriteLine(r.ToString());
+
+            }
+
+        }
+        public static IEnumerable<JToken> ReadMultipleContents
+                                                (
+                                                    this JsonReader target
+                                                )
+
+        {
+            if (!target.SupportMultipleContent)
+            {
+                target.SupportMultipleContent = true;
+            }
+            var serializer = new JsonSerializer();
+            while (target.Read())
+            {
+                if (target.TokenType == JsonToken.StartObject)
+                {
+                    JToken entry = serializer.Deserialize<JToken>(target);
+                    yield return entry;
+                }
+                else if (target.TokenType == JsonToken.StartArray)
+                {
+                    JArray entries = serializer.Deserialize<JArray>(target);
+                    foreach (var entry in entries)
+                    {
+                        if (entry is JArray)
+                        {
+                            Console.WriteLine();
+                        }
+                        yield return (JToken)entry;
+                    }
+                }
+
+            }
+
+        }
+        public static IEnumerable<IEnumerable<T>> ReadMultipleContentsAsEnumerable<T>
                         (
                             this JsonReader target
                             , int pageSize = 10
@@ -146,7 +236,7 @@ namespace Microshaoft
             }
         }
 
-        public static IEnumerable<T> ReadAllMultipleContent<T>(this JsonReader target)
+        public static IEnumerable<T> ReadAllMultipleContentsAsEnumerable<T>(this JsonReader target)
         {
             if (!target.SupportMultipleContent)
             {
