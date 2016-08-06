@@ -137,6 +137,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)ReaderWriterLock\EasyReaderWriterLockSlim.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ReaderWriterLock\ReaderWriterLockSlimHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SingleThreadAsyncDequeueProcessor\SingleThreadAsyncDequeueProcessor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SingleThreadAsyncDequeueProcessor\SingleThreadAsyncJObjectsDequeueProcessor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SingleThreadAsyncDequeueProcessor\SingleThreadAsyncDequeueProcessor2.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Socket\BufferManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Socket\Microsoft.System.ServiceModel.Channels.SocketAsyncEventArgsPool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Socket\SocketAsyncDataHandler.01.cs" />
