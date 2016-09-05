@@ -126,14 +126,16 @@ namespace Microshaoft
     {
 
         public static void ReadAllMultipleContents
-                                         (
-                 this JsonReader target)
+                                        (
+                                            this JsonReader target
+                                        )
         {
             if (!target.SupportMultipleContent)
             {
                 target.SupportMultipleContent = true;
             }
             var serializer = new JsonSerializer();
+            //serializer.CheckAdditionalContent
             while (target.Read())
             {
                 Console.WriteLine(target.TokenType);

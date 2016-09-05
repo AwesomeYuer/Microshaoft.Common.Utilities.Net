@@ -81,24 +81,34 @@ namespace Test2
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            var r = TaskProcesserHelper.ProcessWaitingShowDialog40
+            var result = false;
+            var r = TaskProcesserHelper
+                            .ProcessWaitingShowDialog
                                     (
                                         this
                                         , new ProcessWaitingCancelableDialog()
                                         , () =>
                                         {
+
                                             Thread.Sleep(5 * 1000);
                                             //throw new Exception();
+                                            result = true;
                                         }
-                                        , () =>
-                                        {
-                                            Console.WriteLine("Finished");
-                                        }
+
                                         , (x) =>
                                         {
                                             Console.WriteLine("Caught Exception: {0}", x);
                                         }
                                     );
+
+            //if (r == DialogResult.Cancel)
+            {
+                Console.WriteLine(r);
+                Console.WriteLine(result);
+
+
+            }
+
             Console.WriteLine(r);
         }
     }
@@ -194,6 +204,108 @@ namespace Microshaoft
             //DialogResult dialogResult = await task;
             return r;
         }
+
+        public static T ProcessWaitingShowDialog<T>
+                    (
+                        IWin32Window ownerWindow
+                        , Form dialogForm
+                        , Func<T> onProcessFunc
+                        , out DialogResult dialogResult
+                        , Func<Exception, Exception, string, bool> onCaughtExceptionProcessFunc = null
+                        , Action<bool, Exception, Exception, string> onFinallyProcessAction = null
+                    )
+        {
+            T r = default(T);
+            dialogResult = default(DialogResult);
+            var IsCompleted = false;
+            new Thread
+                (
+                    new ThreadStart
+                        (
+                            () =>
+                            {
+                                //wait.WaitOne();
+                                Thread.Sleep(10);
+                                TryCatchFinallyProcessHelper
+                                    .TryProcessCatchFinally
+                                        (
+                                            true
+                                            , () =>
+                                            {
+                                                r = onProcessFunc();
+                                                IsCompleted = true;
+                                            }
+                                            , false
+                                            , onCaughtExceptionProcessFunc
+                                            , onFinallyProcessAction
+                                        );
+                            }
+                        )
+                ).Start();
+
+            if (!IsCompleted)
+            {
+                dialogResult = dialogForm.ShowDialog(ownerWindow);
+            }
+            return r;
+        }
+
+
+        public static DialogResult ProcessWaitingShowDialog
+                    (
+                        IWin32Window ownerWindow
+                        , Form dialogForm
+                        , Action onProcessAction = null
+                        , Action<Exception> onCaughtExceptionProcessAction = null
+                    )
+        {
+            //var wait = new AutoResetEvent(false);
+            DialogResult r = default(DialogResult);
+            var IsCompleted = false;
+            if (onProcessAction != null)
+            {
+                new Thread
+                        (
+                            new ThreadStart
+                                (
+                                    () =>
+                                    {
+                                        //wait.WaitOne();
+                                        Thread.Sleep(10);
+                                        try
+                                        {
+                                            //
+                                            onProcessAction();
+                                            IsCompleted = true;
+                                        }
+                                        catch (Exception e)
+                                        {
+                                            //r = -1;
+                                            if (onCaughtExceptionProcessAction != null)
+                                            {
+                                                onCaughtExceptionProcessAction(e);
+                                            }
+                                        }
+                                        finally
+                                        {
+                                            TrySafeInvokeFormClose
+                                                (
+                                                    dialogForm
+                                                    , onCaughtExceptionProcessAction
+                                                );
+                                        }
+                                    }
+                                )
+                        ).Start();
+                //wait.Set();
+                if (!IsCompleted)
+                {
+                    r = dialogForm.ShowDialog(ownerWindow);
+                }
+            }
+            return r;
+        }
+
         public static int ProcessWaitingShowDialog
                             (
                                 IWin32Window ownerWindow
