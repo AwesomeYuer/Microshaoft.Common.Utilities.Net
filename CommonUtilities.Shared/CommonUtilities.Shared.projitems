@@ -172,6 +172,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)WebApiVersionedRoute\VersionedRouteAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApiVersionedRoute\WebApiVersionAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebMvcApi.NET45\FileUploadController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebMvcApi.NET45\HttpRequestResponseMessageExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebMvcApi.NET45\JsonpMediaTypeFormatter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebMvcApi.NET45\TraceSoapMessagesLoggerSoapExtension.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebMvcApi.NET45\WebApiExceptionsHandlerFilter.cs" />
