@@ -122,9 +122,70 @@ namespace Microshaoft
     using Newtonsoft.Json.Linq;
     using System.Collections.Generic;
     using System;
+    using System.IO;
     public static class JsonReaderHelper
     {
+        public static void ReadAllPaths
+                    (
+                        string json
+                        , Func<bool, string, object, Type, JsonReader, bool> onReadPathOnceProcessFunc
+                    )
+        {
+            using (JsonReader reader = new JsonTextReader(new StringReader(json)))
+            {
+                var isStarted = false;
+                var isJArray = false;
+                while (reader.Read())
+                {
+                    JsonToken tokenType = reader.TokenType;
+                    if (!isStarted)
+                    {
+                        if (tokenType == JsonToken.StartArray)
+                        {
+                            isJArray = true;
+                            isStarted = true;
+                        }
+                        else if (tokenType == JsonToken.StartArray)
+                        {
 
+                            isStarted = true;
+                        }
+                        else if (tokenType == JsonToken.StartConstructor)
+                        {
+                            isStarted = true;
+                        }
+                    }
+                    if
+                        (
+                            tokenType != JsonToken.Comment
+                            &&
+                            tokenType != JsonToken.PropertyName
+                        )
+                    {
+                        var jsonPath = reader.Path;
+                        if (!string.IsNullOrEmpty(jsonPath))
+                        {
+                            var valueType = reader.ValueType;
+                            var valueObject = reader.Value;
+                            if (valueType != null)
+                            {
+                                var r = onReadPathOnceProcessFunc(isJArray, jsonPath, valueObject, valueType, reader);
+                                if (r)
+                                {
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                }
+
+            }
+                
+
+
+
+        }
         public static void ReadAllMultipleContents
                                         (
                                             this JsonReader target

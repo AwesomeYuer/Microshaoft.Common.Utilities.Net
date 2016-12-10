@@ -96,9 +96,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Microsoft.Diagnostics.Tracing.Logging\Manager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Microsoft.Diagnostics.Tracing.Logging\MockETWProcessor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Microsoft.Diagnostics.Tracing.Logging\NativeMethods.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Microsoft.Diagnostics.Tracing.Logging\obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Microsoft.Diagnostics.Tracing.Logging\obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Microsoft.Diagnostics.Tracing.Logging\obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\FloatRange.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\GlobalSuppressions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\HashCodeCombiner.cs" />
@@ -191,24 +188,5 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)DataAccess\Pager.StoreProcedure.Sample.sql" />
-    <Content Include="$(MSBuildThisFileDirectory)Microsoft.Diagnostics.Tracing.Logging\project.json" />
-    <Content Include="$(MSBuildThisFileDirectory)Microsoft.Diagnostics.Tracing.Logging\project.lock.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)Microsoft.Diagnostics.Tracing.Logging\Microshaoft.Diagnostics.Tracing.RT.NET4.6.x.csproj" />
-    <None Include="$(MSBuildThisFileDirectory)Microsoft.Diagnostics.Tracing.Logging\Microshaoft.Diagnostics.Tracing.RT.NET4.6.x.csproj.user" />
-    <None Include="$(MSBuildThisFileDirectory)Microsoft.Diagnostics.Tracing.Logging\obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Microsoft.Diagnostics.Tracing.Logging\bin\ARM\Debug\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Microsoft.Diagnostics.Tracing.Logging\bin\ARM\Release\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Microsoft.Diagnostics.Tracing.Logging\bin\Debug\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Microsoft.Diagnostics.Tracing.Logging\bin\Release\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Microsoft.Diagnostics.Tracing.Logging\bin\x64\Debug\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Microsoft.Diagnostics.Tracing.Logging\bin\x64\Release\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Microsoft.Diagnostics.Tracing.Logging\bin\x86\Debug\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Microsoft.Diagnostics.Tracing.Logging\bin\x86\Release\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Microsoft.Diagnostics.Tracing.Logging\obj\Debug\TempPE\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Microsoft.Diagnostics.Tracing.Logging\Properties\" />
   </ItemGroup>
 </Project>
