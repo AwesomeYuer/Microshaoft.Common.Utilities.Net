@@ -169,7 +169,14 @@ namespace Microshaoft
                             var valueObject = reader.Value;
                             if (valueType != null)
                             {
-                                var r = onReadPathOnceProcessFunc(isJArray, jsonPath, valueObject, valueType, reader);
+                                var r = onReadPathOnceProcessFunc
+                                                (
+                                                    isJArray
+                                                    , jsonPath
+                                                    , valueObject
+                                                    , valueType
+                                                    , reader
+                                                );
                                 if (r)
                                 {
                                     break;
@@ -179,12 +186,8 @@ namespace Microshaoft
                     }
 
                 }
-
+                reader.Close();
             }
-                
-
-
-
         }
         public static void ReadAllMultipleContents
                                         (
@@ -203,15 +206,12 @@ namespace Microshaoft
                 var r = serializer.Deserialize(target);
                 Console.WriteLine(r.GetType());
                 Console.WriteLine(r.ToString());
-
             }
-
         }
         public static IEnumerable<JToken> ReadMultipleContents
                                                 (
                                                     this JsonReader target
                                                 )
-
         {
             if (!target.SupportMultipleContent)
             {
@@ -237,9 +237,7 @@ namespace Microshaoft
                         yield return (JToken)entry;
                     }
                 }
-
             }
-
         }
         public static IEnumerable<IEnumerable<T>> ReadMultipleContentsAsEnumerable<T>
                         (

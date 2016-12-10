@@ -12,7 +12,7 @@
         static void Main(string[] args)
         {
             string json = @"
-[{a:'asdasd',b:2222},{a:'@a.[2].a'},{a:'ssss'}]
+{ a: [{a:'asdasd',b:2222},{a:'@a.[2].a'},{a:'ssss'}]}
 
 
 
