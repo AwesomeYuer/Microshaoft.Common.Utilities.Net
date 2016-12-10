@@ -232,7 +232,7 @@ namespace Microshaoft
                     {
                         if (entry is JArray)
                         {
-                            Console.WriteLine();
+                            //Console.WriteLine();
                         }
                         yield return (JToken)entry;
                     }
