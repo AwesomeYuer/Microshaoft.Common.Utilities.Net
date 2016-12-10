@@ -47,7 +47,7 @@
 
 ////   Copyright (c) Microsoft Corporation.  All rights reserved.
 
-//namespace Microsoft.Boc
+//namespace Microsoft
 //{
 //    using System.Diagnostics;
 
@@ -159,7 +159,7 @@
 ////
 ////-----------------------------------------------------------------------------
 
-//namespace Microsoft.Boc
+//namespace Microsoft
 //{
 //    using System;
 //    using System.IO;

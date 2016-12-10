@@ -1,4 +1,4 @@
-﻿//namespace Microsoft.Boc
+﻿//namespace Microsoft
 //{
 //    public static class PoolsManager
 //    {
@@ -12,7 +12,7 @@
 //    }
 //}
 
-//namespace Microsoft.Boc
+//namespace Microsoft
 //{
 //    using System;
 //    using System.Collections.Generic;

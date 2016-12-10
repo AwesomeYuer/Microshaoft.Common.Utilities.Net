@@ -1,6 +1,6 @@
 ﻿
 
-//namespace BOC.Services.LogService.Contracts
+//namespace Services.LogService.Contracts
 //{
 //    using System.Collections.Generic;
 //    using System.Security;
