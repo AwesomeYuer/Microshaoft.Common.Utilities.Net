@@ -25,14 +25,14 @@ namespace Microshaoft
         public static WorkflowApplication CreateWorkflowApplication
                                             (
                                                 string xaml
-                                                , string localAssemblyFilePath = null
+                                                //, string localAssemblyFilePath = null
                                                 , Func<InstanceStore> onPersistProcessFunc = null
                                             )
         {
             var activity = XamlToActivity
                                 (
                                     xaml
-                                    , localAssemblyFilePath
+                                    //, localAssemblyFilePath
                                 );
             WorkflowApplication workflowApplication = new WorkflowApplication(activity);
             if (onPersistProcessFunc != null)
@@ -44,20 +44,20 @@ namespace Microshaoft
         public static Activity XamlToActivity
                                     (
                                         string xaml
-                                        , string localAssemblyFilePath = null
+                                        //, string localAssemblyFilePath = null
                                     )
         {
             Assembly localAssembly = null;
-            if (string.IsNullOrEmpty(localAssemblyFilePath))
-            {
-                localAssembly = Assembly
-                                    .GetExecutingAssembly();
-            }
-            else
-            {
-                localAssembly = Assembly
-                                    .LoadFrom(localAssemblyFilePath);
-            }
+            //if (string.IsNullOrEmpty(localAssemblyFilePath))
+            //{
+            //    localAssembly = Assembly
+            //                        .GetExecutingAssembly();
+            //}
+            //else
+            //{
+            //    localAssembly = Assembly
+            //                        .LoadFrom(localAssemblyFilePath);
+            //}
             var stringReader = new StringReader(xaml);
             var xmlReader = XmlReader.Create(stringReader);
             var xamlXmlReader = new XamlXmlReader

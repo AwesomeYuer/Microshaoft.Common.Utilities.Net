@@ -48,7 +48,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CRC\CRC32.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CRC\CrcHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataAccess\SqlCommandExtensionsMethodsManager.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DataTable\DataReaderHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataReader\DataReaderHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataTable\DataTableHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataTable\DataTableList.ExtensionMethodsManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DynamicExpression\ExpressionTreeHelper.cs" />

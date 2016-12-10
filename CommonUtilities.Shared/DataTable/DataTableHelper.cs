@@ -11,7 +11,6 @@
             var type = typeof(T);
             return GenerateEmptyDataTable(type, needDefinitionAttributeProcess);
         }
-
         public static DataTable GenerateEmptyDataTable
                 (
                     Type type

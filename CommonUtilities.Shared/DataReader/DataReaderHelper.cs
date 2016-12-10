@@ -4,6 +4,30 @@
     using System.Data;
     using System.Data.SqlClient;
     using System.Linq;
+    using System;
+    public static class DataReaderExtensionsMethodsManager
+    {
+        public static IEnumerable<T> ExecuteRead<T>
+                (
+                    this IDataReader target
+                    , Func<int, IDataReader, T> onReadProcessFunc
+                )
+        {
+            int i = 0;
+            while (target.Read())
+            {
+                if (onReadProcessFunc != null)
+                {
+                    yield return
+                        onReadProcessFunc(++i, target);
+                }
+            }
+            //可能有错 由于 yield 延迟
+            target.Close();
+        }
+    }
+
+
     public static class DataReaderHelper
     {
         public static IEnumerable<TEntry> AsEnumerable<TEntry>

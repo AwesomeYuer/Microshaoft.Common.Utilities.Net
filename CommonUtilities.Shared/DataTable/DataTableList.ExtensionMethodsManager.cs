@@ -8,7 +8,6 @@ namespace Microshaoft
 
     public static partial class DataTableListExtensionMethodsManager
     {
-        
         public static DataRow[] FullTextSearch(this DataTable dataTable, string[] keyWords)
         {
             return

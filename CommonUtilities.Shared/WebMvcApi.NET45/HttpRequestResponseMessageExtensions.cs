@@ -29,7 +29,6 @@
             }
             return r;
         }
-
         public static T GetPropertyValue<T>
                         (
                             this HttpRequestMessage target
