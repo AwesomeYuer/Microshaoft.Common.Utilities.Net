@@ -71,6 +71,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Json\JsonHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JsonReaderHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JTokenHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\KeyValueNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KeyWordFilter\CharExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KeyWordFilter\FastFilter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KeyWordFilter\HashFilter.cs" />
