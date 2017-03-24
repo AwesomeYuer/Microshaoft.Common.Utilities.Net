@@ -54,12 +54,6 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\CommonUtilities\CommonUtilities.Full\CommonUtilities.NET4.6.x\CommonUtilities.NET4.6.x.csproj">
-      <Project>{a6b57925-e9ad-4e09-bc4c-32a2bd1164a6}</Project>
-      <Name>CommonUtilities.NET4.6.x</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

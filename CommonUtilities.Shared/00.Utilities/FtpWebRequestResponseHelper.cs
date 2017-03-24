@@ -1,4 +1,5 @@
-﻿namespace Microshaoft
+﻿#if !NETSTANDARD1_4
+namespace Microshaoft
 {
     #region Using directives
 
@@ -326,3 +327,4 @@
 
     }
 }
+#endif

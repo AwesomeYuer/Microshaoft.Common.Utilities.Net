@@ -1,4 +1,5 @@
-﻿//#define cs4 //C# 4.0+
+﻿#if !NETSTANDARD1_4
+//#define cs4 //C# 4.0+
 //#define cs2 //C# 2.0+
 // /r:C:\Windows\Microsoft.NET\Framework\v4.0.30319\System.Runtime.Caching.dll
 namespace Test
@@ -123,3 +124,4 @@ namespace Microshaoft
         }
     }
 }
+#endif

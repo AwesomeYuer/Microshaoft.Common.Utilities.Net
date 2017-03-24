@@ -1,4 +1,5 @@
-﻿namespace Test2
+﻿#if !NETSTANDARD1_4
+namespace Test2
 {
     using System;
     using System.Windows.Forms;
@@ -552,3 +553,4 @@ namespace Microshaoft
         }
     }
 }
+#endif
