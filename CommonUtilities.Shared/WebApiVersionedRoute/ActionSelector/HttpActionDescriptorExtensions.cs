@@ -1,4 +1,5 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+#if !NETSTANDARD1_4
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microshaoft.WebApi
 {
@@ -31,3 +32,4 @@ namespace Microshaoft.WebApi
         }
     }
 }
+#endif

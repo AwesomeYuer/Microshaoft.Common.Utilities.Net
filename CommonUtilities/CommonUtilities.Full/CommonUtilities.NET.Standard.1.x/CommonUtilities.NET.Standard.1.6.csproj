@@ -8,8 +8,4 @@
 
   <Import Project="..\..\..\CommonUtilities.Shared\CommonUtilities.Shared.projitems" Label="Shared" />
 
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.1" />
-  </ItemGroup>
-
 </Project>

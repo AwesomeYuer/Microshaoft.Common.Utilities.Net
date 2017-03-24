@@ -1,4 +1,5 @@
-﻿// OopConsoleTraceEventListenerMonitor_TraceControllerEventsConsumer.cs
+
+// OopConsoleTraceEventListenerMonitor_TraceControllerEventsConsumer.cs
 /*
 	# Microshaoft
 	/r:System.Xaml.dll
@@ -9,6 +10,7 @@
 	/r:"D:\Microshaoft.Nuget.Packages\Microsoft.Diagnostics.Tracing.EventSource.Redist.1.1.28\lib\net46\Microsoft.Diagnostics.Tracing.EventSource.dll"
 	/r:"D:\Microshaoft.Nuget.Packages\Microsoft.Diagnostics.Tracing.TraceEvent.1.0.40\lib\net40\Microsoft.Diagnostics.Tracing.TraceEvent.dll"
 */
+#if !NETSTANDARD1_4
 namespace Test_OopConsoleTraceEventListenerMonitor_TraceControllerEventsConsumer
 {
     using Microshaoft;
@@ -708,3 +710,5 @@ namespace Microshaoft
     }
 }
 
+
+#endif

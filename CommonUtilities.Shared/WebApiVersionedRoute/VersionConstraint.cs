@@ -1,4 +1,5 @@
-﻿namespace Microshaoft.WebApi.Versioning
+#if !NETSTANDARD1_4
+namespace Microshaoft.WebApi.Versioning
 {
     using System;
     using System.Collections.Generic;
@@ -99,3 +100,4 @@
         }
     }
 }
+#endif

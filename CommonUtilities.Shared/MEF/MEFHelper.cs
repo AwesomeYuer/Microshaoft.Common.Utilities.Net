@@ -1,4 +1,5 @@
-﻿
+#if !NETSTANDARD1_4
+
 namespace Microshaoft
 {
     using System.ComponentModel.Composition;
@@ -15,3 +16,5 @@ namespace Microshaoft
         }
     }
 }
+
+#endif

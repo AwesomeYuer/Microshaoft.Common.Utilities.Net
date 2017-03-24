@@ -1,4 +1,4 @@
-﻿/*
+/*
 	PowerShell:
 	[System.Diagnostics.PerformanceCounterCategory]::Delete("Microshaoft ConcurrentAsyncQueue Performance Counters")
 	[System.Diagnostics.PerformanceCounterCategory]::GetCategories() | Format-Table -auto
@@ -29,6 +29,7 @@
 	}
 
 */
+#if !NETSTANDARD1_4
 namespace Microshaoft
 {
     using System;
@@ -115,3 +116,5 @@ namespace Microshaoft
 
     }
 }
+
+#endif

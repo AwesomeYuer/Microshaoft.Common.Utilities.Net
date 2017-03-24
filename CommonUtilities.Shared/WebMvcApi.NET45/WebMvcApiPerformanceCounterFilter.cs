@@ -1,4 +1,5 @@
-﻿namespace Microshaoft.WebMvc
+#if !NETSTANDARD1_4
+namespace Microshaoft.WebMvc
 {
     using System.Web.Mvc;
 
@@ -313,3 +314,5 @@ namespace Microshaoft
         public string PerformanceCounterInstanceName;
     }
 }
+
+#endif

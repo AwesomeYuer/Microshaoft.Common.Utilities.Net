@@ -1,4 +1,5 @@
-﻿namespace Microshaoft.Web
+#if !NETSTANDARD1_4
+namespace Microshaoft.Web
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -136,3 +137,4 @@
         }
     }
 }
+#endif

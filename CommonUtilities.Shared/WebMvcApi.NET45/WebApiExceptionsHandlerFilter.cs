@@ -1,4 +1,5 @@
-﻿// WebApi.MVC.CountPerformanceActionFilter.cs
+#if !NETSTANDARD1_4
+// WebApi.MVC.CountPerformanceActionFilter.cs
 
 namespace Microshaoft.WebApi
 {
@@ -312,3 +313,5 @@ namespace Microshaoft.WebApi
     }
 
 }
+
+#endif

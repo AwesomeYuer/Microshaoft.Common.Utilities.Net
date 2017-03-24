@@ -1,4 +1,5 @@
-﻿namespace Microshaoft
+#if !NETSTANDARD1_4
+namespace Microshaoft
 {
     using System.Collections.Generic;
     using System.Web.Http.Routing;
@@ -57,3 +58,4 @@
         }
     }
 }
+#endif

@@ -1,4 +1,5 @@
-﻿namespace Microshaoft
+#if !NETSTANDARD1_4
+namespace Microshaoft
 {
     using System.Diagnostics;
     public partial class QueuedObjectsPool<T> where T: new()
@@ -56,3 +57,5 @@
         
     }
 }
+
+#endif

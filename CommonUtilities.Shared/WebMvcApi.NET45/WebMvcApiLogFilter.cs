@@ -1,4 +1,5 @@
-﻿// WebApi.MVC.CountPerformanceActionFilter.cs
+#if !NETSTANDARD1_4
+// WebApi.MVC.CountPerformanceActionFilter.cs
 namespace Microshaoft.Web
 {
     using System;
@@ -381,3 +382,5 @@ namespace Microshaoft.Web
     }
 
 }
+
+#endif

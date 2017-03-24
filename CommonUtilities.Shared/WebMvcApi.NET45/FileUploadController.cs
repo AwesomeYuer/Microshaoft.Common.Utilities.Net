@@ -1,4 +1,5 @@
-﻿namespace Microshaoft.WebApi.Controllers
+#if !NETSTANDARD1_4
+namespace Microshaoft.WebApi.Controllers
 {
     using System.IO;
     using System.Linq;
@@ -94,3 +95,4 @@
         public string Submitter { get; set; }
     }
 }
+#endif

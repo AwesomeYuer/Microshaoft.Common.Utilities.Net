@@ -1,4 +1,5 @@
-﻿namespace Microshaoft.Web
+#if !NETSTANDARD1_4
+namespace Microshaoft.Web
 {
     using System.Diagnostics;
     using System.Linq;
@@ -137,3 +138,4 @@
         }
     }
 }
+#endif

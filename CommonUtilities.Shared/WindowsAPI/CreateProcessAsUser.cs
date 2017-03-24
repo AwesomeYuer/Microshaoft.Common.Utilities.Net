@@ -1,4 +1,5 @@
-﻿namespace Microshaoft.Win32
+#if !NETSTANDARD1_4
+namespace Microshaoft.Win32
 {
     using System;
     using System.Runtime.InteropServices;
@@ -217,3 +218,5 @@
         private static extern int WTSGetActiveConsoleSessionId();
     } 
 }
+
+#endif

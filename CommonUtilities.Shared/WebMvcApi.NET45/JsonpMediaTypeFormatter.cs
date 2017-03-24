@@ -1,4 +1,5 @@
-﻿// WebAPI.JsonpMediaTypeFormatter.cs
+#if !NETSTANDARD1_4
+// WebAPI.JsonpMediaTypeFormatter.cs
 namespace Microshaoft.WebApi
 {
     using System;
@@ -114,3 +115,4 @@ namespace Microshaoft.WebApi
         }
     }
 }
+#endif

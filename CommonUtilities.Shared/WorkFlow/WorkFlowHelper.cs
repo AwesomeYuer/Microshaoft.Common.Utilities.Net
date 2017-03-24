@@ -1,4 +1,5 @@
-﻿/*
+﻿
+/*
 # Microshaoft
 /r:System.Xaml.dll
 /r:System.Activities.dll
@@ -6,6 +7,7 @@
 /r:System.Runtime.DurableInstancing.dll
 /r:"D:\Microshaoft.Nuget.Packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll"
 */
+#if !NETSTANDARD1_4
 namespace Microshaoft
 {
     using Newtonsoft.Json.Linq;
@@ -268,3 +270,5 @@ namespace Microshaoft
         }
     }
 }
+
+#endif

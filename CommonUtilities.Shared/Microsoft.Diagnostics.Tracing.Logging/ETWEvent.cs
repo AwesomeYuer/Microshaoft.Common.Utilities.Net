@@ -1,3 +1,4 @@
+#if !NETSTANDARD1_4
 // The MIT License (MIT)
 // 
 // Copyright (c) 2015 Microsoft
@@ -956,3 +957,4 @@ namespace Microsoft.Diagnostics.Tracing.Logging
         }
     }
 }
+#endif

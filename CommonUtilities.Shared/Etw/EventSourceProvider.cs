@@ -1,4 +1,5 @@
-﻿namespace Microshaoft.EventSources
+#if !NETSTANDARD1_4
+namespace Microshaoft.EventSources
 {
     using System;
     using Microsoft.Diagnostics.Tracing;
@@ -370,3 +371,5 @@ namespace Microshaoft
         }
     }
 }
+
+#endif

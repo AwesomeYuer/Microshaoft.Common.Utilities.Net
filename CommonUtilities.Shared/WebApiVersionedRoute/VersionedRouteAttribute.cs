@@ -1,4 +1,5 @@
-﻿namespace Microshaoft.WebApi.Versioning
+#if !NETSTANDARD1_4
+namespace Microshaoft.WebApi.Versioning
 {
     using System.Collections.Generic;
     using System.Web.Http.Routing;
@@ -50,3 +51,4 @@
         }
     }
 }
+#endif
