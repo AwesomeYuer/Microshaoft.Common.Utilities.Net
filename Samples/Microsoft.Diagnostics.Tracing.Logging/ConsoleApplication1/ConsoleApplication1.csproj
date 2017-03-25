@@ -49,7 +49,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\CommonUtilities\Microshaoft.Diagnostics.Tracing\Microshaoft.Diagnostics.Tracing.NET4.6.x\Microshaoft.Diagnostics.Tracing.NET.Framework.4.6.x.csproj">
+    <ProjectReference Include="..\..\..\CommonUtilities\Microshaoft.Diagnostics.Tracing\Microshaoft.Diagnostics.Tracing.NET.Framework.4.6.x\Microshaoft.Diagnostics.Tracing.NET.Framework.4.6.x.csproj">
       <Project>{7a64006a-8bf9-4401-bd7e-84228947c1c2}</Project>
       <Name>Microshaoft.Diagnostics.Tracing.NET.Framework.4.6.x</Name>
     </ProjectReference>
