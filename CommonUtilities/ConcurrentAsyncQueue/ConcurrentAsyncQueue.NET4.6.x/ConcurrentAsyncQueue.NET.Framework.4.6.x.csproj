@@ -4,60 +4,63 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{DED3FF07-3B3B-4EEC-A9B8-60539D54651A}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{D2527213-7CF7-47D9-88DE-1C0CCD5F59DB}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ConsoleApplication1</RootNamespace>
-    <AssemblyName>ConsoleApplication1</AssemblyName>
+    <RootNamespace>Microshaoft</RootNamespace>
+    <AssemblyName>Microshaoft.ConcurrentAsyncQueue.NET.Framework.4.6.x</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\Debug\NET46x\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\Release\NET46x\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Newtonsoft.Json.10.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="..\..\..\Solution.All.Projects.Common.AssemblyInfo.cs">
+      <Link>Properties\Solution.All.Projects.Common.AssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\CommonUtilities\Microshaoft.Diagnostics.Tracing\Microshaoft.Diagnostics.Tracing.NET4.6.x\Microshaoft.Diagnostics.Tracing.NET.Framework.4.6.x.csproj">
-      <Project>{7a64006a-8bf9-4401-bd7e-84228947c1c2}</Project>
-      <Name>Microshaoft.Diagnostics.Tracing.NET.Framework.4.6.x</Name>
+    <ProjectReference Include="..\..\CommonUtilities.Lite\CommonUtilities.Lite.NET.Framework.4.6.x\CommonUtilities.Lite.NET.Framework.4.6.x.csproj">
+      <Project>{214a20f4-f017-42d8-8cc1-e35054a42e30}</Project>
+      <Name>CommonUtilities.Lite.NET.Framework.4.6.x</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TraceEventSources\TraceEventSources.csproj">
-      <Project>{3b60f922-7d57-417b-95a1-5ac9fa34beb2}</Project>
-      <Name>TraceEventSources</Name>
+    <ProjectReference Include="..\..\EasyPerformanceCountersHelper\EasyPerformanceCountersHelper.NET.Framework.4.6.x\EasyPerformanceCountersHelper.NET.Framework.4.6.x.csproj">
+      <Project>{bf7a1c0a-fe1f-4dd9-a044-c895cf6fbd97}</Project>
+      <Name>EasyPerformanceCountersHelper.NET.Framework.4.6.x</Name>
     </ProjectReference>
   </ItemGroup>
+  <Import Project="..\..\..\CommonUtilities.Shared\ConcurrentAsyncQueue.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

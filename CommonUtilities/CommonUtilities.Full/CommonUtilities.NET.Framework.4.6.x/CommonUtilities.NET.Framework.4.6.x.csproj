@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Microshaoft</RootNamespace>
-    <AssemblyName>Microshaoft.Common.Utilities.Net.4.6.x</AssemblyName>
+    <AssemblyName>Microshaoft.Common.Utilities.NET.Framework.4.6.x</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>

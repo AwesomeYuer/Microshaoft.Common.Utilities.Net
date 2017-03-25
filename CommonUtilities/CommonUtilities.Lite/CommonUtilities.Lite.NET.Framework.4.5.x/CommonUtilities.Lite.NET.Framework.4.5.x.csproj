@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{ACB482EF-7D58-4226-A0EC-DEAADC6D9597}</ProjectGuid>
+    <ProjectGuid>{ED69BFA0-D533-42A0-8AD3-AF1E64C84BEF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Microshaoft</RootNamespace>
-    <AssemblyName>Microshaoft.Common.Utilities.NET.Framework.4.5.x</AssemblyName>
+    <AssemblyName>Microshaoft.Common.Utilities.Lite.NET.Framework.4.5.x</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\NET45x\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NET45x</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>CommonUtilities.ruleset</CodeAnalysisRuleSet>
@@ -132,7 +132,7 @@
     <Content Include="TraceEvent.ReadMe.txt" />
     <Content Include="TraceEvent.ReleaseNotes.txt" />
   </ItemGroup>
-  <Import Project="..\..\..\CommonUtilities.Shared\CommonUtilities.Shared.projitems" Label="Shared" />
+  <Import Project="..\..\..\CommonUtilities.Shared\CommonUtilities.Lite.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\..\packages\Microsoft.Diagnostics.Tracing.TraceEvent.1.0.41\build\Microsoft.Diagnostics.Tracing.TraceEvent.targets" Condition="Exists('..\..\..\packages\Microsoft.Diagnostics.Tracing.TraceEvent.1.0.41\build\Microsoft.Diagnostics.Tracing.TraceEvent.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

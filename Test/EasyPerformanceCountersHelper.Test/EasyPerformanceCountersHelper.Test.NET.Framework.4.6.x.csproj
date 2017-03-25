@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{DED3FF07-3B3B-4EEC-A9B8-60539D54651A}</ProjectGuid>
+    <ProjectGuid>{9767FE12-1918-4D4E-BCCE-A56771AFB958}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ConsoleApplication1</RootNamespace>
-    <AssemblyName>ConsoleApplication1</AssemblyName>
+    <AssemblyName>EasyPerformanceCountersHelper.Test.NET4.6.x</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -19,25 +19,31 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\Debug\NET46x\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\Release\NET46x\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -49,13 +55,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\CommonUtilities\Microshaoft.Diagnostics.Tracing\Microshaoft.Diagnostics.Tracing.NET4.6.x\Microshaoft.Diagnostics.Tracing.NET.Framework.4.6.x.csproj">
-      <Project>{7a64006a-8bf9-4401-bd7e-84228947c1c2}</Project>
-      <Name>Microshaoft.Diagnostics.Tracing.NET.Framework.4.6.x</Name>
+    <ProjectReference Include="..\..\CommonUtilities\CommonUtilities.Lite\CommonUtilities.Lite.NET.Framework.4.6.x\CommonUtilities.Lite.NET.Framework.4.6.x.csproj">
+      <Project>{214a20f4-f017-42d8-8cc1-e35054a42e30}</Project>
+      <Name>CommonUtilities.Lite.NET.Framework.4.6.x</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TraceEventSources\TraceEventSources.csproj">
-      <Project>{3b60f922-7d57-417b-95a1-5ac9fa34beb2}</Project>
-      <Name>TraceEventSources</Name>
+    <ProjectReference Include="..\..\CommonUtilities\EasyPerformanceCountersHelper\EasyPerformanceCountersHelper.NET.Framework.4.6.x\EasyPerformanceCountersHelper.NET.Framework.4.6.x.csproj">
+      <Project>{bf7a1c0a-fe1f-4dd9-a044-c895cf6fbd97}</Project>
+      <Name>EasyPerformanceCountersHelper.NET.Framework.4.6.x</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
