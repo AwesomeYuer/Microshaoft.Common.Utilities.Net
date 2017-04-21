@@ -10,12 +10,16 @@ namespace Microshaoft.WebApi.Controllers
     using System.Collections.Generic;
     using System.Collections.Specialized;
     using System;
+    using System.Web.Http.Cors;
+
     /// <summary>
     /// This sample controller reads the contents of an HTML file upload asynchronously and writes one or more body parts to a local file.
     /// </summary>
     [RoutePrefix("api/restful/Files")]
     //[Authorize(Roles = "Administrators")]
-    public class FilesController : ApiController
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
+    //[Authorize(Roles = "Administrators")]
+    public class FilesProcessController : ApiController
     {
         static readonly string ServerUploadFolder = @"d:\temp\";//th.GetTempPath();
 

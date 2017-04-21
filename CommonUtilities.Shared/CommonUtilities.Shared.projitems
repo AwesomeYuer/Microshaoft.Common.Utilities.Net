@@ -18,6 +18,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\CompressHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\CryptographyHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\DateTimeHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\DebugConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\DirectoryHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\EasyTimer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\EncodingHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\FileLogHelper.cs" />
@@ -41,6 +43,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Collections\CollectionExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\DictionaryExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\EmptyReadOnlyDictionary.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Collections\EnumerableHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConcurrentAsyncQueue\ConcurrentAsyncQueue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConcurrentAsyncQueue\KeyedStack.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\ConfigurationAppSettingsHelper.cs" />
