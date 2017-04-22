@@ -2,16 +2,48 @@
 namespace Microshaoft
 {
     using System;
+    using System.Collections.Generic;
     using System.Data;
     using System.Data.SqlClient;
 
     public static class SqlCommandExtensionsMethodsManager
     {
-        public static void ExecuteDataReader
+        public static IEnumerable<TEntry> ExecuteRead<TEntry>
                 (
                     this SqlCommand command
-                    , Func<int, IDataReader, bool> onReadProcessFunc
+                    , Func<int, IDataReader, TEntry> onReadProcessFunc
                 )
+        {
+            SqlConnection sqlConnection = command.Connection;
+            if (sqlConnection.State == ConnectionState.Closed)
+            {
+                sqlConnection.Open();
+            }
+            //using
+            //    (
+            IDataReader dataReader
+                            = command
+                                    .ExecuteReader
+                                            (
+                                                CommandBehavior.CloseConnection
+                                            );
+            //)
+            //{
+            return
+                dataReader
+                    .ExecuteRead<TEntry>
+                        (
+                            onReadProcessFunc
+                        );
+            //}
+
+        }
+
+        public static void ExecuteDataReader
+               (
+                   this SqlCommand command
+                   , Func<int, IDataReader, bool> onReadProcessFunc
+               )
         {
             var needBreak = false;
             SqlConnection sqlConnection = null;

@@ -14,17 +14,26 @@ namespace Microshaoft
                     , Func<int, IDataReader, T> onReadProcessFunc
                 )
         {
-            int i = 0;
-            while (target.Read())
+            try
             {
-                if (onReadProcessFunc != null)
+                int i = 0;
+                while (target.Read())
                 {
-                    yield return
-                        onReadProcessFunc(++i, target);
+                    if (onReadProcessFunc != null)
+                    {
+                        yield return
+                            onReadProcessFunc(++i, target);
+                    }
                 }
             }
-            //可能有错 由于 yield 延迟
-            target.Close();
+            finally
+            {
+                //可能有错 由于 yield 延迟
+                target.Close();
+                target.Dispose();
+            }
+
+
         }
     }
 
@@ -46,6 +55,40 @@ namespace Microshaoft
                     );
         }
 
+
+        public static IEnumerable<TEntry> GetEnumerable<TEntry>
+                (
+                    IDataReader dataReader
+                    , Func<IDataReader, TEntry> onReadProcessFunc
+                    , bool skipNull = true
+                )
+                    where TEntry : new()
+        {
+            while (dataReader.Read())
+            {
+                var x = onReadProcessFunc(dataReader);
+                if (!skipNull)
+                {
+                    yield
+                        return
+                                x;
+                }
+                else
+                {
+                    if (x != null)
+                    {
+                        yield
+                           return
+                                   x;
+                    }
+                }
+            }
+
+
+        }
+
+
+
         public static IEnumerable<TEntry> GetEnumerable<TEntry>
                         (
                             IDataReader dataReader
@@ -61,7 +104,7 @@ namespace Microshaoft
                                     (
                                         (x) =>
                                         {
-                                            attribute = 
+                                            attribute =
                                                         x
                                                             .GetCustomAttributes
                                                                 (typeof(MemberAdditionalDefinitionAttribute), true)
