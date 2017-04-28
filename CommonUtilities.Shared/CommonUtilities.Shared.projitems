@@ -69,6 +69,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ExceptionStackTrace\StackTraceHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ExtensionsMethods\ConcurrentDictionaryExtensionsMethodsManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpClientHelper\HttpClientHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\JObjectExtensionMethodsManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\DynamicJson.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JsonFileHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JsonHelper.cs" />
