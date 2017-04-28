@@ -6,19 +6,33 @@
 
     public static class JObjectExtensionMethodsManager
     {
-        private static void TravelValueProperties
+        private static void Travel
                                 (
                                     JObject rootJObject
-                                    , string rootPath
+                                    , string ancestorPath
                                     , JObject currentJObject
-                                    , Action<JObject, string, JObject, JProperty> onTraveledProcessAction = null
+                                    , Action<JObject, string, JObject, JProperty>
+                                            onTraveledJValuePropertyProcessAction = null
+                                    , Action<JObject, string, JObject, JProperty>
+                                            onTraveledJObjectPropertyProcessAction = null
+
                                 )
         {
             var jProperties = currentJObject.Properties();
-
+            var b = false;
             foreach (var jProperty in jProperties)
             {
-                var path = rootPath + "." + jProperty.Name;
+                var path = ancestorPath;
+                if
+                    (
+                        !string.IsNullOrEmpty(path)
+                        &&
+                        !string.IsNullOrWhiteSpace(path)
+                    )
+                {
+                    path += ".";
+                }
+                path += jProperty.Name;
                 if (jProperty.HasValues)
                 {
                     if
@@ -26,11 +40,23 @@
                             jProperty.Value is JValue
                         )
                     {
-                        onTraveledProcessAction?
+                        if (!b)
+                        {
+                            onTraveledJObjectPropertyProcessAction?
+                                    .Invoke
+                                        (
+                                            rootJObject
+                                            , ancestorPath
+                                            , currentJObject
+                                            , jProperty
+                                        );
+                            b = true;
+                        }
+                        onTraveledJValuePropertyProcessAction?
                                 .Invoke
                                     (
                                         rootJObject
-                                        , path
+                                        , ancestorPath
                                         , currentJObject
                                         , jProperty
                                     );
@@ -47,12 +73,13 @@
                             var jObject = jToken as JObject;
                             if (jObject != null)
                             {
-                                TravelValueProperties
+                                Travel
                                     (
                                         rootJObject
                                         , string.Format("{0}[{1}]", path, i)
                                         , jObject
-                                        , onTraveledProcessAction
+                                        , onTraveledJValuePropertyProcessAction
+                                        , onTraveledJObjectPropertyProcessAction
                                     );
                             }
                             i++;
@@ -63,12 +90,13 @@
                         var jObject = jProperty.Value as JObject;
                         if (jObject != null)
                         {
-                            TravelValueProperties
+                            Travel
                                 (
                                     rootJObject
                                     , path
                                     , jObject
-                                    , onTraveledProcessAction
+                                    , onTraveledJValuePropertyProcessAction
+                                    , onTraveledJObjectPropertyProcessAction
                                 );
                         }
                     }
@@ -77,32 +105,49 @@
         }
 
 
-        public static void TravelValueProperties
+        public static void Travel
                                 (
                                     this JObject target
-                                    , Action<JObject, string, JObject, JProperty> onTraveledProcessAction = null
+                                    , Action<JObject, string, JObject, JProperty>
+                                            onTraveledJValuePropertyProcessAction = null
+                                    , Action<JObject, string, JObject, JProperty>
+                                            onTraveledJObjectPropertyProcessAction = null
                                 )
         {
-            TravelValueProperties(target, "", target, onTraveledProcessAction);
-        }
-
-
-
-
-        public static void AddEventsListener
-                                (
-                                    this JObject target
-                                    , Action<JObject, string, JObject, PropertyChangedEventArgs, JValue, JValue>
-                                        onPropertyChangedProcessAction
-                                )
-        {
-            TravelValueProperties
+            Travel
                 (
                     target
+                    , string.Empty
+                    , target
+                    , onTraveledJValuePropertyProcessAction
+                    , onTraveledJObjectPropertyProcessAction
+                );
+        }
+
+        public static void Observe
+                                (
+                                    this JObject target
+                                    , Action
+                                        <
+                                            JObject
+                                            , string
+                                            , JObject
+                                            , PropertyChangedEventArgs
+                                            , JValue
+                                            , JValue
+                                        >
+                                            onPropertyChangedProcessAction
+                                )
+        {
+            Travel
+                (
+                    target
+                    , null
                     , (root, path, current, property) =>
                     {
                         JValue lastValue = null;
-                        current.PropertyChanging +=
+                        current
+                            .PropertyChanging +=
                                             (
                                                 (sender, args) =>
                                                 {
@@ -114,27 +159,32 @@
                                                 }
                                             );
                         JValue newValue = null;
-                        current.PropertyChanged +=
-                                (
-                                    (sender, args) =>
-                                    {
-                                        var jo = sender as JObject;
-                                        if (jo != null)
-                                        {
-                                            newValue = jo[args.PropertyName] as JValue;
-                                        }
-                                        onPropertyChangedProcessAction(root, path, current, args, lastValue, newValue);
-                                    }
-                                );
+                        current
+                            .PropertyChanged +=
+                                            (
+                                                (sender, args) =>
+                                                {
+                                                    var jo = sender as JObject;
+                                                    if (jo != null)
+                                                    {
+                                                        newValue = jo[args.PropertyName] as JValue;
+                                                    }
+                                                    onPropertyChangedProcessAction
+                                                            (
+                                                                root
+                                                                , path
+                                                                , current
+                                                                , args
+                                                                , lastValue
+                                                                , newValue
+                                                            );
+                                                }
+                                            );
                     }
                 );
-
         }
-
-
     }
 }
-
 
 
 namespace TestConsoleApp6
@@ -156,33 +206,34 @@ namespace TestConsoleApp6
 ,F4:{F1:'aa',F2:'ddd'}
 }";
 
-            json = "{Name:'asdsadas',F2:'00000',F3: null, F4:{F5:{F6:null}}}";
+            json = "{Name:'asdsadas',F2:[1,{F1:'00000'}],F3: null, F4:{F5:{F6:null}}}";
             var jObject = JObject.Parse(json);
 
-            jObject.AddEventsListener
+            jObject.Observe
                         (
-                            (x, y, z, zz, v1, v2) =>
+                            (root, ancestorPath, current, args, v1, v2) =>
                             {
-                                Console.WriteLine(zz.PropertyName);
-                                Console.WriteLine(y);
-                                Console.WriteLine(v1);
-                                Console.WriteLine(v2);
+                                Console.WriteLine("===================");
+                                Console.WriteLine
+                                            (
+                                                "{0}.{1}: ({2}) => ({3})"
+                                                , ancestorPath
+                                                , args.PropertyName
+                                                , v1
+                                                , v2
+                                            );
                                 Console.WriteLine("===================");
                             }
                         );
 
-            jObject.TravelValueProperties
-                        (
-                            (root, path, current, property) =>
-                            {
-                                Console.WriteLine(path);
-                            }
-                        );
 
-            //jObject.AddEventsListener();
 
-            //jObject["Name"] = "zzzz";
-            // jObject["F1"][0]["F1"] = "zzzz";
+            jObject["Name"] = "zzzz";
+            jObject["F4"]["F5"]["F6"] = "zzzzA";
+
+            jObject[@"F9"] = "asdsa";
+
+            jObject["F2"][1]["F1"] = "zzzzA0000";
             //jObject["F3"] = "zzzz";
 
             //Console.WriteLine(jObject["F1"][0]["F1"]);
@@ -190,9 +241,5 @@ namespace TestConsoleApp6
 
             Console.ReadLine();
         }
-
-
-
-
     }
 }
