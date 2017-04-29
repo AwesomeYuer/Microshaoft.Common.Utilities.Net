@@ -13,13 +13,19 @@
                                     , JObject currentJObject
                                     , Action<JObject, string, JObject, JProperty>
                                             onTraveledJValuePropertyProcessAction = null
-                                    , Action<JObject, string, JObject, JProperty>
+                                    , Action<JObject, string, JObject>
                                             onTraveledJObjectPropertyProcessAction = null
 
                                 )
         {
+            onTraveledJObjectPropertyProcessAction?
+                    .Invoke
+                        (
+                            rootJObject
+                            , ancestorPath
+                            , currentJObject
+                        );
             var jProperties = currentJObject.Properties();
-            var b = false;
             foreach (var jProperty in jProperties)
             {
                 var path = ancestorPath;
@@ -40,18 +46,7 @@
                             jProperty.Value is JValue
                         )
                     {
-                        if (!b)
-                        {
-                            onTraveledJObjectPropertyProcessAction?
-                                    .Invoke
-                                        (
-                                            rootJObject
-                                            , ancestorPath
-                                            , currentJObject
-                                            , jProperty
-                                        );
-                            b = true;
-                        }
+
                         onTraveledJValuePropertyProcessAction?
                                 .Invoke
                                     (
@@ -110,7 +105,7 @@
                                     this JObject target
                                     , Action<JObject, string, JObject, JProperty>
                                             onTraveledJValuePropertyProcessAction = null
-                                    , Action<JObject, string, JObject, JProperty>
+                                    , Action<JObject, string, JObject>
                                             onTraveledJObjectPropertyProcessAction = null
                                 )
         {
@@ -143,7 +138,7 @@
                 (
                     target
                     , null
-                    , (root, path, current, property) =>
+                    , (root, path, current) =>
                     {
                         JValue lastValue = null;
                         current
