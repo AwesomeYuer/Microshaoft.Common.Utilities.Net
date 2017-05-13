@@ -1,10 +1,11 @@
-#if !NETSTANDARD1_4
+
 namespace Microshaoft
 {
     using System;
     using System.Collections.Generic;
     using System.Data;
     using System.Data.SqlClient;
+    using System.Diagnostics;
 
     public static class SqlCommandExtensionsMethodsManager
     {
@@ -150,12 +151,14 @@ namespace Microshaoft
             }
             while (!isLast);
         }
+        //[Conditional("NETFRAMEWORK4_X")]
+#if NETFRAMEWORK4_X
         public static void ExecuteDataTablePager
-                (
-                    this SqlCommand command
-                    , int pageFetchRows
-                    , Func<int, DataTable, bool> onPageProcessFunc
-                )
+        (
+            this SqlCommand command
+            , int pageFetchRows
+            , Func<int, DataTable, bool> onPageProcessFunc
+        )
         {
             SqlConnection connection = null;
             try
@@ -213,8 +216,9 @@ namespace Microshaoft
             {
                 //connection.Close();
             }
-        }
+        } 
+#endif
     }
 }
 
-#endif
+

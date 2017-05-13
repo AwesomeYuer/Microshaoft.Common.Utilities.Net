@@ -15,11 +15,15 @@
             MemoryStream ms = new MemoryStream();
             GZipStream stream = new GZipStream(ms, CompressionMode.Compress, true);
             stream.Write(DATA, 0, DATA.Length);
+#if NETFRAMEWORK4_X
             stream.Close();
+#endif
             stream.Dispose();
             stream = null;
             byte[] buffer = StreamDataHelper.ReadDataToBytes(ms);
+#if NETFRAMEWORK4_X
             ms.Close();
+#endif
             ms.Dispose();
             ms = null;
             return buffer;
@@ -30,10 +34,14 @@
             MemoryStream ms = new MemoryStream(data);
             GZipStream stream = new GZipStream(ms, CompressionMode.Decompress);
             byte[] buffer = StreamDataHelper.ReadDataToBytes(stream);
+#if NETFRAMEWORK4_X
             ms.Close();
+#endif
             ms.Dispose();
             ms = null;
+#if NETFRAMEWORK4_X
             stream.Close();
+#endif
             stream.Dispose();
             stream = null;
             return buffer;
@@ -45,7 +53,9 @@
             MemoryStream ms = new MemoryStream();
             GZipStream stream = new GZipStream(ms, CompressionMode.Compress, true);
             stream.Write(buffer, 0, buffer.Length);
+#if NETFRAMEWORK4_X
             stream.Close();
+#endif
             stream.Dispose();
             stream = null;
             if (ms.CanSeek)
@@ -71,11 +81,15 @@
             MemoryStream ms = new MemoryStream();
             DeflateStream stream = new DeflateStream(ms, CompressionMode.Compress, true);
             stream.Write(DATA, 0, DATA.Length);
+#if NETFRAMEWORK4_X
             stream.Close();
+#endif
             stream.Dispose();
             stream = null;
             byte[] buffer = StreamDataHelper.ReadDataToBytes(ms);
+#if NETFRAMEWORK4_X
             ms.Close();
+#endif
             ms.Dispose();
             ms = null;
             return buffer;
@@ -85,10 +99,14 @@
             MemoryStream ms = new MemoryStream(data);
             DeflateStream stream = new DeflateStream(ms, CompressionMode.Decompress);
             byte[] buffer = StreamDataHelper.ReadDataToBytes(stream);
+#if NETFRAMEWORK4_X
             ms.Close();
+#endif
             ms.Dispose();
             ms = null;
+#if NETFRAMEWORK4_X
             stream.Close();
+#endif
             stream.Dispose();
             stream = null;
             return buffer;
@@ -99,7 +117,9 @@
             MemoryStream ms = new MemoryStream();
             DeflateStream stream = new DeflateStream(ms, CompressionMode.Compress, true);
             stream.Write(buffer, 0, buffer.Length);
+#if NETFRAMEWORK4_X
             stream.Close();
+#endif
             stream.Dispose();
             stream = null;
             if (ms.CanSeek)
@@ -142,7 +162,7 @@ namespace TestConsoleApplication
             // TODO: 在此处添加代码以启动应用程序
             //
             Console.WriteLine("Hello World");
-            Console.WriteLine(Environment.Version.ToString());
+            //Console.WriteLine(Environment.Version.ToString());
             string s = "阿斯个贷哈根室电话个撒谎干大事个贷伽师将阿斯个贷哈根室电话个撒谎干大事个贷伽师将事个贷伽师将事个贷伽师将事个贷伽师将事个贷伽师将事个贷伽师将事个贷伽师将事个贷伽师将";
             byte[] buffer = Encoding.UTF8.GetBytes(s);
             byte[] bytes;

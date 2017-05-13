@@ -60,16 +60,16 @@
                                             , e.ToString()
                                         );
                     Console.Error.WriteLine(log);
-                    EventLogHelper
-                        .WriteEventLogEntry
-                            (
-                                ""
-                                , 1001
-                                , log
-                                , 101
-                                , EventLogEntryType.Error
+                    //EventLogHelper
+                    //    .WriteEventLogEntry
+                    //        (
+                    //            ""
+                    //            , 1001
+                    //            , log
+                    //            , 101
+                    //            , EventLogEntryType.Error
                                 
-                            );
+                    //        );
                     r = false;
                 }
                 if (r)
@@ -229,15 +229,21 @@ namespace Microshaoft
             string s = string.Empty;
             var chars = Path.GetInvalidPathChars();
             chars = chars.Union(Path.GetInvalidFileNameChars()).ToArray();
-            Array
-                .ForEach
-                    (
-                        chars
-                        , (x) =>
-                        {
-                            s = s.Replace(x.ToString(), replacement);
-                        }
-                    );
+            //Array
+            //    .ForEach
+            //        (
+            //            chars
+            //            , (x) =>
+            //            {
+            //                s = s.Replace(x.ToString(), replacement);
+            //            }
+            //        );
+
+            foreach (var x in chars)
+            {
+                s = s.Replace(x.ToString(), replacement);
+            }
+
             return s;
         }
         public static string GetNewPath(string oldDirectoryPath, string newDirectoryPath, string originalFileFullPath)

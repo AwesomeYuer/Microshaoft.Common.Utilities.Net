@@ -80,7 +80,9 @@
             byte[] bytes = new byte[l];
             ms.Position = 0;
             ms.Read(bytes, 0, (int)l);
+#if NETFRAMEWORK4_X
             ms.Close();
+#endif
             ms.Dispose();
             ms = null;
             if (position >= 0)

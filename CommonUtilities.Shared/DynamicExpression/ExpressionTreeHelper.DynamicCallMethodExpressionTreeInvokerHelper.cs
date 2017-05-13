@@ -52,20 +52,33 @@
             var parametersInfos = constructorInfo.GetParameters();
             var constructorParametersExpressions = new List<ParameterExpression>();
             int i = 0;
-            Array.ForEach
-                    (
-                        parametersInfos
-                        , (x) =>
-                        {
-                            var parameterExpression = Expression.Parameter
-                                                                    (
-                                                                        x.ParameterType
-                                                                        , "p" + i.ToString()
-                                                                    );
-                            constructorParametersExpressions.Add(parameterExpression);
-                            i++;
-                        }
-                    );
+            //Array.ForEach
+            //        (
+            //            parametersInfos
+            //            , (x) =>
+            //            {
+            //                var parameterExpression = Expression.Parameter
+            //                                                        (
+            //                                                            x.ParameterType
+            //                                                            , "p" + i.ToString()
+            //                                                        );
+            //                constructorParametersExpressions.Add(parameterExpression);
+            //                i++;
+            //            }
+            //        );
+
+            foreach (var x in parametersInfos)
+            {
+                var parameterExpression = Expression.Parameter
+                                                        (
+                                                            x.ParameterType
+                                                            , "p" + i.ToString()
+                                                        );
+                constructorParametersExpressions.Add(parameterExpression);
+                i++;
+            }
+
+
             var newExpression = Expression.New(constructorInfo, constructorParametersExpressions);
             var inner = Expression.Lambda(newExpression, constructorParametersExpressions);
             var args = Expression.Parameter(typeof(object[]), "args");
@@ -255,30 +268,50 @@
             var parametersParameterExpressionList = new List<Expression>();
             int i = 0;
             var parametersInfos = methodInfo.GetParameters();
-            Array
-                .ForEach
-                    (
-                        parametersInfos
-                        , (x) =>
-                        {
-                            BinaryExpression valueObject
+            foreach (var x in parametersInfos)
+            {
+                BinaryExpression valueObject
                                                 = Expression
                                                         .ArrayIndex
                                                             (
                                                                 argumentsParameterExpression
                                                                 , Expression.Constant(i)
                                                             );
-                            UnaryExpression valueCast
-                                                = Expression
-                                                        .Convert
-                                                            (
-                                                                valueObject
-                                                                , x.ParameterType
-                                                            );
-                            parametersParameterExpressionList.Add(valueCast);
-                            i++;
-                        }
-                    );
+                UnaryExpression valueCast
+                                    = Expression
+                                            .Convert
+                                                (
+                                                    valueObject
+                                                    , x.ParameterType
+                                                );
+                parametersParameterExpressionList.Add(valueCast);
+                i++;
+            }
+
+            //Array
+            //    .ForEach
+            //        (
+            //            parametersInfos
+            //            , (x) =>
+            //            {
+            //                BinaryExpression valueObject
+            //                                    = Expression
+            //                                            .ArrayIndex
+            //                                                (
+            //                                                    argumentsParameterExpression
+            //                                                    , Expression.Constant(i)
+            //                                                );
+            //                UnaryExpression valueCast
+            //                                    = Expression
+            //                                            .Convert
+            //                                                (
+            //                                                    valueObject
+            //                                                    , x.ParameterType
+            //                                                );
+            //                parametersParameterExpressionList.Add(valueCast);
+            //                i++;
+            //            }
+            //        );
             methodCallExpression = Expression
                                             .Call
                                                 (
