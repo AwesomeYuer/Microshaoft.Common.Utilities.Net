@@ -8,44 +8,40 @@
 
     public static class JObjectExtensionMethodsManager
     {
-        public static void FreezeValueProperty(this JObject target, string propertyName, int afterChangedTimes = 0)
+        public static void FreezeValueProperty
+                                    (
+                                        this JObject target
+                                        , string propertyName
+                                        , int afterChangedTimes = 0
+                                    )
         {
             int changed = 0;
-            target.PropertyChanged +=
-                (
-                    (x, y) =>
-                    {
-                        if (y.PropertyName == propertyName)
-                        {
-                            Interlocked.Increment(ref changed);
-                        }
-                    }
-                );
-            target.PropertyChanging +=
-                (
-                    (x, y) =>
-                    {
-                        if (y.PropertyName == propertyName)
-                        {
-                            if (changed >= afterChangedTimes)
+            target
+                .PropertyChanged +=
+                            (
+                                (x, y) =>
+                                {
+                                    if (y.PropertyName == propertyName)
+                                    {
+                                        Interlocked.Increment(ref changed);
+                                    }
+                                }
+                            );
+            target
+                .PropertyChanging +=
+                        (
+                            (x, y) =>
                             {
-                                throw new Exception();
+                                if (y.PropertyName == propertyName)
+                                {
+                                    if (changed >= afterChangedTimes)
+                                    {
+                                        throw new Exception();
+                                    }
+                                }
                             }
-                        }
-                    }
-                );
-
-
-
+                        );
         }
-
-
-
-
-
-
-
-
         private static void Travel
                                 (
                                     JObject rootJObject
@@ -55,7 +51,6 @@
                                             onTraveledJValuePropertyProcessAction = null
                                     , Action<JObject, string, JObject>
                                             onTraveledJObjectPropertyProcessAction = null
-
                                 )
         {
             onTraveledJObjectPropertyProcessAction?
@@ -86,7 +81,6 @@
                             jProperty.Value is JValue
                         )
                     {
-
                         onTraveledJValuePropertyProcessAction?
                                 .Invoke
                                     (
@@ -138,8 +132,6 @@
                 }
             }
         }
-
-
         public static void Travel
                                 (
                                     this JObject target
@@ -158,20 +150,17 @@
                     , onTraveledJObjectPropertyProcessAction
                 );
         }
-
-
-
-        public static void Set
-                                (
-                                    this JObject target
-                                    , string path
-                                    , JValue value
-                                    , Action
-                                        <
-                                            JObject
-                                        >
-                                            onPropertyChangedProcessAction
-                                )
+        public static void SetPropertyValue
+                            (
+                                this JObject target
+                                , string path
+                                , JValue value
+                                , Action
+                                    <
+                                        JObject
+                                    >
+                                        onPropertyChangedProcessAction
+                            )
         {
             var arr = path.Split('.');
             JToken jToken = target[arr[0]];
@@ -222,7 +211,6 @@
                         target.Annotation<Dictionary<string, JObject>>().Add(args.PropertyName, jDelegate);
                     }
                 }
-
             );
 
             Travel
@@ -400,7 +388,7 @@ namespace TestConsoleApp6
             //jObject["F2"][1]["F90"] = JObject.Parse("{'a':1,'b':2}");
             //jObject["F3"] = "zzzz";
 
-            jObject.Set("F4.F5.F6.F7", new JValue("666"), null);
+            jObject.SetPropertyValue("F4.F5.F6.F7", new JValue("666"), null);
 
             Console.WriteLine(
                     jObject.ToString()
