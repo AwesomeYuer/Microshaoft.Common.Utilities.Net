@@ -4,12 +4,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{01940F78-F528-4C0E-8F1A-D14C7CF26BC1}</ProjectGuid>
+    <ProjectGuid>{8DECA320-739F-474B-BD5F-71C09EFC1EC2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Microshaoft</RootNamespace>
-    <AssemblyName>Microshaoft.ConcurrentAsyncQueue.Net.4.6.x</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <AssemblyName>Microshaoft.EasyPerformanceCountersHelper.Net.4.7.x</AssemblyName>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\NET46x\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETFRAMEWORK4_X</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -31,25 +31,32 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\..\Solution.All.Projects.Common.AssemblyInfo.cs">
+      <Link>Properties\Solution.All.Projects.Common.AssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="CommonUtilities.NET4.6.x.Lite.csproj">
-      <Project>{b509d9ba-92fa-45f6-877c-adc80f14f785}</Project>
-      <Name>CommonUtilities.NET4.6.x.Lite</Name>
-    </ProjectReference>
-    <ProjectReference Include="EasyPerformanceCountersHelper.NET4.6.x.csproj">
-      <Project>{4cd2bad2-478f-4294-a210-8cb601c04f55}</Project>
-      <Name>EasyPerformanceCountersHelper.NET4.6.x</Name>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\CommonUtilities.Lite\CommonUtilities.Lite.NET.Framework.4.7.x\CommonUtilities.Lite.NET.Framework.4.7.x.csproj">
+      <Project>{1b65919e-10ef-4fce-9fec-de547a62fc15}</Project>
+      <Name>CommonUtilities.Lite.NET.Framework.4.7.x</Name>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="..\..\CommonUtilities.Shared\ConcurrentAsyncQueue.Shared.projitems" Label="Shared" />
+  <Import Project="..\..\..\CommonUtilities.Shared\EasyPerformanceCountersHelper.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

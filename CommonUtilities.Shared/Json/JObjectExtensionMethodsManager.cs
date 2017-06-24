@@ -278,9 +278,9 @@ namespace Test
     using System.Dynamic;
     using System.Linq.Expressions;
     using Microshaoft;
-    class Program
+    class Program12
     {
-        static void Main(string[] args)
+        static void Main1(string[] args)
         {
             var root = new JTree();
 

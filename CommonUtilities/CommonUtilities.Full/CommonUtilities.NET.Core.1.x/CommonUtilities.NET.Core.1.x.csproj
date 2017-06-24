@@ -4,6 +4,14 @@
     <TargetFramework>netcoreapp1.1</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\bin\Release\netcoreapp1.1\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\bin\Debug\netcoreapp1.1\</OutputPath>
+  </PropertyGroup>
+
   <Import Project="..\..\..\CommonUtilities.Shared\CommonUtilities.NET.Standard.Shared.projitems" Label="Shared" />
 
   <ItemGroup>
