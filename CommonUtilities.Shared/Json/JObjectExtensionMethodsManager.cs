@@ -8,13 +8,19 @@
 
     public static class JObjectExtensionMethodsManager
     {
-        public static void FreezeValueProperty
+        public static bool FreezeValueProperty
                                     (
                                         this JObject target
                                         , string propertyName
                                         , int afterChangedTimes = 0
                                     )
         {
+            var r = false;
+            //var property = target[propertyName];
+            //if (property != null)
+            //{
+            //if (property is JValue)
+            //{
             int changed = 0;
             target
                 .PropertyChanged +=
@@ -36,11 +42,21 @@
                                 {
                                     if (changed >= afterChangedTimes)
                                     {
-                                        throw new Exception();
+                                        throw new Exception
+                                                    (
+                                                        $"Property {propertyName}'s value is freezed"
+                                                    );
                                     }
                                 }
                             }
                         );
+            r = true;
+            //}
+
+            //}
+
+
+            return r;
         }
         private static void Travel
                                 (
@@ -268,24 +284,32 @@ namespace Test
     using Microshaoft;
     class Program12
     {
-        static void Main1(string[] args)
+        static void Main(string[] args)
         {
             var root = new JTree();
 
             root.Teller = new Teller();
             root.Teller.Name = "2222";
+
+
             root.Teller.TellerNo = "11111";
             root.Teller.TellerNo = "222";
+
+            root.Teller.Other = "asdasdsa";
+
+
+
+
             try
             {
                 root.Teller.TellerNo = "333";
             }
-            catch
+            catch (Exception e)
             {
-
+                Console.WriteLine(e.ToString());
             }
             root.Teller = new Teller();
-
+            root.Teller.TellerNo = "zzzz";
             Console.WriteLine(root.Teller.TellerNo);
             Console.WriteLine(root.ToString());
             Console.Read();
