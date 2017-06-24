@@ -209,6 +209,7 @@
     <None Include="Newtonsoft.Json.10.0.3\LICENSE.md" />
     <None Include="Newtonsoft.Json.10.0.3\Newtonsoft.Json.10.0.3.nupkg" />
     <None Include="Newtonsoft.Json.10.0.3\tools\install.ps1" />
+    <None Include="NuGet.CommandLine.4.1.0\NuGet.CommandLine.4.1.0.nupkg" />
     <None Include="Owin.1.0\Owin.1.0.nupkg" />
     <None Include="Respond.1.4.2\Respond.1.4.2.nupkg" />
     <None Include="WebGrease.1.5.2\WebGrease.1.5.2.nupkg" />
@@ -422,6 +423,7 @@
     <Content Include="Newtonsoft.Json.10.0.3\lib\portable-net40+sl5+win8+wp8+wpa81\Newtonsoft.Json.xml" />
     <Content Include="Newtonsoft.Json.10.0.3\lib\portable-net45+win8+wp8+wpa81\Newtonsoft.Json.dll" />
     <Content Include="Newtonsoft.Json.10.0.3\lib\portable-net45+win8+wp8+wpa81\Newtonsoft.Json.xml" />
+    <Content Include="NuGet.CommandLine.4.1.0\tools\NuGet.exe" />
     <Content Include="Owin.1.0\lib\net40\Owin.dll" />
     <Content Include="Respond.1.4.2\content\Scripts\respond.js" />
     <Content Include="Respond.1.4.2\content\Scripts\respond.matchmedia.addListener.js" />
