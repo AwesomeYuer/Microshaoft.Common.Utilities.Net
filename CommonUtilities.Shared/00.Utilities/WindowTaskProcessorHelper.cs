@@ -6,7 +6,7 @@
     using System.Windows;
     using System.Windows.Threading;
 
-    public static class WindowTaskProcessorHelper
+    public static class WindowUITaskProcessorHelper
     {
         public static async Task WindowUITaskRunAsync
                            (
