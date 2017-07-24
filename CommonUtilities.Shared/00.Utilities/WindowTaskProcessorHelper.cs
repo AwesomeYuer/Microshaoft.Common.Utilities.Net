@@ -4,12 +4,14 @@
     using System.Threading;
     using System.Threading.Tasks;
     using System.Windows;
+    using System.Windows.Threading;
+
     public static class WindowTaskProcessorHelper
     {
         public static async Task WindowUITaskRunAsync
                            (
                                Func<Window> onCreateProgressWindowProcessFunc
-                               , Action<Window> taskRunWindowProcessAction
+                               , Action<Window> onWindowUITaskProcessAction
                                , Window ownerWindow
                            )
 
@@ -24,7 +26,7 @@
                                         progressWindow = onCreateProgressWindowProcessFunc();
                                         autoResetEvent.Set();
                                         progressWindow.Show();
-                                        System.Windows.Threading.Dispatcher.Run();
+                                        Dispatcher.Run();
                                     }
                                 );
             thread.TrySetApartmentState(ApartmentState.STA);
@@ -35,7 +37,7 @@
                         (
                             () =>
                             {
-                                taskRunWindowProcessAction(ownerWindow);
+                                onWindowUITaskProcessAction(ownerWindow);
                                 progressWindow
                                     .Dispatcher
                                     .Invoke
