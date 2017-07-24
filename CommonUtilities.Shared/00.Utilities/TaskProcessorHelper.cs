@@ -83,7 +83,7 @@ namespace Test2
         private void button1_Click(object sender, EventArgs e)
         {
             var result = false;
-            var r = TaskProcesserHelper
+            var r = TaskProcessorHelper
                             .ProcessWaitingShowDialog
                                     (
                                         this
@@ -120,7 +120,7 @@ namespace Microshaoft
     using System.Threading;
     using System.Threading.Tasks;
     using System.Windows.Forms;
-    public static class TaskProcesserHelper
+    public static class TaskProcessorHelper
     {
         public static int ProcessWaitingShowDialog
                     (
