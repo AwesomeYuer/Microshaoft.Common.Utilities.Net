@@ -1,6 +1,4 @@
-﻿#if !NETSTANDARD1_4
-
-namespace Microshaoft
+﻿namespace Microshaoft
 {
     using System;
     using System.IO;
@@ -646,4 +644,3 @@ namespace Microshaoft
         }
     }
 }
-#endif

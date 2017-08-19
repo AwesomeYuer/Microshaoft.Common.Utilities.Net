@@ -1,4 +1,4 @@
-﻿#if !NETSTANDARD1_4
+﻿#if NETFRAMEWORK4_X
 namespace Microshaoft
 {
     using System;
@@ -248,7 +248,7 @@ namespace Microshaoft
                                 , null
                                 , () =>
                                 {
-                                    #region Try Process
+#region Try Process
                                     if (Sender.OnDequeueThreadStart != null)
                                     {
                                         l = Interlocked.Read(ref Sender._concurrentDequeueThreadsCount);
@@ -269,14 +269,14 @@ namespace Microshaoft
                                     }
                                     while (true)
                                     {
-                                        #region while true loop
+#region while true loop
                                         if (Break)
                                         {
                                             break;
                                         }
                                         while (!queue.IsEmpty)
                                         {
-                                            #region while queue.IsEmpty loop
+#region while queue.IsEmpty loop
                                             if (Break)
                                             {
                                                 break;
@@ -369,9 +369,9 @@ namespace Microshaoft
                                                     stopwatchEnqueue = null;
                                                 }
                                             }
-                                            #endregion while queue.IsEmpty loop
+#endregion while queue.IsEmpty loop
                                         }
-                                        #region wait
+#region wait
 
                                         Sender
                                             ._waitingDequeueThreadsProcessorsStack
@@ -385,24 +385,24 @@ namespace Microshaoft
                                         {
 
                                         }
-                                        #endregion wait
-                                        #endregion while true loop
+#endregion wait
+#endregion while true loop
                                     }
-                                    #endregion
+#endregion
                                 }
                                 , (x, y, z) =>			//catch
                                 {
-                                    #region Catch Process
+#region Catch Process
                                     if (Sender.OnCaughtException != null)
                                     {
                                         reThrowException = Sender.OnCaughtException(Sender, x, y, z);
                                     }
                                     return reThrowException;
-                                    #endregion
+#endregion
                                 }
                                 , (x, y, z, w) =>		//finally
                                 {
-                                    #region Finally Process
+#region Finally Process
                                     l = Interlocked.Decrement(ref Sender._concurrentDequeueThreadsCount);
                                     if (l < 0)
                                     {
@@ -436,7 +436,7 @@ namespace Microshaoft
                                             .StartIncreaseDequeueProcessThreads(1);
                                     }
                                     Break = false;
-                                    #endregion
+#endregion
                                 }
                                 , //decrementCountersAfterCountPerformanceInThread
                                     qpcc.DecrementCountersAfterCountPerformanceInThread

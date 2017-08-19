@@ -1,4 +1,5 @@
-#if !NETSTANDARD1_4
+#if NETFRAMEWORK4_X
+
 namespace Microshaoft
 {
     using Newtonsoft.Json.Linq;
@@ -321,7 +322,7 @@ namespace Microshaoft
                                         _timerCounters[0].Item2 = stopwatchEnqueue;
                                         _timerCounters[1].Item2 = stopwatchDequeue;
 
-                                        #region while queue.IsEmpty loop
+#region while queue.IsEmpty loop
                                         var reThrowException = false;
                                         JToken item = null;
                                         bool needAdd = false; 
@@ -371,7 +372,7 @@ namespace Microshaoft
                                                             , null
                                                             , qpcc.IncrementCountersAfterCountPerformanceForDequeue
                                                         );
-                                        #endregion while queue.IsEmpty loop
+#endregion while queue.IsEmpty loop
 
                                         //池化
 

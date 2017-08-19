@@ -1,3 +1,4 @@
+
 // The MIT License (MIT)
 // 
 // Copyright (c) 2015 Microsoft
@@ -19,7 +20,8 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#if !NETSTANDARD1_4
+#if NETFRAMEWORK4_X
+
 namespace Microsoft.Diagnostics.Tracing.Logging.Reader
 {
     using System;
@@ -31,7 +33,7 @@ namespace Microsoft.Diagnostics.Tracing.Logging.Reader
     /// </summary>
     public sealed class ETWFileProcessor : ETWProcessor
     {
-        #region Public
+#region Public
         /// <summary>
         /// Constructor with no files configured.
         /// </summary>
@@ -135,9 +137,9 @@ namespace Microsoft.Diagnostics.Tracing.Logging.Reader
         public delegate void BuffersLostHandler(string sessionName, long buffersLost);
 
         public event BuffersLostHandler BuffersLost;
-        #endregion
+#endregion
 
-        #region Private
+#region Private
         private void ReadFile(string filename)
         {
             this.CurrentSessionName = filename;
@@ -173,7 +175,7 @@ namespace Microsoft.Diagnostics.Tracing.Logging.Reader
         }
 
         private ICollection<string> filenames;
-        #endregion
+#endregion
     }
 }
 #endif

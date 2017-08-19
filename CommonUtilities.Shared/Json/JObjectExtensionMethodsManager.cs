@@ -1,4 +1,6 @@
-﻿namespace Microshaoft
+﻿#if NETFRAMEWORK4_X
+
+namespace Microshaoft
 {
     using Newtonsoft.Json.Linq;
     using System;
@@ -423,3 +425,4 @@ namespace TestConsoleApp6
         }
     }
 }
+#endif

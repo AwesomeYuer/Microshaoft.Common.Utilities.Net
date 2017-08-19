@@ -82,9 +82,8 @@ namespace Microshaoft
                 sw.WriteLine(content);
                 sw.WriteLine("\nEnd;================================================");
                 sw.Flush();
-#if NETFRAMEWORK4_X
+
                 sw.Close();
-#endif
             }
         }
         public static void WriteLog

@@ -1,5 +1,4 @@
-﻿#if !NETSTANDARD1_4
-namespace Microshaoft
+﻿namespace Microshaoft
 {
     using System;
     using System.Collections.Concurrent;
@@ -53,4 +52,3 @@ namespace Microshaoft
         }
     }
 }
-#endif

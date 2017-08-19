@@ -1,4 +1,4 @@
-#if !NETSTANDARD1_4
+#if NETFRAMEWORK4_X
 // WebApi.MVC.CountPerformanceActionFilter.cs
 namespace Microshaoft.Web
 {
@@ -57,7 +57,7 @@ namespace Microshaoft.Web
 
         public override void OnActionExecuting(HttpActionContext actionContext)
         {
-            #region Request Log
+#region Request Log
             var enableDebugLog = false;
             if (GetEnableDebugLogProcessFunc != null)
             {
@@ -162,13 +162,13 @@ namespace Microshaoft.Web
                             .Request
                     );
             }
-            #endregion
+#endregion
         }
 
 
         public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
         {
-            #region Response Log
+#region Response Log
             var enableDebugLog = false;
             if (GetEnableDebugLogProcessFunc != null)
             {
@@ -212,7 +212,7 @@ namespace Microshaoft.Web
                                 .Response
                     );
             }
-            #endregion
+#endregion
         }
 
         private void LogRequestMessage

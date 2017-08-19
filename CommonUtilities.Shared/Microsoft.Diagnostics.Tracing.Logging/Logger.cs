@@ -1,4 +1,5 @@
-#if !NETSTANDARD1_4
+#if NETFRAMEWORK4_X
+
 // The MIT License (MIT)
 // 
 // Copyright (c) 2015 Microsoft
@@ -173,7 +174,7 @@ namespace Microsoft.Diagnostics.Tracing.Logging
         void AddRegexFilter(string pattern);
     }
 
-    #region Formatters
+#region Formatters
     [Flags]
     public enum TextLogFormatOptions
     {
@@ -358,19 +359,19 @@ namespace Microsoft.Diagnostics.Tracing.Logging
             return this.builder.ToString();
         }
     }
-    #endregion Formatters
+#endregion Formatters
 
-    #region Loggers
+#region Loggers
     /// <summary>
     /// Base class which handles common work to safely dispatch individual events for all EventListener-based classes.
     /// </summary>
     public abstract class EventListenerDispatcher : EventListener, IEventLogger
     {
-        #region Private
+#region Private
         private volatile bool disabled;
-        #endregion
+#endregion
 
-        #region Public
+#region Public
         /// <summary>
         /// Whether this logger has been disabled (and should stop posting/writing new data)
         /// </summary>
@@ -391,9 +392,9 @@ namespace Microsoft.Diagnostics.Tracing.Logging
         /// <see cref="Guid.Empty">Guid.Empty</see> to disable activity ID filtering.
         /// </summary>
         public Guid FilterActivityID { get; set; }
-        #endregion
+#endregion
 
-        #region Protected
+#region Protected
         protected EventListenerDispatcher()
         {
             this.Filters = new List<Regex>();
@@ -407,9 +408,9 @@ namespace Microsoft.Diagnostics.Tracing.Logging
         /// Regular expression filters for output.
         /// </summary>
         protected List<Regex> Filters { get; }
-        #endregion
+#endregion
 
-        #region EventListener
+#region EventListener
         /// <summary>
         /// Constructs an <see cref="ETWEvent"/> object from eventData and calls the overloadable Write method
         /// with the data.
@@ -466,9 +467,9 @@ namespace Microsoft.Diagnostics.Tracing.Logging
         /// </summary>
         /// <param name="ev"></param>
         public abstract void Write(ETWEvent ev);
-        #endregion
+#endregion
 
-        #region IEventLogger
+#region IEventLogger
         public void SubscribeToEvents(EventProviderSubscription subscription)
         {
             if (subscription == null)
@@ -549,9 +550,9 @@ namespace Microsoft.Diagnostics.Tracing.Logging
             get { throw new NotSupportedException("This is not a file-backed logger"); }
             set { throw new NotSupportedException("This is not a file-backed logger"); }
         }
-        #endregion
+#endregion
 
-        #region IDisposable
+#region IDisposable
         public override void Dispose()
         {
             lock (this.WriterLock)
@@ -563,7 +564,7 @@ namespace Microsoft.Diagnostics.Tracing.Logging
         }
 
         protected abstract void Dispose(bool disposing);
-        #endregion
+#endregion
     }
 
     /// <summary>
@@ -578,12 +579,12 @@ namespace Microsoft.Diagnostics.Tracing.Logging
     {
         private readonly EventStringFormatter formatter = new EventStringFormatter();
 
-        #region Protected
+#region Protected
         /// <summary>
         /// The TextWriter object used to emit logged data
         /// </summary>
         protected TextWriter Writer { get; set; }
-        #endregion
+#endregion
 
         /// <summary>
         /// Expose formatting options to the consumer.
@@ -631,7 +632,7 @@ namespace Microsoft.Diagnostics.Tracing.Logging
             }
         }
 
-        #region IDisposable
+#region IDisposable
         [SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly",
             Justification = "This code ends up cleaner than copying the Dispose() method to inheritors"),
          SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times",
@@ -647,20 +648,20 @@ namespace Microsoft.Diagnostics.Tracing.Logging
             }
             GC.SuppressFinalize(this);
         }
-        #endregion
+#endregion
     }
 
     internal sealed class ConsoleLogger : BaseTextLogger
     {
-        #region Public
+#region Public
         public ConsoleLogger()
         {
             this.Writer = Console.Out;
             InternalLogger.Write.LoggerDestinationOpened(this.GetType().ToString(), LogManager.ConsoleLoggerName);
         }
-        #endregion
+#endregion
 
-        #region IDisposable
+#region IDisposable
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -669,7 +670,7 @@ namespace Microsoft.Diagnostics.Tracing.Logging
                 InternalLogger.Write.LoggerDestinationClosed(this.GetType().ToString(), LogManager.ConsoleLoggerName);
             }
         }
-        #endregion
+#endregion
     }
 
     /// <summary>
@@ -680,7 +681,7 @@ namespace Microsoft.Diagnostics.Tracing.Logging
     /// </remarks>
     public sealed class MemoryLogger : BaseTextLogger
     {
-        #region IDisposable
+#region IDisposable
         protected override void Dispose(bool disposing)
         {
             if (disposing && this.Stream != null)
@@ -690,9 +691,9 @@ namespace Microsoft.Diagnostics.Tracing.Logging
                 InternalLogger.Write.LoggerDestinationClosed(this.GetType().ToString(), ":memory:");
             }
         }
-        #endregion
+#endregion
 
-        #region Public
+#region Public
         /// <summary>
         /// Construct a new in-memory logger.
         /// </summary>
@@ -712,20 +713,20 @@ namespace Microsoft.Diagnostics.Tracing.Logging
         /// property to true.
         /// </remarks>
         public MemoryStream Stream { get; private set; }
-        #endregion
+#endregion
     }
 
     internal sealed class TextFileLogger : BaseTextLogger
     {
-        #region Public
+#region Public
         public TextFileLogger(string filename, int bufferSizeMB)
         {
             this.outputBufferSize = bufferSizeMB * 1024 * 1024;
             this.Open(filename);
         }
-        #endregion
+#endregion
 
-        #region IEventLogger
+#region IEventLogger
         public override string Filename
         {
             get
@@ -743,9 +744,9 @@ namespace Microsoft.Diagnostics.Tracing.Logging
                 }
             }
         }
-        #endregion
+#endregion
 
-        #region IDisposable
+#region IDisposable
         protected override void Dispose(bool disposing)
         {
             if (disposing && this.outputFile != null)
@@ -753,9 +754,9 @@ namespace Microsoft.Diagnostics.Tracing.Logging
                 this.Close();
             }
         }
-        #endregion
+#endregion
 
-        #region Private
+#region Private
         private readonly int outputBufferSize;
         private FileStream outputFile;
 
@@ -797,21 +798,21 @@ namespace Microsoft.Diagnostics.Tracing.Logging
                 InternalLogger.Write.LoggerDestinationClosed(this.GetType().ToString(), filename);
             }
         }
-        #endregion
+#endregion
     }
 
     internal sealed class ETLFileLogger : IEventLogger, IDisposable
     {
-        #region IDisposable
+#region IDisposable
         public void Dispose()
         {
             string filename = this.session.FileName;
             this.session.Dispose();
             InternalLogger.Write.LoggerDestinationClosed(this.GetType().ToString(), filename);
         }
-        #endregion
+#endregion
 
-        #region Public
+#region Public
         public ETLFileLogger(string sessionName, string filename, int bufferSizeMB)
         {
             string fullSessionName = SessionPrefix + sessionName;
@@ -868,9 +869,9 @@ namespace Microsoft.Diagnostics.Tracing.Logging
                 throw new OperationCanceledException("could not tear down existing trace session");
             }
         }
-        #endregion
+#endregion
 
-        #region Private
+#region Private
         internal const string SessionPrefix = "Microsoft.Diagnostics.Tracing.Logging.";
         private const int MaxRenameTries = 3;
         private const int RenameRetryWaitMS = 500;
@@ -942,9 +943,9 @@ namespace Microsoft.Diagnostics.Tracing.Logging
 
             return (open ? session != null : session == null);
         }
-        #endregion
+#endregion
 
-        #region IEventLogger
+#region IEventLogger
         public void SubscribeToEvents(EventProviderSubscription subscription)
         {
             if (subscription == null)
@@ -1087,7 +1088,7 @@ namespace Microsoft.Diagnostics.Tracing.Logging
                 }
             }
         }
-        #endregion
+#endregion
     }
 
     /// <summary>
@@ -1095,7 +1096,7 @@ namespace Microsoft.Diagnostics.Tracing.Logging
     /// </summary>
     internal sealed class FileBackedLogger : IDisposable
     {
-        #region Public
+#region Public
         /// <summary>The default filename template for rotated log files</summary>
         /// <remarks>
         /// This yields a string like "foo_20110623T154000Z--T155000Z"
@@ -1269,9 +1270,9 @@ namespace Microsoft.Diagnostics.Tracing.Logging
             }
             return true;
         }
-        #endregion
+#endregion
 
-        #region Private
+#region Private
         private readonly string baseFilename;
         private readonly string directoryName;
         private readonly string fileExtension;
@@ -1336,9 +1337,9 @@ namespace Microsoft.Diagnostics.Tracing.Logging
             sequence += (now.Second * 1000) + now.Millisecond;
             return sequence;
         }
-        #endregion
+#endregion
 
-        #region IDisposable
+#region IDisposable
         public void Dispose()
         {
             this.Dispose(true);
@@ -1352,7 +1353,7 @@ namespace Microsoft.Diagnostics.Tracing.Logging
                 this.Logger = null;
             }
         }
-        #endregion
+#endregion
     }
 
     /// <summary>
@@ -1360,7 +1361,7 @@ namespace Microsoft.Diagnostics.Tracing.Logging
     /// </summary>
     public sealed class NetworkLogger : EventListenerDispatcher
     {
-        #region Public
+#region Public
         /// <summary>
         /// Ctor
         /// </summary>
@@ -1381,9 +1382,9 @@ namespace Microsoft.Diagnostics.Tracing.Logging
             this.serverUri = new Uri(string.Format("http://{0}:{1}", hostname, port));
             InternalLogger.Write.LoggerDestinationOpened(this.GetType().ToString(), this.serverUri.ToString());
         }
-        #endregion
+#endregion
 
-        #region IDisposable
+#region IDisposable
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -1391,15 +1392,15 @@ namespace Microsoft.Diagnostics.Tracing.Logging
                 InternalLogger.Write.LoggerDestinationClosed(this.GetType().ToString(), this.serverUri.ToString());
             }
         }
-        #endregion
+#endregion
 
-        #region Private
+#region Private
         private readonly Uri serverUri;
         private readonly DataContractSerializer serializer = new DataContractSerializer(typeof(ETWEvent));
         private readonly MemoryStream serializationBuffer = new MemoryStream();
-        #endregion
+#endregion
 
-        #region EventListenerDispatcher
+#region EventListenerDispatcher
         public override void Write(ETWEvent ev)
         {
             try
@@ -1474,8 +1475,8 @@ namespace Microsoft.Diagnostics.Tracing.Logging
             public byte[] PostData;
             public WebRequest WebRequest;
         }
-        #endregion
+#endregion
     }
-    #endregion Loggers
+#endregion Loggers
 }
 #endif

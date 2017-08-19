@@ -1,4 +1,4 @@
-﻿#if !NETSTANDARD1_4
+﻿
 namespace Test
 {
     using Microshaoft;
@@ -672,4 +672,3 @@ namespace Microshaoft
         }
     }
 }
-#endif

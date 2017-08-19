@@ -1,4 +1,5 @@
-﻿namespace Microshaoft
+﻿#if NETFRAMEWORK4_X
+namespace Microshaoft
 {
     using System;
     using System.Threading;
@@ -52,3 +53,4 @@
         }
     }
 }
+#endif

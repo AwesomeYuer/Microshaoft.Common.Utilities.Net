@@ -1,4 +1,5 @@
-#if !NETSTANDARD1_4
+#if NETFRAMEWORK4_X
+
 namespace Microshaoft
 {
     using System;
@@ -49,7 +50,7 @@ namespace Microshaoft
             {
                 if (enabledCountPerformance)
                 {
-                    #region before
+#region before
                     if (IncrementCountersBeforeCountPerformance != null)
                     {
                         Array
@@ -98,7 +99,7 @@ namespace Microshaoft
                                     }
                                 );
                     }
-                    #endregion
+#endregion
                 }
                 var needTry = true;
                 TryCatchFinallyProcessHelper
@@ -128,7 +129,7 @@ namespace Microshaoft
                                     {
                                         if (enabledCountPerformance)
                                         {
-                                            #region after
+#region after
 
                                             if (timerCounters != null)
                                             {
@@ -181,7 +182,7 @@ namespace Microshaoft
                                                             }
                                                         );
                                             }
-                                            #endregion
+#endregion
                                         }
                                         if (onFinallyCountPerformanceProcessAction != null)
                                         {

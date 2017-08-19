@@ -1,4 +1,4 @@
-﻿#if !NETSTANDARD1_4
+﻿#if NETFRAMEWORK4_X
 namespace Test2
 {
     using System;
@@ -41,7 +41,7 @@ namespace Test2
             }
             base.Dispose(disposing);
         }
-        #region Windows Form Designer generated code
+#region Windows Form Designer generated code
         /// <summary>
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
@@ -71,7 +71,7 @@ namespace Test2
             this.Text = "MainForm";
             this.ResumeLayout(false);
         }
-        #endregion
+#endregion
         private System.Windows.Forms.Button button1;
     }
     public partial class MainForm : Form

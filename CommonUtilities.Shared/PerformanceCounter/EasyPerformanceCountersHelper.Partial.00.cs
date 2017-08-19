@@ -29,7 +29,8 @@
 	}
 
 */
-#if !NETSTANDARD1_4
+#if NETFRAMEWORK4_X
+
 namespace Microshaoft
 {
     using System;

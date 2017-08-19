@@ -1,4 +1,4 @@
-﻿#if NETFRAMEWORK4_X
+﻿
 namespace Microshaoft
 {
     using System;
@@ -32,7 +32,7 @@ namespace Microshaoft
                     {
                         caughtException = true;
                         exception = e;
-                        var currentCalleeMethod = MethodInfo.GetCurrentMethod();
+                        var currentCalleeMethod = MethodBase.GetCurrentMethod();
                         var currentCalleeType = currentCalleeMethod.DeclaringType;
                         StackTrace stackTrace = new StackTrace();
                         StackFrame stackFrame = stackTrace.GetFrame(1);
@@ -115,7 +115,7 @@ namespace Microshaoft
                                 exception = aggregateException.Flatten();
                             }
                         }
-                        var currentCalleeMethod = MethodInfo.GetCurrentMethod();
+                        var currentCalleeMethod = MethodBase.GetCurrentMethod();
                         var currentCalleeType = currentCalleeMethod.DeclaringType;
                         StackTrace stackTrace = new StackTrace(e, true);
                         StackFrame stackFrame = stackTrace.GetFrame(1);
@@ -168,4 +168,3 @@ namespace Microshaoft
 
     }
 }
-#endif

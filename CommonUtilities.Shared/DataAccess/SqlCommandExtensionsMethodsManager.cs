@@ -152,7 +152,7 @@ namespace Microshaoft
             while (!isLast);
         }
         //[Conditional("NETFRAMEWORK4_X")]
-#if NETFRAMEWORK4_X
+
         public static void ExecuteDataTablePager
         (
             this SqlCommand command
@@ -217,7 +217,7 @@ namespace Microshaoft
                 //connection.Close();
             }
         } 
-#endif
+
     }
 }
 

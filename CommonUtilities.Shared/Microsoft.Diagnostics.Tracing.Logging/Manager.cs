@@ -19,7 +19,9 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#if !NETSTANDARD1_4
+#if NETFRAMEWORK4_X
+
+
 namespace Microsoft.Diagnostics.Tracing.Logging
 {
     using System;
@@ -62,7 +64,7 @@ namespace Microsoft.Diagnostics.Tracing.Logging
     /// </remarks>
     public sealed partial class LogManager : EventListener
     {
-        #region Public
+#region Public
         /// <summary>
         /// Minimum rotationInterval for file rotation. Rotation at a faster rotationInterval is not allowed.
         /// </summary>
@@ -393,9 +395,9 @@ namespace Microsoft.Diagnostics.Tracing.Logging
                 return false;
             }
         }
-        #endregion
+#endregion
 
-        #region Private
+#region Private
         internal const string DataDirectoryEnvironmentVariable = "DATADIR";
 
         /// <summary>
@@ -704,9 +706,9 @@ namespace Microsoft.Diagnostics.Tracing.Logging
                                                       "buffer size must be between MinFileBufferSizeMB and MaxFileBufferSizeMB");
             }
         }
-        #endregion
+#endregion
 
-        #region IDisposable
+#region IDisposable
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times",
             Justification =
                 "EventListener does not provide a protected Dispose(bool) method to correctly implement the pattern")]
@@ -755,7 +757,7 @@ namespace Microsoft.Diagnostics.Tracing.Logging
             // to see that we have shut down.
             InternalLogger.Write.Shutdown();
         }
-        #endregion
+#endregion
     }
 }
 #endif

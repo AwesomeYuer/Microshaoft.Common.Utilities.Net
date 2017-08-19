@@ -1,4 +1,5 @@
-#if !NETSTANDARD1_4
+#if NETFRAMEWORK4_X
+
 namespace Microshaoft
 {
     using System.Collections.Generic;
@@ -94,7 +95,7 @@ namespace Microshaoft
 
 
 
-        #region PerformanceCounters
+#region PerformanceCounters
         private PerformanceCounter _caughtExceptionsPerformanceCounter;
         [
             PerformanceCounterDefinitionAttribute
@@ -367,7 +368,7 @@ namespace Microshaoft
                 return _dequeueThreadEndPerformanceCounter;
             }
         }
-        #endregion
+#endregion
         // indexer declaration
         public override PerformanceCounter this[string name]
         {

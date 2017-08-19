@@ -87,9 +87,8 @@
             stream.Dispose();
             stream = null;
             byte[] buffer = StreamDataHelper.ReadDataToBytes(ms);
-#if NETFRAMEWORK4_X
+
             ms.Close();
-#endif
             ms.Dispose();
             ms = null;
             return buffer;
@@ -99,14 +98,11 @@
             MemoryStream ms = new MemoryStream(data);
             DeflateStream stream = new DeflateStream(ms, CompressionMode.Decompress);
             byte[] buffer = StreamDataHelper.ReadDataToBytes(stream);
-#if NETFRAMEWORK4_X
+
             ms.Close();
-#endif
             ms.Dispose();
             ms = null;
-#if NETFRAMEWORK4_X
             stream.Close();
-#endif
             stream.Dispose();
             stream = null;
             return buffer;
@@ -117,9 +113,8 @@
             MemoryStream ms = new MemoryStream();
             DeflateStream stream = new DeflateStream(ms, CompressionMode.Compress, true);
             stream.Write(buffer, 0, buffer.Length);
-#if NETFRAMEWORK4_X
+
             stream.Close();
-#endif
             stream.Dispose();
             stream = null;
             if (ms.CanSeek)

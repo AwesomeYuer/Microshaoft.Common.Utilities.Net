@@ -42,7 +42,7 @@ namespace Microshaoft
 
     public static class DataReaderHelper
     {
-#if NETFRAMEWORK4_X
+
         public static IEnumerable<TEntry> AsEnumerable<TEntry>
                         (
                             this SqlDataReader target
@@ -57,7 +57,6 @@ namespace Microshaoft
                         , needDefinitionAttributeProcess
                     );
         } 
-#endif
 
 
         public static IEnumerable<TEntry> GetEnumerable<TEntry>
@@ -93,7 +92,7 @@ namespace Microshaoft
 
 
 
-#if NETFRAMEWORK4_X
+
         public static IEnumerable<TEntry> GetEnumerable<TEntry>
                 (
                     IDataReader dataReader
@@ -149,7 +148,7 @@ namespace Microshaoft
                         entry;
             }
         } 
-#endif
+
     }
 }
 
