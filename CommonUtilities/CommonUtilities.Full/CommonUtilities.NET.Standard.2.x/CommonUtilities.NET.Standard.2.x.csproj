@@ -5,17 +5,17 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>..\bin\Release\netstandard1.6\</OutputPath>
+    <OutputPath>..\bin\Release\netstandard2.0\</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\bin\Debug\netstandard1.6\</OutputPath>
+    <OutputPath>..\bin\Debug\netstandard2.0\</OutputPath>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   
 
-  <Import Project="..\..\..\CommonUtilities.Shared\CommonUtilities.NET.Standard.2.x.Shared.projitems" Label="Shared" />
+  <Import Project="..\..\..\CommonUtilities.Shared\CommonUtilities.Shared.projitems" Label="Shared" />
 
   
 
