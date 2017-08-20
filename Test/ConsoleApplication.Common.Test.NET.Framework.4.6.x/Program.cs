@@ -1,4 +1,4 @@
-#if !NETSTANDARD1_4
+
 namespace Test
 {
     using Newtonsoft.Json;
@@ -125,4 +125,4 @@ namespace Test
 
 
 }
-#endif
+
