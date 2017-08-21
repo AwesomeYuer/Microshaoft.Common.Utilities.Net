@@ -114,14 +114,19 @@ namespace Test2
         }
     }
 }
+#endif
 namespace Microshaoft
 {
     using System;
     using System.Threading;
     using System.Threading.Tasks;
+#if NETFRAMEWORK4_X
     using System.Windows.Forms;
+#endif
     public static class TaskProcessorHelper
     {
+#if NETFRAMEWORK4_X
+
         public static int ProcessWaitingShowDialog
                     (
                         IWin32Window ownerWindow
@@ -374,6 +379,7 @@ namespace Microshaoft
             }
             return r;
         }
+
         private static bool TrySafeInvokeFormClose
                                 (
                                     Form dialogForm
@@ -432,6 +438,7 @@ namespace Microshaoft
             }
             return r;
         }
+#endif
         public static int ProcessWaitingCancelable
                             (
                                 Func<AutoResetEvent> onWaitFactoryFunc
@@ -488,6 +495,8 @@ namespace Microshaoft
         }
     }
 }
+#if NETFRAMEWORK4_X
+
 namespace Microshaoft
 {
     using System;

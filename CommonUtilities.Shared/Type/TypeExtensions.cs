@@ -1,4 +1,4 @@
-#if NETFRAMEWORK4_X
+//#if NETFRAMEWORK4_X
 namespace Microshaoft
 {
     using System;
@@ -105,7 +105,7 @@ namespace Microshaoft
             return type.GetTypeInfo().DeclaredConstructors;
         }
 
-#if !PORTABLE
+#if !PORTABLE && !NETSTANDARD2_X
         public static Type CreateType(this TypeBuilder type)
         {
             return type.CreateTypeInfo().AsType();
@@ -117,7 +117,7 @@ namespace Microshaoft
             return type.GetTypeInfo().DeclaredMembers;
         }
 
-#if PORTABLE
+//#if PORTABLE
         public static IEnumerable<MemberInfo> GetAllMembers(this Type type)
         {
             while (true)
@@ -140,14 +140,14 @@ namespace Microshaoft
         {
             return type.GetAllMembers().Where(mi => mi.Name == name).ToArray();
         }
-#endif
+//#endif
 
         public static IEnumerable<MethodInfo> GetDeclaredMethods(this Type type)
         {
             return type.GetTypeInfo().DeclaredMethods;
         }
 
-#if PORTABLE
+//#if PORTABLE
         public static MethodInfo GetMethod(this Type type, string name)
         {
             return type.GetAllMethods().FirstOrDefault(mi => mi.Name == name);
@@ -161,7 +161,7 @@ namespace Microshaoft
                 .Where(mi => mi.GetParameters().Length == parameters.Length)
                 .FirstOrDefault(mi => mi.GetParameters().Select(pi => pi.ParameterType).SequenceEqual(parameters));
         }
-#endif
+//#endif
 
         public static IEnumerable<MethodInfo> GetAllMethods(this Type type)
         {
@@ -173,12 +173,12 @@ namespace Microshaoft
             return type.GetTypeInfo().DeclaredProperties;
         }
 
-#if PORTABLE
+//#if PORTABLE
         public static PropertyInfo GetProperty(this Type type, string name)
         {
             return type.GetTypeInfo().DeclaredProperties.FirstOrDefault(mi => mi.Name == name);
         }
-#endif
+//#endif
 
         public static object[] GetCustomAttributes(this Type type, Type attributeType, bool inherit)
         {
@@ -240,12 +240,12 @@ namespace Microshaoft
             return type.GetTypeInfo().BaseType;
         }
 
-#if PORTABLE
+//#if PORTABLE
         public static bool IsAssignableFrom(this Type type, Type other)
         {
             return type.GetTypeInfo().IsAssignableFrom(other.GetTypeInfo());
         }
-#endif
+//#endif
 
         public static bool IsAbstract(this Type type)
         {
@@ -318,4 +318,4 @@ namespace Microshaoft
         }
     }
 }
-#endif
+//#endif
