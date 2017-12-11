@@ -1,4 +1,4 @@
-﻿#if !NETSTANDARD1_4
+﻿
 namespace Microshaoft
 {
     using System;
@@ -9,7 +9,10 @@ namespace Microshaoft
     using System.Runtime.Serialization;
     using System.Runtime.Serialization.Json;
     using System.Runtime.Serialization.Formatters.Binary;
+    using System.Diagnostics;
+#if NETFRAMEWORK4_X
     using System.Runtime.Serialization.Formatters.Soap;
+#endif
     public static class SerializerHelper
     {
         public static T XmlSerializerXmlToObject<T>(string Xml)
@@ -142,6 +145,7 @@ namespace Microshaoft
             ms = null;
             return Object;
         }
+#if NETFRAMEWORK4_X
         public static string FormatterObjectToSoap<T>
                              (
                                  T Object
@@ -155,6 +159,11 @@ namespace Microshaoft
                 return soap;
             }
         }
+#endif
+
+
+#if NETFRAMEWORK4_X
+        
         public static T FormatterSoapToObject<T>
                                     (
                                         string soap
@@ -170,6 +179,7 @@ namespace Microshaoft
                 return Object;
             }
         }
+#endif
         public static byte[] FormatterObjectToBinary<T>
                                     (
                                         T Object
@@ -232,4 +242,3 @@ namespace Microshaoft
 
     }
 }
-#endif

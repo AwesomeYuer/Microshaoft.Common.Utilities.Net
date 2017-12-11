@@ -1,4 +1,4 @@
-#if !NETSTANDARD1_4
+#if NETFRAMEWORK4_X
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microshaoft.WebApi
@@ -472,7 +472,7 @@ namespace Microshaoft.WebApi
                     HttpActionDescriptor descriptor = candidate.ActionDescriptor;
                     //2016-04-24 于溪玥 Microshaoft
                     // 2016-04-23 modified Microsoft original source code
-                    #warning 2016-04-23 modified Microsoft original source code
+#warning 2016-04-23 modified Microsoft original source code
                     //if (IsSubset(_actionParameterNames[descriptor], candidate.CombinedParameterNames))
                     //{
                     //    matches.Add(candidate);

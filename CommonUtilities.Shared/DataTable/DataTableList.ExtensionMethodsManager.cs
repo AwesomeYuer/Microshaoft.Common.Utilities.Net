@@ -1,4 +1,4 @@
-#if !NETSTANDARD1_4
+
 
 namespace Microshaoft
 {
@@ -9,6 +9,7 @@ namespace Microshaoft
 
     public static partial class DataTableListExtensionMethodsManager
     {
+#if NETFRAMEWORK4_X
         public static DataRow[] FullTextSearch(this DataTable dataTable, string[] keyWords)
         {
             return
@@ -46,6 +47,7 @@ namespace Microshaoft
                             }
                         ).ToArray();
         }
+#endif
         public static DataTable ToDataTable<TEntry>(this IEnumerable<TEntry> target, bool needDefinitionAttributeProcess = false)
         {
             var type = typeof(TEntry);
@@ -139,4 +141,4 @@ namespace Microshaoft
     }
 }
 
-#endif
+

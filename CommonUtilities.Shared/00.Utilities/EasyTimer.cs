@@ -1,8 +1,12 @@
-﻿#if !NETSTANDARD1_4
+﻿
 namespace Microshaoft
 {
     using System;
+//#if NETFRAMEWORK4_X
     using System.Timers;
+//#else
+//    using System.Threading;
+//#endif
     public class EasyTimer
     {
         private Timer _timer;
@@ -136,4 +140,3 @@ namespace Microshaoft
         }
     }
 }
-#endif

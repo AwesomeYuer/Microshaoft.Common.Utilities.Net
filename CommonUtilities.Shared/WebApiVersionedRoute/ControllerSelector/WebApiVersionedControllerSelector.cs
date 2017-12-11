@@ -1,4 +1,4 @@
-#if !NETSTANDARD1_4
+#if NETFRAMEWORK4_X
 
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 

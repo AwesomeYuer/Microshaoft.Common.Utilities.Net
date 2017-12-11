@@ -1,4 +1,5 @@
-#if !NETSTANDARD1_4
+#if NETFRAMEWORK4_X
+
 // The MIT License (MIT)
 // 
 // Copyright (c) 2015 Microsoft

@@ -1,4 +1,4 @@
-#if !NETSTANDARD1_4
+#if NETFRAMEWORK4_X
 // WebApi.MVC.CountPerformanceActionFilter.cs
 
 namespace Microshaoft.WebApi
@@ -55,7 +55,7 @@ namespace Microshaoft.WebApi
 
         public override void OnException(HttpActionExecutedContext actionExecutedContext)
         {
-            #region Request Log
+#region Request Log
             var actionContext = actionExecutedContext.ActionContext;
             HttpContext httpContext = HttpContext.Current;
                 var userHostAddress = httpContext.Request.UserHostAddress;
@@ -149,7 +149,7 @@ namespace Microshaoft.WebApi
                 //                .Response
                 //    );
             
-            #endregion
+#endregion
         }
 
         private void LogRequestResponseMessage

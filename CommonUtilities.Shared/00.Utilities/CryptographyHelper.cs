@@ -1,6 +1,4 @@
-﻿#if !NETSTANDARD1_4
-
-namespace Microshaoft
+﻿namespace Microshaoft
 {
     using System;
     using System.IO;
@@ -274,15 +272,17 @@ namespace Microshaoft
             buffer = hashAlgorithm.ComputeHash(stream);
             stream.Close();
             stream.Dispose();
-            secret.EncryptorHashSignature = encryptorPrivateKeyPfxProvider.SignHash
-                                                                                (
-                                                                                    buffer
-                                                                                    , Enum.GetName
-                                                                                                (
-                                                                                                    signHashMode.GetType()
-                                                                                                    , signHashMode
-                                                                                                )
-                                                                                );
+            secret.EncryptorHashSignature 
+                        = encryptorPrivateKeyPfxProvider
+                                                    .SignHash
+                                                        (
+                                                            buffer
+                                                            , Enum.GetName
+                                                                        (
+                                                                            signHashMode.GetType()
+                                                                            , signHashMode
+                                                                        )
+                                                        );
             secret.EncryptorPublicKeyCerRawData = encryptorPublicKeyCer.RawData;
             secret.SignHashMode = signHashMode;
             secret.DoOAEPadding = DoOAEPadding;
@@ -308,7 +308,9 @@ namespace Microshaoft
                                      , byte[] data
                                  )
         {
-            return algorithm.CreateEncryptor().TransformFinalBlock(data, 0, data.Length);
+            return algorithm
+                        .CreateEncryptor()
+                        .TransformFinalBlock(data, 0, data.Length);
         }
         public static byte[] SymmetricAlgorithmEncrypt
                                        (
@@ -329,7 +331,9 @@ namespace Microshaoft
                                             , byte[] data
                                          )
         {
-            return algorithm.CreateDecryptor().TransformFinalBlock(data, 0, data.Length);
+            return algorithm
+                        .CreateDecryptor()
+                        .TransformFinalBlock(data, 0, data.Length);
         }
         public static string SymmetricAlgorithmDecrypt
                                         (
@@ -646,4 +650,3 @@ namespace Microshaoft
         }
     }
 }
-#endif

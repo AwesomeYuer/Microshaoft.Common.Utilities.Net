@@ -30,7 +30,8 @@
 	}
 
 */
-#if !NETSTANDARD1_4
+#if NETFRAMEWORK4_X
+
 namespace Microshaoft
 {
     using System;
@@ -80,7 +81,7 @@ namespace Microshaoft
                                 );
             var reThrowException = false;
 
-            #region Count Inner TryCatchFinally
+#region Count Inner TryCatchFinally
             TryCatchFinallyProcessHelper
                     .TryProcessCatchFinally
                         (
@@ -121,7 +122,7 @@ namespace Microshaoft
                                 }
                             }
                         );
-            #endregion
+#endregion
 
             if (enabledCountPerformance)
             {
@@ -178,7 +179,7 @@ namespace Microshaoft
                 var stopwatchIndex = 0;
                 if (enabledCount)
                 {
-                    #region get Container
+#region get Container
                     string key = string
                                     .Format
                                         (
@@ -206,7 +207,7 @@ namespace Microshaoft
                                         );
                         }
                     }
-                    #endregion
+#endregion
                     var enableIncrementOnBegin
                             = enabledProcessingFlagsType
                                     .HasFlag
@@ -297,7 +298,7 @@ namespace Microshaoft
                                             .TimeBasedOnBeginOnEnd
                                     );
 
-            #region get Container
+#region get Container
             TPerformanceCountersContainer container = null;
             string key = string
                             .Format
@@ -327,7 +328,7 @@ namespace Microshaoft
                 //                );
                 //}
             }
-            #endregion
+#endregion
             if (enableTimeBasedOnBeginOnEnd)
             {
                 if (stopwatchesCount > 0)

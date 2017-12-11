@@ -1,4 +1,4 @@
-#if !NETSTANDARD1_4
+
 // Licensed to the .NET Foundation under one or more agreements.
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
@@ -488,4 +488,3 @@ namespace Microshaoft.Buffers
         public abstract void Return(T[] buffer, bool clearArray = false);
     }
 }
-#endif

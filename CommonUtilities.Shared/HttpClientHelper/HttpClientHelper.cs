@@ -1,4 +1,4 @@
-#if !NETSTANDARD1_4
+#if NETFRAMEWORK4_X
 
 namespace Test
 {
@@ -39,13 +39,15 @@ namespace Microshaoft
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
     using System.Net.Http;
     using System.Net.Http.Handlers;
+
     using System.Threading.Tasks;
     public static class HttpClientHelper
     {
-
+        //[Conditional("NETFRAMEWORK4_X")]
         public static void RegisterHttpClientProgressMessageHandler
                                 (
                                     Action<HttpClient> onHttpClientSendReceiveProcessAction

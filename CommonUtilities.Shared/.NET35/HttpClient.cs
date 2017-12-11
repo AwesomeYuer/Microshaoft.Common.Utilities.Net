@@ -1,5 +1,4 @@
-﻿#if !NETSTANDARD1_4
-namespace Microshaoft.NET35
+﻿namespace Microshaoft.NET35
 {
     using Newtonsoft.Json;
     using System.IO;
@@ -41,4 +40,3 @@ namespace Microshaoft.NET35
     }
 }
 
-#endif

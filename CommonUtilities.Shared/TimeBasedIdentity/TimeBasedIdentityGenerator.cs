@@ -1,10 +1,12 @@
-#if !NETSTANDARD1_4
+
 namespace Microshaoft
 {
     using System;
     using System.Threading;
     using System.Runtime.Serialization;
+#if NETFRAMEWORK4_X
     using System.Web.Script.Serialization;
+#endif
     using System.Xml.Serialization;
     using Newtonsoft.Json;
 
@@ -28,20 +30,27 @@ namespace Microshaoft
         //按秒对齐的时间
         public /*readonly*/ DateTime PeriodAlignedTime;
 
-        //周期标识 按(桶个数)取模后第(余数)个周期
+        //周期标识 按(桶个数)取模后第(余数)
+#if NETFRAMEWORK4_X
         [ScriptIgnore]
+#endif
+
         [XmlIgnore]
         [JsonIgnore]
         [IgnoreDataMember]
         public readonly int[] PeriodSeedsBucket = null;
 
+#if NETFRAMEWORK4_X
         [ScriptIgnore]
+#endif
         [XmlIgnore]
         [JsonIgnore]
         [IgnoreDataMember]
         public readonly DateTime? InitializedTime;
 
+#if NETFRAMEWORK4_X
         [ScriptIgnore]
+#endif
         [XmlIgnore]
         [JsonIgnore]
         [IgnoreDataMember]
@@ -382,4 +391,4 @@ namespace Microshaoft
         }
     }
 }
-#endif
+

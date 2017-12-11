@@ -1,4 +1,4 @@
-#if !NETSTANDARD1_4
+
 /*--------------------------------------------------------------------------
 * DynamicJson
 * ver 1.2.0.0 (May. 21th, 2010)
@@ -558,4 +558,3 @@ namespace ConsoleApplication1
     }
 }
 
-#endif

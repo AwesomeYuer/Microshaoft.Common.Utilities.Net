@@ -19,7 +19,11 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#if !NETSTANDARD1_4
+
+
+#if NETFRAMEWORK4_X
+
+
 namespace Microsoft.Diagnostics.Tracing.Logging
 {
     using System;
@@ -31,7 +35,7 @@ namespace Microsoft.Diagnostics.Tracing.Logging
 
     public sealed partial class LogManager
     {
-        #region Private
+#region Private
         private readonly Dictionary<EventSource, EventSourceInfo> eventSourceInfos =
             new Dictionary<EventSource, EventSourceInfo>();
 
@@ -191,9 +195,9 @@ namespace Microsoft.Diagnostics.Tracing.Logging
 
             return null;
         }
-        #endregion
+#endregion
 
-        #region EventListener
+#region EventListener
         /// <summary>
         /// Generates internal manifest data when new event sources are created and updates existing listeners based on configuration
         /// </summary>
@@ -266,7 +270,7 @@ namespace Microsoft.Diagnostics.Tracing.Logging
         /// Required by EventListener base class but this is a no-op
         /// </summary>
         protected override void OnEventWritten(EventWrittenEventArgs eventData) { }
-        #endregion
+#endregion
     }
 }
 #endif

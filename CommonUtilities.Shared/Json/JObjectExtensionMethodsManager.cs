@@ -1,11 +1,65 @@
-﻿namespace Microshaoft
+﻿#if NETFRAMEWORK4_X
+
+namespace Microshaoft
 {
     using Newtonsoft.Json.Linq;
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Threading;
 
     public static class JObjectExtensionMethodsManager
     {
+        public static bool FreezeValueProperty
+                                    (
+                                        this JObject target
+                                        , string propertyName
+                                        , int afterChangedTimes = 0
+                                    )
+        {
+            var r = false;
+            //var property = target[propertyName];
+            //if (property != null)
+            //{
+            //if (property is JValue)
+            //{
+            int changed = 0;
+            target
+                .PropertyChanged +=
+                            (
+                                (x, y) =>
+                                {
+                                    if (y.PropertyName == propertyName)
+                                    {
+                                        Interlocked.Increment(ref changed);
+                                    }
+                                }
+                            );
+            target
+                .PropertyChanging +=
+                        (
+                            (x, y) =>
+                            {
+                                if (y.PropertyName == propertyName)
+                                {
+                                    if (changed >= afterChangedTimes)
+                                    {
+                                        throw new Exception
+                                                    (
+                                                        $"Property {propertyName}'s value is freezed"
+                                                    );
+                                    }
+                                }
+                            }
+                        );
+            r = true;
+            //}
+
+            //}
+
+
+            return r;
+        }
         private static void Travel
                                 (
                                     JObject rootJObject
@@ -15,7 +69,6 @@
                                             onTraveledJValuePropertyProcessAction = null
                                     , Action<JObject, string, JObject>
                                             onTraveledJObjectPropertyProcessAction = null
-
                                 )
         {
             onTraveledJObjectPropertyProcessAction?
@@ -46,7 +99,6 @@
                             jProperty.Value is JValue
                         )
                     {
-
                         onTraveledJValuePropertyProcessAction?
                                 .Invoke
                                     (
@@ -98,8 +150,6 @@
                 }
             }
         }
-
-
         public static void Travel
                                 (
                                     this JObject target
@@ -118,7 +168,35 @@
                     , onTraveledJObjectPropertyProcessAction
                 );
         }
+        public static void SetPropertyValue
+                            (
+                                this JObject target
+                                , string path
+                                , JValue value
+                                , Action
+                                    <
+                                        JObject
+                                    >
+                                        onPropertyChangedProcessAction
+                            )
+        {
+            var arr = path.Split('.');
+            JToken jToken = target[arr[0]];
+            for (var i = 1; i < arr.Length - 1; i++)
+            {
+                jToken = jToken[arr[i]];
+            }
 
+            JObject j = jToken as JObject;
+            j[arr[arr.Length - 1]] = value;
+
+            if (onPropertyChangedProcessAction != null)
+            {
+                onPropertyChangedProcessAction(
+                    target
+                );
+            }
+        }
         public static void Observe
                                 (
                                     this JObject target
@@ -134,6 +212,25 @@
                                             onPropertyChangedProcessAction
                                 )
         {
+
+            //target.Annotation<Action<string>>().
+            // HashSet --> Dictionary
+            target.AddAnnotation(new Dictionary<string, JObject>());
+            target.PropertyChanged += (
+                (sender, args) =>
+                {
+                    if (!target.Annotation<Dictionary<string, JObject>>().ContainsKey(args.PropertyName))
+                    {
+                        JObject jDelegate = new JObject
+                        (
+                            new JProperty("methodName", onPropertyChangedProcessAction.Method.Name)
+                            , new JProperty("isFlag", onPropertyChangedProcessAction == null ? true : false)
+                        );
+                        target.Annotation<Dictionary<string, JObject>>().Add(args.PropertyName, jDelegate);
+                    }
+                }
+            );
+
             Travel
                 (
                     target
@@ -180,8 +277,87 @@
         }
     }
 }
+namespace Test
+{
+    using Newtonsoft.Json.Linq;
+    using System;
+    using System.Dynamic;
+    using System.Linq.Expressions;
+    using Microshaoft;
+    class Program12
+    {
+        static void Main(string[] args)
+        {
+            var root = new JTree();
+
+            root.Teller = new Teller();
+            root.Teller.Name = "2222";
 
 
+            root.Teller.TellerNo = "11111";
+            root.Teller.TellerNo = "222";
+
+            root.Teller.Other = "asdasdsa";
+
+
+
+
+            try
+            {
+                root.Teller.TellerNo = "333";
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            root.Teller = new Teller();
+            root.Teller.TellerNo = "zzzz";
+            Console.WriteLine(root.Teller.TellerNo);
+            Console.WriteLine(root.ToString());
+            Console.Read();
+        }
+
+    }
+
+    public class JTree : JObject
+    {
+        public dynamic Teller
+        {
+            get
+            {
+                return this["Teller"];
+            }
+            set
+            {
+                this["Teller"] = value;
+            }
+
+        }
+
+
+    }
+
+    public class Teller : JObject
+    {
+
+        public string TellerNo
+        {
+            get
+            {
+                return this["TellerNo"].Value<string>();
+            }
+            set
+            {
+                this["Teller"] = value;
+            }
+        }
+
+        public Teller()
+        {
+            this.FreezeValueProperty("TellerNo", 2);
+        }
+    }
+}
 namespace TestConsoleApp6
 {
     using Microshaoft;
@@ -189,7 +365,7 @@ namespace TestConsoleApp6
     using System;
     class Program
     {
-        static void Main(string[] args1)
+        static void Main1(string[] args1)
         {
             string json = @"{
   'Name': 'Bad Boys',
@@ -201,40 +377,52 @@ namespace TestConsoleApp6
 ,F4:{F1:'aa',F2:'ddd'}
 }";
 
-            json = "{Name:'asdsadas',F2:[1,{F1:'00000'}],F3: null, F4:{F5:{F6:null}}}";
+            json = "{Name:'asdsadas',F2:[1,{F1:'00000'}],F3: null, F4:{F5:{F6:{F7:'000',F8:'1'},F8:null}}}";
             var jObject = JObject.Parse(json);
 
-            jObject.Observe
-                        (
-                            (root, ancestorPath, current, args, v1, v2) =>
-                            {
-                                Console.WriteLine("===================");
-                                Console.WriteLine
-                                            (
-                                                "{0}.{1}: ({2}) => ({3})"
-                                                , ancestorPath
-                                                , args.PropertyName
-                                                , v1
-                                                , v2
-                                            );
-                                Console.WriteLine("===================");
-                            }
-                        );
+            //jObject.Observe
+            //            (
+            //                (root, ancestorPath, current, args, v1, v2) =>
+            //                {
+            //                    Console.WriteLine("===================");
+            //                    Console.WriteLine
+            //                                (
+            //                                    "{0}.{1}: ({2}) => ({3})"
+            //                                    , ancestorPath
+            //                                    , args.PropertyName
+            //                                    , v1
+            //                                    , v2
+            //                                );
+            //                    Console.WriteLine("===================");
+            //                }
+            //            );
 
 
 
-            jObject["Name"] = "zzzz";
-            jObject["F4"]["F5"]["F6"] = "zzzzA";
+            //jObject["name"] = "zzzz";
+            //jObject["name"] = "1111";
 
-            jObject[@"F9"] = "asdsa";
+            //Console.WriteLine(jObject.ToString());
 
-            jObject["F2"][1]["F1"] = "zzzzA0000";
+            //jObject["F4"]["F5"]["F6"] = "zzzzA";
+
+            //jObject[@"F9"] = "asdsa";
+
+            //jObject["F2"][1]["F1"] = "zzzzA0000";
+
+
+            //jObject["F2"][1]["F90"] = JObject.Parse("{'a':1,'b':2}");
             //jObject["F3"] = "zzzz";
 
-            //Console.WriteLine(jObject["F1"][0]["F1"]);
+            jObject.SetPropertyValue("F4.F5.F6.F7", new JValue("666"), null);
+
+            Console.WriteLine(
+                    jObject.ToString()
+            );
 
 
             Console.ReadLine();
         }
     }
 }
+#endif

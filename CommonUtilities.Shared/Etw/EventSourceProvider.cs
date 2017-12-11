@@ -1,4 +1,4 @@
-#if !NETSTANDARD1_4
+#if NETFRAMEWORK4_X
 namespace Microshaoft.EventSources
 {
     using System;
@@ -32,9 +32,9 @@ namespace Microshaoft.EventSources
     ]
     public sealed class EventLogEventSource : EventSource
     {
-        #region Singleton instance
+#region Singleton instance
         public static EventLogEventSource Log = new EventLogEventSource();
-        #endregion
+#endregion
         [
             Event
                 (
@@ -111,7 +111,7 @@ namespace Microshaoft.EventSources
                     , (object)data
                 );
         }
-        #region Keywords / Tasks / Opcodes
+#region Keywords / Tasks / Opcodes
         public class Keywords   // This is a bitvector
         {
             public const EventKeywords EventKeyword1 = (EventKeywords)0x00000001;
@@ -132,7 +132,7 @@ namespace Microshaoft.EventSources
             public const EventTags EventTag1 = (EventTags)1;
             public const EventTags EventTag2 = (EventTags)2;
         }
-        #endregion
+#endregion
     }
 }
 //namespace Microshaoft.EventListeners

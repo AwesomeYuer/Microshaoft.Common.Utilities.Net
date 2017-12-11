@@ -211,7 +211,7 @@
                         .CreateDelegate(delegateType);
             return r;
         }
-        public static Func<object, object[], TResult> 
+        public static Func<object, object[], TResult>
                             CreateTargetMethodCallInvokerFunc<TResult>
                                                 (
                                                     MethodInfo methodInfo

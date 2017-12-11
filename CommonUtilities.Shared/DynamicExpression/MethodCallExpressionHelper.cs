@@ -1,4 +1,4 @@
-#if !NETSTANDARD1_4
+
 //----------------------------------------------------------------
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 //----------------------------------------------------------------
@@ -9,9 +9,10 @@ namespace System.Activities.Expressions
     using System.Collections.ObjectModel;
     using System.Linq.Expressions;
     using System.Reflection;
+#if NETFRAMEWORK4_X
     using System.Runtime;
     using System.Threading;
-
+#endif
     public static class MethodCallExpressionHelper
     {
         public const int FuncCacheCapacity = 500;
@@ -191,7 +192,21 @@ namespace System.Activities.Expressions
             return ComposeBlockExpression(variables, assignVariablesExpressions, newExpression, assignVariablesBackExpressions, typeof(TResult), true, false);
         }
 
-        public static Func<object, object[], object> GetFunc(CodeActivityMetadata metadata, MethodInfo methodInfo, bool valueTypeReference = false)
+
+        public static bool NeedRetrieve(MethodBase newMethod, MethodBase oldMethod, Delegate func)
+        {
+            if (newMethod == null)
+            {
+                return false;
+            }
+            if ((newMethod == oldMethod) && (func != null))
+            {
+                return false;
+            }
+            return true;
+        }
+#if NETFRAMEWORK4_X
+                public static Func<object, object[], object> GetFunc(CodeActivityMetadata metadata, MethodInfo methodInfo, bool valueTypeReference = false)
         {
             try
             {
@@ -233,20 +248,6 @@ namespace System.Activities.Expressions
             }
 
         }
-
-        public static bool NeedRetrieve(MethodBase newMethod, MethodBase oldMethod, Delegate func)
-        {
-            if (newMethod == null)
-            {
-                return false;
-            }
-            if ((newMethod == oldMethod) && (func != null))
-            {
-                return false;
-            }
-            return true;
-        }
-
         public static Func<object, object[], object> GetFunc(CodeActivityMetadata metadata, MethodInfo methodInfo,
             MruCache<MethodInfo, Func<object, object[], object>> cache, ReaderWriterLockSlim locker, bool valueTypeReference = false)
         {
@@ -285,8 +286,13 @@ namespace System.Activities.Expressions
             return func;
         }
 
-        public static Func<object[], TResult> GetFunc<TResult>(CodeActivityMetadata metadata, ConstructorInfo constructorInfo,
-            MruCache<ConstructorInfo, Func<object[], TResult>> cache, ReaderWriterLockSlim locker)
+        public static Func<object[], TResult> GetFunc<TResult>
+                                                (
+                                                    CodeActivityMetadata metadata
+                                                    , ConstructorInfo constructorInfo
+                                                    , MruCache<ConstructorInfo, Func<object[], TResult>> cache
+                                                    , ReaderWriterLockSlim locker
+                                                )
         {
             Func<object[], TResult> func = null;
             if (constructorInfo != null)
@@ -328,11 +334,7 @@ namespace System.Activities.Expressions
             }
             return func;
         }
+#endif
     }
 }
 
-
-
-
-
-#endif

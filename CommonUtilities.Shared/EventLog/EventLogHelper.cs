@@ -1,4 +1,4 @@
-#if !NETSTANDARD1_4
+#if NETFRAMEWORK4_X
 namespace Microshaoft
 {
     using Newtonsoft.Json;
@@ -10,10 +10,130 @@ namespace Microshaoft
     using System.Globalization;
     using System.Linq;
     using System.Net.Http;
+    //using System.Runtime.ExceptionServices;
     using System.Security;
     public static class EventLogHelper
     {
+        [Flags]
+        public enum AppDomainExceptionsHandlerType
+        {
+            None = 0
+            , UnhandledException = 2
+            , FirstChanceException = 4
+            
+        }
 
+        private static AppDomainExceptionsHandlerType _registeredExceptionsType = AppDomainExceptionsHandlerType.None;
+        
+
+
+        public static void RegisterAutoEventLogExceptions
+                                        (
+                                            string sourceName
+                                            , int eventID //设计时指定
+                                            , short category
+                                            , AppDomainExceptionsHandlerType exceptionsType = AppDomainExceptionsHandlerType.None
+                                        )
+        {
+            if (exceptionsType.HasFlag(AppDomainExceptionsHandlerType.UnhandledException))
+            {
+                if (_registeredExceptionsType.HasFlag(AppDomainExceptionsHandlerType.UnhandledException))
+                {
+                    _registeredExceptionsType |= AppDomainExceptionsHandlerType.UnhandledException;
+                    AppDomain
+                           .CurrentDomain
+                           .UnhandledException +=
+                                   (
+                                       (sender, e) =>
+                                       {
+                                           var logMessage = string
+                                                                .Format
+                                                                    (
+                                                                        "{1} On Type Of Sender: [{2}], Value Of Sender: [{3}]"
+                                                                        , "\r\n"
+                                                                        , Enum
+                                                                            .GetName
+                                                                                (
+                                                                                    typeof(AppDomainExceptionsHandlerType)
+                                                                                    , AppDomainExceptionsHandlerType
+                                                                                            .UnhandledException
+                                                                                )
+                                                                        , sender.GetType()
+                                                                        , sender
+                                                                    );
+                                           logMessage = string
+                                                            .Format
+                                                                (
+                                                                    "{1}{0}{2}"
+                                                                    , ":\r\n"
+                                                                    , logMessage
+                                                                    , e
+                                                                        .ExceptionObject
+                                                                        .ToString()
+                                                                );
+                                           WriteEventLogEntry
+                                               (
+                                                   //string logName,
+                                                   sourceName,
+                                                   eventID,
+                                                   logMessage,
+                                                   category,
+                                                   EventLogEntryType.Error //设计时指定
+                                               );
+                                       }
+                                   );
+                }
+            }
+            if (exceptionsType.HasFlag(AppDomainExceptionsHandlerType.FirstChanceException))
+            {
+                if (_registeredExceptionsType.HasFlag(AppDomainExceptionsHandlerType.FirstChanceException))
+                {
+                    _registeredExceptionsType |= AppDomainExceptionsHandlerType.FirstChanceException;
+                    AppDomain
+                           .CurrentDomain
+                           .FirstChanceException +=
+                                   (
+                                       (sender, e) =>
+                                       {
+                                           var logMessage = string
+                                                                .Format
+                                                                    (
+                                                                        "{1} On Type Of Sender: [{2}], Value Of Sender: [{3}]"
+                                                                        , "\r\n"
+                                                                        , Enum
+                                                                            .GetName
+                                                                                (
+                                                                                    typeof(AppDomainExceptionsHandlerType)
+                                                                                    , AppDomainExceptionsHandlerType
+                                                                                            .FirstChanceException
+                                                                                )
+                                                                        , sender.GetType()
+                                                                        , sender
+                                                                    );
+                                           logMessage = string
+                                                            .Format
+                                                                (
+                                                                    "{1}{0}{2}"
+                                                                    , ":\r\n"
+                                                                    , logMessage
+                                                                    , e
+                                                                        .Exception
+                                                                        .ToString()
+                                                                );
+                                           WriteEventLogEntry
+                                               (
+                                                   //string logName,
+                                                   sourceName,
+                                                   eventID,
+                                                   logMessage,
+                                                   category,
+                                                   EventLogEntryType.Error //设计时指定
+                                               );
+                                       }
+                                   );
+                }
+            }
+        }
         private static string _processNameID
                                 = new Func<string>
                                         (

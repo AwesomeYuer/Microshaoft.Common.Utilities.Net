@@ -1,5 +1,4 @@
-﻿#if !NETSTANDARD1_4
-namespace Test
+﻿namespace Test
 {
     using Newtonsoft.Json;
     using System;
@@ -8,7 +7,7 @@ namespace Test
     using System.Linq;
     using Microshaoft;
     using Newtonsoft.Json.Linq;
-    class Program12
+    class Program123
     {
         static void Main(string[] args)
         {
@@ -324,4 +323,3 @@ namespace Microshaoft
         }
     }
 }
-#endif

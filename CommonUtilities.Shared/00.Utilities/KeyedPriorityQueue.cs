@@ -1,5 +1,5 @@
 ﻿// <copyright file="KeyedPriorityQueue.cs" company="Microsoft">Copyright (c) Microsoft Corporation.  All rights reserved.</copyright>
-#if !NETSTANDARD1_4
+
 namespace Microshaoft
 {
     using System;
@@ -275,4 +275,3 @@ namespace Microshaoft
         }
     }
 }
-#endif

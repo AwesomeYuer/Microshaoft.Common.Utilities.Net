@@ -1,4 +1,5 @@
-﻿namespace Microshaoft
+﻿
+namespace Microshaoft
 {
     using System;
     using System.Diagnostics;
@@ -31,7 +32,7 @@
                     {
                         caughtException = true;
                         exception = e;
-                        var currentCalleeMethod = MethodInfo.GetCurrentMethod();
+                        var currentCalleeMethod = MethodBase.GetCurrentMethod();
                         var currentCalleeType = currentCalleeMethod.DeclaringType;
                         StackTrace stackTrace = new StackTrace();
                         StackFrame stackFrame = stackTrace.GetFrame(1);
@@ -114,7 +115,7 @@
                                 exception = aggregateException.Flatten();
                             }
                         }
-                        var currentCalleeMethod = MethodInfo.GetCurrentMethod();
+                        var currentCalleeMethod = MethodBase.GetCurrentMethod();
                         var currentCalleeType = currentCalleeMethod.DeclaringType;
                         StackTrace stackTrace = new StackTrace(e, true);
                         StackFrame stackFrame = stackTrace.GetFrame(1);

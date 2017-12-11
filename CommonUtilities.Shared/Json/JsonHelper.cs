@@ -1,5 +1,4 @@
-﻿#if !NETSTANDARD1_4
-namespace Microshaoft
+﻿namespace Microshaoft
 {
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
@@ -226,4 +225,3 @@ namespace Microshaoft
         }
     }
 }
-#endif

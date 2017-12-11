@@ -1,4 +1,4 @@
-#if !NETSTANDARD1_4
+
 namespace Microshaoft
 {
     using System.Collections.Generic;
@@ -6,6 +6,8 @@ namespace Microshaoft
     using System.Data.SqlClient;
     using System.Linq;
     using System;
+    using System.Reflection;
+
     public static class DataReaderExtensionsMethodsManager
     {
         public static IEnumerable<T> ExecuteRead<T>
@@ -40,6 +42,7 @@ namespace Microshaoft
 
     public static class DataReaderHelper
     {
+
         public static IEnumerable<TEntry> AsEnumerable<TEntry>
                         (
                             this SqlDataReader target
@@ -53,7 +56,7 @@ namespace Microshaoft
                         target
                         , needDefinitionAttributeProcess
                     );
-        }
+        } 
 
 
         public static IEnumerable<TEntry> GetEnumerable<TEntry>
@@ -89,12 +92,13 @@ namespace Microshaoft
 
 
 
+
         public static IEnumerable<TEntry> GetEnumerable<TEntry>
-                        (
-                            IDataReader dataReader
-                            , bool needDefinitionAttributeProcess = false
-                        )
-                            where TEntry : new()
+                (
+                    IDataReader dataReader
+                    , bool needDefinitionAttributeProcess = false
+                )
+                    where TEntry : new()
         {
             var type = typeof(TEntry);
             MemberAdditionalDefinitionAttribute attribute = null;
@@ -143,8 +147,9 @@ namespace Microshaoft
                     return
                         entry;
             }
-        }
+        } 
+
     }
 }
 
-#endif
+

@@ -1,4 +1,4 @@
-#if !NETSTANDARD1_4
+#if NETFRAMEWORK4_X
 namespace Microshaoft.WebMvc
 {
     using System.Web.Mvc;
@@ -79,7 +79,7 @@ namespace Microshaoft
 
         public override void OnActionExecuting(HttpActionContext actionContext)
         {
-            #region 计数器
+#region 计数器
             var controllerPerformanceCounterCategoryName
                                 = string
                                     .Format
@@ -188,7 +188,7 @@ namespace Microshaoft
                             , _actionStopwatchKey
                         );
 
-            #endregion
+#endregion
         }
         private void CountPerformanceBegin
                                 (

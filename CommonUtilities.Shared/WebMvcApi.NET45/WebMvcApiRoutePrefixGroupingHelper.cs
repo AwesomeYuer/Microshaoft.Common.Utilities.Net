@@ -1,4 +1,5 @@
-#if !NETSTANDARD1_4
+#if NETFRAMEWORK4_X
+
 namespace Microshaoft.Web
 {
     using System.Collections.Generic;
@@ -62,7 +63,7 @@ namespace Microshaoft.Web
                                         (
                                             (x) =>
                                             {
-                                                #region 按 RoutePrefix + Route + Version 筛选
+#region 按 RoutePrefix + Route + Version 筛选
                                                 var r = false;
                                                 routePrefixAttribute = x
                                                                             .ControllerDescriptor
@@ -85,7 +86,7 @@ namespace Microshaoft.Web
                                                     }
                                                 }
                                                 return r; 
-                                                #endregion
+#endregion
                                             }
                                         )
                                     .ToLookup

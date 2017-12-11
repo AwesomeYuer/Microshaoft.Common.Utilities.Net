@@ -1,4 +1,5 @@
-#if !NETSTANDARD1_4
+#if NETFRAMEWORK4_X
+
 // The MIT License (MIT)
 // 
 // Copyright (c) 2015 Microsoft
@@ -34,7 +35,7 @@ namespace Microsoft.Diagnostics.Tracing.Logging
 
     public sealed partial class LogManager
     {
-        #region Public
+#region Public
         /// <summary>
         /// Provide string-based configuration which will be applied additively after any file configuration.
         /// </summary>
@@ -75,9 +76,9 @@ namespace Microsoft.Diagnostics.Tracing.Logging
         {
             return singleton.UpdateConfigurationFile(filename);
         }
-        #endregion
+#endregion
 
-        #region Private
+#region Private
         // HEY! HEY YOU! Are you adding stuff here? You're adding stuff, it's cool. Just go update
         // the 'configuration.md' file in doc with what you've added. Santa will bring you bonus gifts.
         private const string EtwOverrideXpath = "/loggers/etwlogging";
@@ -711,7 +712,7 @@ namespace Microsoft.Diagnostics.Tracing.Logging
                 return ((caps & flags) != 0);
             }
         }
-        #endregion
+#endregion
     }
 }
 #endif
