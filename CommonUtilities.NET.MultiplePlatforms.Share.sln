@@ -1,10 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.8
+VisualStudioVersion = 15.0.27130.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "000.Solution Items", "000.Solution Items", "{85BAAC83-9159-4E88-929C-FC9A98556042}"
 	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
 		License.txt = License.txt
 		README.md = README.md
 		Solution.All.Projects.Common.AssemblyInfo.cs = Solution.All.Projects.Common.AssemblyInfo.cs
@@ -160,7 +162,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonUtilities.NET.Core.2.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonUtilities.NET.Standard.2.x", "CommonUtilities\CommonUtilities.Full\CommonUtilities.NET.Standard.2.x\CommonUtilities.NET.Standard.2.x.csproj", "{27C1503D-46A2-430B-9A24-A7589828F8D9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp.Common.Test.NET.Core.2.x", "Test\ConsoleApp.Common.Test.NET.Core.2.x\ConsoleApp.Common.Test.NET.Core.2.x.csproj", "{FCD49C9C-0898-4195-957C-0EF86445BE5D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp.Common.Test.NET.Core.2.x", "Test\ConsoleApp.Common.Test.NET.Core.2.x\ConsoleApp.Common.Test.NET.Core.2.x.csproj", "{FCD49C9C-0898-4195-957C-0EF86445BE5D}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "CommonUtilities.Console.Test.Shared", "Test\CommonUtilities.Console.Test.Shared\CommonUtilities.Console.Test.Shared.shproj", "{AE1C2A2E-C269-4996-A539-38D57E293C02}"
 EndProject
