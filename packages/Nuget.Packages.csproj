@@ -213,6 +213,20 @@
     <None Include="Newtonsoft.Json.10.0.3\tools\install.ps1" />
     <None Include="NuGet.CommandLine.4.4.1\NuGet.CommandLine.4.4.1.nupkg" />
     <None Include="Owin.1.0\Owin.1.0.nupkg" />
+    <None Include="popper.js.1.12.9\content\Scripts\esm\popper-utils.js.map" />
+    <None Include="popper.js.1.12.9\content\Scripts\esm\popper-utils.min.js.map" />
+    <None Include="popper.js.1.12.9\content\Scripts\esm\popper.js.map" />
+    <None Include="popper.js.1.12.9\content\Scripts\esm\popper.min.js.map" />
+    <None Include="popper.js.1.12.9\content\Scripts\popper-utils.js.map" />
+    <None Include="popper.js.1.12.9\content\Scripts\popper-utils.min.js.map" />
+    <None Include="popper.js.1.12.9\content\Scripts\popper.js.map" />
+    <None Include="popper.js.1.12.9\content\Scripts\popper.min.js.map" />
+    <None Include="popper.js.1.12.9\content\Scripts\README.md" />
+    <None Include="popper.js.1.12.9\content\Scripts\umd\popper-utils.js.map" />
+    <None Include="popper.js.1.12.9\content\Scripts\umd\popper-utils.min.js.map" />
+    <None Include="popper.js.1.12.9\content\Scripts\umd\popper.js.map" />
+    <None Include="popper.js.1.12.9\content\Scripts\umd\popper.min.js.map" />
+    <None Include="popper.js.1.12.9\popper.js.1.12.9.nupkg" />
     <None Include="Respond.1.4.2\Respond.1.4.2.nupkg" />
     <None Include="System.Diagnostics.DiagnosticSource.4.4.1\lib\netcoreapp2.0\_._" />
     <None Include="System.Diagnostics.DiagnosticSource.4.4.1\ref\netcoreapp2.0\_._" />
@@ -432,6 +446,18 @@
     <Content Include="Newtonsoft.Json.10.0.3\lib\portable-net45+win8+wp8+wpa81\Newtonsoft.Json.xml" />
     <Content Include="NuGet.CommandLine.4.4.1\tools\NuGet.exe" />
     <Content Include="Owin.1.0\lib\net40\Owin.dll" />
+    <Content Include="popper.js.1.12.9\content\Scripts\esm\popper-utils.js" />
+    <Content Include="popper.js.1.12.9\content\Scripts\esm\popper-utils.min.js" />
+    <Content Include="popper.js.1.12.9\content\Scripts\esm\popper.js" />
+    <Content Include="popper.js.1.12.9\content\Scripts\esm\popper.min.js" />
+    <Content Include="popper.js.1.12.9\content\Scripts\popper-utils.js" />
+    <Content Include="popper.js.1.12.9\content\Scripts\popper-utils.min.js" />
+    <Content Include="popper.js.1.12.9\content\Scripts\popper.js" />
+    <Content Include="popper.js.1.12.9\content\Scripts\popper.min.js" />
+    <Content Include="popper.js.1.12.9\content\Scripts\umd\popper-utils.js" />
+    <Content Include="popper.js.1.12.9\content\Scripts\umd\popper-utils.min.js" />
+    <Content Include="popper.js.1.12.9\content\Scripts\umd\popper.js" />
+    <Content Include="popper.js.1.12.9\content\Scripts\umd\popper.min.js" />
     <Content Include="Respond.1.4.2\content\Scripts\respond.js" />
     <Content Include="Respond.1.4.2\content\Scripts\respond.matchmedia.addListener.js" />
     <Content Include="Respond.1.4.2\content\Scripts\respond.matchmedia.addListener.min.js" />
@@ -455,6 +481,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="popper.js.1.12.9\content\Scripts\index.d.ts" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
