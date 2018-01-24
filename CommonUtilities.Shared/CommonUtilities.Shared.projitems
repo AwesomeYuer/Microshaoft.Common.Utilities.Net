@@ -187,6 +187,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)WebMvcApi.NET45\WebMvcApiPerformanceCountersHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebMvcApi.NET45\WebMvcApiRoutePrefixGroupingHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WindowsAPI\CreateProcessAsUser.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WorkFlow\ActivityFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorkFlow\WorkFlowHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Xml\XmlCDATA.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Xml\XmlValidationHelper.cs" />
