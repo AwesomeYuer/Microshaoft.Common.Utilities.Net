@@ -1,10 +1,10 @@
-﻿namespace Server
+﻿namespace Microshaoft
 {
     using Microshaoft;
     using System;
     using System.Net;
     using System.Net.Sockets;
-    class EchoServer<T>
+    public class EchoServer<T>
     {
         //Socket _socketListener;
         private Action<SocketAsyncDataHandler<T>, byte[]> _onReceivedDataProcessAction;
