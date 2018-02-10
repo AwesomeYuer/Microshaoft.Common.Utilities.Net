@@ -263,7 +263,7 @@
                             (sender, e) =>
                             {
                                 var socket = sender as Socket;
-                                if (e.BytesTransferred >= 0)
+                                if (e.BytesTransferred > 0)
                                 {
                                     byte[] buffer = e.Buffer;
                                     int r = e.BytesTransferred;
