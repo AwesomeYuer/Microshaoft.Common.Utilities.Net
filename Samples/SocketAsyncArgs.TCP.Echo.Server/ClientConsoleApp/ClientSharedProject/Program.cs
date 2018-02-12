@@ -13,7 +13,6 @@ namespace Client
     {
         static void Main(string[] args)
         {
-
 #if NETCOREAPP2_0
             Console.WriteLine(RuntimeInformation.OSArchitecture.ToString());
             Console.WriteLine(RuntimeInformation.OSDescription);
@@ -21,14 +20,29 @@ namespace Client
 #endif
 
             Console.Title = "Client";
-            var ipa = IPAddress.Parse("127.0.0.1");
+            int port = 18180;
+            Console.WriteLine("Please input port to connect ...");
+            if
+                (
+                    int.TryParse
+                        (
+                            Console.ReadLine()
+                            , out int p
+                        )
+                )
+            {
+                port = p;
+            }
+            Console.WriteLine($"Connect Port: {port}");
+            IPAddress ipa;
+            IPAddress.TryParse("127.0.0.1", out ipa);
             var socket = new Socket
                                 (
                                     AddressFamily.InterNetwork
                                     , SocketType.Stream
                                     , ProtocolType.Tcp
                                 );
-            var ipep = new IPEndPoint(ipa, 18180);
+            var ipep = new IPEndPoint(ipa, port);
             socket.Connect(ipep);
 
             //Console.ReadLine();

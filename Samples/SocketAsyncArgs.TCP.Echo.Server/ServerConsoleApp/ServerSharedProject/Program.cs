@@ -17,13 +17,16 @@
             Console.WriteLine(RuntimeInformation.FrameworkDescription);
 #endif
             Console.Title = "Server";
-            IPAddress ipa;
-            IPAddress.TryParse("127.0.0.1", out ipa);
+           
             var receiveEncoding = Encoding.UTF8;
             var sendEncoding = Encoding.UTF8;
+            var port = 18180;
+            IPAddress ipa;
+            IPAddress.TryParse("127.0.0.1", out ipa);
+            ipa = IPAddress.Any;
             var es = new EchoServer<string>
                             (
-                                new IPEndPoint(ipa, 18180)
+                                new IPEndPoint(ipa, port)
                                 , (x, y) =>
                                 {
                                     var s = receiveEncoding.GetString(y);
@@ -34,7 +37,11 @@
                                                     , "\r\n"
                                                     , s
                                                     , DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")
+#if NETCOREAPP2_0
+                                                    , RuntimeInformation.OSDescription
+#else
                                                     , ""
+#endif
                                                 );
                                     Console.WriteLine(s);
                                     Console.WriteLine($"Server ReceivedAsyncCount: {x.ReceivedAsyncCount}");
