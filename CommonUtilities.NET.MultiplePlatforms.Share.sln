@@ -186,6 +186,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientConsoleApp.Framework"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ClientSharedProject", "Samples\SocketAsyncArgs.TCP.Echo.Server\ClientConsoleApp\ClientSharedProject\ClientSharedProject.shproj", "{E2A49F80-5E62-414D-BF57-8E1802B144A8}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{DDC18FC6-4080-492B-B70F-B68B26225949}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		CommonUtilities.Shared\CommonUtilities.Lite.Shared.projitems*{1b65919e-10ef-4fce-9fec-de547a62fc15}*SharedItemsImports = 4
@@ -912,6 +914,22 @@ Global
 		{53AB334D-022F-485E-A755-FE59B38DB953}.Release|x64.Build.0 = Release|Any CPU
 		{53AB334D-022F-485E-A755-FE59B38DB953}.Release|x86.ActiveCfg = Release|Any CPU
 		{53AB334D-022F-485E-A755-FE59B38DB953}.Release|x86.Build.0 = Release|Any CPU
+		{DDC18FC6-4080-492B-B70F-B68B26225949}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDC18FC6-4080-492B-B70F-B68B26225949}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDC18FC6-4080-492B-B70F-B68B26225949}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{DDC18FC6-4080-492B-B70F-B68B26225949}.Debug|ARM.Build.0 = Debug|Any CPU
+		{DDC18FC6-4080-492B-B70F-B68B26225949}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{DDC18FC6-4080-492B-B70F-B68B26225949}.Debug|x64.Build.0 = Debug|Any CPU
+		{DDC18FC6-4080-492B-B70F-B68B26225949}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DDC18FC6-4080-492B-B70F-B68B26225949}.Debug|x86.Build.0 = Debug|Any CPU
+		{DDC18FC6-4080-492B-B70F-B68B26225949}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDC18FC6-4080-492B-B70F-B68B26225949}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDC18FC6-4080-492B-B70F-B68B26225949}.Release|ARM.ActiveCfg = Release|Any CPU
+		{DDC18FC6-4080-492B-B70F-B68B26225949}.Release|ARM.Build.0 = Release|Any CPU
+		{DDC18FC6-4080-492B-B70F-B68B26225949}.Release|x64.ActiveCfg = Release|Any CPU
+		{DDC18FC6-4080-492B-B70F-B68B26225949}.Release|x64.Build.0 = Release|Any CPU
+		{DDC18FC6-4080-492B-B70F-B68B26225949}.Release|x86.ActiveCfg = Release|Any CPU
+		{DDC18FC6-4080-492B-B70F-B68B26225949}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

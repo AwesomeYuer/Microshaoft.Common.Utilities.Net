@@ -1,0 +1,6 @@
+version: '3'
+
+services:
+  serverconsoleapp.core:
+    ports:
+      - "18180:18180"
