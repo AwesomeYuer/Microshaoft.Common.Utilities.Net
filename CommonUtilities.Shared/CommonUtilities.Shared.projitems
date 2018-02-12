@@ -18,7 +18,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\CompressHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\CryptographyHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\DateTimeHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\DebugConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Console\DebugConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\DirectoryHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\EasyTimer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\EncodingHelper.cs" />
@@ -34,7 +34,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\StringsHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\TaskProcessorHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\TryCatchFinallyHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\WindowsConsoleHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\WindowTaskProcessorHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Assembly\AssemblyHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Caches\CacheItemEntryRemovedNotifier.cs" />
@@ -48,6 +47,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)ConcurrentAsyncQueue\ConcurrentAsyncQueue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConcurrentAsyncQueue\KeyedStack.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\ConfigurationAppSettingsHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Console\WindowsBackgroundInteractiveConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Console\WindowsConsoleHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CRC\CRC16.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CRC\CRC32.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CRC\CrcHelper.cs" />

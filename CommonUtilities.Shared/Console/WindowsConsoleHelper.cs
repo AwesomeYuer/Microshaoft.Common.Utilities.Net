@@ -12,7 +12,7 @@
     {
         public static void AllocateConsole()
         {
-            AllocConsole();
+            AllocConsole(); 
             //Console.OpenStandardOutput();
 
             //IntPtr stdHandle = GetStdHandle(STD_OUTPUT_HANDLE);
