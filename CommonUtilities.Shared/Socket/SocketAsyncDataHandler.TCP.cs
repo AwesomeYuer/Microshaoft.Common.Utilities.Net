@@ -434,6 +434,8 @@
                             )
         {
             Interlocked.Increment(ref _receivedCount);
+            // related Issue/Question:
+            //https://github.com/dotnet/corefx/issues/26917
             bool r = socket.ReceiveAsync(socketAsyncEventArgs);
             if (!r)
             {
