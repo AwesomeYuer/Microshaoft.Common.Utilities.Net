@@ -1,4 +1,4 @@
-﻿#if NETFRAMEWORK4_X
+﻿//#if NETFRAMEWORK4_X
 
 namespace Microshaoft
 {
@@ -425,4 +425,4 @@ namespace TestConsoleApp6
         }
     }
 }
-#endif
+//#endif
