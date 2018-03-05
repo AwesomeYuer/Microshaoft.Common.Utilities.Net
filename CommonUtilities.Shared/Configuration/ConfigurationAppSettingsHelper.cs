@@ -1,4 +1,4 @@
-
+#if !XAMARIN
 namespace Microshaoft
 {
     using System;
@@ -219,5 +219,5 @@ namespace Microshaoft
         }
     }
 }
-
+#endif
 
