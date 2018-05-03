@@ -1,8 +1,7 @@
 ﻿using Android.App;
 using Android.Widget;
 using Android.OS;
-
-
+using System.Threading;
 
 
 namespace AndroidApp1
@@ -16,6 +15,16 @@ namespace AndroidApp1
 
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
+            
+
+            new Thread
+                    (
+                        () =>
+                        {
+                            Server.Program.Main(null);
+                        }
+                    ).Start();
+
         }
     }
 }
