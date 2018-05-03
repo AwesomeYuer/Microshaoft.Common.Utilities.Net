@@ -4,14 +4,14 @@
     using System;
     using System.Net;
     using System.Text;
-#if NETCOREAPP2_0
+#if NETCOREAPP2_X
     using System.Runtime.InteropServices;
 #endif
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-#if NETCOREAPP2_0
+#if NETCOREAPP2_X
             Console.WriteLine(RuntimeInformation.OSArchitecture.ToString());
             Console.WriteLine(RuntimeInformation.OSDescription);
             Console.WriteLine(RuntimeInformation.FrameworkDescription);
@@ -37,7 +37,7 @@
                                                     , "\r\n"
                                                     , s
                                                     , DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")
-#if NETCOREAPP2_0
+#if NETCOREAPP2_X
                                                     , RuntimeInformation.OSDescription
 #else
                                                     , ""

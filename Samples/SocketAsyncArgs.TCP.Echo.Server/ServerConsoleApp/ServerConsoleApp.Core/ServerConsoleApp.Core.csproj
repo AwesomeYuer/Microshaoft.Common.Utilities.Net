@@ -5,6 +5,10 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG;NETCOREAPP2_X;NETCOREAPP2_0</DefineConstants>
+  </PropertyGroup>
+
   <Import Project="..\ServerSharedProject\ServerSharedProject.projitems" Label="Shared" />
 
   <ItemGroup>

@@ -192,13 +192,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "005.Xamrain", "005.Xamrain"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AndroidApp1", "Samples\Xamarin\AndroidApp1\AndroidApp1.csproj", "{2F4CBF03-89F3-4250-A7D9-CBA4B527FFC8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonUtilities.NET.Xamarin.Standard.2.x", "CommonUtilities\CommonUtilities.Full\CommonUtilities.NET.Xamarin.Standard.2.x\CommonUtilities.NET.Xamarin.Standard.2.x.csproj", "{96ECF103-5181-4538-A15A-FFF8404042D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonUtilities.NET.Xamarin.Standard.2.x", "CommonUtilities\CommonUtilities.Full\CommonUtilities.NET.Xamarin.Standard.2.x\CommonUtilities.NET.Xamarin.Standard.2.x.csproj", "{96ECF103-5181-4538-A15A-FFF8404042D0}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		CommonUtilities.Shared\CommonUtilities.Lite.Shared.projitems*{1b65919e-10ef-4fce-9fec-de547a62fc15}*SharedItemsImports = 4
 		CommonUtilities.Shared\WebApiUtilities.Shared.projitems*{1fbd68b8-839e-4c54-a00c-beac21119371}*SharedItemsImports = 13
 		CommonUtilities.Shared\CommonUtilities.Lite.Shared.projitems*{214a20f4-f017-42d8-8cc1-e35054a42e30}*SharedItemsImports = 4
+		Samples\SocketAsyncArgs.TCP.Echo.Server\ServerConsoleApp\ServerSharedProject\ServerSharedProject.projitems*{2f4cbf03-89f3-4250-a7d9-cba4b527ffc8}*SharedItemsImports = 4
 		Samples\SocketAsyncArgs.TCP.Echo.Server\ServerConsoleApp\ServerSharedProject\ServerSharedProject.projitems*{3f6feee0-0473-441f-a073-889503ec7710}*SharedItemsImports = 13
 		Test\CommonUtilities.Console.Test.Shared\CommonUtilities.Console.Test.Shared.projitems*{4abb4b40-9f74-40e0-aa24-6ed891bfcd4b}*SharedItemsImports = 4
 		Samples\SocketAsyncArgs.TCP.Echo.Server\ClientConsoleApp\ClientSharedProject\ClientSharedProject.projitems*{53ab334d-022f-485e-a755-fe59b38db953}*SharedItemsImports = 4
