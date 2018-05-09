@@ -2,6 +2,20 @@
 {
     using System;
     using System.Globalization;
+
+    public static class DateTimeExtensionsManager
+    {
+        public static DateTime GetAlignSecondsDateTime(this DateTime time, long alignSeconds)
+        {
+            var r = DateTimeHelper
+                        .GetAlignSecondsDateTime
+                                (
+                                    time
+                                    , alignSeconds
+                                );
+            return r;
+        }
+    }
     public static class DateTimeHelper
     {
         public static void GetAlignSecondsDateTimes<T>
@@ -52,6 +66,7 @@
             DateTime dt = new DateTime(ticks);
             return dt;
         }
+
         public static string GetDateTimeString(DateTime time, string format)
         {
             return time.ToString(format);
