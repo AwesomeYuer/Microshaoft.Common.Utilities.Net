@@ -2,6 +2,20 @@
 {
     using System;
     using System.Globalization;
+
+    public static class DateTimeExtensionsManager
+    {
+        public static DateTime GetAlignSecondsDateTime(this DateTime time, long alignSeconds)
+        {
+            var r = DateTimeHelper
+                        .GetAlignSecondsDateTime
+                                (
+                                    time
+                                    , alignSeconds
+                                );
+            return r;
+        }
+    }
     public static class DateTimeHelper
     {
         public static void GetAlignSecondsDateTimes<T>
@@ -24,14 +38,16 @@
         public static bool IsVaildateTimestamp(DateTime timeStamp, int timeoutSeconds)
         {
             long l = SecondsDiffNow(timeStamp);
-            return ((l > 0) && (l < timeoutSeconds));
+            var r = ((l > 0) && (l < timeoutSeconds));
+            return r;
         }
 
         public static long MillisecondsDiff(DateTime time1, DateTime time2)
         {
             long t1 = time1.Ticks;
             long t2 = time2.Ticks;
-            return (t2 - t1) / 10000;
+            var r = (t2 - t1) / 10000;
+            return r;
         }
         public static long SecondsDiff(DateTime time1, DateTime time2)
         {
@@ -47,11 +63,12 @@
         }
         public static DateTime GetAlignSecondsDateTime(DateTime time, long alignSeconds)
         {
-            long ticks = time.Ticks;
+            var ticks = time.Ticks;
             ticks -= ticks % (10000 * 1000 * alignSeconds);
-            DateTime dt = new DateTime(ticks);
-            return dt;
+            var r = new DateTime(ticks);
+            return r;
         }
+
         public static string GetDateTimeString(DateTime time, string format)
         {
             return time.ToString(format);
@@ -59,7 +76,8 @@
         public static DateTime? ParseExactNullableDateTime(string text, string format)
         {
             DateTime time;
-            DateTime? r = DateTime.TryParseExact
+            DateTime? r = DateTime
+                                .TryParseExact
                                         (
                                             text
                                             , format
