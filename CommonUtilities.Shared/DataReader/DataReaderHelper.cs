@@ -167,6 +167,7 @@ namespace Microshaoft
                              )
         {
             var fieldsCount = dataReader.FieldCount;
+            //SqlHelperParameterCache.GetSpParameterSet()
             while (dataReader.Read())
             {
                 JObject row = new JObject();

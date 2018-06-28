@@ -150,6 +150,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Socket\SocketAsyncDataHandler.UDP.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Socket\SocketAsyncEventArgsPool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Socket\SocketHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sql\SqlHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System.Buffers.ArrayPool\ArrayPool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Throttler\RateLimiters\FixedTokenBucket.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Throttler\RateLimiters\IThrottleStrategy.cs" />
