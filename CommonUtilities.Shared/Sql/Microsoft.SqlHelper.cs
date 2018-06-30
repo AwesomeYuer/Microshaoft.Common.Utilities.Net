@@ -9,7 +9,7 @@ namespace Microshaoft
     using System.CodeDom.Compiler;
     using Microsoft.CSharp;
 
-    using Microshaoft.Data;
+    using Microsoft.Data;
     public class Class1
     {
         [STAThread]
@@ -47,7 +47,7 @@ namespace Microshaoft
             cn.Imports.Add(new CodeNamespaceImport("System"));
             cn.Imports.Add(new CodeNamespaceImport("System.Data"));
             cn.Imports.Add(new CodeNamespaceImport("System.Data.SqlClient"));
-            //cn.Imports.Add(new CodeNamespaceImport("Microshaoft.Data"));
+            //cn.Imports.Add(new CodeNamespaceImport("Microsoft.Data"));
             CodeTypeDeclaration ctd = new CodeTypeDeclaration(className);
 
             System.CodeDom.CodeMemberField cmf = new CodeMemberField(new CodeTypeReference(typeof(string)), "_ConnectionString");
@@ -235,7 +235,7 @@ namespace Microshaoft
             cn.Imports.Add(new CodeNamespaceImport("System"));
             cn.Imports.Add(new CodeNamespaceImport("System.Data"));
             cn.Imports.Add(new CodeNamespaceImport("System.Data.SqlClient"));
-            cn.Imports.Add(new CodeNamespaceImport("Microshaoft.Data"));
+            cn.Imports.Add(new CodeNamespaceImport("Microsoft.Data"));
             CodeTypeDeclaration ctd = new CodeTypeDeclaration(className);
 
             System.CodeDom.CodeMemberField cmf = new CodeMemberField(new CodeTypeReference(typeof(string)), "_ConnectionString");
@@ -462,7 +462,7 @@ namespace Microshaoft
 // SqlHelper.v3.1.cs
 //csc.exe SqlHelper.v3.1.cs /t:library /r:C:\WINNT\Microsoft.NET\Framework\v1.1.4322\System.Data.OracleClient.dll
 
-namespace Microshaoft.Data
+namespace Microsoft.Data
 {
     using System;
     using System.IO;
