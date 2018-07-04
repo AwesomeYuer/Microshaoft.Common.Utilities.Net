@@ -113,7 +113,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Socket\SocketAsyncDataHandler.UDP.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Socket\SocketAsyncEventArgsPool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Socket\SocketHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Sql\MIcroshaoft.OleDbType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\Microshaoft.SqlHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\Microsoft.SqlHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System.Buffers.ArrayPool\ArrayPool.cs" />

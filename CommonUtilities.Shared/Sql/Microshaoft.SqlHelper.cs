@@ -1,52 +1,198 @@
 ﻿namespace Microshaoft
 {
-    using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Data;
-    using System.Data.OleDb;
     using System.Data.SqlClient;
     using System.Linq;
-#if !NETFRAMEWORK4_X
-    using Microshaoft.Data.OleDb;
-#endif
+
     public static class SqlHelper
     {
-        public class SqlParameterDefinition
+        public static List<SqlParameter> GenerateExecuteSqlParameters
+                                (
+                                    string connectionString
+                                    , string storeProcedureName
+                                    , JObject actualParameters
+                                )
         {
-            public string ParameterName;
-            [JsonProperty("SqlDbType")]
-            public string SqlDbTypeName;
-            public string Size;
-            public ParameterDirection Direction;
-            public byte Precision;
-        }
-
-        public static SqlParameter[] GenerateExecuteSqlParameters(SqlConnection connection, string storeProcedureName, JObject actualParameters)
-        {
-            var sqlParameters = GetCachedStoreProcedureParameters(connection, storeProcedureName, true);
-            var actualSqlParameters = new SqlParameter[sqlParameters.Length];
-            var i = 0;
-            foreach (var sqlParameter in sqlParameters)
+            List<SqlParameter> result = null;
+            var sqlParameters = GetCachedStoreProcedureParameters
+                                    (
+                                        connectionString
+                                        , storeProcedureName
+                                        , true
+                                    );
+            foreach (KeyValuePair<string, JToken> jProperty in actualParameters)
             {
-                var parameterName = sqlParameter.ParameterName;
-                var hasActualParameter = actualParameters[parameterName] != null;
-                var actualSqlParameter = sqlParameter.Clone(!hasActualParameter);
-                if (hasActualParameter)
+                SqlParameter sqlParameter = null;
+                if
+                    (
+                        sqlParameters
+                            .TryGetValue
+                                (
+                                    jProperty.Key
+                                    , out sqlParameter
+                                )
+                    )
                 {
-                    actualSqlParameter.Value = (object)actualParameters[parameterName];
+                    var direction = sqlParameter
+                                        .Direction;
+                    if 
+                        (
+                            direction == ParameterDirection.Input
+                            ||
+                            direction == ParameterDirection.InputOutput
+                        )
+                    {
+                        var r = sqlParameter.ShallowClone();
+                        r.Value = (object)jProperty.Value;
+                        if (result == null)
+                        {
+                            result = new List<SqlParameter>();
+                        }
+                        result.Add(r);
+                    }
                 }
-                actualSqlParameters[i] = actualSqlParameter;
-                i++;
+            }
+            
+  
+
+            foreach (var kvp in sqlParameters)
+            {
+                var sqlParameter = kvp.Value;
+                if 
+                    (
+                        !result
+                            .Exists
+                                (
+                                    (x) =>
+                                    {
+                                        return
+                                            (string.Compare(x.ParameterName, sqlParameter.ParameterName, true) == 0);
+                                    }
+                                )
+                    )
+                {
+                    var direction = sqlParameter.Direction;
+                    if
+                        (
+                            direction != ParameterDirection.Input
+
+                        )
+                    {
+                        if (result == null)
+                        {
+                            result = new List<SqlParameter>();
+                        }
+                        result.Add(sqlParameter.ShallowClone());
+                    }
+
+                }
+                
+                
             }
 
-            return actualSqlParameters;
+            return result;
+
         }
+        public static JValue GetJValue(this SqlParameter target)
+        {
+            JValue r = null;
+            if
+                (
+                    target.SqlDbType == SqlDbType.VarChar
+                    ||
+                    target.SqlDbType == SqlDbType.NVarChar
+                    ||
+                    target.SqlDbType == SqlDbType.Char
+                    ||
+                    target.SqlDbType == SqlDbType.NChar
+                    ||
+                    target.SqlDbType == SqlDbType.Text
+                    ||
+                    target.SqlDbType == SqlDbType.NText
+                )
+            {
+                r = new JValue((string)target.Value);
+            }
+            else if
+                (
+                    target.SqlDbType == SqlDbType.DateTime
+                    ||
+                    target.SqlDbType == SqlDbType.DateTime2
+                    ||
+                    target.SqlDbType == SqlDbType.SmallDateTime
+                    ||
+                    target.SqlDbType == SqlDbType.Date
+                    ||
+                    target.SqlDbType == SqlDbType.DateTime
+                )
+            {
+                r = new JValue((DateTime)target.Value);
+            }
+            else if
+                (
+                    target.SqlDbType == SqlDbType.DateTimeOffset
+                )
+            {
+                r = new JValue((DateTimeOffset)target.Value);
+            }
+            else if
+                (
+                    target.SqlDbType == SqlDbType.Bit
+                    
+                )
+            {
+                r = new JValue((bool)target.Value);
+            }
+            else if
+                (
+                    target.SqlDbType == SqlDbType.Decimal
 
+                )
+            {
+                r = new JValue((decimal)target.Value);
+            }
+            else if
+                (
+                    target.SqlDbType == SqlDbType.Float
 
+                )
+            {
+                r = new JValue((float)target.Value);
+            }
+            else if
+                (
+                    target.SqlDbType == SqlDbType.Real
 
+                )
+            {
+                r = new JValue((double)target.Value);
+            }
+            else if
+                (
+                    target.SqlDbType == SqlDbType.UniqueIdentifier
+                )
+            {
+                r = new JValue((Guid)target.Value);
+            }
+            else if
+                (
+                    target.SqlDbType == SqlDbType.BigInt
+                    ||
+                    target.SqlDbType == SqlDbType.Int
+                    ||
+                    target.SqlDbType == SqlDbType.SmallInt
+                    ||
+                    target.SqlDbType == SqlDbType.TinyInt
+                )
+            {
+                r = new JValue((long)target.Value);
+            }
+            return r;
+        }
         public static JArray ToJArray(this SqlParameter[] target)
                         
         {
@@ -68,7 +214,7 @@
 
         }
 
-        public static SqlParameter Clone(this SqlParameter target, bool includeValue = false)
+        public static SqlParameter ShallowClone(this SqlParameter target, bool includeValue = false)
         {
             var result = new SqlParameter();
             result.ParameterName = target.ParameterName;
@@ -86,105 +232,139 @@
         }
 
 
-        public static ConcurrentDictionary<string, SqlParameter[]> _dictionary = new ConcurrentDictionary<string, SqlParameter[]>();
-        public static SqlParameter[] GetCachedStoreProcedureParameters
+        public static ConcurrentDictionary<string, IDictionary<string, SqlParameter>>
+            _dictionary 
+                = new ConcurrentDictionary<string, IDictionary<string, SqlParameter>>
+                            (
+                                StringComparer.OrdinalIgnoreCase
+                            );
+        public static IDictionary<string,SqlParameter> GetCachedStoreProcedureParameters
                                         (
-                                            SqlConnection connection
-                                            , string p_procedure_name
+                                            string connectionString
+                                            , string storeProcedureName
                                             , bool includeReturnValueParameter = false
                                         )
         {
-            
-
-            var key = $"{connection.DataSource}-{connection.Database}-{p_procedure_name}".ToUpper();
+            SqlConnection connection = new SqlConnection(connectionString);
+            var key = $"{connection.DataSource}-{connection.Database}-{storeProcedureName}".ToUpper();
             var result = _dictionary
                                 .GetOrAdd
                                         (
                                             key
                                             , (x) =>
                                             {
-                                                var sqlParameters = GetStoreProcedureParameters
-                                                    (
-                                                        connection
-                                                        , p_procedure_name
-                                                        , includeReturnValueParameter
-                                                    );
+                                                var sqlParameters
+                                                        = GetStoreProcedureParameters
+                                                                (
+                                                                    connectionString
+                                                                    , storeProcedureName
+                                                                    , includeReturnValueParameter
+                                                                );
                                                 var r = sqlParameters
-                                                                .ToArray();
+                                                                .ToDictionary
+                                                                    (
+                                                                        (xx) =>
+                                                                        {
+                                                                            return xx
+                                                                                    .ParameterName
+                                                                                    .TrimStart('@');
+                                                                        }
+                                                                        , StringComparer.OrdinalIgnoreCase
+                                                                    );
                                                 return r;
                                             }
                                         );
             return result;
         }
 
-
-
         public static IEnumerable<SqlParameter> GetStoreProcedureParameters
                                         (
-                                            SqlConnection connection
-                                            , string p_procedure_name
+                                            string connectionString
+                                            , string storeProcedureName
                                             , bool includeReturnValueParameter = false
                                         )
         {
+            SqlConnection connection = null;
 
-            int p_group_number = 0;
-            string p_procedure_schema = string.Empty;
-            string p_parameter_name = string.Empty;
+            try
+            {
+                connection = new SqlConnection(connectionString);
+                var dataSource = connection.DataSource;
+                var dataBase = connection.Database;
+                //var key = $"{connection.DataSource}-{connection.Database}-{p_procedure_name}".ToUpper();
+                int groupNumber = 0;
+                string procedureSchema = string.Empty;
+                string parameterName = string.Empty;
 
-
-            SqlCommand command = new SqlCommand("sp_procedure_params_rowset", connection);
-            command.CommandType = CommandType.StoredProcedure;
-            
-            SqlParameter sqlParameterProcedure_Name = command.Parameters.Add("@procedure_name", SqlDbType.NVarChar, 128);
-            sqlParameterProcedure_Name.Value = (p_procedure_name != null ? (object)p_procedure_name : DBNull.Value);
-            SqlParameter sqlParameterGroup_Number = command.Parameters.Add("@group_number", SqlDbType.Int);
-            sqlParameterGroup_Number.Value = p_group_number;
-            SqlParameter sqlParameterProcedure_Schema = command.Parameters.Add("@procedure_schema", SqlDbType.NVarChar, 128);
-            sqlParameterProcedure_Schema.Value = (p_procedure_schema != null ? (object)p_procedure_schema : DBNull.Value);
-            SqlParameter sqlParameterParameter_Name = command.Parameters.Add("@parameter_name", SqlDbType.NVarChar, 128);
-            sqlParameterParameter_Name.Value = (p_parameter_name != null ? (object)p_parameter_name : DBNull.Value);
-            SqlParameter sqlParameterReturn = command.Parameters.Add("@RETURN_VALUE", SqlDbType.Int);
-            sqlParameterReturn.Direction = ParameterDirection.ReturnValue;
-            connection.Open();
-
-            var sqlDataReader = command.ExecuteReader(CommandBehavior.CloseConnection);
-
-            var sqlParameters = sqlDataReader.ExecuteRead<SqlParameter>
-                    (
-                        (x, reader) =>
-                        {
-                            var sqlParameter = new SqlParameter();
-                            sqlParameter
-                                .ParameterName = (string)(reader["PARAMETER_NAME"]);
-                            sqlParameter
-                                .SqlDbType = GetSqlDbType
-                                                (
-                                                    (short)(reader["DATA_TYPE"])
-
-                                                    , (string)(reader["TYPE_NAME"])
-                                                );
-                            if (reader["CHARACTER_MAXIMUM_LENGTH"] != DBNull.Value)
-                            {
-                                sqlParameter
-                                    .Size = reader.GetInt32(reader.GetOrdinal("CHARACTER_MAXIMUM_LENGTH"));
-                            }
-                            
-                            sqlParameter
-                                    .Direction = GetParameterDirection
-                                                    (
-                                                        reader.GetInt16(reader.GetOrdinal("PARAMETER_TYPE"))
-                                                    );
-                            if ((sqlParameter.SqlDbType == SqlDbType.Decimal))
-                            {
-                                sqlParameter.Scale = (byte)(((short)(reader["NUMERIC_SCALE"]) & 255));
-                                sqlParameter.Precision = (byte)(((short)(reader["NUMERIC_PRECISION"]) & 255));
-                            }
-                            return sqlParameter;
-                        }
-                    );
-            return sqlParameters;
+                using (SqlCommand command = new SqlCommand("sp_procedure_params_rowset", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
 
 
+                    SqlParameter sqlParameterProcedure_Name = command.Parameters.Add("@procedure_name", SqlDbType.NVarChar, 128);
+                    sqlParameterProcedure_Name.Value = (storeProcedureName != null ? (object)storeProcedureName : DBNull.Value);
+                    //SqlParameter sqlParameterGroup_Number = command.Parameters.Add("@group_number", SqlDbType.Int);
+                    //sqlParameterGroup_Number.Value = groupNumber;
+                    //SqlParameter sqlParameterProcedure_Schema = command.Parameters.Add("@procedure_schema", SqlDbType.NVarChar, 128);
+                    //sqlParameterProcedure_Schema.Value = (procedureSchema != null ? (object)procedureSchema : DBNull.Value);
+                    //SqlParameter sqlParameterParameter_Name = command.Parameters.Add("@parameter_name", SqlDbType.NVarChar, 128);
+                    //sqlParameterParameter_Name.Value = (parameterName != null ? (object)parameterName : DBNull.Value);
+                    SqlParameter sqlParameterReturn = command.Parameters.Add("@RETURN_VALUE", SqlDbType.Int);
+                    sqlParameterReturn.Direction = ParameterDirection.ReturnValue;
+                    connection.Open();
+                    var sqlDataReader = command.ExecuteReader(CommandBehavior.CloseConnection);
+                    var sqlParameters
+                            = sqlDataReader
+                                    .ExecuteRead<SqlParameter>
+                                        (
+                                            (x, reader) =>
+                                            {
+                                                var sqlParameter = new SqlParameter();
+                                                sqlParameter
+                                                    .ParameterName = (string)(reader["PARAMETER_NAME"]);
+                                                var sqlDbTypeName = (string)(reader["TYPE_NAME"]);
+                                                SqlDbType sqlDbType = (SqlDbType) Enum.Parse(typeof(SqlDbType), sqlDbTypeName, true);
+                                                
+                                                sqlParameter
+                                                    .SqlDbType = sqlDbType;
+                                                if (reader["CHARACTER_MAXIMUM_LENGTH"] != DBNull.Value)
+                                                {
+                                                    sqlParameter
+                                                        .Size = reader
+                                                                    .GetInt32
+                                                                        (
+                                                                            reader
+                                                                                .GetOrdinal("CHARACTER_MAXIMUM_LENGTH")
+                                                                        );
+                                                }
+                                                
+                                                sqlParameter
+                                                        .Direction = GetParameterDirection
+                                                                        (
+                                                                            reader
+                                                                                .GetInt16
+                                                                                    (
+                                                                                        reader
+                                                                                            .GetOrdinal("PARAMETER_TYPE")
+                                                                                    )
+                                                                        );
+                                                if ((sqlParameter.SqlDbType == SqlDbType.Decimal))
+                                                {
+                                                    sqlParameter.Scale = (byte)(((short)(reader["NUMERIC_SCALE"]) & 255));
+                                                    sqlParameter.Precision = (byte)(((short)(reader["NUMERIC_PRECISION"]) & 255));
+                                                }
+                                                return sqlParameter;
+                                            }
+                                        );
+                    return sqlParameters;
+                }
+                
+            }
+            finally
+            {
+                //connection.Close();
+                //connection = null;
+            }
         }
 
         /// <summary>
@@ -213,105 +393,7 @@
             }
             return pd;
         }
-        private static SqlDbType GetSqlDbType(short parameterType, string typeName)
-        {
-            SqlDbType cmdType;
-            OleDbType oleDbType;
-            cmdType = SqlDbType.Variant;
-            oleDbType = (OleDbType)(parameterType);
-
-            switch (oleDbType)
-            {
-                case OleDbType.SmallInt:
-                    cmdType = SqlDbType.SmallInt;
-                    break;
-                case OleDbType.Integer:
-                    cmdType = SqlDbType.Int;
-                    break;
-                case OleDbType.Single:
-                    cmdType = SqlDbType.Real;
-                    break;
-                case OleDbType.Double:
-                    cmdType = SqlDbType.Float;
-                    break;
-                case OleDbType.Currency:
-                    cmdType = (typeName == "money") ? SqlDbType.Money : SqlDbType.SmallMoney;
-                    break;
-                case OleDbType.Date:
-                    cmdType = (typeName == "datetime") ? SqlDbType.DateTime : SqlDbType.SmallDateTime;
-                    break;
-                case OleDbType.BSTR:
-                    cmdType = (typeName == "nchar") ? SqlDbType.NChar : SqlDbType.NVarChar;
-                    break;
-                case OleDbType.Boolean:
-                    cmdType = SqlDbType.Bit;
-                    break;
-                case OleDbType.Variant:
-                    cmdType = SqlDbType.Variant;
-                    break;
-                case OleDbType.Decimal:
-                    cmdType = SqlDbType.Decimal;
-                    break;
-                case OleDbType.TinyInt:
-                    cmdType = SqlDbType.TinyInt;
-                    break;
-                case OleDbType.UnsignedTinyInt:
-                    cmdType = SqlDbType.TinyInt;
-                    break;
-                case OleDbType.UnsignedSmallInt:
-                    cmdType = SqlDbType.SmallInt;
-                    break;
-                case OleDbType.BigInt:
-                    cmdType = SqlDbType.BigInt;
-                    break;
-                case OleDbType.Filetime:
-                    cmdType = (typeName == "datetime") ? SqlDbType.DateTime : SqlDbType.SmallDateTime;
-                    break;
-                case OleDbType.Guid:
-                    cmdType = SqlDbType.UniqueIdentifier;
-                    break;
-                case OleDbType.Binary:
-                    cmdType = (typeName == "binary") ? SqlDbType.Binary : SqlDbType.VarBinary;
-                    break;
-                case OleDbType.Char:
-                    cmdType = (typeName == "char") ? SqlDbType.Char : SqlDbType.VarChar;
-                    break;
-                case OleDbType.WChar:
-                    cmdType = (typeName == "nchar") ? SqlDbType.NChar : SqlDbType.NVarChar;
-                    break;
-                case OleDbType.Numeric:
-                    cmdType = SqlDbType.Decimal;
-                    break;
-                case OleDbType.DBDate:
-                    cmdType = (typeName == "datetime") ? SqlDbType.DateTime : SqlDbType.SmallDateTime;
-                    break;
-                case OleDbType.DBTime:
-                    cmdType = (typeName == "datetime") ? SqlDbType.DateTime : SqlDbType.SmallDateTime;
-                    break;
-                case OleDbType.DBTimeStamp:
-                    cmdType = (typeName == "datetime") ? SqlDbType.DateTime : SqlDbType.SmallDateTime;
-                    break;
-                case OleDbType.VarChar:
-                    cmdType = (typeName == "char") ? SqlDbType.Char : SqlDbType.VarChar;
-                    break;
-                case OleDbType.LongVarChar:
-                    cmdType = SqlDbType.Text;
-                    break;
-                case OleDbType.VarWChar:
-                    cmdType = (typeName == "nchar") ? SqlDbType.NChar : SqlDbType.NVarChar;
-                    break;
-                case OleDbType.LongVarWChar:
-                    cmdType = SqlDbType.NText;
-                    break;
-                case OleDbType.VarBinary:
-                    cmdType = (typeName == "binary") ? SqlDbType.Binary : SqlDbType.VarBinary;
-                    break;
-                case OleDbType.LongVarBinary:
-                    cmdType = SqlDbType.Image;
-                    break;
-            }
-            return cmdType;
-        }
+        
 
     }
 
