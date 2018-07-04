@@ -1,12 +1,11 @@
-﻿using Microshaoft;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
-using System.Data;
-using System.Data.SqlClient;
-using System.Linq;
-
-namespace WebApplication.ASPNetCore.Controllers
+﻿namespace WebApplication.ASPNetCore.Controllers
 {
+    using Microshaoft;
+    using Microsoft.AspNetCore.Mvc;
+    using Newtonsoft.Json.Linq;
+    using System.Data;
+    using System.Data.SqlClient;
+    using System.Linq;
     [Route("api/[controller]")]
     [ApiController]
     public class StoreProcedureExecutorController : ControllerBase

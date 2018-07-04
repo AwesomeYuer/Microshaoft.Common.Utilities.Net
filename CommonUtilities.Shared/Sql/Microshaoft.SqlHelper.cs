@@ -382,8 +382,8 @@
                     break;
                 case 2: //或者干脆注释掉 case 2 的全部
                     pd = ParameterDirection.Output; //是这里的问题
-                    goto default; //我加的这句话
-                                  //break; //我注释掉的这句话
+                    //goto default; //我加的这句话
+                    break; //我注释掉的这句话
                 case 4:
                     pd = ParameterDirection.ReturnValue;
                     break;
