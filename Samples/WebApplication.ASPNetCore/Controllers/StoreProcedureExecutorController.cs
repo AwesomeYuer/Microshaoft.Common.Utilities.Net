@@ -50,8 +50,8 @@
                     connection.Open();
                     var dataReader = command.ExecuteReader();
                     var data = dataReader
-                                    .AsJTokensEnumerable()
-                                    .ToArray();
+                                    .AsJTokensEnumerable();
+                                    //.ToArray();
                     var result = new JObject();
                     var jProperty = new JProperty
                                             (
