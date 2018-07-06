@@ -64,10 +64,11 @@ namespace Microshaoft
                                 (
                                     JObject rootJObject
                                     , string ancestorPath
+                                    , string propertyName
                                     , JObject currentJObject
-                                    , Action<JObject, string, JObject, JProperty>
+                                    , Action<JObject, string, string, JObject, JProperty>
                                             onTraveledJValuePropertyProcessAction = null
-                                    , Action<JObject, string, JObject>
+                                    , Action<JObject, string, string, JObject>
                                             onTraveledJObjectPropertyProcessAction = null
                                 )
         {
@@ -76,6 +77,7 @@ namespace Microshaoft
                         (
                             rootJObject
                             , ancestorPath
+                            , propertyName
                             , currentJObject
                         );
             var jProperties = currentJObject.Properties();
@@ -104,6 +106,7 @@ namespace Microshaoft
                                     (
                                         rootJObject
                                         , ancestorPath
+                                        , jProperty.Name
                                         , currentJObject
                                         , jProperty
                                     );
@@ -124,6 +127,7 @@ namespace Microshaoft
                                     (
                                         rootJObject
                                         , string.Format("{0}[{1}]", path, i)
+                                        , jProperty.Name
                                         , jObject
                                         , onTraveledJValuePropertyProcessAction
                                         , onTraveledJObjectPropertyProcessAction
@@ -141,6 +145,7 @@ namespace Microshaoft
                                 (
                                     rootJObject
                                     , path
+                                    , jProperty.Name
                                     , jObject
                                     , onTraveledJValuePropertyProcessAction
                                     , onTraveledJObjectPropertyProcessAction
@@ -153,15 +158,16 @@ namespace Microshaoft
         public static void Travel
                                 (
                                     this JObject target
-                                    , Action<JObject, string, JObject, JProperty>
+                                    , Action<JObject, string, string, JObject, JProperty>
                                             onTraveledJValuePropertyProcessAction = null
-                                    , Action<JObject, string, JObject>
+                                    , Action<JObject, string, string, JObject>
                                             onTraveledJObjectPropertyProcessAction = null
                                 )
         {
             Travel
                 (
                     target
+                    , string.Empty
                     , string.Empty
                     , target
                     , onTraveledJValuePropertyProcessAction
@@ -235,7 +241,7 @@ namespace Microshaoft
                 (
                     target
                     , null
-                    , (root, path, current) =>
+                    , (root, path, paropertyName, current) =>
                     {
                         JValue lastValue = null;
                         current
