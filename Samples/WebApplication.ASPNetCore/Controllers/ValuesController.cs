@@ -3,18 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 
-namespace WebApplication.ASPNetCore.Controllers
+namespace Microshaoft.AspNETCore.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class valuesController : ControllerBase
     {
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        [Route("{sp}")]
+        public ActionResult<string> Get
+                                (
+                                    string sp
+                                )
         {
-            return new string[] { "value1", "value2" };
+            return null;
         }
 
         // GET api/values/5

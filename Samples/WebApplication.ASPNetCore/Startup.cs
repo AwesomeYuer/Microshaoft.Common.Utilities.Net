@@ -18,6 +18,7 @@ namespace WebApplication.ASPNetCore
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+           // Configuration.GetConnectionString()
         }
 
         public IConfiguration Configuration { get; }

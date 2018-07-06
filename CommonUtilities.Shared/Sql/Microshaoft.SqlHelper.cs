@@ -393,8 +393,100 @@
             }
             return pd;
         }
-        
 
+        public static JObject StoreProcedureWebExecute
+                                (
+                                    SqlConnection connection
+                                    , string storeProcedureName
+                                    , string p = null //string.Empty
+                                    , int commandTimeout = 90
+                                )
+        {
+            var dataSource = connection.DataSource;
+            var dataBaseName = connection.Database;
+            try
+            {
+                using
+                    (
+                        SqlCommand command = new SqlCommand(storeProcedureName, connection)
+                        {
+                            CommandType = CommandType.StoredProcedure
+                            ,
+                            CommandTimeout = commandTimeout
+                        }
+                    )
+                {
+                    var actualParameters = JObject.Parse(p);
+                    var sqlParameters = SqlHelper
+                                            .GenerateExecuteSqlParameters
+                                                    (
+                                                        connection.ConnectionString
+                                                        , storeProcedureName
+                                                        , actualParameters
+                                                    );
+                    var parameters = sqlParameters.ToArray();
+                    command.Parameters.AddRange(parameters);
+                    connection.Open();
+                    var dataReader = command.ExecuteReader();
+                    var data = dataReader
+                                    .AsJTokensEnumerable();
+                    //var query = jarray
+                    //  .GroupBy(g => g["Type"])
+                    //  .Select(g => string.Format("var {0}={1};{2}", g.Key, new JArray(g.ToList()), Environment.NewLine));
+                    //                  string result = string.Join(string.Empty, query);
+
+                    var result = new JObject();
+                    var jProperty = new JProperty
+                                            (
+                                                "ResultSet"
+                                                , new JArray(data)
+                                            );
+
+                    result.Add(jProperty);
+                    var outputParameters
+                            = sqlParameters
+                                    .Where
+                                        (
+                                            (x) =>
+                                            {
+                                                return
+                                                    (
+                                                        x.Direction
+                                                        !=
+                                                        ParameterDirection.Input
+                                                    );
+                                            }
+                                        );
+                    JObject outputs = null;
+                    foreach (var x in outputParameters)
+                    {
+                        if (outputs == null)
+                        {
+                            outputs = new JObject();
+                        }
+                        outputs
+                                .Add
+                                    (
+                                        x.ParameterName.TrimStart('@')
+                                        , new JValue(x.Value)
+                                    );
+                    }
+                    if (outputs != null)
+                    {
+                        result.Add("outputs", outputs);
+                    }
+                    return result;
+                }
+            }
+            finally
+            {
+                if (connection.State != ConnectionState.Closed)
+                {
+                    connection.Close();
+                }
+                connection = null;
+            }
+        }
     }
 
 
