@@ -7,7 +7,6 @@
     using System.Data;
     using System.Data.SqlClient;
     using System.Linq;
-
     public static class SqlHelper
     {
         public static List<SqlParameter> GenerateExecuteSqlParameters
@@ -56,9 +55,6 @@
                     }
                 }
             }
-            
-  
-
             foreach (var kvp in sqlParameters)
             {
                 var sqlParameter = kvp.Value;
@@ -70,7 +66,15 @@
                                     (x) =>
                                     {
                                         return
-                                            (string.Compare(x.ParameterName, sqlParameter.ParameterName, true) == 0);
+                                            (
+                                                string
+                                                    .Compare
+                                                        (
+                                                            x.ParameterName
+                                                            , sqlParameter.ParameterName
+                                                            , true
+                                                        ) == 0
+                                            );
                                     }
                                 )
                     )
@@ -79,7 +83,6 @@
                     if
                         (
                             direction != ParameterDirection.Input
-
                         )
                     {
                         if (result == null)
@@ -88,14 +91,9 @@
                         }
                         result.Add(sqlParameter.ShallowClone());
                     }
-
                 }
-                
-                
             }
-
             return result;
-
         }
         public static JValue GetJValue(this SqlParameter target)
         {
@@ -142,7 +140,6 @@
             else if
                 (
                     target.SqlDbType == SqlDbType.Bit
-                    
                 )
             {
                 r = new JValue((bool)target.Value);
@@ -150,7 +147,6 @@
             else if
                 (
                     target.SqlDbType == SqlDbType.Decimal
-
                 )
             {
                 r = new JValue((decimal)target.Value);
@@ -158,7 +154,6 @@
             else if
                 (
                     target.SqlDbType == SqlDbType.Float
-
                 )
             {
                 r = new JValue((float)target.Value);
@@ -166,7 +161,6 @@
             else if
                 (
                     target.SqlDbType == SqlDbType.Real
-
                 )
             {
                 r = new JValue((double)target.Value);
@@ -194,7 +188,6 @@
             return r;
         }
         public static JArray ToJArray(this SqlParameter[] target)
-                        
         {
             int i = 1;
             var result = new JArray();
@@ -211,7 +204,6 @@
                 i++;
             }
             return result;
-
         }
 
         public static SqlParameter ShallowClone(this SqlParameter target, bool includeValue = false)
@@ -230,9 +222,7 @@
             }
             return result;
         }
-
-
-        public static ConcurrentDictionary<string, IDictionary<string, SqlParameter>>
+        private static ConcurrentDictionary<string, IDictionary<string, SqlParameter>>
             _dictionary 
                 = new ConcurrentDictionary<string, IDictionary<string, SqlParameter>>
                             (
@@ -247,33 +237,36 @@
         {
             SqlConnection connection = new SqlConnection(connectionString);
             var key = $"{connection.DataSource}-{connection.Database}-{storeProcedureName}".ToUpper();
-            var result = _dictionary
-                                .GetOrAdd
-                                        (
-                                            key
-                                            , (x) =>
-                                            {
-                                                var sqlParameters
-                                                        = GetStoreProcedureParameters
-                                                                (
-                                                                    connectionString
-                                                                    , storeProcedureName
-                                                                    , includeReturnValueParameter
-                                                                );
-                                                var r = sqlParameters
-                                                                .ToDictionary
-                                                                    (
-                                                                        (xx) =>
-                                                                        {
-                                                                            return xx
-                                                                                    .ParameterName
-                                                                                    .TrimStart('@');
-                                                                        }
-                                                                        , StringComparer.OrdinalIgnoreCase
-                                                                    );
-                                                return r;
-                                            }
-                                        );
+            var result =
+                    _dictionary
+                        .GetOrAdd
+                                (
+                                    key
+                                    , (x) =>
+                                    {
+                                        var sqlParameters
+                                                = GetStoreProcedureParameters
+                                                        (
+                                                            connectionString
+                                                            , storeProcedureName
+                                                            , includeReturnValueParameter
+                                                        );
+                                        var r = sqlParameters
+                                                        .ToDictionary
+                                                            (
+                                                                (xx) =>
+                                                                {
+                                                                    return
+                                                                        xx
+                                                                            .ParameterName
+                                                                            .TrimStart('@');
+                                                                }
+                                                                , StringComparer
+                                                                        .OrdinalIgnoreCase
+                                                            );
+                                        return r;
+                                    }
+                                );
             return result;
         }
 
@@ -285,22 +278,18 @@
                                         )
         {
             SqlConnection connection = null;
-
             try
             {
                 connection = new SqlConnection(connectionString);
                 var dataSource = connection.DataSource;
                 var dataBase = connection.Database;
                 //var key = $"{connection.DataSource}-{connection.Database}-{p_procedure_name}".ToUpper();
-                int groupNumber = 0;
+                //int groupNumber = 0;
                 string procedureSchema = string.Empty;
                 string parameterName = string.Empty;
-
                 using (SqlCommand command = new SqlCommand("sp_procedure_params_rowset", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-
-
                     SqlParameter sqlParameterProcedure_Name = command.Parameters.Add("@procedure_name", SqlDbType.NVarChar, 128);
                     sqlParameterProcedure_Name.Value = (storeProcedureName != null ? (object)storeProcedureName : DBNull.Value);
                     //SqlParameter sqlParameterGroup_Number = command.Parameters.Add("@group_number", SqlDbType.Int);
@@ -312,7 +301,11 @@
                     SqlParameter sqlParameterReturn = command.Parameters.Add("@RETURN_VALUE", SqlDbType.Int);
                     sqlParameterReturn.Direction = ParameterDirection.ReturnValue;
                     connection.Open();
-                    var sqlDataReader = command.ExecuteReader(CommandBehavior.CloseConnection);
+                    var sqlDataReader = command
+                                            .ExecuteReader
+                                                (
+                                                    CommandBehavior.CloseConnection
+                                                );
                     var sqlParameters
                             = sqlDataReader
                                     .ExecuteRead<SqlParameter>
@@ -324,7 +317,6 @@
                                                     .ParameterName = (string)(reader["PARAMETER_NAME"]);
                                                 var sqlDbTypeName = (string)(reader["TYPE_NAME"]);
                                                 SqlDbType sqlDbType = (SqlDbType) Enum.Parse(typeof(SqlDbType), sqlDbTypeName, true);
-                                                
                                                 sqlParameter
                                                     .SqlDbType = sqlDbType;
                                                 if (reader["CHARACTER_MAXIMUM_LENGTH"] != DBNull.Value)
@@ -337,7 +329,6 @@
                                                                                 .GetOrdinal("CHARACTER_MAXIMUM_LENGTH")
                                                                         );
                                                 }
-                                                
                                                 sqlParameter
                                                         .Direction = GetParameterDirection
                                                                         (
@@ -358,7 +349,6 @@
                                         );
                     return sqlParameters;
                 }
-                
             }
             finally
             {
@@ -441,7 +431,6 @@
                                                 "ResultSet"
                                                 , new JArray(data)
                                             );
-
                     result.Add(jProperty);
                     var outputParameters
                             = sqlParameters
@@ -465,11 +454,11 @@
                             outputs = new JObject();
                         }
                         outputs
-                                .Add
-                                    (
-                                        x.ParameterName.TrimStart('@')
-                                        , new JValue(x.Value)
-                                    );
+                            .Add
+                                (
+                                    x.ParameterName.TrimStart('@')
+                                    , new JValue(x.Value)
+                                );
                     }
                     if (outputs != null)
                     {
@@ -488,6 +477,4 @@
             }
         }
     }
-
-
 }
