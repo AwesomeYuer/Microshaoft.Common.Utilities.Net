@@ -6,11 +6,16 @@ namespace Microshaoft.WebApi.Controllers
     using System.Web.Http;
     using System.Data.SqlClient;
 
-    [RoutePrefix("api/[controller]")]
+    [RoutePrefix("api/StoreProcedureExecutor")]
     public abstract partial class AbstractStoreProcedureExecutorControllerBase 
             :
                 ApiController //, IConnectionString
     {
+
+        /* 
+        * ASP.NET Framework should implement Get Action/Method
+        * but ASP.NET Core needn't  
+        */
         // GET api/values
         [HttpGet]
         [Route("{storeProcedureName}")]
