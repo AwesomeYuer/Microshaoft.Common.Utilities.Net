@@ -12,7 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)MemberAdditionalDefinitionAttribute\MemberAdditionalDefinitionAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\AbstractStoreProcedureExecutorControllerBase.0.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\AbstractStoreProcedureExecutorControllerBase.2.NET.Framework.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\AbstractStoreProcedureExecutorControllerBase.3..NET.Core.Standard.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\AbstractStoreProcedureExecutorControllerBase.3.NET.Core.Standard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApiVersionedRoute\ActionSelector\CandidateAction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApiVersionedRoute\ActionSelector\HttpActionDescriptorExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApiVersionedRoute\ActionSelector\HttpParameterBindingExtensions.cs" />

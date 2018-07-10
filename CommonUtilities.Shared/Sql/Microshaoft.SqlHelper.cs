@@ -347,6 +347,9 @@
                                                 return sqlParameter;
                                             }
                                         );
+
+                    
+
                     return sqlParameters;
                 }
             }
@@ -417,21 +420,32 @@
                     var parameters = sqlParameters.ToArray();
                     command.Parameters.AddRange(parameters);
                     connection.Open();
-                    var dataReader = command.ExecuteReader();
-                    var data = dataReader
-                                    .AsJTokensEnumerable();
-                    //var query = jarray
-                    //  .GroupBy(g => g["Type"])
-                    //  .Select(g => string.Format("var {0}={1};{2}", g.Key, new JArray(g.ToList()), Environment.NewLine));
-                    //                  string result = string.Join(string.Empty, query);
 
                     var result = new JObject();
-                    var jProperty = new JProperty
+                    var dataReader = command
+                                        .ExecuteReader
                                             (
-                                                "ResultSet"
-                                                , new JArray(data)
+                                                CommandBehavior
+                                                    .CloseConnection
                                             );
-                    result.Add(jProperty);
+                    do
+                    {
+                        var data = dataReader
+                                    .AsJTokensEnumerable();
+                        if (result["ResultSets"] == null)
+                        {
+                            var jProperty = new JProperty
+                                                (
+                                                    "ResultSets"
+                                                    , new JArray()
+                                                );
+                            result.Add(jProperty);
+                        }
+                        ((JArray) result["ResultSets"]).Add(new JArray(data));
+
+                    }
+                    while (dataReader.NextResult());
+                    dataReader.Close();
                     var outputParameters
                             = sqlParameters
                                     .Where
