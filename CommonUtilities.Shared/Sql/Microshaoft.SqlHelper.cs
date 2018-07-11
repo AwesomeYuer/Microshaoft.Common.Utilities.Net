@@ -347,9 +347,6 @@
                                                 return sqlParameter;
                                             }
                                         );
-
-                    
-
                     return sqlParameters;
                 }
             }
@@ -442,7 +439,6 @@
                             result.Add(jProperty);
                         }
                         ((JArray) result["ResultSets"]).Add(new JArray(data));
-
                     }
                     while (dataReader.NextResult());
                     dataReader.Close();
