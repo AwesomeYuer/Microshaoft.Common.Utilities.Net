@@ -176,98 +176,104 @@ namespace Microshaoft
                     var fieldType = dataReader.GetFieldType(i);
                     var fieldName = dataReader.GetName(i);
                     JValue fieldValue = null;
-                    
-                    if
-                        (
-                            fieldType == typeof(bool)
-                        )
+
+                    if (!dataReader.IsDBNull(i))
                     {
-                        fieldValue = new JValue(dataReader.GetBoolean(i));
-                    }
-                    else if
-                        (
-                            fieldType == typeof(byte)
-                        )
-                    {
-                        fieldValue = new JValue(dataReader.GetByte(i));
-                    }
-                    else if
-                        (
-                            fieldType == typeof(char)
-                        )
-                    {
-                        fieldValue = new JValue(dataReader.GetChar(i));
-                    }
-                    else if
-                        (
-                            fieldType == typeof(DateTime)
-                        )
-                    {
-                        fieldValue = new JValue(dataReader.GetDateTime(i));
-                    }
-                    else if
-                        (
-                            fieldType == typeof(decimal)
-                        )
-                    {
-                        fieldValue = new JValue(dataReader.GetDecimal(i));
-                    }
-                    else if
-                        (
-                            fieldType == typeof(double)
-                        )
-                    {
-                        fieldValue = new JValue(dataReader.GetDouble(i));
-                    }
-                    else if
-                        (
-                            fieldType == typeof(float)
-                        )
-                    {
-                        fieldValue = new JValue(dataReader.GetFloat(i));
-                    }
-                    else if
-                        (
-                            fieldType == typeof(Guid)
-                        )
-                    {
-                        fieldValue = new JValue(dataReader.GetGuid(i));
-                    }
-                    else if
-                        (
-                            fieldType == typeof(short)
-                        )
-                    {
-                        fieldValue = new JValue((long) dataReader.GetInt16(i));
-                    }
-                    else if
-                        (
-                            fieldType == typeof(int)
-                        )
-                    {
-                        fieldValue = new JValue((long) dataReader.GetInt32(i));
-                    }
-                    else if
-                        (
-                            fieldType == typeof(long)
-                        )
-                    {
-                        fieldValue = new JValue((long) dataReader.GetInt64(i));
-                    }
-                    else if
-                        (
-                            fieldType == typeof(string)
-                        )
-                    {
-                        fieldValue = new JValue(dataReader.GetString(i));
-                    }
-                    else
-                    {
-                        fieldValue = new JValue(dataReader[i]);
+                        if
+                            (
+                                fieldType == typeof(bool)
+                            )
+                        {
+                            fieldValue = new JValue(dataReader.GetBoolean(i));
+                        }
+                        else if
+                            (
+                                fieldType == typeof(byte)
+                            )
+                        {
+                            fieldValue = new JValue(dataReader.GetByte(i));
+                        }
+                        else if
+                            (
+                                fieldType == typeof(char)
+                            )
+                        {
+                            fieldValue = new JValue(dataReader.GetChar(i));
+                        }
+                        else if
+                            (
+                                fieldType == typeof(DateTime)
+                            )
+                        {
+                            
+                            fieldValue = null;
+                        }
+                        else if
+                            (
+                                fieldType == typeof(decimal)
+                            )
+                        {
+
+                            fieldValue = new JValue(dataReader.GetDecimal(i));
+                        }
+                        else if
+                            (
+                                fieldType == typeof(double)
+                            )
+                        {
+                            fieldValue = new JValue(dataReader.GetDouble(i));
+                        }
+                        else if
+                            (
+                                fieldType == typeof(float)
+                            )
+                        {
+                            fieldValue = new JValue(dataReader.GetFloat(i));
+                        }
+                        else if
+                            (
+                                fieldType == typeof(Guid)
+                            )
+                        {
+                            fieldValue = new JValue(dataReader.GetGuid(i));
+                        }
+                        else if
+                            (
+                                fieldType == typeof(short)
+                            )
+                        {
+                            fieldValue = new JValue((long)dataReader.GetInt16(i));
+                        }
+                        else if
+                            (
+                                fieldType == typeof(int)
+                            )
+                        {
+                            fieldValue = new JValue((long)dataReader.GetInt32(i));
+                        }
+                        else if
+                            (
+                                fieldType == typeof(long)
+                            )
+                        {
+                            fieldValue = new JValue((long)dataReader.GetInt64(i));
+                        }
+                        else if
+                            (
+                                fieldType == typeof(string)
+                            )
+                        {
+                            fieldValue = new JValue(dataReader.GetString(i));
+                        }
+                        else
+                        {
+                            fieldValue = new JValue(dataReader[i]);
+                        }
                     }
                     var field = new JProperty(fieldName, fieldValue);
                     row.Add(field);
                 }
+                
                 yield
                     return
                         row;
