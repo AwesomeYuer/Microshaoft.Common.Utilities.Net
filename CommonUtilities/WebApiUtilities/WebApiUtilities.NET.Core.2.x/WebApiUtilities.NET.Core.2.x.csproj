@@ -10,7 +10,7 @@
   </PropertyGroup>
   <Import Project="..\..\..\CommonUtilities.Shared\WebApiUtilities.Shared.projitems" Label="Shared" />
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CommonUtilities.Lite\CommonUtilities.Lite.NET.Standard.2.x\CommonUtilities.Lite.NET.Standard.2.x.csproj" />
