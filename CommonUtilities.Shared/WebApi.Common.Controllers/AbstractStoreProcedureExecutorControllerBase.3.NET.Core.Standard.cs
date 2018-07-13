@@ -5,8 +5,10 @@ namespace Microshaoft.WebApi.Controllers
     using Microshaoft;
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json.Linq;
+    using System;
     using System.Data.SqlClient;
-    
+    using System.Linq;
+
     [Route("api/[controller]")]
     [ApiController]
     public abstract partial class AbstractStoreProcedureExecutorControllerBase 
@@ -25,14 +27,26 @@ namespace Microshaoft.WebApi.Controllers
                                 )
         {
             var connection = new SqlConnection(ConnectionString);
+
+            var result = SqlHelper
+                            .StoreProcedureWebExecute
+                                (
+                                    connection
+                                    , storeProcedureName
+                                    , p
+                                );
+
+
+            
+
+
+            
+
+
+
+
             return
-                SqlHelper
-                    .StoreProcedureWebExecute
-                        (
-                            connection
-                            , storeProcedureName
-                            , p
-                        );
+                result;
         }
     }
 }
