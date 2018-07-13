@@ -11,52 +11,53 @@
 
     public class JObjectComparer : IEqualityComparer<JObject>
     {
-        public string[] ComparePropertiesNames;
+        public string[] CompareJTokensPaths;
 
         public bool Equals(JObject x, JObject y)
         {
             var r = false;
-            foreach (var s in ComparePropertiesNames)
+            foreach (var path in CompareJTokensPaths)
             {
-                var xJTokenType = x[s].Type;
-                var yJTokenType = y[s].Type;
+                
+                var xJTokenType = x.SelectToken(path).Type;
+                var yJTokenType = y.SelectToken(path).Type;
                 if (xJTokenType == yJTokenType)
                 {
                     if (xJTokenType == JTokenType.String)
                     {
-                        r = x[s].Value<string>() == y[s].Value<string>();
+                        r = x.SelectToken(path).Value<string>() == y.SelectToken(path).Value<string>();
                     }
                     else if (xJTokenType == JTokenType.Integer)
                     {
-                        r = x[s].Value<int>() == y[s].Value<int>();
+                        r = x.SelectToken(path).Value<int>() == y.SelectToken(path).Value<int>();
                     }
                     else if (xJTokenType == JTokenType.Boolean)
                     {
-                        r = x[s].Value<bool>() == y[s].Value<bool>();
+                        r = x.SelectToken(path).Value<bool>() == y.SelectToken(path).Value<bool>();
                     }
                     else if (xJTokenType == JTokenType.Date)
                     {
-                        r = x[s].Value<DateTime>() == y[s].Value<DateTime>();
+                        r = x.SelectToken(path).Value<DateTime>() == y.SelectToken(path).Value<DateTime>();
                     }
                     else if (xJTokenType == JTokenType.Float)
                     {
-                        r = x[s].Value<float>() == y[s].Value<float>();
+                        r = x.SelectToken(path).Value<float>() == y.SelectToken(path).Value<float>();
                     }
                     else if (xJTokenType == JTokenType.Guid)
                     {
-                        r = x[s].Value<Guid>() == y[s].Value<Guid>();
+                        r = x.SelectToken(path).Value<Guid>() == y.SelectToken(path).Value<Guid>();
                     }
                     else if (xJTokenType == JTokenType.Guid)
                     {
-                        r = x[s].Value<Guid>() == y[s].Value<Guid>();
+                        r = x.SelectToken(path).Value<Guid>() == y.SelectToken(path).Value<Guid>();
                     }
                     else if (xJTokenType == JTokenType.TimeSpan)
                     {
-                        r = x[s].Value<TimeSpan>() == y[s].Value<TimeSpan>();
+                        r = x.SelectToken(path).Value<TimeSpan>() == y.SelectToken(path).Value<TimeSpan>();
                     }
                     //else if (xJTokenType == JTokenType.)
                     //{
-                    //    r = x[s].Value<Guid>() == y[s].Value<Guid>();
+                    //    r = x.SelectToken(path).Value<Guid>() == y.SelectToken(path).Value<Guid>();
                     //}
                 }
                 if (!r)
