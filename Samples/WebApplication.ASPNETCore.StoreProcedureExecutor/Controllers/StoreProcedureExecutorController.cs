@@ -13,9 +13,9 @@ namespace Microshaoft.WebApi.Controllers
     [ApiController]
     public class StoreProcedureExecutorController : AbstractStoreProcedureExecutorControllerBase //ControllerBase //, IConnectionString
     {
-        protected override string ConnectionString => @"Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=D:\mssql\MSSQL13.LocalDB\LocalDB\TransportionSecrets\TransportionSecrets.mdf;Data Source=(localdb)\mssqllocaldb;";
-
-        
+        protected override string 
+                ConnectionString =>
+                        @"Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=D:\mssql\MSSQL13.LocalDB\LocalDB\TransportionSecrets\TransportionSecrets.mdf;Data Source=(localdb)\mssqllocaldb;";
 
         [Route("{storeProcedureName}/groupby")]
         public ActionResult<JObject> Get
@@ -34,7 +34,7 @@ namespace Microshaoft.WebApi.Controllers
              */
             var result = base.Get(storeProcedureName, p).Value;
             var result0 = result["ResultSets"][0];
-            var comparePropertiesNames
+            var compareJTokensPaths
                                 = g.Split(',');
             var groups = result0
                              .GroupBy
@@ -42,7 +42,7 @@ namespace Microshaoft.WebApi.Controllers
                                      (x) =>
                                      {
                                          var r = new JObject();
-                                         foreach (var s in comparePropertiesNames)
+                                         foreach (var s in compareJTokensPaths)
                                          {
                                              r.Add(s, x[s]);
                                          }
@@ -51,7 +51,7 @@ namespace Microshaoft.WebApi.Controllers
                                      }
                                      , new JObjectComparer()
                                      {
-                                          ComparePropertiesNames = comparePropertiesNames
+                                          CompareJTokensPaths = compareJTokensPaths
                                      }
                                  );
             var result2 = groups
