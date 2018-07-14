@@ -13,7 +13,7 @@
                                 (
                                     string connectionString
                                     , string storeProcedureName
-                                    , JObject actualParameters
+                                    , JObject inputsParameters
                                 )
         {
             List<SqlParameter> result = null;
@@ -23,7 +23,7 @@
                                         , storeProcedureName
                                         , true
                                     );
-            foreach (KeyValuePair<string, JToken> jProperty in actualParameters)
+            foreach (KeyValuePair<string, JToken> jProperty in inputsParameters)
             {
                 SqlParameter sqlParameter = null;
                 if
@@ -38,13 +38,13 @@
                 {
                     var direction = sqlParameter
                                         .Direction;
-                    if 
-                        (
-                            direction == ParameterDirection.Input
-                            ||
-                            direction == ParameterDirection.InputOutput
-                        )
-                    {
+                    //if 
+                    //    (
+                    //        direction == ParameterDirection.Input
+                    //        ||
+                    //        direction == ParameterDirection.InputOutput
+                    //    )
+                    //{
                         var r = sqlParameter.ShallowClone();
                         r.Value = (object)jProperty.Value;
                         if (result == null)
@@ -52,7 +52,7 @@
                             result = new List<SqlParameter>();
                         }
                         result.Add(r);
-                    }
+                    //}
                 }
             }
             foreach (var kvp in sqlParameters)
@@ -372,8 +372,9 @@
                     break;
                 case 2: //或者干脆注释掉 case 2 的全部
                     pd = ParameterDirection.Output; //是这里的问题
-                    //goto default; //我加的这句话
-                    break; //我注释掉的这句话
+                    //2018 Microshoaft All Output will be used as InputOutput
+                    goto default; //
+                    //break; //我注释掉的这句话
                 case 4:
                     pd = ParameterDirection.ReturnValue;
                     break;
@@ -406,19 +407,48 @@
                         }
                     )
                 {
-                    var actualParameters = JObject.Parse(p);
+                    var inputsParameters = JObject.Parse(p);
                     var sqlParameters = SqlHelper
                                             .GenerateExecuteSqlParameters
                                                     (
                                                         connection.ConnectionString
                                                         , storeProcedureName
-                                                        , actualParameters
+                                                        , inputsParameters
                                                     );
                     var parameters = sqlParameters.ToArray();
                     command.Parameters.AddRange(parameters);
                     connection.Open();
+                    var result = new JObject
+                    {
+                        {
+                            "Inputs"
+                            , new JObject
+                                {
+                                    {
+                                        "Parameters"
+                                            , inputsParameters
+                                    }
+                                }
+                        }
+                        ,
+                        {
+                            "Outputs"
+                            , new JObject
+                                {
+                                    {
+                                        "Parameters"
+                                            , null
+                                    }
+                                    ,
+                                    {
+                                        "ResultSets"
+                                            , new JArray()
+                                    }
+                                }
+                        }
+                    };
 
-                    var result = new JObject();
+
                     var dataReader = command
                                         .ExecuteReader
                                             (
@@ -429,50 +459,42 @@
                     {
                         var data = dataReader
                                     .AsJTokensEnumerable();
-                        if (result["ResultSets"] == null)
-                        {
-                            var jProperty = new JProperty
-                                                (
-                                                    "ResultSets"
-                                                    , new JArray()
-                                                );
-                            result.Add(jProperty);
-                        }
-                        ((JArray) result["ResultSets"]).Add(new JArray(data));
+
+                        ((JArray) result["Outputs"]["ResultSets"]).Add(new JArray(data));
                     }
                     while (dataReader.NextResult());
                     dataReader.Close();
                     var outputParameters
-                            = sqlParameters
-                                    .Where
-                                        (
-                                            (x) =>
-                                            {
-                                                return
-                                                    (
-                                                        x.Direction
-                                                        !=
-                                                        ParameterDirection.Input
-                                                    );
-                                            }
-                                        );
-                    JObject outputs = null;
+                                = sqlParameters
+                                        .Where
+                                            (
+                                                (x) =>
+                                                {
+                                                    return
+                                                        (
+                                                            x.Direction
+                                                            !=
+                                                            ParameterDirection.Input
+                                                        );
+                                                }
+                                            );
+                    JObject jOutputParameters = null;
                     foreach (var x in outputParameters)
                     {
-                        if (outputs == null)
+                        if (jOutputParameters == null)
                         {
-                            outputs = new JObject();
+                            jOutputParameters = new JObject();
                         }
-                        outputs
+                        jOutputParameters
                             .Add
                                 (
                                     x.ParameterName.TrimStart('@')
                                     , new JValue(x.Value)
                                 );
                     }
-                    if (outputs != null)
+                    if (jOutputParameters != null)
                     {
-                        result.Add("outputs", outputs);
+                        result["Outputs"]["Parameters"] = jOutputParameters;
                     }
                     return result;
                 }

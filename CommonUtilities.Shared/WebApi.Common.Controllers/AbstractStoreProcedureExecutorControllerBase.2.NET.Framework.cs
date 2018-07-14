@@ -20,22 +20,31 @@ namespace Microshaoft.WebApi.Controllers
         [HttpGet]
         [Route("{storeProcedureName}")]
         public JObject Get
-                                (
-                                    string storeProcedureName
-                                    ,
-                                    [FromUri]
-                                    string p = null //string.Empty
-                                )
+                            (
+                                string storeProcedureName
+                                ,
+                                    [FromUri(Name = "gf")]
+                                    int? groupFrom = default(int?)
+                                ,
+                                    [FromUri(Name = "gf")]
+                                    string groupBy = null
+                                ,
+                                    [FromUri(Name = "p")]
+                                    string parameters = null
+                            )
         {
-            var connection = new SqlConnection(ConnectionString);
-            return
-                SqlHelper
-                    .StoreProcedureWebExecute
-                        (
-                            connection
-                            , storeProcedureName
-                            , p
-                        );
+            SqlConnection connection = new SqlConnection(ConnectionString);
+            JObject result = SqlHelper.StoreProcedureWebExecute(connection, storeProcedureName, parameters, 90);
+            if
+                (
+                    groupFrom.HasValue
+                    &&
+                    groupBy != null
+                )
+            {
+                GroupingJObjectResult(groupFrom.Value, groupBy, result);
+            }
+            return result;
         }
     }
 }
