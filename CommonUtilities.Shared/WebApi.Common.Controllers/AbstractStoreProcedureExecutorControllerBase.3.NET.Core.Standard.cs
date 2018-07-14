@@ -11,42 +11,36 @@ namespace Microshaoft.WebApi.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
-    public abstract partial class AbstractStoreProcedureExecutorControllerBase 
-            : 
+    public abstract partial class AbstractStoreProcedureExecutorControllerBase
+            :
                 ControllerBase //, IConnectionString
     {
-        // GET api/values
-        [HttpGet]
-        [Route("{storeProcedureName}")]
         public ActionResult<JObject> Get
-                                (
-                                    string storeProcedureName
-                                    ,
-                                        [FromQuery]
-                                        string p = null //string.Empty
-                                )
+                            (
+                                string storeProcedureName
+                                , 
+                                    [FromQuery(Name = "gf")]
+                                    int? groupFrom = default(int?)
+                                , 
+                                    [FromQuery(Name = "gf")]
+                                    string groupBy = null
+                                ,   
+                                    [FromQuery(Name = "p")]
+                                    string parameters = null
+                            )
         {
-            var connection = new SqlConnection(ConnectionString);
-
-            var result = SqlHelper
-                            .StoreProcedureWebExecute
-                                (
-                                    connection
-                                    , storeProcedureName
-                                    , p
-                                );
-
-
-            
-
-
-            
-
-
-
-
-            return
-                result;
+            SqlConnection connection = new SqlConnection(ConnectionString);
+            JObject result = SqlHelper.StoreProcedureWebExecute(connection, storeProcedureName, parameters, 90);
+            if
+                (
+                    groupFrom.HasValue
+                    &&
+                    groupBy != null
+                )
+            {
+                GroupingJObjectResult(groupFrom.Value, groupBy, result);
+            }
+            return result;
         }
     }
 }

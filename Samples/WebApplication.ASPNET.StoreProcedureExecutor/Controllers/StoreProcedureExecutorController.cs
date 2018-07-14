@@ -23,16 +23,24 @@ namespace Microshaoft.WebApi.Controllers
         public JObject Get
                         (
                             string storeProcedureName
+                            ,                            
+                                [FromUri(Name = "gf")]
+                                int? groupFrom = null
                             ,
-                            [FromUri]
-                            string p = null //string.Empty
+                                [FromUri(Name = "gb")]
+                                string groupBy = null
+                            ,
+                                [FromUri(Name = "p")]
+                                string parameters = null //string.Empty
                         )
         {
             return
                 base.Get
                         (
                             storeProcedureName
-                            , p
+                            , groupFrom
+                            , groupBy
+                            , parameters
                         );
         }
 

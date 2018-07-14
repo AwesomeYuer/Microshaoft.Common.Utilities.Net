@@ -206,7 +206,7 @@ namespace Microshaoft
                             )
                         {
                             
-                            fieldValue = null;
+                            fieldValue = new JValue(dataReader.GetDateTime(i)); ;
                         }
                         else if
                             (
