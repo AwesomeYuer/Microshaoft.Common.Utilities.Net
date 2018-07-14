@@ -24,7 +24,7 @@ namespace Microshaoft.WebApi.Controllers
                                 string storeProcedureName
                                 ,
                                     [FromUri(Name = "gf")]
-                                    int? groupFrom = default(int?)
+                                    int? groupFrom = null
                                 ,
                                     [FromUri(Name = "gf")]
                                     string groupBy = null
