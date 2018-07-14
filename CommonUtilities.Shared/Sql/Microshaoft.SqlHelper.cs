@@ -55,44 +55,51 @@
                     //}
                 }
             }
-            foreach (var kvp in sqlParameters)
-            {
-                var sqlParameter = kvp.Value;
-                if 
-                    (
-                        !result
-                            .Exists
-                                (
-                                    (x) =>
-                                    {
-                                        return
-                                            (
-                                                string
-                                                    .Compare
-                                                        (
-                                                            x.ParameterName
-                                                            , sqlParameter.ParameterName
-                                                            , true
-                                                        ) == 0
-                                            );
-                                    }
-                                )
-                    )
+            
+                foreach (var kvp in sqlParameters)
                 {
-                    var direction = sqlParameter.Direction;
+                    var sqlParameter = kvp.Value;
+                    if (result == null)
+                    {
+                        result = new List<SqlParameter>();
+                    }
+
                     if
                         (
-                            direction != ParameterDirection.Input
+                            !result
+                                .Exists
+                                    (
+                                        (x) =>
+                                        {
+                                            return
+                                                (
+                                                    string
+                                                        .Compare
+                                                            (
+                                                                x.ParameterName
+                                                                , sqlParameter.ParameterName
+                                                                , true
+                                                            ) == 0
+                                                );
+                                        }
+                                    )
                         )
                     {
-                        if (result == null)
+                        var direction = sqlParameter.Direction;
+                        if
+                            (
+                                direction != ParameterDirection.Input
+                            )
                         {
-                            result = new List<SqlParameter>();
+                            if (result == null)
+                            {
+                                result = new List<SqlParameter>();
+                            }
+                            result.Add(sqlParameter.ShallowClone());
                         }
-                        result.Add(sqlParameter.ShallowClone());
                     }
                 }
-            }
+            
             return result;
         }
         public static JValue GetJValue(this SqlParameter target)

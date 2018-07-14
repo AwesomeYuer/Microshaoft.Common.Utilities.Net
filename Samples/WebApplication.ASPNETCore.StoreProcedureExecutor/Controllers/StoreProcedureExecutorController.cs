@@ -16,62 +16,72 @@ namespace Microshaoft.WebApi.Controllers
         protected override string 
                 ConnectionString =>
                         @"Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=D:\mssql\MSSQL13.LocalDB\LocalDB\TransportionSecrets\TransportionSecrets.mdf;Data Source=(localdb)\mssqllocaldb;";
+        [HttpGet]
+        [Route("groupsjoin/{storeProcedureName}")]
+        public ActionResult<JObject> Get1
+                               (
+                                   string storeProcedureName
+                                   ,
+                                    [FromQuery]
+                                    string p            = null //string.Empty
+                               )
+        {
+            //var storeProcedureName = "zsp_GroupsJoin";
+            var result = base
+                            .Get
+                            (
+                                storeProcedureName
+                                , p
 
-        //[Route("{storeProcedureName}/{groupFrom?}/{groupBy?}")]
-        //public ActionResult<JObject> Get
-        //                       (
-        //                           string storeProcedureName
-        //                           , 
-        //                           int groupFrom         = 0
-        //                           ,
-        //                           string groupBy            = null
-        //                           ,
-        //                            [FromQuery]
-        //                            string p            = null //string.Empty
-        //                       )
-        //{
-        //    /*
-        //     https://localhost:44306/api/StoreProcedureExecutor/zsp_GetDatesAfter/groupby?g=%E5%91%A8%E5%87%A0,%E5%BD%93%E6%97%A5%E6%97%B6%E6%AE%B5&p=%7Bbegindate:%222018-01-01%22,AmountMax:10%7D
-        //     */
-        //    var originalResult = base.Get(storeProcedureName, p).Value;
-        //    var jTokenPath = $"Outputs.ResultSets[{groupFrom}]";
-        //    var originalResultSet = originalResult.SelectToken(jTokenPath);
-        //    var compareJTokensPaths
-        //                        = groupBy.Split(',');
-        //    var groups = originalResultSet
-        //                     .GroupBy
-        //                         (
-        //                             (x) =>
-        //                             {
-        //                                 var r = new JObject();
-        //                                 foreach (var s in compareJTokensPaths)
-        //                                 {
-        //                                     r.Add(s, x[s]);
-        //                                 }
-        //                                 return
-        //                                         r;
-        //                             }
-        //                             , new JObjectComparer()
-        //                             {
-        //                                  CompareJTokensPaths = compareJTokensPaths
-        //                             }
-        //                         );
-        //    var resultSet = groups
-        //                     .Select
-        //                         (
-        //                             (x) =>
-        //                             {
-        //                                 var r = new JObject();
-        //                                 r.Merge(x.Key);
-        //                                 r.Add("Details", new JArray(x));
-        //                                 return r;
-        //                             }
-        //                         );
-        //    originalResult
-        //        .SelectToken(jTokenPath)
-        //        .Parent[groupFrom] = new JArray(resultSet);
-        //    return originalResult;
-        //}
+                            ).Value;
+
+            var resultSets = (JArray) result["Outputs"]["ResultSets"];
+            var groupJoinConditions = JObject.Parse
+                (
+                    @"
+                    {}
+
+                    "
+                );
+            var master = resultSets[0].AsJEnumerable();
+            var length = resultSets.Count();
+            for (var i = 1; i < length; i++)
+            {
+                var detail = resultSets[i];
+
+
+                master
+                    .GroupJoin//<JToken,JToken,JToken,JArray>
+                        (
+                            detail
+                            , (x) =>
+                            {
+                                //master
+                                return x;
+                            }
+                            , (x) =>
+                            {
+                                //Detail
+                                return x;
+                            }
+                            , (x, y) =>
+                            {
+                                var r = new JArray(y);
+                                ((JObject)x).Add($"Details{i}", r);
+                                return
+                                     r;
+                            }
+                            , new JObjectComparer()
+                            {
+                                CompareJTokensPaths = new string[]
+                                 {
+                                     "object_id"
+                                 }
+                            }
+                        ).ToArray();
+            }
+            return result;
+        }
     }
 }
 #endif
