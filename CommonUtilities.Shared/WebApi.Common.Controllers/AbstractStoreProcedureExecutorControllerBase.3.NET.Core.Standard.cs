@@ -15,14 +15,16 @@ namespace Microshaoft.WebApi.Controllers
             :
                 ControllerBase //, IConnectionString
     {
+        [HttpGet]
+        [Route("{storeProcedureName}")]
         public ActionResult<JObject> Get
                             (
                                 string storeProcedureName
                                 , 
                                     [FromQuery(Name = "gf")]
-                                    int? groupFrom = default(int?)
+                                    int? groupFrom = null
                                 , 
-                                    [FromQuery(Name = "gf")]
+                                    [FromQuery(Name = "gb")]
                                     string groupBy = null
                                 ,   
                                     [FromQuery(Name = "p")]
