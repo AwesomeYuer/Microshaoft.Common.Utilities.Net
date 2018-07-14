@@ -26,7 +26,7 @@ namespace Microshaoft.WebApi.Controllers
                                     [FromUri(Name = "gf")]
                                     int? groupFrom = null
                                 ,
-                                    [FromUri(Name = "gf")]
+                                    [FromUri(Name = "gb")]
                                     string groupBy = null
                                 ,
                                     [FromUri(Name = "p")]
