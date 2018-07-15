@@ -9,11 +9,11 @@
     using System.Collections.Generic;
 
 
-    public class JObjectComparer : IEqualityComparer<JObject>
+    public class JObjectComparer : IEqualityComparer<JToken>
     {
         public string[] CompareJTokensPaths;
 
-        public bool Equals(JObject x, JObject y)
+        public bool Equals(JToken x, JToken y)
         {
             var r = false;
             foreach (var path in CompareJTokensPaths)
@@ -68,7 +68,7 @@
             return r;
         }
 
-        public int GetHashCode(JObject obj)
+        public int GetHashCode(JToken obj)
         {
             return 0;
         }

@@ -20,15 +20,16 @@ namespace Microshaoft.WebApi.Controllers
         public ActionResult<JObject> Get
                             (
                                 string storeProcedureName
+                                ,
+                                    [FromQuery(Name = "p")]
+                                    string parameters = null
                                 , 
                                     [FromQuery(Name = "gf")]
                                     int? groupFrom = null
                                 , 
                                     [FromQuery(Name = "gb")]
                                     string groupBy = null
-                                ,   
-                                    [FromQuery(Name = "p")]
-                                    string parameters = null
+
                             )
         {
             SqlConnection connection = new SqlConnection(ConnectionString);

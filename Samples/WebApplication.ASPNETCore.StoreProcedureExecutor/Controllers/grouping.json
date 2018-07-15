@@ -1,0 +1,42 @@
+{
+  "grouping": {
+    "groupName": "C1",
+    "groupBy": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "selectMany": [
+      "FF1",
+      "FF2",
+      {
+        "grouping": {
+          "groupName": "gFF3",
+          "groupBy": [
+            "FFF1",
+            "FFF2",
+            "FFF3"
+          ],
+          "selectMany": [
+            "FFF4",
+            "FFF5",
+            {
+              "grouping": {
+                "groupName": "gFFF6",
+                "groupBy": [
+                  "F11",
+                  "F12",
+                  "F13"
+                ],
+                "selectMany": [
+                  "F14",
+                  "F15"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
