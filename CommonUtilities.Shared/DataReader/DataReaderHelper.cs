@@ -1,4 +1,3 @@
-
 namespace Microshaoft
 {
     using System.Collections.Generic;
@@ -34,8 +33,6 @@ namespace Microshaoft
                 target.Close();
                 target.Dispose();
             }
-
-
         }
     }
 
@@ -57,7 +54,6 @@ namespace Microshaoft
                         , needDefinitionAttributeProcess
                     );
         } 
-
 
         public static IEnumerable<TEntry> GetEnumerable<TEntry>
                 (
@@ -167,7 +163,6 @@ namespace Microshaoft
                              )
         {
             var fieldsCount = dataReader.FieldCount;
-            //SqlHelperParameterCache.GetSpParameterSet()
             while (dataReader.Read())
             {
                 JObject row = new JObject();
@@ -176,7 +171,6 @@ namespace Microshaoft
                     var fieldType = dataReader.GetFieldType(i);
                     var fieldName = dataReader.GetName(i);
                     JValue fieldValue = null;
-
                     if (!dataReader.IsDBNull(i))
                     {
                         if
@@ -205,15 +199,13 @@ namespace Microshaoft
                                 fieldType == typeof(DateTime)
                             )
                         {
-                            
-                            fieldValue = new JValue(dataReader.GetDateTime(i)); ;
+                            fieldValue = new JValue(dataReader.GetDateTime(i));
                         }
                         else if
                             (
                                 fieldType == typeof(decimal)
                             )
                         {
-
                             fieldValue = new JValue(dataReader.GetDecimal(i));
                         }
                         else if
@@ -281,5 +273,3 @@ namespace Microshaoft
         }
     }
 }
-
-
