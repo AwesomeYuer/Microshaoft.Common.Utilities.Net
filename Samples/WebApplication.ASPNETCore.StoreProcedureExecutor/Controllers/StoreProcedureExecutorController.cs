@@ -13,18 +13,19 @@ namespace Microshaoft.WebApi.Controllers
     [ApiController]
     public class StoreProcedureExecutorController : AbstractStoreProcedureExecutorControllerBase //ControllerBase //, IConnectionString
     {
-        protected override string 
+        protected override string
                 ConnectionString =>
                         @"Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=D:\mssql\MSSQL13.LocalDB\LocalDB\TransportionSecrets\TransportionSecrets.mdf;Data Source=(localdb)\mssqllocaldb;";
         [HttpGet]
         [Route("groupsjoin/{storeProcedureName}")]
-        public ActionResult<JObject> Get1
-                               (
-                                   string storeProcedureName
-                                   ,
+        //测试通过 但未完成
+        public ActionResult<JObject> GetByGroupsjoin
+                                (
+                                    string storeProcedureName
+                                    ,
                                     [FromQuery]
                                     string p            = null //string.Empty
-                               )
+                                )
         {
             //var storeProcedureName = "zsp_GroupsJoin";
             var result = base
@@ -35,16 +36,228 @@ namespace Microshaoft.WebApi.Controllers
 
                             ).Value;
 
-            var resultSets = (JArray) result["Outputs"]["ResultSets"];
+            var resultSets = (JArray)result["Outputs"]["ResultSets"];
             var groupJoinConditions = JObject.Parse
                 (
                     @"
-                    {}
+                {}
 
-                    "
+                "
                 );
             var master = resultSets[0].AsJEnumerable();
             var length = resultSets.Count();
+            for (var i = 1; i < length; i++)
+            {
+                var detail = resultSets[i];
+                master
+                    .GroupJoin//<JToken,JToken,JToken,JArray>
+                        (
+                            detail
+                            , (x) =>
+                            {
+                                //master
+                                return x;
+                            }
+                            , (x) =>
+                            {
+                                //Detail
+                                return x;
+                            }
+                            , (x, y) =>
+                            {
+                                var r = new JArray(y);
+                                ((JObject)x).Add($"Details{i}", r);
+                                return
+                                        r;
+                            }
+                            , new JObjectComparer()
+                            {
+                                CompareJTokensPaths = new string[]
+                                    {
+                                        "object_id"
+                                    }
+                            }
+                        ).ToArray();
+            }
+            return result;
+        }
+
+        [HttpGet]
+        [Route("Grouping/{storeProcedureName}")]
+        //未完成
+        public ActionResult<JObject> GetByGrouping
+                               (
+                                   string storeProcedureName
+                                   ,
+                                    [FromQuery]
+                                    string p            = null //string.Empty
+                               )
+        {
+            storeProcedureName = "zsp_Grouping";
+            var result = base
+                            .Get
+                            (
+                                storeProcedureName
+                                , p
+
+                            ).Value;
+
+            var resultSets = (JArray)result["Outputs"]["ResultSets"];
+            var grouping = JObject.Parse
+                (
+                    @"
+{
+    ""grouping"":
+        {
+            ""groupName"": ""C1"",
+            ""groupBy"": [ """", ""F2"", ""F3"" ],
+            ""selectMany"": 
+                [
+                    ""FF1"",
+                    ""FF2"",
+                    {
+                        ""grouping"":
+                            {
+                                ""groupName"": ""gFF3"",
+                                ""groupBy"": [ ""FFF1"", ""FFF2"", ""FFF3"" ],
+                                ""selectMany"":
+                                    [
+                                        ""FFF4"",
+                                        ""FFF5"",
+                                        {
+                                            ""grouping"":
+                                                {
+                                                    ""groupName"": ""gFFF6"",
+                                                    ""groupBy"": [ ""F11"", ""F12"", ""F13"" ],
+                                                    ""selectMany"": [ ""F14"", ""F15"" ]
+                                                }
+                                        }
+                                    ]
+                            }
+                    }
+                ]
+        }
+}
+
+
+                    "
+                );
+
+
+            grouping = JObject.Parse
+                (
+                    @"
+{
+    ""grouping"":
+            {
+                ""groupName"": ""columns"",
+                ""groupBy"": [ ""oid""],
+                 ""groupings"" :
+                    [
+                        {
+                            ""groupName"": ""columns2"",
+                            ""groupBy"": [ ""oid"",""user_type_id""],
+                        }
+                    ]
+            }
+   
+        
+}
+
+
+                    "
+                );
+
+
+
+            var master = resultSets[0].AsJEnumerable();
+            var length = resultSets.Count();
+            var groupName = grouping["grouping"]["groupName"].Value<string>();
+            var groupBy = ((JArray)grouping["grouping"]["groupBy"])
+                                                            .Where
+                                                                (
+                                                                    (xx) =>
+                                                                    {
+                                                                        return
+                                                                            (xx.Type != JTokenType.Object);
+                                                                    }
+                                                                )
+                                                            .Select
+                                                                (
+                                                                    (xx) =>
+                                                                    {
+                                                                        return
+                                                                            xx.Value<string>();
+                                                                    }
+                                                                )
+                                                            .ToArray();
+            IEnumerable<IGrouping<JToken, JToken>> groups = NewMethod
+                            (
+                                master
+                                , groupName
+                                , groupBy
+                                , (g) =>
+                                {
+                                    var key = g.Key;
+                                    
+                                    ((JObject)key)
+                                        .Add
+                                            (
+                                                groupName
+                                                , new JArray(g)
+                                            );
+                                }
+                            );
+            foreach (var x in grouping["grouping"]["groupings"])
+            {
+                groupName = x["groupName"].Value<string>();
+                groupBy = x["groupBy"]
+                                    .Where
+                                        (
+                                            (xx) =>
+                                            {
+                                                return
+                                                    (xx.Type != JTokenType.Object);
+                                            }
+                                        )
+                                    .Select
+                                        (
+                                            (xx) =>
+                                            {
+                                                return
+                                                    xx.Value<string>();
+                                            }
+                                        )
+                                    .ToArray(); ;
+                var gs = NewMethod
+                                (
+                                    new JArray(groups)
+                                    , groupName
+                                    , groupBy
+                                    , (g) =>
+                                    {
+                                        var key = g.Key;
+                                        ((JObject)key)
+                                            .Add
+                                                (
+                                                    groupName
+                                                    , new JArray(g)
+                                                );
+                                    }
+                                );
+            }
+
+
+
+
+
+            Console.WriteLine();
+
+            resultSets[0] = new JArray(groups);
+
+            return result;
+
+            //================================================
             for (var i = 1; i < length; i++)
             {
                 var detail = resultSets[i];
@@ -80,7 +293,47 @@ namespace Microshaoft.WebApi.Controllers
                             }
                         ).ToArray();
             }
-            return result;
+            return grouping;
+        }
+
+        private static IEnumerable<IGrouping<JToken, JToken>> NewMethod
+                        (
+                            IJEnumerable<JToken> master
+                            , string groupName, string[] groupBy
+                            , Action<IGrouping<JToken, JToken>> action
+                        )
+        {
+            var groups =
+                        master
+                            .GroupBy
+                                (
+                                    (x) =>
+                                    {
+                                        return
+                                            x;
+                                    }
+                                    , new JObjectComparer()
+                                    {
+                                        CompareJTokensPaths = groupBy
+                                    }
+                                );
+
+
+            foreach (var group in groups)
+            {
+                //var r = new JArray(group);
+                //var key = group.Key;
+                //((JObject)key)
+                //    .Add
+                //        (
+                //            groupName
+                //            , r
+                //        );
+                action(group);
+
+            }
+
+            return groups;
         }
     }
 }

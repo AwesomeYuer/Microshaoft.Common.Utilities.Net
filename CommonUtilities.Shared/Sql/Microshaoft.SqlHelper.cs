@@ -422,8 +422,12 @@
                                                         , storeProcedureName
                                                         , inputsParameters
                                                     );
-                    var parameters = sqlParameters.ToArray();
-                    command.Parameters.AddRange(parameters);
+                    if (sqlParameters != null)
+                    {
+                        var parameters = sqlParameters.ToArray();
+                        command.Parameters.AddRange(parameters);
+                    }
+                    
                     connection.Open();
                     var result = new JObject
                     {
@@ -471,33 +475,39 @@
                     }
                     while (dataReader.NextResult());
                     dataReader.Close();
-                    var outputParameters
-                                = sqlParameters
-                                        .Where
-                                            (
-                                                (x) =>
-                                                {
-                                                    return
-                                                        (
-                                                            x.Direction
-                                                            !=
-                                                            ParameterDirection.Input
-                                                        );
-                                                }
-                                            );
                     JObject jOutputParameters = null;
-                    foreach (var x in outputParameters)
+
+
+                    if (sqlParameters != null)
                     {
-                        if (jOutputParameters == null)
+                        var outputParameters
+                                    = sqlParameters
+                                            .Where
+                                                (
+                                                    (x) =>
+                                                    {
+                                                        return
+                                                            (
+                                                                x.Direction
+                                                                !=
+                                                                ParameterDirection.Input
+                                                            );
+                                                    }
+                                                );
+
+                        foreach (var x in outputParameters)
                         {
-                            jOutputParameters = new JObject();
+                            if (jOutputParameters == null)
+                            {
+                                jOutputParameters = new JObject();
+                            }
+                            jOutputParameters
+                                .Add
+                                    (
+                                        x.ParameterName.TrimStart('@')
+                                        , new JValue(x.Value)
+                                    );
                         }
-                        jOutputParameters
-                            .Add
-                                (
-                                    x.ParameterName.TrimStart('@')
-                                    , new JValue(x.Value)
-                                );
                     }
                     if (jOutputParameters != null)
                     {
