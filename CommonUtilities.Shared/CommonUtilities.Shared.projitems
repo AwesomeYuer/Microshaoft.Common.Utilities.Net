@@ -73,6 +73,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)HttpClientHelper\HttpClientHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JObjectExtensionMethodsManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\DynamicJson.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\JObjectExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JsonFileHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JsonHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JsonReaderHelper.cs" />
@@ -196,6 +197,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)WebMvcApi.NET45\WebMvcApiPerformanceCounterFilter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebMvcApi.NET45\WebMvcApiPerformanceCountersHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebMvcApi.NET45\WebMvcApiRoutePrefixGroupingHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebMvcApi.NET45\HttpRequestMessageExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WindowsAPI\CreateProcessAsUser.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorkFlow\ActivityFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorkFlow\WorkFlowHelper.cs" />
@@ -206,5 +208,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)DataAccess\Pager.StoreProcedure.Sample.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)WebMvcApiFiltersAttributes\" />
   </ItemGroup>
 </Project>
