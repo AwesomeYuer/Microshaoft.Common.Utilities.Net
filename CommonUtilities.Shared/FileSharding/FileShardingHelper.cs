@@ -149,7 +149,7 @@
                 var filePartsName = Path.GetFileNameWithoutExtension(filesGroup.Key);
                 filePartsName = filePartsName + mergedFileExtensionName;
                 filePartsName = Path.Combine(directory, filePartsName);
-                var orderdFilesGroup
+                var orderedFilesGroup
                             = filesGroup
                                 .OrderBy
                                     (
@@ -172,7 +172,7 @@
                 var mergedZipFiles = MergePartialFilesGroupProcess
                                             (
                                                 filePartsName
-                                                , orderdFilesGroup
+                                                , orderedFilesGroup
                                                 , parts
                                             );
                 foreach (var mergedZipFile in mergedZipFiles)
@@ -185,13 +185,13 @@
         private static IEnumerable<string> MergePartialFilesGroupProcess
                                     (
                                         string mergedFileName
-                                        , IOrderedEnumerable<string> orderdPartialFilesGroup
+                                        , IOrderedEnumerable<string> orderedPartialFilesGroup
                                         , int parts
                                     )
         {
             var list = new List<string>();
             int i = 0;
-            foreach (var file in orderdPartialFilesGroup)
+            foreach (var file in orderedPartialFilesGroup)
             {
                 i++;
                 var fileName = Path.GetFileName(file);
