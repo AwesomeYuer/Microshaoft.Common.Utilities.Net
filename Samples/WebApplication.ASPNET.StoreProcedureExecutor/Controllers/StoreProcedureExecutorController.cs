@@ -3,6 +3,7 @@ namespace Microshaoft.WebApi.Controllers
 {
     using Microshaoft;
     using Newtonsoft.Json.Linq;
+    using System;
     using System.Collections.Generic;
     using System.Web.Http;
 
@@ -15,7 +16,7 @@ namespace Microshaoft.WebApi.Controllers
 
         public override HashSet<string> GetExecuteWhiteList()
         {
-            return new HashSet<string>() { "zsp_GetDatesAfter" };
+            return new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "zsp_GetDatesAfter" };
         }
         /* 
          * ASP.NET Framework should implement Get Action/Method

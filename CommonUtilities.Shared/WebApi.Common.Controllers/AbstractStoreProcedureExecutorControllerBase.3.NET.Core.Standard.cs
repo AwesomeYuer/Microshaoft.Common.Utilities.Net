@@ -15,6 +15,9 @@ namespace Microshaoft.WebApi.Controllers
             :
                 ControllerBase //, IConnectionString
     {
+        
+
+
         [HttpGet]
         [Route("{storeProcedureName}")]
         public ActionResult<JObject> Get
@@ -32,8 +35,12 @@ namespace Microshaoft.WebApi.Controllers
 
                             )
         {
-            SqlConnection connection = new SqlConnection(ConnectionString);
-            JObject result = SqlHelper.StoreProcedureWebExecute(connection, storeProcedureName, parameters, 90);
+            JObject result = null;
+            var r = Process(storeProcedureName, parameters, out result);
+            if (!r)
+            {
+                return StatusCode(403);
+            }
             if
                 (
                     groupFrom.HasValue
@@ -42,6 +49,26 @@ namespace Microshaoft.WebApi.Controllers
                 )
             {
                 GroupingJObjectResult(groupFrom.Value, groupBy, result);
+            }
+            return result;
+        }
+        [HttpPost]
+        [Route("{storeProcedureName}")]
+        public ActionResult<JObject> Post
+                            (
+                                string storeProcedureName
+                                ,
+                                    [FromBody]
+                                    JObject parameters = null
+
+
+                            )
+        {
+            JObject result = null;
+            var r = Process(storeProcedureName, parameters, out result);
+            if (!r)
+            {
+                return StatusCode(403);
             }
             return result;
         }

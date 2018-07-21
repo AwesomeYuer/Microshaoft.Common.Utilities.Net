@@ -17,7 +17,7 @@ namespace Microshaoft.WebApi.Controllers
     {
         public override HashSet<string> GetExecuteWhiteList()
         {
-            return new HashSet<string>() { "zsp_GetDatesAfter" };
+            return new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "zsp_GetDatesAfter" };
         }
         protected override string
               ConnectionString =>
