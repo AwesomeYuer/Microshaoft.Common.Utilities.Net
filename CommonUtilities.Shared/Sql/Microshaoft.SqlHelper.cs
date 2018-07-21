@@ -229,13 +229,26 @@
             }
             return result;
         }
-        private static ConcurrentDictionary<string, IDictionary<string, SqlParameter>>
-            _dictionary 
-                = new ConcurrentDictionary<string, IDictionary<string, SqlParameter>>
+        private static 
+            ConcurrentDictionary<string, IDictionary<string, SqlParameter>>
+                _dictionary 
+                    = new ConcurrentDictionary<string, IDictionary<string, SqlParameter>>
                             (
                                 StringComparer.OrdinalIgnoreCase
                             );
-        public static IDictionary<string,SqlParameter> GetCachedStoreProcedureParameters
+        public static
+            HashSet<string>
+                StoreProceduresExecuteWhiteList
+                    = null;
+
+        //public static
+        //    HashSet<string>
+        //        StoreProceduresExecuteBlackList
+        //            = null;
+
+        public static
+                IDictionary<string,SqlParameter>
+                        GetCachedStoreProcedureParameters
                                         (
                                             string connectionString
                                             , string storeProcedureName
@@ -277,7 +290,9 @@
             return result;
         }
 
-        public static IEnumerable<SqlParameter> GetStoreProcedureParameters
+        public static 
+                IEnumerable<SqlParameter> 
+                        GetStoreProcedureParameters
                                         (
                                             string connectionString
                                             , string storeProcedureName
@@ -392,11 +407,30 @@
             return pd;
         }
 
-        public static JObject StoreProcedureWebExecute
+        public static JObject StoreProcedureExecute
+                               (
+                                   SqlConnection connection
+                                   , string storeProcedureName
+                                   , string p = null //string.Empty
+                                   , int commandTimeout = 90
+                               )
+        {
+            var inputsParameters = JObject.Parse(p);
+            return
+                StoreProcedureExecute
+                        (
+                            connection
+                            , storeProcedureName
+                            , inputsParameters
+                            , commandTimeout
+                        );
+        }
+
+        public static JObject StoreProcedureExecute
                                 (
                                     SqlConnection connection
                                     , string storeProcedureName
-                                    , string p = null //string.Empty
+                                    , JObject inputsParameters = null //string.Empty
                                     , int commandTimeout = 90
                                 )
         {
@@ -414,7 +448,7 @@
                         }
                     )
                 {
-                    var inputsParameters = JObject.Parse(p);
+                    
                     var sqlParameters = SqlHelper
                                             .GenerateExecuteSqlParameters
                                                     (
@@ -427,7 +461,6 @@
                         var parameters = sqlParameters.ToArray();
                         command.Parameters.AddRange(parameters);
                     }
-                    
                     connection.Open();
                     var result = new JObject
                     {
@@ -458,8 +491,6 @@
                                 }
                         }
                     };
-
-
                     var dataReader = command
                                         .ExecuteReader
                                             (
@@ -476,25 +507,22 @@
                     while (dataReader.NextResult());
                     dataReader.Close();
                     JObject jOutputParameters = null;
-
-
                     if (sqlParameters != null)
                     {
                         var outputParameters
-                                    = sqlParameters
-                                            .Where
-                                                (
-                                                    (x) =>
-                                                    {
-                                                        return
-                                                            (
-                                                                x.Direction
-                                                                !=
-                                                                ParameterDirection.Input
-                                                            );
-                                                    }
-                                                );
-
+                                = sqlParameters
+                                        .Where
+                                            (
+                                                (x) =>
+                                                {
+                                                    return
+                                                        (
+                                                            x.Direction
+                                                            !=
+                                                            ParameterDirection.Input
+                                                        );
+                                                }
+                                            );
                         foreach (var x in outputParameters)
                         {
                             if (jOutputParameters == null)

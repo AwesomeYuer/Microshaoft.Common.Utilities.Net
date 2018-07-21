@@ -11,11 +11,20 @@ namespace Microshaoft.WebApi.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
-    public class StoreProcedureExecutorController : AbstractStoreProcedureExecutorControllerBase //ControllerBase //, IConnectionString
+    public class StoreProcedureExecutorController 
+                    : AbstractStoreProcedureExecutorControllerBase
+                        //ControllerBase //, IConnectionString
     {
+        public override HashSet<string> GetExecuteWhiteList()
+        {
+            return new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "zsp_GetDatesAfter" };
+        }
         protected override string
-                ConnectionString =>
-                        @"Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=D:\mssql\MSSQL13.LocalDB\LocalDB\TransportionSecrets\TransportionSecrets.mdf;Data Source=(localdb)\mssqllocaldb;";
+              ConnectionString =>
+                    @"Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=D:\mssql\MSSQL13.LocalDB\LocalDB\TransportionSecrets\TransportionSecrets.mdf;Data Source=(localdb)\mssqllocaldb;";
+        //protected override string ConnectionString => @"Persist Security Info=False;User ID=sa;Password=GreatWB001!~;Data Source=sops-db.eastus.cloudapp.azure.com;Initial Catalog=StandardFlowInfo";
+
+        #region 未完成任务
         [HttpGet]
         [Route("groupsjoin/{storeProcedureName}")]
         //测试通过 但未完成
@@ -28,6 +37,7 @@ namespace Microshaoft.WebApi.Controllers
                                 )
         {
             //var storeProcedureName = "zsp_GroupsJoin";
+            JObject j = JObject.Parse(p);
             var result = base
                             .Get
                             (
@@ -199,7 +209,7 @@ namespace Microshaoft.WebApi.Controllers
                                 , (g) =>
                                 {
                                     var key = g.Key;
-                                    
+
                                     ((JObject)key)
                                         .Add
                                             (
@@ -335,6 +345,11 @@ namespace Microshaoft.WebApi.Controllers
 
             return groups;
         }
+
+
+
+        #endregion
+
     }
 }
 #endif

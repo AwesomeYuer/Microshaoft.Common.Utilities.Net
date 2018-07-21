@@ -5,6 +5,7 @@ namespace Microshaoft.WebApi.Controllers
     using Newtonsoft.Json.Linq;
     using System.Web.Http;
     using System.Data.SqlClient;
+    using System.Net;
 
     [RoutePrefix("api/StoreProcedureExecutor")]
     public abstract partial class AbstractStoreProcedureExecutorControllerBase 
@@ -19,7 +20,7 @@ namespace Microshaoft.WebApi.Controllers
         // GET api/values
         [HttpGet]
         [Route("{storeProcedureName}")]
-        public JObject Get
+        public IHttpActionResult Get
                             (
                                 string storeProcedureName
                                 ,
@@ -33,8 +34,12 @@ namespace Microshaoft.WebApi.Controllers
                                     string parameters = null
                             )
         {
-            SqlConnection connection = new SqlConnection(ConnectionString);
-            JObject result = SqlHelper.StoreProcedureWebExecute(connection, storeProcedureName, parameters, 90);
+            JObject result = null;
+            var r = Process(storeProcedureName, parameters, out result);
+            if (!r)
+            {
+                return StatusCode(HttpStatusCode.Forbidden);
+            }
             if
                 (
                     groupFrom.HasValue
@@ -44,8 +49,27 @@ namespace Microshaoft.WebApi.Controllers
             {
                 GroupingJObjectResult(groupFrom.Value, groupBy, result);
             }
-            return result;
+            return Ok(result);
         }
+        [HttpPost]
+        [Route("{storeProcedureName}")]
+        public IHttpActionResult Post
+                            (
+                                string storeProcedureName
+                                ,
+                                [FromBody]
+                                JObject parameters
+                            )
+        {
+            JObject result = null;
+            var r = Process(storeProcedureName, parameters, out result);
+            if (!r)
+            {
+                return StatusCode(HttpStatusCode.Forbidden);
+            }
+            return Ok(result);
+        }
+
     }
 }
 #endif

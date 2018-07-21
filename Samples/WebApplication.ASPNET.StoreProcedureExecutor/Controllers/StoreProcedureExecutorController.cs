@@ -3,16 +3,21 @@ namespace Microshaoft.WebApi.Controllers
 {
     using Microshaoft;
     using Newtonsoft.Json.Linq;
+    using System;
     using System.Collections.Generic;
     using System.Web.Http;
 
     [RoutePrefix("api/StoreProcedureExecutor")]
     
-    public class StoreProcedureExecutorController : AbstractStoreProcedureExecutorControllerBase //ControllerBase //, IConnectionString
+    public class StoreProcedureExecutorController 
+                : AbstractStoreProcedureExecutorControllerBase //ControllerBase //, IConnectionString
     {
         protected override string ConnectionString => @"Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=D:\mssql\MSSQL13.LocalDB\LocalDB\TransportionSecrets\TransportionSecrets.mdf;Data Source=(localdb)\mssqllocaldb;";
 
-
+        public override HashSet<string> GetExecuteWhiteList()
+        {
+            return new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "zsp_GetDatesAfter" };
+        }
         /* 
          * ASP.NET Framework should implement Get Action/Method
          * but ASP.NET Core needn't  
@@ -20,10 +25,10 @@ namespace Microshaoft.WebApi.Controllers
 
         [HttpGet]
         [Route("{storeProcedureName}")]
-        public JObject Get
+        public IHttpActionResult Get
                         (
                             string storeProcedureName
-                            ,                            
+                            ,
                                 [FromUri(Name = "gf")]
                                 int? groupFrom = null
                             ,
@@ -44,11 +49,31 @@ namespace Microshaoft.WebApi.Controllers
                         );
         }
 
-
-        [Route("test")]
-        public IEnumerable<string> Get()
+        [HttpPost]
+        [Route("{storeProcedureName}")]
+        public IHttpActionResult Post
+                            (
+                                string storeProcedureName
+                                ,
+                                    [FromBody]
+                                    //[FromForm]
+                                    JObject p //= null
+                            )
         {
-            return new string[] { "value1", "value2" };
+
+            
+            return
+                base
+                    .Post
+                        (
+                            storeProcedureName
+                            , p
+                        );
         }
+        //[Route("test")]
+        //public IEnumerable<string> Get()
+        //{
+        //    return new string[] { "value1", "value2" };
+        //}
     }
 }
