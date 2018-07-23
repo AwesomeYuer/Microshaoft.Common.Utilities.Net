@@ -8,6 +8,7 @@ namespace Microshaoft.WebApi.Controllers
     using System;
     using System.Data.SqlClient;
     using System.Linq;
+    using Microshaoft.Linq.Dynamic;
 
     [Route("api/[controller]")]
     [ApiController]
@@ -41,6 +42,13 @@ namespace Microshaoft.WebApi.Controllers
             {
                 return StatusCode(403);
             }
+
+            var x = new int[]
+            {
+                1
+            }.AsQueryable().Where("x <= 1").ToArray();
+                
+
             if
                 (
                     groupFrom.HasValue
