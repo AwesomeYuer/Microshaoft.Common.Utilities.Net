@@ -78,6 +78,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Json\JsonHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JsonReaderHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JTokenHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)JsonWebToken\JwtTokenHelper.NET.Framework.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)JsonWebToken\JwtTokenHelper.NET.All.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\KeyValueNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KeyWordFilter\CharExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KeyWordFilter\FastFilter.cs" />
@@ -210,5 +212,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)DataAccess\Pager.StoreProcedure.Sample.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)JsonWebToken\" />
   </ItemGroup>
 </Project>

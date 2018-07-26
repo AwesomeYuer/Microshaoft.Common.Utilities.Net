@@ -36,6 +36,7 @@ namespace Microshaoft.WebApi.Controllers
                                     string p            = null //string.Empty
                                 )
         {
+            
             //var storeProcedureName = "zsp_GroupsJoin";
             JObject j = JObject.Parse(p);
             var result = base
