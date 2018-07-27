@@ -43,7 +43,7 @@ namespace Microshaoft.WebApi.Controllers
                             .Get
                             (
                                 storeProcedureName
-                                , p
+                                , j
 
                             ).Value;
 
@@ -105,11 +105,12 @@ namespace Microshaoft.WebApi.Controllers
                                )
         {
             storeProcedureName = "zsp_Grouping";
+            JObject j = JObject.Parse(p);
             var result = base
                             .Get
                             (
                                 storeProcedureName
-                                , p
+                                , j
 
                             ).Value;
 
