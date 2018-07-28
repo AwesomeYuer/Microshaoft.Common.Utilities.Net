@@ -24,7 +24,7 @@ namespace Microshaoft.WebApi.Controllers
         protected override string
               ConnectionString =>
                     @"Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=D:\mssql\MSSQL13.LocalDB\LocalDB\TransportionSecrets\TransportionSecrets.mdf;Data Source=(localdb)\mssqllocaldb;";
-        //protected override string ConnectionString => @"Persist Security Info=False;User ID=sa;Password=GreatWB001!~;Data Source=sops-db.eastus.cloudapp.azure.com;Initial Catalog=StandardFlowInfo";
+        
 
         #region 未完成任务
         [HttpGet]
