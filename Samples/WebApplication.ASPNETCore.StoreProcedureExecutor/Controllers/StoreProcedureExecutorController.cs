@@ -3,6 +3,7 @@
 namespace Microshaoft.WebApi.Controllers
 {
     using Microshaoft;
+    using Microsoft.AspNetCore.Cors;
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json.Linq;
     using System;
@@ -11,6 +12,7 @@ namespace Microshaoft.WebApi.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AllowAllOrigins")]
     public class StoreProcedureExecutorController 
                     : AbstractStoreProcedureExecutorControllerBase
                         //ControllerBase //, IConnectionString
@@ -36,13 +38,14 @@ namespace Microshaoft.WebApi.Controllers
                                     string p            = null //string.Empty
                                 )
         {
+            
             //var storeProcedureName = "zsp_GroupsJoin";
             JObject j = JObject.Parse(p);
             var result = base
                             .Get
                             (
                                 storeProcedureName
-                                , p
+                                , j
 
                             ).Value;
 
@@ -104,11 +107,12 @@ namespace Microshaoft.WebApi.Controllers
                                )
         {
             storeProcedureName = "zsp_Grouping";
+            JObject j = JObject.Parse(p);
             var result = base
                             .Get
                             (
                                 storeProcedureName
-                                , p
+                                , j
 
                             ).Value;
 

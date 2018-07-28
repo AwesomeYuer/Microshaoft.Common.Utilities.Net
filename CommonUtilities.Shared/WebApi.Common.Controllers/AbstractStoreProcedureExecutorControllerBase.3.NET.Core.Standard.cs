@@ -1,13 +1,15 @@
 ﻿#if !NETFRAMEWORK4_X && NETCOREAPP2_X
-
 namespace Microshaoft.WebApi.Controllers
 {
     using Microshaoft;
+    using Microshaoft.Linq.Dynamic;
+    using Microshaoft.WebApi.ModelBinders;
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json.Linq;
     using System;
     using System.Data.SqlClient;
     using System.Linq;
+    using System.Net.Http.Formatting;
 
     [Route("api/[controller]")]
     [ApiController]
@@ -15,9 +17,6 @@ namespace Microshaoft.WebApi.Controllers
             :
                 ControllerBase //, IConnectionString
     {
-        
-
-
         [HttpGet]
         [Route("{storeProcedureName}")]
         public ActionResult<JObject> Get
@@ -25,13 +24,14 @@ namespace Microshaoft.WebApi.Controllers
                                 string storeProcedureName
                                 ,
                                     [FromQuery(Name = "p")]
-                                    string parameters = null
-                                , 
-                                    [FromQuery(Name = "gf")]
-                                    int? groupFrom = null
-                                , 
-                                    [FromQuery(Name = "gb")]
-                                    string groupBy = null
+                                    [ModelBinder(typeof(JTokenModelBinderProvider))]
+                                    JObject parameters = null
+                                //, 
+                                //    [FromQuery(Name = "gf")]
+                                //    int? groupFrom = null
+                                //, 
+                                //    [FromQuery(Name = "gb")]
+                                //    string groupBy = null
 
                             )
         {
@@ -41,15 +41,22 @@ namespace Microshaoft.WebApi.Controllers
             {
                 return StatusCode(403);
             }
-            if
-                (
-                    groupFrom.HasValue
-                    &&
-                    groupBy != null
-                )
-            {
-                GroupingJObjectResult(groupFrom.Value, groupBy, result);
-            }
+
+            ////var x = new int[]
+            ////{
+            ////    1
+            ////}.AsQueryable().Where("x <= 1").ToArray();
+                
+
+            //if
+            //    (
+            //        groupFrom.HasValue
+            //        &&
+            //        groupBy != null
+            //    )
+            //{
+            //    GroupingJObjectResult(groupFrom.Value, groupBy, result);
+            //}
             return result;
         }
         [HttpPost]
@@ -58,14 +65,14 @@ namespace Microshaoft.WebApi.Controllers
                             (
                                 string storeProcedureName
                                 ,
-                                    [FromBody]
-                                    JObject parameters = null
-
-
+                               [FromBody]
+                               //    //[FromForm]
+                               [ModelBinder(typeof(JTokenModelBinderProvider))]
+                               JToken parameters = null
                             )
         {
             JObject result = null;
-            var r = Process(storeProcedureName, parameters, out result);
+            var r = Process(storeProcedureName, (JObject) parameters, out result);
             if (!r)
             {
                 return StatusCode(403);

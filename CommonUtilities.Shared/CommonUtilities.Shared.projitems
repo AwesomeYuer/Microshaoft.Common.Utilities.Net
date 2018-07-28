@@ -78,6 +78,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Json\JsonHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JsonReaderHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JTokenHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)JsonWebToken\JwtTokenHelper.NET.Framework.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)JsonWebToken\JwtTokenHelper.NET.All.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\KeyValueNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KeyWordFilter\CharExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KeyWordFilter\FastFilter.cs" />
@@ -86,6 +88,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)KeyWordFilter\HashStringSet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KeyWordFilter\IWordFilter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KeyWordFilter\TrieFilter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LinqDynamic\Linq.Dynamic.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LongInteger\LongIntegerHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mapper\TinyMapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MEF\MEF.Contracts.cs" />
@@ -168,6 +171,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\AbstractStoreProcedureExecutorControllerBase.3.NET.Core.Standard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\AbstractStoreProcedureExecutorControllerBase.0.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\AbstractStoreProcedureExecutorControllerBase.2.NET.Framework.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenModelBinder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenWebHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApiVersionedRoute\ActionSelector\CandidateAction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApiVersionedRoute\ActionSelector\HttpActionDescriptorExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApiVersionedRoute\ActionSelector\HttpParameterBindingExtensions.cs" />
@@ -191,6 +196,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)WebMvcApi.NET45\FileUploadController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebMvcApi.NET45\HttpRequestResponseMessageExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebMvcApi.NET45\JsonpMediaTypeFormatter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenModelBinderProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebMvcApi.NET45\TraceSoapMessagesLoggerSoapExtension.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebMvcApi.NET45\WebApiExceptionsHandlerFilter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebMvcApi.NET45\WebMvcApiLogFilter.cs" />
@@ -209,5 +215,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)DataAccess\Pager.StoreProcedure.Sample.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)JsonWebToken\" />
   </ItemGroup>
 </Project>
