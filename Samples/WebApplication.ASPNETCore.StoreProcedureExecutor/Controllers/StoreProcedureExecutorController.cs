@@ -3,6 +3,7 @@
 namespace Microshaoft.WebApi.Controllers
 {
     using Microshaoft;
+    using Microsoft.AspNetCore.Cors;
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json.Linq;
     using System;
@@ -11,6 +12,7 @@ namespace Microshaoft.WebApi.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AllowAllOrigins")]
     public class StoreProcedureExecutorController 
                     : AbstractStoreProcedureExecutorControllerBase
                         //ControllerBase //, IConnectionString

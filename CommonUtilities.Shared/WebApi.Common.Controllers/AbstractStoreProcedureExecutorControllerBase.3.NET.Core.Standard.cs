@@ -24,7 +24,7 @@ namespace Microshaoft.WebApi.Controllers
                                 string storeProcedureName
                                 ,
                                     [FromQuery(Name = "p")]
-                                    [ModelBinder(typeof(JTokenFormModelBinderProvider))]
+                                    [ModelBinder(typeof(JTokenModelBinderProvider))]
                                     JObject parameters = null
                                 //, 
                                 //    [FromQuery(Name = "gf")]
@@ -67,7 +67,7 @@ namespace Microshaoft.WebApi.Controllers
                                 ,
                                [FromBody]
                                //    //[FromForm]
-                               [ModelBinder(typeof(JTokenFormModelBinderProvider))]
+                               [ModelBinder(typeof(JTokenModelBinderProvider))]
                                JToken parameters = null
                             )
         {

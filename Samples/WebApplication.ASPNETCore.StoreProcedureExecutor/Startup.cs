@@ -27,11 +27,30 @@ namespace WebApplication.ASPNetCore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services
+                .AddCors
+                    (
+                        options =>
+                        {
+
+                            // BEGIN02
+                            options.AddPolicy("AllowAllOrigins",
+                                builder =>
+                                {
+                                    builder.AllowAnyOrigin();
+                                });
+
+                        }
+                  );
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+
+            app.UseCors();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
