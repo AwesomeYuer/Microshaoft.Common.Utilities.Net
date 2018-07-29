@@ -196,7 +196,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)WebMvcApi.NET45\FileUploadController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebMvcApi.NET45\HttpRequestResponseMessageExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebMvcApi.NET45\JsonpMediaTypeFormatter.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenModelBinderProvider.NET.Core.Standard..cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenModelBinderProvider.NET.Core.Standard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebMvcApi.NET45\TraceSoapMessagesLoggerSoapExtension.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebMvcApi.NET45\WebApiExceptionsHandlerFilter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebMvcApi.NET45\WebMvcApiLogFilter.cs" />
