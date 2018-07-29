@@ -1,7 +1,4 @@
 ﻿//#if !NETFRAMEWORK4_X && !NETSTANDARD2_0
-
-
-
 namespace Microshaoft.WebApi.Controllers
 {
     using Newtonsoft.Json.Linq;
@@ -25,14 +22,11 @@ namespace Microshaoft.WebApi.Controllers
                             = GetExecuteWhiteList();
                 }
             }
-
             return
                 SqlHelper
                         .StoreProceduresExecuteWhiteList
                         .Contains(x);
         }
-
-
         protected abstract string ConnectionString
         {
             get;

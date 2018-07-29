@@ -13,12 +13,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)JsonWebToken\JwtTokenHelper.NET.Framework.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JObjectExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MemberAdditionalDefinitionAttribute\MemberAdditionalDefinitionAttribute.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\AbstractStoreProcedureExecutorControllerBase.0.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\AbstractStoreProcedureExecutorControllerBase.1.NET.All.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\AbstractStoreProcedureExecutorControllerBase.2.NET.Framework.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\AbstractStoreProcedureExecutorControllerBase.3.NET.Core.Standard.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenModelBinder.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenModelBinderProvider.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenWebHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenModelBinder.NET.Framework.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenModelBinderProvider.NET.Core.Standard..cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenWebHelper.NET.Core.Standard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApiVersionedRoute\ActionSelector\CandidateAction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApiVersionedRoute\ActionSelector\HttpActionDescriptorExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApiVersionedRoute\ActionSelector\HttpParameterBindingExtensions.cs" />

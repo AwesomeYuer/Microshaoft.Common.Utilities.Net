@@ -13,10 +13,6 @@ namespace Microshaoft.WebApi.ModelBinders
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web;
-
-
-    
-
     public class JTokenModelBinder : IModelBinder
     {
         public async Task BindModelAsync(ModelBindingContext bindingContext)
@@ -44,7 +40,7 @@ namespace Microshaoft.WebApi.ModelBinders
                 }
                 else
                 {
-                    if (request.ContentType == "application/json")
+                    if (request.IsJsonRequest())
                     {
                         using (var streamReader = new StreamReader(request.Body))
                         {
@@ -58,7 +54,7 @@ namespace Microshaoft.WebApi.ModelBinders
             }
             else if (string.Compare(request.Method, "get", true) == 0)
             {
-                if (request.ContentType == "application/json")
+                if (request.IsJsonRequest())
                 {
                     var json = request
                                     .QueryString
@@ -84,7 +80,8 @@ namespace Microshaoft.WebApi.ModelBinders
                                             jToken
                                         );
         }
-        
+
+       
     }
     public class JTokenModelBinderProvider 
                             : IModelBinderProvider
