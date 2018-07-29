@@ -80,8 +80,6 @@ namespace Microshaoft.WebApi.ModelBinders
                                             jToken
                                         );
         }
-
-       
     }
     public class JTokenModelBinderProvider 
                             : IModelBinderProvider
@@ -106,8 +104,5 @@ namespace Microshaoft.WebApi.ModelBinders
             return null;
         }
     }
-
-   
-
 }
 #endif
