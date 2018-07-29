@@ -1,5 +1,4 @@
 ﻿#if NETCOREAPP2_X
-
 namespace Microshaoft.WebApi
 {
     using Microsoft.AspNetCore.Http;
@@ -9,9 +8,12 @@ namespace Microshaoft.WebApi
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-
     public static class JTokenWebExtensions
     {
+        public static bool IsJsonRequest(this HttpRequest target)
+        {
+            return JTokenWebHelper.IsJsonRequest(target);
+        }
         public static JToken ToJToken(this IFormCollection target)
         {
             return
@@ -23,27 +25,35 @@ namespace Microshaoft.WebApi
                 JTokenWebHelper.ToJToken(target);
         }
     }
-
     public static class JTokenWebHelper
     {
+        public static bool IsJsonRequest(HttpRequest request)
+        {
+            return request.ContentType == "application/json";
+        }
         public static JToken ToJToken(IQueryCollection target)
         {
             return
-                 ToJToken((IEnumerable<KeyValuePair<string, StringValues>>)target);
-
-
-
+                 ToJToken
+                    (
+                        (IEnumerable<KeyValuePair<string, StringValues>>)
+                            target
+                    );
         }
         public static JToken ToJToken(IFormCollection target)
         {
             return
-                 ToJToken((IEnumerable<KeyValuePair<string, StringValues>>)target);
-
-
+                 ToJToken
+                    (
+                        (IEnumerable<KeyValuePair<string, StringValues>>)
+                            target
+                    );
         }
-
-
-        private static JToken ToJToken(IEnumerable<KeyValuePair<string, StringValues>> target)
+        public static JToken ToJToken
+                                (
+                                    IEnumerable<KeyValuePair<string, StringValues>>
+                                            target
+                                )
         {
             IEnumerable<JProperty>
                 jProperties
@@ -70,12 +80,9 @@ namespace Microshaoft.WebApi
                                                 );
                                     }
                                 );
-
             var result = new JObject(jProperties);
             return result;
-
         }
-
     }
 }
 #endif
