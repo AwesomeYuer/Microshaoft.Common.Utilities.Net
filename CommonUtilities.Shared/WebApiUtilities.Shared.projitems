@@ -17,7 +17,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\AbstractStoreProcedureExecutorControllerBase.2.NET.Framework.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\AbstractStoreProcedureExecutorControllerBase.3.NET.Core.Standard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenModelBinder.NET.Framework.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenModelBinderProvider.NET.Core.Standard..cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenModelBinderProvider.NET.Core.Standard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenWebHelper.NET.Core.Standard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApiVersionedRoute\ActionSelector\CandidateAction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApiVersionedRoute\ActionSelector\HttpActionDescriptorExtensions.cs" />
