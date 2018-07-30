@@ -386,13 +386,16 @@ namespace Microshaoft
                         , out validatedToken
                         , out claimsPrincipal
                     );
-            IPAddress ipa = null;
-            if (IPAddress.TryParse(ip, out ipa))
+            if (r)
             {
-                var tokenIP = claimsPrincipal.GetClaimTypeValue("UserClientIP");
-                if (IPAddress.TryParse(tokenIP, out ipa))
+                IPAddress ipa = null;
+                if (IPAddress.TryParse(ip, out ipa))
                 {
-                    r = (tokenIP == ip);
+                    var tokenIP = claimsPrincipal.GetClaimTypeValue("UserClientIP");
+                    if (IPAddress.TryParse(tokenIP, out ipa))
+                    {
+                        r = (tokenIP == ip);
+                    }
                 }
             }
             if (r)
