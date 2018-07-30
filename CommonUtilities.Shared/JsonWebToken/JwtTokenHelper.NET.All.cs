@@ -330,12 +330,75 @@ namespace Microshaoft
                                                            .GetBytes(plainTextSecurityKey)
                                                    );
                 var signingCredentials
-                            = new Microsoft.IdentityModel.Tokens.SigningCredentials
-                                (
-                                    signingKey
-                                    , signingCredentialsAlgorithm
-                                    , signingCredentialsDigest
-                                );
+                            = new Microsoft
+                                        .IdentityModel
+                                        .Tokens
+                                        .SigningCredentials
+                                                    (
+                                                        signingKey
+                                                        , signingCredentialsAlgorithm
+                                                        , signingCredentialsDigest
+                                                    );
+                r = TryIssueToken
+                         (
+                            issuer
+                            , audience
+                            , claims
+                            , out plainToken
+                            , out secretTokenString
+                            , signingKey
+                            , signingCredentials
+                         );
+            }
+            catch //(Exception)
+            {
+
+                //throw;
+            }
+            return
+                   r;
+        }
+
+        public static bool TryIssueToken
+                    (
+                        string issuer
+                        , string audience
+                        , IEnumerable<Claim> claims
+                        , out Microsoft.IdentityModel.Tokens.SecurityToken plainToken
+                        , out string secretTokenString
+                        , Microsoft
+                                .IdentityModel
+                                .Tokens
+                                .SymmetricSecurityKey
+                                                signingKey
+                        , Microsoft
+                                .IdentityModel
+                                .Tokens
+                                .SigningCredentials
+                                                signingCredentials
+                    )
+        {
+            bool r = false;
+            plainToken = null;
+            secretTokenString = null;
+            try
+            {
+                //var signingKey = new Microsoft
+                //                           .IdentityModel
+                //                           .Tokens
+                //                           .SymmetricSecurityKey
+                //                                   (
+                //                                       Encoding
+                //                                           .GetEncoding(plainTextSecurityKeyEncoding)
+                //                                           .GetBytes(plainTextSecurityKey)
+                //                                   );
+                //var signingCredentials
+                //            = new Microsoft.IdentityModel.Tokens.SigningCredentials
+                //                (
+                //                    signingKey
+                //                    , signingCredentialsAlgorithm
+                //                    , signingCredentialsDigest
+                //                );
                 // ComplexClaim
                 var claimsIdentity = new ClaimsIdentity
                 (
