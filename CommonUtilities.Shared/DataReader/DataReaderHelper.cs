@@ -6,7 +6,6 @@ namespace Microshaoft
     using System.Linq;
     using System;
     using Newtonsoft.Json.Linq;
-
     public static class DataReaderExtensionsMethodsManager
     {
         public static IEnumerable<T> ExecuteRead<T>
@@ -35,11 +34,8 @@ namespace Microshaoft
             }
         }
     }
-
-
     public static class DataReaderHelper
     {
-
         public static IEnumerable<TEntry> AsEnumerable<TEntry>
                         (
                             this SqlDataReader target
@@ -54,7 +50,6 @@ namespace Microshaoft
                         , needDefinitionAttributeProcess
                     );
         } 
-
         public static IEnumerable<TEntry> GetEnumerable<TEntry>
                 (
                     IDataReader dataReader
@@ -82,13 +77,7 @@ namespace Microshaoft
                     }
                 }
             }
-
-
         }
-
-
-
-
         public static IEnumerable<TEntry> GetEnumerable<TEntry>
                 (
                     IDataReader dataReader
@@ -144,27 +133,57 @@ namespace Microshaoft
                         entry;
             }
         }
-
-        public static IEnumerable<JToken> AsJTokensEnumerable
+        public static IEnumerable<JToken> AsJTokensRowsEnumerable
                              (
                                  this IDataReader target
                              )
         {
             return
-                GetJTokensEnumerable
+                GetJTokensRowsEnumerable
                     (
                         target
                     );
         }
-
-        public static IEnumerable<JToken> GetJTokensEnumerable
+        public static IEnumerable<JToken> GetJTokensColumnsEnumerable
+                     (
+                        this IDataReader dataReader
+                     )
+        {
+            var fieldsCount = dataReader.FieldCount;
+            for (var i = 0; i < fieldsCount; i++)
+            {
+                var fieldType = dataReader.GetFieldType(i);
+                var fieldName = dataReader.GetName(i);
+                yield
+                    return
+                        new JObject
+                                (
+                                    new JProperty
+                                        (
+                                            "title"
+                                            , fieldName
+                                        )
+                                    ,
+                                    new JProperty
+                                        (
+                                            "type"
+                                            , fieldType
+                                                .GetJTokenType()
+                                                .ToString()
+                                        )
+                                );
+            }
+        }
+        public static IEnumerable<JToken> GetJTokensRowsEnumerable
                              (
                                  IDataReader dataReader
                              )
         {
             var fieldsCount = dataReader.FieldCount;
+            //int rowNum = 0;
             while (dataReader.Read())
             {
+                //rowNum++;
                 JObject row = new JObject();
                 for (var i = 0; i < fieldsCount; i++)
                 {
@@ -265,7 +284,6 @@ namespace Microshaoft
                     var field = new JProperty(fieldName, fieldValue);
                     row.Add(field);
                 }
-                
                 yield
                     return
                         row;
