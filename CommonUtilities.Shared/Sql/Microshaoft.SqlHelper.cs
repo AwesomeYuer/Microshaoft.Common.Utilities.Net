@@ -499,10 +499,27 @@
                                             );
                     do
                     {
-                        var data = dataReader
-                                    .AsJTokensEnumerable();
-
-                        ((JArray) result["Outputs"]["ResultSets"]).Add(new JArray(data));
+                        var columns = dataReader
+                                        .GetJTokensColumnsEnumerable();
+                        var rows = dataReader
+                                        .AsJTokensRowsEnumerable();
+                        
+                        ((JArray) result["Outputs"]["ResultSets"])
+                                            .Add
+                                                (
+                                                    new JObject
+                                                    {
+                                                        {
+                                                            "Columns"
+                                                            , new JArray(columns)
+                                                        }
+                                                        ,
+                                                        {
+                                                            "Rows"
+                                                            , new JArray(rows)
+                                                        }
+                                                    }
+                                                );
                     }
                     while (dataReader.NextResult());
                     dataReader.Close();

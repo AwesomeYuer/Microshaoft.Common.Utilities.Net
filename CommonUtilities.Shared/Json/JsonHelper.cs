@@ -8,7 +8,6 @@
     using System.Xml.Linq;
     using System.Collections.Generic;
 
-
     public class JObjectComparer : IEqualityComparer<JToken>
     {
         public string[] CompareJTokensPaths;
@@ -76,6 +75,81 @@
 
     public static class JsonHelper
     {
+        public static JTokenType GetJTokenType(this Type target)
+        {
+            JTokenType r = JTokenType.None;
+            if
+                (
+                    typeof(bool) == target
+                )
+            {
+                r = JTokenType.Boolean;
+            }
+            else if
+                (
+                    typeof(byte[]) == target
+                )
+            {
+                r = JTokenType.Bytes;
+            }
+            else if
+                (
+                    typeof(DateTime) == target
+                )
+            {
+                r = JTokenType.Date;
+            }
+            else if
+                (
+                    typeof(float) == target
+                    ||
+                    typeof(Double) == target
+                    ||
+                    typeof(Single) == target
+                    ||
+                    typeof(decimal) == target
+                )
+            {
+                r = JTokenType.Float;
+            }
+            else if
+                (
+                    typeof(Guid) == target
+                )
+            {
+                r = JTokenType.Guid;
+            }
+            else if
+                (
+                    typeof(int) == target
+                    ||
+                    typeof(long) == target
+                    ||
+                    typeof(short) == target
+                    ||
+                    typeof(uint) == target
+                    ||
+                    typeof(ushort) == target
+                    ||
+                    typeof(byte) == target
+                )
+            {
+                r = JTokenType.Integer;
+            }
+            else if
+                (
+                    typeof(TimeSpan) == target
+                )
+            {
+                r = JTokenType.TimeSpan;
+            }
+            else
+            {
+                r = JTokenType.String;
+            }
+            return r;
+
+        }
         public static JToken MergeJsonTemplateToJToken
                         (
                             string jsonTemplate

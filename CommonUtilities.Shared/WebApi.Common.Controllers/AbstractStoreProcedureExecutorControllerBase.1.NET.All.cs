@@ -47,13 +47,13 @@ namespace Microshaoft.WebApi.Controllers
 
             SqlConnection connection = new SqlConnection(ConnectionString);
             result = SqlHelper
-                                .StoreProcedureExecute
-                                        (
-                                            connection
-                                            , storeProcedureName
-                                            , parameters
-                                            , 90
-                                        );
+                            .StoreProcedureExecute
+                                    (
+                                        connection
+                                        , storeProcedureName
+                                        , parameters
+                                        , 90
+                                    );
             return true;
         }
         private bool Process(string storeProcedureName, string parameters, out JObject result)
