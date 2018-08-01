@@ -160,13 +160,19 @@ namespace Microshaoft
                                 (
                                     new JProperty
                                         (
-                                            "title"
+                                            "ColumnName"
                                             , fieldName
                                         )
                                     ,
                                     new JProperty
                                         (
-                                            "type"
+                                            "Title"
+                                            , fieldName
+                                        )
+                                    ,
+                                    new JProperty
+                                        (
+                                            "ColumnType"
                                             , fieldType
                                                 .GetJTokenType()
                                                 .ToString()
