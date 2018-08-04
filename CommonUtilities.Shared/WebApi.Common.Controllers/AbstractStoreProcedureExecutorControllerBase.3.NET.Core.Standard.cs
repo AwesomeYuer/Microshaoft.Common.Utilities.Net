@@ -48,13 +48,43 @@ namespace Microshaoft.WebApi.Controllers
         [HttpPatch]
         [HttpPost]
         [HttpPut]
-        [Route("{storeProcedureName}")]
-        public ActionResult<JToken> ProcessActionRequest
+        [Route
+            (
+                  "{storeProcedureName}/"
+                + "{resultPathSegment1?}/"
+                + "{resultPathSegment2?}/"
+                + "{resultPathSegment3?}/"
+                + "{resultPathSegment4?}/"
+                + "{resultPathSegment5?}/"
+                + "{resultPathSegment6?}/"
+            )
+        ]
+        public virtual ActionResult<JToken> ProcessActionRequest
                             (
+                                [FromRoute]
                                 string storeProcedureName
                                 ,
                                 [ModelBinder(typeof(JTokenModelBinder))]
                                 JToken parameters = null
+
+                                ,
+                                [FromRoute]
+                                string resultPathSegment1 = null
+                                ,
+                                [FromRoute]
+                                string resultPathSegment2 = null
+                                ,
+                                [FromRoute]
+                                string resultPathSegment3 = null
+                                ,
+                                [FromRoute]
+                                string resultPathSegment4 = null
+                                ,
+                                [FromRoute]
+                                string resultPathSegment5 = null
+                                ,
+                                [FromRoute]
+                                string resultPathSegment6 = null
                             )
         {
             JToken result = null;
@@ -73,8 +103,20 @@ namespace Microshaoft.WebApi.Controllers
                 return StatusCode(403);
             }
             result["TimeStamp"] = DateTime.Now;
+            result = result
+                        .GetDescendantByPath
+                            (
+                                resultPathSegment1
+                                , resultPathSegment2
+                                , resultPathSegment3
+                                , resultPathSegment4
+                                , resultPathSegment5
+                                , resultPathSegment6
+                            );
             return result;
         }
+
+
     }
 }
 #endif
