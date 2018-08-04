@@ -10,6 +10,7 @@ namespace Microshaoft.WebApi.Controllers
     using System.Data.SqlClient;
     using System.Linq;
     using System.Net.Http.Formatting;
+    using Microshaoft.Web;
 
     [Route("api/[controller]")]
     [ApiController]
@@ -17,66 +18,61 @@ namespace Microshaoft.WebApi.Controllers
             :
                 ControllerBase //, IConnectionString
     {
+        //[ResponseCache(Duration = 10)]
+        //[
+        //    TypeFilter
+        //        (
+        //            typeof(RouteAuthorizeActionFilter)
+        //            //, IsReusable = false
+        //            , Arguments = new object[] {  
+        //                new string[]
+        //                {
+        //                    "storeProcedureName"
+        //                }
+        //            }
+        //        )
+        //]
+        //[
+        //    RouteAuthorizeActionFilter
+        //    (
+        //        new string[]
+        //            {
+        //                "storeProcedureName"
+        //            }
+        //    )
+        //]
+        [HttpDelete]
         [HttpGet]
-        [Route("{storeProcedureName}")]
-        public ActionResult<JObject> Get
-                            (
-                                string storeProcedureName
-                                ,
-                                    [FromQuery(Name = "p")]
-                                    [ModelBinder(typeof(JTokenModelBinderProvider))]
-                                    JObject parameters = null
-                                //, 
-                                //    [FromQuery(Name = "gf")]
-                                //    int? groupFrom = null
-                                //, 
-                                //    [FromQuery(Name = "gb")]
-                                //    string groupBy = null
-
-                            )
-        {
-            JObject result = null;
-            var r = Process(storeProcedureName, parameters, out result);
-            if (!r)
-            {
-                return StatusCode(403);
-            }
-
-            ////var x = new int[]
-            ////{
-            ////    1
-            ////}.AsQueryable().Where("x <= 1").ToArray();
-                
-
-            //if
-            //    (
-            //        groupFrom.HasValue
-            //        &&
-            //        groupBy != null
-            //    )
-            //{
-            //    GroupingJObjectResult(groupFrom.Value, groupBy, result);
-            //}
-            return result;
-        }
+        [HttpHead]
+        [HttpOptions]
+        [HttpPatch]
         [HttpPost]
+        [HttpPut]
         [Route("{storeProcedureName}")]
-        public ActionResult<JObject> Post
+        public ActionResult<JToken> ProcessActionRequest
                             (
                                 string storeProcedureName
                                 ,
-                               [FromBody]
-                               //    //[FromForm]
-                               [ModelBinder(typeof(JTokenModelBinderProvider))]
-                               JToken parameters = null
+                                [ModelBinder(typeof(JTokenModelBinder))]
+                                JToken parameters = null
                             )
         {
-            JObject result = null;
-            var r = Process(storeProcedureName, (JObject) parameters, out result);
+            JToken result = null;
+            var r = false;
+            if (NeedCheckWhiteList)
+            {
+                r = CheckList(storeProcedureName, Request.Method);
+                if (!r)
+                {
+                    return StatusCode(403);
+                }
+            }
+            r = Process(storeProcedureName, parameters, out result);
             if (!r)
             {
                 return StatusCode(403);
             }
+            result["TimeStamp"] = DateTime.Now;
             return result;
         }
     }

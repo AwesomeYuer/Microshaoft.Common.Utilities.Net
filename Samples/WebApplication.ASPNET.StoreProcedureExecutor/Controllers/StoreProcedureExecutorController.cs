@@ -2,6 +2,7 @@
 namespace Microshaoft.WebApi.Controllers
 {
     using Microshaoft;
+    using Microshaoft.Web;
     using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Generic;
@@ -14,9 +15,20 @@ namespace Microshaoft.WebApi.Controllers
     {
         protected override string ConnectionString => @"Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=D:\mssql\MSSQL13.LocalDB\LocalDB\TransportionSecrets\TransportionSecrets.mdf;Data Source=(localdb)\mssqllocaldb;";
 
-        public override HashSet<string> GetExecuteWhiteList()
+        protected override bool NeedCheckWhiteList => true;
+
+        public override IDictionary<string, HttpMethodsFlags> GetExecuteWhiteList()
         {
-            return new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "zsp_GetDatesAfter" };
+            return
+                new
+                    Dictionary<string, HttpMethodsFlags>
+                        (StringComparer.OrdinalIgnoreCase)
+                            {
+                                {
+                                    "zsp_GetDatesAfter"
+                                    , HttpMethodsFlags.Get //| HttpMethodsFlags.Post
+                                }
+                            };
         }
         /* 
          * ASP.NET Framework should implement Get Action/Method

@@ -34,8 +34,17 @@ namespace Microshaoft.WebApi.Controllers
                                     string parameters = null
                             )
         {
-            JObject result = null;
-            var r = Process(storeProcedureName, parameters, out result);
+            JToken result = null;
+            var r = false;
+            if (NeedCheckWhiteList)
+            {
+                r = CheckList(storeProcedureName, Request.Method.ToString());
+                if (!r)
+                {
+                    return StatusCode(HttpStatusCode.Forbidden);
+                }
+            }
+            r = Process(storeProcedureName, parameters, out result);
             if (!r)
             {
                 return StatusCode(HttpStatusCode.Forbidden);
@@ -61,7 +70,7 @@ namespace Microshaoft.WebApi.Controllers
                                 JObject parameters
                             )
         {
-            JObject result = null;
+            JToken result = null;
             var r = Process(storeProcedureName, parameters, out result);
             if (!r)
             {
