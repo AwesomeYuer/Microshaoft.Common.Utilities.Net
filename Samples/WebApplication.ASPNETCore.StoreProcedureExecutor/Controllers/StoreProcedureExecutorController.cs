@@ -4,6 +4,7 @@ namespace Microshaoft.WebApi.Controllers
 {
     using Microshaoft;
     using Microshaoft.Web;
+    using Microshaoft.WebApi.ModelBinders;
     using Microsoft.AspNetCore.Cors;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Routing;
@@ -41,6 +42,33 @@ namespace Microshaoft.WebApi.Controllers
 
         protected override bool NeedCheckWhiteList => true;
 
+
+        [HttpDelete]
+        [HttpGet]
+        [HttpHead]
+        [HttpOptions]
+        [HttpPatch]
+        [HttpPost]
+        [HttpPut]
+        [Route("{storeProcedureName}/0")]
+        public ActionResult<JToken> GetResultSet1RowsOnly
+                    (
+                        string storeProcedureName
+                        ,
+                            [ModelBinder(typeof(JTokenModelBinder))]
+                            JToken parameters = null
+                    )
+        {
+            var result = base.ProcessActionRequest(storeProcedureName, parameters);
+            return
+                new ActionResult<JToken>
+                        (
+                            result.Value["Outputs"]["ResultSets"][0]
+                        );
+            //result["Outputs"]["ResultSets"][0];
+
+
+        }
 
         #region 未完成任务
         /*

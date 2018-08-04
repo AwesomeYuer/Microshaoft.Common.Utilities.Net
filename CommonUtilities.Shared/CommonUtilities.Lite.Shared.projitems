@@ -41,6 +41,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Collections\CollectionExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\DictionaryExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\EmptyReadOnlyDictionary.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Collections\EnumerableHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\ConfigurationAppSettingsHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Console\DebugConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Console\WindowsBackgroundInteractiveConsole.cs" />
