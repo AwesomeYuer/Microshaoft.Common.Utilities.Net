@@ -1,5 +1,6 @@
 ﻿namespace Microshaoft
 {
+    
     using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Concurrent;
@@ -13,7 +14,7 @@
                                 (
                                     string connectionString
                                     , string storeProcedureName
-                                    , JObject inputsParameters
+                                    , JToken inputsParameters
                                 )
         {
             List<SqlParameter> result = null;
@@ -23,7 +24,8 @@
                                         , storeProcedureName
                                         , true
                                     );
-            foreach (KeyValuePair<string, JToken> jProperty in inputsParameters)
+            var jProperties = (JObject)inputsParameters;
+            foreach (KeyValuePair<string, JToken> jProperty in jProperties)
             {
                 SqlParameter sqlParameter = null;
                 if
@@ -236,10 +238,7 @@
                             (
                                 StringComparer.OrdinalIgnoreCase
                             );
-        public static
-            HashSet<string>
-                StoreProceduresExecuteWhiteList
-                    = null;
+
 
         //public static
         //    HashSet<string>
@@ -430,7 +429,7 @@
                                 (
                                     SqlConnection connection
                                     , string storeProcedureName
-                                    , JObject inputsParameters = null //string.Empty
+                                    , JToken inputsParameters = null //string.Empty
                                     , int commandTimeout = 90
                                 )
         {
@@ -464,6 +463,11 @@
                     connection.Open();
                     var result = new JObject
                     {
+                        {
+                            "TimeStamp"
+                            , null
+                        }
+                        ,
                         {
                             "Inputs"
                             , new JObject

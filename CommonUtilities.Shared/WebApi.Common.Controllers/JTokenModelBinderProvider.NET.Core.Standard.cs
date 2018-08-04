@@ -21,7 +21,8 @@ namespace Microshaoft.WebApi.ModelBinders
                                     .HttpContext
                                     .Request;
             JToken jToken = null;
-            if (string.Compare(request.Method, "post", true) == 0)
+
+            async void RequestBodyProcess()
             {
                 if (request.HasFormContentType)
                 {
@@ -29,13 +30,14 @@ namespace Microshaoft.WebApi.ModelBinders
                     await formBinder.BindModelAsync(bindingContext);
                     if (bindingContext.Result.IsModelSet)
                     {
-                        jToken = JTokenWebHelper.ToJToken
-                                        (
-                                            (IFormCollection)
-                                                bindingContext
-                                                        .Result
-                                                        .Model
-                                        );
+                        jToken = JTokenWebHelper
+                                        .ToJToken
+                                            (
+                                                (IFormCollection)
+                                                    bindingContext
+                                                            .Result
+                                                            .Model
+                                            );
                     }
                 }
                 else
@@ -47,12 +49,16 @@ namespace Microshaoft.WebApi.ModelBinders
                             var task = streamReader.ReadToEndAsync();
                             await task;
                             var json = task.Result;
-                            jToken = JToken.Parse(json);
+                            if (!json.IsNullOrEmptyOrWhiteSpace())
+                            {
+                                jToken = JToken.Parse(json);
+                            }
                         }
                     }
                 }
             }
-            else if (string.Compare(request.Method, "get", true) == 0)
+
+            void RequestHeaderProcess()
             {
                 if (request.IsJsonRequest())
                 {
@@ -71,6 +77,31 @@ namespace Microshaoft.WebApi.ModelBinders
                 {
                     jToken = request.Query.ToJToken();
                 }
+            }
+
+            if
+                (
+                    string.Compare(request.Method, "get", true) == 0
+                )
+            {
+                RequestHeaderProcess();
+                if (jToken == null)
+                {
+                    RequestBodyProcess();
+                }
+            }
+            else
+                //if 
+                //(
+                //    string.Compare(request.Method, "get", true) == 0
+                //)
+            {
+                RequestBodyProcess();
+                if (jToken == null)
+                {
+                    RequestHeaderProcess();
+                }
+                
             }
             bindingContext
                     .Result =

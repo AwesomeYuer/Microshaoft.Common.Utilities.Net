@@ -3,10 +3,13 @@
 namespace Microshaoft.WebApi.Controllers
 {
     using Microshaoft;
+    using Microshaoft.Web;
     using Microsoft.AspNetCore.Cors;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Routing;
     using Newtonsoft.Json.Linq;
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -17,20 +20,34 @@ namespace Microshaoft.WebApi.Controllers
                     : AbstractStoreProcedureExecutorControllerBase
                         //ControllerBase //, IConnectionString
     {
-        public override HashSet<string> GetExecuteWhiteList()
+        public override IDictionary<string, HttpMethodsFlags> GetExecuteWhiteList()
         {
-            return new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "zsp_GetDatesAfter" };
+            return 
+                new 
+                    Dictionary<string, HttpMethodsFlags>
+                        (StringComparer.OrdinalIgnoreCase)
+                            {
+                                {
+                                    "zsp_GetDatesAfter"
+                                    , HttpMethodsFlags.All
+                                        //HttpMethodsFlags.Get 
+                                        //| HttpMethodsFlags.Post
+                                }
+                            };
         }
         protected override string
               ConnectionString =>
                     @"Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=D:\mssql\MSSQL13.LocalDB\LocalDB\TransportionSecrets\TransportionSecrets.mdf;Data Source=(localdb)\mssqllocaldb;";
-        
+
+        protected override bool NeedCheckWhiteList => true;
+
 
         #region 未完成任务
+        /*
         [HttpGet]
         [Route("groupsjoin/{storeProcedureName}")]
         //测试通过 但未完成
-        public ActionResult<JObject> GetByGroupsjoin
+        public ActionResult<JToken> GetByGroupsjoin
                                 (
                                     string storeProcedureName
                                     ,
@@ -98,7 +115,7 @@ namespace Microshaoft.WebApi.Controllers
         [HttpGet]
         [Route("Grouping/{storeProcedureName}")]
         //未完成
-        public ActionResult<JObject> GetByGrouping
+        public ActionResult<JToken> GetByGrouping
                                (
                                    string storeProcedureName
                                    ,
@@ -351,7 +368,7 @@ namespace Microshaoft.WebApi.Controllers
         }
 
 
-
+*/
         #endregion
 
     }
