@@ -15,7 +15,10 @@
         {
             SqlHelper
                 .CachedExecutingParametersExpiredInSeconds = CachedExecutingParametersExpiredInSeconds;
+            //_EnableCorsPolicyName = EnableCorsPolicyName;
         }
+
+        //public static string _EnableCorsPolicyName;
 
         protected abstract int CachedExecutingParametersExpiredInSeconds
         {
@@ -29,6 +32,11 @@
             //set;
         }
 
+        //protected abstract string EnableCorsPolicyName
+        //{
+        //    get;
+        //    //set;
+        //}
 
         protected abstract string ConnectionString
         {

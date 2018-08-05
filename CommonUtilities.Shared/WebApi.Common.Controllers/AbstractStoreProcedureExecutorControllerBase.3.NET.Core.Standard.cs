@@ -5,6 +5,7 @@ namespace Microshaoft.WebApi.Controllers
     using Microshaoft.Linq.Dynamic;
     using Microshaoft.Web;
     using Microshaoft.WebApi.ModelBinders;
+    using Microsoft.AspNetCore.Cors;
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json.Linq;
     using System;

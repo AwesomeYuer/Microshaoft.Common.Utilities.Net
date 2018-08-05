@@ -16,7 +16,7 @@ namespace Microshaoft.WebApi.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
-    [EnableCors("AllowAllOrigins")]
+    [EnableCors("SPE")]
     public class StoreProcedureExecutorController 
                     : AbstractStoreProcedureExecutorControllerBase
                         //ControllerBase //, IConnectionString
@@ -45,6 +45,8 @@ namespace Microshaoft.WebApi.Controllers
         protected override int CachedExecutingParametersExpiredInSeconds => 10;
 
         protected override bool NeedAutoRefreshExecutedTimeForSlideExpire => true;
+
+        
 
         [HttpDelete]
         [HttpGet]
