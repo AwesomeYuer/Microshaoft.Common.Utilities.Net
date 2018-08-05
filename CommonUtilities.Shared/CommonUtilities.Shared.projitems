@@ -168,6 +168,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Type\TypeExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Type\TypeHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UAC\UacHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Web.Cors\WildCardCorsService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\AbstractStoreProcedureExecutorControllerBase.1.NET.All.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\AbstractStoreProcedureExecutorControllerBase.3.NET.Core.Standard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\AbstractStoreProcedureExecutorControllerBase.2.NET.Framework.cs" />

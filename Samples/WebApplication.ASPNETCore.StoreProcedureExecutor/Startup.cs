@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microshaoft.Web;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -28,19 +30,41 @@ namespace WebApplication.ASPNetCore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            
+            services
+                .Add
+                    (
+                        ServiceDescriptor
+                            .Transient<ICorsService, WildcardCorsService>()
+                    );
             services
                 .AddCors
                     (
-                        options =>
+                        (options) =>
                         {
-
+                            options
+                                .AddPolicy
+                                    (
+                                        "SPE"
+                                        , (builder) =>
+                                        {
+                                            builder
+                                                .WithOrigins
+                                                    (
+                                                        "*.microshaoft.com"
+                                                    );
+                                        }
+                                    );
                             // BEGIN02
-                            options.AddPolicy("AllowAllOrigins",
-                                builder =>
-                                {
-                                    builder.AllowAnyOrigin();
-                                });
+                            options
+                                .AddPolicy
+                                    (
+                                        "AllowAllOrigins"
+                                        ,
+                                        (builder) =>
+                                        {
+                                            builder.AllowAnyOrigin();
+                                        }
+                                    );
 
                         }
                   );
@@ -50,9 +74,7 @@ namespace WebApplication.ASPNetCore
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            
             app.UseCors();
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
