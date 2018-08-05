@@ -3,6 +3,7 @@ namespace Microshaoft.WebApi.Controllers
 {
     using Microshaoft;
     using Microshaoft.Linq.Dynamic;
+    using Microshaoft.Web;
     using Microshaoft.WebApi.ModelBinders;
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json.Linq;
@@ -10,13 +11,13 @@ namespace Microshaoft.WebApi.Controllers
     using System.Data.SqlClient;
     using System.Linq;
     using System.Net.Http.Formatting;
-    using Microshaoft.Web;
 
     [Route("api/[controller]")]
     [ApiController]
-    public abstract partial class AbstractStoreProcedureExecutorControllerBase
-            :
-                ControllerBase //, IConnectionString
+    public abstract partial class 
+                AbstractStoreProcedureExecutorControllerBase
+                    :
+                        ControllerBase //, IConnectionString
     {
         //[ResponseCache(Duration = 10)]
         //[
@@ -66,7 +67,6 @@ namespace Microshaoft.WebApi.Controllers
                                 ,
                                 [ModelBinder(typeof(JTokenModelBinder))]
                                 JToken parameters = null
-
                                 ,
                                 [FromRoute]
                                 string resultPathSegment1 = null
@@ -115,8 +115,6 @@ namespace Microshaoft.WebApi.Controllers
                             );
             return result;
         }
-
-
     }
 }
 #endif
