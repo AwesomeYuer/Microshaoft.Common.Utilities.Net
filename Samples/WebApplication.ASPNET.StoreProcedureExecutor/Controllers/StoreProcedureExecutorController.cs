@@ -17,6 +17,10 @@ namespace Microshaoft.WebApi.Controllers
 
         protected override bool NeedCheckWhiteList => true;
 
+        protected override int CachedExecutingParametersExpiredInSeconds => 10;
+
+        protected override bool NeedAutoRefreshExecutedTimeForSlideExpire => false;
+
         public override IDictionary<string, HttpMethodsFlags> GetExecuteWhiteList()
         {
             return
