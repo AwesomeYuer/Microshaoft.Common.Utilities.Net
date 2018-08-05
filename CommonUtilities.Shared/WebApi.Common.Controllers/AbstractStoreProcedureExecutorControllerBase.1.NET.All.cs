@@ -10,6 +10,26 @@
     //[ApiController]
     public abstract partial class AbstractStoreProcedureExecutorControllerBase 
     {
+
+        public AbstractStoreProcedureExecutorControllerBase()
+        {
+            SqlHelper
+                .CachedExecutingParametersExpiredInSeconds = CachedExecutingParametersExpiredInSeconds;
+        }
+
+        protected abstract int CachedExecutingParametersExpiredInSeconds
+        {
+            get;
+            //set;
+        }
+
+        protected abstract bool NeedAutoRefreshExecutedTimeForSlideExpire
+        {
+            get;
+            //set;
+        }
+
+
         protected abstract string ConnectionString
         {
             get;
@@ -76,6 +96,15 @@
                                         , parameters
                                         , 90
                                     );
+            if (NeedAutoRefreshExecutedTimeForSlideExpire)
+            {
+                SqlHelper
+                    .RefreshCachedStoreProcedureExecuted
+                        (
+                            connection
+                            , storeProcedureName
+                        );
+            }
             return true;
         }
         private bool Process(string storeProcedureName, string parameters, out JToken result)

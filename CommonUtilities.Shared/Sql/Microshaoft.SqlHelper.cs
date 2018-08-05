@@ -10,6 +10,15 @@
     using System.Linq;
     public static class SqlHelper
     {
+
+        private static int _cachedExecutingParametersExpiredInSeconds;
+        public static int CachedExecutingParametersExpiredInSeconds
+        {
+            get => _cachedExecutingParametersExpiredInSeconds;
+            set => _cachedExecutingParametersExpiredInSeconds = value;
+        }
+
+
         public static List<SqlParameter> GenerateExecuteSqlParameters
                                 (
                                     string connectionString
@@ -47,61 +56,61 @@
                     //        direction == ParameterDirection.InputOutput
                     //    )
                     //{
-                        var r = sqlParameter.ShallowClone();
-                        r.Value = (object)jProperty.Value;
-                        if (result == null)
-                        {
-                            result = new List<SqlParameter>();
-                        }
-                        result.Add(r);
-                    //}
-                }
-            }
-            
-                foreach (var kvp in sqlParameters)
-                {
-                    var sqlParameter = kvp.Value;
+                    var r = sqlParameter.ShallowClone();
+                    r.Value = (object)jProperty.Value;
                     if (result == null)
                     {
                         result = new List<SqlParameter>();
                     }
+                    result.Add(r);
+                    //}
+                }
+            }
 
+            foreach (var kvp in sqlParameters)
+            {
+                var sqlParameter = kvp.Value;
+                if (result == null)
+                {
+                    result = new List<SqlParameter>();
+                }
+
+                if
+                    (
+                        !result
+                            .Exists
+                                (
+                                    (x) =>
+                                    {
+                                        return
+                                            (
+                                                string
+                                                    .Compare
+                                                        (
+                                                            x.ParameterName
+                                                            , sqlParameter.ParameterName
+                                                            , true
+                                                        ) == 0
+                                            );
+                                    }
+                                )
+                    )
+                {
+                    var direction = sqlParameter.Direction;
                     if
                         (
-                            !result
-                                .Exists
-                                    (
-                                        (x) =>
-                                        {
-                                            return
-                                                (
-                                                    string
-                                                        .Compare
-                                                            (
-                                                                x.ParameterName
-                                                                , sqlParameter.ParameterName
-                                                                , true
-                                                            ) == 0
-                                                );
-                                        }
-                                    )
+                            direction != ParameterDirection.Input
                         )
                     {
-                        var direction = sqlParameter.Direction;
-                        if
-                            (
-                                direction != ParameterDirection.Input
-                            )
+                        if (result == null)
                         {
-                            if (result == null)
-                            {
-                                result = new List<SqlParameter>();
-                            }
-                            result.Add(sqlParameter.ShallowClone());
+                            result = new List<SqlParameter>();
                         }
+                        result.Add(sqlParameter.ShallowClone());
                     }
                 }
-            
+            }
+
             return result;
         }
         public static JValue GetJValue(this SqlParameter target)
@@ -207,7 +216,7 @@
                 jObject.Add(nameof(parameter.SqlDbType), new JValue(parameter.SqlDbType.ToString()));
                 jObject.Add(nameof(parameter.Size), new JValue(parameter.Size));
                 jObject.Add(nameof(parameter.Direction), new JValue((long)parameter.Direction));
-                jObject.Add(nameof(parameter.Scale), new JValue((long) parameter.Scale));
+                jObject.Add(nameof(parameter.Scale), new JValue((long)parameter.Scale));
                 jObject.Add(nameof(parameter.Precision), new JValue((long)parameter.Precision));
                 result.Add(jObject);
                 i++;
@@ -231,19 +240,53 @@
             }
             return result;
         }
+        private class ExecutingInfo
+        {
+            public IDictionary<string, SqlParameter> SqlParameters;
+            public DateTime RecentExecutedTime;
+        }
+
         private static 
-            ConcurrentDictionary<string, IDictionary<string, SqlParameter>>
+            ConcurrentDictionary<string, ExecutingInfo>
                 _dictionary 
-                    = new ConcurrentDictionary<string, IDictionary<string, SqlParameter>>
+                    = new ConcurrentDictionary<string, ExecutingInfo>
                             (
                                 StringComparer.OrdinalIgnoreCase
                             );
 
+        
 
         //public static
         //    HashSet<string>
         //        StoreProceduresExecuteBlackList
         //            = null;
+
+
+        public static void
+                        RefreshCachedStoreProcedureExecuted
+                                        (
+                                            SqlConnection connection
+                                            , string storeProcedureName
+                                            
+                                        )
+        {
+            var dataSource = connection.DataSource;
+            var dataBase = connection.Database;
+            var key = $"{connection.DataSource}-{connection.Database}-{storeProcedureName}".ToUpper();
+            ExecutingInfo executingInfo = null;
+            if
+                (
+                    _dictionary
+                        .TryGetValue
+                            (
+                                key
+                                , out executingInfo
+                            )
+                )
+            {
+                executingInfo.RecentExecutedTime = DateTime.Now;
+            }
+        }
 
         public static
                 IDictionary<string,SqlParameter>
@@ -252,40 +295,78 @@
                                             string connectionString
                                             , string storeProcedureName
                                             , bool includeReturnValueParameter = false
+                                            //, int cacheExpireInSeconds = 0
                                         )
         {
+            ExecutingInfo GetExecutingInfo()
+            {
+                var sqlParameters
+                        = GetStoreProcedureParameters
+                                (
+                                    connectionString
+                                    , storeProcedureName
+                                    , includeReturnValueParameter
+                                );
+                var parameters = sqlParameters
+                                .ToDictionary
+                                    (
+                                        (xx) =>
+                                        {
+                                            return
+                                                xx
+                                                    .ParameterName
+                                                    .TrimStart('@');
+                                        }
+                                        , StringComparer
+                                                .OrdinalIgnoreCase
+                                    );
+
+                var _executingInfo = new ExecutingInfo()
+                {
+                    SqlParameters = parameters,
+                    RecentExecutedTime = DateTime.Now
+
+                };
+                return _executingInfo;
+            }
+
             SqlConnection connection = new SqlConnection(connectionString);
             var key = $"{connection.DataSource}-{connection.Database}-{storeProcedureName}".ToUpper();
-            var result =
-                    _dictionary
-                        .GetOrAdd
-                                (
-                                    key
-                                    , (x) =>
-                                    {
-                                        var sqlParameters
-                                                = GetStoreProcedureParameters
-                                                        (
-                                                            connectionString
-                                                            , storeProcedureName
-                                                            , includeReturnValueParameter
-                                                        );
-                                        var r = sqlParameters
-                                                        .ToDictionary
-                                                            (
-                                                                (xx) =>
-                                                                {
-                                                                    return
-                                                                        xx
-                                                                            .ParameterName
-                                                                            .TrimStart('@');
-                                                                }
-                                                                , StringComparer
-                                                                        .OrdinalIgnoreCase
-                                                            );
-                                        return r;
-                                    }
-                                );
+            var add = false;
+            var executingInfo
+                    = _dictionary
+                            .GetOrAdd
+                                    (
+                                        key
+                                        , (x) =>
+                                        {
+                                            var r = GetExecutingInfo();
+                                            add = true;
+                                            return r;
+                                        }
+                                    );
+            var result = executingInfo.SqlParameters;
+            if (!add)
+            {
+                if (_cachedExecutingParametersExpiredInSeconds > 0)
+                {
+                    if 
+                        (
+                            DateTimeHelper
+                                .SecondsDiffNow
+                                    (
+                                        executingInfo
+                                                .RecentExecutedTime
+                                    )
+                            > _cachedExecutingParametersExpiredInSeconds
+                        )
+                    {
+                        executingInfo = GetExecutingInfo();
+                        _dictionary[key] = executingInfo;
+                        result = executingInfo.SqlParameters;
+                    }
+                }
+            }
             return result;
         }
 
@@ -562,6 +643,10 @@
                     {
                         result["Outputs"]["Parameters"] = jOutputParameters;
                     }
+
+                    
+
+
                     return result;
                 }
             }
