@@ -639,10 +639,6 @@
                     {
                         result["Outputs"]["Parameters"] = jOutputParameters;
                     }
-
-                    
-
-
                     return result;
                 }
             }
