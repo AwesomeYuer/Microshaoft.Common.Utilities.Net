@@ -1,6 +1,5 @@
 ﻿namespace Microshaoft
 {
-    
     using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Concurrent;
@@ -10,14 +9,11 @@
     using System.Linq;
     public static class SqlHelper
     {
-
-        private static int _cachedExecutingParametersExpiredInSeconds;
         public static int CachedExecutingParametersExpiredInSeconds
         {
-            get => _cachedExecutingParametersExpiredInSeconds;
-            set => _cachedExecutingParametersExpiredInSeconds = value;
+            get;
+            set;
         }
-
 
         public static List<SqlParameter> GenerateExecuteSqlParameters
                                 (
@@ -348,7 +344,7 @@
             var result = executingInfo.SqlParameters;
             if (!add)
             {
-                if (_cachedExecutingParametersExpiredInSeconds > 0)
+                if (CachedExecutingParametersExpiredInSeconds > 0)
                 {
                     if 
                         (
@@ -358,7 +354,7 @@
                                         executingInfo
                                                 .RecentExecutedTime
                                     )
-                            > _cachedExecutingParametersExpiredInSeconds
+                            > CachedExecutingParametersExpiredInSeconds
                         )
                     {
                         executingInfo = GetExecutingInfo();
