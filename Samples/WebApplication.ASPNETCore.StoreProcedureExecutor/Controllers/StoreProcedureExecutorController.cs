@@ -48,23 +48,33 @@ namespace Microshaoft.WebApi.Controllers
 
         
 
-        [HttpDelete]
-        [HttpGet]
-        [HttpHead]
-        [HttpOptions]
-        [HttpPatch]
-        [HttpPost]
-        [HttpPut]
-        [Route("{storeProcedureName}/0")]
-        public ActionResult<JToken> GetResultSet1RowsOnly
+        //[HttpDelete]
+        //[HttpGet]
+        //[HttpHead]
+        //[HttpOptions]
+        //[HttpPatch]
+        //[HttpPost]
+        //[HttpPut]
+        //[Route("{dataBaseType}/{storeProcedureName}/0")]
+        private ActionResult<JToken> GetResultSet1RowsOnly
                     (
+                        [FromRoute]
+                        string dataBaseType //= "mssql"
+                        ,
                         string storeProcedureName
                         ,
                             [ModelBinder(typeof(JTokenModelBinder))]
                             JToken parameters = null
                     )
         {
-            var result = base.ProcessActionRequest(storeProcedureName, parameters);
+            var result
+                    = base
+                        .ProcessActionRequest
+                                (
+                                    dataBaseType
+                                    , storeProcedureName
+                                    , parameters
+                                );
             return
                 new ActionResult<JToken>
                         (

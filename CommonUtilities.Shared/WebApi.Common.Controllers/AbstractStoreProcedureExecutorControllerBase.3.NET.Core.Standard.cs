@@ -12,6 +12,8 @@ namespace Microshaoft.WebApi.Controllers
     using System.Data.SqlClient;
     using System.Linq;
     using System.Net.Http.Formatting;
+    using Microshaoft;
+
 
     [Route("api/[controller]")]
     [ApiController]
@@ -20,6 +22,10 @@ namespace Microshaoft.WebApi.Controllers
                     :
                         ControllerBase //, IConnectionString
     {
+
+        
+
+
         //[ResponseCache(Duration = 10)]
         //[
         //    TypeFilter
@@ -52,19 +58,26 @@ namespace Microshaoft.WebApi.Controllers
         [HttpPut]
         [Route
             (
-                  "{storeProcedureName}/"
+                "{dataBaseType}/"
+                + "{storeProcedureName}/"
                 + "{resultPathSegment1?}/"
                 + "{resultPathSegment2?}/"
                 + "{resultPathSegment3?}/"
                 + "{resultPathSegment4?}/"
                 + "{resultPathSegment5?}/"
-                + "{resultPathSegment6?}/"
+                + "{resultPathSegment6?}"
             )
         ]
         public virtual ActionResult<JToken> ProcessActionRequest
                             (
+
+                                [FromRoute]
+                                string dataBaseType //= "mssql"
+
+                                ,
                                 [FromRoute]
                                 string storeProcedureName
+
                                 ,
                                 [ModelBinder(typeof(JTokenModelBinder))]
                                 JToken parameters = null
@@ -86,8 +99,10 @@ namespace Microshaoft.WebApi.Controllers
                                 ,
                                 [FromRoute]
                                 string resultPathSegment6 = null
+
                             )
         {
+            //string dataBaseType = "mssql";
             JToken result = null;
             var r = false;
             if (NeedCheckWhiteList)

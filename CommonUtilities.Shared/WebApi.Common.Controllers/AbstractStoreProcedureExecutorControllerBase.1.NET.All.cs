@@ -6,16 +6,38 @@
     using System.Collections.Generic;
     using System.Data.SqlClient;
     using System.Linq;
+    using Microshaoft.StoreProcedureExecutors;
     //[Route("api/[controller]")]
     //[ApiController]
-    public abstract partial class AbstractStoreProcedureExecutorControllerBase 
+
+
+
+
+    public abstract partial class 
+        AbstractStoreProcedureExecutorControllerBase 
+            //: IStoreProcedureParametersSetCacheAutoRefreshable
     {
+
+        private MsSQLStoreProcedureExecutor
+                _msSQLStoreProcedureExecutor
+                    = null;
+                    //new MsSQLStoreProcedureExecutor()
+                    //{
+                    //    CachedExecutingParametersExpiredInSeconds = CachedExecutingParametersExpiredInSeconds
+                    //    , NeedAutoRefreshExecutedTimeForSlideExpire = Need
+                    //};
+
 
         public AbstractStoreProcedureExecutorControllerBase()
         {
             SqlHelper
                 .CachedExecutingParametersExpiredInSeconds = CachedExecutingParametersExpiredInSeconds;
             //_EnableCorsPolicyName = EnableCorsPolicyName;
+            _msSQLStoreProcedureExecutor = new MsSQLStoreProcedureExecutor()
+            {
+                 CachedExecutingParametersExpiredInSeconds = CachedExecutingParametersExpiredInSeconds
+                 , NeedAutoRefreshExecutedTimeForSlideExpire = NeedAutoRefreshExecutedTimeForSlideExpire
+            };
         }
 
         //public static string _EnableCorsPolicyName;
@@ -49,6 +71,7 @@
             //set;
         }
 
+        
         private static
             IDictionary<string, HttpMethodsFlags>
                             _whiteList = null;
@@ -89,31 +112,47 @@
             return r;
         }
         
-
         public abstract IDictionary<string, HttpMethodsFlags> GetExecuteWhiteList();
 
-        private bool Process(string storeProcedureName, JToken parameters, out JToken result)
+        private bool Process(string storeProcedureName, JToken parameters, out JToken result, string dataBaseType = "mssql")
         {
+            var r = false;
             result = null;
-            SqlConnection connection = new SqlConnection(ConnectionString);
-            result = SqlHelper
-                            .StoreProcedureExecute
-                                    (
-                                        connection
-                                        , storeProcedureName
-                                        , parameters
-                                        , 90
-                                    );
-            if (NeedAutoRefreshExecutedTimeForSlideExpire)
+
+            if (dataBaseType == "mssql")
             {
-                SqlHelper
-                    .RefreshCachedStoreProcedureExecuted
+
+                r = _msSQLStoreProcedureExecutor
+                    .Execute
                         (
-                            connection
+                            ConnectionString
                             , storeProcedureName
+                            , parameters
+                            , out result
                         );
+
             }
-            return true;
+
+
+            //SqlConnection connection = new SqlConnection(ConnectionString);
+            //result = SqlHelper
+            //                .StoreProcedureExecute
+            //                        (
+            //                            connection
+            //                            , storeProcedureName
+            //                            , parameters
+            //                            , 90
+            //                        );
+            //if (NeedAutoRefreshExecutedTimeForSlideExpire)
+            //{
+            //    SqlHelper
+            //        .RefreshCachedStoreProcedureExecuted
+            //            (
+            //                connection
+            //                , storeProcedureName
+            //            );
+            //}
+            return r;
         }
         private bool Process(string storeProcedureName, string parameters, out JToken result)
         {
