@@ -13,7 +13,11 @@ namespace Microshaoft.WebApi.Controllers
     using System.Linq;
     using System.Net.Http.Formatting;
     using Microshaoft;
-
+    using System.IO;
+    using System.Composition.Convention;
+    using System.Composition.Hosting;
+    using System.Composition;
+    using System.Collections.Generic;
 
     [Route("api/[controller]")]
     [ApiController]
@@ -24,6 +28,75 @@ namespace Microshaoft.WebApi.Controllers
     {
 
         
+        private static IDictionary<string, IStoreProcedureExecutable> _executors;
+        
+        
+        public AbstractStoreProcedureExecutorControllerBase()
+        {
+            if
+                (
+                    SqlHelper
+                        .CachedExecutingParametersExpiredInSeconds
+                    !=
+                    CachedExecutingParametersExpiredInSeconds
+                )
+            {
+                SqlHelper
+                        .CachedExecutingParametersExpiredInSeconds
+                            = CachedExecutingParametersExpiredInSeconds;
+            }
+            if (_executors == null)
+            {
+                lock (_locker)
+                {
+                    if (!DynamicLoadExecutorsPath.IsNullOrEmptyOrWhiteSpace())
+                    {
+                        if (Directory.Exists(DynamicLoadExecutorsPath))
+                        {
+                            var r = CompositionHelper
+                                    .ImportManyExportsComposeParts<IStoreProcedureExecutable>
+                                        (
+                                            DynamicLoadExecutorsPath
+                                        );
+
+                            _executors = r.ToDictionary
+                                (
+                                    (x) =>
+                                    {
+                                        return
+                                            x.DataBaseType;
+                                    }
+                                    ,
+                                    (x) =>
+                                    {
+                                        IStoreProcedureParametersSetCacheAutoRefreshable
+                                            rr = x as IStoreProcedureParametersSetCacheAutoRefreshable;
+                                        if (rr != null)
+                                        {
+                                            rr.CachedExecutingParametersExpiredInSeconds
+                                                = CachedExecutingParametersExpiredInSeconds;
+                                            rr.NeedAutoRefreshExecutedTimeForSlideExpire
+                                                = NeedAutoRefreshExecutedTimeForSlideExpire;
+                                        }
+                                        return
+                                            x;
+
+                                    }
+                                    , StringComparer.OrdinalIgnoreCase
+                                );
+
+                        }
+                    }
+
+                }
+
+
+            }
+
+        }
+
+        
+
 
 
         //[ResponseCache(Duration = 10)]

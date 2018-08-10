@@ -46,7 +46,10 @@ namespace Microshaoft.WebApi.Controllers
 
         protected override bool NeedAutoRefreshExecutedTimeForSlideExpire => true;
 
-        
+        protected override string DynamicLoadExecutorsPath =>
+            @"D:\MyGitHub\Microshaoft.Common.Utilities.Net.4x\StoreProcedureWebApiExecutorsPlugins\MsSQL.StoreProcedureWebApiExecutor\bin\Debug\netcoreapp2.1\";
+            //@"d:\netcoreapp2.1x\";
+
 
         //[HttpDelete]
         //[HttpGet]

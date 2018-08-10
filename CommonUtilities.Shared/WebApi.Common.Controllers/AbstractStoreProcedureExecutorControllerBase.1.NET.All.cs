@@ -6,7 +6,7 @@
     using System.Collections.Generic;
     using System.Data.SqlClient;
     using System.Linq;
-    using Microshaoft.StoreProcedureExecutors;
+    //using Microshaoft.StoreProcedureExecutors;
     //[Route("api/[controller]")]
     //[ApiController]
 
@@ -17,30 +17,11 @@
         AbstractStoreProcedureExecutorControllerBase 
             //: IStoreProcedureParametersSetCacheAutoRefreshable
     {
-
-        private MsSQLStoreProcedureExecutor
-                _msSQLStoreProcedureExecutor
-                    = null;
-                    //new MsSQLStoreProcedureExecutor()
-                    //{
-                    //    CachedExecutingParametersExpiredInSeconds = CachedExecutingParametersExpiredInSeconds
-                    //    , NeedAutoRefreshExecutedTimeForSlideExpire = Need
-                    //};
-
-
-        public AbstractStoreProcedureExecutorControllerBase()
+        protected abstract string DynamicLoadExecutorsPath
         {
-            SqlHelper
-                .CachedExecutingParametersExpiredInSeconds = CachedExecutingParametersExpiredInSeconds;
-            //_EnableCorsPolicyName = EnableCorsPolicyName;
-            _msSQLStoreProcedureExecutor = new MsSQLStoreProcedureExecutor()
-            {
-                 CachedExecutingParametersExpiredInSeconds = CachedExecutingParametersExpiredInSeconds
-                 , NeedAutoRefreshExecutedTimeForSlideExpire = NeedAutoRefreshExecutedTimeForSlideExpire
-            };
+            get;
+            //set;
         }
-
-        //public static string _EnableCorsPolicyName;
 
         protected abstract int CachedExecutingParametersExpiredInSeconds
         {
@@ -119,10 +100,18 @@
             var r = false;
             result = null;
 
-            if (dataBaseType == "mssql")
+            IStoreProcedureExecutable executor = null;
+            r = _executors
+                        .TryGetValue
+                            (
+                                dataBaseType
+                                , out executor
+                            );
+
+            if (r)
             {
 
-                r = _msSQLStoreProcedureExecutor
+                r = executor
                     .Execute
                         (
                             ConnectionString

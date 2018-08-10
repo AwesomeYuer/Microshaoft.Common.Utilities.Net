@@ -21,6 +21,8 @@ namespace Microshaoft.WebApi.Controllers
 
         protected override bool NeedAutoRefreshExecutedTimeForSlideExpire => false;
 
+        protected override string DynamicLoadExecutorsPath => throw new NotImplementedException();
+
         public override IDictionary<string, HttpMethodsFlags> GetExecuteWhiteList()
         {
             return

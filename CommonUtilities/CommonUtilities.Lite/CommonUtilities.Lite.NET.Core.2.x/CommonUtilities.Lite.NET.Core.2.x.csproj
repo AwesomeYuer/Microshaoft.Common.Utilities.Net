@@ -7,9 +7,11 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DefineConstants>TRACE;DEBUG;NETCOREAPP;NETCOREAPP2_1;NETCOREAPP;NETCOREAPP2_X</DefineConstants>
   </PropertyGroup>
   <Import Project="..\..\..\CommonUtilities.Shared\CommonUtilities.Lite.Shared.projitems" Label="Shared" />
   <ItemGroup>
+    <PackageReference Include="Microsoft.Composition" Version="1.0.31" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.5.1" />

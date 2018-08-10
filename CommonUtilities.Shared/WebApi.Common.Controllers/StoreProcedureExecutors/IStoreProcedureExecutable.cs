@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Microshaoft
 {
-    interface IStoreProcedureExecutable
+    public interface IStoreProcedureExecutable
     {
         string DataBaseType { get; }
         bool Execute
@@ -19,7 +19,7 @@ namespace Microshaoft
 
     }
 
-    interface IStoreProcedureParametersSetCacheAutoRefreshable
+    public interface IStoreProcedureParametersSetCacheAutoRefreshable
     {
         int CachedExecutingParametersExpiredInSeconds
         {

@@ -12,10 +12,11 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.ResponseCaching" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Composition" Version="1.0.31" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.2.4" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CommonUtilities.Lite\CommonUtilities.Lite.NET.Standard.2.x\CommonUtilities.Lite.NET.Standard.2.x.csproj" />
+    <ProjectReference Include="..\..\CommonUtilities.Lite\CommonUtilities.Lite.NET.Core.2.x\CommonUtilities.Lite.NET.Core.2.x.csproj" />
   </ItemGroup>
 </Project>
