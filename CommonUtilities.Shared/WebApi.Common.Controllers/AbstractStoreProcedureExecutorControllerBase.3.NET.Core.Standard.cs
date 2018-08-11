@@ -26,25 +26,43 @@ namespace Microshaoft.WebApi.Controllers
                     :
                         ControllerBase //, IConnectionString
     {
-
-        
         private static IDictionary<string, IStoreProcedureExecutable> _executors;
-        
-        
         public AbstractStoreProcedureExecutorControllerBase()
         {
-            if
-                (
-                    SqlHelper
-                        .CachedExecutingParametersExpiredInSeconds
-                    !=
-                    CachedExecutingParametersExpiredInSeconds
-                )
+            
+            if (_connections == null)
             {
-                SqlHelper
-                        .CachedExecutingParametersExpiredInSeconds
-                            = CachedExecutingParametersExpiredInSeconds;
+                lock (_locker)
+                {
+                    if (_connections == null)
+                    {
+                        _connections
+                            = GetDataBasesConnectionsInfo()
+                                    .ToDictionary
+                                        (
+                                            (x) =>
+                                            {
+                                                return
+                                                    x.ConnectionID;
+                                            }
+                                            , StringComparer.OrdinalIgnoreCase
+                                        );
+                    }
+                }
             }
+
+            //if
+            //    (
+            //        SqlHelper
+            //            .CachedExecutingParametersExpiredInSeconds
+            //        !=
+            //        CachedExecutingParametersExpiredInSeconds
+            //    )
+            //{
+            //    SqlHelper
+            //            .CachedExecutingParametersExpiredInSeconds
+            //                = CachedExecutingParametersExpiredInSeconds;
+            //}
             if (_executors == null)
             {
                 lock (_locker)
@@ -54,10 +72,10 @@ namespace Microshaoft.WebApi.Controllers
                         if (Directory.Exists(DynamicLoadExecutorsPath))
                         {
                             var r = CompositionHelper
-                                    .ImportManyExportsComposeParts<IStoreProcedureExecutable>
-                                        (
-                                            DynamicLoadExecutorsPath
-                                        );
+                                        .ImportManyExportsComposeParts<IStoreProcedureExecutable>
+                                            (
+                                                DynamicLoadExecutorsPath
+                                            );
 
                             _executors = r.ToDictionary
                                 (
@@ -84,21 +102,11 @@ namespace Microshaoft.WebApi.Controllers
                                     }
                                     , StringComparer.OrdinalIgnoreCase
                                 );
-
                         }
                     }
-
                 }
-
-
             }
-
         }
-
-        
-
-
-
         //[ResponseCache(Duration = 10)]
         //[
         //    TypeFilter
@@ -131,7 +139,7 @@ namespace Microshaoft.WebApi.Controllers
         [HttpPut]
         [Route
             (
-                "{dataBaseType}/"
+                "{connectionID}/"
                 + "{storeProcedureName}/"
                 + "{resultPathSegment1?}/"
                 + "{resultPathSegment2?}/"
@@ -145,7 +153,7 @@ namespace Microshaoft.WebApi.Controllers
                             (
 
                                 [FromRoute]
-                                string dataBaseType //= "mssql"
+                                string connectionID //= "mssql"
 
                                 ,
                                 [FromRoute]
@@ -178,15 +186,23 @@ namespace Microshaoft.WebApi.Controllers
             //string dataBaseType = "mssql";
             JToken result = null;
             var r = false;
-            if (NeedCheckWhiteList)
+            DataBaseConnectionInfo connectionInfo = null;
+            r = _connections
+                        .TryGetValue
+                            (
+                                connectionID
+                                , out connectionInfo
+                            );
+            if (r)
             {
-                r = CheckList(storeProcedureName, Request.Method);
-                if (!r)
-                {
-                    return StatusCode(403);
-                }
+                r = Process
+                        (
+                            connectionInfo
+                            , storeProcedureName
+                            , parameters
+                            , out result
+                        );
             }
-            r = Process(storeProcedureName, parameters, out result);
             if (!r)
             {
                 return StatusCode(403);

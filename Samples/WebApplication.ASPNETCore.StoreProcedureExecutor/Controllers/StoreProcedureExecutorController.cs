@@ -17,30 +17,30 @@ namespace Microshaoft.WebApi.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [EnableCors("SPE")]
-    public class StoreProcedureExecutorController 
+    public class StoreProcedureExecutorController
                     : AbstractStoreProcedureExecutorControllerBase
-                        //ControllerBase //, IConnectionString
+    //ControllerBase //, IConnectionString
     {
-        public override IDictionary<string, HttpMethodsFlags> GetExecuteWhiteList()
-        {
-            return 
-                new 
-                    Dictionary<string, HttpMethodsFlags>
-                        (StringComparer.OrdinalIgnoreCase)
-                            {
-                                {
-                                    "zsp_GetDatesAfter"
-                                    , HttpMethodsFlags.All
-                                        //HttpMethodsFlags.Get 
-                                        //| HttpMethodsFlags.Post
-                                }
-                            };
-        }
-        protected override string
-              ConnectionString =>
-                    @"Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=D:\mssql\MSSQL13.LocalDB\LocalDB\TransportionSecrets\TransportionSecrets.mdf;Data Source=(localdb)\mssqllocaldb;";
+        //public override IDictionary<string, HttpMethodsFlags> GetExecuteWhiteList()
+        //{
+        //    return
+        //        new
+        //            Dictionary<string, HttpMethodsFlags>
+        //                (StringComparer.OrdinalIgnoreCase)
+        //                    {
+        //                        {
+        //                            "zsp_GetDatesAfter"
+        //                            , HttpMethodsFlags.All
+        //                                //HttpMethodsFlags.Get 
+        //                                //| HttpMethodsFlags.Post
+        //                        }
+        //                    };
+        //}
+        //protected override string
+        //      ConnectionString =>
+        //            @"Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=D:\mssql\MSSQL13.LocalDB\LocalDB\TransportionSecrets\TransportionSecrets.mdf;Data Source=(localdb)\mssqllocaldb;";
 
-        protected override bool NeedCheckWhiteList => true;
+        //protected override bool NeedCheckWhiteList => true;
 
         protected override int CachedExecutingParametersExpiredInSeconds => 10;
 
@@ -48,7 +48,42 @@ namespace Microshaoft.WebApi.Controllers
 
         protected override string DynamicLoadExecutorsPath =>
             @"D:\MyGitHub\Microshaoft.Common.Utilities.Net.4x\StoreProcedureWebApiExecutorsPlugins\MsSQL.StoreProcedureWebApiExecutor\bin\Debug\netcoreapp2.1\";
-            //@"d:\netcoreapp2.1x\";
+
+
+
+        protected override IEnumerable<DataBaseConnectionInfo> GetDataBasesConnectionsInfo()
+        {
+
+            return
+                    new List<DataBaseConnectionInfo>()
+                    {
+                         new DataBaseConnectionInfo()
+                         {
+                              ConnectionID = "mssql1"
+                              , DataBaseType =  DataBasesType.MsSQL
+                              , ConnectionString =
+                                    @"Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=D:\mssql\MSSQL13.LocalDB\LocalDB\TransportionSecrets\TransportionSecrets.mdf;Data Source=(localdb)\mssqllocaldb;"
+                              , WhiteList = new Dictionary<string, HttpMethodsFlags>
+                                                  (StringComparer.OrdinalIgnoreCase)
+                                                {
+                                                    {
+                                                        "zsp_GetDatesAfter"
+                                                        , HttpMethodsFlags.All
+                                                            //HttpMethodsFlags.Get 
+                                                            //| HttpMethodsFlags.Post
+                                                    }
+                                                }
+                         }
+                         ,
+                         new DataBaseConnectionInfo()
+                         {
+                             ConnectionID = "mysql1"
+                              ,DataBaseType =  DataBasesType.MySQL
+                         }
+                    };
+        }
+
+        //@"d:\netcoreapp2.1x\";
 
 
         //[HttpDelete]

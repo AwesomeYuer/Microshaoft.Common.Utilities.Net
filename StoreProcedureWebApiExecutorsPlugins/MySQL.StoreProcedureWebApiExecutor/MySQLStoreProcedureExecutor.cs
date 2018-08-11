@@ -10,7 +10,7 @@ using Newtonsoft.Json.Linq;
 namespace Microshaoft.StoreProcedureExecutors
 {
     [Export(typeof(IStoreProcedureExecutable))]
-    public class MsSQLStoreProcedureExecutor
+    public class MySQLStoreProcedureExecutor
                         : IStoreProcedureExecutable
                             , IStoreProcedureParametersSetCacheAutoRefreshable
     {

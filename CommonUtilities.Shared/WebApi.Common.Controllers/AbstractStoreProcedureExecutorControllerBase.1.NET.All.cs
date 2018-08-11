@@ -4,15 +4,21 @@
     using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Generic;
-    using System.Data.SqlClient;
     using System.Linq;
-    //using Microshaoft.StoreProcedureExecutors;
-    //[Route("api/[controller]")]
-    //[ApiController]
+    public enum DataBasesType
+    {
+        MsSQL ,
+        MySQL
+    }
+    public class DataBaseConnectionInfo
+    {
+        public string ConnectionID;
+        public DataBasesType DataBaseType;
+        public string ConnectionString;
+        public IDictionary<string, HttpMethodsFlags>
+                            WhiteList;
 
-
-
-
+    }
     public abstract partial class 
         AbstractStoreProcedureExecutorControllerBase 
             //: IStoreProcedureParametersSetCacheAutoRefreshable
@@ -22,42 +28,26 @@
             get;
             //set;
         }
-
         protected abstract int CachedExecutingParametersExpiredInSeconds
         {
             get;
             //set;
         }
-
         protected abstract bool NeedAutoRefreshExecutedTimeForSlideExpire
         {
             get;
             //set;
         }
-
-        //protected abstract string EnableCorsPolicyName
-        //{
-        //    get;
-        //    //set;
-        //}
-
-        protected abstract string ConnectionString
-        {
-            get;
-            //set;
-        }
-        protected abstract bool NeedCheckWhiteList
-        {
-            get;
-            //set;
-        }
-
-        
-        private static
-            IDictionary<string, HttpMethodsFlags>
-                            _whiteList = null;
+        private static IDictionary<string, DataBaseConnectionInfo> _connections = null;
+        protected abstract IEnumerable<DataBaseConnectionInfo> GetDataBasesConnectionsInfo();
+       
         private static object _locker = new object();
-        private bool CheckList(string storeProcedureName, string httpMethod)
+        private bool CheckList
+                (
+                    IDictionary<string, HttpMethodsFlags> whiteList
+                    , string storeProcedureName
+                    , string httpMethod
+                )
         {
             var r = false;
             HttpMethodsFlags httpMethodsFlag;
@@ -71,15 +61,8 @@
             if (r)
             {
                 
-                if (_whiteList == null)
-                {
-                    lock (_locker)
-                    {
-                        _whiteList = GetExecuteWhiteList();
-                    }
-                }
                 HttpMethodsFlags allowedHttpMethodsFlags;
-                r = _whiteList
+                r = whiteList
                         .TryGetValue
                             (
                                 storeProcedureName
@@ -92,10 +75,49 @@
             }
             return r;
         }
-        
-        public abstract IDictionary<string, HttpMethodsFlags> GetExecuteWhiteList();
-
-        private bool Process(string storeProcedureName, JToken parameters, out JToken result, string dataBaseType = "mssql")
+        private bool Process
+                    (
+                        DataBaseConnectionInfo connectionInfo
+                        , string storeProcedureName
+                        , JToken parameters
+                        , out JToken result
+                    )
+        {
+            var r = false;
+            result = null;
+            var whiteList = connectionInfo.WhiteList;
+            if (whiteList != null)
+            {
+                if (whiteList.Count > 0)
+                {
+                    r = CheckList(whiteList, storeProcedureName, Request.Method);
+                }
+            }
+            else
+            {
+                r = true;
+            }
+            if (r)
+            {
+                r = Process
+                    (
+                        connectionInfo.ConnectionString
+                        , connectionInfo.DataBaseType.ToString()
+                        , storeProcedureName
+                        , parameters
+                        , out result
+                    );
+            }
+            return r;
+        }
+        private bool Process
+                        (
+                            string connectionString
+                            , string dataBaseType
+                            , string storeProcedureName
+                            , JToken parameters
+                            , out JToken result
+                        )
         {
             var r = false;
             result = null;
@@ -110,43 +132,36 @@
 
             if (r)
             {
-
                 r = executor
-                    .Execute
-                        (
-                            ConnectionString
-                            , storeProcedureName
-                            , parameters
-                            , out result
-                        );
-
+                        .Execute
+                            (
+                                connectionString
+                                , storeProcedureName
+                                , parameters
+                                , out result
+                            );
             }
-
-
-            //SqlConnection connection = new SqlConnection(ConnectionString);
-            //result = SqlHelper
-            //                .StoreProcedureExecute
-            //                        (
-            //                            connection
-            //                            , storeProcedureName
-            //                            , parameters
-            //                            , 90
-            //                        );
-            //if (NeedAutoRefreshExecutedTimeForSlideExpire)
-            //{
-            //    SqlHelper
-            //        .RefreshCachedStoreProcedureExecuted
-            //            (
-            //                connection
-            //                , storeProcedureName
-            //            );
-            //}
             return r;
         }
-        private bool Process(string storeProcedureName, string parameters, out JToken result)
+        private bool Process
+                        (
+                            string   connectionString
+                            , string dataBaseType
+                            , string storeProcedureName
+                            , string parameters
+                            , out JToken result
+                        )
+
         {
             var j = JObject.Parse(parameters);
-            var r = Process(storeProcedureName, j, out result);
+            var r = Process
+                        (
+                            connectionString
+                            , dataBaseType
+                            , storeProcedureName
+                            , j
+                            , out result
+                        );
             return r;
         }
         private void GroupingJObjectResult(int groupFrom, string groupBy, JToken result)

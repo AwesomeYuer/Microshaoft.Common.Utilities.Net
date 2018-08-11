@@ -1,5 +1,6 @@
 ﻿namespace Microshaoft
 {
+    using MySql.Data.MySqlClient;
     using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Concurrent;
@@ -8,7 +9,7 @@
     using System.Data.Common;
     using System.Data.SqlClient;
     using System.Linq;
-    public static class SqlHelper
+    public static class MySqlHelper
     {
         public static int CachedExecutingParametersExpiredInSeconds
         {
@@ -16,14 +17,14 @@
             set;
         }
 
-        public static List<SqlParameter> GenerateExecuteSqlParameters
+        public static List<MySqlParameter> GenerateExecuteMySqlParameters
                                 (
                                     string connectionString
                                     , string storeProcedureName
                                     , JToken inputsParameters
                                 )
         {
-            List<SqlParameter> result = null;
+            List<MySqlParameter> result = null;
             var dbParameters = GetCachedStoreProcedureParameters
                                     (
                                         connectionString
@@ -33,7 +34,7 @@
             var jProperties = (JObject)inputsParameters;
             foreach (KeyValuePair<string, JToken> jProperty in jProperties)
             {
-                SqlParameter sqlParameter = null;
+                MySqlParameter sqlParameter = null;
                 if
                     (
                         dbParameters
@@ -46,22 +47,32 @@
                 {
                     var direction = sqlParameter
                                         .Direction;
-                    var cloneSqlParameter = sqlParameter.ShallowClone();
-                    cloneSqlParameter.Value = (object)jProperty.Value;
+                    //if 
+                    //    (
+                    //        direction == ParameterDirection.Input
+                    //        ||
+                    //        direction == ParameterDirection.InputOutput
+                    //    )
+                    //{
+                    var r = sqlParameter.ShallowClone();
+                    r.Value = (object)jProperty.Value;
                     if (result == null)
                     {
-                        result = new List<SqlParameter>();
+                        result = new List<MySqlParameter>();
                     }
-                    result.Add(cloneSqlParameter);
+                    result.Add(r);
+                    //}
                 }
             }
+
             foreach (var kvp in dbParameters)
             {
                 var sqlParameter = kvp.Value;
                 if (result == null)
                 {
-                    result = new List<SqlParameter>();
+                    result = new List<MySqlParameter>();
                 }
+
                 if
                     (
                         !result
@@ -91,120 +102,114 @@
                     {
                         if (result == null)
                         {
-                            result = new List<SqlParameter>();
+                            result = new List<MySqlParameter>();
                         }
-                        var cloneSqlParameter = sqlParameter.ShallowClone();
-                        //if (direction == ParameterDirection.InputOutput)
-                        //{
-                        //    cloneSqlParameter.Direction = ParameterDirection.Output;
-                        //}
-                        result.Add(cloneSqlParameter);
+                        result.Add(sqlParameter.ShallowClone());
                     }
                 }
             }
+
             return result;
         }
-        public static JValue GetJValue(this SqlParameter target)
+        public static JValue GetJValue(this MySqlParameter target)
         {
             JValue r = null;
             if
                 (
-                    target.SqlDbType == SqlDbType.VarChar
+                    target.MySqlDbType == MySqlDbType.VarChar
                     ||
-                    target.SqlDbType == SqlDbType.NVarChar
+                    target.MySqlDbType == MySqlDbType.VarString
+                    //||
+                    //target.MySqlDbType == MySqlDbType.Char
+                    //||
+                    //target.MySqlDbType == MySqlDbType.NChar
                     ||
-                    target.SqlDbType == SqlDbType.Char
-                    ||
-                    target.SqlDbType == SqlDbType.NChar
-                    ||
-                    target.SqlDbType == SqlDbType.Text
-                    ||
-                    target.SqlDbType == SqlDbType.NText
+                    target.MySqlDbType == MySqlDbType.Text
+                    //||
+                    //target.MySqlDbType == MySqlDbType.NText
                 )
             {
                 r = new JValue((string)target.Value);
             }
             else if
                 (
-                    target.SqlDbType == SqlDbType.DateTime
+                    target.MySqlDbType == MySqlDbType.DateTime
+                    //||
+                    //target.MySqlDbType == MySqlDbType.DateTime2
+                    //||
+                    //target.MySqlDbType == MySqlDbType.SmallDateTime
                     ||
-                    target.SqlDbType == SqlDbType.DateTime2
-                    ||
-                    target.SqlDbType == SqlDbType.SmallDateTime
-                    ||
-                    target.SqlDbType == SqlDbType.Date
-                    ||
-                    target.SqlDbType == SqlDbType.DateTime
+                    target.MySqlDbType == MySqlDbType.Date
                 )
             {
                 r = new JValue((DateTime)target.Value);
             }
+            //else if
+            //    (
+            //        target.MySqlDbType == MySqlDbType.DateTimeOffset
+            //    )
+            //{
+            //    r = new JValue((DateTimeOffset)target.Value);
+            //}
             else if
                 (
-                    target.SqlDbType == SqlDbType.DateTimeOffset
-                )
-            {
-                r = new JValue((DateTimeOffset)target.Value);
-            }
-            else if
-                (
-                    target.SqlDbType == SqlDbType.Bit
+                    target.MySqlDbType == MySqlDbType.Bit
                 )
             {
                 r = new JValue((bool)target.Value);
             }
             else if
                 (
-                    target.SqlDbType == SqlDbType.Decimal
+                    target.MySqlDbType == MySqlDbType.Decimal
                 )
             {
                 r = new JValue((decimal)target.Value);
             }
             else if
                 (
-                    target.SqlDbType == SqlDbType.Float
+                    target.MySqlDbType == MySqlDbType.Float
                 )
             {
                 r = new JValue((float)target.Value);
             }
+            //else if
+            //    (
+            //        target.MySqlDbType == MySqlDbType.Real
+            //    )
+            //{
+            //    r = new JValue((double)target.Value);
+            //}
             else if
                 (
-                    target.SqlDbType == SqlDbType.Real
-                )
-            {
-                r = new JValue((double)target.Value);
-            }
-            else if
-                (
-                    target.SqlDbType == SqlDbType.UniqueIdentifier
+                    target.MySqlDbType == MySqlDbType.Guid
                 )
             {
                 r = new JValue((Guid)target.Value);
             }
             else if
                 (
-                    target.SqlDbType == SqlDbType.BigInt
+                    target.MySqlDbType == MySqlDbType.Int64
                     ||
-                    target.SqlDbType == SqlDbType.Int
+                    target.MySqlDbType == MySqlDbType.Int32
                     ||
-                    target.SqlDbType == SqlDbType.SmallInt
+                    target.MySqlDbType == MySqlDbType.Int24
                     ||
-                    target.SqlDbType == SqlDbType.TinyInt
+                    target.MySqlDbType == MySqlDbType.Int16
                 )
             {
                 r = new JValue((long)target.Value);
             }
             return r;
         }
-        public static JArray ToJArray(this SqlParameter[] target)
+        public static JArray ToJArray(this MySqlParameter[] target)
         {
             int i = 1;
             var result = new JArray();
-            foreach (SqlParameter parameter in target)
+            foreach (MySqlParameter parameter in target)
             {
                 var jObject = new JObject();
                 jObject.Add(nameof(parameter.ParameterName), new JValue(parameter.ParameterName));
-                jObject.Add(nameof(parameter.SqlDbType), new JValue(parameter.SqlDbType.ToString()));
+                jObject.Add(nameof(parameter.MySqlDbType), new JValue(parameter.MySqlDbType.ToString()));
                 jObject.Add(nameof(parameter.Size), new JValue(parameter.Size));
                 jObject.Add(nameof(parameter.Direction), new JValue((long)parameter.Direction));
                 jObject.Add(nameof(parameter.Scale), new JValue((long)parameter.Scale));
@@ -215,11 +220,11 @@
             return result;
         }
 
-        public static SqlParameter ShallowClone(this SqlParameter target, bool includeValue = false)
+        public static MySqlParameter ShallowClone(this MySqlParameter target, bool includeValue = false)
         {
-            var result = new SqlParameter();
+            var result = new MySqlParameter();
             result.ParameterName = target.ParameterName;
-            result.SqlDbType = target.SqlDbType;
+            result.MySqlDbType = target.MySqlDbType;
             result.Size = target.Size;
             result.Direction = target.Direction;
             result.Scale = target.Scale;
@@ -233,19 +238,19 @@
         }
         private class ExecutingInfo
         {
-            public IDictionary<string, SqlParameter> SqlParameters;
+            public IDictionary<string, MySqlParameter> MySqlParameters;
             public DateTime RecentExecutedTime;
         }
 
-        private static 
+        private static
             ConcurrentDictionary<string, ExecutingInfo>
-                _dictionary 
+                _dictionary
                     = new ConcurrentDictionary<string, ExecutingInfo>
                             (
                                 StringComparer.OrdinalIgnoreCase
                             );
 
-        
+
 
         //public static
         //    HashSet<string>
@@ -258,7 +263,7 @@
                                         (
                                             DbConnection connection
                                             , string storeProcedureName
-                                            
+
                                         )
         {
             var dataSource = connection.DataSource;
@@ -280,13 +285,13 @@
         }
 
         public static
-                IDictionary<string,SqlParameter>
+                IDictionary<string, MySqlParameter>
                         GetCachedStoreProcedureParameters
                                         (
                                             string connectionString
                                             , string storeProcedureName
                                             , bool includeReturnValueParameter = false
-                                            //, int cacheExpireInSeconds = 0
+                                        //, int cacheExpireInSeconds = 0
                                         )
         {
             ExecutingInfo GetExecutingInfo()
@@ -315,7 +320,7 @@
 
                 var _executingInfo = new ExecutingInfo()
                 {
-                    SqlParameters = parameters,
+                    MySqlParameters = parameters,
                     RecentExecutedTime = DateTime.Now
 
                 };
@@ -337,12 +342,12 @@
                                             return r;
                                         }
                                     );
-            var result = executingInfo.SqlParameters;
+            var result = executingInfo.MySqlParameters;
             if (!add)
             {
                 if (CachedExecutingParametersExpiredInSeconds > 0)
                 {
-                    if 
+                    if
                         (
                             DateTimeHelper
                                 .SecondsDiffNow
@@ -355,15 +360,15 @@
                     {
                         executingInfo = GetExecutingInfo();
                         _dictionary[key] = executingInfo;
-                        result = executingInfo.SqlParameters;
+                        result = executingInfo.MySqlParameters;
                     }
                 }
             }
             return result;
         }
 
-        public static 
-                IEnumerable<SqlParameter> 
+        public static
+                IEnumerable<MySqlParameter>
                         GetStoreProcedureParameters
                                         (
                                             string connectionString
@@ -371,40 +376,31 @@
                                             , bool includeReturnValueParameter = false
                                         )
         {
-            SqlConnection connection = null;
+            MySqlConnection connection = null;
             try
             {
-                connection = new SqlConnection(connectionString);
+                connection = new MySqlConnection(connectionString);
                 var dataSource = connection.DataSource;
                 var dataBase = connection.Database;
                 //var key = $"{connection.DataSource}-{connection.Database}-{p_procedure_name}".ToUpper();
                 //int groupNumber = 0;
                 string procedureSchema = string.Empty;
                 string parameterName = string.Empty;
-                var commandText = @"
-                    SELECT
-                        * 
-                    FROM
-                        information_schema.parameters a 
-                    WHERE
-                        a.SPECIFIC_NAME = @procedure_name
-                    ";
-                //commandText = "sp_procedure_params_rowset";
 
 
 
-                using (SqlCommand command = new SqlCommand(commandText, connection))
+                using (MySqlCommand command = new MySqlCommand("sp_procedure_params_rowset", connection))
                 {
-                    //command.CommandType = CommandType.StoredProcedure;
-                    SqlParameter sqlParameterProcedure_Name = command.Parameters.Add("@procedure_name", SqlDbType.NVarChar, 128);
+                    command.CommandType = CommandType.StoredProcedure;
+                    MySqlParameter sqlParameterProcedure_Name = command.Parameters.Add("@procedure_name", MySqlDbType.NVarChar, 128);
                     sqlParameterProcedure_Name.Value = (storeProcedureName != null ? (object)storeProcedureName : DBNull.Value);
-                    //SqlParameter sqlParameterGroup_Number = command.Parameters.Add("@group_number", SqlDbType.Int);
+                    //MySqlParameter sqlParameterGroup_Number = command.Parameters.Add("@group_number", MySqlDbType.Int);
                     //sqlParameterGroup_Number.Value = groupNumber;
-                    //SqlParameter sqlParameterProcedure_Schema = command.Parameters.Add("@procedure_schema", SqlDbType.NVarChar, 128);
+                    //MySqlParameter sqlParameterProcedure_Schema = command.Parameters.Add("@procedure_schema", MySqlDbType.NVarChar, 128);
                     //sqlParameterProcedure_Schema.Value = (procedureSchema != null ? (object)procedureSchema : DBNull.Value);
-                    //SqlParameter sqlParameterParameter_Name = command.Parameters.Add("@parameter_name", SqlDbType.NVarChar, 128);
+                    //MySqlParameter sqlParameterParameter_Name = command.Parameters.Add("@parameter_name", MySqlDbType.NVarChar, 128);
                     //sqlParameterParameter_Name.Value = (parameterName != null ? (object)parameterName : DBNull.Value);
-                    SqlParameter sqlParameterReturn = command.Parameters.Add("@RETURN_VALUE", SqlDbType.Int);
+                    MySqlParameter sqlParameterReturn = command.Parameters.Add("@RETURN_VALUE", MySqlDbType.Int);
                     sqlParameterReturn.Direction = ParameterDirection.ReturnValue;
                     connection.Open();
                     var sqlDataReader = command
@@ -414,18 +410,17 @@
                                                 );
                     var sqlParameters
                             = sqlDataReader
-                                    .ExecuteRead<SqlParameter>
+                                    .ExecuteRead<MySqlParameter>
                                         (
                                             (x, reader) =>
                                             {
-                                                var sqlParameter = new SqlParameter();
+                                                var sqlParameter = new MySqlParameter();
                                                 sqlParameter
                                                     .ParameterName = (string)(reader["PARAMETER_NAME"]);
-                                                var sqlDbTypeName = //(string)(reader["TYPE_NAME"]);
-                                                                    (string)(reader["DATA_TYPE"]);
-                                                SqlDbType sqlDbType = (SqlDbType) Enum.Parse(typeof(SqlDbType), sqlDbTypeName, true);
+                                                var sqlDbTypeName = (string)(reader["TYPE_NAME"]);
+                                                MySqlDbType sqlDbType = (MySqlDbType)Enum.Parse(typeof(MySqlDbType), sqlDbTypeName, true);
                                                 sqlParameter
-                                                    .SqlDbType = sqlDbType;
+                                                    .MySqlDbType = sqlDbType;
                                                 if (reader["CHARACTER_MAXIMUM_LENGTH"] != DBNull.Value)
                                                 {
                                                     sqlParameter
@@ -440,19 +435,13 @@
                                                         .Direction = GetParameterDirection
                                                                         (
                                                                             reader
-                                                                                .GetString
+                                                                                .GetInt16
                                                                                     (
                                                                                         reader
-                                                                                            .GetOrdinal("PARAMETER_MODE")
+                                                                                            .GetOrdinal("PARAMETER_TYPE")
                                                                                     )
-                                                                            //reader
-                                                                            //    .GetInt16
-                                                                            //        (
-                                                                            //            reader
-                                                                            //                .GetOrdinal("PARAMETER_TYPE")
-                                                                            //        )
                                                                         );
-                                                if ((sqlParameter.SqlDbType == SqlDbType.Decimal))
+                                                if ((sqlParameter.MySqlDbType == MySqlDbType.Decimal))
                                                 {
                                                     sqlParameter.Scale = (byte)(((short)(reader["NUMERIC_SCALE"]) & 255));
                                                     sqlParameter.Precision = (byte)(((short)(reader["NUMERIC_PRECISION"]) & 255));
@@ -469,27 +458,7 @@
                 //connection = null;
             }
         }
-        private static ParameterDirection GetParameterDirection(string parameterMode)
-        {
-            ParameterDirection pd;
-            if (string.Compare(parameterMode, "IN", true) == 0)
-            {
-                pd = ParameterDirection.Input;
-            }
-            else if (string.Compare(parameterMode, "INOUT", true) == 0)
-            {
-                pd = ParameterDirection.InputOutput;
-            }
-            else if (string.Compare(parameterMode, "RETURN", true) == 0)
-            {
-                pd = ParameterDirection.ReturnValue;
-            }
-            else
-            {
-                pd = ParameterDirection.Output;
-            }
-            return pd;
-        }
+
         /// <summary>
         /// Converts the OleDb parameter direction
         /// </summary>
@@ -507,7 +476,7 @@
                     pd = ParameterDirection.Output; //是这里的问题
                     //2018 Microshoaft All Output will be used as InputOutput
                     goto default; //
-                    //break; //我注释掉的这句话
+                                  //break; //我注释掉的这句话
                 case 4:
                     pd = ParameterDirection.ReturnValue;
                     break;
@@ -554,7 +523,7 @@
                         DbCommand command = new SqlCommand
                                                     (
                                                         storeProcedureName
-                                                        , (SqlConnection) connection
+                                                        , (SqlConnection)connection
                                                     )
                         {
                             CommandType = CommandType.StoredProcedure
@@ -563,9 +532,8 @@
                         }
                     )
                 {
-                    
-                    var sqlParameters = SqlHelper
-                                            .GenerateExecuteSqlParameters
+
+                    var sqlParameters = GenerateExecuteMySqlParameters
                                                     (
                                                         connection.ConnectionString
                                                         , storeProcedureName
@@ -623,8 +591,8 @@
                                         .GetJTokensColumnsEnumerable();
                         var rows = dataReader
                                         .AsJTokensRowsEnumerable();
-                        
-                        ((JArray) result["Outputs"]["ResultSets"])
+
+                        ((JArray)result["Outputs"]["ResultSets"])
                                             .Add
                                                 (
                                                     new JObject
