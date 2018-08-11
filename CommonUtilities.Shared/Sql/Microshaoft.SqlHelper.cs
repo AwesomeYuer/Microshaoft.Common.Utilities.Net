@@ -5,6 +5,7 @@
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Data;
+    using System.Data.Common;
     using System.Data.SqlClient;
     using System.Linq;
     public static class SqlHelper
@@ -23,7 +24,7 @@
                                 )
         {
             List<SqlParameter> result = null;
-            var sqlParameters = GetCachedStoreProcedureParameters
+            var dbParameters = GetCachedStoreProcedureParameters
                                     (
                                         connectionString
                                         , storeProcedureName
@@ -35,7 +36,7 @@
                 SqlParameter sqlParameter = null;
                 if
                     (
-                        sqlParameters
+                        dbParameters
                             .TryGetValue
                                 (
                                     jProperty.Key
@@ -45,32 +46,22 @@
                 {
                     var direction = sqlParameter
                                         .Direction;
-                    //if 
-                    //    (
-                    //        direction == ParameterDirection.Input
-                    //        ||
-                    //        direction == ParameterDirection.InputOutput
-                    //    )
-                    //{
-                    var r = sqlParameter.ShallowClone();
-                    r.Value = (object)jProperty.Value;
+                    var cloneSqlParameter = sqlParameter.ShallowClone();
+                    cloneSqlParameter.Value = (object)jProperty.Value;
                     if (result == null)
                     {
                         result = new List<SqlParameter>();
                     }
-                    result.Add(r);
-                    //}
+                    result.Add(cloneSqlParameter);
                 }
             }
-
-            foreach (var kvp in sqlParameters)
+            foreach (var kvp in dbParameters)
             {
                 var sqlParameter = kvp.Value;
                 if (result == null)
                 {
                     result = new List<SqlParameter>();
                 }
-
                 if
                     (
                         !result
@@ -102,11 +93,15 @@
                         {
                             result = new List<SqlParameter>();
                         }
-                        result.Add(sqlParameter.ShallowClone());
+                        var cloneSqlParameter = sqlParameter.ShallowClone();
+                        //if (direction == ParameterDirection.InputOutput)
+                        //{
+                        //    cloneSqlParameter.Direction = ParameterDirection.Output;
+                        //}
+                        result.Add(cloneSqlParameter);
                     }
                 }
             }
-
             return result;
         }
         public static JValue GetJValue(this SqlParameter target)
@@ -261,7 +256,7 @@
         public static void
                         RefreshCachedStoreProcedureExecuted
                                         (
-                                            SqlConnection connection
+                                            DbConnection connection
                                             , string storeProcedureName
                                             
                                         )
@@ -303,7 +298,8 @@
                                     , storeProcedureName
                                     , includeReturnValueParameter
                                 );
-                var parameters = sqlParameters
+                var parameters =
+                            sqlParameters
                                 .ToDictionary
                                     (
                                         (xx) =>
@@ -385,9 +381,21 @@
                 //int groupNumber = 0;
                 string procedureSchema = string.Empty;
                 string parameterName = string.Empty;
-                using (SqlCommand command = new SqlCommand("sp_procedure_params_rowset", connection))
+                var commandText = @"
+                    SELECT
+                        * 
+                    FROM
+                        information_schema.parameters a 
+                    WHERE
+                        a.SPECIFIC_NAME = @procedure_name
+                    ";
+                //commandText = "sp_procedure_params_rowset";
+
+
+
+                using (SqlCommand command = new SqlCommand(commandText, connection))
                 {
-                    command.CommandType = CommandType.StoredProcedure;
+                    //command.CommandType = CommandType.StoredProcedure;
                     SqlParameter sqlParameterProcedure_Name = command.Parameters.Add("@procedure_name", SqlDbType.NVarChar, 128);
                     sqlParameterProcedure_Name.Value = (storeProcedureName != null ? (object)storeProcedureName : DBNull.Value);
                     //SqlParameter sqlParameterGroup_Number = command.Parameters.Add("@group_number", SqlDbType.Int);
@@ -413,7 +421,8 @@
                                                 var sqlParameter = new SqlParameter();
                                                 sqlParameter
                                                     .ParameterName = (string)(reader["PARAMETER_NAME"]);
-                                                var sqlDbTypeName = (string)(reader["TYPE_NAME"]);
+                                                var sqlDbTypeName = //(string)(reader["TYPE_NAME"]);
+                                                                    (string)(reader["DATA_TYPE"]);
                                                 SqlDbType sqlDbType = (SqlDbType) Enum.Parse(typeof(SqlDbType), sqlDbTypeName, true);
                                                 sqlParameter
                                                     .SqlDbType = sqlDbType;
@@ -431,11 +440,17 @@
                                                         .Direction = GetParameterDirection
                                                                         (
                                                                             reader
-                                                                                .GetInt16
+                                                                                .GetString
                                                                                     (
                                                                                         reader
-                                                                                            .GetOrdinal("PARAMETER_TYPE")
+                                                                                            .GetOrdinal("PARAMETER_MODE")
                                                                                     )
+                                                                            //reader
+                                                                            //    .GetInt16
+                                                                            //        (
+                                                                            //            reader
+                                                                            //                .GetOrdinal("PARAMETER_TYPE")
+                                                                            //        )
                                                                         );
                                                 if ((sqlParameter.SqlDbType == SqlDbType.Decimal))
                                                 {
@@ -454,7 +469,27 @@
                 //connection = null;
             }
         }
-
+        private static ParameterDirection GetParameterDirection(string parameterMode)
+        {
+            ParameterDirection pd;
+            if (string.Compare(parameterMode, "IN", true) == 0)
+            {
+                pd = ParameterDirection.Input;
+            }
+            else if (string.Compare(parameterMode, "INOUT", true) == 0)
+            {
+                pd = ParameterDirection.InputOutput;
+            }
+            else if (string.Compare(parameterMode, "RETURN", true) == 0)
+            {
+                pd = ParameterDirection.ReturnValue;
+            }
+            else
+            {
+                pd = ParameterDirection.Output;
+            }
+            return pd;
+        }
         /// <summary>
         /// Converts the OleDb parameter direction
         /// </summary>
@@ -485,7 +520,7 @@
 
         public static JObject StoreProcedureExecute
                                (
-                                   SqlConnection connection
+                                   DbConnection connection
                                    , string storeProcedureName
                                    , string p = null //string.Empty
                                    , int commandTimeout = 90
@@ -504,7 +539,7 @@
 
         public static JObject StoreProcedureExecute
                                 (
-                                    SqlConnection connection
+                                    DbConnection connection
                                     , string storeProcedureName
                                     , JToken inputsParameters = null //string.Empty
                                     , int commandTimeout = 90
@@ -516,7 +551,11 @@
             {
                 using
                     (
-                        SqlCommand command = new SqlCommand(storeProcedureName, connection)
+                        DbCommand command = new SqlCommand
+                                                    (
+                                                        storeProcedureName
+                                                        , (SqlConnection) connection
+                                                    )
                         {
                             CommandType = CommandType.StoredProcedure
                             ,

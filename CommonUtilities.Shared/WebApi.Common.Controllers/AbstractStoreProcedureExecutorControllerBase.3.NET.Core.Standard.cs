@@ -12,6 +12,12 @@ namespace Microshaoft.WebApi.Controllers
     using System.Data.SqlClient;
     using System.Linq;
     using System.Net.Http.Formatting;
+    using Microshaoft;
+    using System.IO;
+    using System.Composition.Convention;
+    using System.Composition.Hosting;
+    using System.Composition;
+    using System.Collections.Generic;
 
     [Route("api/[controller]")]
     [ApiController]
@@ -20,6 +26,141 @@ namespace Microshaoft.WebApi.Controllers
                     :
                         ControllerBase //, IConnectionString
     {
+        
+        public AbstractStoreProcedureExecutorControllerBase()
+        {
+            if (_connections == null)
+            {
+                lock (_locker)
+                {
+                    if (_connections == null)
+                    {
+                        _connections
+                            = GetDataBasesConnectionsInfo()
+                                    .ToDictionary
+                                        (
+                                            (x) =>
+                                            {
+                                                return
+                                                    x.ConnectionID;
+                                            }
+                                            , StringComparer.OrdinalIgnoreCase
+                                        );
+                    }
+                }
+            }
+
+            //if
+            //    (
+            //        SqlHelper
+            //            .CachedExecutingParametersExpiredInSeconds
+            //        !=
+            //        CachedExecutingParametersExpiredInSeconds
+            //    )
+            //{
+            //    SqlHelper
+            //            .CachedExecutingParametersExpiredInSeconds
+            //                = CachedExecutingParametersExpiredInSeconds;
+            //}
+            if 
+                (
+                    _executors == null
+                )
+            {
+                lock (_locker)
+                {
+                    if (_executors == null)
+                    {
+                        if (DynamicLoadExecutorsPaths != null)
+                        {
+                            var q
+                                = DynamicLoadExecutorsPaths
+                                        .Where
+                                            (x => Directory.Exists(x))
+                                        .SelectMany
+                                            (
+                                                (x) =>
+                                                {
+                                                    var r =
+                                                        CompositionHelper
+                                                            .ImportManyExportsComposeParts
+                                                                <IStoreProcedureExecutable>
+                                                                    (
+                                                                        x
+                                                                    );
+                                                    return
+                                                        r;
+                                                }
+                                            ).ToArray();
+                            _executors = q
+                                        .ToDictionary
+                                            (
+                                                (x) =>
+                                                {
+                                                    return
+                                                        x.DataBaseType;
+                                                }
+                                                ,
+                                                (x) =>
+                                                {
+                                                    IStoreProcedureParametersSetCacheAutoRefreshable
+                                                        rr = x as IStoreProcedureParametersSetCacheAutoRefreshable;
+                                                    if (rr != null)
+                                                    {
+                                                        rr.CachedExecutingParametersExpiredInSeconds
+                                                            = CachedExecutingParametersExpiredInSeconds;
+                                                        rr.NeedAutoRefreshExecutedTimeForSlideExpire
+                                                            = NeedAutoRefreshExecutedTimeForSlideExpire;
+                                                    }
+                                                    return
+                                                        x;
+                                                }
+                                                , StringComparer.OrdinalIgnoreCase
+                                            );
+
+
+
+                            //if (Directory.Exists(DynamicLoadExecutorsPath))
+                            //{
+                            //    var r = CompositionHelper
+                            //                .ImportManyExportsComposeParts<IStoreProcedureExecutable>
+                            //                    (
+                            //                        DynamicLoadExecutorsPath
+                            //                    );
+
+                            //    _executors = r.ToDictionary
+                            //        (
+                            //            (x) =>
+                            //            {
+                            //                return
+                            //                    x.DataBaseType;
+                            //            }
+                            //            ,
+                            //            (x) =>
+                            //            {
+                            //                IStoreProcedureParametersSetCacheAutoRefreshable
+                            //                    rr = x as IStoreProcedureParametersSetCacheAutoRefreshable;
+                            //                if (rr != null)
+                            //                {
+                            //                    rr.CachedExecutingParametersExpiredInSeconds
+                            //                        = CachedExecutingParametersExpiredInSeconds;
+                            //                    rr.NeedAutoRefreshExecutedTimeForSlideExpire
+                            //                        = NeedAutoRefreshExecutedTimeForSlideExpire;
+                            //                }
+                            //                return
+                            //                    x;
+
+                            //            }
+                            //            , StringComparer.OrdinalIgnoreCase
+                            //        );
+                            //}
+                        }
+
+                    }
+                    
+                }
+            }
+        }
         //[ResponseCache(Duration = 10)]
         //[
         //    TypeFilter
@@ -52,19 +193,26 @@ namespace Microshaoft.WebApi.Controllers
         [HttpPut]
         [Route
             (
-                  "{storeProcedureName}/"
+                "{connectionID}/"
+                + "{storeProcedureName}/"
                 + "{resultPathSegment1?}/"
                 + "{resultPathSegment2?}/"
                 + "{resultPathSegment3?}/"
                 + "{resultPathSegment4?}/"
                 + "{resultPathSegment5?}/"
-                + "{resultPathSegment6?}/"
+                + "{resultPathSegment6?}"
             )
         ]
         public virtual ActionResult<JToken> ProcessActionRequest
                             (
+
+                                [FromRoute]
+                                string connectionID //= "mssql"
+
+                                ,
                                 [FromRoute]
                                 string storeProcedureName
+
                                 ,
                                 [ModelBinder(typeof(JTokenModelBinder))]
                                 JToken parameters = null
@@ -86,19 +234,30 @@ namespace Microshaoft.WebApi.Controllers
                                 ,
                                 [FromRoute]
                                 string resultPathSegment6 = null
+
                             )
         {
+            //string dataBaseType = "mssql";
             JToken result = null;
             var r = false;
-            if (NeedCheckWhiteList)
+            DataBaseConnectionInfo connectionInfo = null;
+            r = _connections
+                        .TryGetValue
+                            (
+                                connectionID
+                                , out connectionInfo
+                            );
+            if (r)
             {
-                r = CheckList(storeProcedureName, Request.Method);
-                if (!r)
-                {
-                    return StatusCode(403);
-                }
+                r = Process
+                        (
+                            connectionInfo
+                            , storeProcedureName
+                            , Request.Method
+                            , parameters
+                            , out result
+                        );
             }
-            r = Process(storeProcedureName, parameters, out result);
             if (!r)
             {
                 return StatusCode(403);

@@ -11,9 +11,6 @@ using Microsoft.Extensions.Logging;
 
 namespace WebApplication.ASPNetCore
 {
-    
-
-
     public class Program
     {
         public static void Main(string[] args)

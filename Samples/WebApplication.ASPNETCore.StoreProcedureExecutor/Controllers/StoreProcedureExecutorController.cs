@@ -17,54 +17,116 @@ namespace Microshaoft.WebApi.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [EnableCors("SPE")]
-    public class StoreProcedureExecutorController 
+    public class StoreProcedureExecutorController
                     : AbstractStoreProcedureExecutorControllerBase
-                        //ControllerBase //, IConnectionString
+    //ControllerBase //, IConnectionString
     {
-        public override IDictionary<string, HttpMethodsFlags> GetExecuteWhiteList()
-        {
-            return 
-                new 
-                    Dictionary<string, HttpMethodsFlags>
-                        (StringComparer.OrdinalIgnoreCase)
-                            {
-                                {
-                                    "zsp_GetDatesAfter"
-                                    , HttpMethodsFlags.All
-                                        //HttpMethodsFlags.Get 
-                                        //| HttpMethodsFlags.Post
-                                }
-                            };
-        }
-        protected override string
-              ConnectionString =>
-                    @"Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=D:\mssql\MSSQL13.LocalDB\LocalDB\TransportionSecrets\TransportionSecrets.mdf;Data Source=(localdb)\mssqllocaldb;";
+        //public override IDictionary<string, HttpMethodsFlags> GetExecuteWhiteList()
+        //{
+        //    return
+        //        new
+        //            Dictionary<string, HttpMethodsFlags>
+        //                (StringComparer.OrdinalIgnoreCase)
+        //                    {
+        //                        {
+        //                            "zsp_GetDatesAfter"
+        //                            , HttpMethodsFlags.All
+        //                                //HttpMethodsFlags.Get 
+        //                                //| HttpMethodsFlags.Post
+        //                        }
+        //                    };
+        //}
+        //protected override string
+        //      ConnectionString =>
+        //            @"Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=D:\mssql\MSSQL13.LocalDB\LocalDB\TransportionSecrets\TransportionSecrets.mdf;Data Source=(localdb)\mssqllocaldb;";
 
-        protected override bool NeedCheckWhiteList => true;
+        //protected override bool NeedCheckWhiteList => true;
 
         protected override int CachedExecutingParametersExpiredInSeconds => 10;
 
         protected override bool NeedAutoRefreshExecutedTimeForSlideExpire => true;
 
-        
+        protected override string[] DynamicLoadExecutorsPaths =>
+            new string[]
+            {
+                @"D:\MyGitHub\Microshaoft.Common.Utilities.Net.4x\StoreProcedureWebApiExecutorsPlugins\MsSQL.StoreProcedureWebApiExecutor\bin\Debug\netcoreapp2.1\"
+                ,
+                @"D:\MyGitHub\Microshaoft.Common.Utilities.Net.4x\StoreProcedureWebApiExecutorsPlugins\MySQL.StoreProcedureWebApiExecutor\bin\Debug\netcoreapp2.1"
+            };
+        protected override IEnumerable<DataBaseConnectionInfo> GetDataBasesConnectionsInfo()
+        {
 
-        [HttpDelete]
-        [HttpGet]
-        [HttpHead]
-        [HttpOptions]
-        [HttpPatch]
-        [HttpPost]
-        [HttpPut]
-        [Route("{storeProcedureName}/0")]
-        public ActionResult<JToken> GetResultSet1RowsOnly
+            return
+                    new List<DataBaseConnectionInfo>()
+                    {
+                         new DataBaseConnectionInfo()
+                         {
+                              ConnectionID = "mssql1"
+                              , DataBaseType =  DataBasesType.MsSQL
+                              , ConnectionString =
+                                    @"Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=D:\mssql\MSSQL13.LocalDB\LocalDB\TransportionSecrets\TransportionSecrets.mdf;Data Source=(localdb)\mssqllocaldb;"
+                              , WhiteList = new Dictionary<string, HttpMethodsFlags>
+                                                  (StringComparer.OrdinalIgnoreCase)
+                                                {
+                                                    {
+                                                        "zsp_GetDatesAfter"
+                                                        , HttpMethodsFlags.All
+                                                            //HttpMethodsFlags.Get 
+                                                            //| HttpMethodsFlags.Post
+                                                    }
+                                                }
+                         }
+                         ,
+                         new DataBaseConnectionInfo()
+                         {
+                              ConnectionID = "mysql1"
+                              , DataBaseType =  DataBasesType.MySQL
+                              , ConnectionString =
+                                    @"server= microshaoft-ubuntu-001.westus.cloudapp.azure.com;uid=root;pwd=withoutpassword;database=Test"
+                              , WhiteList = new Dictionary<string, HttpMethodsFlags>
+                                                  (StringComparer.OrdinalIgnoreCase)
+                                                {
+                                                    {
+                                                        "zsp_GetDatesAfter"
+                                                        , HttpMethodsFlags.All
+                                                            //HttpMethodsFlags.Get 
+                                                            //| HttpMethodsFlags.Post
+                                                    }
+                                                }
+                         }
+                    };
+        }
+
+        //@"d:\netcoreapp2.1x\";
+
+
+        //[HttpDelete]
+        //[HttpGet]
+        //[HttpHead]
+        //[HttpOptions]
+        //[HttpPatch]
+        //[HttpPost]
+        //[HttpPut]
+        //[Route("{dataBaseType}/{storeProcedureName}/0")]
+        private ActionResult<JToken> GetResultSet1RowsOnly
                     (
+                        [FromRoute]
+                        string dataBaseType //= "mssql"
+                        ,
                         string storeProcedureName
                         ,
                             [ModelBinder(typeof(JTokenModelBinder))]
                             JToken parameters = null
                     )
         {
-            var result = base.ProcessActionRequest(storeProcedureName, parameters);
+            var result
+                    = base
+                        .ProcessActionRequest
+                                (
+                                    dataBaseType
+                                    , storeProcedureName
+                                    , parameters
+                                );
             return
                 new ActionResult<JToken>
                         (

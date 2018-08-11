@@ -91,8 +91,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)LinqDynamic\Linq.Dynamic.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LongInteger\LongIntegerHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mapper\TinyMapper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)MEF\MEF.Contracts.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)MEF\MEFHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MEF.Composition\MEF.Contracts.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MEF.Composition\MEFHelper.NET.Core.Standard.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MEF.Composition\MEFHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MemberAdditionalDefinitionAttribute\MemberAdditionalDefinitionAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Microsoft.Diagnostics.Tracing.Logging\ActivityID.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Microsoft.Diagnostics.Tracing.Logging\Assert.cs" />
@@ -157,6 +158,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Socket\SocketHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\Microsoft.SqlHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\Microshaoft.SqlHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sql\MySqlHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System.Buffers.ArrayPool\ArrayPool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Throttler\RateLimiters\FixedTokenBucket.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Throttler\RateLimiters\IThrottleStrategy.cs" />
@@ -176,6 +178,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenModelBinder.NET.Framework.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenWebHelper.NET.Core.Standard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\RouteAuthorizeActionFilter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\StoreProcedureExecutors\IStoreProcedureExecutable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\StoreProcedureExecutors\MSSQL.StoreProcedureExecutor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApiVersionedRoute\ActionSelector\CandidateAction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApiVersionedRoute\ActionSelector\HttpActionDescriptorExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApiVersionedRoute\ActionSelector\HttpParameterBindingExtensions.cs" />
