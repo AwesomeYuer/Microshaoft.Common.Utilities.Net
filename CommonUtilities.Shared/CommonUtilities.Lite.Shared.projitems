@@ -119,6 +119,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Socket\SocketHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\Microshaoft.SqlHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\Microsoft.SqlHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sql\MySqlHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System.Buffers.ArrayPool\ArrayPool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Throttler\RateLimiters\FixedTokenBucket.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Throttler\RateLimiters\IThrottleStrategy.cs" />

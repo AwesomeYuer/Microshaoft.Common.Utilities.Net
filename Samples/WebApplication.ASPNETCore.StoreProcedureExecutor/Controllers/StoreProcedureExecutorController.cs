@@ -46,11 +46,13 @@ namespace Microshaoft.WebApi.Controllers
 
         protected override bool NeedAutoRefreshExecutedTimeForSlideExpire => true;
 
-        protected override string DynamicLoadExecutorsPath =>
-            @"D:\MyGitHub\Microshaoft.Common.Utilities.Net.4x\StoreProcedureWebApiExecutorsPlugins\MsSQL.StoreProcedureWebApiExecutor\bin\Debug\netcoreapp2.1\";
-
-
-
+        protected override string[] DynamicLoadExecutorsPaths =>
+            new string[]
+            {
+                @"D:\MyGitHub\Microshaoft.Common.Utilities.Net.4x\StoreProcedureWebApiExecutorsPlugins\MsSQL.StoreProcedureWebApiExecutor\bin\Debug\netcoreapp2.1\"
+                ,
+                @"D:\MyGitHub\Microshaoft.Common.Utilities.Net.4x\StoreProcedureWebApiExecutorsPlugins\MySQL.StoreProcedureWebApiExecutor\bin\Debug\netcoreapp2.1"
+            };
         protected override IEnumerable<DataBaseConnectionInfo> GetDataBasesConnectionsInfo()
         {
 
@@ -77,8 +79,20 @@ namespace Microshaoft.WebApi.Controllers
                          ,
                          new DataBaseConnectionInfo()
                          {
-                             ConnectionID = "mysql1"
-                              ,DataBaseType =  DataBasesType.MySQL
+                              ConnectionID = "mysql1"
+                              , DataBaseType =  DataBasesType.MySQL
+                              , ConnectionString =
+                                    @"server= microshaoft-ubuntu-001.westus.cloudapp.azure.com;uid=root;pwd=withoutpassword;database=Test"
+                              , WhiteList = new Dictionary<string, HttpMethodsFlags>
+                                                  (StringComparer.OrdinalIgnoreCase)
+                                                {
+                                                    {
+                                                        "zsp_GetDatesAfter"
+                                                        , HttpMethodsFlags.All
+                                                            //HttpMethodsFlags.Get 
+                                                            //| HttpMethodsFlags.Post
+                                                    }
+                                                }
                          }
                     };
         }

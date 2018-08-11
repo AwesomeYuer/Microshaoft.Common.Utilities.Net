@@ -5,6 +5,7 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using System.Text;
 using Microshaoft;
+using MySql.Data.MySqlClient;
 using Newtonsoft.Json.Linq;
 
 namespace Microshaoft.StoreProcedureExecutors
@@ -14,7 +15,7 @@ namespace Microshaoft.StoreProcedureExecutors
                         : IStoreProcedureExecutable
                             , IStoreProcedureParametersSetCacheAutoRefreshable
     {
-        public string DataBaseType => "mssql";////this.GetType().Name;
+        public string DataBaseType => "mysql";////this.GetType().Name;
 
         public int CachedExecutingParametersExpiredInSeconds
         {
@@ -38,19 +39,19 @@ namespace Microshaoft.StoreProcedureExecutors
                 (
                     CachedExecutingParametersExpiredInSeconds > 0
                     &&
-                    SqlHelper
+                    MySqlHelper
                         .CachedExecutingParametersExpiredInSeconds
                     !=
                     CachedExecutingParametersExpiredInSeconds
                 )
             {
-                SqlHelper
+                MySqlHelper
                         .CachedExecutingParametersExpiredInSeconds
                             = CachedExecutingParametersExpiredInSeconds;
             }
             result = null;
-            DbConnection connection = new SqlConnection(connectionString);
-            result = SqlHelper
+            MySqlConnection connection = new MySqlConnection(connectionString);
+            result = MySqlHelper
                             .StoreProcedureExecute
                                     (
                                         connection
@@ -62,7 +63,7 @@ namespace Microshaoft.StoreProcedureExecutors
 
             if (NeedAutoRefreshExecutedTimeForSlideExpire)
             {
-                SqlHelper
+                MySqlHelper
                     .RefreshCachedStoreProcedureExecuted
                         (
                             connection

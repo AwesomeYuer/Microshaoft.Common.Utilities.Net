@@ -26,10 +26,9 @@ namespace Microshaoft.WebApi.Controllers
                     :
                         ControllerBase //, IConnectionString
     {
-        private static IDictionary<string, IStoreProcedureExecutable> _executors;
+        
         public AbstractStoreProcedureExecutorControllerBase()
         {
-            
             if (_connections == null)
             {
                 lock (_locker)
@@ -63,47 +62,102 @@ namespace Microshaoft.WebApi.Controllers
             //            .CachedExecutingParametersExpiredInSeconds
             //                = CachedExecutingParametersExpiredInSeconds;
             //}
-            if (_executors == null)
+            if 
+                (
+                    _executors == null
+                )
             {
                 lock (_locker)
                 {
-                    if (!DynamicLoadExecutorsPath.IsNullOrEmptyOrWhiteSpace())
+                    if (_executors == null)
                     {
-                        if (Directory.Exists(DynamicLoadExecutorsPath))
+                        if (DynamicLoadExecutorsPaths != null)
                         {
-                            var r = CompositionHelper
-                                        .ImportManyExportsComposeParts<IStoreProcedureExecutable>
+                            var q
+                                = DynamicLoadExecutorsPaths
+                                        .Where
+                                            (x => Directory.Exists(x))
+                                        .SelectMany
                                             (
-                                                DynamicLoadExecutorsPath
+                                                (x) =>
+                                                {
+                                                    var r =
+                                                        CompositionHelper
+                                                            .ImportManyExportsComposeParts
+                                                                <IStoreProcedureExecutable>
+                                                                    (
+                                                                        x
+                                                                    );
+                                                    return
+                                                        r;
+                                                }
+                                            ).ToArray();
+                            _executors = q
+                                        .ToDictionary
+                                            (
+                                                (x) =>
+                                                {
+                                                    return
+                                                        x.DataBaseType;
+                                                }
+                                                ,
+                                                (x) =>
+                                                {
+                                                    IStoreProcedureParametersSetCacheAutoRefreshable
+                                                        rr = x as IStoreProcedureParametersSetCacheAutoRefreshable;
+                                                    if (rr != null)
+                                                    {
+                                                        rr.CachedExecutingParametersExpiredInSeconds
+                                                            = CachedExecutingParametersExpiredInSeconds;
+                                                        rr.NeedAutoRefreshExecutedTimeForSlideExpire
+                                                            = NeedAutoRefreshExecutedTimeForSlideExpire;
+                                                    }
+                                                    return
+                                                        x;
+                                                }
+                                                , StringComparer.OrdinalIgnoreCase
                                             );
 
-                            _executors = r.ToDictionary
-                                (
-                                    (x) =>
-                                    {
-                                        return
-                                            x.DataBaseType;
-                                    }
-                                    ,
-                                    (x) =>
-                                    {
-                                        IStoreProcedureParametersSetCacheAutoRefreshable
-                                            rr = x as IStoreProcedureParametersSetCacheAutoRefreshable;
-                                        if (rr != null)
-                                        {
-                                            rr.CachedExecutingParametersExpiredInSeconds
-                                                = CachedExecutingParametersExpiredInSeconds;
-                                            rr.NeedAutoRefreshExecutedTimeForSlideExpire
-                                                = NeedAutoRefreshExecutedTimeForSlideExpire;
-                                        }
-                                        return
-                                            x;
 
-                                    }
-                                    , StringComparer.OrdinalIgnoreCase
-                                );
+
+                            //if (Directory.Exists(DynamicLoadExecutorsPath))
+                            //{
+                            //    var r = CompositionHelper
+                            //                .ImportManyExportsComposeParts<IStoreProcedureExecutable>
+                            //                    (
+                            //                        DynamicLoadExecutorsPath
+                            //                    );
+
+                            //    _executors = r.ToDictionary
+                            //        (
+                            //            (x) =>
+                            //            {
+                            //                return
+                            //                    x.DataBaseType;
+                            //            }
+                            //            ,
+                            //            (x) =>
+                            //            {
+                            //                IStoreProcedureParametersSetCacheAutoRefreshable
+                            //                    rr = x as IStoreProcedureParametersSetCacheAutoRefreshable;
+                            //                if (rr != null)
+                            //                {
+                            //                    rr.CachedExecutingParametersExpiredInSeconds
+                            //                        = CachedExecutingParametersExpiredInSeconds;
+                            //                    rr.NeedAutoRefreshExecutedTimeForSlideExpire
+                            //                        = NeedAutoRefreshExecutedTimeForSlideExpire;
+                            //                }
+                            //                return
+                            //                    x;
+
+                            //            }
+                            //            , StringComparer.OrdinalIgnoreCase
+                            //        );
+                            //}
                         }
+
                     }
+                    
                 }
             }
         }
@@ -199,6 +253,7 @@ namespace Microshaoft.WebApi.Controllers
                         (
                             connectionInfo
                             , storeProcedureName
+                            , Request.Method
                             , parameters
                             , out result
                         );

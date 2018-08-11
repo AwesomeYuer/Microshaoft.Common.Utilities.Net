@@ -13,6 +13,7 @@
   <Import Project="..\..\..\CommonUtilities.Shared\CommonUtilities.Lite.Shared.projitems" Label="Shared" />
 
   <ItemGroup>
+    <PackageReference Include="MySql.Data" Version="8.0.12" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.5.1" />

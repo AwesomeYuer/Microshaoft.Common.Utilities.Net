@@ -23,7 +23,8 @@
         AbstractStoreProcedureExecutorControllerBase 
             //: IStoreProcedureParametersSetCacheAutoRefreshable
     {
-        protected abstract string DynamicLoadExecutorsPath
+        private static IDictionary<string, IStoreProcedureExecutable> _executors;
+        protected abstract string[] DynamicLoadExecutorsPaths
         {
             get;
             //set;
@@ -79,6 +80,7 @@
                     (
                         DataBaseConnectionInfo connectionInfo
                         , string storeProcedureName
+                        , string httpMethod
                         , JToken parameters
                         , out JToken result
                     )
@@ -90,7 +92,12 @@
             {
                 if (whiteList.Count > 0)
                 {
-                    r = CheckList(whiteList, storeProcedureName, Request.Method);
+                    r = CheckList
+                            (
+                                whiteList
+                                , storeProcedureName
+                                , httpMethod
+                            );
                 }
             }
             else

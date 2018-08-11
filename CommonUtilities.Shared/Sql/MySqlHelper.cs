@@ -1,4 +1,5 @@
-﻿namespace Microshaoft
+﻿#if !XAMARIN
+namespace Microshaoft
 {
     using MySql.Data.MySqlClient;
     using Newtonsoft.Json.Linq;
@@ -47,24 +48,15 @@
                 {
                     var direction = sqlParameter
                                         .Direction;
-                    //if 
-                    //    (
-                    //        direction == ParameterDirection.Input
-                    //        ||
-                    //        direction == ParameterDirection.InputOutput
-                    //    )
-                    //{
-                    var r = sqlParameter.ShallowClone();
-                    r.Value = (object)jProperty.Value;
+                    var cloneMySqlParameter = sqlParameter.ShallowClone();
+                    cloneMySqlParameter.Value = (object)jProperty.Value;
                     if (result == null)
                     {
                         result = new List<MySqlParameter>();
                     }
-                    result.Add(r);
-                    //}
+                    result.Add(cloneMySqlParameter);
                 }
             }
-
             foreach (var kvp in dbParameters)
             {
                 var sqlParameter = kvp.Value;
@@ -72,7 +64,6 @@
                 {
                     result = new List<MySqlParameter>();
                 }
-
                 if
                     (
                         !result
@@ -104,21 +95,25 @@
                         {
                             result = new List<MySqlParameter>();
                         }
-                        result.Add(sqlParameter.ShallowClone());
+                        var cloneMySqlParameter = sqlParameter.ShallowClone();
+                        //if (direction == ParameterDirection.InputOutput)
+                        //{
+                        //    cloneMySqlParameter.Direction = ParameterDirection.Output;
+                        //}
+                        result.Add(cloneMySqlParameter);
                     }
                 }
             }
-
             return result;
         }
-        public static JValue GetJValue(this MySqlParameter target)
+        public static JValue GetJValue(MySqlParameter target)
         {
             JValue r = null;
             if
                 (
                     target.MySqlDbType == MySqlDbType.VarChar
-                    ||
-                    target.MySqlDbType == MySqlDbType.VarString
+                    //||
+                    //target.MySqlDbType == MySqlDbType.NVarChar
                     //||
                     //target.MySqlDbType == MySqlDbType.Char
                     //||
@@ -127,6 +122,8 @@
                     target.MySqlDbType == MySqlDbType.Text
                     //||
                     //target.MySqlDbType == MySqlDbType.NText
+                    ||
+                    target.MySqlDbType == MySqlDbType.VarString
                 )
             {
                 r = new JValue((string)target.Value);
@@ -140,6 +137,8 @@
                     //target.MySqlDbType == MySqlDbType.SmallDateTime
                     ||
                     target.MySqlDbType == MySqlDbType.Date
+                    ||
+                    target.MySqlDbType == MySqlDbType.DateTime
                 )
             {
                 r = new JValue((DateTime)target.Value);
@@ -188,13 +187,21 @@
             }
             else if
                 (
-                    target.MySqlDbType == MySqlDbType.Int64
+                    target.MySqlDbType == MySqlDbType.UInt16
                     ||
-                    target.MySqlDbType == MySqlDbType.Int32
+                    target.MySqlDbType == MySqlDbType.UInt24
+                    ||
+                    target.MySqlDbType == MySqlDbType.UInt32
+                    ||
+                    target.MySqlDbType == MySqlDbType.UInt64
+                    ||
+                    target.MySqlDbType == MySqlDbType.Int16
                     ||
                     target.MySqlDbType == MySqlDbType.Int24
                     ||
-                    target.MySqlDbType == MySqlDbType.Int16
+                    target.MySqlDbType == MySqlDbType.Int32
+                    ||
+                    target.MySqlDbType == MySqlDbType.Int64
                 )
             {
                 r = new JValue((long)target.Value);
@@ -312,7 +319,7 @@
                                             return
                                                 xx
                                                     .ParameterName
-                                                    .TrimStart('@');
+                                                    .TrimStart('@','?');
                                         }
                                         , StringComparer
                                                 .OrdinalIgnoreCase
@@ -327,7 +334,7 @@
                 return _executingInfo;
             }
 
-            SqlConnection connection = new SqlConnection(connectionString);
+            MySqlConnection connection = new MySqlConnection(connectionString);
             var key = $"{connection.DataSource}-{connection.Database}-{storeProcedureName}".ToUpper();
             var add = false;
             var executingInfo
@@ -386,13 +393,25 @@
                 //int groupNumber = 0;
                 string procedureSchema = string.Empty;
                 string parameterName = string.Empty;
+                var commandText = @"
+                    SELECT
+                        * 
+                    FROM
+                        information_schema.parameters a 
+                    WHERE
+                        a.SPECIFIC_NAME = @procedure_name
+                    ";
+                //commandText = "sp_procedure_params_rowset";
 
 
 
-                using (MySqlCommand command = new MySqlCommand("sp_procedure_params_rowset", connection))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-                    MySqlParameter sqlParameterProcedure_Name = command.Parameters.Add("@procedure_name", MySqlDbType.NVarChar, 128);
+                //using
+                //    (
+                MySqlCommand command = new MySqlCommand(commandText, connection);
+                //    )
+                //{
+                    //command.CommandType = CommandType.StoredProcedure;
+                    MySqlParameter sqlParameterProcedure_Name = command.Parameters.Add("@procedure_name", MySqlDbType.VarChar, 128);
                     sqlParameterProcedure_Name.Value = (storeProcedureName != null ? (object)storeProcedureName : DBNull.Value);
                     //MySqlParameter sqlParameterGroup_Number = command.Parameters.Add("@group_number", MySqlDbType.Int);
                     //sqlParameterGroup_Number.Value = groupNumber;
@@ -400,13 +419,14 @@
                     //sqlParameterProcedure_Schema.Value = (procedureSchema != null ? (object)procedureSchema : DBNull.Value);
                     //MySqlParameter sqlParameterParameter_Name = command.Parameters.Add("@parameter_name", MySqlDbType.NVarChar, 128);
                     //sqlParameterParameter_Name.Value = (parameterName != null ? (object)parameterName : DBNull.Value);
-                    MySqlParameter sqlParameterReturn = command.Parameters.Add("@RETURN_VALUE", MySqlDbType.Int);
+                    MySqlParameter sqlParameterReturn = command.Parameters.Add("@RETURN_VALUE", MySqlDbType.Int32);
                     sqlParameterReturn.Direction = ParameterDirection.ReturnValue;
                     connection.Open();
-                    var sqlDataReader = command
+                    IDataReader sqlDataReader = command
                                             .ExecuteReader
                                                 (
-                                                    CommandBehavior.CloseConnection
+                                                CommandBehavior.CloseConnection
+                                                //CommandBehavior.CloseConnection
                                                 );
                     var sqlParameters
                             = sqlDataReader
@@ -416,8 +436,9 @@
                                             {
                                                 var sqlParameter = new MySqlParameter();
                                                 sqlParameter
-                                                    .ParameterName = (string)(reader["PARAMETER_NAME"]);
-                                                var sqlDbTypeName = (string)(reader["TYPE_NAME"]);
+                                                    .ParameterName = "@" + (string)(reader["PARAMETER_NAME"]);
+                                                var sqlDbTypeName = //(string)(reader["TYPE_NAME"]);
+                                                                    (string)(reader["DATA_TYPE"]);
                                                 MySqlDbType sqlDbType = (MySqlDbType)Enum.Parse(typeof(MySqlDbType), sqlDbTypeName, true);
                                                 sqlParameter
                                                     .MySqlDbType = sqlDbType;
@@ -435,11 +456,17 @@
                                                         .Direction = GetParameterDirection
                                                                         (
                                                                             reader
-                                                                                .GetInt16
+                                                                                .GetString
                                                                                     (
                                                                                         reader
-                                                                                            .GetOrdinal("PARAMETER_TYPE")
+                                                                                            .GetOrdinal("PARAMETER_MODE")
                                                                                     )
+                                                                        //reader
+                                                                        //    .GetInt16
+                                                                        //        (
+                                                                        //            reader
+                                                                        //                .GetOrdinal("PARAMETER_TYPE")
+                                                                        //        )
                                                                         );
                                                 if ((sqlParameter.MySqlDbType == MySqlDbType.Decimal))
                                                 {
@@ -450,7 +477,7 @@
                                             }
                                         );
                     return sqlParameters;
-                }
+                //}
             }
             finally
             {
@@ -458,7 +485,27 @@
                 //connection = null;
             }
         }
-
+        private static ParameterDirection GetParameterDirection(string parameterMode)
+        {
+            ParameterDirection pd;
+            if (string.Compare(parameterMode, "IN", true) == 0)
+            {
+                pd = ParameterDirection.Input;
+            }
+            else if (string.Compare(parameterMode, "INOUT", true) == 0)
+            {
+                pd = ParameterDirection.InputOutput;
+            }
+            else if (string.Compare(parameterMode, "RETURN", true) == 0)
+            {
+                pd = ParameterDirection.ReturnValue;
+            }
+            else
+            {
+                pd = ParameterDirection.Output;
+            }
+            return pd;
+        }
         /// <summary>
         /// Converts the OleDb parameter direction
         /// </summary>
@@ -489,7 +536,7 @@
 
         public static JObject StoreProcedureExecute
                                (
-                                   DbConnection connection
+                                   MySqlConnection connection
                                    , string storeProcedureName
                                    , string p = null //string.Empty
                                    , int commandTimeout = 90
@@ -508,7 +555,7 @@
 
         public static JObject StoreProcedureExecute
                                 (
-                                    DbConnection connection
+                                    MySqlConnection connection
                                     , string storeProcedureName
                                     , JToken inputsParameters = null //string.Empty
                                     , int commandTimeout = 90
@@ -518,22 +565,23 @@
             var dataBaseName = connection.Database;
             try
             {
-                using
-                    (
-                        DbCommand command = new SqlCommand
-                                                    (
-                                                        storeProcedureName
-                                                        , (SqlConnection)connection
-                                                    )
-                        {
-                            CommandType = CommandType.StoredProcedure
-                            ,
-                            CommandTimeout = commandTimeout
-                        }
-                    )
+                //using
+                //    (
+                DbCommand command = new MySqlCommand
+                                            (
+                                                storeProcedureName
+                                                , connection
+                                            )
                 {
+                    CommandType = CommandType.StoredProcedure
+                    ,
+                    CommandTimeout = commandTimeout
+                };
+                    //)
+                //{
 
-                    var sqlParameters = GenerateExecuteMySqlParameters
+                    var sqlParameters = MySqlHelper
+                                            .GenerateExecuteMySqlParameters
                                                     (
                                                         connection.ConnectionString
                                                         , storeProcedureName
@@ -637,7 +685,7 @@
                             jOutputParameters
                                 .Add
                                     (
-                                        x.ParameterName.TrimStart('@')
+                                        x.ParameterName.TrimStart('@','?')
                                         , new JValue(x.Value)
                                     );
                         }
@@ -647,7 +695,7 @@
                         result["Outputs"]["Parameters"] = jOutputParameters;
                     }
                     return result;
-                }
+                //}
             }
             finally
             {
@@ -660,3 +708,4 @@
         }
     }
 }
+#endif
