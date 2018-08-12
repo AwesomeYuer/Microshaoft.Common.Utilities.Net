@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Composition;
-using System.Data.Common;
-using System.Data.SqlClient;
-using System.Text;
-using Microshaoft;
-using Newtonsoft.Json.Linq;
-
-namespace Microshaoft.StoreProcedureExecutors
+﻿namespace Microshaoft.StoreProcedureExecutors
 {
+    using Microshaoft;
+    using Newtonsoft.Json.Linq;
+    using System.Composition;
+    using System.Data.SqlClient;
     [Export(typeof(IStoreProcedureExecutable))]
     public class MsSQLStoreProcedureExecutor
                         : IStoreProcedureExecutable
@@ -38,19 +33,19 @@ namespace Microshaoft.StoreProcedureExecutors
                 (
                     CachedExecutingParametersExpiredInSeconds > 0
                     &&
-                    SqlHelper
+                    MsSqlHelper
                         .CachedExecutingParametersExpiredInSeconds
                     !=
                     CachedExecutingParametersExpiredInSeconds
                 )
             {
-                SqlHelper
+                MsSqlHelper
                         .CachedExecutingParametersExpiredInSeconds
                             = CachedExecutingParametersExpiredInSeconds;
             }
             result = null;
-            DbConnection connection = new SqlConnection(connectionString);
-            result = SqlHelper
+            SqlConnection connection = new SqlConnection(connectionString);
+            result = MsSqlHelper
                             .StoreProcedureExecute
                                     (
                                         connection
@@ -62,7 +57,7 @@ namespace Microshaoft.StoreProcedureExecutors
 
             if (NeedAutoRefreshExecutedTimeForSlideExpire)
             {
-                SqlHelper
+                MsSqlHelper
                     .RefreshCachedStoreProcedureExecuted
                         (
                             connection

@@ -156,9 +156,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Socket\SocketAsyncDataHandler.UDP.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Socket\SocketAsyncEventArgsPool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Socket\SocketHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sql\Microshaoft.00.SqlHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\Microsoft.SqlHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Sql\Microshaoft.SqlHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Sql\MySqlHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sql\Microshaoft.01.MsSqlHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sql\Microshaoft.02.MySqlHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System.Buffers.ArrayPool\ArrayPool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Throttler\RateLimiters\FixedTokenBucket.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Throttler\RateLimiters\IThrottleStrategy.cs" />
