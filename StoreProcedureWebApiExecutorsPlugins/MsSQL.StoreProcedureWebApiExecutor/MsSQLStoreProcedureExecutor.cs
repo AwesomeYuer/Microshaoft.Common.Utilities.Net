@@ -38,19 +38,19 @@ namespace Microshaoft.StoreProcedureExecutors
                 (
                     CachedExecutingParametersExpiredInSeconds > 0
                     &&
-                    SqlHelper
+                    MsSqlHelper
                         .CachedExecutingParametersExpiredInSeconds
                     !=
                     CachedExecutingParametersExpiredInSeconds
                 )
             {
-                SqlHelper
+                MsSqlHelper
                         .CachedExecutingParametersExpiredInSeconds
                             = CachedExecutingParametersExpiredInSeconds;
             }
             result = null;
-            DbConnection connection = new SqlConnection(connectionString);
-            result = SqlHelper
+            SqlConnection connection = new SqlConnection(connectionString);
+            result = MsSqlHelper
                             .StoreProcedureExecute
                                     (
                                         connection
@@ -62,7 +62,7 @@ namespace Microshaoft.StoreProcedureExecutors
 
             if (NeedAutoRefreshExecutedTimeForSlideExpire)
             {
-                SqlHelper
+                MsSqlHelper
                     .RefreshCachedStoreProcedureExecuted
                         (
                             connection
