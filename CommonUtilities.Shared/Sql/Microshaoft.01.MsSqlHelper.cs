@@ -2,12 +2,9 @@
 {
     using Newtonsoft.Json.Linq;
     using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Data;
-    using System.Data.Common;
     using System.Data.SqlClient;
-    using System.Linq;
     public static class MsSqlHelper
     {
         public static int CachedExecutingParametersExpiredInSeconds
@@ -189,7 +186,7 @@
 
         }
 
-        public static List<SqlParameter> GenerateExecuteSqlParameters
+        public static List<SqlParameter> GenerateExecuteParameters
                                 (
                                     string connectionString
                                     , string storeProcedureName
@@ -209,172 +206,9 @@
                                     , onQueryDefinitionsReadOneDbParameterProcessFunc
                                     , onExecutingSetDbParameterTypeProcessFunc
                                     , onExecutingSetDbParameterValueProcessFunc
-                                )
-                        .Select
-                            (
-                                (x) =>
-                                {
-                                    return
-                                        (SqlParameter)x;
-                                }
-                            )
-                        .ToList();
+                                );
             return result;
         }
-        private static JValue GetJValue(this SqlParameter target)
-        {
-            JValue processFunc(SqlParameter parameter)
-            {
-                JValue rr = null;
-                if
-                    (
-                       parameter.SqlDbType == SqlDbType.VarChar
-                       ||
-                       parameter.SqlDbType == SqlDbType.NVarChar
-                       ||
-                       parameter.SqlDbType == SqlDbType.Char
-                       ||
-                       parameter.SqlDbType == SqlDbType.NChar
-                       ||
-                       parameter.SqlDbType == SqlDbType.Text
-                       ||
-                       parameter.SqlDbType == SqlDbType.NText
-                    )
-                {
-                    rr = new JValue((string)parameter.Value);
-                }
-                else if
-                    (
-                        parameter.SqlDbType == SqlDbType.DateTime
-                        ||
-                        parameter.SqlDbType == SqlDbType.DateTime2
-                        ||
-                        parameter.SqlDbType == SqlDbType.SmallDateTime
-                        ||
-                        parameter.SqlDbType == SqlDbType.Date
-                        ||
-                        parameter.SqlDbType == SqlDbType.DateTime
-                    )
-                {
-                    rr = new JValue((DateTime)parameter.Value);
-                }
-                else if
-                    (
-                        parameter.SqlDbType == SqlDbType.DateTimeOffset
-                    )
-                {
-                    rr = new JValue((DateTimeOffset)parameter.Value);
-                }
-                else if
-                    (
-                        parameter.SqlDbType == SqlDbType.Bit
-                    )
-                {
-                    rr = new JValue((bool)parameter.Value);
-                }
-                else if
-                    (
-                        parameter.SqlDbType == SqlDbType.Decimal
-                    )
-                {
-                    rr = new JValue((decimal)parameter.Value);
-                }
-                else if
-                    (
-                        parameter.SqlDbType == SqlDbType.Float
-                    )
-                {
-                    rr = new JValue((float)parameter.Value);
-                }
-                else if
-                    (
-                        parameter.SqlDbType == SqlDbType.Real
-                    )
-                {
-                    rr = new JValue((double)parameter.Value);
-                }
-                else if
-                    (
-                        parameter.SqlDbType == SqlDbType.UniqueIdentifier
-                    )
-                {
-                    rr = new JValue((Guid)parameter.Value);
-                }
-                else if
-                    (
-                        parameter.SqlDbType == SqlDbType.BigInt
-                        ||
-                        parameter.SqlDbType == SqlDbType.Int
-                        ||
-                        parameter.SqlDbType == SqlDbType.SmallInt
-                        ||
-                        parameter.SqlDbType == SqlDbType.TinyInt
-                    )
-                {
-                    rr = new JValue((long)parameter.Value);
-                }
-                return rr;
-            }
-            JValue r = null;
-            r = SqlHelper
-                    .GetJValue<SqlParameter>
-                        (
-                            target
-                            , processFunc
-                        );
-            return r;
-        }
-        
-        private static
-                IDictionary<string,DbParameter>
-                        GetCachedStoreProcedureParameters
-                                        (
-                                            string connectionString
-                                            , string storeProcedureName
-                                            , bool includeReturnValueParameter = false
-                                            //, int cacheExpireInSeconds = 0
-                                        )
-        {
-            var r =
-                    SqlHelper
-                        .GetCachedStoreProcedureParameters
-                            <SqlConnection, SqlCommand, SqlParameter>
-                                (
-                                    connectionString
-                                    , storeProcedureName
-                                    , onQueryDefinitionsSetInputParameterProcessFunc
-                                    , onQueryDefinitionsSetReturnParameterProcessFunc
-                                    , onQueryDefinitionsReadOneDbParameterProcessFunc
-                                    , includeReturnValueParameter
-                                );
-            return r;
-        }
-
-        private static 
-                IEnumerable<DbParameter> 
-                        GetStoreProcedureParameters
-                                        (
-                                            string connectionString
-                                            , string storeProcedureName
-                                            , bool includeReturnValueParameter = false
-                                        )
-        {
-            var r =
-                    SqlHelper
-                        .GetStoreProcedureParameters
-                            <SqlConnection, SqlCommand, SqlParameter>
-                            (
-                                connectionString
-                                , storeProcedureName
-                                , onQueryDefinitionsSetInputParameterProcessFunc
-                                , onQueryDefinitionsSetReturnParameterProcessFunc
-                                , onQueryDefinitionsReadOneDbParameterProcessFunc
-                                , includeReturnValueParameter
-
-                            );
-            return r;
-        }
-       
         public static JToken StoreProcedureExecute
                                (
                                    SqlConnection connection

@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Composition;
-using System.Data.Common;
-using System.Data.SqlClient;
-using System.Text;
-using Microshaoft;
-using MySql.Data.MySqlClient;
-using Newtonsoft.Json.Linq;
-
-namespace Microshaoft.StoreProcedureExecutors
+﻿namespace Microshaoft.StoreProcedureExecutors
 {
+    using Microshaoft;
+    using MySql.Data.MySqlClient;
+    using Newtonsoft.Json.Linq;
+    using System.Composition;
     [Export(typeof(IStoreProcedureExecutable))]
     public class MySQLStoreProcedureExecutor
                         : IStoreProcedureExecutable
@@ -39,19 +33,19 @@ namespace Microshaoft.StoreProcedureExecutors
                 (
                     CachedExecutingParametersExpiredInSeconds > 0
                     &&
-                    MySqlHelper
+                    Microshaoft.MySqlHelper
                         .CachedExecutingParametersExpiredInSeconds
                     !=
                     CachedExecutingParametersExpiredInSeconds
                 )
             {
-                MySqlHelper
+                Microshaoft.MySqlHelper
                         .CachedExecutingParametersExpiredInSeconds
                             = CachedExecutingParametersExpiredInSeconds;
             }
             result = null;
             MySqlConnection connection = new MySqlConnection(connectionString);
-            result = MySqlHelper
+            result = Microshaoft.MySqlHelper
                             .StoreProcedureExecute
                                     (
                                         connection
@@ -63,7 +57,7 @@ namespace Microshaoft.StoreProcedureExecutors
 
             if (NeedAutoRefreshExecutedTimeForSlideExpire)
             {
-                MySqlHelper
+                Microshaoft.MySqlHelper
                     .RefreshCachedStoreProcedureExecuted
                         (
                             connection

@@ -369,55 +369,66 @@
                     WHERE
                         a.SPECIFIC_NAME = @procedure_name
                     ";
-                using
-                    (
-                        DbCommand command = new TDbCommand()
-                        {
-                            CommandText = commandText
-                            ,CommandType = CommandType.Text
-                            ,Connection = connection
-                        }
-                    )
+                //MySQL 不支持 using command
+                //using
+                //    (
+                DbCommand command = new TDbCommand()
+                {
+                    CommandText = commandText
+                    ,
+                    CommandType = CommandType.Text
+                    ,
+                    Connection = connection
+                };
+                    //)
                 {
                     //command.CommandType = CommandType.StoredProcedure;
                     TDbParameter dbParameterProcedure_Name = new TDbParameter();
                     dbParameterProcedure_Name.ParameterName = "@procedure_name";
                     dbParameterProcedure_Name.Direction = ParameterDirection.Input;
                     dbParameterProcedure_Name.Size = 128;
-                    dbParameterProcedure_Name.Value = (storeProcedureName != null ? (object)storeProcedureName : DBNull.Value);
+                    dbParameterProcedure_Name
+                            .Value = 
+                                    (
+                                        storeProcedureName != null 
+                                        ?
+                                        (object)storeProcedureName
+                                        :
+                                        DBNull.Value
+                                    );
 
-                    dbParameterProcedure_Name = onQueryDefinitionsSetInputParameterProcessFunc(dbParameterProcedure_Name);
-                    //
-                    //dbParameterProcedure_Name.DbType = DbType.String;
-                    //
-                    
-                    //
+                    dbParameterProcedure_Name 
+                            = onQueryDefinitionsSetInputParameterProcessFunc
+                                    (
+                                        dbParameterProcedure_Name
+                                    );
                     command.Parameters.Add(dbParameterProcedure_Name);
-
-
                     TDbParameter dbParameterReturn = new TDbParameter();
                     dbParameterReturn.ParameterName = "@RETURN_VALUE";
                     dbParameterReturn.Direction = ParameterDirection.ReturnValue;
-                    //dbParameterReturn.DbType = DbType.Int32;
-                    //
-                    dbParameterReturn = onQueryDefinitionsSetReturnParameterProcessFunc(dbParameterReturn);
-
+                    dbParameterReturn 
+                        = onQueryDefinitionsSetReturnParameterProcessFunc
+                                (
+                                    dbParameterReturn
+                                );
                     connection.Open();
-                    var dataReader = command
-                                        .ExecuteReader
-                                            (
-                                                CommandBehavior.CloseConnection
-                                            );
+                    var dataReader
+                            = command
+                                    .ExecuteReader
+                                        (
+                                            CommandBehavior
+                                                .CloseConnection
+                                        );
                     var dbParameters
                             = dataReader
                                     .ExecuteRead
                                         (
                                             (x, reader) =>
                                             {
-
                                                 var dbParameter = new TDbParameter();
                                                 dbParameter
-                                                    .ParameterName = (string)(reader["PARAMETER_NAME"]);
+                                                    .ParameterName 
+                                                        = (string)(reader["PARAMETER_NAME"]);
                                                 if (reader["CHARACTER_MAXIMUM_LENGTH"] != DBNull.Value)
                                                 {
                                                     dbParameter
@@ -425,35 +436,29 @@
                                                                     .GetInt32
                                                                         (
                                                                             reader
-                                                                                .GetOrdinal("CHARACTER_MAXIMUM_LENGTH")
+                                                                                .GetOrdinal
+                                                                                    ("CHARACTER_MAXIMUM_LENGTH")
                                                                         );
                                                 }
                                                 dbParameter
-                                                        .Direction = GetParameterDirection
+                                                    .Direction
+                                                        = GetParameterDirection
+                                                            (
+                                                                reader
+                                                                    .GetString
                                                                         (
                                                                             reader
-                                                                                .GetString
-                                                                                    (
-                                                                                        reader
-                                                                                            .GetOrdinal("PARAMETER_MODE")
-                                                                                    )
-                                                                        );
-                                                return
+                                                                                .GetOrdinal
+                                                                                    ("PARAMETER_MODE")
+                                                                        )
+                                                            );
+                                                var r =
                                                     onQueryDefinitionsReadOneDbParameterProcessFunc
                                                         (
                                                             reader
                                                             , dbParameter
                                                         );
-                                                //var dbTypeName = //(string)(reader["TYPE_NAME"]);
-                                                //                    (string)(reader["DATA_TYPE"]);
-                                                //DbType dbType = (DbType) Enum.Parse(typeof(SqlDbType), sqlDbTypeName, true);
-                                                //DbParameter
-                                                //    .SqlDbType = sqlDbType;
-                                                //if ((DbParameter.SqlDbType == SqlDbType.Decimal))
-                                                //{
-                                                //    DbParameter.Scale = (byte)(((short)(reader["NUMERIC_SCALE"]) & 255));
-                                                //    DbParameter.Precision = (byte)(((short)(reader["NUMERIC_PRECISION"]) & 255));
-                                                //}
+                                                return r;
                                             }
                                         );
                     return dbParameters;
