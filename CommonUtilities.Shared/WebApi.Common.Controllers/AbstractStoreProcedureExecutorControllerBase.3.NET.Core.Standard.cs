@@ -91,7 +91,7 @@ namespace Microshaoft.WebApi.Controllers
                                                     return
                                                         r;
                                                 }
-                                            ).ToArray();
+                                            );
                             _executors = q
                                         .ToDictionary
                                             (
