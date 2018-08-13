@@ -238,6 +238,7 @@ namespace Microshaoft.WebApi.Controllers
                             )
         {
             //string dataBaseType = "mssql";
+            var beginTime = DateTime.Now;
             JToken result = null;
             var r = false;
             DataBaseConnectionInfo connectionInfo = null;
@@ -262,7 +263,10 @@ namespace Microshaoft.WebApi.Controllers
             {
                 return StatusCode(403);
             }
-            result["TimeStamp"] = DateTime.Now;
+            result["BeginTime"] = beginTime;
+            var endTime = DateTime.Now;
+            result["EndTime"] = endTime;
+            result["DurationInMilliseconds"] = DateTimeHelper.MillisecondsDiff(beginTime, endTime);
             result = result
                         .GetDescendantByPath
                             (

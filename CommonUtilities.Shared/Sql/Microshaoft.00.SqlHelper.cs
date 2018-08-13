@@ -628,7 +628,17 @@
                     var result = new JObject
                     {
                         {
-                            "TimeStamp"
+                            "BeginTime"
+                            , null
+                        }
+                        ,
+                        {
+                            "EndTime"
+                            , null
+                        }
+                        ,
+                        {
+                            "DurationInMilliseconds"
                             , null
                         }
                         ,

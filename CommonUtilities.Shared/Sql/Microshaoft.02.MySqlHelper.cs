@@ -85,7 +85,7 @@ namespace Microshaoft
                     )
         {
             object r = null;
-            var parameterValueText = jValue.ToString();
+            var jValueText = jValue.ToString();
 
             if
                 (
@@ -104,7 +104,7 @@ namespace Microshaoft
                     parameter.MySqlDbType == MySqlDbType.VarString
                 )
             {
-                r = parameterValueText;
+                r = jValueText;
             }
             else if
                 (
@@ -119,7 +119,7 @@ namespace Microshaoft
                     parameter.MySqlDbType == MySqlDbType.DateTime
                 )
             {
-                r = DateTime.Parse(parameterValueText);
+                r = DateTime.Parse(jValueText);
             }
             //else if
             //    (
@@ -133,21 +133,21 @@ namespace Microshaoft
                     parameter.MySqlDbType == MySqlDbType.Bit
                 )
             {
-                r = bool.Parse(parameterValueText);
+                r = bool.Parse(jValueText);
             }
             else if
                 (
                     parameter.MySqlDbType == MySqlDbType.Decimal
                 )
             {
-                r = new JValue((decimal)parameter.Value);
+                r = decimal.Parse(jValueText);
             }
             else if
                 (
                     parameter.MySqlDbType == MySqlDbType.Float
                 )
             {
-                r = new JValue((float)parameter.Value);
+                r = float.Parse(jValueText);
             }
             //else if
             //    (
@@ -161,14 +161,14 @@ namespace Microshaoft
                     parameter.MySqlDbType == MySqlDbType.Guid
                 )
             {
-                r = Guid.Parse(parameterValueText);
+                r = Guid.Parse(jValueText);
             }
             else if
                 (
                     parameter.MySqlDbType == MySqlDbType.UInt16
                 )
             {
-                r = ushort.Parse(parameterValueText);
+                r = ushort.Parse(jValueText);
             }
             else if
                 (
@@ -177,21 +177,21 @@ namespace Microshaoft
                     parameter.MySqlDbType == MySqlDbType.UInt32
                 )
             {
-                r = uint.Parse(parameterValueText);
+                r = uint.Parse(jValueText);
             }
             else if
                 (
                     parameter.MySqlDbType == MySqlDbType.UInt64
                 )
             {
-                r = ulong.Parse(parameterValueText);
+                r = ulong.Parse(jValueText);
             }
             else if
                (
                    parameter.MySqlDbType == MySqlDbType.Int16
                )
             {
-                r = short.Parse(parameterValueText);
+                r = short.Parse(jValueText);
             }
             else if
                (
@@ -200,7 +200,7 @@ namespace Microshaoft
                     parameter.MySqlDbType == MySqlDbType.Int32
                )
             {
-                r = int.Parse(parameterValueText);
+                r = int.Parse(jValueText);
 
             }
             else if
@@ -208,7 +208,7 @@ namespace Microshaoft
                     parameter.MySqlDbType == MySqlDbType.Int64
                )
             {
-                r = long.Parse(parameterValueText);
+                r = long.Parse(jValueText);
             }
             return r;
 
