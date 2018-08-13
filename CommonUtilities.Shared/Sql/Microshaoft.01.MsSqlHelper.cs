@@ -79,7 +79,7 @@
                     )
         {
             object r = null;
-            var parameterValueText = jValue.ToString();
+            var jValueText = jValue.ToString();
             if
                     (
                        parameter.SqlDbType == SqlDbType.VarChar
@@ -95,7 +95,7 @@
                        parameter.SqlDbType == SqlDbType.NText
                     )
             {
-                r = parameterValueText;
+                r = jValueText;
             }
             else if
                 (
@@ -110,77 +110,77 @@
                     parameter.SqlDbType == SqlDbType.DateTime
                 )
             {
-                r = DateTime.Parse(parameterValueText);
+                r = DateTime.Parse(jValueText);
             }
             else if
                 (
                     parameter.SqlDbType == SqlDbType.DateTimeOffset
                 )
             {
-                r = DateTimeOffset.Parse(parameterValueText);
+                r = DateTimeOffset.Parse(jValueText);
             }
             else if
                 (
                     parameter.SqlDbType == SqlDbType.Bit
                 )
             {
-                r = bool.Parse(parameterValueText);
+                r = bool.Parse(jValueText);
             }
             else if
                 (
                     parameter.SqlDbType == SqlDbType.Decimal
                 )
             {
-                r = decimal.Parse(parameterValueText);
+                r = decimal.Parse(jValueText);
             }
             else if
                 (
                     parameter.SqlDbType == SqlDbType.Float
                 )
             {
-                r = float.Parse(parameterValueText);
+                r = float.Parse(jValueText);
             }
             else if
                 (
                     parameter.SqlDbType == SqlDbType.Real
                 )
             {
-                r = double.Parse(parameterValueText);
+                r = double.Parse(jValueText);
             }
             else if
                 (
                     parameter.SqlDbType == SqlDbType.UniqueIdentifier
                 )
             {
-                r = Guid.Parse(parameterValueText);
+                r = Guid.Parse(jValueText);
             }
             else if
                 (
                     parameter.SqlDbType == SqlDbType.BigInt
                 )
             {
-                r = long.Parse(parameterValueText);
+                r = long.Parse(jValueText);
             }
             else if
                 (
                     parameter.SqlDbType == SqlDbType.Int
                 )
             {
-                r = int.Parse(parameterValueText);
+                r = int.Parse(jValueText);
             }
             else if
                 (
                     parameter.SqlDbType == SqlDbType.SmallInt
                 )
             {
-                r = short.Parse(parameterValueText);
+                r = short.Parse(jValueText);
             }
             else if
                 (
                     parameter.SqlDbType == SqlDbType.TinyInt
                 )
             {
-                r = short.Parse(parameterValueText);
+                r = short.Parse(jValueText);
             }
             return r;
 
