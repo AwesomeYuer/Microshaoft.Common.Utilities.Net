@@ -1,4 +1,4 @@
-﻿#if !XAMARIN
+﻿#if !XAMARIN && NETFRAMEWORK4_X
 namespace Microshaoft
 {
     using Newtonsoft.Json.Linq;
