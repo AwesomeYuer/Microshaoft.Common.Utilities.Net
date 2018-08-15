@@ -120,6 +120,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Sql\Microshaoft.00.SqlHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\Microshaoft.01.MsSqlHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\Microshaoft.02.MySqlHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sql\Microshaoft.03.NpgSqlHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\Microsoft.SqlHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System.Buffers.ArrayPool\ArrayPool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Throttler\RateLimiters\FixedTokenBucket.cs" />

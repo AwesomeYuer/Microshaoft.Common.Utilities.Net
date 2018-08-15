@@ -1,47 +1,20 @@
 ﻿#if !NETFRAMEWORK4_X && !NETSTANDARD2_0
-
 namespace Microshaoft.WebApi.Controllers
 {
-    using Microshaoft;
     using Microshaoft.Web;
     using Microshaoft.WebApi.ModelBinders;
     using Microsoft.AspNetCore.Cors;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.Routing;
     using Newtonsoft.Json.Linq;
     using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
-    using System.Linq;
 
     [Route("api/[controller]")]
     [ApiController]
     [EnableCors("SPE")]
     public class StoreProcedureExecutorController
                     : AbstractStoreProcedureExecutorControllerBase
-    //ControllerBase //, IConnectionString
     {
-        //public override IDictionary<string, HttpMethodsFlags> GetExecuteWhiteList()
-        //{
-        //    return
-        //        new
-        //            Dictionary<string, HttpMethodsFlags>
-        //                (StringComparer.OrdinalIgnoreCase)
-        //                    {
-        //                        {
-        //                            "zsp_GetDatesAfter"
-        //                            , HttpMethodsFlags.All
-        //                                //HttpMethodsFlags.Get 
-        //                                //| HttpMethodsFlags.Post
-        //                        }
-        //                    };
-        //}
-        //protected override string
-        //      ConnectionString =>
-        //            @"Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=D:\mssql\MSSQL13.LocalDB\LocalDB\TransportionSecrets\TransportionSecrets.mdf;Data Source=(localdb)\mssqllocaldb;";
-
-        //protected override bool NeedCheckWhiteList => true;
-
         protected override int CachedExecutingParametersExpiredInSeconds => 10;
 
         protected override bool NeedAutoRefreshExecutedTimeForSlideExpire => true;
@@ -55,7 +28,6 @@ namespace Microshaoft.WebApi.Controllers
             };
         protected override IEnumerable<DataBaseConnectionInfo> GetDataBasesConnectionsInfo()
         {
-
             return
                     new List<DataBaseConnectionInfo>()
                     {
@@ -96,10 +68,6 @@ namespace Microshaoft.WebApi.Controllers
                          }
                     };
         }
-
-        //@"d:\netcoreapp2.1x\";
-
-
         //[HttpDelete]
         //[HttpGet]
         //[HttpHead]
