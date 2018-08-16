@@ -5,12 +5,14 @@ namespace Microshaoft.WebApi.Controllers
     using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
     public enum DataBasesType
     {
         MsSQL ,
-        MySQL
+        MySQL ,
+        NpgSQL ,
+        Oracle ,
+        Sqlite
     }
     public class DataBaseConnectionInfo
     {
@@ -25,8 +27,14 @@ namespace Microshaoft.WebApi.Controllers
         AbstractStoreProcedureExecutorControllerBase 
             //: IStoreProcedureParametersSetCacheAutoRefreshable
     {
-        
 
+        protected abstract int CommandTimeoutInSeconds
+        {
+            get;
+            //set;
+        }
+
+ 
 
         private static IDictionary<string, IStoreProcedureExecutable> _executors;
         protected abstract string[] DynamicLoadExecutorsPaths
@@ -50,7 +58,9 @@ namespace Microshaoft.WebApi.Controllers
         private static object _locker = new object();
         private bool CheckList
                 (
-                    IDictionary<string, HttpMethodsFlags> whiteList
+                    IDictionary
+                        <string, HttpMethodsFlags>
+                            whiteList
                     , string storeProcedureName
                     , string httpMethod
                 )
@@ -66,7 +76,6 @@ namespace Microshaoft.WebApi.Controllers
                         );
             if (r)
             {
-                
                 HttpMethodsFlags allowedHttpMethodsFlags;
                 r = whiteList
                         .TryGetValue
@@ -76,7 +85,8 @@ namespace Microshaoft.WebApi.Controllers
                             );
                 if (r)
                 {
-                    r = allowedHttpMethodsFlags.HasFlag(httpMethodsFlag);
+                    r = allowedHttpMethodsFlags
+                            .HasFlag(httpMethodsFlag);
                 }
             }
             return r;
@@ -88,6 +98,7 @@ namespace Microshaoft.WebApi.Controllers
                         , string httpMethod
                         , JToken parameters
                         , out JToken result
+                        , int commandTimeoutInSeconds = 90
                     )
         {
             var r = false;
@@ -112,13 +123,14 @@ namespace Microshaoft.WebApi.Controllers
             if (r)
             {
                 r = Process
-                    (
-                        connectionInfo.ConnectionString
-                        , connectionInfo.DataBaseType.ToString()
-                        , storeProcedureName
-                        , parameters
-                        , out result
-                    );
+                        (
+                            connectionInfo.ConnectionString
+                            , connectionInfo.DataBaseType.ToString()
+                            , storeProcedureName
+                            , parameters
+                            , out result
+                            , commandTimeoutInSeconds
+                        );
             }
             return r;
         }
@@ -129,6 +141,7 @@ namespace Microshaoft.WebApi.Controllers
                             , string storeProcedureName
                             , JToken parameters
                             , out JToken result
+                            , int commandTimeoutInSeconds = 90
                         )
         {
             var r = false;
@@ -151,6 +164,7 @@ namespace Microshaoft.WebApi.Controllers
                                 , storeProcedureName
                                 , parameters
                                 , out result
+                                , commandTimeoutInSeconds
                             );
             }
             return r;
@@ -162,8 +176,8 @@ namespace Microshaoft.WebApi.Controllers
                             , string storeProcedureName
                             , string parameters
                             , out JToken result
+                            , int commandTimeoutInSeconds = 90
                         )
-
         {
             var j = JObject.Parse(parameters);
             var r = Process
@@ -173,6 +187,7 @@ namespace Microshaoft.WebApi.Controllers
                             , storeProcedureName
                             , j
                             , out result
+                            , commandTimeoutInSeconds
                         );
             return r;
         }
@@ -201,16 +216,16 @@ namespace Microshaoft.WebApi.Controllers
                                      }
                                  );
             var resultSet = groups
-                             .Select
-                                 (
-                                     (x) =>
-                                     {
-                                         var r = new JObject();
-                                         r.Merge(x.Key);
-                                         r.Add("Details", new JArray(x));
-                                         return r;
-                                     }
-                                 );
+                                 .Select
+                                     (
+                                         (x) =>
+                                         {
+                                             var r = new JObject();
+                                             r.Merge(x.Key);
+                                             r.Add("Details", new JArray(x));
+                                             return r;
+                                         }
+                                     );
             result
                 .SelectToken(jTokenPath)
                 .Parent[groupFrom] = new JArray(resultSet);

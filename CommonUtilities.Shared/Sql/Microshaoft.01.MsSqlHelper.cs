@@ -47,28 +47,69 @@
                                , SqlParameter parameter
                            )
         {
-            var dbTypeName = (string)(reader["DATA_TYPE"]);
-            SqlDbType dbType = (SqlDbType)Enum.Parse(typeof(SqlDbType), dbTypeName, true);
-            parameter
-                .SqlDbType = dbType;
+            var originalDbTypeName = (string)(reader["DATA_TYPE"]);
+            var dbTypeName = originalDbTypeName;
+            if (string.Compare(dbTypeName, "sql_variant", true) == 0)
+            {
+                dbTypeName = "variant";
+            }
+            else if (string.Compare(dbTypeName, "numeric", true) == 0)
+            {
+                dbTypeName = "decimal";
+            }
+            else if (string.Compare(dbTypeName, "hierarchyid", true) == 0)
+            {
+                dbTypeName = "int";
+            }
+            SqlDbType dbType = SqlDbType.Udt;
+            var r =  Enum
+                        .TryParse
+                            (
+                                dbTypeName
+                                , true
+                                , out dbType
+                            );
+            if (r)
+            {
+                parameter
+                    .SqlDbType = dbType;
+            }
             if ((parameter.SqlDbType == SqlDbType.Decimal))
             {
-                parameter.Scale = (byte)(((short)(reader["NUMERIC_SCALE"]) & 255));
-                parameter.Precision = (byte)(((short)(reader["NUMERIC_PRECISION"]) & 255));
+                parameter
+                    .Scale =
+                        (
+                            (byte)
+                                (
+                                    (
+                                        (short)
+                                            (
+                                                (int)(reader["NUMERIC_SCALE"])
+                                            )
+                                    )
+                                    //& 255
+                                )
+                        );
+                parameter.Precision = ((byte)reader["NUMERIC_PRECISION"]);
+            }
+            else if (parameter.SqlDbType == SqlDbType.Udt)
+            {
+                //, @geometry geometry = null
+                //, @geography geography = null
+                parameter.UdtTypeName = originalDbTypeName;
             }
             return parameter;
         }
         private static SqlParameter
-                       onExecutingSetDbParameterTypeProcessFunc
-                            (
-                                SqlParameter definitionSqlParameter
-                                , SqlParameter cloneSqlParameter
-                            )
+                    onExecutingSetDbParameterTypeProcessFunc
+                        (
+                            SqlParameter definitionSqlParameter
+                            , SqlParameter cloneSqlParameter
+                        )
         {
             cloneSqlParameter.SqlDbType = definitionSqlParameter.SqlDbType;
             return cloneSqlParameter;
         }
-
         private static object
                onExecutingSetDbParameterValueProcessFunc
                     (
@@ -182,7 +223,6 @@
             }
             return r;
         }
-
         public static List<SqlParameter> GenerateExecuteParameters
                                 (
                                     string connectionString
