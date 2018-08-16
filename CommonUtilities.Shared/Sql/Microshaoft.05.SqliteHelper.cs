@@ -6,7 +6,6 @@ namespace Microshaoft
     using System;
     using System.Collections.Generic;
     using System.Data;
-    using System.Data.SqlClient;
     public static class SqliteHelper
     {
         public static int CachedExecutingParametersExpiredInSeconds
@@ -49,11 +48,10 @@ namespace Microshaoft
                                , SqliteParameter parameter
                            )
         {
-            var sqliteTypeName = //(string)(reader["TYPE_NAME"]);
-                    (string)(reader["DATA_TYPE"]);
-            SqliteType sqliteType = (SqliteType)Enum.Parse(typeof(SqliteType), sqliteTypeName, true);
+            var dbTypeName = (string)(reader["DATA_TYPE"]);
+            SqliteType dbType = (SqliteType)Enum.Parse(typeof(SqliteType), dbTypeName, true);
             parameter
-                .SqliteType = sqliteType;
+                .SqliteType = dbType;
             if ((parameter.SqliteType == SqliteType.Real))
             {
                 parameter.Scale = (byte)(((short)(reader["NUMERIC_SCALE"]) & 255));
@@ -68,8 +66,8 @@ namespace Microshaoft
                                 , SqliteParameter cloneSqliteParameter
                             )
         {
-            //to do
-            cloneSqliteParameter.SqliteType = definitionSqliteParameter.SqliteType;
+            cloneSqliteParameter
+                    .SqliteType = definitionSqliteParameter.SqliteType;
             return cloneSqliteParameter;
         }
 
@@ -83,51 +81,12 @@ namespace Microshaoft
             object r = null;
             var jValueText = jValue.ToString();
             if
-                    (
-                       parameter.SqliteType == SqliteType.Text
-                       //||
-                       //parameter.SqliteType == SqliteType.NVarChar
-                       //||
-                       //parameter.SqliteType == SqliteType.Char
-                       //||
-                       //parameter.SqliteType == SqliteType.NChar
-                       //||
-                       //parameter.SqliteType == SqliteType.Text
-                       //||
-                       //parameter.SqliteType == SqliteType.NText
-                    )
+                (
+                    parameter.SqliteType == SqliteType.Text
+                )
             {
                 r = jValueText;
             }
-            //else if
-            //    (
-            //        parameter.SqliteType == SqliteType.DateTime
-            //        ||
-            //        parameter.SqliteType == SqliteType.DateTime2
-            //        ||
-            //        parameter.SqliteType == SqliteType.SmallDateTime
-            //        ||
-            //        parameter.SqliteType == SqliteType.Date
-            //        ||
-            //        parameter.SqliteType == SqliteType.DateTime
-            //    )
-            //{
-            //    r = DateTime.Parse(jValueText);
-            //}
-            //else if
-            //    (
-            //        parameter.SqliteType == SqliteType.DateTimeOffset
-            //    )
-            //{
-            //    r = DateTimeOffset.Parse(jValueText);
-            //}
-            //else if
-            //    (
-            //        parameter.SqliteType == SqliteType.Bit
-            //    )
-            //{
-            //    r = bool.Parse(jValueText);
-            //}
             else if
                 (
                     parameter.SqliteType == SqliteType.Real
@@ -135,13 +94,6 @@ namespace Microshaoft
             {
                 r = decimal.Parse(jValueText);
             }
-            //else if
-            //    (
-            //        parameter.SqliteType == SqliteType.Float
-            //    )
-            //{
-            //    r = float.Parse(jValueText);
-            //}
             else if
                 (
                     parameter.SqliteType == SqliteType.Real
@@ -149,20 +101,6 @@ namespace Microshaoft
             {
                 r = double.Parse(jValueText);
             }
-            //else if
-            //    (
-            //        parameter.SqliteType == SqliteType.UniqueIdentifier
-            //    )
-            //{
-            //    r = Guid.Parse(jValueText);
-            //}
-            //else if
-            //    (
-            //        parameter.SqliteType == SqliteType.BigInt
-            //    )
-            //{
-            //    r = long.Parse(jValueText);
-            //}
             else if
                 (
                     parameter.SqliteType == SqliteType.Integer
@@ -170,24 +108,8 @@ namespace Microshaoft
             {
                 r = int.Parse(jValueText);
             }
-            //else if
-            //    (
-            //        parameter.SqliteType == SqliteType.SmallInt
-            //    )
-            //{
-            //    r = short.Parse(jValueText);
-            //}
-            //else if
-            //    (
-            //        parameter.SqliteType == SqliteType.TinyInt
-            //    )
-            //{
-            //    r = short.Parse(jValueText);
-            //}
             return r;
-
         }
-
         public static List<SqliteParameter> GenerateExecuteParameters
                                 (
                                     string connectionString
@@ -229,7 +151,6 @@ namespace Microshaoft
                             , commandTimeout
                         );
         }
-
         public static JToken StoreProcedureExecute
                                 (
                                     SqliteConnection connection

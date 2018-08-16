@@ -55,15 +55,11 @@
                             );
             return clone;
         }
-
-
-
         public static int CachedExecutingParametersExpiredInSeconds
         {
             get;
             set;
         }
-
         public static List<TDbParameter> 
                     GenerateStoreProcedureExecuteParameters<TDbConnection, TDbCommand, TDbParameter>
                                 (
@@ -184,15 +180,11 @@
             }
             return result;
         }
- 
- 
-       
         private class ExecutingInfo
         {
             public IDictionary<string, DbParameter> DbParameters;
             public DateTime RecentExecutedTime;
         }
-
         private static 
             ConcurrentDictionary<string, ExecutingInfo>
                 _dictionary 

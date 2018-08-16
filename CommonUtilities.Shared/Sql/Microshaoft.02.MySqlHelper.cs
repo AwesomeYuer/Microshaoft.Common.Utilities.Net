@@ -5,12 +5,8 @@ namespace Microshaoft
     using MySql.Data.MySqlClient;
     using Newtonsoft.Json.Linq;
     using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Data;
-    using System.Data.Common;
-    using System.Data.SqlClient;
-    using System.Linq;
     public static class MySqlHelper
     {
         public static int CachedExecutingParametersExpiredInSeconds
@@ -53,11 +49,10 @@ namespace Microshaoft
                                , MySqlParameter parameter
                            )
         {
-            var mySqlDbTypeName = //(string)(reader["TYPE_NAME"]);
-                    (string)(reader["DATA_TYPE"]);
-            MySqlDbType sqlDbType = (MySqlDbType)Enum.Parse(typeof(MySqlDbType), mySqlDbTypeName, true);
+            var dbTypeName = (string)(reader["DATA_TYPE"]);
+            MySqlDbType dbType = (MySqlDbType)Enum.Parse(typeof(MySqlDbType), dbTypeName, true);
             parameter
-                .MySqlDbType = sqlDbType;
+                .MySqlDbType = dbType;
             if ((parameter.MySqlDbType == MySqlDbType.Decimal))
             {
                 parameter.Scale = (byte)(((short)(reader["NUMERIC_SCALE"]) & 255));
@@ -90,16 +85,8 @@ namespace Microshaoft
             if
                 (
                     parameter.MySqlDbType == MySqlDbType.VarChar
-                    //||
-                    //parameter.MySqlDbType == MySqlDbType.NVarChar
-                    //||
-                    //parameter.MySqlDbType == MySqlDbType.Char
-                    //||
-                    //parameter.MySqlDbType == MySqlDbType.NChar
                     ||
                     parameter.MySqlDbType == MySqlDbType.Text
-                    //||
-                    //target.MySqlDbType == MySqlDbType.NText
                     ||
                     parameter.MySqlDbType == MySqlDbType.VarString
                 )
@@ -109,10 +96,6 @@ namespace Microshaoft
             else if
                 (
                     parameter.MySqlDbType == MySqlDbType.DateTime
-                    //||
-                    //parameter.MySqlDbType == MySqlDbType.DateTime2
-                    //||
-                    //parameter.MySqlDbType == MySqlDbType.SmallDateTime
                     ||
                     parameter.MySqlDbType == MySqlDbType.Date
                     ||
@@ -121,13 +104,6 @@ namespace Microshaoft
             {
                 r = DateTime.Parse(jValueText);
             }
-            //else if
-            //    (
-            //        target.MySqlDbType == MySqlDbType.DateTimeOffset
-            //    )
-            //{
-            //    r = new JValue((DateTimeOffset)target.Value);
-            //}
             else if
                 (
                     parameter.MySqlDbType == MySqlDbType.Bit
@@ -149,13 +125,6 @@ namespace Microshaoft
             {
                 r = float.Parse(jValueText);
             }
-            //else if
-            //    (
-            //        target.MySqlDbType == MySqlDbType.Real
-            //    )
-            //{
-            //    r = new JValue((double)target.Value);
-            //}
             else if
                 (
                     parameter.MySqlDbType == MySqlDbType.Guid
@@ -211,7 +180,6 @@ namespace Microshaoft
                 r = long.Parse(jValueText);
             }
             return r;
-
         }
 
         public static List<MySqlParameter> GenerateExecuteParameters

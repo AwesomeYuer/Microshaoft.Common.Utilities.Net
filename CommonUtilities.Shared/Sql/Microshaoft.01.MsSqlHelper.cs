@@ -47,11 +47,10 @@
                                , SqlParameter parameter
                            )
         {
-            var sqlDbTypeName = //(string)(reader["TYPE_NAME"]);
-                    (string)(reader["DATA_TYPE"]);
-            SqlDbType sqlDbType = (SqlDbType)Enum.Parse(typeof(SqlDbType), sqlDbTypeName, true);
+            var dbTypeName = (string)(reader["DATA_TYPE"]);
+            SqlDbType dbType = (SqlDbType)Enum.Parse(typeof(SqlDbType), dbTypeName, true);
             parameter
-                .SqlDbType = sqlDbType;
+                .SqlDbType = dbType;
             if ((parameter.SqlDbType == SqlDbType.Decimal))
             {
                 parameter.Scale = (byte)(((short)(reader["NUMERIC_SCALE"]) & 255));
@@ -66,7 +65,6 @@
                                 , SqlParameter cloneSqlParameter
                             )
         {
-            //to do
             cloneSqlParameter.SqlDbType = definitionSqlParameter.SqlDbType;
             return cloneSqlParameter;
         }
@@ -183,7 +181,6 @@
                 r = short.Parse(jValueText);
             }
             return r;
-
         }
 
         public static List<SqlParameter> GenerateExecuteParameters
