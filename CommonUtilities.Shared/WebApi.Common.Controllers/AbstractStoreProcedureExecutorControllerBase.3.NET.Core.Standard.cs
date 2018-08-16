@@ -16,7 +16,6 @@ namespace Microshaoft.WebApi.Controllers
                     :
                         ControllerBase
     {
-        
         public AbstractStoreProcedureExecutorControllerBase()
         {
             _locker

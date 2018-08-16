@@ -1,9 +1,11 @@
-﻿namespace Microshaoft.WebApi.Controllers
+﻿#if !XAMARIN
+namespace Microshaoft.WebApi.Controllers
 {
     using Microshaoft.Web;
     using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     public enum DataBasesType
     {
@@ -23,6 +25,9 @@
         AbstractStoreProcedureExecutorControllerBase 
             //: IStoreProcedureParametersSetCacheAutoRefreshable
     {
+        
+
+
         private static IDictionary<string, IStoreProcedureExecutable> _executors;
         protected abstract string[] DynamicLoadExecutorsPaths
         {
@@ -212,3 +217,4 @@
         }
     }
 }
+#endif
