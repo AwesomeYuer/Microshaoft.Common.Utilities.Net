@@ -2,13 +2,10 @@
 namespace Microshaoft
 {
     using Newtonsoft.Json.Linq;
+    using Oracle.ManagedDataAccess.Client;
     using System;
     using System.Collections.Generic;
-    //using System.Data;
-    using System.Data.SqlClient;
-    using Oracle.ManagedDataAccess.Client;
     using System.Data;
-
     public static class OracleSqlHelper
     {
         public static int CachedExecutingParametersExpiredInSeconds
@@ -51,11 +48,10 @@ namespace Microshaoft
                                , OracleParameter parameter
                            )
         {
-            var oracleSqlDbTypeName = //(string)(reader["TYPE_NAME"]);
-                    (string)(reader["DATA_TYPE"]);
-            OracleDbType oracleSqlDbType = (OracleDbType)Enum.Parse(typeof(OracleDbType), oracleSqlDbTypeName, true);
+            var dbTypeName = (string)(reader["DATA_TYPE"]);
+            OracleDbType dbType = (OracleDbType)Enum.Parse(typeof(OracleDbType), dbTypeName, true);
             parameter
-                .OracleDbType = oracleSqlDbType;
+                .OracleDbType = dbType;
             if ((parameter.OracleDbType == OracleDbType.Decimal))
             {
                 parameter.Scale = (byte)(((short)(reader["NUMERIC_SCALE"]) & 255));
@@ -70,8 +66,9 @@ namespace Microshaoft
                                 , OracleParameter cloneOracleParameter
                             )
         {
-            //to do
-            cloneOracleParameter.OracleDbType = definitionOracleParameter.OracleDbType;
+            cloneOracleParameter
+                    .OracleDbType = definitionOracleParameter
+                                                    .OracleDbType;
             return cloneOracleParameter;
         }
 
@@ -85,19 +82,15 @@ namespace Microshaoft
             object r = null;
             var jValueText = jValue.ToString();
             if
-                    (
-                       parameter.OracleDbType == OracleDbType.Varchar2
-                       ||
-                       parameter.OracleDbType == OracleDbType.NVarchar2
-                       ||
-                       parameter.OracleDbType == OracleDbType.Char
-                       ||
-                       parameter.OracleDbType == OracleDbType.NChar
-                       //||
-                       //parameter.OracleDbType == OracleDbType.Text
-                       //||
-                       //parameter.OracleDbType == OracleDbType.NText
-                    )
+                (
+                    parameter.OracleDbType == OracleDbType.Varchar2
+                    ||
+                    parameter.OracleDbType == OracleDbType.NVarchar2
+                    ||
+                    parameter.OracleDbType == OracleDbType.Char
+                    ||
+                    parameter.OracleDbType == OracleDbType.NChar
+                )
             {
                 r = jValueText;
             }
@@ -166,9 +159,7 @@ namespace Microshaoft
                 r = short.Parse(jValueText);
             }
             return r;
-
         }
-
         public static List<OracleParameter> GenerateExecuteParameters
                                 (
                                     string connectionString
@@ -210,7 +201,6 @@ namespace Microshaoft
                             , commandTimeout
                         );
         }
-
         public static JToken StoreProcedureExecute
                                 (
                                     OracleConnection connection

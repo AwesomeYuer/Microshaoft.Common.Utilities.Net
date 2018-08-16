@@ -24,6 +24,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\FtpWebRequestResponseHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\GCNotifier.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\KeyedPriorityQueue.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\LockHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\PathFileHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\RemotingHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\SequenceSeedHelper.cs" />

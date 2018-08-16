@@ -1,17 +1,12 @@
 ﻿#if !XAMARIN
 namespace Microshaoft
 {
-    //using MySql.Data.MySqlClient;
     using Newtonsoft.Json.Linq;
     using Npgsql;
     using NpgsqlTypes;
     using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Data;
-    using System.Data.Common;
-    using System.Data.SqlClient;
-    using System.Linq;
     public static class NpgSqlHelper
     {
         public static int CachedExecutingParametersExpiredInSeconds
@@ -54,11 +49,10 @@ namespace Microshaoft
                                , NpgsqlParameter parameter
                            )
         {
-            var npgSqlDbTypeName = //(string)(reader["TYPE_NAME"]);
-                    (string)(reader["DATA_TYPE"]);
-            NpgsqlDbType sqlDbType = (NpgsqlDbType)Enum.Parse(typeof(NpgsqlDbType), npgSqlDbTypeName, true);
+            var dbTypeName = (string)(reader["DATA_TYPE"]);
+            NpgsqlDbType dbType = (NpgsqlDbType)Enum.Parse(typeof(NpgsqlDbType), dbTypeName, true);
             parameter
-                .NpgsqlDbType = sqlDbType;
+                .NpgsqlDbType = dbType;
             if ((parameter.NpgsqlDbType == NpgsqlDbType.Numeric))
             {
                 parameter.Scale = (byte)(((short)(reader["NUMERIC_SCALE"]) & 255));
@@ -73,7 +67,6 @@ namespace Microshaoft
                                 , NpgsqlParameter cloneNpgsqlParameter
                             )
         {
-            //to do
             cloneNpgsqlParameter.NpgsqlDbType = definitionNpgsqlParameter.NpgsqlDbType;
             return cloneNpgsqlParameter;
         }
@@ -87,22 +80,13 @@ namespace Microshaoft
         {
             object r = null;
             var jValueText = jValue.ToString();
-
             if
                 (
                     parameter.NpgsqlDbType == NpgsqlDbType.Varchar
-                    //||
-                    //parameter.NpgsqlDbType == NpgsqlDbType.NVarChar
-                    //||
-                    //parameter.NpgsqlDbType == NpgsqlDbType.Char
-                    //||
-                    //parameter.NpgsqlDbType == NpgsqlDbType.NChar
                     ||
                     parameter.NpgsqlDbType == NpgsqlDbType.Text
                     ||
                     parameter.NpgsqlDbType == NpgsqlDbType.Char
-                    //||
-                    //parameter.NpgsqlDbType == NpgsqlDbType.
                 )
             {
                 r = jValueText;
@@ -112,23 +96,10 @@ namespace Microshaoft
                     parameter.NpgsqlDbType == NpgsqlDbType.Date
                     ||
                     parameter.NpgsqlDbType == NpgsqlDbType.Time
-                    //||
-                    //parameter.NpgsqlDbType == NpgsqlDbType.SmallDateTime
-                    //||
-                    //parameter.NpgsqlDbType == NpgsqlDbType.Date
-                    //||
-                    //parameter.NpgsqlDbType == NpgsqlDbType.DateTime
                 )
             {
                 r = DateTime.Parse(jValueText);
             }
-            //else if
-            //    (
-            //        target.MySqlDbType == MySqlDbType.DateTimeOffset
-            //    )
-            //{
-            //    r = new JValue((DateTimeOffset)target.Value);
-            //}
             else if
                 (
                     parameter.NpgsqlDbType == NpgsqlDbType.Bit
@@ -136,13 +107,6 @@ namespace Microshaoft
             {
                 r = bool.Parse(jValueText);
             }
-            //else if
-            //    (
-            //        parameter.MySqlDbType == MySqlDbType.Decimal
-            //    )
-            //{
-            //    r = decimal.Parse(jValueText);
-            //}
             else if
                 (
                     parameter.NpgsqlDbType == NpgsqlDbType.Double
@@ -164,46 +128,6 @@ namespace Microshaoft
             {
                 r = Guid.Parse(jValueText);
             }
-            //else if
-            //    (
-            //        parameter.MySqlDbType == MySqlDbType.UInt16
-            //    )
-            //{
-            //    r = ushort.Parse(jValueText);
-            //}
-            //else if
-            //    (
-            //        parameter.MySqlDbType == MySqlDbType.UInt24
-            //        ||
-            //        parameter.MySqlDbType == MySqlDbType.UInt32
-            //    )
-            //{
-            //    r = uint.Parse(jValueText);
-            //}
-            //else if
-            //    (
-            //        parameter.MySqlDbType == MySqlDbType.UInt64
-            //    )
-            //{
-            //    r = ulong.Parse(jValueText);
-            //}
-            //else if
-            //   (
-            //       parameter.MySqlDbType == MySqlDbType.Int16
-            //   )
-            //{
-            //    r = short.Parse(jValueText);
-            //}
-            //else if
-            //   (
-            //        parameter.MySqlDbType == MySqlDbType.Int24
-            //        ||
-            //        parameter.MySqlDbType == MySqlDbType.Int32
-            //   )
-            //{
-            //    r = int.Parse(jValueText);
-
-            //}
             else if
                (
                     parameter.NpgsqlDbType == NpgsqlDbType.Bigint
@@ -212,7 +136,6 @@ namespace Microshaoft
                 r = long.Parse(jValueText);
             }
             return r;
-
         }
 
         public static List<NpgsqlParameter> GenerateExecuteParameters

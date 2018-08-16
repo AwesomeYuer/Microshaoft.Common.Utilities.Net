@@ -38,8 +38,8 @@ namespace Microshaoft.MEF.Contracts
 }
 namespace Microshaoft.MEF.Contracts
 {
-    using System;
-    using System.Xml;
+    //using System;
+    //using System.Xml;
     public interface IMefPartsCompositionContainer<TPart, TPartKey, TResult, TInvokeParams>
     {
         TPart[] Parts
