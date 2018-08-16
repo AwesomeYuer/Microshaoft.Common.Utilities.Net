@@ -26,6 +26,11 @@ namespace Microshaoft.WebApi.Controllers
                 ,
                 @"D:\MyGitHub\Microshaoft.Common.Utilities.Net.4x\StoreProcedureWebApiExecutorsPlugins\MySQL.StoreProcedureWebApiExecutor\bin\Debug\netcoreapp2.1"
             };
+
+        protected override int CommandTimeoutInSeconds => 101;
+
+        
+
         protected override IEnumerable<DataBaseConnectionInfo> GetDataBasesConnectionsInfo()
         {
             return
@@ -46,6 +51,13 @@ namespace Microshaoft.WebApi.Controllers
                                                             //HttpMethodsFlags.Get 
                                                             //| HttpMethodsFlags.Post
                                                     }
+                                                    ,
+                                                                                                        {
+                                                        "zsp_Test"
+                                                        , HttpMethodsFlags.All
+                                                            //HttpMethodsFlags.Get 
+                                                            //| HttpMethodsFlags.Post
+                                                    }
                                                 }
                          }
                          ,
@@ -60,6 +72,13 @@ namespace Microshaoft.WebApi.Controllers
                                                 {
                                                     {
                                                         "zsp_GetDatesAfter"
+                                                        , HttpMethodsFlags.All
+                                                            //HttpMethodsFlags.Get 
+                                                            //| HttpMethodsFlags.Post
+                                                    }
+                                                    ,
+                                                    {
+                                                        "zsp_Test"
                                                         , HttpMethodsFlags.All
                                                             //HttpMethodsFlags.Get 
                                                             //| HttpMethodsFlags.Post

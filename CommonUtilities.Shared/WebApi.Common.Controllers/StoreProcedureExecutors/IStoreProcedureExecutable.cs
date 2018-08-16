@@ -1,10 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Microshaoft
+﻿namespace Microshaoft
 {
+    using Newtonsoft.Json.Linq;
     public interface IStoreProcedureExecutable
     {
         string DataBaseType { get; }
@@ -14,6 +10,8 @@ namespace Microshaoft
                     , string storeProcedureName
                     , JToken parameters
                     , out JToken result
+
+                    , int commandTimeoutInSeconds = 90
                 );
 
 

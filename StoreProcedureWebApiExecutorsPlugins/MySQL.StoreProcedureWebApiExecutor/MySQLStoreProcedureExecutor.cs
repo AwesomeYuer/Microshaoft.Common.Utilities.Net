@@ -27,6 +27,7 @@
                         , string storeProcedureName
                         , JToken parameters
                         , out JToken result
+                        , int commandTimeoutInSeconds       = 90   
                     )
         {
             if
@@ -45,16 +46,15 @@
             }
             result = null;
             MySqlConnection connection = new MySqlConnection(connectionString);
+            //connection.ConnectionTimeout = connectionTimeoutInSeconds;
             result = Microshaoft.MySqlHelper
                             .StoreProcedureExecute
                                     (
                                         connection
                                         , storeProcedureName
                                         , parameters
-                                        , 90
+                                        , commandTimeoutInSeconds
                                     );
-
-
             if (NeedAutoRefreshExecutedTimeForSlideExpire)
             {
                 Microshaoft.MySqlHelper

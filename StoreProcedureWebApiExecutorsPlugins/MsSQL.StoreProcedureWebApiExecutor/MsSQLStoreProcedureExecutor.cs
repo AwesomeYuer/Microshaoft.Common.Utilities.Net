@@ -27,6 +27,7 @@
                         , string storeProcedureName
                         , JToken parameters
                         , out JToken result
+                        , int commandTimeoutInSeconds = 90
                     )
         {
             if
@@ -51,7 +52,7 @@
                                         connection
                                         , storeProcedureName
                                         , parameters
-                                        , 90
+                                        , commandTimeoutInSeconds
                                     );
 
 

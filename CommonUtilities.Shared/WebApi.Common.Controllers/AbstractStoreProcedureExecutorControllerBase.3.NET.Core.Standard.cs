@@ -204,6 +204,7 @@ namespace Microshaoft.WebApi.Controllers
                             , Request.Method
                             , parameters
                             , out result
+                            , CommandTimeoutInSeconds
                         );
             }
             if (!r)

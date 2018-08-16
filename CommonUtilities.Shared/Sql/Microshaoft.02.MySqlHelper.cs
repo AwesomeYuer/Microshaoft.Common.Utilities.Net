@@ -1,5 +1,4 @@
 ﻿#if !XAMARIN
-
 namespace Microshaoft
 {
     using MySql.Data.MySqlClient;
@@ -55,8 +54,20 @@ namespace Microshaoft
                 .MySqlDbType = dbType;
             if ((parameter.MySqlDbType == MySqlDbType.Decimal))
             {
-                parameter.Scale = (byte)(((short)(reader["NUMERIC_SCALE"]) & 255));
-                parameter.Precision = (byte)(((short)(reader["NUMERIC_PRECISION"]) & 255));
+                parameter.Scale =
+                        (
+                            (byte)
+                                (
+                                    (
+                                        (short)
+                                            (
+                                                (int)(reader["NUMERIC_SCALE"])
+                                            )
+                                    )
+                                //& 255
+                                )
+                        );
+                parameter.Precision = ((byte)reader["NUMERIC_PRECISION"]);
             }
             return parameter;
         }
@@ -81,7 +92,6 @@ namespace Microshaoft
         {
             object r = null;
             var jValueText = jValue.ToString();
-
             if
                 (
                     parameter.MySqlDbType == MySqlDbType.VarChar
@@ -170,7 +180,6 @@ namespace Microshaoft
                )
             {
                 r = int.Parse(jValueText);
-
             }
             else if
                (
@@ -210,7 +219,7 @@ namespace Microshaoft
                                    MySqlConnection connection
                                    , string storeProcedureName
                                    , string p = null //string.Empty
-                                   , int commandTimeout = 90
+                                   , int commandTimeoutInSeconds = 90
                                )
         {
             JToken inputsParameters = JObject.Parse(p);
@@ -220,7 +229,7 @@ namespace Microshaoft
                             connection
                             , storeProcedureName
                             , inputsParameters
-                            , commandTimeout
+                            , commandTimeoutInSeconds
                         );
         }
 
@@ -229,7 +238,7 @@ namespace Microshaoft
                                     MySqlConnection connection
                                     , string storeProcedureName
                                     , JToken inputsParameters = null //string.Empty
-                                    , int commandTimeout = 90
+                                    , int commandTimeoutInSeconds = 90
                                 )
         {
             var r = SqlHelper
@@ -244,7 +253,7 @@ namespace Microshaoft
                                     , onExecutingSetDbParameterTypeProcessFunc
                                     , onExecutingSetDbParameterValueProcessFunc
                                     , inputsParameters
-                                    , commandTimeout
+                                    , commandTimeoutInSeconds
                                 );
             return r;
         }

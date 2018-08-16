@@ -25,8 +25,6 @@
             r = onDbParameterToJValueProcessFunc(dbParameter);
             return r;
         }
-
-
         public static TDbParameter ShallowClone<TDbParameter>
                         (
                             this DbParameter target
@@ -61,28 +59,29 @@
             set;
         }
         public static List<TDbParameter> 
-                    GenerateStoreProcedureExecuteParameters<TDbConnection, TDbCommand, TDbParameter>
-                                (
-                                    string connectionString
-                                    , string storeProcedureName
-                                    , JToken inputsParameters
-                                    , Func<TDbParameter, TDbParameter>
-                                            onQueryDefinitionsSetInputParameterProcessFunc
-                                    , Func<TDbParameter, TDbParameter>
-                                            onQueryDefinitionsSetReturnParameterProcessFunc
-                                    , Func<IDataReader, TDbParameter, TDbParameter>
-                                            onQueryDefinitionsReadOneDbParameterProcessFunc
-                                    , Func<TDbParameter, TDbParameter, TDbParameter>
-                                            onExecutingSetDbParameterTypeProcessFunc
-                                    , Func<TDbParameter, JToken , object>
-                                            onExecutingSetDbParameterValueProcessFunc
-                                )
-                            where
-                                    TDbConnection : DbConnection, new()
-                            where
-                                    TDbCommand : DbCommand, new()
-                            where
-                                    TDbParameter : DbParameter, new()
+                    GenerateStoreProcedureExecuteParameters
+                        <TDbConnection, TDbCommand, TDbParameter>
+                            (
+                                string connectionString
+                                , string storeProcedureName
+                                , JToken inputsParameters
+                                , Func<TDbParameter, TDbParameter>
+                                        onQueryDefinitionsSetInputParameterProcessFunc
+                                , Func<TDbParameter, TDbParameter>
+                                        onQueryDefinitionsSetReturnParameterProcessFunc
+                                , Func<IDataReader, TDbParameter, TDbParameter>
+                                        onQueryDefinitionsReadOneDbParameterProcessFunc
+                                , Func<TDbParameter, TDbParameter, TDbParameter>
+                                        onExecutingSetDbParameterTypeProcessFunc
+                                , Func<TDbParameter, JToken , object>
+                                        onExecutingSetDbParameterValueProcessFunc
+                            )
+                        where
+                                TDbConnection : DbConnection, new()
+                        where
+                                TDbCommand : DbCommand, new()
+                        where
+                                TDbParameter : DbParameter, new()
         {
             List<TDbParameter> result = null;
             var dbParameters 
@@ -213,37 +212,39 @@
                             )
                 )
             {
-                executingInfo.RecentExecutedTime = DateTime.Now;
+                executingInfo
+                    .RecentExecutedTime = DateTime.Now;
             }
         }
 
         public static
                 IDictionary<string,DbParameter>
-                        GetCachedStoreProcedureParameters
-                            <TDbConnection, TDbCommand, TDbParameter>
-                                    (
-                                        string connectionString
-                                        , string storeProcedureName
-                                        , Func<TDbParameter, TDbParameter>
-                                                onQueryDefinitionsSetInputParameterProcessFunc
-                                        , Func<TDbParameter, TDbParameter>
-                                                onQueryDefinitionsSetReturnParameterProcessFunc
-                                        , Func<IDataReader, TDbParameter, TDbParameter>
-                                                onQueryDefinitionsReadOneDbParameterProcessFunc
-                                        , bool includeReturnValueParameter = false
-                                        //, int cacheExpireInSeconds = 0
-                                    )
-                            where
-                                    TDbConnection : DbConnection ,new ()
-                            where
-                                    TDbCommand : DbCommand, new()
-                            where
-                                    TDbParameter : DbParameter, new()
+                    GetCachedStoreProcedureParameters
+                        <TDbConnection, TDbCommand, TDbParameter>
+                                (
+                                    string connectionString
+                                    , string storeProcedureName
+                                    , Func<TDbParameter, TDbParameter>
+                                            onQueryDefinitionsSetInputParameterProcessFunc
+                                    , Func<TDbParameter, TDbParameter>
+                                            onQueryDefinitionsSetReturnParameterProcessFunc
+                                    , Func<IDataReader, TDbParameter, TDbParameter>
+                                            onQueryDefinitionsReadOneDbParameterProcessFunc
+                                    , bool includeReturnValueParameter = false
+                                    //, int cacheExpireInSeconds = 0
+                                )
+                        where
+                                TDbConnection : DbConnection ,new ()
+                        where
+                                TDbCommand : DbCommand, new()
+                        where
+                                TDbParameter : DbParameter, new()
         {
             ExecutingInfo GetExecutingInfo()
             {
-                var dbParameters
-                        = GetStoreProcedureParameters<TDbConnection, TDbCommand, TDbParameter>
+                var dbParameters =
+                        GetStoreProcedureParameters
+                            <TDbConnection, TDbCommand, TDbParameter>
                                 (
                                     connectionString
                                     , storeProcedureName
@@ -253,30 +254,28 @@
                                     , includeReturnValueParameter
                                 );
                 var parameters =
-                            dbParameters
-                                .ToDictionary
-                                    (
-                                        (xx) =>
-                                        {
-                                            return
-                                                xx
-                                                    .ParameterName
-                                                    .TrimStart('@');
-                                        }
-                                        , (xx) =>
-                                        {
-                                            return
-                                                (DbParameter)xx;
-                                        }
-                                        , StringComparer
-                                                .OrdinalIgnoreCase
-                                    );
-
+                        dbParameters
+                            .ToDictionary
+                                (
+                                    (xx) =>
+                                    {
+                                        return
+                                            xx
+                                                .ParameterName
+                                                .TrimStart('@');
+                                    }
+                                    , (xx) =>
+                                    {
+                                        return
+                                            (DbParameter)xx;
+                                    }
+                                    , StringComparer
+                                            .OrdinalIgnoreCase
+                                );
                 var _executingInfo = new ExecutingInfo()
                 {
                     DbParameters = parameters,
                     RecentExecutedTime = DateTime.Now
-
                 };
                 return _executingInfo;
             }
@@ -324,25 +323,25 @@
 
         public static 
                 IEnumerable<TDbParameter> 
-                        GetStoreProcedureParameters
-                                <TDbConnection, TDbCommand, TDbParameter>
-                                    (
-                                        string connectionString
-                                        , string storeProcedureName
-                                        , Func<TDbParameter, TDbParameter>
-                                                onQueryDefinitionsSetInputParameterProcessFunc
-                                        , Func<TDbParameter, TDbParameter>
-                                                onQueryDefinitionsSetReturnParameterProcessFunc
-                                        , Func<IDataReader, TDbParameter, TDbParameter>
-                                                onQueryDefinitionsReadOneDbParameterProcessFunc
-                                        , bool includeReturnValueParameter = false
-                                    )
-                            where
-                                TDbConnection : DbConnection, new ()
-                            where
-                                TDbCommand : DbCommand, new()
-                            where
-                                TDbParameter : DbParameter, new()
+                    GetStoreProcedureParameters
+                        <TDbConnection, TDbCommand, TDbParameter>
+                            (
+                                string connectionString
+                                , string storeProcedureName
+                                , Func<TDbParameter, TDbParameter>
+                                        onQueryDefinitionsSetInputParameterProcessFunc
+                                , Func<TDbParameter, TDbParameter>
+                                        onQueryDefinitionsSetReturnParameterProcessFunc
+                                , Func<IDataReader, TDbParameter, TDbParameter>
+                                        onQueryDefinitionsReadOneDbParameterProcessFunc
+                                , bool includeReturnValueParameter = false
+                            )
+                    where
+                        TDbConnection : DbConnection, new ()
+                    where
+                        TDbCommand : DbCommand, new()
+                    where
+                        TDbParameter : DbParameter, new()
         {
             DbConnection connection = null;
             try
@@ -403,6 +402,7 @@
                                 (
                                     dbParameterReturn
                                 );
+                    
                     connection.Open();
                     var dataReader
                             = command
@@ -598,7 +598,8 @@
                         }
                     )
                 {
-                    List<TDbParameter> dbParameters 
+                    List<TDbParameter>
+                        dbParameters 
                             = GenerateStoreProcedureExecuteParameters
                                     <TDbConnection, TDbCommand, TDbParameter>
                                         (
@@ -674,22 +675,26 @@
                         var rows = dataReader
                                         .AsJTokensRowsEnumerable();
                         
-                        ((JArray) result["Outputs"]["ResultSets"])
-                                            .Add
-                                                (
-                                                    new JObject
-                                                    {
-                                                        {
-                                                            "Columns"
-                                                            , new JArray(columns)
-                                                        }
-                                                        ,
-                                                        {
-                                                            "Rows"
-                                                            , new JArray(rows)
-                                                        }
-                                                    }
-                                                );
+                        (
+                            (JArray)
+                                result
+                                    ["Outputs"]["ResultSets"]
+                        )
+                            .Add
+                                (
+                                    new JObject
+                                    {
+                                        {
+                                            "Columns"
+                                            , new JArray(columns)
+                                        }
+                                        ,
+                                        {
+                                            "Rows"
+                                            , new JArray(rows)
+                                        }
+                                    }
+                                );
                     }
                     while (dataReader.NextResult());
                     dataReader.Close();
@@ -698,18 +703,20 @@
                     {
                         var outputParameters
                                 = dbParameters
-                                        .Where
-                                            (
-                                                (x) =>
-                                                {
-                                                    return
-                                                        (
-                                                            x.Direction
-                                                            !=
-                                                            ParameterDirection.Input
-                                                        );
-                                                }
-                                            );
+                                    .Where
+                                        (
+                                            (x) =>
+                                            {
+                                                return
+                                                    (
+                                                        x
+                                                            .Direction
+                                                        !=
+                                                        ParameterDirection
+                                                            .Input
+                                                    );
+                                            }
+                                        );
                         foreach (var x in outputParameters)
                         {
                             if (jOutputParameters == null)
