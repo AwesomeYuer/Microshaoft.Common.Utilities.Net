@@ -5,10 +5,12 @@
     using System.Composition;
     using System.Data.SqlClient;
     [Export(typeof(IStoreProcedureExecutable))]
-    public class MsSQLStoreProcedureExecutor
+    public class MsSQLStoreProcedureExecutorCompositionPlugin
                         : IStoreProcedureExecutable
                             , IStoreProcedureParametersSetCacheAutoRefreshable
-    {
+    { 
+        public MsSqlStoreProceduresExecutor _executor = new MsSqlStoreProceduresExecutor();
+
         public string DataBaseType => "mssql";////this.GetType().Name;
 
         public int CachedExecutingParametersExpiredInSeconds
@@ -34,32 +36,30 @@
                 (
                     CachedExecutingParametersExpiredInSeconds > 0
                     &&
-                    MsSqlHelper
+                    _executor
                         .CachedExecutingParametersExpiredInSeconds
                     !=
                     CachedExecutingParametersExpiredInSeconds
                 )
             {
-                MsSqlHelper
+                _executor
                         .CachedExecutingParametersExpiredInSeconds
                             = CachedExecutingParametersExpiredInSeconds;
             }
             result = null;
             SqlConnection connection = new SqlConnection(connectionString);
-            result = MsSqlHelper
-                            .StoreProcedureExecute
+            result = _executor
+                            .Execute
                                     (
                                         connection
                                         , storeProcedureName
                                         , parameters
                                         , commandTimeoutInSeconds
                                     );
-
-
             if (NeedAutoRefreshExecutedTimeForSlideExpire)
             {
-                MsSqlHelper
-                    .RefreshCachedStoreProcedureExecuted
+                _executor
+                    .RefreshCachedExecuted
                         (
                             connection
                             , storeProcedureName
