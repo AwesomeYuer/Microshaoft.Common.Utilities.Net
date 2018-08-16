@@ -22,9 +22,9 @@ namespace Microshaoft.WebApi.Controllers
         protected override string[] DynamicLoadExecutorsPaths =>
             new string[]
             {
-                @"D:\MyGitHub\Microshaoft.Common.Utilities.Net.4x\StoreProcedureWebApiExecutorsPlugins\MsSQL.StoreProcedureWebApiExecutor\bin\Debug\netcoreapp2.1\"
+                @"D:\MyGitHub\Microshaoft.Common.Utilities.Net.4x\StoreProcedureWebApiExecutorsPlugins\MsSQL.StoreProcedureWebApiExecutor.Plugin\bin\Debug\netcoreapp2.1\"
                 ,
-                @"D:\MyGitHub\Microshaoft.Common.Utilities.Net.4x\StoreProcedureWebApiExecutorsPlugins\MySQL.StoreProcedureWebApiExecutor\bin\Debug\netcoreapp2.1"
+                @"D:\MyGitHub\Microshaoft.Common.Utilities.Net.4x\StoreProcedureWebApiExecutorsPlugins\MySQL.StoreProcedureWebApiExecutor.Plugin\bin\Debug\netcoreapp2.1"
             };
 
         protected override int CommandTimeoutInSeconds => 101;

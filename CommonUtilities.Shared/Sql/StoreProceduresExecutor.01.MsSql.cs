@@ -5,25 +5,11 @@
     using System.Collections.Generic;
     using System.Data;
     using System.Data.SqlClient;
-    public static class MsSqlHelper
+    public class MsSqlStoreProceduresExecutor
+                    : AbstractStoreProceduresExecutor<SqlConnection, SqlCommand, SqlParameter>
     {
-        public static int CachedExecutingParametersExpiredInSeconds
-        {
-            get
-            {
-                return
-                    SqlHelper
-                        .CachedExecutingParametersExpiredInSeconds;
-            }
-            set
-            {
-                SqlHelper
-                    .CachedExecutingParametersExpiredInSeconds = value;
-            }
-        }
-
-        private static SqlParameter
-                        onQueryDefinitionsSetInputParameterProcessFunc
+        protected override SqlParameter
+                        OnQueryDefinitionsSetInputParameterProcess
                             (
                                 SqlParameter parameter
                             )
@@ -31,8 +17,8 @@
             parameter.SqlDbType = SqlDbType.NVarChar;
             return parameter;
         }
-        private static SqlParameter
-                        onQueryDefinitionsSetReturnParameterProcessFunc
+        protected override SqlParameter
+                        OnQueryDefinitionsSetReturnParameterProcess
                             (
                                 SqlParameter parameter
                             )
@@ -40,8 +26,8 @@
             parameter.SqlDbType = SqlDbType.Int;
             return parameter;
         }
-        private static SqlParameter
-                       onQueryDefinitionsReadOneDbParameterProcessFunc
+        protected override SqlParameter
+                       OnQueryDefinitionsReadOneDbParameterProcess
                            (
                                IDataReader reader
                                , SqlParameter parameter
@@ -62,7 +48,7 @@
                 dbTypeName = "int";
             }
             SqlDbType dbType = SqlDbType.Udt;
-            var r =  Enum
+            var r = Enum
                         .TryParse
                             (
                                 dbTypeName
@@ -87,7 +73,7 @@
                                                 (int)(reader["NUMERIC_SCALE"])
                                             )
                                     )
-                                    //& 255
+                                //& 255
                                 )
                         );
                 parameter.Precision = ((byte)reader["NUMERIC_PRECISION"]);
@@ -100,18 +86,18 @@
             }
             return parameter;
         }
-        private static SqlParameter
-                    onExecutingSetDbParameterTypeProcessFunc
+        protected override SqlParameter
+                    OnExecutingSetDbParameterTypeProcess
                         (
-                            SqlParameter definitionSqlParameter
-                            , SqlParameter cloneSqlParameter
+                            SqlParameter definitionParameter
+                            , SqlParameter cloneParameter
                         )
         {
-            cloneSqlParameter.SqlDbType = definitionSqlParameter.SqlDbType;
-            return cloneSqlParameter;
+            cloneParameter.SqlDbType = definitionParameter.SqlDbType;
+            return cloneParameter;
         }
-        private static object
-               onExecutingSetDbParameterValueProcessFunc
+        protected override object
+               OnExecutingSetDbParameterValueProcess
                     (
                         SqlParameter parameter
                         , JToken jValue
@@ -223,85 +209,7 @@
             }
             return r;
         }
-        public static List<SqlParameter> GenerateExecuteParameters
-                                (
-                                    string connectionString
-                                    , string storeProcedureName
-                                    , JToken inputsParameters
-                                )
-        {
-            var result
-                    = SqlHelper
-                        .GenerateStoreProcedureExecuteParameters
-                            <SqlConnection, SqlCommand, SqlParameter>
-                                (
-                                    connectionString
-                                    , storeProcedureName
-                                    , inputsParameters
-                                    , onQueryDefinitionsSetInputParameterProcessFunc
-                                    , onQueryDefinitionsSetReturnParameterProcessFunc
-                                    , onQueryDefinitionsReadOneDbParameterProcessFunc
-                                    , onExecutingSetDbParameterTypeProcessFunc
-                                    , onExecutingSetDbParameterValueProcessFunc
-                                );
-            return result;
-        }
-        public static JToken StoreProcedureExecute
-                               (
-                                   SqlConnection connection
-                                   , string storeProcedureName
-                                   , string p = null //string.Empty
-                                   , int commandTimeout = 90
-                               )
-        {
-            JToken inputsParameters = JObject.Parse(p);
-            return
-                StoreProcedureExecute
-                        (
-                            connection
-                            , storeProcedureName
-                            , inputsParameters
-                            , commandTimeout
-                        );
-        }
 
-        public static JToken StoreProcedureExecute
-                                (
-                                    SqlConnection connection
-                                    , string storeProcedureName
-                                    , JToken inputsParameters = null //string.Empty
-                                    , int commandTimeout = 90
-                                )
-        {
-            var r = SqlHelper
-                        .StoreProcedureExecute
-                            <SqlConnection, SqlCommand, SqlParameter>
-                                (
-                                    connection
-                                    , storeProcedureName
-                                    , onQueryDefinitionsSetInputParameterProcessFunc
-                                    , onQueryDefinitionsSetReturnParameterProcessFunc
-                                    , onQueryDefinitionsReadOneDbParameterProcessFunc
-                                    , onExecutingSetDbParameterTypeProcessFunc
-                                    , onExecutingSetDbParameterValueProcessFunc
-                                    , inputsParameters
-                                    , commandTimeout
-                                );
-            return r;
-        }
-        public static void
-                RefreshCachedStoreProcedureExecuted
-                                (
-                                    SqlConnection connection
-                                    , string storeProcedureName
-                                )
-        {
-            SqlHelper
-                    .RefreshCachedStoreProcedureExecuted
-                            (
-                                connection
-                                , storeProcedureName
-                            );
-        }
+  
     }
 }

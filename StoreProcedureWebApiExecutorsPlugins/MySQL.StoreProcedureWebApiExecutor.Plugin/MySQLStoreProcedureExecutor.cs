@@ -5,10 +5,12 @@
     using Newtonsoft.Json.Linq;
     using System.Composition;
     [Export(typeof(IStoreProcedureExecutable))]
-    public class MySQLStoreProcedureExecutor
+    public class MySQLStoreProcedureExecutorCompositionPlugin
                         : IStoreProcedureExecutable
                             , IStoreProcedureParametersSetCacheAutoRefreshable
     {
+        public MySqlStoreProceduresExecutor _executor = new MySqlStoreProceduresExecutor();
+
         public string DataBaseType => "mysql";////this.GetType().Name;
 
         public int CachedExecutingParametersExpiredInSeconds
@@ -27,28 +29,27 @@
                         , string storeProcedureName
                         , JToken parameters
                         , out JToken result
-                        , int commandTimeoutInSeconds       = 90   
+                        , int commandTimeoutInSeconds = 90
                     )
         {
             if
                 (
                     CachedExecutingParametersExpiredInSeconds > 0
                     &&
-                    Microshaoft.MySqlHelper
+                    _executor
                         .CachedExecutingParametersExpiredInSeconds
                     !=
                     CachedExecutingParametersExpiredInSeconds
                 )
             {
-                Microshaoft.MySqlHelper
+                _executor
                         .CachedExecutingParametersExpiredInSeconds
                             = CachedExecutingParametersExpiredInSeconds;
             }
             result = null;
             MySqlConnection connection = new MySqlConnection(connectionString);
-            //connection.ConnectionTimeout = connectionTimeoutInSeconds;
-            result = Microshaoft.MySqlHelper
-                            .StoreProcedureExecute
+            result = _executor
+                            .Execute
                                     (
                                         connection
                                         , storeProcedureName
@@ -57,8 +58,8 @@
                                     );
             if (NeedAutoRefreshExecutedTimeForSlideExpire)
             {
-                Microshaoft.MySqlHelper
-                    .RefreshCachedStoreProcedureExecuted
+                _executor
+                    .RefreshCachedExecuted
                         (
                             connection
                             , storeProcedureName
