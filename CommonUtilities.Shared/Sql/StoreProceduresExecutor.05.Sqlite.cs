@@ -4,7 +4,6 @@ namespace Microshaoft
     using Microsoft.Data.Sqlite;
     using Newtonsoft.Json.Linq;
     using System;
-    using System.Collections.Generic;
     using System.Data;
     public class SqliteStoreProceduresExecutor
                     : AbstractStoreProceduresExecutor<SqliteConnection, SqliteCommand, SqliteParameter>

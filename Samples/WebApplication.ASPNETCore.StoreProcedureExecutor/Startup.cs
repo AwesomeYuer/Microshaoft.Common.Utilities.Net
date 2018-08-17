@@ -1,34 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microshaoft;
-using Microshaoft.Web;
-using Microshaoft.WebApi.Controllers;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Cors.Infrastructure;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-
-namespace WebApplication.ASPNetCore
+﻿namespace WebApplication.ASPNetCore
 {
+    using Microshaoft.Web;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Cors.Infrastructure;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
     public class Startup
     {
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-           // Configuration.GetConnectionString()
         }
-
         public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services
@@ -43,8 +28,6 @@ namespace WebApplication.ASPNetCore
                 .AddSingleton
                     <IStoreProceduresService, StoreProceduresExecuteService>
                         ();
-
-
             services
                 .Add
                     (
@@ -85,7 +68,6 @@ namespace WebApplication.ASPNetCore
                   );
             services.AddResponseCaching();
         }
-
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
@@ -98,11 +80,8 @@ namespace WebApplication.ASPNetCore
             {
                 //app.UseHsts();
             }
-
             //app.UseHttpsRedirection();
             app.UseMvc();
-
-
             //app.Use(async (context, next) =>
             //{
             //    context.Response.GetTypedHeaders().CacheControl =
@@ -113,7 +92,6 @@ namespace WebApplication.ASPNetCore
             //        };
             //    context.Response.Headers[Microsoft.Net.Http.Headers.HeaderNames.Vary] =
             //        new string[] { "Accept-Encoding" };
-
             //    await next();
             //});
             app.UseResponseCaching();

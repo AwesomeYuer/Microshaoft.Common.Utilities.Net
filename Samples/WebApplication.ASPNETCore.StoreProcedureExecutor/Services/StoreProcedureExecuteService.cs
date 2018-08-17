@@ -1,82 +1,74 @@
 ﻿namespace Microshaoft.Web
 {
-    using Microshaoft;
     using Microshaoft.WebApi.Controllers;
-    using Microsoft.AspNetCore.Mvc;
-    using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-
     public class StoreProceduresExecuteService
                             : AbstractStoreProceduresService
     {
         protected override
-            IEnumerable<DataBaseConnectionInfo> DataBasesConnectionsInfo        
+                IEnumerable<DataBaseConnectionInfo>
+                                DataBasesConnectionsInfo        
         {
             get
             {
                 return
-                new List<DataBaseConnectionInfo>()
-                    {
-                         new DataBaseConnectionInfo()
-                         {
-                              ConnectionID = "mssql1"
-                              , DataBaseType =  DataBasesType.MsSQL
-                              , ConnectionString =
-                                    @"Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=D:\mssql\MSSQL13.LocalDB\LocalDB\TransportionSecrets\TransportionSecrets.mdf;Data Source=(localdb)\mssqllocaldb;"
-                              , WhiteList = new Dictionary<string, HttpMethodsFlags>
-                                                  (StringComparer.OrdinalIgnoreCase)
-                                                {
+                    new List<DataBaseConnectionInfo>()
+                        {
+                             new DataBaseConnectionInfo()
+                             {
+                                  ConnectionID = "mssql1"
+                                  , DataBaseType =  DataBasesType.MsSQL
+                                  , ConnectionString =
+                                        @"Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=D:\mssql\MSSQL13.LocalDB\LocalDB\TransportionSecrets\TransportionSecrets.mdf;Data Source=(localdb)\mssqllocaldb;"
+                                  , WhiteList = new Dictionary<string, HttpMethodsFlags>
+                                                      (StringComparer.OrdinalIgnoreCase)
                                                     {
-                                                        "zsp_GetDatesAfter"
-                                                        , HttpMethodsFlags.All
-                                                            //HttpMethodsFlags.Get 
-                                                            //| HttpMethodsFlags.Post
+                                                        {
+                                                            "zsp_GetDatesAfter"
+                                                            , HttpMethodsFlags.All
+                                                                //HttpMethodsFlags.Get 
+                                                                //| HttpMethodsFlags.Post
+                                                        }
+                                                        ,
+                                                                                                            {
+                                                            "zsp_Test"
+                                                            , HttpMethodsFlags.All
+                                                                //HttpMethodsFlags.Get 
+                                                                //| HttpMethodsFlags.Post
+                                                        }
                                                     }
-                                                    ,
-                                                                                                        {
-                                                        "zsp_Test"
-                                                        , HttpMethodsFlags.All
-                                                            //HttpMethodsFlags.Get 
-                                                            //| HttpMethodsFlags.Post
-                                                    }
-                                                }
-                         }
-                         ,
-                         new DataBaseConnectionInfo()
-                         {
-                              ConnectionID = "mysql1"
-                              , DataBaseType =  DataBasesType.MySQL
-                              , ConnectionString =
-                                    @"server= microshaoft-ubuntu-001.westus.cloudapp.azure.com;uid=root;pwd=withoutpassword;database=Test"
-                              , WhiteList = new Dictionary<string, HttpMethodsFlags>
-                                                  (StringComparer.OrdinalIgnoreCase)
-                                                {
+                             }
+                             ,
+                             new DataBaseConnectionInfo()
+                             {
+                                  ConnectionID = "mysql1"
+                                  , DataBaseType =  DataBasesType.MySQL
+                                  , ConnectionString =
+                                        @"server= microshaoft-ubuntu-001.westus.cloudapp.azure.com;uid=root;pwd=withoutpassword;database=Test"
+                                  , WhiteList = new Dictionary<string, HttpMethodsFlags>
+                                                      (StringComparer.OrdinalIgnoreCase)
                                                     {
-                                                        "zsp_GetDatesAfter"
-                                                        , HttpMethodsFlags.All
-                                                            //HttpMethodsFlags.Get 
-                                                            //| HttpMethodsFlags.Post
+                                                        {
+                                                            "zsp_GetDatesAfter"
+                                                            , HttpMethodsFlags.All
+                                                                //HttpMethodsFlags.Get 
+                                                                //| HttpMethodsFlags.Post
+                                                        }
+                                                        ,
+                                                        {
+                                                            "zsp_Test"
+                                                            , HttpMethodsFlags.All
+                                                                //HttpMethodsFlags.Get 
+                                                                //| HttpMethodsFlags.Post
+                                                        }
                                                     }
-                                                    ,
-                                                    {
-                                                        "zsp_Test"
-                                                        , HttpMethodsFlags.All
-                                                            //HttpMethodsFlags.Get 
-                                                            //| HttpMethodsFlags.Post
-                                                    }
-                                                }
-                         }
-                    };
-
+                             }
+                        };
             }
-            
         }
-
         protected override
-            string[] DynamicLoadExecutorsPaths
+                    string[] DynamicLoadExecutorsPaths
         {
             get
             {
@@ -89,9 +81,9 @@
                         };
             }
         }
-
-        protected override int CachedExecutingParametersExpiredInSeconds => 11;
-
-        protected override bool NeedAutoRefreshExecutedTimeForSlideExpire => true;
+        protected override int
+                CachedExecutingParametersExpiredInSeconds => 11;
+        protected override bool 
+                NeedAutoRefreshExecutedTimeForSlideExpire => true;
     }
 }
