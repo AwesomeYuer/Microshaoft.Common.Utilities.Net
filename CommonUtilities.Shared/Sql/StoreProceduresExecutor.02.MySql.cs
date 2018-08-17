@@ -4,7 +4,6 @@ namespace Microshaoft
     using MySql.Data.MySqlClient;
     using Newtonsoft.Json.Linq;
     using System;
-    using System.Collections.Generic;
     using System.Data;
     public class MySqlStoreProceduresExecutor
                     : AbstractStoreProceduresExecutor<MySqlConnection, MySqlCommand, MySqlParameter>
