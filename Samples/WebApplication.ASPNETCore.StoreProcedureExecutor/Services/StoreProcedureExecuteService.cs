@@ -31,7 +31,7 @@
                                                                 //| HttpMethodsFlags.Post
                                                         }
                                                         ,
-                                                                                                            {
+                                                        {
                                                             "zsp_Test"
                                                             , HttpMethodsFlags.All
                                                                 //HttpMethodsFlags.Get 

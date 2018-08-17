@@ -58,7 +58,9 @@ namespace Microshaoft
                             , SqliteParameter cloneParameter
                         )
         {
-            cloneParameter.SqliteType = definitionParameter.SqliteType;
+            cloneParameter
+                .SqliteType = definitionParameter
+                                        .SqliteType;
             return cloneParameter;
         }
         protected override object
@@ -82,21 +84,34 @@ namespace Microshaoft
                     parameter.SqliteType == SqliteType.Real
                 )
             {
-                r = decimal.Parse(jValueText);
-            }
-            else if
-                (
-                    parameter.SqliteType == SqliteType.Real
-                )
-            {
-                r = double.Parse(jValueText);
+                double rr;
+                var b = double
+                            .TryParse
+                                (
+                                    jValueText
+                                    , out rr
+                                );
+                if (b)
+                {
+                    r = rr;
+                }
             }
             else if
                 (
                     parameter.SqliteType == SqliteType.Integer
                 )
             {
-                r = int.Parse(jValueText);
+                int rr;
+                var b = int
+                            .TryParse
+                                (
+                                    jValueText
+                                    , out rr
+                                );
+                if (b)
+                {
+                    r = rr;
+                }
             }
             return r;
         }

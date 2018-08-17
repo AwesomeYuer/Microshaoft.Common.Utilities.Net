@@ -37,22 +37,31 @@ namespace Microshaoft
             OracleDbType dbType = (OracleDbType)Enum.Parse(typeof(OracleDbType), dbTypeName, true);
             parameter
                 .OracleDbType = dbType;
-            if ((parameter.OracleDbType == OracleDbType.Decimal))
+            if (parameter.OracleDbType == OracleDbType.Decimal)
             {
-                parameter.Scale =
-                        (
-                            (byte)
-                                (
+                var o = reader["NUMERIC_SCALE"];
+                if (o != DBNull.Value)
+                {
+                    parameter
+                        .Scale =
+                            (
+                                (byte)
                                     (
-                                        (short)
-                                            (
-                                                (int)(reader["NUMERIC_SCALE"])
-                                            )
+                                        (
+                                            (short)
+                                                (
+                                                    (int)o
+                                                )
+                                        )
+                                    //& 255
                                     )
-                                //& 255
-                                )
-                        );
-                parameter.Precision = ((byte)reader["NUMERIC_PRECISION"]);
+                            );
+                }
+                o = reader["NUMERIC_PRECISION"];
+                if (o != DBNull.Value)
+                {
+                    parameter.Precision = ((byte)o);
+                }
             }
             return parameter;
         }
@@ -99,35 +108,85 @@ namespace Microshaoft
                     parameter.OracleDbType == OracleDbType.TimeStampTZ
                 )
             {
-                r = DateTime.Parse(jValueText);
+                DateTime rr;
+                var b = DateTime
+                            .TryParse
+                                (
+                                    jValueText
+                                    , out rr
+                                );
+                if (b)
+                {
+                    r = rr;
+                }
             }
             else if
                 (
                     parameter.OracleDbType == OracleDbType.Boolean
                 )
             {
-                r = bool.Parse(jValueText);
+                bool rr;
+                var b = bool
+                            .TryParse
+                                (
+                                    jValueText
+                                    , out rr
+                                );
+                if (b)
+                {
+                    r = rr;
+                }
             }
             else if
                 (
                     parameter.OracleDbType == OracleDbType.Decimal
                 )
             {
-                r = decimal.Parse(jValueText);
+                decimal rr;
+                var b = decimal
+                            .TryParse
+                                (
+                                    jValueText
+                                    , out rr
+                                );
+                if (b)
+                {
+                    r = rr;
+                }
             }
             else if
                 (
                     parameter.OracleDbType == OracleDbType.Double
                 )
             {
-                r = double.Parse(jValueText);
+                double rr;
+                var b = double
+                            .TryParse
+                                (
+                                    jValueText
+                                    , out rr
+                                );
+                if (b)
+                {
+                    r = rr;
+                }
             }
             else if
                 (
                     parameter.OracleDbType == OracleDbType.Raw
                 )
             {
-                r = Guid.Parse(jValueText);
+                Guid rr;
+                var b = Guid
+                            .TryParse
+                                (
+                                    jValueText
+                                    , out rr
+                                );
+                if (b)
+                {
+                    r = rr;
+                }
             }
             else if
                 (
@@ -136,21 +195,51 @@ namespace Microshaoft
                     parameter.OracleDbType == OracleDbType.Int64
                 )
             {
-                r = long.Parse(jValueText);
+                long rr;
+                var b = long
+                            .TryParse
+                                (
+                                    jValueText
+                                    , out rr
+                                );
+                if (b)
+                {
+                    r = rr;
+                }
             }
             else if
                 (
                     parameter.OracleDbType == OracleDbType.Int32
                 )
             {
-                r = int.Parse(jValueText);
+                int rr;
+                var b = int
+                            .TryParse
+                                (
+                                    jValueText
+                                    , out rr
+                                );
+                if (b)
+                {
+                    r = rr;
+                }
             }
             else if
                 (
-                    parameter.OracleDbType == OracleDbType.Int64
+                    parameter.OracleDbType == OracleDbType.Int16
                 )
             {
-                r = short.Parse(jValueText);
+                short rr;
+                var b = short
+                            .TryParse
+                                (
+                                    jValueText
+                                    , out rr
+                                );
+                if (b)
+                {
+                    r = rr;
+                }
             }
             return r;
         }

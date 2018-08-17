@@ -59,23 +59,31 @@
                 parameter
                     .SqlDbType = dbType;
             }
-            if ((parameter.SqlDbType == SqlDbType.Decimal))
+            if (parameter.SqlDbType == SqlDbType.Decimal)
             {
-                parameter
-                    .Scale =
-                        (
-                            (byte)
-                                (
+                var o = reader["NUMERIC_SCALE"];
+                if (o != DBNull.Value)
+                {
+                    parameter
+                        .Scale =
+                            (
+                                (byte)
                                     (
-                                        (short)
-                                            (
-                                                (int)(reader["NUMERIC_SCALE"])
-                                            )
+                                        (
+                                            (short)
+                                                (
+                                                    (int) o
+                                                )
+                                        )
+                                    //& 255
                                     )
-                                //& 255
-                                )
-                        );
-                parameter.Precision = ((byte)reader["NUMERIC_PRECISION"]);
+                            );
+                }
+                o = reader["NUMERIC_PRECISION"];
+                if (o != DBNull.Value)
+                {
+                    parameter.Precision = ((byte)o);
+                }
             }
             else if (parameter.SqlDbType == SqlDbType.Udt)
             {
@@ -134,81 +142,189 @@
                     parameter.SqlDbType == SqlDbType.DateTime
                 )
             {
-                r = DateTime.Parse(jValueText);
+                DateTime rr;
+                var b = DateTime
+                            .TryParse
+                                (
+                                    jValueText
+                                    , out rr
+                                );
+                if (b)
+                {
+                    r = rr;
+                }
             }
             else if
                 (
                     parameter.SqlDbType == SqlDbType.DateTimeOffset
                 )
             {
-                r = DateTimeOffset.Parse(jValueText);
+                DateTimeOffset rr;
+                var b = DateTimeOffset
+                            .TryParse
+                                (
+                                    jValueText
+                                    , out rr
+                                );
+                if (b)
+                {
+                    r = rr;
+                }
             }
             else if
                 (
                     parameter.SqlDbType == SqlDbType.Bit
                 )
             {
-                r = bool.Parse(jValueText);
+                bool rr;
+                var b = bool
+                            .TryParse
+                                (
+                                    jValueText
+                                    , out rr
+                                );
+                if (b)
+                {
+                    r = rr;
+                }
             }
             else if
                 (
                     parameter.SqlDbType == SqlDbType.Decimal
                 )
             {
-                r = decimal.Parse(jValueText);
+                decimal rr;
+                var b = decimal
+                            .TryParse
+                                (
+                                    jValueText
+                                    , out rr
+                                );
+                if (b)
+                {
+                    r = rr;
+                }
             }
             else if
                 (
                     parameter.SqlDbType == SqlDbType.Float
                 )
             {
-                r = float.Parse(jValueText);
+                float rr;
+                var b = float
+                            .TryParse
+                                (
+                                    jValueText
+                                    , out rr
+                                );
+                if (b)
+                {
+                    r = rr;
+                }
             }
             else if
                 (
                     parameter.SqlDbType == SqlDbType.Real
                 )
             {
-                r = double.Parse(jValueText);
+                double rr;
+                var b = double
+                            .TryParse
+                                (
+                                    jValueText
+                                    , out rr
+                                );
+                if (b)
+                {
+                    r = rr;
+                }
             }
             else if
                 (
                     parameter.SqlDbType == SqlDbType.UniqueIdentifier
                 )
             {
-                r = Guid.Parse(jValueText);
+                Guid rr;
+                var b = Guid
+                            .TryParse
+                                (
+                                    jValueText
+                                    , out rr
+                                );
+                if (b)
+                {
+                    r = rr;
+                }
             }
             else if
                 (
                     parameter.SqlDbType == SqlDbType.BigInt
                 )
             {
-                r = long.Parse(jValueText);
+                long rr;
+                var b = long
+                        .TryParse
+                            (
+                                jValueText
+                                , out rr
+                            );
+                if (b)
+                {
+                    r = rr;
+                }
             }
             else if
                 (
                     parameter.SqlDbType == SqlDbType.Int
                 )
             {
-                r = int.Parse(jValueText);
+                int rr;
+                var b = int
+                            .TryParse
+                                (
+                                    jValueText
+                                    , out rr
+                                );
+                if (b)
+                {
+                    r = rr;
+                }
             }
             else if
                 (
                     parameter.SqlDbType == SqlDbType.SmallInt
                 )
             {
-                r = short.Parse(jValueText);
+                short rr;
+                var b = short
+                            .TryParse
+                                (
+                                    jValueText
+                                    , out rr
+                                );
+                if (b)
+                {
+                    r = rr;
+                }
             }
             else if
                 (
                     parameter.SqlDbType == SqlDbType.TinyInt
                 )
             {
-                r = short.Parse(jValueText);
+                short rr;
+                var b = short
+                            .TryParse
+                                (
+                                    jValueText
+                                    , out rr
+                                );
+                if (b)
+                {
+                    r = rr;
+                }
             }
             return r;
         }
-
-  
     }
 }
