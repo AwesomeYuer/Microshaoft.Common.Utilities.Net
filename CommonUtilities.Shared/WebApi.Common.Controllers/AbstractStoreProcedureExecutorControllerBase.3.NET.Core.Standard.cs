@@ -2,138 +2,28 @@
 namespace Microshaoft.WebApi.Controllers
 {
     using Microshaoft;
-    using Microshaoft.Linq.Dynamic;
+    using Microshaoft.Web;
     using Microshaoft.WebApi.ModelBinders;
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json.Linq;
-    using System;
-    using System.IO;
-    using System.Linq;
     [Route("api/[controller]")]
     [ApiController]
     public abstract partial class 
-                AbstractStoreProcedureExecutorControllerBase
+                AbstractStoreProceduresExecutorControllerBase
                     :
                         ControllerBase
     {
-        public AbstractStoreProcedureExecutorControllerBase()
+        private readonly
+                IStoreProceduresService
+                            _service;
+
+        public AbstractStoreProceduresExecutorControllerBase
+                    (
+                        IStoreProceduresService service
+                    )
         {
-            _locker
-                .LockIf
-                    (
-                        () =>
-                        {
-                            var r = (_connections == null);
-                            return r;
-                        }
-                        , () =>
-                        {
-                            _connections
-                                = GetDataBasesConnectionsInfo()
-                                        .ToDictionary
-                                            (
-                                                (x) =>
-                                                {
-                                                    return
-                                                        x.ConnectionID;
-                                                }
-                                                , StringComparer
-                                                        .OrdinalIgnoreCase
-                                            );
-                        }
-                    );
-            _locker
-                .LockIf
-                    (
-                        () =>
-                        {
-                            var r = (_executors == null);
-                            return r;
-                        }
-                        , () =>
-                        {
-                            if (DynamicLoadExecutorsPaths != null)
-                            {
-                                var q =
-                                    DynamicLoadExecutorsPaths
-                                        .Where
-                                            (
-                                                (x) =>
-                                                {
-                                                    return
-                                                        Directory
-                                                            .Exists(x);
-                                                }
-                                            )
-                                        .SelectMany
-                                            (
-                                                (x) =>
-                                                {
-                                                    var r =
-                                                        CompositionHelper
-                                                            .ImportManyExportsComposeParts
-                                                                <IStoreProcedureExecutable>
-                                                                    (
-                                                                        x
-                                                                    );
-                                                    return
-                                                            r;
-                                                }
-                                            );
-                                _executors =
-                                    q
-                                    .ToDictionary
-                                        (
-                                            (x) =>
-                                            {
-                                                return
-                                                    x.DataBaseType;
-                                            }
-                                            ,
-                                            (x) =>
-                                            {
-                                                IStoreProcedureParametersSetCacheAutoRefreshable
-                                                    rr = x as IStoreProcedureParametersSetCacheAutoRefreshable;
-                                                if (rr != null)
-                                                {
-                                                    rr.CachedExecutingParametersExpiredInSeconds
-                                                        = CachedExecutingParametersExpiredInSeconds;
-                                                    rr.NeedAutoRefreshExecutedTimeForSlideExpire
-                                                        = NeedAutoRefreshExecutedTimeForSlideExpire;
-                                                }
-                                                return
-                                                    x;
-                                            }
-                                            , StringComparer
-                                                    .OrdinalIgnoreCase
-                                        );
-                            }
-                        }
-                    );
+            _service = service;
         }
-        //[ResponseCache(Duration = 10)]
-        //[
-        //    TypeFilter
-        //        (
-        //            typeof(RouteAuthorizeActionFilter)
-        //            //, IsReusable = false
-        //            , Arguments = new object[] {  
-        //                new string[]
-        //                {
-        //                    "storeProcedureName"
-        //                }
-        //            }
-        //        )
-        //]
-        //[
-        //    RouteAuthorizeActionFilter
-        //    (
-        //        new string[]
-        //            {
-        //                "storeProcedureName"
-        //            }
-        //    )
-        //]
         [HttpDelete]
         [HttpGet]
         [HttpHead]
@@ -185,43 +75,19 @@ namespace Microshaoft.WebApi.Controllers
                                 string resultPathSegment6 = null
                             )
         {
-            var beginTime = DateTime.Now;
             JToken result = null;
-            var r = false;
-            DataBaseConnectionInfo connectionInfo = null;
-            r = _connections
-                        .TryGetValue
+            (int StatusCode, JToken Result) rr;
+            rr = _service
+                        .Process
                             (
                                 connectionID
-                                , out connectionInfo
+                                , storeProcedureName
+                                , parameters
+                                , Request.Method
+                                , 102
                             );
-            if (r)
-            {
-                r = Process
-                        (
-                            connectionInfo
-                            , storeProcedureName
-                            , Request.Method
-                            , parameters
-                            , out result
-                            , CommandTimeoutInSeconds
-                        );
-            }
-            if (!r)
-            {
-                return StatusCode(403);
-            }
-            result["BeginTime"] = beginTime;
-            var endTime = DateTime.Now;
-            result["EndTime"] = endTime;
-            result["DurationInMilliseconds"]
-                    = DateTimeHelper
-                            .MillisecondsDiff
-                                    (
-                                        beginTime
-                                        , endTime
-                                    );
-            result = result
+            result = rr
+                        .Result
                         .GetDescendantByPath
                             (
                                 resultPathSegment1

@@ -180,6 +180,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\AbstractStoreProcedureExecutorControllerBase.1.NET.All.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\AbstractStoreProcedureExecutorControllerBase.3.NET.Core.Standard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\AbstractStoreProcedureExecutorControllerBase.2.NET.Framework.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\StoreProcedureExecuteService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\HttpMethodsFlags.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenModelBinder.NET.Framework.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenWebHelper.NET.Core.Standard.cs" />

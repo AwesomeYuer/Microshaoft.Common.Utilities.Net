@@ -3,16 +3,17 @@
     using Microshaoft;
     using Newtonsoft.Json.Linq;
     using System.Composition;
+    using System.Data.Common;
     using System.Data.SqlClient;
     [Export(typeof(IStoreProcedureExecutable))]
     public class MsSQLStoreProcedureExecutorCompositionPlugin
                         : IStoreProcedureExecutable
                             , IStoreProcedureParametersSetCacheAutoRefreshable
     { 
-        public MsSqlStoreProceduresExecutor _executor = new MsSqlStoreProceduresExecutor();
-
+        public AbstractStoreProceduresExecutor
+                    <SqlConnection, SqlCommand, SqlParameter>
+                        _executor = new MsSqlStoreProceduresExecutor();
         public string DataBaseType => "mssql";////this.GetType().Name;
-
         public int CachedExecutingParametersExpiredInSeconds
         {
             get;
@@ -47,7 +48,7 @@
                             = CachedExecutingParametersExpiredInSeconds;
             }
             result = null;
-            SqlConnection connection = new SqlConnection(connectionString);
+            DbConnection connection = new SqlConnection(connectionString);
             result = _executor
                             .Execute
                                     (
