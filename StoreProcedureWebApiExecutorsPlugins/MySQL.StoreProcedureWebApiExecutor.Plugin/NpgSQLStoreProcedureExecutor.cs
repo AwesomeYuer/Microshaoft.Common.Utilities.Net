@@ -1,20 +1,20 @@
 ﻿namespace Microshaoft.StoreProcedureExecutors
 {
     using Microshaoft;
-    using MySql.Data.MySqlClient;
     using Newtonsoft.Json.Linq;
+    using Npgsql;
     using System.Composition;
     using System.Data.Common;
 
     [Export(typeof(IStoreProcedureExecutable))]
-    public class MySQLStoreProcedureExecutorCompositionPlugin
+    public class NpgSQLStoreProcedureExecutorCompositionPlugin
                         : IStoreProcedureExecutable
                             , IStoreProcedureParametersSetCacheAutoRefreshable
     {
         public AbstractStoreProceduresExecutor
-                    <MySqlConnection, MySqlCommand, MySqlParameter>
-                        _executor = new MySqlStoreProceduresExecutor();
-        public string DataBaseType => "mysql";////this.GetType().Name;
+                    <NpgsqlConnection, NpgsqlCommand, NpgsqlParameter>
+                        _executor = new NpgSqlStoreProceduresExecutor();
+        public string DataBaseType => "npgsql";////this.GetType().Name;
         public int CachedExecutingParametersExpiredInSeconds
         {
             get;
@@ -49,7 +49,7 @@
                             = CachedExecutingParametersExpiredInSeconds;
             }
             result = null;
-            DbConnection connection = new MySqlConnection(connectionString);
+            DbConnection connection = new NpgsqlConnection(connectionString);
             result = _executor
                             .Execute
                                     (

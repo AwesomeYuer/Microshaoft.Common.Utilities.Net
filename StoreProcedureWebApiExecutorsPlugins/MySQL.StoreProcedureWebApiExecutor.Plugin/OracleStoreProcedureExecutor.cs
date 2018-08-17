@@ -1,20 +1,22 @@
-﻿namespace Microshaoft.StoreProcedureExecutors
+﻿#if !XAMARIN && NETFRAMEWORK4_X
+namespace Microshaoft.StoreProcedureExecutors
 {
     using Microshaoft;
-    using MySql.Data.MySqlClient;
     using Newtonsoft.Json.Linq;
+    using Npgsql;
+    using Oracle.ManagedDataAccess.Client;
     using System.Composition;
     using System.Data.Common;
 
     [Export(typeof(IStoreProcedureExecutable))]
-    public class MySQLStoreProcedureExecutorCompositionPlugin
+    public class OracleStoreProcedureExecutorCompositionPlugin
                         : IStoreProcedureExecutable
                             , IStoreProcedureParametersSetCacheAutoRefreshable
     {
         public AbstractStoreProceduresExecutor
-                    <MySqlConnection, MySqlCommand, MySqlParameter>
-                        _executor = new MySqlStoreProceduresExecutor();
-        public string DataBaseType => "mysql";////this.GetType().Name;
+                    <OracleConnection, OracleCommand, OracleParameter>
+                        _executor = new OracleStoreProceduresExecutor();
+        public string DataBaseType => "oracle";////this.GetType().Name;
         public int CachedExecutingParametersExpiredInSeconds
         {
             get;
@@ -49,7 +51,7 @@
                             = CachedExecutingParametersExpiredInSeconds;
             }
             result = null;
-            DbConnection connection = new MySqlConnection(connectionString);
+            DbConnection connection = new OracleConnection(connectionString);
             result = _executor
                             .Execute
                                     (
@@ -71,3 +73,4 @@
         }
     }
 }
+#endif

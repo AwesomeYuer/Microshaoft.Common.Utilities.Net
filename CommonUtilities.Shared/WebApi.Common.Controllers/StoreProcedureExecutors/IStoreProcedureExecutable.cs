@@ -10,7 +10,6 @@
                     , string storeProcedureName
                     , JToken parameters
                     , out JToken result
-
                     , int commandTimeoutInSeconds = 90
                 );
 

@@ -6,7 +6,7 @@ namespace Microshaoft
     using System;
     using System.Collections.Generic;
     using System.Data;
-    public class StoreProceduresExecutor
+    public class SqliteStoreProceduresExecutor
                     : AbstractStoreProceduresExecutor<SqliteConnection, SqliteCommand, SqliteParameter>
     {
         protected override SqliteParameter

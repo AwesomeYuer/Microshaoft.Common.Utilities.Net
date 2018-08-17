@@ -1,20 +1,21 @@
 ﻿namespace Microshaoft.StoreProcedureExecutors
 {
     using Microshaoft;
+    using Microsoft.Data.Sqlite;
     using MySql.Data.MySqlClient;
     using Newtonsoft.Json.Linq;
     using System.Composition;
     using System.Data.Common;
 
     [Export(typeof(IStoreProcedureExecutable))]
-    public class MySQLStoreProcedureExecutorCompositionPlugin
+    public class SqliteStoreProcedureExecutorCompositionPlugin
                         : IStoreProcedureExecutable
                             , IStoreProcedureParametersSetCacheAutoRefreshable
     {
         public AbstractStoreProceduresExecutor
-                    <MySqlConnection, MySqlCommand, MySqlParameter>
-                        _executor = new MySqlStoreProceduresExecutor();
-        public string DataBaseType => "mysql";////this.GetType().Name;
+                    <SqliteConnection, SqliteCommand, SqliteParameter>
+                        _executor = new SqliteStoreProceduresExecutor();
+        public string DataBaseType => "sqlite";////this.GetType().Name;
         public int CachedExecutingParametersExpiredInSeconds
         {
             get;

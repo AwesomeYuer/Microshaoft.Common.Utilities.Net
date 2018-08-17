@@ -3,7 +3,6 @@ namespace Microshaoft.WebApi.Controllers
 {
     using Microshaoft.Web;
     using Newtonsoft.Json.Linq;
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     public enum DataBasesType
@@ -19,178 +18,13 @@ namespace Microshaoft.WebApi.Controllers
         public string ConnectionID;
         public DataBasesType DataBaseType;
         public string ConnectionString;
-        public IDictionary<string, HttpMethodsFlags>
+        public IDictionary
+                    <string, HttpMethodsFlags>
                             WhiteList;
-
     }
     public abstract partial class 
-        AbstractStoreProcedureExecutorControllerBase 
-            //: IStoreProcedureParametersSetCacheAutoRefreshable
+            AbstractStoreProceduresExecutorControllerBase 
     {
-
-        protected abstract int CommandTimeoutInSeconds
-        {
-            get;
-            //set;
-        }
-
- 
-
-        private static IDictionary<string, IStoreProcedureExecutable> _executors;
-        protected abstract string[] DynamicLoadExecutorsPaths
-        {
-            get;
-            //set;
-        }
-        protected abstract int CachedExecutingParametersExpiredInSeconds
-        {
-            get;
-            //set;
-        }
-        protected abstract bool NeedAutoRefreshExecutedTimeForSlideExpire
-        {
-            get;
-            //set;
-        }
-        private static IDictionary<string, DataBaseConnectionInfo> _connections = null;
-        protected abstract IEnumerable<DataBaseConnectionInfo> GetDataBasesConnectionsInfo();
-       
-        private static object _locker = new object();
-        private bool CheckList
-                (
-                    IDictionary
-                        <string, HttpMethodsFlags>
-                            whiteList
-                    , string storeProcedureName
-                    , string httpMethod
-                )
-        {
-            var r = false;
-            HttpMethodsFlags httpMethodsFlag;
-            r = Enum
-                    .TryParse<HttpMethodsFlags>
-                        (
-                            httpMethod
-                            , true
-                            , out httpMethodsFlag
-                        );
-            if (r)
-            {
-                HttpMethodsFlags allowedHttpMethodsFlags;
-                r = whiteList
-                        .TryGetValue
-                            (
-                                storeProcedureName
-                                , out allowedHttpMethodsFlags
-                            );
-                if (r)
-                {
-                    r = allowedHttpMethodsFlags
-                            .HasFlag(httpMethodsFlag);
-                }
-            }
-            return r;
-        }
-        private bool Process
-                    (
-                        DataBaseConnectionInfo connectionInfo
-                        , string storeProcedureName
-                        , string httpMethod
-                        , JToken parameters
-                        , out JToken result
-                        , int commandTimeoutInSeconds = 90
-                    )
-        {
-            var r = false;
-            result = null;
-            var whiteList = connectionInfo.WhiteList;
-            if (whiteList != null)
-            {
-                if (whiteList.Count > 0)
-                {
-                    r = CheckList
-                            (
-                                whiteList
-                                , storeProcedureName
-                                , httpMethod
-                            );
-                }
-            }
-            else
-            {
-                r = true;
-            }
-            if (r)
-            {
-                r = Process
-                        (
-                            connectionInfo.ConnectionString
-                            , connectionInfo.DataBaseType.ToString()
-                            , storeProcedureName
-                            , parameters
-                            , out result
-                            , commandTimeoutInSeconds
-                        );
-            }
-            return r;
-        }
-        private bool Process
-                        (
-                            string connectionString
-                            , string dataBaseType
-                            , string storeProcedureName
-                            , JToken parameters
-                            , out JToken result
-                            , int commandTimeoutInSeconds = 90
-                        )
-        {
-            var r = false;
-            result = null;
-
-            IStoreProcedureExecutable executor = null;
-            r = _executors
-                        .TryGetValue
-                            (
-                                dataBaseType
-                                , out executor
-                            );
-
-            if (r)
-            {
-                r = executor
-                        .Execute
-                            (
-                                connectionString
-                                , storeProcedureName
-                                , parameters
-                                , out result
-                                , commandTimeoutInSeconds
-                            );
-            }
-            return r;
-        }
-        private bool Process
-                        (
-                            string   connectionString
-                            , string dataBaseType
-                            , string storeProcedureName
-                            , string parameters
-                            , out JToken result
-                            , int commandTimeoutInSeconds = 90
-                        )
-        {
-            var j = JObject.Parse(parameters);
-            var r = Process
-                        (
-                            connectionString
-                            , dataBaseType
-                            , storeProcedureName
-                            , j
-                            , out result
-                            , commandTimeoutInSeconds
-                        );
-            return r;
-        }
         private void GroupingJObjectResult(int groupFrom, string groupBy, JToken result)
         {
             var jTokenPath = $"Outputs.ResultSets[{groupFrom}]";
