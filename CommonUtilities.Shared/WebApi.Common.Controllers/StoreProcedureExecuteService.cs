@@ -9,7 +9,7 @@ namespace Microshaoft.Web
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    public interface IStoreProceduresService
+    public interface IStoreProceduresWebApiService
     {
         (int StatusCode, JToken Result)
                 Process
@@ -27,7 +27,7 @@ namespace Microshaoft.Web
     }
     public abstract class
                 AbstractStoreProceduresService
-                                : IStoreProceduresService
+                                : IStoreProceduresWebApiService
     {
         private object _locker = new object();
         public AbstractStoreProceduresService()
