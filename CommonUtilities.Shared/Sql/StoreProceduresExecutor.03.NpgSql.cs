@@ -40,20 +40,29 @@ namespace Microshaoft
                 .NpgsqlDbType = dbType;
             if ((parameter.NpgsqlDbType == NpgsqlDbType.Numeric))
             {
-                parameter.Scale =
-                        (
-                            (byte)
-                                (
+                var o = reader["NUMERIC_SCALE"];
+                if (o != DBNull.Value)
+                {
+                    parameter
+                        .Scale =
+                            (
+                                (byte)
                                     (
-                                        (short)
-                                            (
-                                                (int)(reader["NUMERIC_SCALE"])
-                                            )
+                                        (
+                                            (short)
+                                                (
+                                                    (int)o
+                                                )
+                                        )
+                                    //& 255
                                     )
-                                //& 255
-                                )
-                        );
-                parameter.Precision = ((byte)reader["NUMERIC_PRECISION"]);
+                            );
+                }
+                o = reader["NUMERIC_PRECISION"];
+                if (o != DBNull.Value)
+                {
+                    parameter.Precision = ((byte)o);
+                }
             }
             return parameter;
         }
@@ -94,42 +103,104 @@ namespace Microshaoft
                     parameter.NpgsqlDbType == NpgsqlDbType.Time
                 )
             {
-                r = DateTime.Parse(jValueText);
+                DateTime rr;
+                var b = DateTime
+                            .TryParse
+                                (
+                                    jValueText
+                                    , out rr
+                                );
+                if (b)
+                {
+                    r = rr;
+                }
             }
             else if
                 (
                     parameter.NpgsqlDbType == NpgsqlDbType.Bit
                 )
             {
-                r = bool.Parse(jValueText);
+                bool rr;
+                var b = bool
+                            .TryParse
+                                (
+                                    jValueText
+                                    , out rr
+                                );
+                if (b)
+                {
+                    r = rr;
+                }
             }
             else if
                 (
                     parameter.NpgsqlDbType == NpgsqlDbType.Double
-                )
-            {
-                r = Double.Parse(jValueText);
-            }
-            else if
-                (
+                    ||
                     parameter.NpgsqlDbType == NpgsqlDbType.Real
                 )
             {
-                r = Double.Parse(jValueText);
+                double rr;
+                var b = double
+                            .TryParse
+                                (
+                                    jValueText
+                                    , out rr
+                                );
+                if (b)
+                {
+                    r = rr;
+                }
             }
             else if
                 (
                     parameter.NpgsqlDbType == NpgsqlDbType.Uuid
                 )
             {
-                r = Guid.Parse(jValueText);
+                Guid rr;
+                var b = Guid
+                            .TryParse
+                                (
+                                    jValueText
+                                    , out rr
+                                );
+                if (b)
+                {
+                    r = rr;
+                }
             }
             else if
                (
                     parameter.NpgsqlDbType == NpgsqlDbType.Bigint
                )
             {
-                r = long.Parse(jValueText);
+                long rr;
+                var b = long
+                            .TryParse
+                                (
+                                    jValueText
+                                    , out rr
+                                );
+                if (b)
+                {
+                    r = rr;
+                }
+            }
+            else if
+               (
+                    parameter.NpgsqlDbType == NpgsqlDbType.Numeric
+               )
+            {
+                decimal rr;
+                var b = decimal
+                            .TryParse
+                                (
+                                    jValueText
+                                    , out rr
+                                );
+                if (b)
+                {
+                    r = rr;
+                }
             }
             return r;
         }

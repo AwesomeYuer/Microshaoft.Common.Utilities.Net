@@ -12,6 +12,15 @@ namespace Microshaoft.WebApi.Controllers
     public class StoreProcedureExecutorController
                     : AbstractStoreProceduresExecutorControllerBase
     {
+
+        /*
+         * http://localhost:5816/api/StoreProcedureExecutor/mysql1/zsp_test?{datetime:"2019-01-01",pBIT:true,pBOOL:1,pTINYINT:1,pSMALLINT:16,pMEDIUMINT:25,pINT:65536,pBIGINT:999999,pFLOAT:9999.99,pDOUBLE:9999.99,pDECIMAL:9999.99,pCHAR:"a",pVARCHAR:"aaaaaaaaaa",pDate:"2018-09-01",pDateTime:"2018-09-01 21:00:10",pTimeStamp:null,pTime:null,pYear:null}
+         *
+         *
+         *
+         *
+         */
+
         public StoreProcedureExecutorController(IStoreProceduresWebApiService service)
                 : base(service)
         {
@@ -378,7 +387,7 @@ namespace Microshaoft.WebApi.Controllers
 
 
 */
-        #endregion
+#endregion
 
     }
 }

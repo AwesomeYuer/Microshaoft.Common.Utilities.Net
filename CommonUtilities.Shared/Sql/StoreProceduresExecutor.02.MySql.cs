@@ -33,26 +33,95 @@ namespace Microshaoft
                                , MySqlParameter parameter
                            )
         {
-            var dbTypeName = (string)(reader["DATA_TYPE"]);
-            MySqlDbType dbType = (MySqlDbType)Enum.Parse(typeof(MySqlDbType), dbTypeName, true);
-            parameter
-                .MySqlDbType = dbType;
-            if ((parameter.MySqlDbType == MySqlDbType.Decimal))
+            var originalDbTypeName = (string)(reader["DATA_TYPE"]);
+            var dbTypeName = originalDbTypeName;
+            //bit
+            //tinyint
+            //smallint
+            //mediumint
+            //int
+            //bigint
+            //float
+            //double
+            //decimal
+            //char
+            //varchar
+            //tinytext
+            //tinytext
+            //mediumtext
+            //longtext
+            //tinyblob
+            //tinyblob
+            //mediumblob
+            //longblob
+            //date
+            //datetime
+            //timestamp
+            //time
+            //year
+            
+            if (string.Compare(dbTypeName, "bool", true) == 0)
             {
-                parameter.Scale =
+                dbTypeName = "Int16";
+            }
+            else if (string.Compare(dbTypeName, "smallint", true) == 0)
+            {
+                dbTypeName = "Int16";
+            }
+            else if (string.Compare(dbTypeName, "mediumint", true) == 0)
+            {
+                dbTypeName = "Int24";
+            }
+            else if (string.Compare(dbTypeName, "int", true) == 0)
+            {
+                dbTypeName = "Int32";
+            }
+            else if (string.Compare(dbTypeName, "bigint", true) == 0)
+            {
+                dbTypeName = "Int64";
+            }
+            MySqlDbType dbType = MySqlDbType.Bit;
+            var r = Enum
+                        .TryParse
+                            (
+                                dbTypeName
+                                , true
+                                , out dbType
+                            );
+            if (r)
+            {
+                parameter
+                    .MySqlDbType = dbType;
+            }
+            if 
+                (
+                    parameter.MySqlDbType == MySqlDbType.Decimal
+                    ||
+                    parameter.MySqlDbType == MySqlDbType.NewDecimal
+                )
+            {
+                var o = reader["NUMERIC_SCALE"];
+                if (o != DBNull.Value)
+                {
+                    parameter.Scale =
                         (
                             (byte)
                                 (
                                     (
                                         (short)
                                             (
-                                                (int)(reader["NUMERIC_SCALE"])
+                                                (long) o
                                             )
                                     )
                                 //& 255
                                 )
                         );
-                parameter.Precision = ((byte)reader["NUMERIC_PRECISION"]);
+                }
+                o = reader["NUMERIC_PRECISION"];
+                if (o != DBNull.Value)
+                {
+                    parameter.Precision = ((byte)((uint)o));
+                }
             }
             return parameter;
         }
@@ -95,42 +164,102 @@ namespace Microshaoft
                     parameter.MySqlDbType == MySqlDbType.DateTime
                 )
             {
-                r = DateTime.Parse(jValueText);
+                DateTime rr;
+                var b = DateTime
+                        .TryParse
+                            (
+                                jValueText
+                                , out rr
+                            );
+                if (b)
+                {
+                    r = rr;
+                }
             }
             else if
                 (
                     parameter.MySqlDbType == MySqlDbType.Bit
                 )
             {
-                r = bool.Parse(jValueText);
+                bool rr;
+                var b = bool
+                        .TryParse
+                            (
+                                jValueText
+                                , out rr
+                            );
+                if (b)
+                {
+                    r = rr;
+                }
             }
             else if
                 (
                     parameter.MySqlDbType == MySqlDbType.Decimal
                 )
             {
-                r = decimal.Parse(jValueText);
+                decimal rr;
+                var b = decimal
+                        .TryParse
+                            (
+                                jValueText
+                                , out rr
+                            );
+                if (b)
+                {
+                    r = rr;
+                }
             }
             else if
                 (
                     parameter.MySqlDbType == MySqlDbType.Float
                 )
             {
-                r = float.Parse(jValueText);
+                float rr;
+                var b = float
+                        .TryParse
+                            (
+                                jValueText
+                                , out rr
+                            );
+                if (b)
+                {
+                    r = rr;
+                }
             }
             else if
                 (
                     parameter.MySqlDbType == MySqlDbType.Guid
                 )
             {
-                r = Guid.Parse(jValueText);
+                Guid rr;
+                var b = Guid
+                        .TryParse
+                            (
+                                jValueText
+                                , out rr
+                            );
+                if (b)
+                {
+                    r = rr;
+                }
             }
             else if
                 (
                     parameter.MySqlDbType == MySqlDbType.UInt16
                 )
             {
-                r = ushort.Parse(jValueText);
+                ushort rr;
+                var b = ushort
+                        .TryParse
+                            (
+                                jValueText
+                                , out rr
+                            );
+                if (b)
+                {
+                    r = rr;
+                }
             }
             else if
                 (
@@ -139,21 +268,51 @@ namespace Microshaoft
                     parameter.MySqlDbType == MySqlDbType.UInt32
                 )
             {
-                r = uint.Parse(jValueText);
+                uint rr;
+                var b = uint
+                        .TryParse
+                            (
+                                jValueText
+                                , out rr
+                            );
+                if (b)
+                {
+                    r = rr;
+                }
             }
             else if
                 (
                     parameter.MySqlDbType == MySqlDbType.UInt64
                 )
             {
-                r = ulong.Parse(jValueText);
+                ulong rr;
+                var b = ulong
+                        .TryParse
+                            (
+                                jValueText
+                                , out rr
+                            );
+                if (b)
+                {
+                    r = rr;
+                }
             }
             else if
                (
                    parameter.MySqlDbType == MySqlDbType.Int16
                )
             {
-                r = short.Parse(jValueText);
+                short rr;
+                var b = short
+                        .TryParse
+                            (
+                                jValueText
+                                , out rr
+                            );
+                if (b)
+                {
+                    r = rr;
+                }
             }
             else if
                (
@@ -162,14 +321,34 @@ namespace Microshaoft
                     parameter.MySqlDbType == MySqlDbType.Int32
                )
             {
-                r = int.Parse(jValueText);
+                int rr;
+                var b = int
+                        .TryParse
+                            (
+                                jValueText
+                                , out rr
+                            );
+                if (b)
+                {
+                    r = rr;
+                }
             }
             else if
                (
                     parameter.MySqlDbType == MySqlDbType.Int64
                )
             {
-                r = long.Parse(jValueText);
+                long rr;
+                var b = long
+                        .TryParse
+                            (
+                                jValueText
+                                , out rr
+                            );
+                if (b)
+                {
+                    r = rr;
+                }
             }
             return r;
         }
