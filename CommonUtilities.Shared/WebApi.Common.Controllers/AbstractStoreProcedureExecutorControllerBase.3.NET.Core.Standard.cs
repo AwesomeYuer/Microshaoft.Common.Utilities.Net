@@ -14,12 +14,12 @@ namespace Microshaoft.WebApi.Controllers
                         ControllerBase
     {
         private readonly
-                IStoreProceduresService
+                IStoreProceduresWebApiService
                             _service;
 
         public AbstractStoreProceduresExecutorControllerBase
                     (
-                        IStoreProceduresService service
+                        IStoreProceduresWebApiService service
                     )
         {
             _service = service;

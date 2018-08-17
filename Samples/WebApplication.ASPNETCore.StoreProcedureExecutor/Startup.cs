@@ -26,7 +26,7 @@
             services
                 //.AddTransient
                 .AddSingleton
-                    <IStoreProceduresService, StoreProceduresExecuteService>
+                    <IStoreProceduresWebApiService, StoreProceduresExecuteService>
                         ();
             services
                 .Add
