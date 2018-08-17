@@ -29,7 +29,7 @@ namespace Microshaoft.Web
                 AbstractStoreProceduresService
                                 : IStoreProceduresWebApiService
     {
-        private object _locker = new object();
+        private static object _locker = new object();
         public AbstractStoreProceduresService()
         {
             _locker
