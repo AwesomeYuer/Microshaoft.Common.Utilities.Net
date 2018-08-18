@@ -10,6 +10,45 @@
                     : AbstractStoreProceduresExecutor
                             <SqlConnection, SqlCommand, SqlParameter>
     {
+        private IDictionary<string, Type> _dictionary
+                    = new Dictionary<string, Type>
+                            (StringComparer.OrdinalIgnoreCase)
+        {
+                      { "image"                 , typeof(string)            }
+                    , { "text"                  , typeof(string)            }
+                    , { "uniqueidentifier"      , typeof(Guid)              }
+                    , { "date"                  , typeof(DateTime)          }
+                    , { "time"                  , typeof(DateTime)          }
+                    , { "datetime2"             , typeof(DateTime)          }
+                    , { "datetimeoffset"        , typeof(DateTime)          }
+                    , { "tinyint"               , typeof(short)             }
+                    , { "smallint"              , typeof(int)               }
+                    , { "int"                   , typeof(int)               }
+                    , { "smalldatetime"         , typeof(DateTime)          }
+                    , { "real"                  , typeof(double)            }
+                    , { "money"                 , typeof(decimal)           }
+                    , { "datetime"              , typeof(DateTime)          }
+                    , { "float"                 , typeof(float)             }
+                    //, { "sql_variant"           , typeof(string)          }
+                    , { "ntext"                 , typeof(string)            }
+                    , { "bit"                   , typeof(bool)              }
+                    , { "decimal"               , typeof(decimal)           }
+                    , { "numeric"               , typeof(decimal)           }
+                    , { "smallmoney"            , typeof(decimal)           }
+                    , { "bigint"                , typeof(long)              }
+                    , { "hierarchyid"           , typeof(long)              }
+                    , { "geometry"              , typeof(string)            }
+                    , { "geography"             , typeof(string)            }
+                    , { "varbinary"             , typeof(byte[])            }
+                    , { "varchar"               , typeof(string)            }
+                    , { "binary"                , typeof(byte[])            }
+                    , { "char"                  , typeof(string)            }
+                    , { "timestamp"             , typeof(long)              }
+                    , { "nvarchar"              , typeof(string)            }
+                    , { "nchar"                 , typeof(string)            }
+                    , { "xml"                   , typeof(string)            }
+                    , { "sysname"               , typeof(string)            }
+        };
         protected override SqlParameter
                         OnQueryDefinitionsSetInputParameterProcess
                             (
@@ -116,44 +155,7 @@
             return parameter;
         }
 
-        private IDictionary<string, Type> _dictionary
-                = new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase)
-                {
-                      { "image"                 , typeof(string)            }
-                    , { "text"                  , typeof(string)            }
-                    , { "uniqueidentifier"      , typeof(Guid)              }
-                    , { "date"                  , typeof(DateTime)          }
-                    , { "time"                  , typeof(DateTime)          }
-                    , { "datetime2"             , typeof(DateTime)          }
-                    , { "datetimeoffset"        , typeof(DateTime)          }
-                    , { "tinyint"               , typeof(short)             }
-                    , { "smallint"              , typeof(int)               }
-                    , { "int"                   , typeof(int)               }
-                    , { "smalldatetime"         , typeof(DateTime)          }
-                    , { "real"                  , typeof(double)            }
-                    , { "money"                 , typeof(decimal)           }
-                    , { "datetime"              , typeof(DateTime)          }
-                    , { "float"                 , typeof(float)             }
-                    //, { "sql_variant"           , typeof(string)          }
-                    , { "ntext"                 , typeof(string)            }
-                    , { "bit"                   , typeof(bool)              }
-                    , { "decimal"               , typeof(decimal)           }
-                    , { "numeric"               , typeof(decimal)           }
-                    , { "smallmoney"            , typeof(decimal)           }
-                    , { "bigint"                , typeof(long)              }
-                    , { "hierarchyid"           , typeof(long)              }
-                    , { "geometry"              , typeof(string)            }
-                    , { "geography"             , typeof(string)            }
-                    , { "varbinary"             , typeof(byte[])            }
-                    , { "varchar"               , typeof(string)            }
-                    , { "binary"                , typeof(byte[])            }
-                    , { "char"                  , typeof(string)            }
-                    , { "timestamp"             , typeof(long)              }
-                    , { "nvarchar"              , typeof(string)            }
-                    , { "nchar"                 , typeof(string)            }
-                    , { "xml"                   , typeof(string)            }
-                    , { "sysname"               , typeof(string)            }   
-                };
+
         public Type GetTypeBySqlDbTypeName(string sqlDbTypeName)
         {
             Type r = null;
@@ -203,7 +205,6 @@ from
 					WHERE
 						aa.name = @userDefinedTableTypeName
 				)
-	
 	) a
 		inner join
 			sys.types b
@@ -211,7 +212,7 @@ from
 					a.system_type_id = b.system_type_id
 					and
 					a.user_type_id = b.user_type_id
-                    ";
+                ";
                 //MySQL 不支持 using command
                 using
                     (
@@ -524,8 +525,33 @@ from
                     parameter.SqlDbType == SqlDbType.Structured
                 )
             {
-                //Debugger.Break();
-                var dataTable = (DataTable) parameter.Value;
+                var parameterValue = parameter.Value;
+                if
+                    (
+                        parameterValue != DBNull.Value
+                        &&
+                        parameterValue != null
+                    )
+                {
+                    DataTable dataTable = parameterValue as DataTable;
+                    if (dataTable != null)
+                    {
+                        var jArray = (JArray)jValue;
+                        var columns = dataTable.Columns;
+                        var rows = dataTable.Rows;
+                        foreach (var entry in jArray)
+                        {
+                            var row = dataTable.NewRow();
+                            foreach (DataColumn column in columns)
+                            {
+                                var columnName = column.ColumnName;
+                                row[columnName] = entry[columnName];
+                            }
+                            rows.Add(row);
+                        }
+                        r = dataTable;
+                    }
+                }
             }
             return r;
         }
