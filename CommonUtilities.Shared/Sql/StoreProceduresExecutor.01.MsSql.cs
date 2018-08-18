@@ -10,44 +10,44 @@
                     : AbstractStoreProceduresExecutor
                             <SqlConnection, SqlCommand, SqlParameter>
     {
-        private IDictionary<string, Type> _dictionary
+        private IDictionary<string, Type> _dbTypesMapper
                     = new Dictionary<string, Type>
                             (StringComparer.OrdinalIgnoreCase)
         {
-                      { "image"                 , typeof(string)            }
-                    , { "text"                  , typeof(string)            }
-                    , { "uniqueidentifier"      , typeof(Guid)              }
-                    , { "date"                  , typeof(DateTime)          }
-                    , { "time"                  , typeof(DateTime)          }
-                    , { "datetime2"             , typeof(DateTime)          }
-                    , { "datetimeoffset"        , typeof(DateTime)          }
-                    , { "tinyint"               , typeof(short)             }
-                    , { "smallint"              , typeof(int)               }
-                    , { "int"                   , typeof(int)               }
-                    , { "smalldatetime"         , typeof(DateTime)          }
-                    , { "real"                  , typeof(double)            }
-                    , { "money"                 , typeof(decimal)           }
-                    , { "datetime"              , typeof(DateTime)          }
-                    , { "float"                 , typeof(float)             }
-                    //, { "sql_variant"           , typeof(string)          }
-                    , { "ntext"                 , typeof(string)            }
-                    , { "bit"                   , typeof(bool)              }
-                    , { "decimal"               , typeof(decimal)           }
-                    , { "numeric"               , typeof(decimal)           }
-                    , { "smallmoney"            , typeof(decimal)           }
-                    , { "bigint"                , typeof(long)              }
-                    , { "hierarchyid"           , typeof(long)              }
-                    , { "geometry"              , typeof(string)            }
-                    , { "geography"             , typeof(string)            }
-                    , { "varbinary"             , typeof(byte[])            }
-                    , { "varchar"               , typeof(string)            }
-                    , { "binary"                , typeof(byte[])            }
-                    , { "char"                  , typeof(string)            }
-                    , { "timestamp"             , typeof(long)              }
-                    , { "nvarchar"              , typeof(string)            }
-                    , { "nchar"                 , typeof(string)            }
-                    , { "xml"                   , typeof(string)            }
-                    , { "sysname"               , typeof(string)            }
+              { "image"                 , typeof(byte[])            }
+            , { "text"                  , typeof(string)            }
+            , { "uniqueidentifier"      , typeof(Guid)              }
+            , { "date"                  , typeof(DateTime)          }
+            , { "time"                  , typeof(DateTime)          }
+            , { "datetime2"             , typeof(DateTime)          }
+            , { "datetimeoffset"        , typeof(DateTime)          }
+            , { "tinyint"               , typeof(short)             }
+            , { "smallint"              , typeof(int)               }
+            , { "int"                   , typeof(int)               }
+            , { "smalldatetime"         , typeof(DateTime)          }
+            , { "real"                  , typeof(double)            }
+            , { "money"                 , typeof(decimal)           }
+            , { "datetime"              , typeof(DateTime)          }
+            , { "float"                 , typeof(float)             }
+            , { "sql_variant"           , typeof(byte[])            }
+            , { "ntext"                 , typeof(string)            }
+            , { "bit"                   , typeof(bool)              }
+            , { "decimal"               , typeof(decimal)           }
+            , { "numeric"               , typeof(decimal)           }
+            , { "smallmoney"            , typeof(decimal)           }
+            , { "bigint"                , typeof(long)              }
+            , { "hierarchyid"           , typeof(long)              }
+            , { "geometry"              , typeof(string)            }
+            , { "geography"             , typeof(string)            }
+            , { "varbinary"             , typeof(byte[])            }
+            , { "varchar"               , typeof(string)            }
+            , { "binary"                , typeof(byte[])            }
+            , { "char"                  , typeof(string)            }
+            , { "timestamp"             , typeof(long)              }
+            , { "nvarchar"              , typeof(string)            }
+            , { "nchar"                 , typeof(string)            }
+            , { "xml"                   , typeof(string)            }
+            , { "sysname"               , typeof(string)            }
         };
         protected override SqlParameter
                         OnQueryDefinitionsSetInputParameterProcess
@@ -159,7 +159,7 @@
         public Type GetTypeBySqlDbTypeName(string sqlDbTypeName)
         {
             Type r = null;
-            _dictionary
+            _dbTypesMapper
                 .TryGetValue
                     (
                         sqlDbTypeName
