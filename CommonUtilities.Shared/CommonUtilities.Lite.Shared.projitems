@@ -124,7 +124,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Sql\StoreProceduresExecutor.04.Oracle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\StoreProceduresExecutor.05.Sqlite.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\StoreProceduresExecutor.02.MySql.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Sql\StoreProceduresExecutor.01.MsSQL.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sql\StoreProceduresExecutor.01.MsSql.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\StoreProceduresExecutor.00.AbstractBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System.Buffers.ArrayPool\ArrayPool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Throttler\RateLimiters\FixedTokenBucket.cs" />

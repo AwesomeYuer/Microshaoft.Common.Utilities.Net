@@ -82,6 +82,10 @@
                             "/mnt/d/MyGitHub/Microshaoft.Common.Utilities.Net.4x/StoreProcedureWebApiExecutorsPlugins/MsSQL.StoreProcedureWebApiExecutor.Plugin/bin/Debug/netcoreapp2.1/"
                             ,
                             "/mnt/d/MyGitHub/Microshaoft.Common.Utilities.Net.4x/StoreProcedureWebApiExecutorsPlugins/MySQL.StoreProcedureWebApiExecutor.Plugin/bin/Debug/netcoreapp2.1"
+                            ,
+                            "/home/microshaoft/mygithub/Microshaoft.Common.Utilities.Net.4x/StoreProcedureWebApiExecutorsPlugins/MsSQL.StoreProcedureWebApiExecutor.Plugin/bin/Debug/netcoreapp2.1/"
+                            ,
+                            "/home/microshaoft/mygithub/Microshaoft.Common.Utilities.Net.4x/StoreProcedureWebApiExecutorsPlugins/MySQL.StoreProcedureWebApiExecutor.Plugin/bin/Debug/netcoreapp2.1/"
                         };
             }
         }
