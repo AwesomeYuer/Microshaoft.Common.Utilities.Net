@@ -1,4 +1,4 @@
-﻿namespace WebApplication.ASPNetCore
+﻿    namespace WebApplication.ASPNetCore
 {
     using Microshaoft.Web;
     using Microsoft.AspNetCore.Builder;
