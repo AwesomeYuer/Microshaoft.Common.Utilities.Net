@@ -40,6 +40,7 @@
                         (
                             IDataReader reader
                             , TDbParameter parameter
+                            , string connectionString
                         );
 
         protected abstract TDbParameter
@@ -100,7 +101,38 @@
                                         cloneDbParameter
                                         , jProperty.Value
                                     );
-                    cloneDbParameter.Value = parameterValue;
+                    var dbParameterValue = dbParameter.Value;
+                    if 
+                        (
+                            dbParameterValue != DBNull.Value
+                            &&
+                            dbParameterValue != null
+                        )
+                    {
+                        DataTable dataTable = dbParameterValue as DataTable;
+                        if (dataTable != null)
+                        {
+                            dataTable = dataTable.Clone();
+                            var jArray = (JArray) jProperty.Value;
+                            var columns = dataTable.Columns;
+                            var rows = dataTable.Rows;
+                            foreach (var entry in jArray)
+                            {
+                                var row = dataTable.NewRow();
+                                foreach (DataColumn column in columns)
+                                {
+                                    var columnName = column.ColumnName;
+                                    row[columnName] = entry[columnName];
+                                }
+                                rows.Add(row);
+                            }
+                        }
+                        cloneDbParameter.Value = dataTable;
+                    }
+                    else
+                    {
+                        cloneDbParameter.Value = parameterValue;
+                    }
                     if (result == null)
                     {
                         result = new List<TDbParameter>();

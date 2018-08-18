@@ -9,18 +9,18 @@
     [Export(typeof(IStoreProcedureExecutable))]
     public class MySQLStoreProcedureExecutorCompositionPlugin
                         : IStoreProcedureExecutable
-                            , IStoreProcedureParametersSetCacheAutoRefreshable
+                            , ICacheAutoRefreshable
     {
         public AbstractStoreProceduresExecutor
                     <MySqlConnection, MySqlCommand, MySqlParameter>
                         _executor = new MySqlStoreProceduresExecutor();
         public string DataBaseType => "mysql";////this.GetType().Name;
-        public int CachedExecutingParametersExpiredInSeconds
+        public int CachedExpiredInSeconds
         {
             get;
             set;
         }
-        public bool NeedAutoRefreshExecutedTimeForSlideExpire
+        public bool NeedAutoRefreshForSlideExpire
         {
             get;
             set;
@@ -36,17 +36,17 @@
         {
             if
                 (
-                    CachedExecutingParametersExpiredInSeconds > 0
+                    CachedExpiredInSeconds > 0
                     &&
                     _executor
                         .CachedExecutingParametersExpiredInSeconds
                     !=
-                    CachedExecutingParametersExpiredInSeconds
+                    CachedExpiredInSeconds
                 )
             {
                 _executor
                         .CachedExecutingParametersExpiredInSeconds
-                            = CachedExecutingParametersExpiredInSeconds;
+                            = CachedExpiredInSeconds;
             }
             result = null;
             DbConnection connection = new MySqlConnection(connectionString);
@@ -58,7 +58,7 @@
                                         , parameters
                                         , commandTimeoutInSeconds
                                     );
-            if (NeedAutoRefreshExecutedTimeForSlideExpire)
+            if (NeedAutoRefreshForSlideExpire)
             {
                 _executor
                     .RefreshCachedExecuted

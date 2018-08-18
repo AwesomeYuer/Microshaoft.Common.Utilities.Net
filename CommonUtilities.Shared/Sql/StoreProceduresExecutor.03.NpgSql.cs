@@ -32,6 +32,7 @@ namespace Microshaoft
                            (
                                IDataReader reader
                                , NpgsqlParameter parameter
+                               , string connectionString
                            )
         {
             var dbTypeName = (string)(reader["DATA_TYPE"]);

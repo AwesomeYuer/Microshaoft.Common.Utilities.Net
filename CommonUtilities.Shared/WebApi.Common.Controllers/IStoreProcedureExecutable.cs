@@ -3,7 +3,10 @@
     using Newtonsoft.Json.Linq;
     public interface IStoreProcedureExecutable
     {
-        string DataBaseType { get; }
+        string DataBaseType
+        {
+            get;
+        }
         bool Execute
                 (
                     string connectionString
@@ -12,23 +15,18 @@
                     , out JToken result
                     , int commandTimeoutInSeconds = 90
                 );
-
-
     }
-
-    public interface IStoreProcedureParametersSetCacheAutoRefreshable
+    public interface ICacheAutoRefreshable
     {
-        int CachedExecutingParametersExpiredInSeconds
+        int CachedExpiredInSeconds
         {
             get;
             set;
         }
-
-        bool NeedAutoRefreshExecutedTimeForSlideExpire
+        bool NeedAutoRefreshForSlideExpire
         {
             get;
             set;
         }
-
     }
 }
