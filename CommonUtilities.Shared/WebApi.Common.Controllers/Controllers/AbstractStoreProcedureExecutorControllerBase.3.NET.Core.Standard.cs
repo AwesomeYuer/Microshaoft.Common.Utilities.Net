@@ -78,14 +78,14 @@ namespace Microshaoft.WebApi.Controllers
             JToken result = null;
             (int StatusCode, JToken Result) rr;
             rr = _service
-                        .Process
-                            (
-                                connectionID
-                                , storeProcedureName
-                                , parameters
-                                , Request.Method
-                                , 102
-                            );
+                    .Process
+                        (
+                            connectionID
+                            , storeProcedureName
+                            , parameters
+                            , Request.Method
+                            , 102
+                        );
             result = rr
                         .Result
                         .GetDescendantByPath

@@ -51,6 +51,7 @@
                             );
             return clone;
         }
+
         public static 
                 IEnumerable<TDbParameter> 
                     GetStoreProcedureDefinitionParameters
@@ -62,7 +63,7 @@
                                         onQueryDefinitionsSetInputParameterProcessFunc
                                 , Func<TDbParameter, TDbParameter>
                                         onQueryDefinitionsSetReturnParameterProcessFunc
-                                , Func<IDataReader, TDbParameter, TDbParameter>
+                                , Func<IDataReader, TDbParameter, string, TDbParameter>
                                         onQueryDefinitionsReadOneDbParameterProcessFunc
                                 , bool includeReturnValueParameter = false
                             )
@@ -179,6 +180,7 @@
                                                         (
                                                             reader
                                                             , dbParameter
+                                                            , connectionString
                                                         );
                                                 return r;
                                             }

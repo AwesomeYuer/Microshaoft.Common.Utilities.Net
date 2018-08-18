@@ -31,6 +31,7 @@ namespace Microshaoft
                            (
                                IDataReader reader
                                , OracleParameter parameter
+                               , string connectionString
                            )
         {
             var dbTypeName = (string)(reader["DATA_TYPE"]);

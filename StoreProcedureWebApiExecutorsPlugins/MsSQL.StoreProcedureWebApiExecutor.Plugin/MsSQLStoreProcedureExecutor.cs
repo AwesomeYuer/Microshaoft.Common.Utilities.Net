@@ -8,18 +8,18 @@
     [Export(typeof(IStoreProcedureExecutable))]
     public class MsSQLStoreProcedureExecutorCompositionPlugin
                         : IStoreProcedureExecutable
-                            , IStoreProcedureParametersSetCacheAutoRefreshable
+                            , ICacheAutoRefreshable
     { 
         public AbstractStoreProceduresExecutor
                     <SqlConnection, SqlCommand, SqlParameter>
                         _executor = new MsSqlStoreProceduresExecutor();
         public string DataBaseType => "mssql";////this.GetType().Name;
-        public int CachedExecutingParametersExpiredInSeconds
+        public int CachedExpiredInSeconds
         {
             get;
             set;
         }
-        public bool NeedAutoRefreshExecutedTimeForSlideExpire
+        public bool NeedAutoRefreshForSlideExpire
         {
             get;
             set;
@@ -35,17 +35,17 @@
         {
             if
                 (
-                    CachedExecutingParametersExpiredInSeconds > 0
+                    CachedExpiredInSeconds > 0
                     &&
                     _executor
                         .CachedExecutingParametersExpiredInSeconds
                     !=
-                    CachedExecutingParametersExpiredInSeconds
+                    CachedExpiredInSeconds
                 )
             {
                 _executor
                         .CachedExecutingParametersExpiredInSeconds
-                            = CachedExecutingParametersExpiredInSeconds;
+                            = CachedExpiredInSeconds;
             }
             result = null;
             DbConnection connection = new SqlConnection(connectionString);
@@ -57,7 +57,7 @@
                                         , parameters
                                         , commandTimeoutInSeconds
                                     );
-            if (NeedAutoRefreshExecutedTimeForSlideExpire)
+            if (NeedAutoRefreshForSlideExpire)
             {
                 _executor
                     .RefreshCachedExecuted

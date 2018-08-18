@@ -31,6 +31,7 @@ namespace Microshaoft
                            (
                                IDataReader reader
                                , SqliteParameter parameter
+                               , string connectionString
                            )
         {
             var originalDbTypeName = (string)(reader["DATA_TYPE"]);

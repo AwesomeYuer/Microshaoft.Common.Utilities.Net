@@ -10,18 +10,18 @@
     [Export(typeof(IStoreProcedureExecutable))]
     public class SqliteStoreProcedureExecutorCompositionPlugin
                         : IStoreProcedureExecutable
-                            , IStoreProcedureParametersSetCacheAutoRefreshable
+                            , ICacheAutoRefreshable
     {
         public AbstractStoreProceduresExecutor
                     <SqliteConnection, SqliteCommand, SqliteParameter>
                         _executor = new SqliteStoreProceduresExecutor();
         public string DataBaseType => "sqlite";////this.GetType().Name;
-        public int CachedExecutingParametersExpiredInSeconds
+        public int CachedExpiredInSeconds
         {
             get;
             set;
         }
-        public bool NeedAutoRefreshExecutedTimeForSlideExpire
+        public bool NeedAutoRefreshForSlideExpire
         {
             get;
             set;
@@ -37,17 +37,17 @@
         {
             if
                 (
-                    CachedExecutingParametersExpiredInSeconds > 0
+                    CachedExpiredInSeconds > 0
                     &&
                     _executor
                         .CachedExecutingParametersExpiredInSeconds
                     !=
-                    CachedExecutingParametersExpiredInSeconds
+                    CachedExpiredInSeconds
                 )
             {
                 _executor
                         .CachedExecutingParametersExpiredInSeconds
-                            = CachedExecutingParametersExpiredInSeconds;
+                            = CachedExpiredInSeconds;
             }
             result = null;
             DbConnection connection = new MySqlConnection(connectionString);
@@ -59,7 +59,7 @@
                                         , parameters
                                         , commandTimeoutInSeconds
                                     );
-            if (NeedAutoRefreshExecutedTimeForSlideExpire)
+            if (NeedAutoRefreshForSlideExpire)
             {
                 _executor
                     .RefreshCachedExecuted

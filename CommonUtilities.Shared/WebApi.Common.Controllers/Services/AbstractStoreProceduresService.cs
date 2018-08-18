@@ -15,14 +15,10 @@ namespace Microshaoft.Web
                 Process
                      (
                         string connectionID //= "mssql"
-                        ,
-                        string storeProcedureName
-                        ,
-                        JToken parameters = null
-                        ,
-                        string httpMethod = "Get"
-                        ,
-                        int commandTimeoutInSeconds = 101
+                        , string storeProcedureName
+                        , JToken parameters = null
+                        , string httpMethod = "Get"
+                        , int commandTimeoutInSeconds = 101
                     );
     }
     public abstract class
@@ -106,14 +102,16 @@ namespace Microshaoft.Web
                                             ,
                                             (x) =>
                                             {
-                                                IStoreProcedureParametersSetCacheAutoRefreshable
-                                                    rr = x as IStoreProcedureParametersSetCacheAutoRefreshable;
+                                                ICacheAutoRefreshable
+                                                    rr = x as ICacheAutoRefreshable;
                                                 if (rr != null)
                                                 {
-                                                    rr.CachedExecutingParametersExpiredInSeconds
-                                                        = CachedExecutingParametersExpiredInSeconds;
-                                                    rr.NeedAutoRefreshExecutedTimeForSlideExpire
-                                                        = NeedAutoRefreshExecutedTimeForSlideExpire;
+                                                    rr
+                                                        .CachedExpiredInSeconds
+                                                            = CachedExecutingParametersExpiredInSeconds;
+                                                    rr
+                                                        .NeedAutoRefreshForSlideExpire
+                                                            = NeedAutoRefreshExecutedTimeForSlideExpire;
                                                 }
                                                 return
                                                     x;
