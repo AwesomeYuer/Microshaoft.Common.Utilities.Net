@@ -41,8 +41,26 @@
             clone.Precision = target.Precision;
             if (includeValue)
             {
-                //Shadow copy
-                clone.Value = target.Value;
+                //Shallow copy
+                var targetValue = target.Value;
+                if
+                    (
+                        targetValue != DBNull.Value
+                        &&
+                        targetValue != null
+                    )
+                {
+                    DataTable dataTable = targetValue as DataTable;
+                    if (dataTable != null)
+                    {
+                        clone.Value = dataTable.Clone();
+                    }
+                    else
+                    {
+                        //Shallow copy
+                        clone.Value = target.Value;
+                    }
+                }
             }
             clone = onSetTypeProcessFunc
                             (

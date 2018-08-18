@@ -8,14 +8,14 @@
     using System.Data.Common;
     using System.Linq;
     public abstract class
-                    AbstractStoreProceduresExecutor
-                            <TDbConnection, TDbCommand, TDbParameter>
-                                where
-                                        TDbConnection : DbConnection, new()
-                                where
-                                        TDbCommand : DbCommand, new()
-                                where
-                                        TDbParameter : DbParameter, new()
+            AbstractStoreProceduresExecutor
+                    <TDbConnection, TDbCommand, TDbParameter>
+                        where
+                                TDbConnection : DbConnection, new()
+                        where
+                                TDbCommand : DbCommand, new()
+                        where
+                                TDbParameter : DbParameter, new()
     {
         public int CachedExecutingParametersExpiredInSeconds
         {
@@ -89,20 +89,9 @@
                 {
                     var direction = dbParameter
                                         .Direction;
-                    var cloneDbParameter = dbParameter
-                                                .ShallowClone
-                                                    <TDbParameter>
-                                                        (
-                                                            OnExecutingSetDbParameterTypeProcess
-                                                        );
-                    var parameterValue =
-                            OnExecutingSetDbParameterValueProcess
-                                    (
-                                        cloneDbParameter
-                                        , jProperty.Value
-                                    );
                     var dbParameterValue = dbParameter.Value;
-                    if 
+                    var includeValueClone = false;
+                    if
                         (
                             dbParameterValue != DBNull.Value
                             &&
@@ -112,32 +101,30 @@
                         DataTable dataTable = dbParameterValue as DataTable;
                         if (dataTable != null)
                         {
-                            dataTable = dataTable.Clone();
-                            var jArray = (JArray) jProperty.Value;
-                            var columns = dataTable.Columns;
-                            var rows = dataTable.Rows;
-                            foreach (var entry in jArray)
-                            {
-                                var row = dataTable.NewRow();
-                                foreach (DataColumn column in columns)
-                                {
-                                    var columnName = column.ColumnName;
-                                    row[columnName] = entry[columnName];
-                                }
-                                rows.Add(row);
-                            }
+                            includeValueClone = true;
                         }
-                        cloneDbParameter.Value = dataTable;
                     }
-                    else
-                    {
-                        cloneDbParameter.Value = parameterValue;
-                    }
+                    var cloneDbParameter
+                            = dbParameter
+                                    .ShallowClone
+                                        <TDbParameter>
+                                            (
+                                                OnExecutingSetDbParameterTypeProcess
+                                                , includeValueClone
+                                            );
+                    var parameterValue =
+                            OnExecutingSetDbParameterValueProcess
+                                    (
+                                        cloneDbParameter
+                                        , jProperty.Value
+                                    );
+                    cloneDbParameter.Value = parameterValue;
                     if (result == null)
                     {
                         result = new List<TDbParameter>();
                     }
-                    result.Add(cloneDbParameter);
+                    result
+                        .Add(cloneDbParameter);
                 }
             }
             foreach (var kvp in dbParameters)
@@ -179,12 +166,13 @@
                         {
                             result = new List<TDbParameter>();
                         }
-                        var cloneDbParameter = dbParameter
-                                                    .ShallowClone
-                                                        <TDbParameter>
-                                                            (
-                                                                OnExecutingSetDbParameterTypeProcess
-                                                            );
+                        var cloneDbParameter =
+                                dbParameter
+                                    .ShallowClone
+                                        <TDbParameter>
+                                            (
+                                                OnExecutingSetDbParameterTypeProcess
+                                            );
                         //if (direction == ParameterDirection.InputOutput)
                         //{
                         //    cloneDbParameter.Direction = ParameterDirection.Output;
@@ -231,7 +219,6 @@
                     .RecentExecutedTime = DateTime.Now;
             }
         }
-
         public IDictionary<string, DbParameter>
                     GetCachedParameters
                                 (
@@ -315,7 +302,6 @@
             }
             return result;
         }
-
         public IEnumerable<TDbParameter>
                     GetDefinitionParameters
                             (
@@ -339,29 +325,19 @@
         }
         public ParameterDirection GetParameterDirection(string parameterMode)
         {
-            var r = SqlHelper.GetParameterDirection(parameterMode);
+            var r = SqlHelper
+                        .GetParameterDirection
+                            (parameterMode);
             return r;
         }
-        /// <summary>
-        /// Converts the OleDb parameter direction
-        /// </summary>
-        /// <param name="oledbDirection">The integer parameter direction</param>
-        /// <returns>A ParameterDirection</returns>
-        //public ParameterDirection GetParameterDirection(short oledbDirection)
-        //{
-        //    var r = SqlHelper.GetParameterDirection(oledbDirection);
-        //    return r;
-        //}
-
         public JToken
                     Execute
-
-                                    (
-                                        DbConnection connection
-                                        , string storeProcedureName
-                                        , string p = null //string.Empty
-                                        , int commandTimeout = 90
-                                    )
+                        (
+                            DbConnection connection
+                            , string storeProcedureName
+                            , string p = null //string.Empty
+                            , int commandTimeout = 90
+                        )
          {
             var inputsParameters = JObject.Parse(p);
             return
@@ -505,22 +481,22 @@
                     JObject jOutputParameters = null;
                     if (dbParameters != null)
                     {
-                        var outputParameters
-                                = dbParameters
-                                    .Where
-                                        (
-                                            (x) =>
-                                            {
-                                                return
-                                                    (
-                                                        x
-                                                            .Direction
-                                                        !=
-                                                        ParameterDirection
-                                                            .Input
-                                                    );
-                                            }
-                                        );
+                        var outputParameters =
+                            dbParameters
+                                .Where
+                                    (
+                                        (x) =>
+                                        {
+                                            return
+                                                (
+                                                    x
+                                                        .Direction
+                                                    !=
+                                                    ParameterDirection
+                                                        .Input
+                                                );
+                                        }
+                                    );
                         foreach (var x in outputParameters)
                         {
                             if (jOutputParameters == null)
