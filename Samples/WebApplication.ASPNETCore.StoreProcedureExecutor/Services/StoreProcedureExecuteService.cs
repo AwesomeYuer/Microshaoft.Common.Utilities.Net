@@ -20,7 +20,7 @@
                                   ConnectionID = "mssql1"
                                   , DataBaseType =  DataBasesType.MsSQL
                                   , ConnectionString =
-                                        @"Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=D:\mssql\MSSQL13.LocalDB\LocalDB\TransportionSecrets\TransportionSecrets.mdf;Data Source=(localdb)\mssqllocaldb;"
+                                        @"Initial Catalog=Test;Data Source=localhost;User=sa;Password=!@#123QWE"
                                   , WhiteList = new Dictionary<string, HttpMethodsFlags>
                                                       (StringComparer.OrdinalIgnoreCase)
                                                     {
@@ -45,7 +45,7 @@
                                   ConnectionID = "mysql1"
                                   , DataBaseType =  DataBasesType.MySQL
                                   , ConnectionString =
-                                        @"server= microshaoft-ubuntu-001.westus.cloudapp.azure.com;uid=root;pwd=withoutpassword;database=Test"
+                                        @"server=microshaoft-ubuntu-001.westus.cloudapp.azure.com;uid=root;pwd=withoutpassword;database=Test"
                                   , WhiteList = new Dictionary<string, HttpMethodsFlags>
                                                       (StringComparer.OrdinalIgnoreCase)
                                                     {
@@ -78,6 +78,10 @@
                             @"D:\MyGitHub\Microshaoft.Common.Utilities.Net.4x\StoreProcedureWebApiExecutorsPlugins\MsSQL.StoreProcedureWebApiExecutor.Plugin\bin\Debug\netcoreapp2.1\"
                             ,
                             @"D:\MyGitHub\Microshaoft.Common.Utilities.Net.4x\StoreProcedureWebApiExecutorsPlugins\MySQL.StoreProcedureWebApiExecutor.Plugin\bin\Debug\netcoreapp2.1"
+                            ,
+                            "/mnt/d/MyGitHub/Microshaoft.Common.Utilities.Net.4x/StoreProcedureWebApiExecutorsPlugins/MsSQL.StoreProcedureWebApiExecutor.Plugin/bin/Debug/netcoreapp2.1/"
+                            ,
+                            "/mnt/d/MyGitHub/Microshaoft.Common.Utilities.Net.4x/StoreProcedureWebApiExecutorsPlugins/MySQL.StoreProcedureWebApiExecutor.Plugin/bin/Debug/netcoreapp2.1"
                         };
             }
         }
