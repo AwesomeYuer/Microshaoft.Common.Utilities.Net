@@ -80,16 +80,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\CommonUtilities\CommonUtilities.Lite\CommonUtilities.Lite.NET.Framework.4.6.x\CommonUtilities.Lite.NET.Framework.4.6.x.csproj">
-      <Project>{214a20f4-f017-42d8-8cc1-e35054a42e30}</Project>
-      <Name>CommonUtilities.Lite.NET.Framework.4.6.x</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NumberGuessWorkflowActivities\NumberGuessWorkflowActivities.csproj">
-      <Project>{98ec024c-6439-44b1-8b1e-29e457b2201f}</Project>
-      <Name>NumberGuessWorkflowActivities</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5 SP1</ProductName>

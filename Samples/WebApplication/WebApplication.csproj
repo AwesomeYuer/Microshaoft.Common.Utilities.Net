@@ -361,12 +361,6 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CommonUtilities\WebApiUtilities\WebApiUtilities.NET.Framework.4.6.x\WebApiUtilities.NET.Framework.4.6.x.csproj">
-      <Project>{9077f25d-1118-4428-8b7c-e924e1a90281}</Project>
-      <Name>WebApiUtilities.NET.Framework.4.6.x</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>

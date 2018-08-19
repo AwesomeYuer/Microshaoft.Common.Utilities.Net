@@ -101,12 +101,6 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\CommonUtilities.Lite\CommonUtilities.Lite.NET.Framework.4.5.x\CommonUtilities.Lite.NET.Framework.4.5.x.csproj">
-      <Project>{ed69bfa0-d533-42a0-8ad3-af1e64c84bef}</Project>
-      <Name>CommonUtilities.Lite.NET.Framework.4.5.x</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="..\..\..\CommonUtilities.Shared\EasyPerformanceCountersHelper.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

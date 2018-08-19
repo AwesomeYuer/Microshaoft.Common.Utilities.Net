@@ -49,10 +49,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\CommonUtilities\Microshaoft.Diagnostics.Tracing\Microshaoft.Diagnostics.Tracing.NET.Framework.4.6.x\Microshaoft.Diagnostics.Tracing.NET.Framework.4.6.x.csproj">
-      <Project>{7a64006a-8bf9-4401-bd7e-84228947c1c2}</Project>
-      <Name>Microshaoft.Diagnostics.Tracing.NET.Framework.4.6.x</Name>
-    </ProjectReference>
     <ProjectReference Include="..\TraceEventSources\TraceEventSources.csproj">
       <Project>{3b60f922-7d57-417b-95a1-5ac9fa34beb2}</Project>
       <Name>TraceEventSources</Name>

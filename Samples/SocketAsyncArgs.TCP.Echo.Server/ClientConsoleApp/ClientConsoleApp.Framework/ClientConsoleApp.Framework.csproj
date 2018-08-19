@@ -46,12 +46,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\CommonUtilities\CommonUtilities.Full\CommonUtilities.NET.Framework.4.7.x\CommonUtilities.NET.Framework.4.7.x.csproj">
-      <Project>{c2af98f7-fe1f-46b9-8613-0ef72f6ff436}</Project>
-      <Name>CommonUtilities.NET.Framework.4.7.x</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
   <Import Project="..\ClientSharedProject\ClientSharedProject.projitems" Label="Shared" />
