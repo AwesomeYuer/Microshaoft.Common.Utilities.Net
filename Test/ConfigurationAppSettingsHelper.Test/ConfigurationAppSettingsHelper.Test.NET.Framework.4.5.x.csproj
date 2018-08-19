@@ -54,6 +54,12 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\CommonUtilities\CommonUtilities.Lite\CommonUtilities.Lite.NET.Framework.4.5.x\CommonUtilities.Lite.NET.Framework.4.5.x.csproj">
+      <Project>{ed69bfa0-d533-42a0-8ad3-af1e64c84bef}</Project>
+      <Name>CommonUtilities.Lite.NET.Framework.4.5.x</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

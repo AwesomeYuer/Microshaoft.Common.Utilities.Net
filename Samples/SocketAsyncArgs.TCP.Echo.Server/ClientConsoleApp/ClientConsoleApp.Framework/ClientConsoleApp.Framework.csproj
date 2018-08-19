@@ -48,6 +48,12 @@
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\CommonUtilities\CommonUtilities.Lite\CommonUtilities.Lite.NET.Framework.4.7.x\CommonUtilities.Lite.NET.Framework.4.7.x.csproj">
+      <Project>{1b65919e-10ef-4fce-9fec-de547a62fc15}</Project>
+      <Name>CommonUtilities.Lite.NET.Framework.4.7.x</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="..\ClientSharedProject\ClientSharedProject.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

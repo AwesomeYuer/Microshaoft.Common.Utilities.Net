@@ -136,6 +136,16 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\CommonUtilities.Lite\CommonUtilities.Lite.NET.Framework.4.7.x\CommonUtilities.Lite.NET.Framework.4.7.x.csproj">
+      <Project>{1b65919e-10ef-4fce-9fec-de547a62fc15}</Project>
+      <Name>CommonUtilities.Lite.NET.Framework.4.7.x</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\EasyPerformanceCountersHelper\EasyPerformanceCountersHelper.NET.Framework.4.7.x\EasyPerformanceCountersHelper.NET.Framework.4.7.x.csproj">
+      <Project>{8deca320-739f-474b-bd5f-71c09efc1ec2}</Project>
+      <Name>EasyPerformanceCountersHelper.NET.Framework.4.7.x</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="..\..\..\CommonUtilities.Shared\WebApiUtilities.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

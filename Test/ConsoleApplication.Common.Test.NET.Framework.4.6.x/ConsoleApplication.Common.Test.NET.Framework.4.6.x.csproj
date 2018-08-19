@@ -52,6 +52,12 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\CommonUtilities\CommonUtilities.Lite\CommonUtilities.Lite.NET.Framework.4.6.x\CommonUtilities.Lite.NET.Framework.4.6.x.csproj">
+      <Project>{214a20f4-f017-42d8-8cc1-e35054a42e30}</Project>
+      <Name>CommonUtilities.Lite.NET.Framework.4.6.x</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="..\CommonUtilities.Console.Test.Shared\CommonUtilities.Console.Test.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
