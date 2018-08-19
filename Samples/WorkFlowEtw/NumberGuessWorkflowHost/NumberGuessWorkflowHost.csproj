@@ -80,21 +80,21 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\CommonUtilities\CommonUtilities.Lite\CommonUtilities.Lite.NET.Framework.4.6.x\CommonUtilities.Lite.NET.Framework.4.6.x.csproj">
-      <Project>{214a20f4-f017-42d8-8cc1-e35054a42e30}</Project>
-      <Name>CommonUtilities.Lite.NET.Framework.4.6.x</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NumberGuessWorkflowActivities\NumberGuessWorkflowActivities.csproj">
-      <Project>{98ec024c-6439-44b1-8b1e-29e457b2201f}</Project>
-      <Name>NumberGuessWorkflowActivities</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\CommonUtilities\CommonUtilities.Full\CommonUtilities.NET.Framework.4.6.x\CommonUtilities.NET.Framework.4.6.x.csproj">
+      <Project>{a6b57925-e9ad-4e09-bc4c-32a2bd1164a6}</Project>
+      <Name>CommonUtilities.NET.Framework.4.6.x</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NumberGuessWorkflowActivities\NumberGuessWorkflowActivities.csproj">
+      <Project>{98ec024c-6439-44b1-8b1e-29e457b2201f}</Project>
+      <Name>NumberGuessWorkflowActivities</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

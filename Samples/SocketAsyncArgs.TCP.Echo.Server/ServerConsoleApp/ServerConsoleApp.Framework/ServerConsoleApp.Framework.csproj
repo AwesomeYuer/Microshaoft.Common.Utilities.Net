@@ -49,9 +49,9 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\CommonUtilities\CommonUtilities.Full\CommonUtilities.NET.Framework.4.7.x\CommonUtilities.NET.Framework.4.7.x.csproj">
-      <Project>{c2af98f7-fe1f-46b9-8613-0ef72f6ff436}</Project>
-      <Name>CommonUtilities.NET.Framework.4.7.x</Name>
+    <ProjectReference Include="..\..\..\..\CommonUtilities\CommonUtilities.Lite\CommonUtilities.Lite.NET.Framework.4.7.x\CommonUtilities.Lite.NET.Framework.4.7.x.csproj">
+      <Project>{1b65919e-10ef-4fce-9fec-de547a62fc15}</Project>
+      <Name>CommonUtilities.Lite.NET.Framework.4.7.x</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="..\ServerSharedProject\ServerSharedProject.projitems" Label="Shared" />

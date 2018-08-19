@@ -361,16 +361,16 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CommonUtilities\WebApiUtilities\WebApiUtilities.NET.Framework.4.6.x\WebApiUtilities.NET.Framework.4.6.x.csproj">
-      <Project>{9077f25d-1118-4428-8b7c-e924e1a90281}</Project>
-      <Name>WebApiUtilities.NET.Framework.4.6.x</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\index.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\CommonUtilities\CommonUtilities.Full\CommonUtilities.NET.Framework.4.6.x\CommonUtilities.NET.Framework.4.6.x.csproj">
+      <Project>{a6b57925-e9ad-4e09-bc4c-32a2bd1164a6}</Project>
+      <Name>CommonUtilities.NET.Framework.4.6.x</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
