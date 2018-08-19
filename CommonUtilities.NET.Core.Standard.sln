@@ -114,8 +114,6 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "005.Xamrain", "005.Xamrain", "{FFF710BB-7E3A-4D6C-9E09-F3BF2E4B12FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AndroidApp1", "Samples\Xamarin\AndroidApp1\AndroidApp1.csproj", "{2F4CBF03-89F3-4250-A7D9-CBA4B527FFC8}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonUtilities.NET.Xamarin.Standard.2.x", "CommonUtilities\CommonUtilities.Full\CommonUtilities.NET.Xamarin.Standard.2.x\CommonUtilities.NET.Xamarin.Standard.2.x.csproj", "{96ECF103-5181-4538-A15A-FFF8404042D0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiUtilities.NET.Standard.2.x", "CommonUtilities\WebApiUtilities\WebApiUtilities.NET.Standard.2.x\WebApiUtilities.NET.Standard.2.x.csproj", "{65F5AF55-42BE-4B18-BAEE-6FE09F93AC4B}"
@@ -147,7 +145,6 @@ EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		CommonUtilities.Shared\WebApiUtilities.Shared.projitems*{1fbd68b8-839e-4c54-a00c-beac21119371}*SharedItemsImports = 13
-		Samples\SocketAsyncArgs.TCP.Echo.Server\ServerConsoleApp\ServerSharedProject\ServerSharedProject.projitems*{2f4cbf03-89f3-4250-a7d9-cba4b527ffc8}*SharedItemsImports = 4
 		Samples\SocketAsyncArgs.TCP.Echo.Server\ServerConsoleApp\ServerSharedProject\ServerSharedProject.projitems*{3f6feee0-0473-441f-a073-889503ec7710}*SharedItemsImports = 13
 		CommonUtilities.Shared\Microshaoft.Diagnostics.Tracing.Shared.projitems*{5857c99c-c22f-440e-bb4d-be0930e83dbb}*SharedItemsImports = 13
 		CommonUtilities.Shared\CommonUtilities.Shared.projitems*{7878df3a-8418-4aca-b415-300b81afd792}*SharedItemsImports = 13
@@ -264,30 +261,6 @@ Global
 		{DDC18FC6-4080-492B-B70F-B68B26225949}.Release|x64.Build.0 = Release|Any CPU
 		{DDC18FC6-4080-492B-B70F-B68B26225949}.Release|x86.ActiveCfg = Release|Any CPU
 		{DDC18FC6-4080-492B-B70F-B68B26225949}.Release|x86.Build.0 = Release|Any CPU
-		{2F4CBF03-89F3-4250-A7D9-CBA4B527FFC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2F4CBF03-89F3-4250-A7D9-CBA4B527FFC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2F4CBF03-89F3-4250-A7D9-CBA4B527FFC8}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{2F4CBF03-89F3-4250-A7D9-CBA4B527FFC8}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{2F4CBF03-89F3-4250-A7D9-CBA4B527FFC8}.Debug|ARM.Build.0 = Debug|Any CPU
-		{2F4CBF03-89F3-4250-A7D9-CBA4B527FFC8}.Debug|ARM.Deploy.0 = Debug|Any CPU
-		{2F4CBF03-89F3-4250-A7D9-CBA4B527FFC8}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{2F4CBF03-89F3-4250-A7D9-CBA4B527FFC8}.Debug|x64.Build.0 = Debug|Any CPU
-		{2F4CBF03-89F3-4250-A7D9-CBA4B527FFC8}.Debug|x64.Deploy.0 = Debug|Any CPU
-		{2F4CBF03-89F3-4250-A7D9-CBA4B527FFC8}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{2F4CBF03-89F3-4250-A7D9-CBA4B527FFC8}.Debug|x86.Build.0 = Debug|Any CPU
-		{2F4CBF03-89F3-4250-A7D9-CBA4B527FFC8}.Debug|x86.Deploy.0 = Debug|Any CPU
-		{2F4CBF03-89F3-4250-A7D9-CBA4B527FFC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2F4CBF03-89F3-4250-A7D9-CBA4B527FFC8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2F4CBF03-89F3-4250-A7D9-CBA4B527FFC8}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{2F4CBF03-89F3-4250-A7D9-CBA4B527FFC8}.Release|ARM.ActiveCfg = Release|Any CPU
-		{2F4CBF03-89F3-4250-A7D9-CBA4B527FFC8}.Release|ARM.Build.0 = Release|Any CPU
-		{2F4CBF03-89F3-4250-A7D9-CBA4B527FFC8}.Release|ARM.Deploy.0 = Release|Any CPU
-		{2F4CBF03-89F3-4250-A7D9-CBA4B527FFC8}.Release|x64.ActiveCfg = Release|Any CPU
-		{2F4CBF03-89F3-4250-A7D9-CBA4B527FFC8}.Release|x64.Build.0 = Release|Any CPU
-		{2F4CBF03-89F3-4250-A7D9-CBA4B527FFC8}.Release|x64.Deploy.0 = Release|Any CPU
-		{2F4CBF03-89F3-4250-A7D9-CBA4B527FFC8}.Release|x86.ActiveCfg = Release|Any CPU
-		{2F4CBF03-89F3-4250-A7D9-CBA4B527FFC8}.Release|x86.Build.0 = Release|Any CPU
-		{2F4CBF03-89F3-4250-A7D9-CBA4B527FFC8}.Release|x86.Deploy.0 = Release|Any CPU
 		{96ECF103-5181-4538-A15A-FFF8404042D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{96ECF103-5181-4538-A15A-FFF8404042D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96ECF103-5181-4538-A15A-FFF8404042D0}.Debug|ARM.ActiveCfg = Debug|Any CPU
@@ -482,7 +455,6 @@ Global
 		{8C7F9477-C8FB-4C51-9202-A5538528ECF9} = {D40A24D8-040B-4AA8-A83B-B07E8998D17D}
 		{E2A49F80-5E62-414D-BF57-8E1802B144A8} = {D40A24D8-040B-4AA8-A83B-B07E8998D17D}
 		{FFF710BB-7E3A-4D6C-9E09-F3BF2E4B12FA} = {4D0D143C-B43C-41F0-89AF-EDA121770B37}
-		{2F4CBF03-89F3-4250-A7D9-CBA4B527FFC8} = {FFF710BB-7E3A-4D6C-9E09-F3BF2E4B12FA}
 		{96ECF103-5181-4538-A15A-FFF8404042D0} = {B2A16381-4144-4B92-A0BB-7468FA51BD58}
 		{65F5AF55-42BE-4B18-BAEE-6FE09F93AC4B} = {F37B0AF1-585C-4A75-AADE-F59A3B068BBF}
 		{435DDB68-D63C-4029-B2EF-51BEC879164C} = {F37B0AF1-585C-4A75-AADE-F59A3B068BBF}
