@@ -1,0 +1,34 @@
+{
+  "Connections": [
+    {
+      "ConnectionID": "mssql1",
+      "DataBaseType": "mssql",
+      "ConnectionString": "Initial Catalog=Test;Data Source=microshaoft-ubuntu-002.westus.cloudapp.azure.com;User=sa;Password=!@#123QWE",
+      "WhiteList": [
+        {
+          "StoreProcedureName": "zsp_GetDatesAfter",
+          "AllowedHttpMethods": "All"
+        },
+        {
+          "StoreProcedureName": "zsp_test",
+          "AllowedHttpMethods": "All"
+        }
+      ]
+    },
+    {
+      "ConnectionID": "mysql1",
+      "DataBaseType": "mysql",
+      "ConnectionString": "server=microshaoft-ubuntu-001.westus.cloudapp.azure.com;uid=root;pwd=withoutpassword;database=Test",
+      "WhiteList": [
+        {
+          "StoreProcedureName": "zsp_GetDatesAfter",
+          "AllowedHttpMethods": "All"
+        },
+        {
+          "StoreProcedureName": "zsp_test",
+          "AllowedHttpMethods": "All"
+        }
+      ]
+    }
+  ]  
+}
