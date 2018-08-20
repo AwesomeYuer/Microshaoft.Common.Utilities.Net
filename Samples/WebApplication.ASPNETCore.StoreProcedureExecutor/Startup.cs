@@ -28,9 +28,6 @@
                 .AddSingleton
                     <IStoreProceduresWebApiService, StoreProceduresExecuteService>
                         ();
-
-            services
-                .AddSingleton<IConfiguration>(Configuration);
             services
                 .Add
                     (
