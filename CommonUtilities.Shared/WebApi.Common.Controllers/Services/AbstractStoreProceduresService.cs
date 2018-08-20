@@ -4,6 +4,7 @@ namespace Microshaoft.Web
     using Microshaoft;
     using Microshaoft.Linq.Dynamic;
     using Microshaoft.WebApi.Controllers;
+    using Microsoft.Extensions.Configuration;
     using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Generic;
@@ -26,7 +27,115 @@ namespace Microshaoft.Web
                                 : IStoreProceduresWebApiService
     {
         private static object _locker = new object();
-        public AbstractStoreProceduresService()
+
+        protected IDictionary<string, DataBaseConnectionInfo>
+                        GetDataBasesConfigurationProcess
+                                    (
+                                        string dbConnectionsJsonFile = "dbConnections.json"
+                                    )
+        {
+            var configurationBuilder =
+                        new ConfigurationBuilder()
+                                .AddJsonFile(dbConnectionsJsonFile);
+            var configuration = configurationBuilder.Build();
+            var result =
+                    configuration
+                        .GetSection("Connections")
+                        .AsEnumerable()
+                        .Where
+                            (
+                                (x) =>
+                                {
+                                    return
+                                        !x
+                                            .Value
+                                            .IsNullOrEmptyOrWhiteSpace();
+                                }
+                            )
+                        .GroupBy
+                            (
+                                (x) =>
+                                {
+                                    var key = x.Key;
+                                    var i = key.FindIndex(":", 2);
+                                    var rr = key.Substring(0, i);
+                                    return rr;
+                                }
+                            )
+                        .ToDictionary
+                            (
+                                (x) =>
+                                {
+                                    var r = configuration[$"{x.Key}:ConnectionID"];
+                                    return r;
+                                }
+                                , (x) =>
+                                {
+                                    var whiteList =
+                                            configuration
+                                                .GetSection($"{x.Key}:WhiteList")
+                                                .AsEnumerable()
+                                                .Where
+                                                    (
+                                                        (xx) =>
+                                                        {
+                                                            var v = xx.Value;
+                                                            var rr = !v.IsNullOrEmptyOrWhiteSpace();
+                                                            return
+                                                                    rr;
+                                                        }
+                                                    )
+                                                .GroupBy
+                                                    (
+                                                        (xx) =>
+                                                        {
+                                                            var i = xx.Key.FindIndex(":", 4);
+                                                            var rr = xx.Key.Substring(0, i);
+                                                            return rr;
+                                                        }
+                                                    )
+                                                .ToDictionary
+                                                    (
+                                                        (xx) =>
+                                                        {
+                                                            var rr = configuration[$"{xx.Key}:StoreProcedureName"];
+                                                            return rr;
+                                                        }
+                                                        ,
+                                                        (xx) =>
+                                                        {
+                                                            var s = configuration[$"{xx.Key}:AllowedHttpMethods"];
+                                                            var allowedHttpMethods =
+                                                                        Enum
+                                                                            .Parse<HttpMethodsFlags>
+                                                                                (
+                                                                                    s
+                                                                                    , true
+                                                                                );
+                                                            return
+                                                                allowedHttpMethods;
+                                                        }
+                                                        ,
+                                                        StringComparer.OrdinalIgnoreCase
+                                                    );
+                                    var r = new DataBaseConnectionInfo()
+                                    {
+                                        ConnectionID = configuration[$"{x.Key}:ConnectionID"]
+                                        , ConnectionString = configuration[$"{x.Key}:ConnectionString"]
+                                        , DataBaseType = Enum.Parse<DataBasesType>(configuration[$"{x.Key}:DataBaseType"], true)
+                                        , WhiteList = whiteList
+                                    };
+                                    return r;
+                                }
+                                ,
+                                StringComparer.OrdinalIgnoreCase
+                            );
+            return result;
+        }
+        protected virtual void LoadDataBasesConfiguration
+                                    (
+                                        string dbConnectionsJsonFile = "dbConnections.json"
+                                    )
         {
             _locker
                 .LockIf
@@ -38,20 +147,45 @@ namespace Microshaoft.Web
                         }
                         , () =>
                         {
-                            _connections
-                                = DataBasesConnectionsInfo
-                                        .ToDictionary
-                                            (
-                                                (x) =>
-                                                {
-                                                    return
-                                                        x.ConnectionID;
-                                                }
-                                                , StringComparer
-                                                        .OrdinalIgnoreCase
-                                            );
+                            _connections = GetDataBasesConfigurationProcess(dbConnectionsJsonFile);
                         }
                     );
+        }
+        protected virtual string[] GetDynamicLoadExecutorsPathsProcess
+                    (
+                        string dynamicLoadExecutorsPathsJsonFile = "dynamicLoadExecutorsPaths.json"
+                    )
+        {
+            var configurationBuilder =
+                        new ConfigurationBuilder()
+                                .AddJsonFile(dynamicLoadExecutorsPathsJsonFile);
+            var configuration = configurationBuilder.Build();
+            var result =
+                    configuration
+                        .GetSection("DynamicLoadExecutorsPaths")
+                        .AsEnumerable()
+                        .Select
+                            (
+                                (x) =>
+                                {
+                                    return
+                                        x.Value;
+                                }
+                            )
+                        .ToArray();
+            return result;
+        }
+
+        protected virtual void LoadDynamicExecutors
+                        (
+                            string dynamicLoadExecutorsPathsJsonFile = "dynamicLoadExecutorsPaths.json"
+                        )
+        {
+            var dynamicLoadExecutorsPaths =
+                            GetDynamicLoadExecutorsPathsProcess
+                                (
+                                    dynamicLoadExecutorsPathsJsonFile
+                                );
             _locker
                 .LockIf
                     (
@@ -62,17 +196,23 @@ namespace Microshaoft.Web
                         }
                         , () =>
                         {
-                            if (DynamicLoadExecutorsPaths != null)
+                            if (dynamicLoadExecutorsPaths != null)
                             {
                                 var q =
-                                    DynamicLoadExecutorsPaths
+                                    dynamicLoadExecutorsPaths
                                         .Where
                                             (
                                                 (x) =>
                                                 {
+
                                                     return
-                                                        Directory
-                                                            .Exists(x);
+                                                        (
+                                                            !x
+                                                                .IsNullOrEmptyOrWhiteSpace()
+                                                            &&
+                                                            Directory
+                                                                .Exists(x)
+                                                        );
                                                 }
                                             )
                                         .SelectMany
@@ -135,20 +275,13 @@ namespace Microshaoft.Web
             get;
             //set;
         }
+
         private IDictionary<string, DataBaseConnectionInfo> 
                     _connections;
-        protected abstract IEnumerable<DataBaseConnectionInfo> 
-                    DataBasesConnectionsInfo
-        {
-            get;
-        }
+
         private IDictionary<string, IStoreProcedureExecutable>
                     _executors;
-        protected abstract string[]
-                    DynamicLoadExecutorsPaths
-        {
-            get;
-        }
+
         public 
             (int StatusCode, JToken Result)
                         Process

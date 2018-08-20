@@ -4,6 +4,42 @@ namespace Microshaoft
     using System.Text;
     public static class StringHelper
     {
+        public static int FindIndex
+                                (
+                                    this string target
+                                    , string search
+                                    , int hits
+                                    , bool ignoreCase = true
+                                )
+        {
+            int r = -1;
+            int p = 0;
+            var s = target;
+            var ss = search;
+            if (ignoreCase)
+            {
+                s = target.ToUpper();
+                ss = search.ToUpper();
+            }
+            var i = 0;
+            var l = target.Length;
+            var ll = search.Length;
+            while (p <= l && p >= 0)
+            {
+                p = s.IndexOf(ss, p + ll);
+                if (p > 0)
+                {
+                    i++;
+                }
+                if (i >= hits)
+                {
+                    break;
+                }
+            }
+            return p;
+        }
+
+
         public static bool IsNullOrEmptyOrWhiteSpace(this string target)
         {
             return 
