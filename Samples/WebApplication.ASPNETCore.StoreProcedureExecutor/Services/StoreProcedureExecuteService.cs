@@ -11,7 +11,7 @@
                 .LoadDynamicExecutors("dynamicLoadExecutorsPaths.json"); ;
         }
         protected override int
-                CachedExecutingParametersExpiredInSeconds => 11;
+                CachedExecutingParametersDefinitionExpiredInSeconds => 11;
         protected override bool 
                 NeedAutoRefreshExecutedTimeForSlideExpire => true;
     }
