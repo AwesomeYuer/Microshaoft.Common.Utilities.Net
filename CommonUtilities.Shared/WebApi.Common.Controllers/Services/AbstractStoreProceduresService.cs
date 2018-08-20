@@ -115,6 +115,8 @@ namespace Microshaoft.Web
                                                             return
                                                                 allowedHttpMethods;
                                                         }
+                                                        ,
+                                                        StringComparer.OrdinalIgnoreCase
                                                     );
                                     var r = new DataBaseConnectionInfo()
                                     {
@@ -125,6 +127,8 @@ namespace Microshaoft.Web
                                     };
                                     return r;
                                 }
+                                ,
+                                StringComparer.OrdinalIgnoreCase
                             );
             return result;
         }
