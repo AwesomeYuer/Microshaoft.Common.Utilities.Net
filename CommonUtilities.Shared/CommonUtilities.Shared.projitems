@@ -71,6 +71,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)EventLog\EventLogRecordEntry.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ExceptionStackTrace\StackTraceHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ExtensionsMethods\ConcurrentDictionaryExtensionsMethodsManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FasterUtilities\Native32.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FasterUtilities\NativeBufferPool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FasterUtilities\SafeConcurrentDictionary.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FasterUtilities\StateTransitions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FasterUtilities\Status.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpClientHelper\HttpClientHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JObjectExtensionMethodsManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\DynamicJson.cs" />

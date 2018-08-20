@@ -15,7 +15,7 @@ namespace Microshaoft.Web
         (int StatusCode, JToken Result)
                 Process
                      (
-                        string connectionID //= "mssql"
+                        string connectionID
                         , string storeProcedureName
                         , JToken parameters = null
                         , string httpMethod = "Get"
@@ -128,15 +128,18 @@ namespace Microshaoft.Web
                                     return r;
                                 }
                                 ,
-                                StringComparer.OrdinalIgnoreCase
+                                StringComparer
+                                    .OrdinalIgnoreCase
                             );
             return result;
         }
         protected virtual void LoadDataBasesConfiguration
                                     (
-                                        string dbConnectionsJsonFile = "dbConnections.json"
+                                        string dbConnectionsJsonFile
+                                                    = "dbConnections.json"
                                     )
         {
+            var connections = GetDataBasesConfigurationProcess(dbConnectionsJsonFile);
             _locker
                 .LockIf
                     (
@@ -147,13 +150,14 @@ namespace Microshaoft.Web
                         }
                         , () =>
                         {
-                            _connections = GetDataBasesConfigurationProcess(dbConnectionsJsonFile);
+                            _connections = connections;
                         }
                     );
         }
         protected virtual string[] GetDynamicLoadExecutorsPathsProcess
                     (
-                        string dynamicLoadExecutorsPathsJsonFile = "dynamicLoadExecutorsPaths.json"
+                        string dynamicLoadExecutorsPathsJsonFile
+                                    = "dynamicLoadExecutorsPaths.json"
                     )
         {
             var configurationBuilder =
@@ -181,11 +185,63 @@ namespace Microshaoft.Web
                             string dynamicLoadExecutorsPathsJsonFile = "dynamicLoadExecutorsPaths.json"
                         )
         {
-            var dynamicLoadExecutorsPaths =
-                            GetDynamicLoadExecutorsPathsProcess
-                                (
-                                    dynamicLoadExecutorsPathsJsonFile
-                                );
+            var executors =
+                    GetDynamicLoadExecutorsPathsProcess
+                            (
+                                dynamicLoadExecutorsPathsJsonFile
+                            )
+                        .Where
+                            (
+                                (x) =>
+                                {
+                                    return
+                                        (
+                                            !x
+                                                .IsNullOrEmptyOrWhiteSpace()
+                                            &&
+                                            Directory
+                                                .Exists(x)
+                                        );
+                                }
+                            )
+                        .SelectMany
+                            (
+                                (x) =>
+                                {
+                                    var r =
+                                        CompositionHelper
+                                            .ImportManyExportsComposeParts
+                                                <IStoreProcedureExecutable>
+                                                    (x);
+                                    return r;
+                                }
+                            )
+                        .ToDictionary
+                            (
+                                (x) =>
+                                {
+                                    return
+                                        x.DataBaseType;
+                                }
+                                ,
+                                (x) =>
+                                {
+                                    ICacheAutoRefreshable
+                                        rr = x as ICacheAutoRefreshable;
+                                    if (rr != null)
+                                    {
+                                        rr
+                                            .CachedExpiredInSeconds
+                                                = CachedExecutingParametersExpiredInSeconds;
+                                        rr
+                                            .NeedAutoRefreshForSlideExpire
+                                                = NeedAutoRefreshExecutedTimeForSlideExpire;
+                                    }
+                                    return x;
+                                }
+                                , StringComparer
+                                        .OrdinalIgnoreCase
+                            );
             _locker
                 .LockIf
                     (
@@ -196,70 +252,7 @@ namespace Microshaoft.Web
                         }
                         , () =>
                         {
-                            if (dynamicLoadExecutorsPaths != null)
-                            {
-                                var q =
-                                    dynamicLoadExecutorsPaths
-                                        .Where
-                                            (
-                                                (x) =>
-                                                {
-
-                                                    return
-                                                        (
-                                                            !x
-                                                                .IsNullOrEmptyOrWhiteSpace()
-                                                            &&
-                                                            Directory
-                                                                .Exists(x)
-                                                        );
-                                                }
-                                            )
-                                        .SelectMany
-                                            (
-                                                (x) =>
-                                                {
-                                                    var r =
-                                                        CompositionHelper
-                                                            .ImportManyExportsComposeParts
-                                                                <IStoreProcedureExecutable>
-                                                                    (
-                                                                        x
-                                                                    );
-                                                    return
-                                                            r;
-                                                }
-                                            );
-                                _executors =
-                                    q
-                                    .ToDictionary
-                                        (
-                                            (x) =>
-                                            {
-                                                return
-                                                    x.DataBaseType;
-                                            }
-                                            ,
-                                            (x) =>
-                                            {
-                                                ICacheAutoRefreshable
-                                                    rr = x as ICacheAutoRefreshable;
-                                                if (rr != null)
-                                                {
-                                                    rr
-                                                        .CachedExpiredInSeconds
-                                                            = CachedExecutingParametersExpiredInSeconds;
-                                                    rr
-                                                        .NeedAutoRefreshForSlideExpire
-                                                            = NeedAutoRefreshExecutedTimeForSlideExpire;
-                                                }
-                                                return
-                                                    x;
-                                            }
-                                            , StringComparer
-                                                    .OrdinalIgnoreCase
-                                        );
-                            }
+                            _executors = executors;
                         }
                     );
         }
