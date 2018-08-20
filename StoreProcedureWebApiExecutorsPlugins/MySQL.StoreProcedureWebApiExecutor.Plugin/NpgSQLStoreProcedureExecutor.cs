@@ -9,18 +9,18 @@
     [Export(typeof(IStoreProcedureExecutable))]
     public class NpgSQLStoreProcedureExecutorCompositionPlugin
                         : IStoreProcedureExecutable
-                            , ICacheAutoRefreshable
+                            , IParametersDefinitionCacheAutoRefreshable
     {
         public AbstractStoreProceduresExecutor
                     <NpgsqlConnection, NpgsqlCommand, NpgsqlParameter>
                         _executor = new NpgSqlStoreProceduresExecutor();
         public string DataBaseType => "npgsql";////this.GetType().Name;
-        public int CachedExpiredInSeconds
+        public int CachedParametersDefinitionExpiredInSeconds
         {
             get;
             set;
         }
-        public bool NeedAutoRefreshForSlideExpire
+        public bool NeedAutoRefreshParametersDefinitionCacheForSlideExpire
         {
             get;
             set;
@@ -36,17 +36,17 @@
         {
             if
                 (
-                    CachedExpiredInSeconds > 0
+                    CachedParametersDefinitionExpiredInSeconds > 0
                     &&
                     _executor
                         .CachedExecutingParametersExpiredInSeconds
                     !=
-                    CachedExpiredInSeconds
+                    CachedParametersDefinitionExpiredInSeconds
                 )
             {
                 _executor
                         .CachedExecutingParametersExpiredInSeconds
-                            = CachedExpiredInSeconds;
+                            = CachedParametersDefinitionExpiredInSeconds;
             }
             result = null;
             DbConnection connection = new NpgsqlConnection(connectionString);
@@ -58,7 +58,7 @@
                                         , parameters
                                         , commandTimeoutInSeconds
                                     );
-            if (NeedAutoRefreshForSlideExpire)
+            if (NeedAutoRefreshParametersDefinitionCacheForSlideExpire)
             {
                 _executor
                     .RefreshCachedExecuted

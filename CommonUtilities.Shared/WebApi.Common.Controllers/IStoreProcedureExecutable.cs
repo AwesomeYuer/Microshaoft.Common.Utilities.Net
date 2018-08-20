@@ -16,14 +16,14 @@
                     , int commandTimeoutInSeconds = 90
                 );
     }
-    public interface ICacheAutoRefreshable
+    public interface IParametersDefinitionCacheAutoRefreshable
     {
-        int CachedExpiredInSeconds
+        int CachedParametersDefinitionExpiredInSeconds
         {
             get;
             set;
         }
-        bool NeedAutoRefreshForSlideExpire
+        bool NeedAutoRefreshParametersDefinitionCacheForSlideExpire
         {
             get;
             set;

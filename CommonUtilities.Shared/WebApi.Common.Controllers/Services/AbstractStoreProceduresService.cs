@@ -226,15 +226,15 @@ namespace Microshaoft.Web
                                 ,
                                 (x) =>
                                 {
-                                    ICacheAutoRefreshable
-                                        rr = x as ICacheAutoRefreshable;
+                                    IParametersDefinitionCacheAutoRefreshable
+                                        rr = x as IParametersDefinitionCacheAutoRefreshable;
                                     if (rr != null)
                                     {
                                         rr
-                                            .CachedExpiredInSeconds
-                                                = CachedExecutingParametersExpiredInSeconds;
+                                            .CachedParametersDefinitionExpiredInSeconds
+                                                = CachedExecutingParametersDefinitionExpiredInSeconds;
                                         rr
-                                            .NeedAutoRefreshForSlideExpire
+                                            .NeedAutoRefreshParametersDefinitionCacheForSlideExpire
                                                 = NeedAutoRefreshExecutedTimeForSlideExpire;
                                     }
                                     return x;
@@ -257,7 +257,7 @@ namespace Microshaoft.Web
                     );
         }
         protected abstract int 
-                    CachedExecutingParametersExpiredInSeconds
+                    CachedExecutingParametersDefinitionExpiredInSeconds
         {
             get;
             //set;
