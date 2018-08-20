@@ -154,14 +154,10 @@ namespace Microshaoft.Web
                         Process
                             (
                                 string connectionID //= "mssql"
-                                ,
-                                string storeProcedureName
-                                ,
-                                JToken parameters = null
-                                ,
-                                string httpMethod = "Get"
-                                ,
-                                int commandTimeoutInSeconds = 101
+                                , string storeProcedureName
+                                , JToken parameters = null
+                                , string httpMethod = "Get"
+                                , int commandTimeoutInSeconds = 101
                             )
         {
             var beginTime = DateTime.Now;
