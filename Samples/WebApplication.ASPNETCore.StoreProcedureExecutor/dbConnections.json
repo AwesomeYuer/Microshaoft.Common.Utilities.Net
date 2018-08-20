@@ -3,7 +3,7 @@
     {
       "ConnectionID": "mssql1",
       "DataBaseType": "mssql",
-      "ConnectionString": "Initial Catalog=Test;Data Source=microshaoft-ubuntu-002.westus.cloudapp.azure.com;User=sa;Password=!@#123QWE",
+      "ConnectionString": "Initial Catalog=Test;Data Source=microshaoft-ubuntu-002.eastus.cloudapp.azure.com;User=sa;Password=!@#123QWE",
       "WhiteList": [
         {
           "StoreProcedureName": "zsp_GetDatesAfter",
