@@ -22,4 +22,13 @@
     <ProjectReference Include="..\..\CommonUtilities\WebApiUtilities\WebApiUtilities.NET.Core.2.x\WebApiUtilities.NET.Core.2.x.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="hostings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
