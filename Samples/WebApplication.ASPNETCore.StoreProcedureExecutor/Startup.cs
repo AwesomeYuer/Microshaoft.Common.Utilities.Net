@@ -1,4 +1,4 @@
-﻿    namespace WebApplication.ASPNetCore
+﻿namespace WebApplication.ASPNetCore
 {
     using Microshaoft.Web;
     using Microsoft.AspNetCore.Builder;
@@ -13,7 +13,10 @@
         {
             Configuration = configuration;
         }
-        public IConfiguration Configuration { get; }
+        public IConfiguration Configuration
+        {
+            get;
+        }
         public void ConfigureServices(IServiceCollection services)
         {
             services
@@ -26,8 +29,11 @@
             services
                 //.AddTransient
                 .AddSingleton
-                    <IStoreProceduresWebApiService, StoreProceduresExecuteService>
-                        ();
+                    <
+                        IStoreProceduresWebApiService
+                        , StoreProceduresExecuteService
+                    >
+                    ();
             services
                 .Add
                     (
