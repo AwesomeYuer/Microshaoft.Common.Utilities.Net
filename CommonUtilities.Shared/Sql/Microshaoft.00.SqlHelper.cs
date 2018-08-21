@@ -151,7 +151,6 @@
                                 (
                                     dbParameterReturn
                                 );
-                    
                     connection.Open();
                     var dataReader
                             = command

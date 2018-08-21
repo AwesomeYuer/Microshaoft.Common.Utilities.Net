@@ -24,15 +24,7 @@
                                     , optional: false
                                     , reloadOnChange: true
                                 )
-                            .AddJsonFile
-                                (
-                                    path: "dbConnections.json"
-                                    , optional: false
-                                    , reloadOnChange: true
-
-                                )
                             .Build();
-
             return
                 WebHost
                     .CreateDefaultBuilder(args)

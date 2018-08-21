@@ -66,14 +66,14 @@ namespace Microshaoft.Web
                             (
                                 (x) =>
                                 {
-                                    var r = configuration[$"{x.Key}:ConnectionID"];
+                                    var r = configuration[$"{x.Key}ConnectionID"];
                                     return r;
                                 }
                                 , (x) =>
                                 {
                                     var whiteList =
                                             configuration
-                                                .GetSection($"{x.Key}:WhiteList")
+                                                .GetSection($"{x.Key}WhiteList")
                                                 .AsEnumerable()
                                                 .Where
                                                     (
@@ -98,13 +98,13 @@ namespace Microshaoft.Web
                                                     (
                                                         (xx) =>
                                                         {
-                                                            var rr = configuration[$"{xx.Key}:StoreProcedureName"];
+                                                            var rr = configuration[$"{xx.Key}StoreProcedureName"];
                                                             return rr;
                                                         }
                                                         ,
                                                         (xx) =>
                                                         {
-                                                            var s = configuration[$"{xx.Key}:AllowedHttpMethods"];
+                                                            var s = configuration[$"{xx.Key}AllowedHttpMethods"];
                                                             var allowedHttpMethods =
                                                                         Enum
                                                                             .Parse<HttpMethodsFlags>
@@ -116,13 +116,14 @@ namespace Microshaoft.Web
                                                                 allowedHttpMethods;
                                                         }
                                                         ,
-                                                        StringComparer.OrdinalIgnoreCase
+                                                        StringComparer
+                                                                .OrdinalIgnoreCase
                                                     );
                                     var r = new DataBaseConnectionInfo()
                                     {
-                                        ConnectionID = configuration[$"{x.Key}:ConnectionID"]
-                                        , ConnectionString = configuration[$"{x.Key}:ConnectionString"]
-                                        , DataBaseType = Enum.Parse<DataBasesType>(configuration[$"{x.Key}:DataBaseType"], true)
+                                        ConnectionID = configuration[$"{x.Key}ConnectionID"]
+                                        , ConnectionString = configuration[$"{x.Key}ConnectionString"]
+                                        , DataBaseType = Enum.Parse<DataBasesType>(configuration[$"{x.Key}DataBaseType"], true)
                                         , WhiteList = whiteList
                                     };
                                     return r;
