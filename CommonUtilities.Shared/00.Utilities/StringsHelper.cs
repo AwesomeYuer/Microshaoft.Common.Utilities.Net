@@ -12,7 +12,6 @@ namespace Microshaoft
                                     , bool ignoreCase = true
                                 )
         {
-            int r = -1;
             int p = 0;
             var s = target;
             var ss = search;
@@ -24,18 +23,23 @@ namespace Microshaoft
             var i = 0;
             var l = target.Length;
             var ll = search.Length;
-            while (p <= l && p >= 0)
+            do
             {
-                p = s.IndexOf(ss, p + ll);
+                p = s.IndexOf(ss, p);
                 if (p > 0)
                 {
                     i++;
-                }
-                if (i >= hits)
-                {
-                    break;
+                    p += ll;
                 }
             }
+            while 
+                (
+                    p <= l
+                    &&
+                    p >= 0
+                    &&
+                    i < hits
+                );
             return p;
         }
 
