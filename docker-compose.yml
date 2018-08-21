@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  serverconsoleapp.core:
+    image: ${DOCKER_REGISTRY}serverconsoleappcore
+    build:
+      context: .
+      dockerfile: Samples/SocketAsyncArgs.TCP.Echo.Server/ServerConsoleApp/ServerConsoleApp.Core/Dockerfile
