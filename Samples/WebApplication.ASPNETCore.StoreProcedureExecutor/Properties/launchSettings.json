@@ -30,6 +30,9 @@
       "commandName": "Docker",
       "launchBrowser": true,
       "launchUrl": "{Scheme}://localhost:{ServicePort}/api/values"
+    },
+    "newProfile1": {
+      "commandName": "Executable"
     }
   }
 }
