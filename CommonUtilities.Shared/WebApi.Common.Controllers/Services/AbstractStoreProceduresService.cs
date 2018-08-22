@@ -27,9 +27,18 @@ namespace Microshaoft.Web
                                 : IStoreProceduresWebApiService
     {
         private static object _locker = new object();
-
+        public AbstractStoreProceduresService()
+        {
+            Initialize();
+        }
+        //for override from derived class
+        public virtual void Initialize()
+        {
+            LoadDataBasesConnectionsInfo("dbConnections.json");
+            LoadDynamicExecutors("dynamicLoadExecutorsPaths.json");
+        }
         protected IDictionary<string, DataBaseConnectionInfo>
-                        GetDataBasesConfigurationProcess
+                        GetDataBasesConnectionsInfoProcess
                                     (
                                         string dbConnectionsJsonFile = "dbConnections.json"
                                     )
@@ -134,13 +143,13 @@ namespace Microshaoft.Web
                             );
             return result;
         }
-        protected virtual void LoadDataBasesConfiguration
+        protected virtual void LoadDataBasesConnectionsInfo
                                     (
                                         string dbConnectionsJsonFile
                                                     = "dbConnections.json"
                                     )
         {
-            var connections = GetDataBasesConfigurationProcess(dbConnectionsJsonFile);
+            var connections = GetDataBasesConnectionsInfoProcess(dbConnectionsJsonFile);
             _locker
                 .LockIf
                     (

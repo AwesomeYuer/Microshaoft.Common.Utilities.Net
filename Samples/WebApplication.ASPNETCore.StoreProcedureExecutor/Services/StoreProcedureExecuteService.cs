@@ -3,12 +3,21 @@
     public class StoreProceduresExecuteService
                             : AbstractStoreProceduresService
     {
-        public StoreProceduresExecuteService()
+        //called by base AbstractStoreProceduresService constructor
+        public override void Initialize()
         {
+            //using derived class implmention
+            LoadDataBasesConnectionsInfo("dbConnections.json");
+            //using base class implmention
             base
-                .LoadDataBasesConfiguration("dbConnections.json");
+                .LoadDynamicExecutors("dynamicLoadExecutorsPaths.json");
+        }
+        protected override void LoadDataBasesConnectionsInfo(string dbConnectionsJsonFile = "dbConnections.json")
+        {
+            // test for override base LoadDataBasesConnectionsInfo implement
+            // you can implement by using other process except config json file(that's base method)
             base
-                .LoadDynamicExecutors("dynamicLoadExecutorsPaths.json"); ;
+                .LoadDataBasesConnectionsInfo(dbConnectionsJsonFile);
         }
         protected override int
                 CachedExecutingParametersDefinitionExpiredInSeconds => 11;

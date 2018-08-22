@@ -14,7 +14,7 @@ namespace Microshaoft.WebApi.Controllers
                         ControllerBase
     {
         private readonly
-                IStoreProceduresWebApiService
+                    IStoreProceduresWebApiService
                             _service;
 
         public AbstractStoreProceduresExecutorControllerBase
@@ -46,7 +46,6 @@ namespace Microshaoft.WebApi.Controllers
         ]
         public virtual ActionResult<JToken> ProcessActionRequest
                             (
-
                                 [FromRoute]
                                 string connectionID //= "mssql"
                                 ,
