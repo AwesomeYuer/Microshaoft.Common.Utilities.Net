@@ -369,33 +369,26 @@
                         TDbCommand command = new TDbCommand()
                         {
                             CommandType = CommandType.StoredProcedure
-                            ,
-                            CommandTimeout = commandTimeout
-                            ,
-                            CommandText = storeProcedureName
-                            ,
-                            Connection = connection
+                            , CommandTimeout = commandTimeout
+                            , CommandText = storeProcedureName
+                            , Connection = connection
                         }
                     )
                 {
                     List<TDbParameter>
                         dbParameters
                             = GenerateExecuteParameters
-                                    //<TDbConnection, TDbCommand, TDbParameter>
                                         (
                                             connection.ConnectionString
                                             , storeProcedureName
                                             , inputsParameters
-                                            //, onQueryDefinitionsSetInputParameterProcessFunc
-                                            //, onQueryDefinitionsSetReturnParameterProcessFunc
-                                            //, onQueryDefinitionsReadOneDbParameterProcessFunc
-                                            //, onExecutingSetDbParameterTypeProcessFunc
-                                            //, onExecutingSetDbParameterValueProcessFunc
                                         );
                     if (dbParameters != null)
                     {
                         var parameters = dbParameters.ToArray();
-                        command.Parameters.AddRange(parameters);
+                        command
+                            .Parameters
+                            .AddRange(parameters);
                     }
                     connection.Open();
                     var result = new JObject
@@ -451,9 +444,9 @@
                     do
                     {
                         var columns = dataReader
-                                        .GetJTokensColumnsEnumerable();
+                                        .GetColumnsJTokensEnumerable();
                         var rows = dataReader
-                                        .AsJTokensRowsEnumerable();
+                                        .AsRowsJTokensEnumerable();
 
                         (
                             (JArray)

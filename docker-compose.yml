@@ -6,3 +6,10 @@ services:
     build:
       context: .
       dockerfile: Samples/SocketAsyncArgs.TCP.Echo.Server/ServerConsoleApp/ServerConsoleApp.Core/Dockerfile
+
+  webapplication.aspnetcore.storeprocedureexecutor:
+    image: ${DOCKER_REGISTRY}webapplicationaspnetcorestoreprocedureexecutor
+    build:
+      context: .
+      dockerfile: Samples/WebApplication.ASPNETCore.StoreProcedureExecutor/Dockerfile
+

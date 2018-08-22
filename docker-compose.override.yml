@@ -1,1 +1,9 @@
 version: '3.4'
+
+services:
+  webapplication.aspnetcore.storeprocedureexecutor:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "80"
+
