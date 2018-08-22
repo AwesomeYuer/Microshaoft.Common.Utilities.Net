@@ -107,7 +107,7 @@
                     FROM
                         information_schema.parameters a 
                     WHERE
-                        a.SPECIFIC_NAME = @procedure_name
+                        a.SPECIFIC_NAME = @ProcedureName
                     ";
                 //MySQL 不支持 using command
                 //using
@@ -115,19 +115,17 @@
                 DbCommand command = new TDbCommand()
                 {
                     CommandText = commandText
-                    ,
-                    CommandType = CommandType.Text
-                    ,
-                    Connection = connection
+                    , CommandType = CommandType.Text
+                    , Connection = connection
                 };
                     //)
                 {
                     //command.CommandType = CommandType.StoredProcedure;
-                    TDbParameter dbParameterProcedure_Name = new TDbParameter();
-                    dbParameterProcedure_Name.ParameterName = "@procedure_name";
-                    dbParameterProcedure_Name.Direction = ParameterDirection.Input;
-                    dbParameterProcedure_Name.Size = 128;
-                    dbParameterProcedure_Name
+                    TDbParameter dbParameterProcedureName = new TDbParameter();
+                    dbParameterProcedureName.ParameterName = "@ProcedureName";
+                    dbParameterProcedureName.Direction = ParameterDirection.Input;
+                    dbParameterProcedureName.Size = 128;
+                    dbParameterProcedureName
                             .Value = 
                                     (
                                         storeProcedureName != null 
@@ -137,12 +135,12 @@
                                         DBNull.Value
                                     );
 
-                    dbParameterProcedure_Name 
+                    dbParameterProcedureName 
                             = onQueryDefinitionsSetInputParameterProcessFunc
                                     (
-                                        dbParameterProcedure_Name
+                                        dbParameterProcedureName
                                     );
-                    command.Parameters.Add(dbParameterProcedure_Name);
+                    command.Parameters.Add(dbParameterProcedureName);
                     TDbParameter dbParameterReturn = new TDbParameter();
                     dbParameterReturn.ParameterName = "@RETURN_VALUE";
                     dbParameterReturn.Direction = ParameterDirection.ReturnValue;
@@ -232,6 +230,5 @@
             }
             return pd;
         }
-
     }
 }
