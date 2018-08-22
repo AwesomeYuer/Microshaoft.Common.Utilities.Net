@@ -81,16 +81,16 @@ namespace Microshaoft.Web
                                                         {
                                                             var v = xx.Value;
                                                             var rr = !v.IsNullOrEmptyOrWhiteSpace();
-                                                            return
-                                                                    rr;
+                                                            return rr;
                                                         }
                                                     )
                                                 .GroupBy
                                                     (
                                                         (xx) =>
                                                         {
-                                                            var i = xx.Key.FindIndex(":", 4);
-                                                            var rr = xx.Key.Substring(0, i);
+                                                            var key = xx.Key;
+                                                            var i = key.FindIndex(":", 4);
+                                                            var rr = key.Substring(0, i);
                                                             return rr;
                                                         }
                                                     )

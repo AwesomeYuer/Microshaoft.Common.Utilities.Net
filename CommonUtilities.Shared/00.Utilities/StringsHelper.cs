@@ -48,11 +48,17 @@ namespace Microshaoft
         {
             return 
                     string.IsNullOrEmpty(target)
-                    || string.IsNullOrWhiteSpace(target);
+                    ||
+                    string.IsNullOrWhiteSpace(target);
         }
         public static bool IsValidString(string text)
         {
-            return (text != string.Empty && text != null && text.Trim().Length > 0);
+            return 
+                (
+                    text != string.Empty
+                    && text != null
+                    && text.Trim().Length > 0
+                );
         }
         public static string PadLeftInBytes
                             (
@@ -107,7 +113,11 @@ namespace Microshaoft
     }
     public static class StringsHelper
     {
-        public static bool StringsCompareWithWild(Tuple<string, string>[] a, string wild = "*")
+        public static bool StringsCompareWithWild
+                                (
+                                    Tuple<string, string>[] a
+                                    , string wild = "*"
+                                )
         {
             var r = true;
             foreach (var xx in a)
@@ -134,7 +144,7 @@ namespace Microshaoft
     using System.Collections.Specialized;
     using System.Text;
 
-    public static class HttpHelper
+    public static class HtmlHelper
     {
         public static string GenerateFormHTML
                                 (
@@ -166,5 +176,3 @@ namespace Microshaoft
         }
     }
 }
-
-

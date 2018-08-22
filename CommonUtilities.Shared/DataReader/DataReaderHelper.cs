@@ -21,8 +21,9 @@ namespace Microshaoft
                 {
                     if (onReadProcessFunc != null)
                     {
-                        yield return
-                            onReadProcessFunc(++i, target);
+                        yield
+                            return
+                                onReadProcessFunc(++i, target);
                     }
                 }
             }
@@ -111,17 +112,22 @@ namespace Microshaoft
                     {
                         if (attribute != null)
                         {
-                            if (!attribute.DataTableColumnName.IsNullOrEmptyOrWhiteSpace())
+                            if 
+                                (
+                                    !attribute
+                                        .DataTableColumnName
+                                        .IsNullOrEmptyOrWhiteSpace()
+                                )
                             {
                                 dataColumnName = attribute.DataTableColumnName;
                             }
                         }
                     }
                     var setter = DynamicExpressionTreeHelper
-                                            .CreateMemberSetter<TEntry, object>
-                                                (
-                                                    x.Name
-                                                );
+                                        .CreateMemberSetter<TEntry, object>
+                                            (
+                                                x.Name
+                                            );
                     setter
                             (
                                 entry
@@ -133,18 +139,18 @@ namespace Microshaoft
                         entry;
             }
         }
-        public static IEnumerable<JToken> AsJTokensRowsEnumerable
+        public static IEnumerable<JToken> AsRowsJTokensEnumerable
                              (
                                  this IDataReader target
                              )
         {
             return
-                GetJTokensRowsEnumerable
+                GetRowsJTokensEnumerable
                     (
                         target
                     );
         }
-        public static IEnumerable<JToken> GetJTokensColumnsEnumerable
+        public static IEnumerable<JToken> GetColumnsJTokensEnumerable
                      (
                         this IDataReader dataReader
                      )
@@ -180,7 +186,7 @@ namespace Microshaoft
                                 );
             }
         }
-        public static IEnumerable<JToken> GetJTokensRowsEnumerable
+        public static IEnumerable<JToken> GetRowsJTokensEnumerable
                              (
                                  IDataReader dataReader
                              )
