@@ -109,12 +109,11 @@ namespace Microshaoft
                     parameter.OracleDbType == OracleDbType.TimeStampTZ
                 )
             {
-                DateTime rr;
                 var b = DateTime
                             .TryParse
                                 (
                                     jValueText
-                                    , out rr
+                                    , out var rr
                                 );
                 if (b)
                 {
@@ -126,12 +125,11 @@ namespace Microshaoft
                     parameter.OracleDbType == OracleDbType.Boolean
                 )
             {
-                bool rr;
                 var b = bool
                             .TryParse
                                 (
                                     jValueText
-                                    , out rr
+                                    , out var rr
                                 );
                 if (b)
                 {
@@ -143,12 +141,11 @@ namespace Microshaoft
                     parameter.OracleDbType == OracleDbType.Decimal
                 )
             {
-                decimal rr;
                 var b = decimal
                             .TryParse
                                 (
                                     jValueText
-                                    , out rr
+                                    , out var rr
                                 );
                 if (b)
                 {
@@ -160,12 +157,11 @@ namespace Microshaoft
                     parameter.OracleDbType == OracleDbType.Double
                 )
             {
-                double rr;
                 var b = double
                             .TryParse
                                 (
                                     jValueText
-                                    , out rr
+                                    , out var rr
                                 );
                 if (b)
                 {
@@ -177,12 +173,11 @@ namespace Microshaoft
                     parameter.OracleDbType == OracleDbType.Raw
                 )
             {
-                Guid rr;
                 var b = Guid
                             .TryParse
                                 (
                                     jValueText
-                                    , out rr
+                                    , out var rr
                                 );
                 if (b)
                 {
@@ -196,12 +191,11 @@ namespace Microshaoft
                     parameter.OracleDbType == OracleDbType.Int64
                 )
             {
-                long rr;
                 var b = long
                             .TryParse
                                 (
                                     jValueText
-                                    , out rr
+                                    , out var rr
                                 );
                 if (b)
                 {
@@ -213,12 +207,11 @@ namespace Microshaoft
                     parameter.OracleDbType == OracleDbType.Int32
                 )
             {
-                int rr;
                 var b = int
                             .TryParse
                                 (
                                     jValueText
-                                    , out rr
+                                    , out var rr
                                 );
                 if (b)
                 {
@@ -230,12 +223,11 @@ namespace Microshaoft
                     parameter.OracleDbType == OracleDbType.Int16
                 )
             {
-                short rr;
                 var b = short
                             .TryParse
                                 (
                                     jValueText
-                                    , out rr
+                                    , out var rr
                                 );
                 if (b)
                 {

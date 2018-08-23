@@ -104,12 +104,11 @@ namespace Microshaoft
                     parameter.NpgsqlDbType == NpgsqlDbType.Time
                 )
             {
-                DateTime rr;
                 var b = DateTime
                             .TryParse
                                 (
                                     jValueText
-                                    , out rr
+                                    , out var rr
                                 );
                 if (b)
                 {
@@ -121,12 +120,11 @@ namespace Microshaoft
                     parameter.NpgsqlDbType == NpgsqlDbType.Bit
                 )
             {
-                bool rr;
                 var b = bool
                             .TryParse
                                 (
                                     jValueText
-                                    , out rr
+                                    , out var rr
                                 );
                 if (b)
                 {
@@ -140,12 +138,11 @@ namespace Microshaoft
                     parameter.NpgsqlDbType == NpgsqlDbType.Real
                 )
             {
-                double rr;
                 var b = double
                             .TryParse
                                 (
                                     jValueText
-                                    , out rr
+                                    , out var rr
                                 );
                 if (b)
                 {
@@ -157,12 +154,11 @@ namespace Microshaoft
                     parameter.NpgsqlDbType == NpgsqlDbType.Uuid
                 )
             {
-                Guid rr;
                 var b = Guid
                             .TryParse
                                 (
                                     jValueText
-                                    , out rr
+                                    , out var rr
                                 );
                 if (b)
                 {
@@ -174,12 +170,11 @@ namespace Microshaoft
                     parameter.NpgsqlDbType == NpgsqlDbType.Bigint
                )
             {
-                long rr;
                 var b = long
                             .TryParse
                                 (
                                     jValueText
-                                    , out rr
+                                    , out var rr
                                 );
                 if (b)
                 {
@@ -191,12 +186,11 @@ namespace Microshaoft
                     parameter.NpgsqlDbType == NpgsqlDbType.Numeric
                )
             {
-                decimal rr;
-                var b = decimal
+                 var b = decimal
                             .TryParse
                                 (
                                     jValueText
-                                    , out rr
+                                    , out var rr
                                 );
                 if (b)
                 {

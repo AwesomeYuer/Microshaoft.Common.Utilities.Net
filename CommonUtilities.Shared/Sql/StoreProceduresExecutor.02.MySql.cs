@@ -165,13 +165,12 @@ namespace Microshaoft
                     parameter.MySqlDbType == MySqlDbType.DateTime
                 )
             {
-                DateTime rr;
                 var b = DateTime
-                        .TryParse
-                            (
-                                jValueText
-                                , out rr
-                            );
+                            .TryParse
+                                (
+                                    jValueText
+                                    , out var rr
+                                );
                 if (b)
                 {
                     r = rr;
@@ -182,13 +181,12 @@ namespace Microshaoft
                     parameter.MySqlDbType == MySqlDbType.Bit
                 )
             {
-                bool rr;
                 var b = bool
-                        .TryParse
-                            (
-                                jValueText
-                                , out rr
-                            );
+                            .TryParse
+                                (
+                                    jValueText
+                                    , out var rr
+                                );
                 if (b)
                 {
                     r = rr;
@@ -199,13 +197,12 @@ namespace Microshaoft
                     parameter.MySqlDbType == MySqlDbType.Decimal
                 )
             {
-                decimal rr;
                 var b = decimal
-                        .TryParse
-                            (
-                                jValueText
-                                , out rr
-                            );
+                            .TryParse
+                                (
+                                    jValueText
+                                    , out var rr
+                                );
                 if (b)
                 {
                     r = rr;
@@ -216,13 +213,12 @@ namespace Microshaoft
                     parameter.MySqlDbType == MySqlDbType.Float
                 )
             {
-                float rr;
                 var b = float
-                        .TryParse
-                            (
-                                jValueText
-                                , out rr
-                            );
+                            .TryParse
+                                (
+                                    jValueText
+                                    , out var rr
+                                );
                 if (b)
                 {
                     r = rr;
@@ -233,13 +229,12 @@ namespace Microshaoft
                     parameter.MySqlDbType == MySqlDbType.Guid
                 )
             {
-                Guid rr;
-                var b = Guid
-                        .TryParse
-                            (
-                                jValueText
-                                , out rr
-                            );
+                 var b = Guid
+                            .TryParse
+                                (
+                                    jValueText
+                                    , out var rr
+                                );
                 if (b)
                 {
                     r = rr;
@@ -250,13 +245,12 @@ namespace Microshaoft
                     parameter.MySqlDbType == MySqlDbType.UInt16
                 )
             {
-                ushort rr;
                 var b = ushort
-                        .TryParse
-                            (
-                                jValueText
-                                , out rr
-                            );
+                            .TryParse
+                                (
+                                    jValueText
+                                    , out var rr
+                                );
                 if (b)
                 {
                     r = rr;
@@ -269,13 +263,12 @@ namespace Microshaoft
                     parameter.MySqlDbType == MySqlDbType.UInt32
                 )
             {
-                uint rr;
                 var b = uint
-                        .TryParse
-                            (
-                                jValueText
-                                , out rr
-                            );
+                            .TryParse
+                                (
+                                    jValueText
+                                    , out var rr
+                                );
                 if (b)
                 {
                     r = rr;
@@ -286,13 +279,12 @@ namespace Microshaoft
                     parameter.MySqlDbType == MySqlDbType.UInt64
                 )
             {
-                ulong rr;
                 var b = ulong
-                        .TryParse
-                            (
-                                jValueText
-                                , out rr
-                            );
+                            .TryParse
+                                (
+                                    jValueText
+                                    , out var rr
+                                );
                 if (b)
                 {
                     r = rr;
@@ -303,13 +295,12 @@ namespace Microshaoft
                    parameter.MySqlDbType == MySqlDbType.Int16
                )
             {
-                short rr;
                 var b = short
-                        .TryParse
-                            (
-                                jValueText
-                                , out rr
-                            );
+                            .TryParse
+                                (
+                                    jValueText
+                                    , out var rr
+                                );
                 if (b)
                 {
                     r = rr;
@@ -322,13 +313,12 @@ namespace Microshaoft
                     parameter.MySqlDbType == MySqlDbType.Int32
                )
             {
-                int rr;
                 var b = int
-                        .TryParse
-                            (
-                                jValueText
-                                , out rr
-                            );
+                            .TryParse
+                                (
+                                    jValueText
+                                    , out var rr
+                                );
                 if (b)
                 {
                     r = rr;
@@ -339,13 +329,12 @@ namespace Microshaoft
                     parameter.MySqlDbType == MySqlDbType.Int64
                )
             {
-                long rr;
                 var b = long
-                        .TryParse
-                            (
-                                jValueText
-                                , out rr
-                            );
+                            .TryParse
+                                (
+                                    jValueText
+                                    , out long rr
+                                );
                 if (b)
                 {
                     r = rr;
@@ -353,9 +342,6 @@ namespace Microshaoft
             }
             return r;
         }
-
-
     }
 }
-
 #endif

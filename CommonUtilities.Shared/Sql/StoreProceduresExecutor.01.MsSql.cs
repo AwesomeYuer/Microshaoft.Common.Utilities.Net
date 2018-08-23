@@ -338,12 +338,11 @@ from
                     parameter.SqlDbType == SqlDbType.DateTime
                 )
             {
-                DateTime rr;
                 var b = DateTime
                             .TryParse
                                 (
                                     jValueText
-                                    , out rr
+                                    , out var rr
                                 );
                 if (b)
                 {
@@ -355,13 +354,12 @@ from
                     parameter.SqlDbType == SqlDbType.DateTimeOffset
                 )
             {
-                DateTimeOffset rr;
                 var b = DateTimeOffset
-                            .TryParse
-                                (
-                                    jValueText
-                                    , out rr
-                                );
+                                .TryParse
+                                    (
+                                        jValueText
+                                        , out var rr
+                                    );
                 if (b)
                 {
                     r = rr;
@@ -372,12 +370,11 @@ from
                     parameter.SqlDbType == SqlDbType.Bit
                 )
             {
-                bool rr;
                 var b = bool
                             .TryParse
                                 (
                                     jValueText
-                                    , out rr
+                                    , out var rr
                                 );
                 if (b)
                 {
@@ -389,12 +386,11 @@ from
                     parameter.SqlDbType == SqlDbType.Decimal
                 )
             {
-                decimal rr;
                 var b = decimal
                             .TryParse
                                 (
                                     jValueText
-                                    , out rr
+                                    , out var rr
                                 );
                 if (b)
                 {
@@ -406,12 +402,11 @@ from
                     parameter.SqlDbType == SqlDbType.Float
                 )
             {
-                float rr;
                 var b = float
                             .TryParse
                                 (
                                     jValueText
-                                    , out rr
+                                    , out var rr
                                 );
                 if (b)
                 {
@@ -423,12 +418,11 @@ from
                     parameter.SqlDbType == SqlDbType.Real
                 )
             {
-                double rr;
                 var b = double
                             .TryParse
                                 (
                                     jValueText
-                                    , out rr
+                                    , out var rr
                                 );
                 if (b)
                 {
@@ -440,12 +434,11 @@ from
                     parameter.SqlDbType == SqlDbType.UniqueIdentifier
                 )
             {
-                Guid rr;
                 var b = Guid
                             .TryParse
                                 (
                                     jValueText
-                                    , out rr
+                                    , out Guid rr
                                 );
                 if (b)
                 {
@@ -457,13 +450,12 @@ from
                     parameter.SqlDbType == SqlDbType.BigInt
                 )
             {
-                long rr;
                 var b = long
-                        .TryParse
-                            (
-                                jValueText
-                                , out rr
-                            );
+                            .TryParse
+                                (
+                                    jValueText
+                                    , out var rr
+                                );
                 if (b)
                 {
                     r = rr;
@@ -474,12 +466,11 @@ from
                     parameter.SqlDbType == SqlDbType.Int
                 )
             {
-                int rr;
                 var b = int
                             .TryParse
                                 (
                                     jValueText
-                                    , out rr
+                                    , out var rr
                                 );
                 if (b)
                 {
@@ -491,12 +482,11 @@ from
                     parameter.SqlDbType == SqlDbType.SmallInt
                 )
             {
-                short rr;
                 var b = short
                             .TryParse
                                 (
                                     jValueText
-                                    , out rr
+                                    , out var rr
                                 );
                 if (b)
                 {
@@ -508,12 +498,11 @@ from
                     parameter.SqlDbType == SqlDbType.TinyInt
                 )
             {
-                short rr;
                 var b = short
                             .TryParse
                                 (
                                     jValueText
-                                    , out rr
+                                    , out var rr
                                 );
                 if (b)
                 {

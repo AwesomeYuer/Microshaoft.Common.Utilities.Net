@@ -34,11 +34,9 @@ namespace Microshaoft.WebApi.Controllers
                     (
                         [FromRoute]
                         string dataBaseType //= "mssql"
-                        ,
-                        string storeProcedureName
-                        ,
-                        [ModelBinder(typeof(JTokenModelBinder))]
-                        JToken parameters = null
+                        , string storeProcedureName
+                        , [ModelBinder(typeof(JTokenModelBinder))]
+                            JToken parameters = null
                     )
         {
             var result
