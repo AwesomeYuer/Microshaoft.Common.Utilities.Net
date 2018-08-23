@@ -16,6 +16,21 @@
       ]
     },
     {
+      "ConnectionID": "mssql2",
+      "DataBaseType": "mssql",
+      "ConnectionString": "Initial Catalog=StandardFlowInfo;Data Source=sops-db.eastus.cloudapp.azure.com;User=sa;Password=!@#123QWE",
+      "WhiteList": [
+        {
+          "StoreProcedureName": "zsp_GetObjectHistory",
+          "AllowedHttpMethods": "All"
+        },
+        {
+          "StoreProcedureName": "zsp_test",
+          "AllowedHttpMethods": "All"
+        }
+      ]
+    },
+    {
       "ConnectionID": "mysql1",
       "DataBaseType": "mysql",
       "ConnectionString": "server=microshaoft-ubuntu-001.westus.cloudapp.azure.com;uid=root;pwd=withoutpassword;database=Test",
