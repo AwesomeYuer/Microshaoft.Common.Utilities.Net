@@ -1,12 +1,9 @@
-﻿
-namespace Microshaoft
+﻿namespace Microshaoft
 {
     using Newtonsoft.Json.Linq;
     using System;
     public static class JTokenHelper
     {
-
-
         public static JToken GetDescendantByPath(this JToken target, params string[] paths)
         {
             var jsonPath = string.Empty;

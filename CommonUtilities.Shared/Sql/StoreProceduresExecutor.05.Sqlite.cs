@@ -85,12 +85,11 @@ namespace Microshaoft
                     parameter.SqliteType == SqliteType.Real
                 )
             {
-                double rr;
                 var b = double
                             .TryParse
                                 (
                                     jValueText
-                                    , out rr
+                                    , out var rr
                                 );
                 if (b)
                 {
@@ -102,12 +101,11 @@ namespace Microshaoft
                     parameter.SqliteType == SqliteType.Integer
                 )
             {
-                int rr;
                 var b = int
                             .TryParse
                                 (
                                     jValueText
-                                    , out rr
+                                    , out var rr
                                 );
                 if (b)
                 {
