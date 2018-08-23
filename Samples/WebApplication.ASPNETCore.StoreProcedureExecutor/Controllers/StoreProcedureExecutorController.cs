@@ -8,7 +8,7 @@ namespace Microshaoft.WebApi.Controllers
     using Newtonsoft.Json.Linq;
     [Route("api/[controller]")]
     [ApiController]
-    [EnableCors("SPE")]
+    [EnableCors("AllowAllOrigins")]
     public class StoreProcedureExecutorController
                     : AbstractStoreProceduresExecutorControllerBase
     {
