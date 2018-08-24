@@ -88,6 +88,14 @@
             }
             //app.UseHttpsRedirection();
             app.UseMvc();
+            app.UseDefaultFiles
+                (
+                    new DefaultFilesOptions()
+                    {
+                         DefaultFileNames = { "index.html", "jsdifflib.mssql.html" }
+                    }
+                );
+            app.UseStaticFiles();
             //app.Use(async (context, next) =>
             //{
             //    context.Response.GetTypedHeaders().CacheControl =
