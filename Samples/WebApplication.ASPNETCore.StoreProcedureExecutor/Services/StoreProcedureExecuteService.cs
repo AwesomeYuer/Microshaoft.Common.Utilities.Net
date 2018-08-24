@@ -20,7 +20,7 @@
                 .LoadDataBasesConnectionsInfo(dbConnectionsJsonFile);
         }
         protected override int
-                CachedExecutingParametersDefinitionExpiredInSeconds => 11;
+                CachedParametersDefinitionExpiredInSeconds => 11;
         protected override bool 
                 NeedAutoRefreshExecutedTimeForSlideExpire => true;
     }
