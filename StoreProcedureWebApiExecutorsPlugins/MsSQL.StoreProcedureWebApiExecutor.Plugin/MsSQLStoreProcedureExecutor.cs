@@ -38,13 +38,13 @@
                     CachedParametersDefinitionExpiredInSeconds > 0
                     &&
                     _executor
-                        .CachedExecutingParametersExpiredInSeconds
+                        .CachedParametersDefinitionExpiredInSeconds
                     !=
                     CachedParametersDefinitionExpiredInSeconds
                 )
             {
                 _executor
-                        .CachedExecutingParametersExpiredInSeconds
+                        .CachedParametersDefinitionExpiredInSeconds
                             = CachedParametersDefinitionExpiredInSeconds;
             }
             result = null;

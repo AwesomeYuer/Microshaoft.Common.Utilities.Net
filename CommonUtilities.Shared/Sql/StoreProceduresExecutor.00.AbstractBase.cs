@@ -17,7 +17,7 @@
                         where
                                 TDbParameter : DbParameter, new()
     {
-        public int CachedExecutingParametersExpiredInSeconds
+        public int CachedParametersDefinitionExpiredInSeconds
         {
             get;
             set;
@@ -259,7 +259,7 @@
             var result = executingInfo.DbParameters;
             if (!add)
             {
-                if (CachedExecutingParametersExpiredInSeconds > 0)
+                if (CachedParametersDefinitionExpiredInSeconds > 0)
                 {
                     var locker = executingInfo
                                             .Locker;
@@ -278,7 +278,7 @@
                                             (
                                                 diffSeconds
                                                 >
-                                                CachedExecutingParametersExpiredInSeconds
+                                                CachedParametersDefinitionExpiredInSeconds
                                             );
                                     return r;
                                 }

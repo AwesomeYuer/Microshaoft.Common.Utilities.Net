@@ -242,7 +242,7 @@ namespace Microshaoft.Web
                                     {
                                         rr
                                             .CachedParametersDefinitionExpiredInSeconds
-                                                = CachedExecutingParametersDefinitionExpiredInSeconds;
+                                                = CachedParametersDefinitionExpiredInSeconds;
                                         rr
                                             .NeedAutoRefreshParametersDefinitionCacheForSlideExpire
                                                 = NeedAutoRefreshExecutedTimeForSlideExpire;
@@ -267,7 +267,7 @@ namespace Microshaoft.Web
                     );
         }
         protected abstract int 
-                    CachedExecutingParametersDefinitionExpiredInSeconds
+                    CachedParametersDefinitionExpiredInSeconds
         {
             get;
             //set;
