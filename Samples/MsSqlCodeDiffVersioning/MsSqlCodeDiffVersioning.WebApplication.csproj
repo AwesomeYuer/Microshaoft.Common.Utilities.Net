@@ -32,9 +32,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="CompositionPlugins\MsSQL.StoreProcedureWebApiExecutor.Plugin.deps.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Update="dbConnections.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -47,13 +44,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="CompositionPlugins\MsSQL.StoreProcedureWebApiExecutor.Plugin.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <PackageReference Update="Microsoft.NETCore.App" Version="2.1.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="Microsoft.NETCore.App" Version="2.1.0" />
+    <Folder Include="CompositionPlugins\" />
   </ItemGroup>
 
 </Project>
