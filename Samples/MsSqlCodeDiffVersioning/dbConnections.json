@@ -18,7 +18,7 @@
     {
       "ConnectionID": "mssql2",
       "DataBaseType": "mssql",
-      "ConnectionString": "Initial Catalog=StandardFlowInfo;Data Source=localhost;User=sa;Password=!@#123QWE",
+      "ConnectionString": "Initial Catalog=test;Data Source=localhost;User=sa;Password=!@#123QWE",
       "WhiteList": [
         {
           "StoreProcedureName": "zsp_zObjectsChangesLogsHistory_Get",
