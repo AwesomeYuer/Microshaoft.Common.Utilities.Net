@@ -10,6 +10,7 @@ namespace Microshaoft.Web
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     public interface IStoreProceduresWebApiService
     {
         (int StatusCode, JToken Result)
@@ -195,10 +196,39 @@ namespace Microshaoft.Web
                             string dynamicLoadExecutorsPathsJsonFile = "dynamicLoadExecutorsPaths.json"
                         )
         {
+
+            var executingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var executors =
                     GetDynamicLoadExecutorsPathsProcess
                             (
                                 dynamicLoadExecutorsPathsJsonFile
+                            )
+                        .Select
+                            (
+                                (x) =>
+                                {
+                                    var path = x;
+                                    if (!path.IsNullOrEmptyOrWhiteSpace())
+                                    {
+                                        if
+                                            (
+                                                x.StartsWith(".")
+                                                ||
+                                                x.StartsWith("\\")      //Windows
+                                                ||
+                                                x.StartsWith("/")       //linux
+                                            )
+                                        {
+                                            path = path.TrimStart('.', '\\', '/');
+                                        }
+                                        path = Path.Combine
+                                                        (
+                                                            executingDirectory
+                                                            , path
+                                                        );
+                                    }
+                                    return path;
+                                }
                             )
                         .Where
                             (
