@@ -183,9 +183,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)Type\TypeHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UAC\UacHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Cors\WildCardCorsService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\Controllers\AbstractStoreProcedureExecutorControllerBase.1.NET.All.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\Controllers\AbstractStoreProcedureExecutorControllerBase.3.NET.Core.Standard.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\Controllers\AbstractStoreProcedureExecutorControllerBase.2.NET.Framework.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\CommonController\AbstractCommonControllerBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\CommonController\AbstractActionCommonProcessingService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\StoreProcedureExecutorController\AbstractStoreProcedureExecutorControllerBase.1.NET.All.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\StoreProcedureExecutorController\AbstractStoreProcedureExecutorControllerBase.3.NET.Core.Standard.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\StoreProcedureExecutorController\AbstractStoreProcedureExecutorControllerBase.2.NET.Framework.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\Services\AbstractStoreProceduresService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\HttpMethodsFlags.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenModelBinder\JTokenModelBinder.NET.Framework.cs" />
@@ -238,7 +240,7 @@
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)JsonWebToken\" />
     <Folder Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenModelBinder\" />
-    <Folder Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\Controllers\" />
+    <Folder Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\StoreProcedureExecutorController\" />
     <Folder Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\Services\" />
   </ItemGroup>
 </Project>
