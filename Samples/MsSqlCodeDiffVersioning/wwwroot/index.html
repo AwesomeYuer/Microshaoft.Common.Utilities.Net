@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-    <title>jsdifflib demo</title>
+    <title>MS SQL Code Verioning Diff</title>
     <link rel="stylesheet" type="text/css" href="libs/jsdifflib/diffview.css" />
     <script type="text/javascript" src="libs/jsdifflib/diffview.js"></script>
     <script type="text/javascript" src="libs/jsdifflib/difflib.js"></script>
@@ -72,9 +72,9 @@
         function GetObjectsTexts() {
             //debugger;
             var left = vm.SelectedItem().ID;
-            var right = vm.SelectedChildItem().ID;
+            var right = vm.SelectedDetailItem().ID;
             if (left > right) {
-                left = vm.SelectedChildItem().ID;
+                left = vm.SelectedDetailItem().ID;
                 right = vm.SelectedItem().ID;
             }
             var ids = left + ',' + right;
@@ -113,88 +113,107 @@
                 viewType: viewType
             }));
         }
-
     </script>
 </head>
 
 <body>
-    search text:<input id="search" type="text" /> before time:<input id="datepicker1" type="text" />
-    <button onclick="GetList()">Search and Append</button>
-    <button onclick="vm.Items.removeAll();vm.Counter = 0;">clear</button>
-    <button data-bind="text: SortByObjectNameDirection" onclick="vm.SortByObjectName()">SortByObjectName</button>
-    <button data-bind="text: SortByAddSequenceDirection" onclick="vm.SortByAddSequence()">SortByAddSequenceDesc</button>
-    <br />
-    <div class="viewType">
-        <input type="button" style="width:50%" value="compare" onclick="GetObjectsTexts();" />
-        <p>diff view type:
-
-            <input type="radio" id="diffViewType0" value="0" data-bind="checked:SelectedDiffViewType" />
-            <label for="diffViewType0">side</label>
-
-            <input type="radio" id="diffViewType1" value="1" data-bind="checked:SelectedDiffViewType" />
-            <label for="diffViewType1">Inline</label>
-
-            <!-- <input type="radio" id="diffViewType2" value="2" data-bind="checked:SelectedDiffViewType"/>
-                    <label for="diffViewType2">no</label>  -->
-            </label>
-
-        </p>
+    <div>
+        Search Object's Name Contains Text:<input id="search" type="text" />
+        Post Time Before:<input id="datepicker1" type="text" />
+        <button onclick="GetMasterList()">Search and Append</button>
     </div>
-
     <div class="container">
         <div class="form-group">
-            <label>Search Result:</label><br />
-            <select size="10" style="width:40%;" data-bind="options: Items,
-                                    optionsText: 'OptionText',
-                                    selectedOptions: SelectedItems
-                                ">
-            </select>
-            <select size="10" style="width:40%;" data-bind="options: ChildrenItems,
-                                optionsText: 'OptionText',
-                                selectedOptions: SelectedChildrenItems,
-                                optionsAfterRender: SetChildItemOptionDisable" 
-                    >
-                    </select>
-                </div>
-            </div>  
-            <div id="diffoutput">
-                
-            </div>                    
+            <table width="100%">
+                <tr>
+                    <td width="50%">
+                        <label>Master Search Result:</label>
+                        <button onclick="vm.Items.removeAll();vm.Counter = 0;">clear</button>
+                        <button
+                            data-bind="text: SortByObjectNameDirection"
+                            onclick="vm.SortByObjectName()"
+                        >
+                            SortByObjectName
+                        </button>
+                        <button
+                            data-bind="text: SortByAddSequenceDirection"
+                            onclick="vm.SortByAddSequence()"
+                        >
+                            SortByAddSequence
+                        </button>
+                    </td>
+                    <td width="50%">
+                        <label>Master Selected Detail :</label>
+                    </td>
+                </tr>
+                <tr>
+                        <td>
+                            <select
+                                size="10"
+                                style="width:100%;"
+                                data-bind="options: Items,
+                                            optionsText: 'OptionText',
+                                            selectedOptions: SelectedItems"
+                            >
+                            </select>
+                        </td>
+                        <td>
+                            <select
+                                size="10"
+                                style="width:100%;"
+                                data-bind="options: DetailItems,
+                                                optionsText: 'OptionText',
+                                                selectedOptions: SelectedDetailItems,
+                                                optionsAfterRender: SetDetailItemOptionDisable" 
+                            >
+                            </select>
+                        </td>
+                    </tr>
+            </table>
+        </div>
+    </div>
+    <div class="viewType">
+            Diff View Type:
+            <br />
+            <input type="radio" id="diffViewType0" value="0" data-bind="checked:SelectedDiffViewType" />
+            <label for="diffViewType0" onclick="GetObjectsTexts();">Side</label>
+            <input type="radio" id="diffViewType1" value="1" data-bind="checked:SelectedDiffViewType" />
+            <label for="diffViewType1" onclick="GetObjectsTexts();">Inline</label>
+    </div>
+    <div id="diffoutput">
+    </div>                    
     <script>
         var viewModel = function (data) {
             var self = this;
             this.Counter = 0;
-            // this.Add =  ko.computed(function() {
-            //         return this.Counter ++;
-            //     });
             this.SelectedDiffViewType = ko.observable("0");
             this.Items = ko.observableArray(data);
             this.SelectedItems = ko.observableArray([]);
             this.SelectedItem = ko.computed(function () {
                 return this.SelectedItems()[0];
             }, this);
-            this.ChildrenItems = ko.computed(function () {
+            this.DetailItems = ko.computed(function () {
                 return this.Items().filter(function (x) {
                     var r = false;
                     r = self.SelectedItem() != undefined;
                     if (r) {
                         var xx = self.SelectedItem();
-                        x.DisableAsChild(x.ID == xx.ID);
+                        x.DisableInDetail(x.ID == xx.ID);
                         r = (x.ObjectName == xx.ObjectName);
                     }
                     return r;
                 })
             }, this);
-            this.SelectedChildrenItems = ko.observableArray([]);
-            this.SelectedChildItem = ko.computed(function () {
-                return this.SelectedChildrenItems()[0];
+            this.SelectedDetailItems = ko.observableArray([]);
+            this.SelectedDetailItem = ko.computed(function () {
+                return this.SelectedDetailItems()[0];
             }, this);
-            this.SetChildItemOptionDisable = function (option, item) {
-                ko.applyBindingsToNode(option, { disable: item.DisableAsChild }, item);
+            this.SetDetailItemOptionDisable = function (option, item) {
+                ko.applyBindingsToNode(option, { disable: item.DisableInDetail }, item);
             };
             this.SortByAddSequenceState = ko.observable(false);
             this.SortByAddSequenceDirection = ko.computed(function () {
-                var r = "SortByAddSequence Direction ";
+                var r = "SortByAddSequence ";
                 if (self.SortByAddSequenceState) {
                     if (self.SortByAddSequenceState()) {
                         r += " Asc";
@@ -205,8 +224,8 @@
                 return r;
             });
             this.SortByAddSequence = function () {
-                self.Items.sort(function (a, b) {
-                    var r = a.AddSequence > b.AddSequence ? -1 : 1;
+                self.Items.sort(function (x, y) {
+                    var r = x.AddSequence > y.AddSequence ? -1 : 1;
                     if (self.SortByAddSequenceState()) {
                         r = -1 * r;
                     }
@@ -216,7 +235,7 @@
             };
             this.SortByObjectNameState = ko.observable(false);
             this.SortByObjectNameDirection = ko.computed(function () {
-                var r = "SortByObjectName Direction ";
+                var r = "SortByObjectName ";
                 if (self.SortByObjectNameState) {
                     if (self.SortByObjectNameState()) {
                         r += " Asc";
@@ -228,8 +247,12 @@
             });
             this.SortByObjectName = function () {
                 this.Items.sort(
-                    function (left, right) {
-                        var r = (left.ObjectName == right.ObjectName ? (left.ID < right.ID ? -1 : 1) : (left.ObjectName < right.ObjectName ? -1 : 1));
+                    function (x, y) {
+                        var r = (
+                                    x.ObjectName == y.ObjectName ? 
+                                    (x.ID < y.ID ? -1 : 1) : 
+                                    (x.ObjectName < y.ObjectName ? -1 : 1)
+                                );
                         if (self.SortByObjectNameState()) {
                             r = -1 * r;
                         }
@@ -247,7 +270,7 @@
             vm.Counter = 0;
         }
 
-        function GetList() {
+        function GetMasterList() {
             //jsonp cross domain
             var search = document.getElementById("search").value;
             var beforeTime = document.getElementById("datepicker1").value;
@@ -262,7 +285,7 @@
                             });
                             if (found == undefined) {
                                 item.OptionText = item.ObjectName + '(' + item.ID + ')' + ' @ ' + item.PostTime + ' @ ' + item.HostName;
-                                item.DisableAsChild = ko.observable(false);
+                                item.DisableInDetail = ko.observable(false);
                                 item.AddSequence = (++vm.Counter);
                                 vm.Items.push(item);
                             }
