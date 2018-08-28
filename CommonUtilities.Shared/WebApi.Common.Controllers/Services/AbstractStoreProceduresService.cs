@@ -196,7 +196,6 @@ namespace Microshaoft.Web
                             string dynamicLoadExecutorsPathsJsonFile = "dynamicLoadExecutorsPaths.json"
                         )
         {
-
             var executingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var executors =
                     GetDynamicLoadExecutorsPathsProcess
@@ -213,10 +212,6 @@ namespace Microshaoft.Web
                                         if
                                             (
                                                 x.StartsWith(".")
-                                                ||
-                                                x.StartsWith("\\")      //Windows
-                                                ||
-                                                x.StartsWith("/")       //linux
                                             )
                                         {
                                             path = path.TrimStart('.', '\\', '/');
