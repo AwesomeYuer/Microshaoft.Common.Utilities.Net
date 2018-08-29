@@ -1,5 +1,6 @@
 ﻿namespace WebApplication.ASPNetCore
 {
+    using Microshaoft;
     using Microshaoft.Web;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Cors.Infrastructure;
@@ -7,6 +8,13 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.FileProviders;
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -88,14 +96,35 @@
             }
             //app.UseHttpsRedirection();
             app.UseMvc();
+            Console.WriteLine(Directory.GetCurrentDirectory());
             app.UseDefaultFiles
                 (
                     new DefaultFilesOptions()
                     {
-                         DefaultFileNames = { "index.html", "jsdifflib.mssql.html" }
+                        DefaultFileNames = { "index.html", "jsdifflib.mssql.html" }
                     }
                 );
-            app.UseStaticFiles();
+            //兼容 Linux/Windows wwwroot 路径配置
+            var wwwroot = GetExistsPaths("wwwrootpaths.json","wwwroot").FirstOrDefault();
+            if (wwwroot.IsNullOrEmptyOrWhiteSpace())
+            {
+                app.UseStaticFiles();
+            }
+            else
+            {
+                app.UseStaticFiles
+                    (
+                        new StaticFileOptions()
+                        {
+                              FileProvider = new PhysicalFileProvider
+                                                    (
+                                                        wwwroot
+                                                    )
+                            , RequestPath = ""
+                        }
+                    );
+            }
+            
             //app.Use(async (context, next) =>
             //{
             //    context.Response.GetTypedHeaders().CacheControl =
@@ -109,6 +138,63 @@
             //    await next();
             //});
             app.UseResponseCaching();
+        }
+
+        private static IEnumerable<string> GetExistsPaths(string configurationJsonFile, string sectionName)
+        {
+            var configurationBuilder =
+                        new ConfigurationBuilder()
+                                .AddJsonFile(configurationJsonFile);
+            var configuration = configurationBuilder.Build();
+            var executingDirectory = Path
+                                     .GetDirectoryName
+                                             (
+                                                 Assembly
+                                                     .GetExecutingAssembly()
+                                                     .Location
+                                             );
+            var result =
+                    configuration
+                        .GetSection(sectionName)
+                        .AsEnumerable()
+                        .Select
+                            (
+                                (x) =>
+                                {
+                                    var r = x.Value;
+                                    if (!r.IsNullOrEmptyOrWhiteSpace())
+                                    {
+                                        if
+                                            (
+                                                r.StartsWith(".")
+                                            )
+                                        {
+                                            r = r.TrimStart('.', '\\', '/');
+                                        }
+                                        r = Path.Combine
+                                                        (
+                                                            executingDirectory
+                                                            , r
+                                                        );
+                                    }
+                                    return r;
+                                }
+                            )
+                        .Where
+                            (
+                                (x) =>
+                                {
+                                    return
+                                        (
+                                            !x
+                                                .IsNullOrEmptyOrWhiteSpace()
+                                            &&
+                                            Directory
+                                                .Exists(x)
+                                        );
+                                }
+                            );
+            return result;
         }
     }
 }

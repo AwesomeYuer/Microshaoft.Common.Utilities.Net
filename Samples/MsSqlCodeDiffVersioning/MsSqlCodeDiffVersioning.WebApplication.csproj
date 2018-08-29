@@ -4,19 +4,19 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
+  <!--<ItemGroup>
     <Content Remove="wwwroot\libs\jquery-ui\jquery-ui-1.12.1.css" />
     <Content Remove="wwwroot\libs\jquery-ui\jquery-ui-1.12.1.js" />
-  </ItemGroup>
+  </ItemGroup>-->
 
-  <ItemGroup>
+  <!--<ItemGroup>
     <EmbeddedResource Include="wwwroot\libs\jquery-ui\jquery-ui-1.12.1.js">
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
     <EmbeddedResource Include="wwwroot\libs\jquery-ui\jquery-ui-1.12.1.css">
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
-  </ItemGroup>
+  </ItemGroup>-->
 
   <ItemGroup>
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml.user" />
@@ -39,6 +39,9 @@
     <Content Update="dynamicLoadExecutorsPaths.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Update="wwwrootpaths.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Update="hostings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -51,9 +54,5 @@
   <ItemGroup>
     <Folder Include="CompositionPlugins\" />
   </ItemGroup>
-
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy ..\..\StoreProcedureWebApiExecutorsPlugins\MsSQL.StoreProcedureWebApiExecutor.Plugin\bin\Debug\netcoreapp2.1\*.plugin.* $(TargetDir)CompositionPlugins\ /Y&#xD;&#xA;xcopy ..\..\StoreProcedureWebApiExecutorsPlugins\MySQL.StoreProcedureWebApiExecutor.Plugin\bin\Debug\netcoreapp2.1\*.plugin.* $(TargetDir)CompositionPlugins\ /Y&#xD;&#xA;" />
-  </Target>
 
 </Project>
