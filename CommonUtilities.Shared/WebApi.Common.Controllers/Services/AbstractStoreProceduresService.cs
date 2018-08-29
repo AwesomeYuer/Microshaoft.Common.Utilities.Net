@@ -190,13 +190,31 @@ namespace Microshaoft.Web
                         .ToArray();
             return result;
         }
+        private class StoreProcedureComparer : IEqualityComparer<IStoreProcedureExecutable>
+        {
+            public bool Equals(IStoreProcedureExecutable x, IStoreProcedureExecutable y)
+            {
+                return 
+                    (x.DataBaseType == y.DataBaseType);
+            }
 
+            public int GetHashCode(IStoreProcedureExecutable obj)
+            {
+                return -1;
+            }
+        }
         protected virtual void LoadDynamicExecutors
                         (
                             string dynamicLoadExecutorsPathsJsonFile = "dynamicLoadExecutorsPaths.json"
                         )
         {
-            var executingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var executingDirectory = Path
+                                        .GetDirectoryName
+                                                (
+                                                    Assembly
+                                                        .GetExecutingAssembly()
+                                                        .Location
+                                                );
             var executors =
                     GetDynamicLoadExecutorsPathsProcess
                             (
@@ -250,6 +268,10 @@ namespace Microshaoft.Web
                                                     (x);
                                     return r;
                                 }
+                            )
+                        .Distinct
+                            (
+                                 new StoreProcedureComparer()
                             )
                         .ToDictionary
                             (

@@ -7,6 +7,9 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using System;
+    using System.IO;
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -88,6 +91,7 @@
             }
             //app.UseHttpsRedirection();
             app.UseMvc();
+            Console.WriteLine(Directory.GetCurrentDirectory());
             app.UseDefaultFiles
                 (
                     new DefaultFilesOptions()
