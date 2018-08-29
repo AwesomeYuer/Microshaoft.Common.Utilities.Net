@@ -1,0 +1,7 @@
+{
+  "wwwroot": [
+    ".\\wwwroot", //linux
+    "./wwwroot", //windows
+    //"D:\\MyGitHub\\Microshaoft.Common.Utilities.Net.4x\\Samples\\MsSqlCodeDiffVersioning\\wwwroot"
+  ]
+}

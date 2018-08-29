@@ -55,7 +55,7 @@
             CreateWebHostBuilder
                 (args)
                     //.UseKestrel()
-                    .UseContentRoot(Directory.GetCurrentDirectory())
+                    //.UseContentRoot(Directory.GetCurrentDirectory())
                     //.UseIISIntegration()
                     .Build()
                     .Run();
