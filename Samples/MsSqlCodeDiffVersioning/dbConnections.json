@@ -22,6 +22,7 @@
       "WhiteList": [
         {
           "StoreProcedureName": "zsp_zObjectsChangesLogsHistory_Get",
+          "StoreProcedureAlias": "Objects",
           "AllowedHttpMethods": "All"
         },
         {
