@@ -81,78 +81,77 @@ namespace Microshaoft.Web
                                 }
                                 , (x) =>
                                 {
-                                    var whiteList =
-                                            configuration
-                                                .GetSection($"{x.Key}WhiteList")
-                                                .AsEnumerable()
-                                                .Where
-                                                    (
-                                                        (xx) =>
+                                    var allowExecuteWhiteList
+                                        = configuration
+                                            .GetSection($"{x.Key}WhiteList")
+                                            .AsEnumerable()
+                                            .Where
+                                                (
+                                                    (xx) =>
+                                                    {
+                                                        var v = xx.Value;
+                                                        var rr = !v.IsNullOrEmptyOrWhiteSpace();
+                                                        return rr;
+                                                    }
+                                                )
+                                            .GroupBy
+                                                (
+                                                    (xx) =>
+                                                    {
+                                                        var key = xx.Key;
+                                                        var i = key.FindIndex(":", 4);
+                                                        var rr = key.Substring(0, i);
+                                                        return rr;
+                                                    }
+                                                )
+                                            .ToDictionary
+                                                (
+                                                    (xx) =>
+                                                    {
+                                                        var key = configuration[$"{xx.Key}StoreProcedureAlias"];
+                                                        var storeProcedureName = configuration[$"{xx.Key}StoreProcedureName"];
+                                                        if (key.IsNullOrEmptyOrWhiteSpace())
                                                         {
-                                                            var v = xx.Value;
-                                                            var rr = !v.IsNullOrEmptyOrWhiteSpace();
-                                                            return rr;
+                                                            key = storeProcedureName;
                                                         }
-                                                    )
-                                                .GroupBy
-                                                    (
-                                                        (xx) =>
+                                                        return key;
+                                                    }
+                                                    ,
+                                                    (xx) =>
+                                                    {
+                                                        var storeProcedureName = configuration[$"{xx.Key}StoreProcedureName"];
+                                                        var s = configuration[$"{xx.Key}AllowedHttpMethods"];
+                                                        var allowedHttpMethods =
+                                                                    Enum
+                                                                        .Parse<HttpMethodsFlags>
+                                                                            (
+                                                                                s
+                                                                                , true
+                                                                            );
+                                                        var rr = new StoreProcedureInfo()
                                                         {
-                                                            var key = xx.Key;
-                                                            var i = key.FindIndex(":", 4);
-                                                            var rr = key.Substring(0, i);
-                                                            return rr;
-                                                        }
-                                                    )
-                                                .ToDictionary
-                                                    (
-                                                        (xx) =>
-                                                        {
-                                                            var key = configuration[$"{xx.Key}StoreProcedureAlias"];
-                                                            var storeProcedureName = configuration[$"{xx.Key}StoreProcedureName"];
-                                                            if (key.IsNullOrEmptyOrWhiteSpace())
-                                                            {
-                                                                key = storeProcedureName;
-                                                            }
-                                                            return key;
-                                                        }
-                                                        ,
-                                                        (xx) =>
-                                                        {
-                                                            var storeProcedureName = configuration[$"{xx.Key}StoreProcedureName"];
-                                                            var s = configuration[$"{xx.Key}AllowedHttpMethods"];
-                                                            var allowedHttpMethods =
-                                                                        Enum
-                                                                            .Parse<HttpMethodsFlags>
-                                                                                (
-                                                                                    s
-                                                                                    , true
-                                                                                );
-                                                            var rr = new StoreProcedureInfo()
-                                                            {
-                                                                Alias = xx.Key
-                                                                , Name = storeProcedureName
-                                                                , AllowedHttpMethods = allowedHttpMethods
-                                                            };
-                                                            return
-                                                                rr;
-                                                        }
-                                                        ,
-                                                        StringComparer
-                                                                .OrdinalIgnoreCase
-                                                    );
+                                                            Alias = xx.Key
+                                                            , Name = storeProcedureName
+                                                            , AllowedHttpMethods = allowedHttpMethods
+                                                        };
+                                                        return
+                                                            rr;
+                                                    }
+                                                    ,
+                                                    StringComparer
+                                                            .OrdinalIgnoreCase
+                                                );
                                     var r = new DataBaseConnectionInfo()
                                     {
                                         ConnectionID = configuration[$"{x.Key}ConnectionID"]
                                         , ConnectionString = configuration[$"{x.Key}ConnectionString"]
                                         , DataBaseType = Enum.Parse<DataBasesType>(configuration[$"{x.Key}DataBaseType"], true)
-                                        , WhiteList = whiteList
+                                        , AllowExecuteWhiteList = allowExecuteWhiteList
                                     };
                                     return r;
                                 }
-                                ,
-                                StringComparer
-                                    .OrdinalIgnoreCase
+                                , StringComparer
+                                        .OrdinalIgnoreCase
                             );
             return result;
         }
@@ -162,7 +161,8 @@ namespace Microshaoft.Web
                                                     = "dbConnections.json"
                                     )
         {
-            var connections = GetDataBasesConnectionsInfoProcess(dbConnectionsJsonFile);
+            var connections = GetDataBasesConnectionsInfoProcess
+                                    (dbConnectionsJsonFile);
             _locker
                 .LockIf
                     (
@@ -204,7 +204,11 @@ namespace Microshaoft.Web
         }
         private class StoreProcedureComparer : IEqualityComparer<IStoreProcedureExecutable>
         {
-            public bool Equals(IStoreProcedureExecutable x, IStoreProcedureExecutable y)
+            public bool Equals
+                            (
+                                IStoreProcedureExecutable x
+                                , IStoreProcedureExecutable y
+                            )
             {
                 return 
                     (x.DataBaseType == y.DataBaseType);
@@ -408,15 +412,15 @@ namespace Microshaoft.Web
         {
             var r = false;
             result = null;
-            var whiteList = connectionInfo.WhiteList;
+            var allowExecuteWhiteList = connectionInfo.AllowExecuteWhiteList;
             var storeProcedureName = string.Empty;
-            if (whiteList != null)
+            if (allowExecuteWhiteList != null)
             {
-                if (whiteList.Count > 0)
+                if (allowExecuteWhiteList.Count > 0)
                 {
                     r = CheckList
                             (
-                                whiteList
+                                allowExecuteWhiteList
                                 , storeProcedureAliasOrName
                                 , httpMethod
                                 , out StoreProcedureInfo storeProcedureInfo
@@ -504,7 +508,7 @@ namespace Microshaoft.Web
                 (
                     IDictionary
                         <string, StoreProcedureInfo>
-                            whiteList
+                            allowExecuteWhiteList
                     , string storeProcedureAliasOrName
                     , string httpMethod
                     , out StoreProcedureInfo storeProcedureInfo
@@ -522,7 +526,7 @@ namespace Microshaoft.Web
                         );
             if (r)
             {
-                r = whiteList
+                r = allowExecuteWhiteList
                         .TryGetValue
                             (
                                 storeProcedureAliasOrName

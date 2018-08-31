@@ -145,7 +145,7 @@
                 {
                     parameter.TypeName = (string)o;
                 }
-                var dataTable = CreateEmptyDataTable
+                var dataTable = CreateUserDefinedTableTypeEmptyDataTable
                                     (
                                         connectionString
                                         , parameter.TypeName
@@ -154,21 +154,19 @@
             }
             return parameter;
         }
-
-
         public Type GetTypeBySqlDbTypeName(string sqlDbTypeName)
         {
             Type r = null;
             _dbTypesMapper
-                .TryGetValue
-                    (
-                        sqlDbTypeName
-                        , out r
-                    );
+                    .TryGetValue
+                        (
+                            sqlDbTypeName
+                            , out r
+                        );
             return r;
         }
         public DataTable
-                        CreateEmptyDataTable
+                        CreateUserDefinedTableTypeEmptyDataTable
                             (
                                 string connectionString
                                 , string userDefinedTableTypeName
@@ -219,10 +217,8 @@ from
                         SqlCommand command = new SqlCommand()
                         {
                             CommandText = commandText
-                            ,
-                            CommandType = CommandType.Text
-                            ,
-                            Connection = connection
+                            , CommandType = CommandType.Text
+                            , Connection = connection
                         }
                     )
                 {
@@ -522,10 +518,10 @@ from
                         parameterValue != null
                     )
                 {
-                    DataTable dataTable = parameterValue as DataTable;
+                    var dataTable = parameterValue as DataTable;
                     if (dataTable != null)
                     {
-                        var jArray = (JArray)jValue;
+                        var jArray = (JArray) jValue;
                         var columns = dataTable.Columns;
                         var rows = dataTable.Rows;
                         foreach (var entry in jArray)
