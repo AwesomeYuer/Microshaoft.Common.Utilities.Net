@@ -26,7 +26,7 @@ namespace Microshaoft.WebApi.Controllers
         public string ConnectionString;
         public IDictionary
                     <string, StoreProcedureInfo>
-                            WhiteList;
+                            AllowExecuteWhiteList;
     }
     public abstract partial class 
             AbstractStoreProceduresExecutorControllerBase 
