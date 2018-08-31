@@ -101,30 +101,38 @@
                 (
                     new DefaultFilesOptions()
                     {
-                        DefaultFileNames = { "index.html", "jsdifflib.mssql.html" }
+                        DefaultFileNames =
+                            {
+                                "index.html"
+                            }
                     }
                 );
             //兼容 Linux/Windows wwwroot 路径配置
-            var wwwroot = GetExistsPaths("wwwrootpaths.json","wwwroot").FirstOrDefault();
+            var wwwroot = GetExistsPaths
+                                (
+                                    "wwwrootpaths.json"
+                                    , "wwwroot"
+                                )
+                                .FirstOrDefault();
             if (wwwroot.IsNullOrEmptyOrWhiteSpace())
             {
                 app.UseStaticFiles();
             }
             else
             {
-                app.UseStaticFiles
-                    (
-                        new StaticFileOptions()
-                        {
-                              FileProvider = new PhysicalFileProvider
-                                                    (
-                                                        wwwroot
-                                                    )
-                            , RequestPath = ""
-                        }
-                    );
+                app
+                    .UseStaticFiles
+                        (
+                            new StaticFileOptions()
+                            {
+                                  FileProvider = new PhysicalFileProvider
+                                                        (
+                                                            wwwroot
+                                                        )
+                                , RequestPath = ""
+                            }
+                        );
             }
-            
             //app.Use(async (context, next) =>
             //{
             //    context.Response.GetTypedHeaders().CacheControl =
@@ -139,20 +147,20 @@
             //});
             app.UseResponseCaching();
         }
-
         private static IEnumerable<string> GetExistsPaths(string configurationJsonFile, string sectionName)
         {
             var configurationBuilder =
                         new ConfigurationBuilder()
                                 .AddJsonFile(configurationJsonFile);
             var configuration = configurationBuilder.Build();
-            var executingDirectory = Path
-                                     .GetDirectoryName
-                                             (
-                                                 Assembly
-                                                     .GetExecutingAssembly()
-                                                     .Location
-                                             );
+            var executingDirectory =
+                        Path
+                            .GetDirectoryName
+                                    (
+                                        Assembly
+                                            .GetExecutingAssembly()
+                                            .Location
+                                    );
             var result =
                     configuration
                         .GetSection(sectionName)
@@ -171,11 +179,12 @@
                                         {
                                             r = r.TrimStart('.', '\\', '/');
                                         }
-                                        r = Path.Combine
-                                                        (
-                                                            executingDirectory
-                                                            , r
-                                                        );
+                                        r = Path
+                                                .Combine
+                                                    (
+                                                        executingDirectory
+                                                        , r
+                                                    );
                                     }
                                     return r;
                                 }

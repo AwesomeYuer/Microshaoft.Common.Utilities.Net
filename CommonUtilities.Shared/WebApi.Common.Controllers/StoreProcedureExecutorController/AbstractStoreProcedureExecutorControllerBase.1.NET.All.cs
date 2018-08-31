@@ -13,13 +13,19 @@ namespace Microshaoft.WebApi.Controllers
         Oracle ,
         Sqlite
     }
+    public class StoreProcedureInfo
+    {
+        public string Name;
+        public string Alias;
+        public HttpMethodsFlags AllowedHttpMethods;
+    }
     public class DataBaseConnectionInfo
     {
         public string ConnectionID;
         public DataBasesType DataBaseType;
         public string ConnectionString;
         public IDictionary
-                    <string, HttpMethodsFlags>
+                    <string, StoreProcedureInfo>
                             WhiteList;
     }
     public abstract partial class 

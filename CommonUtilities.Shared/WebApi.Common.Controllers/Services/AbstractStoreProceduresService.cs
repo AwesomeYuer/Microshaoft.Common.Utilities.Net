@@ -108,12 +108,18 @@ namespace Microshaoft.Web
                                                     (
                                                         (xx) =>
                                                         {
-                                                            var rr = configuration[$"{xx.Key}StoreProcedureName"];
-                                                            return rr;
+                                                            var key = configuration[$"{xx.Key}StoreProcedureAlias"];
+                                                            var storeProcedureName = configuration[$"{xx.Key}StoreProcedureName"];
+                                                            if (key.IsNullOrEmptyOrWhiteSpace())
+                                                            {
+                                                                key = storeProcedureName;
+                                                            }
+                                                            return key;
                                                         }
                                                         ,
                                                         (xx) =>
                                                         {
+                                                            var storeProcedureName = configuration[$"{xx.Key}StoreProcedureName"];
                                                             var s = configuration[$"{xx.Key}AllowedHttpMethods"];
                                                             var allowedHttpMethods =
                                                                         Enum
@@ -122,8 +128,14 @@ namespace Microshaoft.Web
                                                                                     s
                                                                                     , true
                                                                                 );
+                                                            var rr = new StoreProcedureInfo()
+                                                            {
+                                                                Alias = xx.Key
+                                                                , Name = storeProcedureName
+                                                                , AllowedHttpMethods = allowedHttpMethods
+                                                            };
                                                             return
-                                                                allowedHttpMethods;
+                                                                rr;
                                                         }
                                                         ,
                                                         StringComparer
@@ -387,7 +399,7 @@ namespace Microshaoft.Web
         private bool Process
             (
                 DataBaseConnectionInfo connectionInfo
-                , string storeProcedureName
+                , string storeProcedureAliasOrName
                 , string httpMethod
                 , JToken parameters
                 , out JToken result
@@ -397,6 +409,7 @@ namespace Microshaoft.Web
             var r = false;
             result = null;
             var whiteList = connectionInfo.WhiteList;
+            var storeProcedureName = string.Empty;
             if (whiteList != null)
             {
                 if (whiteList.Count > 0)
@@ -404,9 +417,14 @@ namespace Microshaoft.Web
                     r = CheckList
                             (
                                 whiteList
-                                , storeProcedureName
+                                , storeProcedureAliasOrName
                                 , httpMethod
+                                , out StoreProcedureInfo storeProcedureInfo
                             );
+                    if (r)
+                    {
+                        storeProcedureName = storeProcedureInfo.Name;
+                    }
                 }
             }
             else
@@ -485,14 +503,16 @@ namespace Microshaoft.Web
         private bool CheckList
                 (
                     IDictionary
-                        <string, HttpMethodsFlags>
+                        <string, StoreProcedureInfo>
                             whiteList
-                    , string storeProcedureName
+                    , string storeProcedureAliasOrName
                     , string httpMethod
+                    , out StoreProcedureInfo storeProcedureInfo
                 )
         {
             var r = false;
             HttpMethodsFlags httpMethodsFlag;
+            storeProcedureInfo = null;
             r = Enum
                     .TryParse<HttpMethodsFlags>
                         (
@@ -502,16 +522,16 @@ namespace Microshaoft.Web
                         );
             if (r)
             {
-                HttpMethodsFlags allowedHttpMethodsFlags;
                 r = whiteList
                         .TryGetValue
                             (
-                                storeProcedureName
-                                , out allowedHttpMethodsFlags
+                                storeProcedureAliasOrName
+                                , out storeProcedureInfo
                             );
                 if (r)
                 {
-                    r = allowedHttpMethodsFlags
+                    r = storeProcedureInfo
+                            .AllowedHttpMethods
                             .HasFlag(httpMethodsFlag);
                 }
             }
