@@ -122,7 +122,7 @@
                                                     (int) o
                                                 )
                                         )
-                                    //& 255
+                                        //& 255
                                     )
                             );
                 }
@@ -305,19 +305,19 @@ from
             object r = null;
             var jValueText = jValue.ToString();
             if
-                    (
-                       parameter.SqlDbType == SqlDbType.VarChar
-                       ||
-                       parameter.SqlDbType == SqlDbType.NVarChar
-                       ||
-                       parameter.SqlDbType == SqlDbType.Char
-                       ||
-                       parameter.SqlDbType == SqlDbType.NChar
-                       ||
-                       parameter.SqlDbType == SqlDbType.Text
-                       ||
-                       parameter.SqlDbType == SqlDbType.NText
-                    )
+                (
+                    parameter.SqlDbType == SqlDbType.VarChar
+                    ||
+                    parameter.SqlDbType == SqlDbType.NVarChar
+                    ||
+                    parameter.SqlDbType == SqlDbType.Char
+                    ||
+                    parameter.SqlDbType == SqlDbType.NChar
+                    ||
+                    parameter.SqlDbType == SqlDbType.Text
+                    ||
+                    parameter.SqlDbType == SqlDbType.NText
+                )
             {
                 r = jValueText;
             }
