@@ -23,7 +23,7 @@
             get;
             set;
         }
-        bool NeedAutoRefreshParametersDefinitionCacheForSlideExpire
+        bool NeedAutoRefreshExecutedTimeForSlideExpire
         {
             get;
             set;

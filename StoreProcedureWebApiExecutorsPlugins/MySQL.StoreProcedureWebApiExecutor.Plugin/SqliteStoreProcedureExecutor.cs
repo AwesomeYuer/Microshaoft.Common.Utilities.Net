@@ -21,7 +21,7 @@
             get;
             set;
         }
-        public bool NeedAutoRefreshParametersDefinitionCacheForSlideExpire
+        public bool NeedAutoRefreshExecutedTimeForSlideExpire
         {
             get;
             set;
@@ -59,7 +59,7 @@
                                         , parameters
                                         , commandTimeoutInSeconds
                                     );
-            if (NeedAutoRefreshParametersDefinitionCacheForSlideExpire)
+            if (NeedAutoRefreshExecutedTimeForSlideExpire)
             {
                 _executor
                     .RefreshCachedExecuted
