@@ -1,13 +1,13 @@
 #if NETCOREAPP2_X
 namespace Microshaoft
 {
+    using System.Collections.Generic;
     using System.Composition.Convention;
     using System.Composition.Hosting;
     using System.IO;
+    using System.Linq;
     using System.Reflection;
     using System.Runtime.Loader;
-    using System.Linq;
-    using System.Collections.Generic;
 
     public static class ContainerConfigurationExtensions
     {
@@ -38,9 +38,9 @@ namespace Microshaoft
                         (x) =>
                         {
                             return
-                            AssemblyLoadContext
-                                .Default
-                                .LoadFromAssemblyPath(x);
+                                AssemblyLoadContext
+                                    .Default
+                                    .LoadFromAssemblyPath(x);
                         }
                     )
                 .ToList();
@@ -59,10 +59,21 @@ namespace Microshaoft
                     )
         {
             IEnumerable<T> result = null;
-            var assemblies = Directory
-                        .GetFiles(path, "*.dll", SearchOption.AllDirectories)
-                        .Select(AssemblyLoadContext.Default.LoadFromAssemblyPath)
-                        .ToList();
+            var assemblies = 
+                        Directory
+                            .GetFiles
+                                (
+                                    path
+                                    , "*.dll"
+                                    , SearchOption.AllDirectories
+                                )
+                            .Select
+                                (
+                                    AssemblyLoadContext
+                                        .Default
+                                        .LoadFromAssemblyPath
+                                )
+                            .ToList();
             var configuration = new ContainerConfiguration()
                                         .WithAssemblies(assemblies);
             using (var container = configuration.CreateContainer())

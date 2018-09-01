@@ -141,10 +141,17 @@ namespace Microshaoft.Web
                                                     StringComparer
                                                             .OrdinalIgnoreCase
                                                 );
+                                    //var connectionTimeoutInSeconds = 120;
+                                    //int.TryParse
+                                    //        (
+                                    //            configuration[$"{x.Key}ConnectionTimeoutInSeconds"]
+                                    //            , out connectionTimeoutInSeconds
+                                    //        );
                                     var r = new DataBaseConnectionInfo()
                                     {
                                         ConnectionID = configuration[$"{x.Key}ConnectionID"]
                                         , ConnectionString = configuration[$"{x.Key}ConnectionString"]
+                                        //, ConnectionTimeoutInSeconds = connectionTimeoutInSeconds
                                         , DataBaseType = Enum.Parse<DataBasesType>(configuration[$"{x.Key}DataBaseType"], true)
                                         , AllowExecuteWhiteList = allowExecuteWhiteList
                                     };
@@ -168,12 +175,12 @@ namespace Microshaoft.Web
                     (
                         () =>
                         {
-                            var r = (_connections == null);
+                            var r = (_indexedConnections == null);
                             return r;
                         }
                         , () =>
                         {
-                            _connections = connections;
+                            _indexedConnections = connections;
                         }
                     );
         }
@@ -284,7 +291,9 @@ namespace Microshaoft.Web
                                                     (x);
                                     return r;
                                 }
-                            )
+                            );
+            var indexedExecutors =
+                    executors
                         .Distinct
                             (
                                  new StoreProcedureComparer()
@@ -307,7 +316,7 @@ namespace Microshaoft.Web
                                             .CachedParametersDefinitionExpiredInSeconds
                                                 = CachedParametersDefinitionExpiredInSeconds;
                                         rr
-                                            .NeedAutoRefreshParametersDefinitionCacheForSlideExpire
+                                            .NeedAutoRefreshExecutedTimeForSlideExpire
                                                 = NeedAutoRefreshExecutedTimeForSlideExpire;
                                     }
                                     return x;
@@ -320,12 +329,12 @@ namespace Microshaoft.Web
                     (
                         () =>
                         {
-                            var r = (_executors == null);
+                            var r = (_indexedExecutors == null);
                             return r;
                         }
                         , () =>
                         {
-                            _executors = executors;
+                            _indexedExecutors = indexedExecutors;
                         }
                     );
         }
@@ -343,10 +352,10 @@ namespace Microshaoft.Web
         }
 
         private IDictionary<string, DataBaseConnectionInfo> 
-                    _connections;
+                    _indexedConnections;
 
         private IDictionary<string, IStoreProcedureExecutable>
-                    _executors;
+                    _indexedExecutors;
 
         public 
             (int StatusCode, JToken Result)
@@ -364,12 +373,12 @@ namespace Microshaoft.Web
             var r = false;
             int statusCode = 200;
             DataBaseConnectionInfo connectionInfo = null;
-            r = _connections
-                        .TryGetValue
-                            (
-                                connectionID
-                                , out connectionInfo
-                            );
+            r = _indexedConnections
+                            .TryGetValue
+                                (
+                                    connectionID
+                                    , out connectionInfo
+                                );
             if (r)
             {
                 r = Process
@@ -462,7 +471,7 @@ namespace Microshaoft.Web
             var r = false;
             result = null;
             IStoreProcedureExecutable executor = null;
-            r = _executors
+            r = _indexedExecutors
                         .TryGetValue
                             (
                                 dataBaseType

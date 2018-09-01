@@ -18,6 +18,7 @@ namespace Microshaoft.WebApi.Controllers
         public string Name;
         public string Alias;
         public HttpMethodsFlags AllowedHttpMethods;
+        //public int CommandTimoutInSeconds = 120;
     }
     public class DataBaseConnectionInfo
     {
@@ -27,6 +28,7 @@ namespace Microshaoft.WebApi.Controllers
         public IDictionary
                     <string, StoreProcedureInfo>
                             AllowExecuteWhiteList;
+        public int ConnectionTimeoutInSeconds = 120;
     }
     public abstract partial class 
             AbstractStoreProceduresExecutorControllerBase 
