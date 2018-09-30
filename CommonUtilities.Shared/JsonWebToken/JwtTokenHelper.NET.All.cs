@@ -21,33 +21,35 @@ namespace Microshaoft
     public static partial class JwtTokenHelper
     {
 
-        private static string _webTokenPlainTextSecretKey
-                = //"ABCDEFGHABCDEFGHABCDEFGHABCDEFGHABCDEFGH";
-                    ConfigurationManager
-                        .AppSettings["WebTokenSecretKey"];
-        private static string[] _webTokenIssuers = new string[] { "SOPS" };
-        private static string[] _webTokenAudiences = new string[] { "SOPS" };
+        //private static string _webTokenPlainTextSecretKey
+        //        = //"ABCDEFGHABCDEFGHABCDEFGHABCDEFGHABCDEFGH";
+        //            ConfigurationManager
+        //                .AppSettings["WebTokenSecretKey"];
+        //private static string[] _webTokenIssuers = new string[] { "SOPS" };
+        //private static string[] _webTokenAudiences = new string[] { "SOPS" };
 
-        private static int _webTokenExpireInSeconds
-                = int.Parse
-                        (
-                            ConfigurationManager
-                                .AppSettings["WebTokenExpiredInSeconds"]
-                        );
+        //private static int _webTokenExpireInSeconds
+        //        = int.Parse
+        //                (
+        //                    "10000"
+        //                    //ConfigurationManager
+        //                    //    .AppSettings["WebTokenExpiredInSeconds"]
+        //                );
 
 
-        private static string _ssoTokenPlainTextSecretKey 
-                = //"ZBCDEFGHZBCDEFGHZBCDEFGHZBCDEFGHZBCDEFGH";
-                    ConfigurationManager
-                        .AppSettings["SsoTokenSecretKey"];
-        private static string[] _ssoTokenIssuers = new string[] { "BL" };
-        private static string[] _ssoTokenAudiences = new string[] { "SOPS" };
-        private static int _ssoTokenExpireInSeconds
-                = int.Parse
-                        (
-                            ConfigurationManager
-                                .AppSettings["SsoTokenExpiredInSeconds"]
-                        );
+        //private static string _ssoTokenPlainTextSecretKey 
+        //        = //"ZBCDEFGHZBCDEFGHZBCDEFGHZBCDEFGHZBCDEFGH";
+        //            ConfigurationManager
+        //                .AppSettings["SsoTokenSecretKey"];
+        //private static string[] _ssoTokenIssuers = new string[] { "BL" };
+        //private static string[] _ssoTokenAudiences = new string[] { "SOPS" };
+        //private static int _ssoTokenExpireInSeconds
+        //        = int.Parse
+        //                (
+        //                    "10000"
+        //                    //ConfigurationManager
+        //                    //    .AppSettings["SsoTokenExpiredInSeconds"]
+        //                );
 
         private static IDictionary<string, string> _claimTypes
             = new Func<IDictionary<string, string>>
@@ -92,82 +94,7 @@ namespace Microshaoft
 
                     }
                 )();
-
-
-        public static DateTime ParseSecondsToLocalTime(double seconds)
-        {
-            return new DateTime(1970, 1, 1).AddSeconds(seconds).ToLocalTime();
-        }
-
-        public static string GetClaimTypeValue(this ClaimsPrincipal target, string claimType)
-        {
-            var r = target
-                        .Claims
-                        .FirstOrDefault
-                            (
-                                (x) =>
-                                {
-                                    return
-                                        (x.Type == claimType);
-                                }
-                            ).Value;
-            return r;
-        }
-
-        public static DateTime GetIssuedAtTime(this ClaimsPrincipal target)
-        {
-            var r =
-                    ParseSecondsToLocalTime
-                        (
-                            double.Parse(GetClaimTypeValue(target, "iat"))
-                        );
-
-            return r;
-        }
-        public static bool TryValidateSsoToken
-                        (
-                            string token
-                            , out ClaimsPrincipal claimsPrincipal
-                            , string ip = null
-                            //, int expiredInSeconds = -1
-                        )
-        {
-            var r = false;
-            var plainTextSecurityKey = _ssoTokenPlainTextSecretKey;
-            var issuers = _ssoTokenIssuers;
-            var audiences = _ssoTokenAudiences;
-            SecurityToken validatedToken = null;
-            r = TryValidateToken
-                        (
-                            plainTextSecurityKey
-                            , token
-                            , issuers
-                            , audiences
-                            , out validatedToken
-                            , out claimsPrincipal
-                        );
-            if (r)
-            {
-                IPAddress ipa;
-                if (IPAddress.TryParse(ip, out ipa))
-                {
-                    r = (claimsPrincipal.GetClaimTypeValue("UserClientIP") == ip);
-                }
-            }
-            if (r)
-            {
-                if (_ssoTokenExpireInSeconds >= 0)
-                {
-                    var issuedAt = claimsPrincipal.GetIssuedAtTime();
-                    r = (Math.Abs(DateTimeHelper.SecondsDiffNow(issuedAt)) < _ssoTokenExpireInSeconds);
-                }
-            }
-            if (!r)
-            {
-                claimsPrincipal = null;
-            }
-            return r;
-        }
+        
         public static bool TryValidateToken
                                 (
                                     string plainTextSecurityKey
@@ -211,44 +138,7 @@ namespace Microshaoft
         }
 
 
-        public static bool TryIssueWebToken
-                       (
-                           IEnumerable<Claim> claims
-                           , out string secretTokenString
-                          
-                       )
-        {
-            SecurityToken plainToken;
-            var r = TryIssueToken
-                        (
-                            _webTokenIssuers[0]
-                            , _webTokenAudiences[0]
-                            , claims
-                            , _webTokenPlainTextSecretKey
-                            , out plainToken
-                            , out secretTokenString
-                        );
-            return r;
-        }
-        public static bool TryIssueSsoToken
-                       (
-                           JObject jClaimsIdentity
-                           , out string secretTokenString
 
-                       )
-        {
-            SecurityToken plainToken;
-            var r = TryIssueToken
-                        (
-                            _ssoTokenIssuers[0]
-                            , _ssoTokenAudiences[0]
-                            , jClaimsIdentity
-                            , _ssoTokenPlainTextSecretKey
-                            , out plainToken
-                            , out secretTokenString
-                        );
-            return r;
-        }
         public static bool TryIssueToken
                             (
                                 string issuer
@@ -419,7 +309,7 @@ namespace Microshaoft
                 secretTokenString = tokenHandler.WriteToken(plainToken);
                 r = true;
             }
-            catch //(Exception)
+            catch (Exception e)
             {
 
                 //throw;
@@ -428,53 +318,7 @@ namespace Microshaoft
                    r;
         }
 
-        public static bool TryGetCurrentWebUser
-                                    (
-                                        string token
-                                        , out ClaimsPrincipal claimsPrincipal
-                                        , string ip = null
-                                        , int expiredInSeconds = -1
-                                    )
-        {
-            var r = false;
-            claimsPrincipal = null;
-            
-            SecurityToken validatedToken;
-            r = TryValidateToken
-                    (
-                        _webTokenPlainTextSecretKey
-                        , token
-                        , _webTokenIssuers
-                        , _webTokenAudiences
-                        , out validatedToken
-                        , out claimsPrincipal
-                    );
-            if (r)
-            {
-                IPAddress ipa = null;
-                if (IPAddress.TryParse(ip, out ipa))
-                {
-                    var tokenIP = claimsPrincipal.GetClaimTypeValue("UserClientIP");
-                    if (IPAddress.TryParse(tokenIP, out ipa))
-                    {
-                        r = (tokenIP == ip);
-                    }
-                }
-            }
-            if (r)
-            {
-                if (expiredInSeconds >= 0)
-                {
-                    var issuedAt = claimsPrincipal.GetIssuedAtTime();
-                    r = (Math.Abs(DateTimeHelper.SecondsDiffNow(issuedAt)) < expiredInSeconds);
-                }
-            }
-            if (!r)
-            {
-                claimsPrincipal = null;
-            }
-            return r;
-        }
+        
 
     }
 }

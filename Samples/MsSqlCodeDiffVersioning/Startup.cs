@@ -153,6 +153,7 @@
                         new ConfigurationBuilder()
                                 .AddJsonFile(configurationJsonFile);
             var configuration = configurationBuilder.Build();
+            
             var executingDirectory =
                         Path
                             .GetDirectoryName
@@ -161,6 +162,7 @@
                                             .GetExecutingAssembly()
                                             .Location
                                     );
+            //executingDirectory = AppContext.BaseDirectory;
             var result =
                     configuration
                         .GetSection(sectionName)

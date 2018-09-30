@@ -2,14 +2,16 @@
 {
     using Microshaoft;
     using Newtonsoft.Json.Linq;
+    using System;
     using System.Composition;
+    using System.Data;
     using System.Data.Common;
     using System.Data.SqlClient;
     [Export(typeof(IStoreProcedureExecutable))]
     public class MsSQLStoreProcedureExecutorCompositionPlugin
                         : IStoreProcedureExecutable
                             , IParametersDefinitionCacheAutoRefreshable
-    { 
+    {
         public AbstractStoreProceduresExecutor
                     <SqlConnection, SqlCommand, SqlParameter>
                         _executor = new MsSqlStoreProceduresExecutor();
@@ -30,6 +32,15 @@
                         , string storeProcedureName
                         , JToken parameters
                         , out JToken result
+                        , Func
+                                <
+                                    IDataReader
+                                    , Type        // fieldType
+                                    , string    // fieldName
+                                    , int       // row index
+                                    , int       // column index
+                                    , JProperty   //  JObject Field 对象
+                                > onReadRowColumnProcessFunc = null
                         , int commandTimeoutInSeconds = 90
                     )
         {
@@ -55,6 +66,7 @@
                                         connection
                                         , storeProcedureName
                                         , parameters
+                                        , onReadRowColumnProcessFunc
                                         , commandTimeoutInSeconds
                                     );
             if (NeedAutoRefreshExecutedTimeForSlideExpire)

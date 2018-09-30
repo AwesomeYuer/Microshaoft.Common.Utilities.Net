@@ -1,6 +1,9 @@
 ﻿namespace Microshaoft
 {
     using Newtonsoft.Json.Linq;
+    using System;
+    using System.Data;
+
     public interface IStoreProcedureExecutable
     {
         string DataBaseType
@@ -13,6 +16,15 @@
                     , string storeProcedureName
                     , JToken parameters
                     , out JToken result
+                    , Func
+                        <
+                            IDataReader
+                            , Type        // fieldType
+                            , string    // fieldName
+                            , int       // row index
+                            , int       // column index
+                            , JProperty   //  JObject Field 对象
+                        > onReadRowColumnProcessFunc = null
                     , int commandTimeoutInSeconds = 90
                 );
     }

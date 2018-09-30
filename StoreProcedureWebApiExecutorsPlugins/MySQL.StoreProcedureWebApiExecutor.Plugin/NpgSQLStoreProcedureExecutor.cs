@@ -3,7 +3,9 @@
     using Microshaoft;
     using Newtonsoft.Json.Linq;
     using Npgsql;
+    using System;
     using System.Composition;
+    using System.Data;
     using System.Data.Common;
 
     [Export(typeof(IStoreProcedureExecutable))]
@@ -31,6 +33,15 @@
                         , string storeProcedureName
                         , JToken parameters
                         , out JToken result
+                        , Func
+                            <
+                                IDataReader
+                                , Type        // fieldType
+                                , string    // fieldName
+                                , int       // row index
+                                , int       // column index
+                                , JProperty   //  JObject Field 对象
+                            > onReadRowColumnProcessFunc = null
                         , int commandTimeoutInSeconds = 90
                     )
         {
@@ -56,6 +67,7 @@
                                         connection
                                         , storeProcedureName
                                         , parameters
+                                        , onReadRowColumnProcessFunc
                                         , commandTimeoutInSeconds
                                     );
             if (NeedAutoRefreshExecutedTimeForSlideExpire)

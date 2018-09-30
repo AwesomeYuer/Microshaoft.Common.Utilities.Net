@@ -78,6 +78,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)FasterUtilities\StateTransitions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FasterUtilities\Status.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpClientHelper\HttpClientHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)JsonWebToken\CliamsHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JObjectExtensionMethodsManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\DynamicJson.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JObjectExtensions.cs" />
@@ -239,7 +240,6 @@
     <Content Include="$(MSBuildThisFileDirectory)DataAccess\Pager.StoreProcedure.Sample.sql" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)JsonWebToken\" />
     <Folder Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenModelBinder\" />
     <Folder Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\StoreProcedureExecutorController\" />
     <Folder Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\Services\" />

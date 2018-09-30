@@ -9,6 +9,7 @@
     <Import_RootNamespace>WebApiUtilities.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)JsonWebToken\CliamsHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)JsonWebToken\JwtTokenHelper.NET.All.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)JsonWebToken\JwtTokenHelper.NET.Framework.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JObjectExtensions.cs" />
