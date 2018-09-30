@@ -5,52 +5,49 @@ namespace Microshaoft
     using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Generic;
-    using System.Configuration;
     using System.IdentityModel.Tokens.Jwt;
     //using Microsoft.IdentityModel.Tokens;
     using System.Linq;
-    using System.Net;
-    using System.Net.Http;
     using System.Reflection;
     using System.Security.Claims;
+    using System.Security.Principal;
     using System.Text;
-    using System.Web;
-//#if NETFRAMEWORK4_X
-//    using System.Web.Http.Controllers;
-//#endif
+    //#if NETFRAMEWORK4_X
+    //    using System.Web.Http.Controllers;
+    //#endif
+
+    public class JsonWebTokenUser : IIdentity
+    {
+        public JsonWebTokenUser
+                    (
+                        string name
+                        , string authenticationType
+                        , bool isAuthenticated
+                    )
+        {
+            Name = name;
+            AuthenticationType = authenticationType;
+            IsAuthenticated = isAuthenticated;
+        }
+        public bool IsAuthenticated
+        {
+            get;
+            private set;
+        }
+        public string Name
+        {
+            get;
+            private set;
+        }
+        public string AuthenticationType
+        {
+            get;
+            private set;
+        }
+    }
+
     public static partial class JwtTokenHelper
     {
-
-        //private static string _webTokenPlainTextSecretKey
-        //        = //"ABCDEFGHABCDEFGHABCDEFGHABCDEFGHABCDEFGH";
-        //            ConfigurationManager
-        //                .AppSettings["WebTokenSecretKey"];
-        //private static string[] _webTokenIssuers = new string[] { "SOPS" };
-        //private static string[] _webTokenAudiences = new string[] { "SOPS" };
-
-        //private static int _webTokenExpireInSeconds
-        //        = int.Parse
-        //                (
-        //                    "10000"
-        //                    //ConfigurationManager
-        //                    //    .AppSettings["WebTokenExpiredInSeconds"]
-        //                );
-
-
-        //private static string _ssoTokenPlainTextSecretKey 
-        //        = //"ZBCDEFGHZBCDEFGHZBCDEFGHZBCDEFGHZBCDEFGH";
-        //            ConfigurationManager
-        //                .AppSettings["SsoTokenSecretKey"];
-        //private static string[] _ssoTokenIssuers = new string[] { "BL" };
-        //private static string[] _ssoTokenAudiences = new string[] { "SOPS" };
-        //private static int _ssoTokenExpireInSeconds
-        //        = int.Parse
-        //                (
-        //                    "10000"
-        //                    //ConfigurationManager
-        //                    //    .AppSettings["SsoTokenExpiredInSeconds"]
-        //                );
-
         private static IDictionary<string, string> _claimTypes
             = new Func<IDictionary<string, string>>
                 (
@@ -61,8 +58,10 @@ namespace Microshaoft
                             .GetFields
                                 (
                                     BindingFlags.Public
-                                    | BindingFlags.Static
-                                    | BindingFlags.FlattenHierarchy
+                                    |
+                                    BindingFlags.Static
+                                    |
+                                    BindingFlags.FlattenHierarchy
                                 )
                             .Where
                                 (
@@ -71,8 +70,10 @@ namespace Microshaoft
                                         return
                                             (
                                                 x.FieldType == typeof(string)
-                                                && x.IsLiteral
-                                                && !x.IsInitOnly
+                                                &&
+                                                x.IsLiteral
+                                                &&
+                                                !x.IsInitOnly
                                             );
                                     }
                                 )
@@ -90,8 +91,6 @@ namespace Microshaoft
                                     }
                                     , StringComparer.OrdinalIgnoreCase
                                 );
-
-
                     }
                 )();
         
@@ -99,61 +98,92 @@ namespace Microshaoft
                                 (
                                     string plainTextSecurityKey
                                     , string token
-                                    , string[] issuers
-                                    , string[] audiences
-                                    , out Microsoft.IdentityModel.Tokens.SecurityToken validatedToken
+                                    , out Microsoft
+                                                .IdentityModel
+                                                .Tokens
+                                                .SecurityToken validatedPlainToken
                                     , out ClaimsPrincipal claimsPrincipal
                                 )
         {
             var r = false;
-            validatedToken = null;
+            validatedPlainToken = null;
             claimsPrincipal = null;
             try
             {
-
-                var signingKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(Encoding.UTF8.GetBytes(plainTextSecurityKey));
+                var tokenHandler = new System
+                                            .IdentityModel
+                                            .Tokens
+                                            .Jwt
+                                            .JwtSecurityTokenHandler();
+                var jst = ((JwtSecurityToken)tokenHandler.ReadToken(token));
+                
+                var signingKey = new Microsoft
+                                        .IdentityModel
+                                        .Tokens
+                                        .SymmetricSecurityKey
+                                            (
+                                                Encoding
+                                                    .UTF8
+                                                    .GetBytes
+                                                        (
+                                                            plainTextSecurityKey
+                                                        )
+                                            );
                 var tokenValidationParameters = new TokenValidationParameters()
                 {
-                    ValidAudiences = audiences,
-                    ValidIssuers = issuers,
-                    IssuerSigningKey = signingKey
+                    ValidIssuer = jst.Issuer,
+                    ValidateIssuer = true,
+                    ValidAudiences = jst.Audiences,
+                    ValidateAudience = true,
+                    IssuerSigningKey = signingKey,
+                    ValidateIssuerSigningKey = true,
+                    ValidateLifetime = false
                 };
-                var tokenHandler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
-                var jst = ((JwtSecurityToken)tokenHandler.ReadToken(token));
                 claimsPrincipal = tokenHandler
-                            .ValidateToken
-                                (
-                                    token
-                                    , tokenValidationParameters
-                                    , out validatedToken
-                                );
+                                        .ValidateToken
+                                            (
+                                                token
+                                                , tokenValidationParameters
+                                                , out validatedPlainToken
+                                            );
                 r = true;
             }
             catch (Exception e)
             {
-
-                Console.WriteLine();
+                Console.WriteLine(e);
             }
             return r;
         }
-
-
-
         public static bool TryIssueToken
                             (
                                 string issuer
                                 , string audience
+                                , string userName
                                 , JObject jClaimsIdentity
                                 , string plainTextSecurityKey
-                                , out Microsoft.IdentityModel.Tokens.SecurityToken plainToken
+                                , out Microsoft
+                                            .IdentityModel
+                                            .Tokens
+                                            .SecurityToken plainToken
                                 , out string secretTokenString
-                                , string signingCredentialsAlgorithm = Microsoft.IdentityModel.Tokens.SecurityAlgorithms.HmacSha256Signature
-                                , string signingCredentialsDigest = Microsoft.IdentityModel.Tokens.SecurityAlgorithms.Sha256Digest
+                                //, IIdentity identity = null
+                                , string signingCredentialsAlgorithm
+                                            = Microsoft
+                                                .IdentityModel
+                                                .Tokens
+                                                .SecurityAlgorithms
+                                                .HmacSha256Signature
+                                , string signingCredentialsDigest
+                                            = Microsoft
+                                                .IdentityModel
+                                                .Tokens
+                                                .SecurityAlgorithms
+                                                .Sha256Digest
                                 , string plainTextSecurityKeyEncoding = "UTF-8"
                             )
         {
             var jValues = jClaimsIdentity
-                                     .GetAllJValues();
+                                .GetAllJValues();
             var claims = jValues
                             .Select
                                 (
@@ -181,10 +211,12 @@ namespace Microshaoft
                         (
                             issuer
                             , audience
+                            , userName
                             , claims
                             , plainTextSecurityKey
                             , out plainToken
                             , out secretTokenString
+                            //, identity
                             , signingCredentialsAlgorithm
                             , signingCredentialsDigest
                             , plainTextSecurityKeyEncoding
@@ -196,13 +228,29 @@ namespace Microshaoft
                             (
                                 string issuer
                                 , string audience
+                                , string userName
                                 , IEnumerable<Claim> claims
                                 , string plainTextSecurityKey
-                                , out Microsoft.IdentityModel.Tokens.SecurityToken plainToken
+                                , out Microsoft
+                                        .IdentityModel
+                                        .Tokens
+                                        .SecurityToken plainToken
                                 , out string secretTokenString
-                                , string signingCredentialsAlgorithm = Microsoft.IdentityModel.Tokens.SecurityAlgorithms.HmacSha256Signature
-                                , string signingCredentialsDigest = Microsoft.IdentityModel.Tokens.SecurityAlgorithms.Sha256Digest
+                                //, IIdentity identity = null
+                                , string signingCredentialsAlgorithm
+                                            = Microsoft
+                                                .IdentityModel
+                                                .Tokens
+                                                .SecurityAlgorithms
+                                                .HmacSha256Signature
+                                , string signingCredentialsDigest
+                                            = Microsoft
+                                                .IdentityModel
+                                                .Tokens
+                                                .SecurityAlgorithms
+                                                .Sha256Digest
                                 , string plainTextSecurityKeyEncoding = "UTF-8"
+                                
                             )
         {
             bool r = false;
@@ -210,15 +258,19 @@ namespace Microshaoft
             secretTokenString = null;
             try
             {
-                var signingKey = new Microsoft
-                                           .IdentityModel
-                                           .Tokens
-                                           .SymmetricSecurityKey
-                                                   (
-                                                       Encoding
-                                                           .GetEncoding(plainTextSecurityKeyEncoding)
-                                                           .GetBytes(plainTextSecurityKey)
-                                                   );
+                var signingKey =
+                            new Microsoft
+                                    .IdentityModel
+                                    .Tokens
+                                    .SymmetricSecurityKey
+                                            (
+                                                Encoding
+                                                    .GetEncoding
+                                                        (
+                                                            plainTextSecurityKeyEncoding
+                                                        )
+                                                    .GetBytes(plainTextSecurityKey)
+                                            );
                 var signingCredentials
                             = new Microsoft
                                         .IdentityModel
@@ -233,11 +285,13 @@ namespace Microshaoft
                          (
                             issuer
                             , audience
+                            , userName
                             , claims
                             , out plainToken
                             , out secretTokenString
                             , signingKey
                             , signingCredentials
+                            //, identity
                          );
             }
             catch //(Exception)
@@ -253,8 +307,12 @@ namespace Microshaoft
                     (
                         string issuer
                         , string audience
+                        , string userName
                         , IEnumerable<Claim> claims
-                        , out Microsoft.IdentityModel.Tokens.SecurityToken plainToken
+                        , out Microsoft
+                                    .IdentityModel
+                                    .Tokens
+                                    .SecurityToken plainToken
                         , out string secretTokenString
                         , Microsoft
                                 .IdentityModel
@@ -266,6 +324,7 @@ namespace Microshaoft
                                 .Tokens
                                 .SigningCredentials
                                                 signingCredentials
+                        //, IIdentity identity = null
                     )
         {
             bool r = false;
@@ -273,29 +332,18 @@ namespace Microshaoft
             secretTokenString = null;
             try
             {
-                //var signingKey = new Microsoft
-                //                           .IdentityModel
-                //                           .Tokens
-                //                           .SymmetricSecurityKey
-                //                                   (
-                //                                       Encoding
-                //                                           .GetEncoding(plainTextSecurityKeyEncoding)
-                //                                           .GetBytes(plainTextSecurityKey)
-                //                                   );
-                //var signingCredentials
-                //            = new Microsoft.IdentityModel.Tokens.SigningCredentials
-                //                (
-                //                    signingKey
-                //                    , signingCredentialsAlgorithm
-                //                    , signingCredentialsDigest
-                //                );
-                // ComplexClaim
-                var claimsIdentity = new ClaimsIdentity
-                (
-                    claims
-                    , "Custom"
-                );
-                var securityTokenDescriptor = new Microsoft.IdentityModel.Tokens.SecurityTokenDescriptor()
+                IIdentity user = new JsonWebTokenUser
+                                        (
+                                            userName
+                                            , "jwt"
+                                            , true
+                                        );
+                var claimsIdentity = new ClaimsIdentity(user, claims);
+                var securityTokenDescriptor = 
+                                    new Microsoft
+                                            .IdentityModel
+                                            .Tokens
+                                            .SecurityTokenDescriptor()
                 {
                     Issuer = issuer,
                     Audience = audience,
@@ -303,23 +351,22 @@ namespace Microshaoft
                     Subject = claimsIdentity,
                     SigningCredentials = signingCredentials,
                 };
-
-                var tokenHandler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+                var tokenHandler = new System
+                                            .IdentityModel
+                                            .Tokens
+                                            .Jwt
+                                            .JwtSecurityTokenHandler();
                 plainToken = tokenHandler.CreateToken(securityTokenDescriptor);
                 secretTokenString = tokenHandler.WriteToken(plainToken);
                 r = true;
             }
             catch (Exception e)
             {
-
                 //throw;
             }
             return
                    r;
         }
-
-        
-
     }
 }
 #endif
