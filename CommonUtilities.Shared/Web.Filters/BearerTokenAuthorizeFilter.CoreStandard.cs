@@ -15,7 +15,7 @@ namespace Microshaoft.Web
     }
 
 
-    public class BearerTokenBasedWebApiAuthorizeFilter
+    public class BearerTokenBasedAuthorizeWebApiFilter
                     :
                         //AuthorizeAttribute
                         Attribute
@@ -28,7 +28,7 @@ namespace Microshaoft.Web
         private bool _jwtNeedValidIP = false;
         private string _jwtSecretKey;
         private int _jwtExpireInSeconds = 0;
-        public BearerTokenBasedWebApiAuthorizeFilter
+        public BearerTokenBasedAuthorizeWebApiFilter
                     (
                     //string jwtValidationJsonFile = "JwtValidation.json"
                     )
