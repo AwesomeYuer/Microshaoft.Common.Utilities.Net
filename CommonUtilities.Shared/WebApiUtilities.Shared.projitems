@@ -15,6 +15,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Json\JObjectExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MemberAdditionalDefinitionAttribute\MemberAdditionalDefinitionAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Cors\WildCardCorsService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Web.Filters\BearerTokenAuthorizeFilter.CoreStandard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\CommonController\AbstractActionCommonProcessingService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\CommonController\AbstractCommonControllerBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\IStoreProcedureExecutable.cs" />

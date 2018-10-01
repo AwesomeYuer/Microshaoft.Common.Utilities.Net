@@ -3,6 +3,7 @@
     using Newtonsoft.Json.Linq;
     using System;
     using System.Linq;
+    using System.Net;
     using System.Security.Claims;
     public static class CliamsHelper
     {
@@ -54,7 +55,6 @@
                             ).Value;
             return r;
         }
-
         public static bool TryGetClaimTypeValue
                                 (
                                     this ClaimsPrincipal target
@@ -101,62 +101,60 @@
             }
             return r;
         }
-
-
-        public static DateTime GetIssuedAtTime(this ClaimsPrincipal target)
+        public static DateTime? GetIssuedAtLocalTime(this ClaimsPrincipal target)
         {
-            var r =
-                    ParseSecondsToLocalTime
+            DateTime? r = null;
+            var b = target
+                        .TryGetClaimTypeValue
+                            (
+                                "iat"
+                                , out var claimValue
+                            );
+            if (b)
+            {
+                b = double
+                        .TryParse
+                            (
+                                claimValue
+                                , out var seconds
+                            );
+                if (b)
+                {
+                    r = ParseSecondsToLocalTime
                         (
-                            double.Parse(GetClaimTypeValue(target, "iat"))
+                            seconds
                         );
-
+                }
+            }
             return r;
         }
-        //public static bool TryValidateSsoToken
-        //                (
-        //                    string token
-        //                    , out ClaimsPrincipal claimsPrincipal
-        //                    , string ip = null
-        //                //, int expiredInSeconds = -1
-        //                )
-        //{
-        //    var r = false;
-        //    var plainTextSecurityKey = _ssoTokenPlainTextSecretKey;
-        //    var issuers = _ssoTokenIssuers;
-        //    var audiences = _ssoTokenAudiences;
-        //    SecurityToken validatedToken = null;
-        //    r = TryValidateToken
-        //                (
-        //                    plainTextSecurityKey
-        //                    , token
-        //                    , issuers
-        //                    , audiences
-        //                    , out validatedToken
-        //                    , out claimsPrincipal
-        //                );
-        //    if (r)
-        //    {
-        //        IPAddress ipa;
-        //        if (IPAddress.TryParse(ip, out ipa))
-        //        {
-        //            r = (claimsPrincipal.GetClaimTypeValue("UserClientIP") == ip);
-        //        }
-        //    }
-        //    if (r)
-        //    {
-        //        if (_ssoTokenExpireInSeconds >= 0)
-        //        {
-        //            var issuedAt = claimsPrincipal.GetIssuedAtTime();
-        //            r = (Math.Abs(DateTimeHelper.SecondsDiffNow(issuedAt)) < _ssoTokenExpireInSeconds);
-        //        }
-        //    }
-        //    if (!r)
-        //    {
-        //        claimsPrincipal = null;
-        //    }
-        //    return r;
-        //}
+
+
+        public static IPAddress GetClientIP
+                                    (
+                                        this ClaimsPrincipal target
+                                        , string claimType = "ip"
+                                    )
+        {
+            IPAddress r = null;
+            var b = target
+                        .TryGetClaimTypeValue
+                            (
+                                claimType
+                                , out var claimValue
+                            );
+            if (b)
+            {
+                b = IPAddress
+                        .TryParse
+                            (
+                                claimValue
+                                , out r
+                            );
+            }
+            return r;
+        }
+
         public static DateTime ParseSecondsToLocalTime(double seconds)
         {
             return new DateTime(1970, 1, 1).AddSeconds(seconds).ToLocalTime();

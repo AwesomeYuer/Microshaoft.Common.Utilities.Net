@@ -39,6 +39,9 @@
     <Content Update="dynamicLoadExecutorsPaths.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Update="JwtValidation.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Update="wwwrootpaths.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -98,10 +98,7 @@ namespace Microshaoft
                                 (
                                     string plainTextSecurityKey
                                     , string token
-                                    , out Microsoft
-                                                .IdentityModel
-                                                .Tokens
-                                                .SecurityToken validatedPlainToken
+                                    , out JwtSecurityToken validatedPlainToken
                                     , out ClaimsPrincipal claimsPrincipal
                                 )
         {
@@ -116,19 +113,18 @@ namespace Microshaoft
                                             .Jwt
                                             .JwtSecurityTokenHandler();
                 var jst = ((JwtSecurityToken)tokenHandler.ReadToken(token));
-                
                 var signingKey = new Microsoft
                                         .IdentityModel
                                         .Tokens
                                         .SymmetricSecurityKey
-                                            (
-                                                Encoding
-                                                    .UTF8
-                                                    .GetBytes
-                                                        (
-                                                            plainTextSecurityKey
-                                                        )
-                                            );
+                                                (
+                                                    Encoding
+                                                        .UTF8
+                                                        .GetBytes
+                                                            (
+                                                                plainTextSecurityKey
+                                                            )
+                                                );
                 var tokenValidationParameters = new TokenValidationParameters()
                 {
                     ValidIssuer = jst.Issuer,
@@ -139,13 +135,15 @@ namespace Microshaoft
                     ValidateIssuerSigningKey = true,
                     ValidateLifetime = false
                 };
+                
                 claimsPrincipal = tokenHandler
                                         .ValidateToken
                                             (
                                                 token
                                                 , tokenValidationParameters
-                                                , out validatedPlainToken
+                                                , out var validatedPlainToken0
                                             );
+                validatedPlainToken = validatedPlainToken0 as JwtSecurityToken;
                 r = true;
             }
             catch (Exception e)
