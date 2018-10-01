@@ -78,6 +78,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)FasterUtilities\StateTransitions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FasterUtilities\Status.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpClientHelper\HttpClientHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)JsonWebToken\CliamsHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JObjectExtensionMethodsManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\DynamicJson.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JObjectExtensions.cs" />
@@ -172,6 +173,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Sql\StoreProceduresExecutor.02.MySql.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\StoreProceduresExecutor.05.Sqlite.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System.Buffers.ArrayPool\ArrayPool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Throttler\RateGate\RateGate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Throttler\RateLimiters\FixedTokenBucket.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Throttler\RateLimiters\IThrottleStrategy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Throttler\RateLimiters\SystemTime.cs" />
@@ -183,6 +185,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Type\TypeHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UAC\UacHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Cors\WildCardCorsService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Web.Filters\BearerTokenAuthorizeFilter.CoreStandard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\CommonController\AbstractCommonControllerBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\CommonController\AbstractActionCommonProcessingService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\StoreProcedureExecutorController\AbstractStoreProcedureExecutorControllerBase.1.NET.All.cs" />
@@ -238,7 +241,6 @@
     <Content Include="$(MSBuildThisFileDirectory)DataAccess\Pager.StoreProcedure.Sample.sql" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)JsonWebToken\" />
     <Folder Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenModelBinder\" />
     <Folder Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\StoreProcedureExecutorController\" />
     <Folder Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\Services\" />

@@ -13,7 +13,7 @@ namespace Microshaoft.WebApi.Controllers
                     :
                         ControllerBase
     {
-        private readonly
+        protected readonly
                     IStoreProceduresWebApiService
                             _service;
 
@@ -74,20 +74,29 @@ namespace Microshaoft.WebApi.Controllers
                                 connectionID
                                 , storeProcedureName
                                 , parameters
+                                , null
                                 , Request.Method
                                 , 102
                             );
-            result = rr
-                        .Result
-                        .GetDescendantByPath
-                            (
-                                resultPathSegment1
-                                , resultPathSegment2
-                                , resultPathSegment3
-                                , resultPathSegment4
-                                , resultPathSegment5
-                                , resultPathSegment6
-                            );
+            if (rr.StatusCode == 200)
+            {
+                result = rr
+                            .Result
+                            .GetDescendantByPath
+                                (
+                                    resultPathSegment1
+                                    , resultPathSegment2
+                                    , resultPathSegment3
+                                    , resultPathSegment4
+                                    , resultPathSegment5
+                                    , resultPathSegment6
+                                );
+            }
+            else
+            {
+                Response
+                    .StatusCode = rr.StatusCode;
+            }
             return result;
         }
     }

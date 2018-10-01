@@ -21,96 +21,96 @@ namespace Microshaoft
     public static partial class JwtTokenHelper
     {
 
-        public static bool TryIssueWebToken
-                (
-                    this HttpContextBase target
-                    , IEnumerable<Claim> claims
-                    //, out string secretTokenString
-                )
-        {
-            var secretTokenString = string.Empty;
-            var r = TryIssueWebToken
-                        (
-                            claims
-                            , out secretTokenString
-                        );
-            if (r)
-            {
-                target.SetCookie("WebUserToken", secretTokenString);
-            }
-            return r;
-        }
-        public static bool TryGetCurrentWebUser
-                                    (
+        //public static bool TryIssueWebToken
+        //        (
+        //            this HttpContextBase target
+        //            , IEnumerable<Claim> claims
+        //            //, out string secretTokenString
+        //        )
+        //{
+        //    var secretTokenString = string.Empty;
+        //    var r = TryIssueWebToken
+        //                (
+        //                    claims
+        //                    , out secretTokenString
+        //                );
+        //    if (r)
+        //    {
+        //        target.SetCookie("WebUserToken", secretTokenString);
+        //    }
+        //    return r;
+        //}
+        //public static bool TryGetCurrentWebUser
+        //                            (
 
-                                       this HttpActionContext context
-                                        , out ClaimsPrincipal claimsPrincipal
-                                        , bool needValidateIP = true
-                                        , int expiredInSeconds = -1
-                                        , string cookieName = "WebUserToken"
-                                    )
-        {
-            var r = false;
-            claimsPrincipal = null;
-            var cookieHeader = context.Request.Headers.GetCookies(cookieName).FirstOrDefault();
+        //                               this HttpActionContext context
+        //                                , out ClaimsPrincipal claimsPrincipal
+        //                                , bool needValidateIP = true
+        //                                , int expiredInSeconds = -1
+        //                                , string cookieName = "WebUserToken"
+        //                            )
+        //{
+        //    var r = false;
+        //    claimsPrincipal = null;
+        //    var cookieHeader = context.Request.Headers.GetCookies(cookieName).FirstOrDefault();
 
-            if (cookieHeader != null)
-            {
-                string ip = null;
-                if (needValidateIP)
-                {
-                    ip = context.Request.GetClientIPAddress();
-                }
-                r = TryGetCurrentWebUser
-                        (
-                            cookieHeader[cookieName].Value
-                            , out claimsPrincipal
-                            , ip
-                            , expiredInSeconds
-                        );
-                if (!r)
-                {
-                    context.Response.ClearCookie(cookieName);
-                    claimsPrincipal = null;
-                }
-            }
-            return r;
-        }
-        public static bool TryGetCurrentWebUser
-                                    (
-                                        this HttpContextBase context
-                                        , out ClaimsPrincipal claimsPrincipal
-                                        , bool needValidateIP = true
-                                        , int expiredInSeconds = -1
-                                        , string cookieName = "WebUserToken"
-                                    )
-        {
-            var r = false;
-            claimsPrincipal = null;
-            var cookie = context.Request.Cookies[cookieName];
+        //    if (cookieHeader != null)
+        //    {
+        //        string ip = null;
+        //        if (needValidateIP)
+        //        {
+        //            ip = context.Request.GetClientIPAddress();
+        //        }
+        //        r = TryGetCurrentWebUser
+        //                (
+        //                    cookieHeader[cookieName].Value
+        //                    , out claimsPrincipal
+        //                    , ip
+        //                    , expiredInSeconds
+        //                );
+        //        if (!r)
+        //        {
+        //            context.Response.ClearCookie(cookieName);
+        //            claimsPrincipal = null;
+        //        }
+        //    }
+        //    return r;
+        //}
+        //public static bool TryGetCurrentWebUser
+        //                            (
+        //                                this HttpContextBase context
+        //                                , out ClaimsPrincipal claimsPrincipal
+        //                                , bool needValidateIP = true
+        //                                , int expiredInSeconds = -1
+        //                                , string cookieName = "WebUserToken"
+        //                            )
+        //{
+        //    var r = false;
+        //    claimsPrincipal = null;
+        //    var cookie = context.Request.Cookies[cookieName];
 
-            if (cookie != null)
-            {
-                string ip = null;
-                if (needValidateIP)
-                {
-                    ip = context.Request.UserHostAddress;
-                }
-                r = TryGetCurrentWebUser
-                        (
-                            cookie.Value
-                            , out claimsPrincipal
-                            , ip
-                            , expiredInSeconds
-                        );
-                if (!r)
-                {
-                    context.ClearCookie(cookieName);
-                    claimsPrincipal = null;
-                }
-            }
-            return r;
-        }
+        //    if (cookie != null)
+        //    {
+        //        string ip = null;
+        //        if (needValidateIP)
+        //        {
+        //            ip = context.Request.UserHostAddress;
+        //        }
+        //        r = TryGetCurrentWebUser
+        //                (
+        //                    cookie.Value
+        //                    , out claimsPrincipal
+        //                    , ip
+        //                    , expiredInSeconds
+        //                );
+        //        if (!r)
+        //        {
+        //            context.ClearCookie(cookieName);
+        //            claimsPrincipal = null;
+        //        }
+        //    }
+        //    return r;
+        //}
 
         public static void ClearCookie(this HttpContextBase httpContext, string cookieName)
         {

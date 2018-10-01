@@ -2,12 +2,13 @@
 namespace Microshaoft.Web
 {
     using Microshaoft;
-    using Microshaoft.Linq.Dynamic;
+    //using Microshaoft.Linq.Dynamic;
     using Microshaoft.WebApi.Controllers;
     using Microsoft.Extensions.Configuration;
     using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Generic;
+    using System.Data;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -19,6 +20,15 @@ namespace Microshaoft.Web
                         string connectionID
                         , string storeProcedureName
                         , JToken parameters = null
+                        , Func
+                                <
+                                    IDataReader
+                                    , Type        // fieldType
+                                    , string    // fieldName
+                                    , int       // row index
+                                    , int       // column index
+                                    , JProperty   //  JObject Field 对象
+                                > onReadRowColumnProcessFunc = null
                         , string httpMethod = "Get"
                         , int commandTimeoutInSeconds = 101
                     );
@@ -131,8 +141,10 @@ namespace Microshaoft.Web
                                                         var rr = new StoreProcedureInfo()
                                                         {
                                                             Alias = xx.Key
-                                                            , Name = storeProcedureName
-                                                            , AllowedHttpMethods = allowedHttpMethods
+                                                            ,
+                                                            Name = storeProcedureName
+                                                            ,
+                                                            AllowedHttpMethods = allowedHttpMethods
                                                         };
                                                         return
                                                             rr;
@@ -150,10 +162,13 @@ namespace Microshaoft.Web
                                     var r = new DataBaseConnectionInfo()
                                     {
                                         ConnectionID = configuration[$"{x.Key}ConnectionID"]
-                                        , ConnectionString = configuration[$"{x.Key}ConnectionString"]
+                                        ,
+                                        ConnectionString = configuration[$"{x.Key}ConnectionString"]
                                         //, ConnectionTimeoutInSeconds = connectionTimeoutInSeconds
-                                        , DataBaseType = Enum.Parse<DataBasesType>(configuration[$"{x.Key}DataBaseType"], true)
-                                        , AllowExecuteWhiteList = allowExecuteWhiteList
+                                        ,
+                                        DataBaseType = Enum.Parse<DataBasesType>(configuration[$"{x.Key}DataBaseType"], true)
+                                        ,
+                                        AllowExecuteWhiteList = allowExecuteWhiteList
                                     };
                                     return r;
                                 }
@@ -217,7 +232,7 @@ namespace Microshaoft.Web
                                 , IStoreProcedureExecutable y
                             )
             {
-                return 
+                return
                     (x.DataBaseType == y.DataBaseType);
             }
 
@@ -338,32 +353,41 @@ namespace Microshaoft.Web
                         }
                     );
         }
-        protected abstract int 
+        protected abstract int
                     CachedParametersDefinitionExpiredInSeconds
         {
             get;
             //set;
         }
-        protected abstract bool 
+        protected abstract bool
                     NeedAutoRefreshExecutedTimeForSlideExpire
         {
             get;
             //set;
         }
 
-        private IDictionary<string, DataBaseConnectionInfo> 
+        private IDictionary<string, DataBaseConnectionInfo>
                     _indexedConnections;
 
         private IDictionary<string, IStoreProcedureExecutable>
                     _indexedExecutors;
 
-        public 
+        public
             (int StatusCode, JToken Result)
                         Process
                             (
                                 string connectionID //= "mssql"
                                 , string storeProcedureName
                                 , JToken parameters = null
+                                , Func
+                                    <
+                                        IDataReader
+                                        , Type        // fieldType
+                                        , string    // fieldName
+                                        , int       // row index
+                                        , int       // column index
+                                        , JProperty   //  JObject Field 对象
+                                    > onReadRowColumnProcessFunc = null
                                 , string httpMethod = "Get"
                                 , int commandTimeoutInSeconds = 101
                             )
@@ -388,6 +412,7 @@ namespace Microshaoft.Web
                             , httpMethod
                             , parameters
                             , out result
+                            , onReadRowColumnProcessFunc
                             , commandTimeoutInSeconds
                         );
             }
@@ -407,7 +432,7 @@ namespace Microshaoft.Web
                                         beginTime
                                         , endTime
                                     );
-            return (statusCode, result); 
+            return (statusCode, result);
         }
         private bool Process
             (
@@ -416,6 +441,15 @@ namespace Microshaoft.Web
                 , string httpMethod
                 , JToken parameters
                 , out JToken result
+                , Func
+                    <
+                        IDataReader
+                        , Type        // fieldType
+                        , string    // fieldName
+                        , int       // row index
+                        , int       // column index
+                        , JProperty   //  JObject Field 对象
+                    > onReadRowColumnProcessFunc = null
                 , int commandTimeoutInSeconds = 90
             )
         {
@@ -453,6 +487,7 @@ namespace Microshaoft.Web
                             , storeProcedureName
                             , parameters
                             , out result
+                            , onReadRowColumnProcessFunc
                             , commandTimeoutInSeconds
                         );
             }
@@ -465,6 +500,15 @@ namespace Microshaoft.Web
                             , string storeProcedureName
                             , JToken parameters
                             , out JToken result
+                            , Func
+                                <
+                                    IDataReader
+                                    , Type        // fieldType
+                                    , string    // fieldName
+                                    , int       // row index
+                                    , int       // column index
+                                    , JProperty   //  JObject Field 对象
+                                > onReadRowColumnProcessFunc = null
                             , int commandTimeoutInSeconds = 90
                         )
         {
@@ -486,6 +530,7 @@ namespace Microshaoft.Web
                                 , storeProcedureName
                                 , parameters
                                 , out result
+                                , onReadRowColumnProcessFunc
                                 , commandTimeoutInSeconds
                             );
             }
@@ -498,6 +543,15 @@ namespace Microshaoft.Web
                             , string storeProcedureName
                             , string parameters
                             , out JToken result
+                            , Func
+                                <
+                                    IDataReader
+                                    , Type        // fieldType
+                                    , string    // fieldName
+                                    , int       // row index
+                                    , int       // column index
+                                    , JProperty   //  JObject Field 对象
+                                > onReadRowColumnProcessFunc = null
                             , int commandTimeoutInSeconds = 90
                         )
         {
@@ -509,6 +563,7 @@ namespace Microshaoft.Web
                             , storeProcedureName
                             , j
                             , out result
+                            , onReadRowColumnProcessFunc
                             , commandTimeoutInSeconds
                         );
             return r;

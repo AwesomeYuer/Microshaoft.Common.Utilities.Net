@@ -50,7 +50,7 @@ namespace Microshaoft
                         target
                         , needDefinitionAttributeProcess
                     );
-        } 
+        }
         public static IEnumerable<TEntry> GetEnumerable<TEntry>
                 (
                     IDataReader dataReader
@@ -112,7 +112,7 @@ namespace Microshaoft
                     {
                         if (attribute != null)
                         {
-                            if 
+                            if
                                 (
                                     !attribute
                                         .DataTableColumnName
@@ -141,13 +141,23 @@ namespace Microshaoft
         }
         public static IEnumerable<JToken> AsRowsJTokensEnumerable
                              (
-                                 this IDataReader target
+                                    this IDataReader target
+                                    , Func
+                                        <
+                                            IDataReader
+                                            , Type        // fieldType
+                                            , string    // fieldName
+                                            , int       // row index
+                                            , int       // column index
+                                            , JProperty   //  JObject Field 对象
+                                        > onReadRowColumnProcessFunc = null
                              )
         {
             return
                 GetRowsJTokensEnumerable
                     (
                         target
+                         , onReadRowColumnProcessFunc
                     );
         }
         public static IEnumerable<JToken> GetColumnsJTokensEnumerable
@@ -189,117 +199,165 @@ namespace Microshaoft
         public static IEnumerable<JToken> GetRowsJTokensEnumerable
                              (
                                  IDataReader dataReader
+                                 , Func
+                                        <
+                                            IDataReader
+                                            , Type        // fieldType
+                                            , string    // fieldName
+                                            , int       // row index
+                                            , int       // column index
+                                            , JProperty   //  JObject Field 对象
+                                        > onReadRowColumnProcessFunc = null
                              )
         {
             var fieldsCount = dataReader.FieldCount;
-            //int rowNum = 0;
+            int rowIndex = 0;
             while (dataReader.Read())
             {
-                //rowNum++;
                 JObject row = new JObject();
-                for (var i = 0; i < fieldsCount; i++)
+                for (var fieldIndex = 0; fieldIndex < fieldsCount; fieldIndex++)
                 {
-                    var fieldType = dataReader.GetFieldType(i);
-                    var fieldName = dataReader.GetName(i);
-                    JValue fieldValue = null;
-                    if (!dataReader.IsDBNull(i))
+                    var fieldType = dataReader.GetFieldType(fieldIndex);
+                    var fieldName = dataReader.GetName(fieldIndex);
+                    JProperty field = null;
+                    var needDefaultProcess = true;
+                    if (onReadRowColumnProcessFunc != null)
                     {
-                        if
-                            (
-                                fieldType == typeof(bool)
-                            )
-                        {
-                            fieldValue = new JValue(dataReader.GetBoolean(i));
-                        }
-                        else if
-                            (
-                                fieldType == typeof(byte)
-                            )
-                        {
-                            fieldValue = new JValue(dataReader.GetByte(i));
-                        }
-                        else if
-                            (
-                                fieldType == typeof(char)
-                            )
-                        {
-                            fieldValue = new JValue(dataReader.GetChar(i));
-                        }
-                        else if
-                            (
-                                fieldType == typeof(DateTime)
-                            )
-                        {
-                            fieldValue = new JValue(dataReader.GetDateTime(i));
-                        }
-                        else if
-                            (
-                                fieldType == typeof(decimal)
-                            )
-                        {
-                            fieldValue = new JValue(dataReader.GetDecimal(i));
-                        }
-                        else if
-                            (
-                                fieldType == typeof(double)
-                            )
-                        {
-                            fieldValue = new JValue(dataReader.GetDouble(i));
-                        }
-                        else if
-                            (
-                                fieldType == typeof(float)
-                            )
-                        {
-                            fieldValue = new JValue(dataReader.GetFloat(i));
-                        }
-                        else if
-                            (
-                                fieldType == typeof(Guid)
-                            )
-                        {
-                            fieldValue = new JValue(dataReader.GetGuid(i));
-                        }
-                        else if
-                            (
-                                fieldType == typeof(short)
-                            )
-                        {
-                            fieldValue = new JValue((long)dataReader.GetInt16(i));
-                        }
-                        else if
-                            (
-                                fieldType == typeof(int)
-                            )
-                        {
-                            fieldValue = new JValue((long)dataReader.GetInt32(i));
-                        }
-                        else if
-                            (
-                                fieldType == typeof(long)
-                            )
-                        {
-                            fieldValue = new JValue((long)dataReader.GetInt64(i));
-                        }
-                        else if
-                            (
-                                fieldType == typeof(string)
-                            )
-                        {
-                            fieldValue = new JValue(dataReader.GetString(i));
-                        }
-                        else
-                        {
-                            fieldValue = new JValue(dataReader[i]);
-                        }
+                        field = onReadRowColumnProcessFunc
+                                (
+                                    dataReader
+                                    , fieldType
+                                    , fieldName
+                                    , rowIndex
+                                    , fieldIndex
+                                );
+                        needDefaultProcess = (field == null);
+                        //fieldValue = NewMethod(dataReader, i, fieldType);
                     }
-                    var field = new JProperty(fieldName, fieldValue);
-                    row.Add(field);
+                    if (needDefaultProcess)
+                    {
+                        field = GetFieldJProperty
+                                    (
+                                        dataReader
+                                        , fieldIndex
+                                        , fieldType
+                                        , fieldName
+                                    );
+                    }
+                    if (field != null)
+                    {
+                        row.Add(field);
+                    }
                 }
+                rowIndex++;
                 yield
                     return
                         row;
             }
+        }
+        private static JProperty GetFieldJProperty
+                            (
+                                IDataReader dataReader
+                                , int i
+                                , Type fieldType
+                                , string fieldName
+                            )
+        {
+            JProperty r = null;
+            if (!dataReader.IsDBNull(i))
+            {
+                JValue fieldValue = null;
+                if
+                    (
+                        fieldType == typeof(bool)
+                    )
+                {
+                    fieldValue = new JValue(dataReader.GetBoolean(i));
+                }
+                else if
+                    (
+                        fieldType == typeof(byte)
+                    )
+                {
+                    fieldValue = new JValue(dataReader.GetByte(i));
+                }
+                else if
+                    (
+                        fieldType == typeof(char)
+                    )
+                {
+                    fieldValue = new JValue(dataReader.GetChar(i));
+                }
+                else if
+                    (
+                        fieldType == typeof(DateTime)
+                    )
+                {
+                    fieldValue = new JValue(dataReader.GetDateTime(i));
+                }
+                else if
+                    (
+                        fieldType == typeof(decimal)
+                    )
+                {
+                    fieldValue = new JValue(dataReader.GetDecimal(i));
+                }
+                else if
+                    (
+                        fieldType == typeof(double)
+                    )
+                {
+                    fieldValue = new JValue(dataReader.GetDouble(i));
+                }
+                else if
+                    (
+                        fieldType == typeof(float)
+                    )
+                {
+                    fieldValue = new JValue(dataReader.GetFloat(i));
+                }
+                else if
+                    (
+                        fieldType == typeof(Guid)
+                    )
+                {
+                    fieldValue = new JValue(dataReader.GetGuid(i));
+                }
+                else if
+                    (
+                        fieldType == typeof(short)
+                    )
+                {
+                    fieldValue = new JValue((long)dataReader.GetInt16(i));
+                }
+                else if
+                    (
+                        fieldType == typeof(int)
+                    )
+                {
+                    fieldValue = new JValue((long)dataReader.GetInt32(i));
+                }
+                else if
+                    (
+                        fieldType == typeof(long)
+                    )
+                {
+                    fieldValue = new JValue((long)dataReader.GetInt64(i));
+                }
+                else if
+                    (
+                        fieldType == typeof(string)
+                    )
+                {
+                    fieldValue = new JValue(dataReader.GetString(i));
+                }
+                else
+                {
+                    fieldValue = new JValue(dataReader[i]);
+                }
+                r = new JProperty(fieldName, fieldValue);
+            }
+            return r;
         }
     }
 }

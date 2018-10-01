@@ -236,7 +236,8 @@
                 var _executingInfo = new ExecutingInfo()
                 {
                     DbParameters = nameIndexedParameters
-                    , RecentExecutedTime = DateTime.Now
+                    ,
+                    RecentExecutedTime = DateTime.Now
                 };
                 return _executingInfo;
             }
@@ -319,7 +320,7 @@
                                 );
             return r;
         }
-        public IDictionary<string, DbParameter> 
+        public IDictionary<string, DbParameter>
                     GetNameIndexedDefinitionParameters
                             (
                                 string connectionString
@@ -328,7 +329,7 @@
                             )
 
         {
-            var dbParameters = 
+            var dbParameters =
                             GetDefinitionParameters
                                 (
                                     connectionString
@@ -370,9 +371,18 @@
                             DbConnection connection
                             , string storeProcedureName
                             , string p = null //string.Empty
+                            , Func
+                                <
+                                    IDataReader
+                                    , Type        // fieldType
+                                    , string    // fieldName
+                                    , int       // row index
+                                    , int       // column index
+                                    , JProperty   //  JObject Field 对象
+                                > onReadRowColumnProcessFunc = null
                             , int commandTimeout = 90
                         )
-         {
+        {
             var inputsParameters = JObject.Parse(p);
             return
                 Execute
@@ -380,6 +390,7 @@
                         connection
                         , storeProcedureName
                         , inputsParameters
+                        , onReadRowColumnProcessFunc
                         , commandTimeout
                     );
         }
@@ -390,6 +401,15 @@
                             DbConnection connection
                             , string storeProcedureName
                             , JToken inputsParameters = null //string.Empty
+                            , Func
+                                <
+                                    IDataReader
+                                    , Type        // fieldType
+                                    , string    // fieldName
+                                    , int       // row index
+                                    , int       // column index
+                                    , JProperty   //  JObject Field 对象
+                                > onReadRowColumnProcessFunc = null
                             , int commandTimeout = 90
                         )
         {
@@ -402,9 +422,12 @@
                         TDbCommand command = new TDbCommand()
                         {
                             CommandType = CommandType.StoredProcedure
-                            , CommandTimeout = commandTimeout
-                            , CommandText = storeProcedureName
-                            , Connection = connection
+                            ,
+                            CommandTimeout = commandTimeout
+                            ,
+                            CommandText = storeProcedureName
+                            ,
+                            Connection = connection
                         }
                     )
                 {
@@ -479,7 +502,10 @@
                         var columns = dataReader
                                         .GetColumnsJTokensEnumerable();
                         var rows = dataReader
-                                        .AsRowsJTokensEnumerable();
+                                        .AsRowsJTokensEnumerable
+                                            (
+                                                onReadRowColumnProcessFunc
+                                            );
                         (
                             (JArray)
                                 result
@@ -531,7 +557,7 @@
                             jOutputParameters
                                 .Add
                                     (
-                                        x.ParameterName.TrimStart('@','?')
+                                        x.ParameterName.TrimStart('@', '?')
                                         , new JValue(x.Value)
                                     );
                         }
