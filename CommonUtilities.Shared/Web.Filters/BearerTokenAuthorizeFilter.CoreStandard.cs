@@ -15,7 +15,6 @@ namespace Microshaoft.Web
         , Cookie = 0b0000_00010
     }
 
-
     public class BearerTokenBasedAuthorizeWebApiFilter
                     :
                         //AuthorizeAttribute
@@ -23,7 +22,6 @@ namespace Microshaoft.Web
                         , IActionFilter
     {
         public static int InstancesSeed = 0;
-
         public int InstanceID
         {
             private set;
@@ -130,11 +128,24 @@ namespace Microshaoft.Web
                 {
                     if (_jwtExpireInSeconds > 0)
                     {
-                        var iat = claimsPrincipal.GetIssuedAtLocalTime();
+                        var iat = claimsPrincipal
+                                        .GetIssuedAtLocalTime();
+                        var diffNowSeconds = DateTimeHelper
+                                                .SecondsDiffNow(iat.Value);
                         ok =
-                                DateTimeHelper.SecondsDiffNow(iat.Value)
-                                <=
-                                _jwtExpireInSeconds;
+                            (
+                                (
+                                    diffNowSeconds
+                                    >=
+                                    0
+                                )
+                                &&
+                                (
+                                    diffNowSeconds
+                                    <=
+                                    _jwtExpireInSeconds
+                                )
+                            );
                     }
                 }
                 if (ok)
