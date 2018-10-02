@@ -7,6 +7,7 @@ namespace Microshaoft.Web
     using Microsoft.Extensions.Primitives;
     using System;
     using System.Linq;
+    using System.Threading;
 
     public enum TokenStoreFlags : ushort
     {
@@ -21,6 +22,13 @@ namespace Microshaoft.Web
                         Attribute
                         , IActionFilter
     {
+        public static int InstancesSeed = 0;
+
+        public int InstanceID
+        {
+            private set;
+            get;
+        }
         private string _jwtName;
         private TokenStoreFlags _jwtCarrier;
         private string _jwtIssuer;
@@ -30,9 +38,10 @@ namespace Microshaoft.Web
         private int _jwtExpireInSeconds = 0;
         public BearerTokenBasedAuthorizeWebApiFilter
                     (
-                    //string jwtValidationJsonFile = "JwtValidation.json"
+                        //string jwtValidationJsonFile = "JwtValidation.json"
                     )
         {
+            InstanceID = Interlocked.Increment(ref InstancesSeed);
             Initialize();
         }
         public virtual void Initialize()
