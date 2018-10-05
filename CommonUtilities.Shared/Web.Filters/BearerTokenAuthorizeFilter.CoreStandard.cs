@@ -8,7 +8,7 @@ namespace Microshaoft.Web
     using System;
     using System.Linq;
     using System.Threading;
-
+    [Flags]
     public enum TokenStoreFlags : ushort
     {
         Header = 0b0000_00001
