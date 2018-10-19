@@ -4,13 +4,11 @@ namespace Microshaoft.WebApi.ModelBinders
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc.ModelBinding;
     using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Logging.Abstractions;
     using Microsoft.Extensions.Primitives;
-    using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
-    using System;
-    using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
     using System.Threading.Tasks;
     using System.Web;
     public class JTokenModelBinder : IModelBinder
@@ -20,13 +18,14 @@ namespace Microshaoft.WebApi.ModelBinders
             var request = bindingContext
                                     .HttpContext
                                     .Request;
+
             JToken jToken = null;
-            async void RequestBodyProcess()
+            async void RequestFormBodyProcess()
             {
                 if (request.HasFormContentType)
                 {
-                    var formBinder = new FormCollectionModelBinder();
-                    await formBinder.BindModelAsync(bindingContext);
+                    var formCollectionModelBinder = new FormCollectionModelBinder(NullLoggerFactory.Instance);
+                    await formCollectionModelBinder.BindModelAsync(bindingContext);
                     if (bindingContext.Result.IsModelSet)
                     {
                         jToken = JTokenWebHelper
@@ -56,15 +55,27 @@ namespace Microshaoft.WebApi.ModelBinders
                     }
                 }
             }
-            void RequestHeaderProcess()
+            void RequestQueryStringHeaderProcess()
             {
                 var qs = request.QueryString.Value;
+                if (qs.IsNullOrEmptyOrWhiteSpace())
+                {
+                    return;
+                }
                 qs = HttpUtility
                             .UrlDecode
                                 (
                                     qs
                                 );
+                if (qs.IsNullOrEmptyOrWhiteSpace())
+                {
+                    return;
+                }
                 qs = qs.TrimStart('?');
+                if (qs.IsNullOrEmptyOrWhiteSpace())
+                {
+                    return;
+                }
                 var isJson = false;
                 try
                 {
@@ -80,60 +91,103 @@ namespace Microshaoft.WebApi.ModelBinders
                     jToken = request.Query.ToJToken();
                 }
             }
-            if
-                (
-                    string.Compare(request.Method, "get", true) == 0
-                )
+            // 取 jwtToken 优先级顺序：Header → QueryString → Body
+            StringValues jwtToken = string.Empty;
+            IConfiguration configuration = 
+                    (IConfiguration) request
+                                        .HttpContext
+                                        .RequestServices
+                                        .GetService
+                                            (
+                                                typeof(IConfiguration)
+                                            );
+            var jwtTokenName = configuration
+                                .GetSection("TokenName")
+                                .Value;
+            var needExtractJwtToken = !jwtTokenName.IsNullOrEmptyOrWhiteSpace();
+            void ExtractJwtTokenInJToken()
             {
-                RequestHeaderProcess();
-                if (jToken == null)
+                if (needExtractJwtToken)
                 {
-                    RequestBodyProcess();
+                    if (jToken != null)
+                    {
+                        if (StringValues.IsNullOrEmpty(jwtToken))
+                        {
+                            var j = jToken[jwtTokenName];
+                            if (j != null)
+                            {
+                                jwtToken = j.Value<string>();
+                            }
+                        }
+                    }
                 }
             }
-            else
-                //if 
-                //(
-                //    string.Compare(request.Method, "get", true) == 0
-                //)
+            if (needExtractJwtToken)
             {
-                RequestBodyProcess();
-                if (jToken == null)
-                {
-                    RequestHeaderProcess();
-                }
+                request
+                    .Headers
+                    .TryGetValue
+                        (
+                           jwtTokenName
+                           , out jwtToken
+                        );
+            }
+            RequestQueryStringHeaderProcess();
+            ExtractJwtTokenInJToken();
+            if
+                (
+                    string.Compare(request.Method, "post", true) == 0
+                )
+            {
+                RequestFormBodyProcess();
+                ExtractJwtTokenInJToken();
+                //if (jToken == null)
+                //{
+                //    RequestHeaderProcess();
+                //}
+            }
+            if (!StringValues.IsNullOrEmpty(jwtToken))
+            {
+                request
+                    .HttpContext
+                    .Items
+                    .Add
+                        (
+                            jwtTokenName
+                            , jwtToken
+                        );
             }
             bindingContext
                     .Result =
-                            ModelBindingResult
-                                    .Success
-                                        (
-                                            jToken
-                                        );
+                        ModelBindingResult
+                                .Success
+                                    (
+                                        jToken
+                                    );
         }
     }
-    public class JTokenModelBinderProvider 
-                            : IModelBinderProvider
-                                , IModelBinder
-    {
-        private IModelBinder _binder = new JTokenModelBinder();
-        public async Task BindModelAsync(ModelBindingContext bindingContext)
-        {
-            await _binder.BindModelAsync(bindingContext);
-        }
-        public IModelBinder GetBinder(ModelBinderProviderContext context)
-        {
-            if (context == null)
-            {
-                throw new ArgumentNullException(nameof(context));
-            }
-            if (context.Metadata.ModelType == typeof(JToken))
-            {
-                //_binder = new JTokenModelBinder();
-                return _binder;
-            }
-            return null;
-        }
-    }
+    //public class JTokenModelBinderProvider
+    //                        : IModelBinderProvider
+    //                            , IModelBinder
+    //{
+    //    private IModelBinder _binder = new JTokenModelBinder();
+    //    public async Task BindModelAsync(ModelBindingContext bindingContext)
+    //    {
+    //        await _binder.BindModelAsync(bindingContext);
+    //    }
+    //    public IModelBinder GetBinder(ModelBinderProviderContext context)
+    //    {
+    //        if (context == null)
+    //        {
+    //            throw new ArgumentNullException(nameof(context));
+    //        }
+    //        if (context.Metadata.ModelType == typeof(JToken))
+    //        {
+    //            //_binder = new JTokenModelBinder();
+    //            return _binder;
+    //        }
+    //        return null;
+    //    }
+    //}
 }
 #endif

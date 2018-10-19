@@ -4,19 +4,19 @@
     [Flags]
     public enum HttpMethodsFlags : byte
     {
-        None                = 0b0000_0000
-        , Get               = 0b0000_0001    //[HttpGet]
-        , Head              = 0b0000_0010    //[HttpHead]
-        , Options           = 0b0000_0100    //[HttpOptions]
-        , Trace             = 0b0000_1000
-        , ReadOperations    = 0b0000_1111
+        HttpNone                = 0b0000_0000
+        , HttpGet               = 0b0000_0001    //[HttpGet]
+        , HttpHead              = 0b0000_0010    //[HttpHead]
+        , HttpOptions           = 0b0000_0100    //[HttpOptions]
+        , HttpTrace             = 0b0000_1000
+        , HttpReadOperationsMethods    = 0b0000_1111
+          
+        , HttpDelete            = 0b0001_0000    //[HttpDelete]   
+        , HttpPatch             = 0b0010_0000    //[HttpPatch]
+        , HttpPost              = 0b0100_0000    //[HttpPost]
+        , HttpPut               = 0b1000_0000    //[HttpPut]
+        , HttpWriteOperationsMethods   = 0b1111_0000
 
-        , Delete            = 0b0001_0000    //[HttpDelete]   
-        , Patch             = 0b0010_0000    //[HttpPatch]
-        , Post              = 0b0100_0000    //[HttpPost]
-        , Put               = 0b1000_0000    //[HttpPut]
-        , WriteOperations   = 0b1111_0000
-
-        , All               = 0b1111_1111
+        , HttpAllMethods               = 0b1111_1111
     }
 }

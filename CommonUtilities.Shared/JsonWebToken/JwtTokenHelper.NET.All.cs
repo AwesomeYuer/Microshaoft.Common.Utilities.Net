@@ -93,7 +93,7 @@ namespace Microshaoft
                                 );
                     }
                 )();
-        
+
         public static bool TryValidateToken
                                 (
                                     string plainTextSecurityKey
@@ -112,7 +112,7 @@ namespace Microshaoft
                                             .Tokens
                                             .Jwt
                                             .JwtSecurityTokenHandler();
-                var jst = ((JwtSecurityToken)tokenHandler.ReadToken(token));
+                var jwtSecurityToken = ((JwtSecurityToken)tokenHandler.ReadToken(token));
                 var signingKey = new Microsoft
                                         .IdentityModel
                                         .Tokens
@@ -127,15 +127,15 @@ namespace Microshaoft
                                                 );
                 var tokenValidationParameters = new TokenValidationParameters()
                 {
-                    ValidIssuer = jst.Issuer,
+                    ValidIssuer = jwtSecurityToken.Issuer,
                     ValidateIssuer = true,
-                    ValidAudiences = jst.Audiences,
+                    ValidAudiences = jwtSecurityToken.Audiences,
                     ValidateAudience = true,
                     IssuerSigningKey = signingKey,
                     ValidateIssuerSigningKey = true,
                     ValidateLifetime = false
                 };
-                
+
                 claimsPrincipal = tokenHandler
                                         .ValidateToken
                                             (
@@ -248,7 +248,7 @@ namespace Microshaoft
                                                 .SecurityAlgorithms
                                                 .Sha256Digest
                                 , string plainTextSecurityKeyEncoding = "UTF-8"
-                                
+
                             )
         {
             bool r = false;
@@ -289,7 +289,7 @@ namespace Microshaoft
                             , out secretTokenString
                             , signingKey
                             , signingCredentials
-                            //, identity
+                         //, identity
                          );
             }
             catch //(Exception)
@@ -322,7 +322,7 @@ namespace Microshaoft
                                 .Tokens
                                 .SigningCredentials
                                                 signingCredentials
-                        //, IIdentity identity = null
+                    //, IIdentity identity = null
                     )
         {
             bool r = false;
@@ -337,18 +337,18 @@ namespace Microshaoft
                                             , true
                                         );
                 var claimsIdentity = new ClaimsIdentity(user, claims);
-                var securityTokenDescriptor = 
+                var securityTokenDescriptor =
                                     new Microsoft
                                             .IdentityModel
                                             .Tokens
                                             .SecurityTokenDescriptor()
-                {
-                    Issuer = issuer,
-                    Audience = audience,
-                    IssuedAt = DateTime.Now,
-                    Subject = claimsIdentity,
-                    SigningCredentials = signingCredentials,
-                };
+                                    {
+                                        Issuer = issuer,
+                                        Audience = audience,
+                                        IssuedAt = DateTime.Now,
+                                        Subject = claimsIdentity,
+                                        SigningCredentials = signingCredentials,
+                                    };
                 var tokenHandler = new System
                                             .IdentityModel
                                             .Tokens
@@ -358,7 +358,7 @@ namespace Microshaoft
                 secretTokenString = tokenHandler.WriteToken(plainToken);
                 r = true;
             }
-            catch (Exception e)
+            catch// (Exception e)
             {
                 //throw;
             }

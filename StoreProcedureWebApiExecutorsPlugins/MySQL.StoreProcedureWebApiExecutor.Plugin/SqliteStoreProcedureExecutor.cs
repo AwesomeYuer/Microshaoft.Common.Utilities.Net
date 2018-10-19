@@ -32,8 +32,8 @@
                     (
                         string connectionString
                         , string storeProcedureName
-                        , JToken parameters
                         , out JToken result
+                        , JToken parameters = null
                         , Func
                             <
                                 IDataReader

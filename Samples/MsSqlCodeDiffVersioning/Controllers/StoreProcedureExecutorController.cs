@@ -1,72 +1,143 @@
 ﻿#if !NETFRAMEWORK4_X && !NETSTANDARD2_0
 namespace Microshaoft.WebApi.Controllers
 {
+    using Microshaoft;
     using Microshaoft.Web;
-    using Microshaoft.WebApi.ModelBinders;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Cors;
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json.Linq;
-    using Microshaoft;
-    using Microshaoft.Web;
-    using System.Linq;
+    using System;
 
     [Route("api/[controller]")]
     [ApiController]
     [EnableCors("AllowAllOrigins")]
+    [Authorize]
     public class StoreProcedureExecutorController
                     : AbstractStoreProceduresExecutorControllerBase
     {
-        /*
-         * http://localhost:5816/api/StoreProcedureExecutor/mssql1/zsp_test?{datetime:"2019-01-01",pBIT:true,pBOOL:1,pTINYINT:1,pSMALLINT:16,pMEDIUMINT:25,pINT:65536,pBIGINT:999999,pFLOAT:9999.99,pDOUBLE:9999.99,pDECIMAL:9999.99,pCHAR:"a",pVARCHAR:"aaaaaaaaaa",pDate:"2018-09-01",pDateTime:"2018-09-01 21:00:10",pTimeStamp:null,pTime:null,pYear:null,udt_vcidt:[{varchar:"aaaa",date:"2018-11-11",int:789},{varchar:"bbbb",date:"2018-11-12",int:123}]}
-         */
         public StoreProcedureExecutorController(IStoreProceduresWebApiService service)
                 : base(service)
         {
         }
 
-
-        [HttpDelete]
-        [HttpGet]
-        [HttpHead]
-        [HttpOptions]
-        [HttpPatch]
-        [HttpPost]
-        [HttpPut]
-        [
-            Route
-                (
-                    "test2/"
-                        + "{storeProcedureName}/"
-                )
-        ]
-        public ActionResult<JToken> ProcessActionRequest11
+        [BearerTokenBasedAuthorizeFilter]
+        public override ActionResult<JToken> ProcessActionRequest
+             (
+                    //[FromRoute]
+                    string routeName
+                , //[ModelBinder(typeof(JTokenModelBinder))]
+                    JToken parameters = null
+                , //[FromRoute]
+                    string resultPathSegment1 = null
+                , //[FromRoute]
+                    string resultPathSegment2 = null
+                , //[FromRoute]
+                    string resultPathSegment3 = null
+                , //[FromRoute]
+                    string resultPathSegment4 = null
+                , //[FromRoute]
+                    string resultPathSegment5 = null
+                , //[FromRoute]
+                    string resultPathSegment6 = null
+            )
+        {
+            return
+                ProcessActionRequest
+                    (
+                        routeName
+                        , parameters
+                    );
+        }
+        private ActionResult<JToken> ProcessActionRequest
                         (
-                            [FromRoute]
-                                string storeProcedureName
-                            , [ModelBinder(typeof(JTokenModelBinder))]
+                            //[FromRoute]
+                            string routeName
+                            ,
+                                //[ModelBinder(typeof(JTokenModelBinder))]
                                 JToken parameters = null
                         )
         {
+            JObject jObject = null;
+
+            if (parameters == null)
+            {
+                jObject = new JObject();
+            }
+            else
+            {
+                jObject = (JObject)parameters;
+            }
+
+            //var jsonObject = ((JObject)parameters);
+            jObject
+                    .Add
+                        (
+                            "UserName"
+                            , HttpContext
+                                .User
+                                .Identity
+                                .Name
+                        );
+
+
+
+            if
+                (
+                    HttpContext
+                        .User
+                        .TryGetClaimTypeJTokenValue
+                            (
+                                "Extension"
+                                , out var claimValue
+                            )
+                )
+            {
+
+                var userID = claimValue["User"]["Ui"].Value<string>();
+                var userDispalyName = claimValue["User"]["Un"].Value<string>();
+                var deptID = claimValue["Dept"]["Di"].Value<string>();
+                var deptName = claimValue["Dept"]["Dn"].Value<string>();
+                var teamID = claimValue["Team"]["Ti"].Value<string>();
+                var teamName = claimValue["Team"]["Tn"].Value<string>();
+                var roles = claimValue["Roles"];//.Value<string>();
+
+                jObject.Add("UserID", userID);
+                jObject.Add("UserDisplayName", userDispalyName);
+                jObject.Add("DeptID", deptID);
+                jObject.Add("DeptName", deptName);
+                jObject.Add("TeamID", teamID);
+                jObject.Add("TeamName", teamName);
+                jObject.Add("Roles", roles);
+
+
+                //jObject
+                //        .Add
+                //            (
+                //                "ExtensionClaims"
+                //                , claimValue
+                //            );
+            }
             JToken result = null;
             (int StatusCode, JToken Result) r =
                     _service
                         .Process
                             (
-                                "mssql2"
-                                , "objects"
-                                , parameters
+                                routeName
+                                , jObject
                                 , (reader, fieldType, fieldName, rowIndex, columnIndex) =>
                                 {
                                     JProperty field = null;
                                     if (fieldType == typeof(string))
                                     {
-                                        if (fieldName.Contains("Json", System.StringComparison.OrdinalIgnoreCase))
+                                        if (fieldName.Contains("Json", StringComparison.OrdinalIgnoreCase))
                                         {
-                                            fieldName = fieldName.Replace("json", "", System.StringComparison.OrdinalIgnoreCase);
+                                            //fieldName = fieldName.Replace("json", "", System.StringComparison.OrdinalIgnoreCase);
+                                            var json = reader.GetString(columnIndex);
                                             field = new JProperty
                                                             (
                                                                 fieldName
-                                                                , JObject.Parse(reader.GetString(columnIndex))
+                                                                , JObject.Parse(json)
                                                             );
                                         }
                                     }
@@ -82,7 +153,7 @@ namespace Microshaoft.WebApi.Controllers
                             (
                                 "Outputs"
                                 , "ResultSets"
-                                , "1"
+                                , "0"
                                 , "Rows"
                             );
             }
@@ -94,53 +165,6 @@ namespace Microshaoft.WebApi.Controllers
             return
                 result;
         }
-        [HttpGet]
-        [
-            Route
-                (
-                    "test/{connectionID}/"
-                    + "{storeProcedureName}"
-                //+ "{resultPathSegment1?}/"
-                //+ "{resultPathSegment2?}/"
-                //+ "{resultPathSegment3?}/"
-                //+ "{resultPathSegment4?}/"
-                //+ "{resultPathSegment5?}/"
-                //+ "{resultPathSegment6?}"
-                )
-        ]
-        public ActionResult<JToken> ProcessActionRequest2
-                            (
-                                [FromRoute]
-                                string connectionID //= "mssql"
-                                , [FromRoute]
-                                    string storeProcedureName
-                                , [ModelBinder(typeof(JTokenModelBinder))]
-                                    JToken parameters = null
-
-                            )
-        {
-            var result = base.ProcessActionRequest(connectionID, storeProcedureName, parameters);
-            var jToken = result.Value;
-            jToken = jToken.GetDescendantByPath("Outputs", "ResultSets", "1", "Rows");
-
-            var r =
-                    from c in jToken
-                        //.SelectMany
-                        //    (
-                        //        i => i["categories"]
-                        //    ).Values<string>()
-                    group c by c
-                    into g
-                    orderby g.Count() descending
-                    select g;
-
-            //new { Category = g.Key, Count = g.Count() };
-
-            return jToken;
-
-
-        }
-
     }
 }
 #endif
