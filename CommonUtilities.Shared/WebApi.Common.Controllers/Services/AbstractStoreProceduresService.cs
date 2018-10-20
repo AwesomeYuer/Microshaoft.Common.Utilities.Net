@@ -2,8 +2,6 @@
 namespace Microshaoft.Web
 {
     using Microshaoft;
-    //using Microshaoft.Linq.Dynamic;
-    using Microshaoft.WebApi.Controllers;
     using Microsoft.Extensions.Configuration;
     using Newtonsoft.Json.Linq;
     using System;
@@ -14,11 +12,13 @@ namespace Microshaoft.Web
     using System.Reflection;
     public interface IStoreProceduresWebApiService
     {
-        (int StatusCode, JToken Result)
+        (
+            int StatusCode
+            , JToken Result
+        )
                 Process
                      (
-                        string connectionID
-                        , string storeProcedureName
+                        string routeName
                         , JToken parameters = null
                         , Func
                                 <
@@ -37,180 +37,46 @@ namespace Microshaoft.Web
                 AbstractStoreProceduresService
                                 : IStoreProceduresWebApiService
     {
-        private static object _locker = new object();
-        public AbstractStoreProceduresService()
+        private class StoreProcedureComparer
+                        : IEqualityComparer<IStoreProcedureExecutable>
         {
+            public bool Equals
+                            (
+                                IStoreProcedureExecutable x
+                                , IStoreProcedureExecutable y
+                            )
+            {
+                return
+                    (x.DataBaseType == y.DataBaseType);
+            }
+            public int GetHashCode(IStoreProcedureExecutable obj)
+            {
+                return -1;
+            }
+        }
+        private static object _locker = new object();
+        protected readonly IConfiguration _configuration;
+
+        public AbstractStoreProceduresService(IConfiguration configuration)
+        {
+            _configuration = configuration;
             Initialize();
         }
         //for override from derived class
         public virtual void Initialize()
         {
-            LoadDataBasesConnectionsInfo("dbConnections.json");
-            LoadDynamicExecutors("dynamicLoadExecutorsPaths.json");
+            _cachedParametersDefinitionExpiredInSeconds =
+                _configuration
+                        .GetValue<int>("CachedParametersDefinitionExpiredInSeconds");
+            _needAutoRefreshExecutedTimeForSlideExpire =
+                _configuration
+                        .GetValue<bool>("NeedAutoRefreshExecutedTimeForSlideExpire");
+            LoadDynamicExecutors();
         }
-        protected IDictionary<string, DataBaseConnectionInfo>
-                        GetDataBasesConnectionsInfoProcess
-                                    (
-                                        string dbConnectionsJsonFile = "dbConnections.json"
-                                    )
+        protected virtual string[] GetDynamicLoadExecutorsPathsProcess()
         {
-            var configurationBuilder =
-                        new ConfigurationBuilder()
-                                .AddJsonFile(dbConnectionsJsonFile);
-            var configuration = configurationBuilder.Build();
             var result =
-                    configuration
-                        .GetSection("Connections")
-                        .AsEnumerable()
-                        .Where
-                            (
-                                (x) =>
-                                {
-                                    return
-                                        !x
-                                            .Value
-                                            .IsNullOrEmptyOrWhiteSpace();
-                                }
-                            )
-                        .GroupBy
-                            (
-                                (x) =>
-                                {
-                                    var key = x.Key;
-                                    var i = key.FindIndex(":", 2);
-                                    var rr = key.Substring(0, i);
-                                    return rr;
-                                }
-                            )
-                        .ToDictionary
-                            (
-                                (x) =>
-                                {
-                                    var r = configuration[$"{x.Key}ConnectionID"];
-                                    return r;
-                                }
-                                , (x) =>
-                                {
-                                    var allowExecuteWhiteList
-                                        = configuration
-                                            .GetSection($"{x.Key}WhiteList")
-                                            .AsEnumerable()
-                                            .Where
-                                                (
-                                                    (xx) =>
-                                                    {
-                                                        var v = xx.Value;
-                                                        var rr = !v.IsNullOrEmptyOrWhiteSpace();
-                                                        return rr;
-                                                    }
-                                                )
-                                            .GroupBy
-                                                (
-                                                    (xx) =>
-                                                    {
-                                                        var key = xx.Key;
-                                                        var i = key.FindIndex(":", 4);
-                                                        var rr = key.Substring(0, i);
-                                                        return rr;
-                                                    }
-                                                )
-                                            .ToDictionary
-                                                (
-                                                    (xx) =>
-                                                    {
-                                                        var key = configuration[$"{xx.Key}StoreProcedureAlias"];
-                                                        var storeProcedureName = configuration[$"{xx.Key}StoreProcedureName"];
-                                                        if (key.IsNullOrEmptyOrWhiteSpace())
-                                                        {
-                                                            key = storeProcedureName;
-                                                        }
-                                                        return key;
-                                                    }
-                                                    ,
-                                                    (xx) =>
-                                                    {
-                                                        var storeProcedureName = configuration[$"{xx.Key}StoreProcedureName"];
-                                                        var s = configuration[$"{xx.Key}AllowedHttpMethods"];
-                                                        var allowedHttpMethods =
-                                                                    Enum
-                                                                        .Parse<HttpMethodsFlags>
-                                                                            (
-                                                                                s
-                                                                                , true
-                                                                            );
-                                                        var rr = new StoreProcedureInfo()
-                                                        {
-                                                            Alias = xx.Key
-                                                            ,
-                                                            Name = storeProcedureName
-                                                            ,
-                                                            AllowedHttpMethods = allowedHttpMethods
-                                                        };
-                                                        return
-                                                            rr;
-                                                    }
-                                                    ,
-                                                    StringComparer
-                                                            .OrdinalIgnoreCase
-                                                );
-                                    //var connectionTimeoutInSeconds = 120;
-                                    //int.TryParse
-                                    //        (
-                                    //            configuration[$"{x.Key}ConnectionTimeoutInSeconds"]
-                                    //            , out connectionTimeoutInSeconds
-                                    //        );
-                                    var r = new DataBaseConnectionInfo()
-                                    {
-                                        ConnectionID = configuration[$"{x.Key}ConnectionID"]
-                                        ,
-                                        ConnectionString = configuration[$"{x.Key}ConnectionString"]
-                                        //, ConnectionTimeoutInSeconds = connectionTimeoutInSeconds
-                                        ,
-                                        DataBaseType = Enum.Parse<DataBasesType>(configuration[$"{x.Key}DataBaseType"], true)
-                                        ,
-                                        AllowExecuteWhiteList = allowExecuteWhiteList
-                                    };
-                                    return r;
-                                }
-                                , StringComparer
-                                        .OrdinalIgnoreCase
-                            );
-            return result;
-        }
-        protected virtual void LoadDataBasesConnectionsInfo
-                                    (
-                                        string dbConnectionsJsonFile
-                                                    = "dbConnections.json"
-                                    )
-        {
-            var connections = GetDataBasesConnectionsInfoProcess
-                                    (dbConnectionsJsonFile);
-            _locker
-                .LockIf
-                    (
-                        () =>
-                        {
-                            var r = (_indexedConnections == null);
-                            return r;
-                        }
-                        , () =>
-                        {
-                            _indexedConnections = connections;
-                        }
-                    );
-        }
-        protected virtual string[] GetDynamicLoadExecutorsPathsProcess
-                    (
-                        string dynamicLoadExecutorsPathsJsonFile
-                                    = "dynamicLoadExecutorsPaths.json"
-                    )
-        {
-            var configurationBuilder =
-                        new ConfigurationBuilder()
-                                .AddJsonFile(dynamicLoadExecutorsPathsJsonFile);
-            var configuration = configurationBuilder.Build();
-            var result =
-                    configuration
+                    _configuration
                         .GetSection("DynamicLoadExecutorsPaths")
                         .AsEnumerable()
                         .Select
@@ -224,23 +90,7 @@ namespace Microshaoft.Web
                         .ToArray();
             return result;
         }
-        private class StoreProcedureComparer : IEqualityComparer<IStoreProcedureExecutable>
-        {
-            public bool Equals
-                            (
-                                IStoreProcedureExecutable x
-                                , IStoreProcedureExecutable y
-                            )
-            {
-                return
-                    (x.DataBaseType == y.DataBaseType);
-            }
 
-            public int GetHashCode(IStoreProcedureExecutable obj)
-            {
-                return -1;
-            }
-        }
         protected virtual void LoadDynamicExecutors
                         (
                             string dynamicLoadExecutorsPathsJsonFile = "dynamicLoadExecutorsPaths.json"
@@ -256,7 +106,7 @@ namespace Microshaoft.Web
             var executors =
                     GetDynamicLoadExecutorsPathsProcess
                             (
-                                dynamicLoadExecutorsPathsJsonFile
+                            //dynamicLoadExecutorsPathsJsonFile
                             )
                         .Select
                             (
@@ -353,31 +203,28 @@ namespace Microshaoft.Web
                         }
                     );
         }
-        protected abstract int
-                    CachedParametersDefinitionExpiredInSeconds
+
+        private int _cachedParametersDefinitionExpiredInSeconds = 3600;
+        protected virtual int CachedParametersDefinitionExpiredInSeconds
         {
-            get;
-            //set;
-        }
-        protected abstract bool
-                    NeedAutoRefreshExecutedTimeForSlideExpire
-        {
-            get;
-            //set;
+            get => _cachedParametersDefinitionExpiredInSeconds;
+            private set => _cachedParametersDefinitionExpiredInSeconds = value;
         }
 
-        private IDictionary<string, DataBaseConnectionInfo>
-                    _indexedConnections;
 
+        private bool _needAutoRefreshExecutedTimeForSlideExpire = true;
+        protected virtual bool NeedAutoRefreshExecutedTimeForSlideExpire
+        {
+            get => _needAutoRefreshExecutedTimeForSlideExpire;
+            private set => _needAutoRefreshExecutedTimeForSlideExpire = value;
+        }
         private IDictionary<string, IStoreProcedureExecutable>
                     _indexedExecutors;
-
         public
             (int StatusCode, JToken Result)
                         Process
                             (
-                                string connectionID //= "mssql"
-                                , string storeProcedureName
+                                string routeName
                                 , JToken parameters = null
                                 , Func
                                     <
@@ -392,114 +239,51 @@ namespace Microshaoft.Web
                                 , int commandTimeoutInSeconds = 101
                             )
         {
-            var beginTime = DateTime.Now;
+            var r = false;
             JToken result = null;
-            var r = false;
-            int statusCode = 200;
-            DataBaseConnectionInfo connectionInfo = null;
-            r = _indexedConnections
-                            .TryGetValue
-                                (
-                                    connectionID
-                                    , out connectionInfo
-                                );
-            if (r)
-            {
-                r = Process
+            var statusCode = 500;
+            var r1 = TryGetStoreProcedureInfo
                         (
-                            connectionInfo
-                            , storeProcedureName
+                            routeName
                             , httpMethod
-                            , parameters
-                            , out result
-                            , onReadRowColumnProcessFunc
-                            , commandTimeoutInSeconds
+
                         );
-            }
-            if (!r)
+
+            if (r1.Success && r1.StatusCode == 200)
             {
-                statusCode = 403;
-                result = null;
-                return (statusCode, result);
-            }
-            result["BeginTime"] = beginTime;
-            var endTime = DateTime.Now;
-            result["EndTime"] = endTime;
-            result["DurationInMilliseconds"]
-                    = DateTimeHelper
-                            .MillisecondsDiff
-                                    (
-                                        beginTime
-                                        , endTime
-                                    );
-            return (statusCode, result);
-        }
-        private bool Process
-            (
-                DataBaseConnectionInfo connectionInfo
-                , string storeProcedureAliasOrName
-                , string httpMethod
-                , JToken parameters
-                , out JToken result
-                , Func
-                    <
-                        IDataReader
-                        , Type        // fieldType
-                        , string    // fieldName
-                        , int       // row index
-                        , int       // column index
-                        , JProperty   //  JObject Field 对象
-                    > onReadRowColumnProcessFunc = null
-                , int commandTimeoutInSeconds = 90
-            )
-        {
-            var r = false;
-            result = null;
-            var allowExecuteWhiteList = connectionInfo.AllowExecuteWhiteList;
-            var storeProcedureName = string.Empty;
-            if (allowExecuteWhiteList != null)
-            {
-                if (allowExecuteWhiteList.Count > 0)
-                {
-                    r = CheckList
+                var r2 = Process
                             (
-                                allowExecuteWhiteList
-                                , storeProcedureAliasOrName
-                                , httpMethod
-                                , out StoreProcedureInfo storeProcedureInfo
+                                r1.ConnectionString
+                                , r1.DataBaseType
+                                , r1.StoreProcedureName
+                                , out result
+                                , parameters
+                                , onReadRowColumnProcessFunc
+                                , commandTimeoutInSeconds
                             );
-                    if (r)
-                    {
-                        storeProcedureName = storeProcedureInfo.Name;
-                    }
+                if (r2)
+                {
+                    statusCode = 200;
                 }
             }
             else
             {
-                r = true;
+                statusCode = r1.StatusCode;
             }
-            if (r)
-            {
-                r = Process
-                        (
-                            connectionInfo.ConnectionString
-                            , connectionInfo.DataBaseType.ToString()
-                            , storeProcedureName
-                            , parameters
-                            , out result
-                            , onReadRowColumnProcessFunc
-                            , commandTimeoutInSeconds
-                        );
-            }
-            return r;
+            return
+                (
+                    statusCode
+                    , result
+                );
         }
-        private bool Process
+        protected virtual bool
+                Process
                         (
                             string connectionString
                             , string dataBaseType
                             , string storeProcedureName
-                            , JToken parameters
                             , out JToken result
+                            , JToken parameters = null
                             , Func
                                 <
                                     IDataReader
@@ -514,6 +298,7 @@ namespace Microshaoft.Web
         {
             var r = false;
             result = null;
+            var beginTime = DateTime.Now;
             IStoreProcedureExecutable executor = null;
             r = _indexedExecutors
                         .TryGetValue
@@ -528,82 +313,197 @@ namespace Microshaoft.Web
                             (
                                 connectionString
                                 , storeProcedureName
-                                , parameters
                                 , out result
+                                , parameters
                                 , onReadRowColumnProcessFunc
                                 , commandTimeoutInSeconds
                             );
             }
+            if (!r)
+            {
+                result = null;
+                return r;
+            }
+            result["BeginTime"] = beginTime;
+            var endTime = DateTime.Now;
+            result["EndTime"] = endTime;
+            result["DurationInMilliseconds"]
+                    = DateTimeHelper
+                            .MillisecondsDiff
+                                    (
+                                        beginTime
+                                        , endTime
+                                    );
             return r;
         }
-        private bool Process
+
+        protected virtual
+            (
+                bool Success
+                , int StatusCode
+                , string ConnectionString
+                , string DataBaseType
+                , string StoreProcedureName
+            )
+            TryGetStoreProcedureInfo
                         (
-                            string connectionString
-                            , string dataBaseType
-                            , string storeProcedureName
-                            , string parameters
-                            , out JToken result
-                            , Func
-                                <
-                                    IDataReader
-                                    , Type        // fieldType
-                                    , string    // fieldName
-                                    , int       // row index
-                                    , int       // column index
-                                    , JProperty   //  JObject Field 对象
-                                > onReadRowColumnProcessFunc = null
-                            , int commandTimeoutInSeconds = 90
+                            string routeName
+                            , string httpMethod
                         )
         {
-            var j = JObject.Parse(parameters);
-            var r = Process
-                        (
-                            connectionString
-                            , dataBaseType
-                            , storeProcedureName
-                            , j
-                            , out result
-                            , onReadRowColumnProcessFunc
-                            , commandTimeoutInSeconds
-                        );
-            return r;
-        }
-        private bool CheckList
-                (
-                    IDictionary
-                        <string, StoreProcedureInfo>
-                            allowExecuteWhiteList
-                    , string storeProcedureAliasOrName
-                    , string httpMethod
-                    , out StoreProcedureInfo storeProcedureInfo
-                )
-        {
-            var r = false;
-            HttpMethodsFlags httpMethodsFlag;
-            storeProcedureInfo = null;
-            r = Enum
-                    .TryParse<HttpMethodsFlags>
-                        (
-                            httpMethod
-                            , true
-                            , out httpMethodsFlag
-                        );
-            if (r)
+            var success = false;
+            var statusCode = 500;
+            var connectionString = string.Empty;
+            var storeProcedureName = string.Empty;
+            var dataBaseType = string.Empty;
+            (
+                bool Result
+                , int StatusCode
+                , string ConnectionString
+                , string DataBaseType
+                , string StoreProcedureName
+            )
+            Result()
             {
-                r = allowExecuteWhiteList
-                        .TryGetValue
-                            (
-                                storeProcedureAliasOrName
-                                , out storeProcedureInfo
-                            );
-                if (r)
-                {
-                    r = storeProcedureInfo
-                            .AllowedHttpMethods
-                            .HasFlag(httpMethodsFlag);
-                }
+                return
+                    (
+                        success
+                        , statusCode
+                        , connectionString
+                        , dataBaseType
+                        , storeProcedureName
+                    );
             }
-            return r;
+            IConfigurationSection configurationSection = null;
+            try
+            {
+                configurationSection =
+                    _configuration
+                                .GetSection("Routes")
+                                //Ignore Case
+                                .GetChildren()
+                                .First
+                                    (
+                                        (x) =>
+                                        {
+                                            return
+                                                (
+                                                    string
+                                                        .Compare
+                                                            (
+                                                                x.Key
+                                                                , routeName
+                                                                , true
+                                                            )
+                                                    ==
+                                                    0
+                                                );
+                                        }
+                                    );
+                success = true;
+            }
+            catch// (Exception)
+            {
+                success = false;
+                statusCode = 404;
+            }
+            if (!success)
+            {
+                return Result();
+            }
+
+            try
+            {
+                configurationSection =
+                        configurationSection
+                            .GetChildren()
+                            .First
+                                (
+                                    (x) =>
+                                    {
+                                        if
+                                            (
+                                                !httpMethod
+                                                        .StartsWith
+                                                            (
+                                                                "http"
+                                                                , StringComparison
+                                                                    .OrdinalIgnoreCase
+                                                            )
+                                            )
+                                        {
+                                            httpMethod = "http" + httpMethod;
+                                        }
+                                        return
+                                            (
+                                                string
+                                                    .Compare
+                                                        (
+                                                            x.Key
+                                                            , httpMethod
+                                                            , true
+                                                        )
+                                                ==
+                                                0
+                                            );
+                                    }
+                                );
+                success = true;
+            }
+            catch// (Exception)
+            {
+                success = false;
+                statusCode = 403;
+            }
+            if (!success)
+            {
+                return Result();
+            }
+            var connectionID = configurationSection
+                                    .GetValue<string>("ConnectionID");
+            success = !connectionID.IsNullOrEmptyOrWhiteSpace();
+            if (!success)
+            {
+                statusCode = 500;
+                return Result();
+            }
+            connectionString = _configuration
+                                    .GetSection("Connections")
+                                    .GetSection(connectionID)
+                                    .GetValue<string>("ConnectionString");
+            success = !connectionString.IsNullOrEmptyOrWhiteSpace();
+            if (!success)
+            {
+                statusCode = 500;
+                return Result();
+            }
+            dataBaseType = _configuration
+                                    .GetSection("Connections")
+                                    .GetSection(connectionID)
+                                    .GetValue<string>("DataBaseType");
+            success = !dataBaseType.IsNullOrEmptyOrWhiteSpace();
+            if (!success)
+            {
+                statusCode = 500;
+                return Result();
+            }
+            success = !connectionString.IsNullOrEmptyOrWhiteSpace();
+            if (!success)
+            {
+                statusCode = 500;
+                return Result();
+            }
+            storeProcedureName = configurationSection
+                                        .GetValue<string>("StoreProcedureName");
+            success = !storeProcedureName.IsNullOrEmptyOrWhiteSpace();
+            if (!success)
+            {
+                statusCode = 500;
+                return Result();
+            }
+            success = true;
+            statusCode = 200;
+            return Result();
         }
     }
 }

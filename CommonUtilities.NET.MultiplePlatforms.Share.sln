@@ -222,6 +222,8 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MsSqlCodeDiffVersioning.WebApplication", "Samples\MsSqlCodeDiffVersioning\MsSqlCodeDiffVersioning.WebApplication.csproj", "{4DB1AAE0-F1F9-4C69-825C-46EB0D6AEC45}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jwt.Authorization.Center", "Samples\JwtAuthorizationCenter\Jwt.Authorization.Center.csproj", "{32D6ABEB-661E-4DCB-AD05-C6C394EBB89E}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		CommonUtilities.Shared\CommonUtilities.Lite.Shared.projitems*{1b65919e-10ef-4fce-9fec-de547a62fc15}*SharedItemsImports = 4
@@ -1145,6 +1147,22 @@ Global
 		{4DB1AAE0-F1F9-4C69-825C-46EB0D6AEC45}.Release|x64.Build.0 = Release|Any CPU
 		{4DB1AAE0-F1F9-4C69-825C-46EB0D6AEC45}.Release|x86.ActiveCfg = Release|Any CPU
 		{4DB1AAE0-F1F9-4C69-825C-46EB0D6AEC45}.Release|x86.Build.0 = Release|Any CPU
+		{32D6ABEB-661E-4DCB-AD05-C6C394EBB89E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32D6ABEB-661E-4DCB-AD05-C6C394EBB89E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32D6ABEB-661E-4DCB-AD05-C6C394EBB89E}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{32D6ABEB-661E-4DCB-AD05-C6C394EBB89E}.Debug|ARM.Build.0 = Debug|Any CPU
+		{32D6ABEB-661E-4DCB-AD05-C6C394EBB89E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{32D6ABEB-661E-4DCB-AD05-C6C394EBB89E}.Debug|x64.Build.0 = Debug|Any CPU
+		{32D6ABEB-661E-4DCB-AD05-C6C394EBB89E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{32D6ABEB-661E-4DCB-AD05-C6C394EBB89E}.Debug|x86.Build.0 = Debug|Any CPU
+		{32D6ABEB-661E-4DCB-AD05-C6C394EBB89E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32D6ABEB-661E-4DCB-AD05-C6C394EBB89E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32D6ABEB-661E-4DCB-AD05-C6C394EBB89E}.Release|ARM.ActiveCfg = Release|Any CPU
+		{32D6ABEB-661E-4DCB-AD05-C6C394EBB89E}.Release|ARM.Build.0 = Release|Any CPU
+		{32D6ABEB-661E-4DCB-AD05-C6C394EBB89E}.Release|x64.ActiveCfg = Release|Any CPU
+		{32D6ABEB-661E-4DCB-AD05-C6C394EBB89E}.Release|x64.Build.0 = Release|Any CPU
+		{32D6ABEB-661E-4DCB-AD05-C6C394EBB89E}.Release|x86.ActiveCfg = Release|Any CPU
+		{32D6ABEB-661E-4DCB-AD05-C6C394EBB89E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1249,6 +1267,7 @@ Global
 		{C758CD3D-B9F8-4420-AC80-411E288A23FF} = {CAD60DFA-15EF-4DE0-9EEC-1BFD6B8D955F}
 		{2695F7A3-DC58-478F-8C0A-2ACB52192C5C} = {87F5231C-EA20-4D89-B038-2405D3BABCD8}
 		{4DB1AAE0-F1F9-4C69-825C-46EB0D6AEC45} = {38FF2F59-C5A3-4996-B35B-10F276D73856}
+		{32D6ABEB-661E-4DCB-AD05-C6C394EBB89E} = {38FF2F59-C5A3-4996-B35B-10F276D73856}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ABDE4EA1-B6A3-41C1-AC23-2CA7A04C03AB}

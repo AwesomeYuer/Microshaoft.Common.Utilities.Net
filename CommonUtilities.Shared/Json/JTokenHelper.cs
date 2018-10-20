@@ -16,7 +16,7 @@
                 int i = -1;
                 if (int.TryParse(path, out i))
                 {
-                    i--;
+                    //i--;
                     jsonPath += string.Format("[{0}]", i);
                 }
                 else
@@ -43,7 +43,7 @@
             int iKey = -1;
             if (int.TryParse(key, out iKey))
             {
-                oKey = iKey - 1;
+                oKey = iKey;// - 1;
             }
             target = target[oKey];
             return target;

@@ -7,6 +7,7 @@ namespace Microshaoft.WebApi.Controllers
     using System.Linq;
     public enum DataBasesType
     {
+        UnKnown ,
         MsSQL ,
         MySQL ,
         NpgSQL ,
@@ -29,6 +30,11 @@ namespace Microshaoft.WebApi.Controllers
                     <string, StoreProcedureInfo>
                             AllowExecuteWhiteList;
         public int ConnectionTimeoutInSeconds = 120;
+
+
+        //public int CachedParametersDefinitionExpiredInSeconds = 3600;
+        //public bool NeedAutoRefreshExecutedTimeForSlideExpire = true;
+
     }
     public abstract partial class 
             AbstractStoreProceduresExecutorControllerBase 

@@ -1,17 +1,24 @@
-﻿#if !XAMARIN
+﻿#if NETCOREAPP2_X
 namespace Microshaoft
 {
+    using Microshaoft.WebApi;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Primitives;
     using Microsoft.IdentityModel.Tokens;
     using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Generic;
     using System.IdentityModel.Tokens.Jwt;
+    using System.IO;
     //using Microsoft.IdentityModel.Tokens;
     using System.Linq;
     using System.Reflection;
     using System.Security.Claims;
     using System.Security.Principal;
     using System.Text;
+    using System.Web;
+
     //#if NETFRAMEWORK4_X
     //    using System.Web.Http.Controllers;
     //#endif
@@ -93,7 +100,7 @@ namespace Microshaoft
                                 );
                     }
                 )();
-        
+
         public static bool TryValidateToken
                                 (
                                     string plainTextSecurityKey
@@ -112,7 +119,7 @@ namespace Microshaoft
                                             .Tokens
                                             .Jwt
                                             .JwtSecurityTokenHandler();
-                var jst = ((JwtSecurityToken)tokenHandler.ReadToken(token));
+                var jwtSecurityToken = ((JwtSecurityToken)tokenHandler.ReadToken(token));
                 var signingKey = new Microsoft
                                         .IdentityModel
                                         .Tokens
@@ -127,15 +134,15 @@ namespace Microshaoft
                                                 );
                 var tokenValidationParameters = new TokenValidationParameters()
                 {
-                    ValidIssuer = jst.Issuer,
+                    ValidIssuer = jwtSecurityToken.Issuer,
                     ValidateIssuer = true,
-                    ValidAudiences = jst.Audiences,
+                    ValidAudiences = jwtSecurityToken.Audiences,
                     ValidateAudience = true,
                     IssuerSigningKey = signingKey,
                     ValidateIssuerSigningKey = true,
                     ValidateLifetime = false
                 };
-                
+
                 claimsPrincipal = tokenHandler
                                         .ValidateToken
                                             (
@@ -248,7 +255,7 @@ namespace Microshaoft
                                                 .SecurityAlgorithms
                                                 .Sha256Digest
                                 , string plainTextSecurityKeyEncoding = "UTF-8"
-                                
+
                             )
         {
             bool r = false;
@@ -289,7 +296,7 @@ namespace Microshaoft
                             , out secretTokenString
                             , signingKey
                             , signingCredentials
-                            //, identity
+                         //, identity
                          );
             }
             catch //(Exception)
@@ -300,7 +307,6 @@ namespace Microshaoft
             return
                    r;
         }
-
         public static bool TryIssueToken
                     (
                         string issuer
@@ -322,7 +328,7 @@ namespace Microshaoft
                                 .Tokens
                                 .SigningCredentials
                                                 signingCredentials
-                        //, IIdentity identity = null
+                    //, IIdentity identity = null
                     )
         {
             bool r = false;
@@ -337,18 +343,18 @@ namespace Microshaoft
                                             , true
                                         );
                 var claimsIdentity = new ClaimsIdentity(user, claims);
-                var securityTokenDescriptor = 
+                var securityTokenDescriptor =
                                     new Microsoft
                                             .IdentityModel
                                             .Tokens
                                             .SecurityTokenDescriptor()
-                {
-                    Issuer = issuer,
-                    Audience = audience,
-                    IssuedAt = DateTime.Now,
-                    Subject = claimsIdentity,
-                    SigningCredentials = signingCredentials,
-                };
+                                    {
+                                        Issuer = issuer,
+                                        Audience = audience,
+                                        IssuedAt = DateTime.Now,
+                                        Subject = claimsIdentity,
+                                        SigningCredentials = signingCredentials,
+                                    };
                 var tokenHandler = new System
                                             .IdentityModel
                                             .Tokens
@@ -358,13 +364,166 @@ namespace Microshaoft
                 secretTokenString = tokenHandler.WriteToken(plainToken);
                 r = true;
             }
-            catch (Exception e)
+            catch// (Exception e)
             {
                 //throw;
             }
             return
                    r;
         }
+
+        public static bool TryParseJTokenParameters
+                            (
+                                HttpRequest request
+                                , out JToken parameters
+                                , out string secretJwtToken
+                                , Action<JToken> onFormProcessAction = null
+                                , string jwtTokenName = "xJwtToken"
+                            )
+        {
+            var r = false;
+            parameters = null;
+            secretJwtToken = string.Empty;
+
+            JToken jToken = null;
+            async void RequestFormBodyProcess()
+            {
+                if (request.HasFormContentType)
+                {
+                    onFormProcessAction?.Invoke(jToken);
+                }
+                else
+                {
+                    //if (request.IsJsonRequest())
+                    {
+                        using (var streamReader = new StreamReader(request.Body))
+                        {
+                            var task = streamReader.ReadToEndAsync();
+                            await task;
+                            var json = task.Result;
+                            if (!json.IsNullOrEmptyOrWhiteSpace())
+                            {
+                                jToken = JToken.Parse(json);
+                            }
+                        }
+                    }
+                }
+            }
+            void RequestQueryStringHeaderProcess()
+            {
+                var qs = request.QueryString.Value;
+                if (qs.IsNullOrEmptyOrWhiteSpace())
+                {
+                    return;
+                }
+                qs = HttpUtility
+                            .UrlDecode
+                                (
+                                    qs
+                                );
+                if (qs.IsNullOrEmptyOrWhiteSpace())
+                {
+                    return;
+                }
+                qs = qs.TrimStart('?');
+                if (qs.IsNullOrEmptyOrWhiteSpace())
+                {
+                    return;
+                }
+                var isJson = false;
+                try
+                {
+                    jToken = JToken.Parse(qs);
+                    isJson = jToken is JObject;
+                }
+                catch
+                {
+
+                }
+                if (!isJson)
+                {
+                    jToken = request.Query.ToJToken();
+                }
+            }
+            // 取 jwtToken 优先级顺序：Header → QueryString → Body
+            StringValues jwtToken = string.Empty;
+            var needExtractJwtToken = !jwtTokenName.IsNullOrEmptyOrWhiteSpace();
+            void ExtractJwtToken()
+            {
+                if (needExtractJwtToken)
+                {
+                    if (jToken != null)
+                    {
+                        if (StringValues.IsNullOrEmpty(jwtToken))
+                        {
+                            var j = jToken[jwtTokenName];
+                            if (j != null)
+                            {
+                                jwtToken = j.Value<string>();
+                            }
+                        }
+                    }
+                }
+            }
+            if (needExtractJwtToken)
+            {
+                request
+                    .Headers
+                    .TryGetValue
+                        (
+                           jwtTokenName
+                           , out jwtToken
+                        );
+            }
+            RequestQueryStringHeaderProcess();
+            ExtractJwtToken();
+            if
+                (
+                    string.Compare(request.Method, "post", true) == 0
+                )
+            {
+                RequestFormBodyProcess();
+                ExtractJwtToken();
+                //if (jToken == null)
+                //{
+                //    RequestHeaderProcess();
+                //}
+            }
+            parameters = jToken;
+            secretJwtToken = jwtToken;
+            r = true;
+            return r;
+        }
+        
+
     }
+
+    public static partial class HttpRequestExtensionsManager
+    {
+        public static bool TryParseJTokenParameters
+                            (
+                                this HttpRequest request
+                                , out JToken parameters
+                                , out string secretJwtToken
+                                , Action<JToken> onFormProcessAction = null
+                                , string jwtTokenName = "xJwtToken"
+                            )
+        {
+            return
+                JwtTokenHelper
+                    .TryParseJTokenParameters
+                        (
+                            request
+                            , out parameters
+                            , out secretJwtToken
+                            , onFormProcessAction
+                            , jwtTokenName
+                        );
+
+        }
+
+
+    }
+
 }
 #endif

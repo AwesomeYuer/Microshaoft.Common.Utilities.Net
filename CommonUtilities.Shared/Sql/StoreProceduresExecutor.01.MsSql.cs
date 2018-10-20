@@ -119,10 +119,10 @@
                                         (
                                             (short)
                                                 (
-                                                    (int) o
+                                                    (int)o
                                                 )
                                         )
-                                        //& 255
+                                    //& 255
                                     )
                             );
                 }
@@ -217,8 +217,10 @@ from
                         SqlCommand command = new SqlCommand()
                         {
                             CommandText = commandText
-                            , CommandType = CommandType.Text
-                            , Connection = connection
+                            ,
+                            CommandType = CommandType.Text
+                            ,
+                            Connection = connection
                         }
                     )
                 {
@@ -521,7 +523,7 @@ from
                     var dataTable = parameterValue as DataTable;
                     if (dataTable != null)
                     {
-                        var jArray = (JArray) jValue;
+                        var jArray = (JArray)jValue;
                         var columns = dataTable.Columns;
                         var rows = dataTable.Rows;
                         foreach (var entry in jArray)
@@ -530,7 +532,132 @@ from
                             foreach (DataColumn column in columns)
                             {
                                 var columnName = column.ColumnName;
-                                row[columnName] = entry[columnName];
+                                var jToken = entry[columnName];
+                                //var jValueString = jToken.Value<string>();
+
+                                if
+                                    (
+                                        column.DataType == typeof(string)
+                                        ||
+                                        column.DataType == typeof(Guid)
+                                        ||
+                                        column.DataType == typeof(DateTime)
+                                    )
+                                {
+                                    var jValueString = jToken.Value<string>();
+
+                                    if (column.DataType == typeof(string))
+                                    {
+                                        row[columnName] = jToken.Value<string>();
+                                    }
+                                    else if (column.DataType == typeof(Guid))
+                                    {
+                                        row[columnName] = Guid.Parse(jValueString);
+                                    }
+                                    else if (column.DataType == typeof(DateTime))
+                                    {
+                                        row[columnName] = DateTime.Parse(jValueString);
+                                    }
+                                }
+                                else if
+                                    (
+                                        column.DataType == typeof(short)
+                                        ||
+                                        column.DataType == typeof(int)
+                                        ||
+                                        column.DataType == typeof(long)
+                                        ||
+                                        column.DataType == typeof(double)
+                                        ||
+                                        column.DataType == typeof(float)
+                                        ||
+                                        column.DataType == typeof(bool)
+                                        ||
+                                        column.DataType == typeof(decimal)
+                                    )
+                                {
+                                    if (column.DataType == typeof(short))
+                                    {
+                                        row[columnName] = jToken.Value<short>();
+                                    }
+                                    else if (column.DataType == typeof(int))
+                                    {
+                                        row[columnName] = jToken.Value<int>();
+                                    }
+                                    else if (column.DataType == typeof(long))
+                                    {
+                                        row[columnName] = jToken.Value<long>();
+                                    }
+                                    else if (column.DataType == typeof(double))
+                                    {
+                                        row[columnName] = jToken.Value<double>();
+                                    }
+                                    else if (column.DataType == typeof(float))
+                                    {
+                                        row[columnName] = jToken.Value<float>();
+                                    }
+                                    else if (column.DataType == typeof(bool))
+                                    {
+                                        row[columnName] = jToken.Value<bool>();
+                                    }
+                                    else if (column.DataType == typeof(decimal))
+                                    {
+                                        row[columnName] = jToken.Value<decimal>();
+                                    }
+                                }
+                                else
+                                {
+                                    row[columnName] = null;
+                                }
+
+
+
+                                //if (column.DataType == typeof(string))
+                                //{
+                                //    row[columnName] = jToken.Value<string>();
+                                //}
+                                //else if (column.DataType == typeof(Guid))
+                                //{
+                                //    row[columnName] = jToken.Value<Guid>();
+                                //}
+                                //else if (column.DataType == typeof(DateTime))
+                                //{
+                                //    row[columnName] = jToken.Value<DateTime>();
+                                //}
+                                //else if (column.DataType == typeof(short))
+                                //{
+                                //    row[columnName] = jToken.Value<short>();
+                                //}
+                                //else if (column.DataType == typeof(int))
+                                //{
+                                //    row[columnName] = jToken.Value<int>();
+                                //}
+                                //else if (column.DataType == typeof(long))
+                                //{
+                                //    row[columnName] = jToken.Value<long>();
+                                //}
+                                //else if (column.DataType == typeof(double))
+                                //{
+                                //    row[columnName] = jToken.Value<double>();
+                                //}
+                                //else if (column.DataType == typeof(float))
+                                //{
+                                //    row[columnName] = jToken.Value<float>();
+                                //}
+                                //else if (column.DataType == typeof(bool))
+                                //{
+                                //    row[columnName] = jToken.Value<bool>();
+                                //}
+                                //else if (column.DataType == typeof(decimal))
+                                //{
+                                //    row[columnName] = jToken.Value<decimal>();
+                                //}
+                                //else
+                                //{
+                                //    row[columnName] = null;
+                                //}
+
+                                //row[columnName] = entry[columnName];
                             }
                             rows.Add(row);
                         }

@@ -264,9 +264,9 @@ namespace Microshaoft
                             )
         {
             JProperty r = null;
+            JValue fieldValue = null;
             if (!dataReader.IsDBNull(i))
             {
-                JValue fieldValue = null;
                 if
                     (
                         fieldType == typeof(bool)
@@ -355,8 +355,8 @@ namespace Microshaoft
                 {
                     fieldValue = new JValue(dataReader[i]);
                 }
-                r = new JProperty(fieldName, fieldValue);
             }
+            r = new JProperty(fieldName, fieldValue);
             return r;
         }
     }
