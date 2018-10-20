@@ -51,12 +51,10 @@ namespace Microshaoft.Web
                                                 (
                                                     typeof(IConfiguration)
                                                 );
-            var jwtName = configuration
+            var jwtTokenName = configuration
                             .GetSection("TokenName")
                             .Value;
-            var jwtSecretKey = configuration
-                                .GetSection("SecretKey")
-                                .Value;
+            
             if
                 (
                     context
@@ -64,7 +62,7 @@ namespace Microshaoft.Web
                         .Items
                         .TryGetValue
                             (
-                                jwtName
+                                jwtTokenName
                                 , out object value
                             )
                 )
@@ -72,9 +70,24 @@ namespace Microshaoft.Web
                 jwtToken = value.ToString();
                 ok = true;
             }
+            else
+            {
+                ok = request
+                        .TryParseJTokenParameters
+                            (
+                                out var parameters
+                                , out var secretJwtToken
+                                , null
+                                , jwtTokenName
+                            );
+                ok = !StringValues.IsNullOrEmpty(secretJwtToken);
+            }
 
             if (ok)
             {
+                var jwtSecretKey = configuration
+                                        .GetSection("SecretKey")
+                                        .Value;
                 ok = JwtTokenHelper
                         .TryValidateToken
                             (
