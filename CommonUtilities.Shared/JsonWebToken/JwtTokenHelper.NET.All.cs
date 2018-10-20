@@ -448,7 +448,7 @@ namespace Microshaoft
             // 取 jwtToken 优先级顺序：Header → QueryString → Body
             StringValues jwtToken = string.Empty;
             var needExtractJwtToken = !jwtTokenName.IsNullOrEmptyOrWhiteSpace();
-            void ExtractJwtTokenInJToken()
+            void ExtractJwtToken()
             {
                 if (needExtractJwtToken)
                 {
@@ -476,14 +476,14 @@ namespace Microshaoft
                         );
             }
             RequestQueryStringHeaderProcess();
-            ExtractJwtTokenInJToken();
+            ExtractJwtToken();
             if
                 (
                     string.Compare(request.Method, "post", true) == 0
                 )
             {
                 RequestFormBodyProcess();
-                ExtractJwtTokenInJToken();
+                ExtractJwtToken();
                 //if (jToken == null)
                 //{
                 //    RequestHeaderProcess();
