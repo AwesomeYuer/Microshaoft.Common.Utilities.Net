@@ -39,10 +39,30 @@ namespace Microshaoft.Web
 
         public virtual void OnActionExecuting(ActionExecutingContext context)
         {
+            var ok = false;
+            var errorMessage = string.Empty;
+            var errorStatusCode = -1;
+            void ErrorResult()
+            {
+                //context.Result = new ForbidResult();
+                context.Result = new ContentResult()
+                {
+                    StatusCode = errorStatusCode
+                     ,
+                    ContentType = "application/json"
+                     ,
+                    Content =
+$@"{{
+    StatusCode : {errorStatusCode}
+    , Message : ""{errorMessage}""
+}}"
+                };
+                //return;
+            }
+
             var request = context.HttpContext.Request;
             StringValues jwtToken = string.Empty;
-            var ok = false;
-
+            
             IConfiguration configuration =
                         (IConfiguration)context
                                             .HttpContext
@@ -52,9 +72,8 @@ namespace Microshaoft.Web
                                                     typeof(IConfiguration)
                                                 );
             var jwtTokenName = configuration
-                            .GetSection("TokenName")
-                            .Value;
-            
+                                    .GetSection("TokenName")
+                                    .Value;
             if
                 (
                     context
@@ -81,21 +100,38 @@ namespace Microshaoft.Web
                                 , jwtTokenName
                             );
                 ok = !StringValues.IsNullOrEmpty(secretJwtToken);
+                if (ok)
+                {
+                    jwtToken = secretJwtToken;
+                }
             }
-
+            if (!ok)
+            {
+                errorStatusCode = 400;
+                errorMessage = "Bad Request, Jwt not found";
+                ErrorResult();
+                return;
+            }
             if (ok)
             {
                 var jwtSecretKey = configuration
                                         .GetSection("SecretKey")
                                         .Value;
                 ok = JwtTokenHelper
-                        .TryValidateToken
-                            (
-                                jwtSecretKey
-                                , jwtToken
-                                , out var validatedPlainToken
-                                , out var claimsPrincipal
-                            );
+                            .TryValidateToken
+                                (
+                                    jwtSecretKey
+                                    , jwtToken
+                                    , out var validatedPlainToken
+                                    , out var claimsPrincipal
+                                );
+                if (!ok)
+                {
+                    errorStatusCode = 400;
+                    errorMessage = "Bad Request, Jwt Invalidate";
+                    ErrorResult();
+                    return;
+                }
                 if (ok)
                 {
                     var jwtExpireInSeconds =
@@ -126,6 +162,13 @@ namespace Microshaoft.Web
                                     jwtExpireInSeconds
                                 )
                             );
+                        if (!ok)
+                        {
+                            errorStatusCode = 403;
+                            errorMessage = "Forbid Request, Jwt expired";
+                            ErrorResult();
+                            return;
+                        }
                     }
                 }
                 if (ok)
@@ -145,6 +188,13 @@ namespace Microshaoft.Web
                             ==
                             0
                         );
+                    if (!ok)
+                    {
+                        errorStatusCode = 400;
+                        errorMessage = "Bad Request, Jwt Invalidate Issuer";
+                        ErrorResult();
+                        return;
+                    }
                 }
                 if (ok)
                 {
@@ -178,6 +228,13 @@ namespace Microshaoft.Web
                                                     );
                                      }
                                  );
+                    if (!ok)
+                    {
+                        errorStatusCode = 403;
+                        errorMessage = "Forbid Request, Jwt Invalidate Audiences";
+                        ErrorResult();
+                        return;
+                    }
                 }
                 if (ok)
                 {
@@ -211,6 +268,13 @@ namespace Microshaoft.Web
                                 ==
                                 0
                             );
+                        if (!ok)
+                        {
+                            errorStatusCode = 403;
+                            errorMessage = "Bad Request, Jwt Invalidate userName";
+                            ErrorResult();
+                            return;
+                        }
                     }
                 }
                 if (ok)
@@ -236,6 +300,13 @@ namespace Microshaoft.Web
                                 ==
                                 tokenIpAddress.ToString()
                             );
+                        if (!ok)
+                        {
+                            errorStatusCode = 400;
+                            errorMessage = "Bad Request, Jwt Invalidate IP";
+                            ErrorResult();
+                            return;
+                        }
                     }
                 }
                 if (ok)
@@ -247,7 +318,7 @@ namespace Microshaoft.Web
             }
             if (!ok)
             {
-                context.Result = new ForbidResult();
+                ErrorResult();
                 return;
             }
         }
