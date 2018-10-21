@@ -39,11 +39,30 @@ namespace Microshaoft.Web
 
         public virtual void OnActionExecuting(ActionExecutingContext context)
         {
+            var ok = false;
+            var errorMessage = string.Empty;
+            var errorStatusCode = -1;
+            void ErrorResult()
+            {
+                //context.Result = new ForbidResult();
+                context.Result = new ContentResult()
+                {
+                    StatusCode = errorStatusCode
+                     ,
+                    ContentType = "application/json"
+                     ,
+                    Content =
+$@"{{
+    StatusCode : {errorStatusCode}
+    , Message : ""{errorMessage}""
+}}"
+                };
+                //return;
+            }
+
             var request = context.HttpContext.Request;
             StringValues jwtToken = string.Empty;
-            var ok = false;
-            var errorMessage = string.Empty; 
-
+            
             IConfiguration configuration =
                         (IConfiguration)context
                                             .HttpContext
@@ -88,7 +107,10 @@ namespace Microshaoft.Web
             }
             if (!ok)
             {
-                errorMessage = "Jwt not found";
+                errorStatusCode = 400;
+                errorMessage = "Bad Request, Jwt not found";
+                ErrorResult();
+                return;
             }
             if (ok)
             {
@@ -105,7 +127,10 @@ namespace Microshaoft.Web
                                 );
                 if (!ok)
                 {
-                    errorMessage = "Jwt Invalidate";
+                    errorStatusCode = 400;
+                    errorMessage = "Bad Request, Jwt Invalidate";
+                    ErrorResult();
+                    return;
                 }
                 if (ok)
                 {
@@ -139,7 +164,10 @@ namespace Microshaoft.Web
                             );
                         if (!ok)
                         {
-                            errorMessage = "Jwt expired";
+                            errorStatusCode = 403;
+                            errorMessage = "Forbid Request, Jwt expired";
+                            ErrorResult();
+                            return;
                         }
                     }
                 }
@@ -162,7 +190,10 @@ namespace Microshaoft.Web
                         );
                     if (!ok)
                     {
-                        errorMessage = "Jwt Invalidate Issuer";
+                        errorStatusCode = 400;
+                        errorMessage = "Bad Request, Jwt Invalidate Issuer";
+                        ErrorResult();
+                        return;
                     }
                 }
                 if (ok)
@@ -199,7 +230,10 @@ namespace Microshaoft.Web
                                  );
                     if (!ok)
                     {
-                        errorMessage = "Jwt Invalidate Audiences";
+                        errorStatusCode = 403;
+                        errorMessage = "Forbid Request, Jwt Invalidate Audiences";
+                        ErrorResult();
+                        return;
                     }
                 }
                 if (ok)
@@ -236,7 +270,10 @@ namespace Microshaoft.Web
                             );
                         if (!ok)
                         {
-                            errorMessage = "Jwt Invalidate userName";
+                            errorStatusCode = 403;
+                            errorMessage = "Bad Request, Jwt Invalidate userName";
+                            ErrorResult();
+                            return;
                         }
                     }
                 }
@@ -265,7 +302,10 @@ namespace Microshaoft.Web
                             );
                         if (!ok)
                         {
-                            errorMessage = "Jwt Invalidate IP";
+                            errorStatusCode = 400;
+                            errorMessage = "Bad Request, Jwt Invalidate IP";
+                            ErrorResult();
+                            return;
                         }
                     }
                 }
@@ -278,13 +318,7 @@ namespace Microshaoft.Web
             }
             if (!ok)
             {
-                //context.Result = new ForbidResult();
-                context.Result = new ContentResult()
-                {
-                     StatusCode = 403
-                     //, ContentType = "application/json"
-                     , Content = $"{{Message:{errorMessage}}}"
-                };
+                ErrorResult();
                 return;
             }
         }
