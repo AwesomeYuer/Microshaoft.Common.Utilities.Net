@@ -42,6 +42,7 @@ namespace Microshaoft.Web
             var request = context.HttpContext.Request;
             StringValues jwtToken = string.Empty;
             var ok = false;
+            var errorMessage = string.Empty; 
 
             IConfiguration configuration =
                         (IConfiguration)context
@@ -52,9 +53,8 @@ namespace Microshaoft.Web
                                                     typeof(IConfiguration)
                                                 );
             var jwtTokenName = configuration
-                            .GetSection("TokenName")
-                            .Value;
-            
+                                    .GetSection("TokenName")
+                                    .Value;
             if
                 (
                     context
@@ -81,21 +81,32 @@ namespace Microshaoft.Web
                                 , jwtTokenName
                             );
                 ok = !StringValues.IsNullOrEmpty(secretJwtToken);
+                if (ok)
+                {
+                    jwtToken = secretJwtToken;
+                }
             }
-
+            if (!ok)
+            {
+                errorMessage = "Jwt not found";
+            }
             if (ok)
             {
                 var jwtSecretKey = configuration
                                         .GetSection("SecretKey")
                                         .Value;
                 ok = JwtTokenHelper
-                        .TryValidateToken
-                            (
-                                jwtSecretKey
-                                , jwtToken
-                                , out var validatedPlainToken
-                                , out var claimsPrincipal
-                            );
+                            .TryValidateToken
+                                (
+                                    jwtSecretKey
+                                    , jwtToken
+                                    , out var validatedPlainToken
+                                    , out var claimsPrincipal
+                                );
+                if (!ok)
+                {
+                    errorMessage = "Jwt Invalidate";
+                }
                 if (ok)
                 {
                     var jwtExpireInSeconds =
@@ -126,6 +137,10 @@ namespace Microshaoft.Web
                                     jwtExpireInSeconds
                                 )
                             );
+                        if (!ok)
+                        {
+                            errorMessage = "Jwt expired";
+                        }
                     }
                 }
                 if (ok)
@@ -145,6 +160,10 @@ namespace Microshaoft.Web
                             ==
                             0
                         );
+                    if (!ok)
+                    {
+                        errorMessage = "Jwt Invalidate Issuer";
+                    }
                 }
                 if (ok)
                 {
@@ -178,6 +197,10 @@ namespace Microshaoft.Web
                                                     );
                                      }
                                  );
+                    if (!ok)
+                    {
+                        errorMessage = "Jwt Invalidate Audiences";
+                    }
                 }
                 if (ok)
                 {
@@ -211,6 +234,10 @@ namespace Microshaoft.Web
                                 ==
                                 0
                             );
+                        if (!ok)
+                        {
+                            errorMessage = "Jwt Invalidate userName";
+                        }
                     }
                 }
                 if (ok)
@@ -236,6 +263,10 @@ namespace Microshaoft.Web
                                 ==
                                 tokenIpAddress.ToString()
                             );
+                        if (!ok)
+                        {
+                            errorMessage = "Jwt Invalidate IP";
+                        }
                     }
                 }
                 if (ok)
@@ -247,7 +278,13 @@ namespace Microshaoft.Web
             }
             if (!ok)
             {
-                context.Result = new ForbidResult();
+                //context.Result = new ForbidResult();
+                context.Result = new ContentResult()
+                {
+                     StatusCode = 403
+                     //, ContentType = "application/json"
+                     , Content = $"{{Message:{errorMessage}}}"
+                };
                 return;
             }
         }
