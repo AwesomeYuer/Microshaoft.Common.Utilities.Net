@@ -534,8 +534,12 @@ from
                                 var columnName = column.ColumnName;
                                 var jToken = entry[columnName];
                                 var cell = row[columnName];
+                                if (jToken.Type == null)
+                                {
+                                    cell = null;
+                                }
                                 // with ""
-                                if (column.DataType == typeof(string))
+                                else if (column.DataType == typeof(string))
                                 {
                                     var jValueString = jToken.Value<string>();
                                     cell = jToken.Value<string>();
@@ -602,6 +606,10 @@ from
                         r = dataTable;
                     }
                 }
+            }
+            if (jValue.Type == JTokenType.Null)
+            {
+                r = DBNull.Value;
             }
             return r;
         }
