@@ -105,7 +105,7 @@ namespace Microshaoft.WebApi.Controllers
                                             field = new JProperty
                                                             (
                                                                 fieldName
-                                                                , JObject.Parse(json)
+                                                                , JToken.Parse(json)
                                                             );
                                         }
                                     }
