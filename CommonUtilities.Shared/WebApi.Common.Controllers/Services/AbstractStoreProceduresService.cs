@@ -239,7 +239,6 @@ namespace Microshaoft.Web
                                 , int commandTimeoutInSeconds = 101
                             )
         {
-            var r = false;
             JToken result = null;
             var statusCode = 500;
             var r1 = TryGetStoreProcedureInfo
@@ -249,7 +248,12 @@ namespace Microshaoft.Web
 
                         );
 
-            if (r1.Success && r1.StatusCode == 200)
+            if 
+                (
+                    r1.Success
+                    &&
+                    r1.StatusCode == 200
+                )
             {
                 var r2 = Process
                             (

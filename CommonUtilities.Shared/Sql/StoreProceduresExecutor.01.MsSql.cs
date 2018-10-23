@@ -545,7 +545,14 @@ from
                     }
                 }
             }
-            if (jValue.Type == JTokenType.Null)
+            if 
+                (
+                    jValue.Type == JTokenType.Null
+                    ||
+                    jValue.Type == JTokenType.Undefined
+                    ||
+                    jValue.Type == JTokenType.None
+                )
             {
                 r = DBNull.Value;
             }

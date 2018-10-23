@@ -66,13 +66,11 @@
             }
             return r;
         }
-
         public int GetHashCode(JToken obj)
         {
             return 0;
         }
     }
-
     public static class JsonHelper
     {
         public static object GetPrimtiveTypeJValueAsObject
@@ -153,8 +151,6 @@
             }
             return r;
         }
-
-
         public static JTokenType GetJTokenType(this Type target)
         {
             JTokenType r = JTokenType.None;
