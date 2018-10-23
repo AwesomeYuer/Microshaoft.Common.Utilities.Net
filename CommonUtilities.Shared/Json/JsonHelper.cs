@@ -75,6 +75,86 @@
 
     public static class JsonHelper
     {
+        public static object GetPrimtiveTypeJValueAsObject
+                                    (
+                                        this JToken target
+                                        , Type underlyingType
+                                    )
+        {
+            object r = null;
+            if 
+                (
+                    target.Type == JTokenType.Null 
+                    ||
+                    target.Type == JTokenType.Undefined
+                    ||
+                    target.Type == JTokenType.None
+                )
+            {
+                r = null;
+            }
+            // with ""
+            else if (underlyingType == typeof(string))
+            {
+                var jValueString = target.Value<string>();
+                r = target.Value<string>();
+            }
+            else if (underlyingType == typeof(Guid))
+            {
+                var jValueString = target.Value<string>();
+                r = Guid.Parse(jValueString);
+            }
+            else if (underlyingType == typeof(DateTime))
+            {
+                var jValueString = target.Value<string>();
+                r = DateTime.Parse(jValueString);
+            }
+            //===============================================
+            // without ""
+            else if (underlyingType == typeof(bool))
+            {
+                r = target.Value<bool>();
+            }
+            else if (underlyingType == typeof(short))
+            {
+                r = target.Value<short>();
+            }
+            else if (underlyingType == typeof(ushort))
+            {
+                r = target.Value<ushort>();
+            }
+            else if (underlyingType == typeof(int))
+            {
+                r = target.Value<int>();
+            }
+            else if (underlyingType == typeof(uint))
+            {
+                r = target.Value<uint>();
+            }
+            else if (underlyingType == typeof(long))
+            {
+                r = target.Value<long>();
+            }
+            else if (underlyingType == typeof(ulong))
+            {
+                r = target.Value<ulong>();
+            }
+            else if (underlyingType == typeof(double))
+            {
+                r = target.Value<double>();
+            }
+            else if (underlyingType == typeof(float))
+            {
+                r = target.Value<float>();
+            }
+            else if (underlyingType == typeof(decimal))
+            {
+                r = target.Value<decimal>();
+            }
+            return r;
+        }
+
+
         public static JTokenType GetJTokenType(this Type target)
         {
             JTokenType r = JTokenType.None;

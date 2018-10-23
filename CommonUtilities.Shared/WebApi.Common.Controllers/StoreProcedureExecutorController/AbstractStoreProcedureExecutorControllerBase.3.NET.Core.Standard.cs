@@ -6,6 +6,9 @@ namespace Microshaoft.WebApi.Controllers
     using Microshaoft.WebApi.ModelBinders;
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json.Linq;
+    using System;
+    using System.Data;
+
     [Route("api/[controller]")]
     [ApiController]
     public abstract partial class 
@@ -17,6 +20,22 @@ namespace Microshaoft.WebApi.Controllers
                     IStoreProceduresWebApiService
                             _service;
 
+
+        private Func
+                                <
+                                    IDataReader
+                                    , Type        // fieldType
+                                    , string    // fieldName
+                                    , int       // row index
+                                    , int       // column index
+                                    , JProperty   //  JObject Field 对象
+                                > _onReadRowColumnProcessFunc = null;
+        protected virtual Func<IDataReader, Type, string, int, int, JProperty> OnReadRowColumnProcessFunc
+        {
+            get => _onReadRowColumnProcessFunc;
+            set => _onReadRowColumnProcessFunc = value;
+        }
+
         public AbstractStoreProceduresExecutorControllerBase
                     (
                         IStoreProceduresWebApiService service
@@ -24,6 +43,9 @@ namespace Microshaoft.WebApi.Controllers
         {
             _service = service;
         }
+
+
+
         [HttpDelete]
         [HttpGet]
         [HttpHead]
@@ -70,10 +92,7 @@ namespace Microshaoft.WebApi.Controllers
                         (
                             routeName
                             , parameters
-                            , (reader, fieldType ,fieldName, columnIndex, rowIndex) =>
-                            {
-                                return null;
-                            }
+                            , _onReadRowColumnProcessFunc
                             , Request.Method
                             , 102
                         );
@@ -90,6 +109,33 @@ namespace Microshaoft.WebApi.Controllers
                                     , resultPathSegment5
                                     , resultPathSegment6
                                 );
+                
+                if 
+                    (
+                        (
+                            HttpContext
+                                .Request
+                                .Method
+                            ==
+                            "HttpPost"
+                        )
+                        ||
+                        (
+                            HttpContext
+                                .Request
+                                .Method
+                            ==
+                            "HttpPut"
+                        )
+                    )
+                {
+                    (
+                        (JObject)
+                        result
+                    )
+                    .Property("Inputs")
+                    .Remove();
+                }
             }
             else
             {

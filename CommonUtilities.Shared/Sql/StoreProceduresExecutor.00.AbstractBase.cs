@@ -383,7 +383,7 @@
                             , int commandTimeout = 90
                         )
         {
-            var inputsParameters = JObject.Parse(p);
+            var inputsParameters = JToken.Parse(p);
             return
                 Execute
                     (
