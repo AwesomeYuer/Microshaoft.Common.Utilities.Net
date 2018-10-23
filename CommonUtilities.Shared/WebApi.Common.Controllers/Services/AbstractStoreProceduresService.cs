@@ -239,7 +239,6 @@ namespace Microshaoft.Web
                                 , int commandTimeoutInSeconds = 101
                             )
         {
-            var r = false;
             JToken result = null;
             var statusCode = 500;
             var r1 = TryGetStoreProcedureInfo
@@ -249,7 +248,12 @@ namespace Microshaoft.Web
 
                         );
 
-            if (r1.Success && r1.StatusCode == 200)
+            if 
+                (
+                    r1.Success
+                    &&
+                    r1.StatusCode == 200
+                )
             {
                 var r2 = Process
                             (
@@ -374,11 +378,11 @@ namespace Microshaoft.Web
                         , storeProcedureName
                     );
             }
-            IConfigurationSection configurationSection = null;
+            IConfigurationSection routeConfiguration = null;
             try
             {
-                configurationSection =
-                    _configuration
+                routeConfiguration =
+                        _configuration
                                 .GetSection("Routes")
                                 //Ignore Case
                                 .GetChildren()
@@ -411,11 +415,10 @@ namespace Microshaoft.Web
             {
                 return Result();
             }
-
             try
             {
-                configurationSection =
-                        configurationSection
+                routeConfiguration =
+                        routeConfiguration
                             .GetChildren()
                             .First
                                 (
@@ -459,7 +462,7 @@ namespace Microshaoft.Web
             {
                 return Result();
             }
-            var connectionID = configurationSection
+            var connectionID = routeConfiguration
                                     .GetValue<string>("ConnectionID");
             success = !connectionID.IsNullOrEmptyOrWhiteSpace();
             if (!success)
@@ -467,9 +470,10 @@ namespace Microshaoft.Web
                 statusCode = 500;
                 return Result();
             }
-            connectionString = _configuration
-                                    .GetSection("Connections")
-                                    .GetSection(connectionID)
+            var connectionConfiguration = _configuration
+                                                .GetSection("Connections")
+                                                .GetSection(connectionID);
+            connectionString = connectionConfiguration
                                     .GetValue<string>("ConnectionString");
             success = !connectionString.IsNullOrEmptyOrWhiteSpace();
             if (!success)
@@ -477,9 +481,7 @@ namespace Microshaoft.Web
                 statusCode = 500;
                 return Result();
             }
-            dataBaseType = _configuration
-                                    .GetSection("Connections")
-                                    .GetSection(connectionID)
+            dataBaseType = connectionConfiguration
                                     .GetValue<string>("DataBaseType");
             success = !dataBaseType.IsNullOrEmptyOrWhiteSpace();
             if (!success)
@@ -493,7 +495,7 @@ namespace Microshaoft.Web
                 statusCode = 500;
                 return Result();
             }
-            storeProcedureName = configurationSection
+            storeProcedureName = routeConfiguration
                                         .GetValue<string>("StoreProcedureName");
             success = !storeProcedureName.IsNullOrEmptyOrWhiteSpace();
             if (!success)

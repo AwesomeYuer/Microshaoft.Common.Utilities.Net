@@ -526,80 +526,18 @@ from
                         var jArray = (JArray)jValue;
                         var columns = dataTable.Columns;
                         var rows = dataTable.Rows;
-                        foreach (var entry in jArray)
+                        foreach (var j in jArray)
                         {
                             var row = dataTable.NewRow();
                             foreach (DataColumn column in columns)
                             {
                                 var columnName = column.ColumnName;
-                                var jToken = entry[columnName];
-                                var cell = row[columnName];
-                                if (jToken.Type == null)
-                                {
-                                    cell = null;
-                                }
-                                // with ""
-                                else if (column.DataType == typeof(string))
-                                {
-                                    var jValueString = jToken.Value<string>();
-                                    cell = jToken.Value<string>();
-                                }
-                                else if (column.DataType == typeof(Guid))
-                                {
-                                    var jValueString = jToken.Value<string>();
-                                    cell = Guid.Parse(jValueString);
-                                }
-                                else if (column.DataType == typeof(DateTime))
-                                {
-                                    var jValueString = jToken.Value<string>();
-                                    cell = DateTime.Parse(jValueString);
-                                }
-                                //===============================================
-                                // without ""
-                                else if (column.DataType == typeof(bool))
-                                {
-                                    cell = jToken.Value<bool>();
-                                }
-                                else if (column.DataType == typeof(short))
-                                {
-                                    cell = jToken.Value<short>();
-                                }
-                                else if (column.DataType == typeof(ushort))
-                                {
-                                    cell = jToken.Value<ushort>();
-                                }
-                                else if (column.DataType == typeof(int))
-                                {
-                                    cell = jToken.Value<int>();
-                                }
-                                else if (column.DataType == typeof(uint))
-                                {
-                                    cell = jToken.Value<uint>();
-                                }
-                                else if (column.DataType == typeof(long))
-                                {
-                                    cell = jToken.Value<long>();
-                                }
-                                else if (column.DataType == typeof(ulong))
-                                {
-                                    cell = jToken.Value<ulong>();
-                                }
-                                else if (column.DataType == typeof(double))
-                                {
-                                    cell = jToken.Value<double>();
-                                }
-                                else if (column.DataType == typeof(float))
-                                {
-                                    cell = jToken.Value<float>();
-                                }
-                                else if (column.DataType == typeof(decimal))
-                                {
-                                    cell = jToken.Value<decimal>();
-                                }
-                                else
-                                {
-                                    cell = null;
-                                }
+                                var jToken = j[columnName];
+                                row[columnName] = jToken
+                                                        .GetPrimtiveTypeJValueAsObject
+                                                            (
+                                                                column.DataType
+                                                            );
                             }
                             rows.Add(row);
                         }
@@ -607,7 +545,14 @@ from
                     }
                 }
             }
-            if (jValue.Type == JTokenType.Null)
+            if 
+                (
+                    jValue.Type == JTokenType.Null
+                    ||
+                    jValue.Type == JTokenType.Undefined
+                    ||
+                    jValue.Type == JTokenType.None
+                )
             {
                 r = DBNull.Value;
             }
