@@ -1,12 +1,15 @@
-﻿#if !XAMARIN
-namespace Microshaoft
+﻿namespace Microshaoft
 {
     using MySql.Data.MySqlClient;
     using Newtonsoft.Json.Linq;
     using System;
+    using System.Collections.Generic;
     using System.Data;
+    using System.Data.SqlClient;
+    using System.Linq;
     public class MySqlStoreProceduresExecutor
-                    : AbstractStoreProceduresExecutor<MySqlConnection, MySqlCommand, MySqlParameter>
+                    : AbstractStoreProceduresExecutor
+                            <MySqlConnection, MySqlCommand, MySqlParameter>
     {
         protected override MySqlParameter
                         OnQueryDefinitionsSetInputParameterProcess
@@ -60,10 +63,9 @@ namespace Microshaoft
             //timestamp
             //time
             //year
-            
             if (string.Compare(dbTypeName, "bool", true) == 0)
             {
-                dbTypeName = "Int16";
+                dbTypeName = "Bit";
             }
             else if (string.Compare(dbTypeName, "smallint", true) == 0)
             {
@@ -81,20 +83,20 @@ namespace Microshaoft
             {
                 dbTypeName = "Int64";
             }
-            MySqlDbType dbType = MySqlDbType.Bit;
+            
             var r = Enum
                         .TryParse
                             (
                                 dbTypeName
                                 , true
-                                , out dbType
+                                , out MySqlDbType mySqlDbType
                             );
             if (r)
             {
                 parameter
-                    .MySqlDbType = dbType;
+                    .MySqlDbType = mySqlDbType;
             }
-            if 
+            if
                 (
                     parameter.MySqlDbType == MySqlDbType.Decimal
                     ||
@@ -104,19 +106,20 @@ namespace Microshaoft
                 var o = reader["NUMERIC_SCALE"];
                 if (o != DBNull.Value)
                 {
-                    parameter.Scale =
-                        (
-                            (byte)
-                                (
+                    parameter
+                        .Scale =
+                            (
+                                (byte)
                                     (
-                                        (short)
-                                            (
-                                                (long) o
-                                            )
+                                        (
+                                            (short)
+                                                (
+                                                    (long) o
+                                                )
+                                        )
+                                    //& 255
                                     )
-                                //& 255
-                                )
-                        );
+                            );
                 }
                 o = reader["NUMERIC_PRECISION"];
                 if (o != DBNull.Value)
@@ -126,6 +129,7 @@ namespace Microshaoft
             }
             return parameter;
         }
+        
         protected override MySqlParameter
                     OnExecutingSetDbParameterTypeProcess
                         (
@@ -133,8 +137,10 @@ namespace Microshaoft
                             , MySqlParameter cloneParameter
                         )
         {
-            cloneParameter.MySqlDbType = definitionParameter.MySqlDbType;
-            return cloneParameter;
+            cloneParameter
+                    .MySqlDbType = definitionParameter.MySqlDbType;
+            return
+                cloneParameter;
         }
         protected override object
                OnExecutingSetDbParameterValueProcess
@@ -143,205 +149,13 @@ namespace Microshaoft
                         , JToken jValue
                     )
         {
-            object r = null;
-            var jValueText = jValue.ToString();
-            if
-                (
-                    parameter.MySqlDbType == MySqlDbType.VarChar
-                    ||
-                    parameter.MySqlDbType == MySqlDbType.Text
-                    ||
-                    parameter.MySqlDbType == MySqlDbType.VarString
-                )
-            {
-                r = jValueText;
-            }
-            else if
-                (
-                    parameter.MySqlDbType == MySqlDbType.DateTime
-                    ||
-                    parameter.MySqlDbType == MySqlDbType.Date
-                    ||
-                    parameter.MySqlDbType == MySqlDbType.DateTime
-                )
-            {
-                var b = DateTime
-                            .TryParse
-                                (
-                                    jValueText
-                                    , out var rr
-                                );
-                if (b)
-                {
-                    r = rr;
-                }
-            }
-            else if
-                (
-                    parameter.MySqlDbType == MySqlDbType.Bit
-                )
-            {
-                var b = bool
-                            .TryParse
-                                (
-                                    jValueText
-                                    , out var rr
-                                );
-                if (b)
-                {
-                    r = rr;
-                }
-            }
-            else if
-                (
-                    parameter.MySqlDbType == MySqlDbType.Decimal
-                )
-            {
-                var b = decimal
-                            .TryParse
-                                (
-                                    jValueText
-                                    , out var rr
-                                );
-                if (b)
-                {
-                    r = rr;
-                }
-            }
-            else if
-                (
-                    parameter.MySqlDbType == MySqlDbType.Float
-                )
-            {
-                var b = float
-                            .TryParse
-                                (
-                                    jValueText
-                                    , out var rr
-                                );
-                if (b)
-                {
-                    r = rr;
-                }
-            }
-            else if
-                (
-                    parameter.MySqlDbType == MySqlDbType.Guid
-                )
-            {
-                 var b = Guid
-                            .TryParse
-                                (
-                                    jValueText
-                                    , out var rr
-                                );
-                if (b)
-                {
-                    r = rr;
-                }
-            }
-            else if
-                (
-                    parameter.MySqlDbType == MySqlDbType.UInt16
-                )
-            {
-                var b = ushort
-                            .TryParse
-                                (
-                                    jValueText
-                                    , out var rr
-                                );
-                if (b)
-                {
-                    r = rr;
-                }
-            }
-            else if
-                (
-                    parameter.MySqlDbType == MySqlDbType.UInt24
-                    ||
-                    parameter.MySqlDbType == MySqlDbType.UInt32
-                )
-            {
-                var b = uint
-                            .TryParse
-                                (
-                                    jValueText
-                                    , out var rr
-                                );
-                if (b)
-                {
-                    r = rr;
-                }
-            }
-            else if
-                (
-                    parameter.MySqlDbType == MySqlDbType.UInt64
-                )
-            {
-                var b = ulong
-                            .TryParse
-                                (
-                                    jValueText
-                                    , out var rr
-                                );
-                if (b)
-                {
-                    r = rr;
-                }
-            }
-            else if
-               (
-                   parameter.MySqlDbType == MySqlDbType.Int16
-               )
-            {
-                var b = short
-                            .TryParse
-                                (
-                                    jValueText
-                                    , out var rr
-                                );
-                if (b)
-                {
-                    r = rr;
-                }
-            }
-            else if
-               (
-                    parameter.MySqlDbType == MySqlDbType.Int24
-                    ||
-                    parameter.MySqlDbType == MySqlDbType.Int32
-               )
-            {
-                var b = int
-                            .TryParse
-                                (
-                                    jValueText
-                                    , out var rr
-                                );
-                if (b)
-                {
-                    r = rr;
-                }
-            }
-            else if
-               (
-                    parameter.MySqlDbType == MySqlDbType.Int64
-               )
-            {
-                var b = long
-                            .TryParse
-                                (
-                                    jValueText
-                                    , out long rr
-                                );
-                if (b)
-                {
-                    r = rr;
-                }
-            }
-            return r;
+            return
+                parameter
+                    .SetParameterValue
+                        (
+                            jValue
+                        );
+
         }
     }
 }
-#endif
