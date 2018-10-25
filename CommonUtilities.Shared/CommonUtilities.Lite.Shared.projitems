@@ -26,7 +26,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\KeyedPriorityQueue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\LockHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\PathFileHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\PathHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\RemotingHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\SecureStringHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\SequenceSeedHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\SerializerHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\StreamDataHelper.cs" />
@@ -44,6 +46,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Collections\EmptyReadOnlyDictionary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\EnumerableHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\ConfigurationAppSettingsHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Console\ConsoleHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Console\DebugConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Console\WindowsBackgroundInteractiveConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Console\WindowsConsoleHelper.cs" />
