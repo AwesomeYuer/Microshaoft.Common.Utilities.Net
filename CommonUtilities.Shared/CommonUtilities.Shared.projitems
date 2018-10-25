@@ -164,6 +164,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Socket\SocketAsyncDataHandler.UDP.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Socket\SocketAsyncEventArgsPool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Socket\SocketHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SqlDbParameter\DbParameterHelper.02.npgsql.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SqlDbParameter\DbParameterHelper.00.mssql.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SqlDbParameter\DbParameterHelper.01.mysql.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\Microshaoft.00.SqlHelper.cs" />
