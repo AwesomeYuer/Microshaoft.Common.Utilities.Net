@@ -84,120 +84,12 @@ namespace Microshaoft
                         , JToken jValue
                     )
         {
-            object r = null;
-            var jValueText = jValue.ToString();
-            if
-                (
-                    parameter.NpgsqlDbType == NpgsqlDbType.Varchar
-                    ||
-                    parameter.NpgsqlDbType == NpgsqlDbType.Text
-                    ||
-                    parameter.NpgsqlDbType == NpgsqlDbType.Char
-                )
-            {
-                r = jValueText;
-            }
-            else if
-                (
-                    parameter.NpgsqlDbType == NpgsqlDbType.Date
-                    ||
-                    parameter.NpgsqlDbType == NpgsqlDbType.Time
-                )
-            {
-                var b = DateTime
-                            .TryParse
-                                (
-                                    jValueText
-                                    , out var rr
-                                );
-                if (b)
-                {
-                    r = rr;
-                }
-            }
-            else if
-                (
-                    parameter.NpgsqlDbType == NpgsqlDbType.Bit
-                )
-            {
-                var b = bool
-                            .TryParse
-                                (
-                                    jValueText
-                                    , out var rr
-                                );
-                if (b)
-                {
-                    r = rr;
-                }
-            }
-            else if
-                (
-                    parameter.NpgsqlDbType == NpgsqlDbType.Double
-                    ||
-                    parameter.NpgsqlDbType == NpgsqlDbType.Real
-                )
-            {
-                var b = double
-                            .TryParse
-                                (
-                                    jValueText
-                                    , out var rr
-                                );
-                if (b)
-                {
-                    r = rr;
-                }
-            }
-            else if
-                (
-                    parameter.NpgsqlDbType == NpgsqlDbType.Uuid
-                )
-            {
-                var b = Guid
-                            .TryParse
-                                (
-                                    jValueText
-                                    , out var rr
-                                );
-                if (b)
-                {
-                    r = rr;
-                }
-            }
-            else if
-               (
-                    parameter.NpgsqlDbType == NpgsqlDbType.Bigint
-               )
-            {
-                var b = long
-                            .TryParse
-                                (
-                                    jValueText
-                                    , out var rr
-                                );
-                if (b)
-                {
-                    r = rr;
-                }
-            }
-            else if
-               (
-                    parameter.NpgsqlDbType == NpgsqlDbType.Numeric
-               )
-            {
-                 var b = decimal
-                            .TryParse
-                                (
-                                    jValueText
-                                    , out var rr
-                                );
-                if (b)
-                {
-                    r = rr;
-                }
-            }
-            return r;
+            return
+                parameter
+                    .SetParameterValue
+                        (
+                            jValue
+                        );
         }
     }
 }
