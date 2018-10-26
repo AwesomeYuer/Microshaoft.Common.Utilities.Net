@@ -4,11 +4,11 @@
   "Connections": {
     "c1": {
       "DataBaseType": "mssql",
-      "ConnectionString": "Initial Catalog=EIP_Portal;Data Source=(localdb)\\MSSQLLocalDB;User=sa;Password=pass01!"
+      "ConnectionString": "Initial Catalog=test;Data Source=localhost;User=sa;Password=!@#123QWE"
     },
     "c2": {
       "DataBaseType": "mssql",
-      "ConnectionString": "Initial Catalog=EIP_Portal;Data Source=(localdb)\\MSSQLLocalDB;User=sa;Password=pass01!"
+      "ConnectionString": "Initial Catalog=test;Data Source=localhost;User=sa;Password=!@#123QWE"
     }
   },
   "Routes": {
