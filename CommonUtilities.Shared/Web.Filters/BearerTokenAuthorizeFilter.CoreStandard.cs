@@ -120,8 +120,8 @@ $@"{{
                 ok = JwtTokenHelper
                             .TryValidateToken
                                 (
-                                    jwtSecretKey
-                                    , jwtToken
+                                    jwtToken
+                                    , jwtSecretKey
                                     , out var validatedPlainToken
                                     , out var claimsPrincipal
                                 );
