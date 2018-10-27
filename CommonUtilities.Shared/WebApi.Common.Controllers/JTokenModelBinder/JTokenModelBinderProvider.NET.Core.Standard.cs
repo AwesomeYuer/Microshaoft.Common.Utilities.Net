@@ -39,7 +39,8 @@ namespace Microshaoft.WebApi.ModelBinders
                             , out var secretJwtToken
                             , async (x) =>
                             {
-                                var formCollectionModelBinder = new FormCollectionModelBinder(NullLoggerFactory.Instance);
+                                var formCollectionModelBinder =
+                                            new FormCollectionModelBinder(NullLoggerFactory.Instance);
                                 await formCollectionModelBinder.BindModelAsync(bindingContext);
                                 if (bindingContext.Result.IsModelSet)
                                 {

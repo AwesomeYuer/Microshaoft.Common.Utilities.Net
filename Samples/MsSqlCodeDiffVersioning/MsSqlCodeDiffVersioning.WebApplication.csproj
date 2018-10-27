@@ -58,4 +58,8 @@
     <Folder Include="CompositionPlugins\" />
   </ItemGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy ..\..\StoreProcedureWebApiExecutorsPlugins\MsSQL.StoreProcedureWebApiExecutor.Plugin\bin\Debug\netcoreapp2.1\*.plugin.* $(TargetDir)CompositionPlugins\ /Y" />
+  </Target>
+
 </Project>
