@@ -6,6 +6,7 @@
     using System.Collections.Generic;
     using System.Data;
     using System.Data.Common;
+    using System.Data.SqlClient;
     using System.Linq;
     public abstract class
             AbstractStoreProceduresExecutor
@@ -410,11 +411,14 @@
                                     , int       // column index
                                     , JProperty   //  JObject Field 对象
                                 > onReadRowColumnProcessFunc = null
+                            //, bool enableStatistics = false
                             , int commandTimeout = 90
                         )
         {
             var dataSource = connection.DataSource;
             var dataBaseName = connection.Database;
+            var isSqlConnection = connection is SqlConnection;
+            SqlConnection sqlConnection = null;
             try
             {
                 using
@@ -422,12 +426,9 @@
                         TDbCommand command = new TDbCommand()
                         {
                             CommandType = CommandType.StoredProcedure
-                            ,
-                            CommandTimeout = commandTimeout
-                            ,
-                            CommandText = storeProcedureName
-                            ,
-                            Connection = connection
+                            , CommandTimeout = commandTimeout
+                            , CommandText = storeProcedureName
+                            , Connection = connection
                         }
                     )
                 {
@@ -446,6 +447,7 @@
                             .Parameters
                             .AddRange(parameters);
                     }
+
                     connection.Open();
                     var result = new JObject
                     {
@@ -461,6 +463,11 @@
                         ,
                         {
                             "DurationInMilliseconds"
+                            , null
+                        }
+                        ,
+                        {
+                            "DataBaseStatistics"
                             , null
                         }
                         ,
@@ -566,11 +573,35 @@
                     {
                         result["Outputs"]["Parameters"] = jOutputParameters;
                     }
+
+                    if (isSqlConnection)
+                    {
+                        sqlConnection = connection as SqlConnection;
+                        if (sqlConnection != null)
+                        {
+                            if (sqlConnection.StatisticsEnabled)
+                            {
+                                var j = new JObject();
+                                var statistics = sqlConnection.RetrieveStatistics();
+                                var json = JsonHelper.Serialize(statistics);
+                                var jStatistics = JObject.Parse(json);
+                                result["DataBaseStatistics"] = jStatistics;
+                            }
+                        }
+                    }
                     return result;
                 }
             }
             finally
             {
+                if (isSqlConnection)
+                {
+                    if (!sqlConnection.StatisticsEnabled)
+                    {
+                        sqlConnection.StatisticsEnabled = false;
+                    }
+                    sqlConnection = null;
+                }
                 if (connection.State != ConnectionState.Closed)
                 {
                     connection.Close();

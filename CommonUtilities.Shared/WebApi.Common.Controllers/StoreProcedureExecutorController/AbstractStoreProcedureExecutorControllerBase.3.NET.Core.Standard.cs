@@ -94,7 +94,7 @@ namespace Microshaoft.WebApi.Controllers
                             , parameters
                             , _onReadRowColumnProcessFunc
                             , Request.Method
-                            , 102
+                            //, 102
                         );
             if (r.StatusCode == 200)
             {

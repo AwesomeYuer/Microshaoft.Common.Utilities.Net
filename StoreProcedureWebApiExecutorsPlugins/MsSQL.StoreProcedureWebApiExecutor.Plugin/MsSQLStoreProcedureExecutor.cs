@@ -41,6 +41,7 @@
                                     , int       // column index
                                     , JProperty   //  JObject Field 对象
                                 > onReadRowColumnProcessFunc = null
+                        , bool enableStatistics = false
                         , int commandTimeoutInSeconds = 90
                     )
         {
@@ -59,7 +60,8 @@
                             = CachedParametersDefinitionExpiredInSeconds;
             }
             result = null;
-            DbConnection connection = new SqlConnection(connectionString);
+            SqlConnection connection = new SqlConnection(connectionString);
+            connection.StatisticsEnabled = enableStatistics;
             result = _executor
                             .Execute
                                     (

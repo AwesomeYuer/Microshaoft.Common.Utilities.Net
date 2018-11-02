@@ -4,22 +4,29 @@
   "Connections": {
     "c1": {
       "DataBaseType": "mssql",
-      "ConnectionString": "Initial Catalog=test;Data Source=localhost;User=sa;Password=!@#123QWE"
+      "ConnectionString": "Initial Catalog=test;Data Source=localhost;User=sa;Password=!@#123QWE",
+      "enableStatistics": false,
     },
     "c2": {
       "DataBaseType": "mssql",
-      "ConnectionString": "Initial Catalog=test;Data Source=localhost;User=sa;Password=!@#123QWE"
+      "ConnectionString": "Initial Catalog=test;Data Source=localhost;User=sa;Password=!@#123QWE",
+      "EnableStatistics": true
+      /*
+
+      */
     }
   },
   "Routes": {
     "objEcts": {
       "HttpGet": {
         "ConnectionID": "c1",
-        "StoreProcedureName": "zsp_zObjectsChangesLogsHistory_Get"
+        "StoreProcedureName": "zsp_zObjectsChangesLogsHistory_Get",
+        "EnableStatistics": true
       },
       "HttpPost": {
         "ConnectionID": "c1",
-        "StoreProcedureName": "zsp_zObjectsChangesLogsHistory_Get"
+        "StoreProcedureName": "zsp_zObjectsChangesLogsHistory_Get",
+        //"EnableStatistics": true
       }
     },
     "usEr": {
