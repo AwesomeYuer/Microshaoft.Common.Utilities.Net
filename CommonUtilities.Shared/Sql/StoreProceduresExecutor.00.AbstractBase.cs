@@ -596,7 +596,7 @@
             {
                 if (isSqlConnection)
                 {
-                    if (!sqlConnection.StatisticsEnabled)
+                    if (sqlConnection.StatisticsEnabled)
                     {
                         sqlConnection.StatisticsEnabled = false;
                     }
