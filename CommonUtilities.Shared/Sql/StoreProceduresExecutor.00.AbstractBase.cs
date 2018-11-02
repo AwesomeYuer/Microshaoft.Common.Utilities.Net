@@ -288,12 +288,13 @@
                                 () =>
                                 {
                                     executingInfo
-                                        .DbParameters = GetNameIndexedDefinitionParameters
-                                                            (
-                                                                connectionString
-                                                                , storeProcedureName
-                                                                , includeReturnValueParameter
-                                                            );
+                                        .DbParameters =
+                                                GetNameIndexedDefinitionParameters
+                                                    (
+                                                        connectionString
+                                                        , storeProcedureName
+                                                        , includeReturnValueParameter
+                                                    );
                                 }
                             );
                 }
@@ -356,7 +357,6 @@
                                 , StringComparer
                                         .OrdinalIgnoreCase
                             );
-
             return result;
         }
         public ParameterDirection GetParameterDirection(string parameterMode)
@@ -447,7 +447,6 @@
                             .Parameters
                             .AddRange(parameters);
                     }
-
                     connection.Open();
                     var result = new JObject
                     {
@@ -465,22 +464,22 @@
                             "DurationInMilliseconds"
                             , null
                         }
-                        ,
-                        {
-                            "DataBaseStatistics"
-                            , null
-                        }
-                        ,
-                        {
-                            "Inputs"
-                            , new JObject
-                                {
-                                    {
-                                        "Parameters"
-                                            , inputsParameters
-                                    }
-                                }
-                        }
+                        //,
+                        //{
+                        //    "DataBaseStatistics"
+                        //    , null
+                        //}
+                        //,
+                        //{
+                        //    "Inputs"
+                        //    , new JObject
+                        //        {
+                        //            {
+                        //                "Parameters"
+                        //                    , inputsParameters
+                        //            }
+                        //        }
+                        //}
                         ,
                         {
                             "Outputs"
@@ -516,7 +515,8 @@
                         (
                             (JArray)
                                 result
-                                    ["Outputs"]["ResultSets"]
+                                    ["Outputs"]
+                                    ["ResultSets"]
                         )
                         .Add
                             (
@@ -573,7 +573,6 @@
                     {
                         result["Outputs"]["Parameters"] = jOutputParameters;
                     }
-
                     if (isSqlConnection)
                     {
                         sqlConnection = connection as SqlConnection;
@@ -585,7 +584,16 @@
                                 var statistics = sqlConnection.RetrieveStatistics();
                                 var json = JsonHelper.Serialize(statistics);
                                 var jStatistics = JObject.Parse(json);
-                                result["DataBaseStatistics"] = jStatistics;
+                                result["DurationInMilliseconds"]
+                                        .Parent
+                                        .AddAfterSelf
+                                            (
+                                                new JProperty
+                                                        (
+                                                            "DataBaseStatistics"
+                                                            , jStatistics
+                                                        )
+                                            );
                             }
                         }
                     }

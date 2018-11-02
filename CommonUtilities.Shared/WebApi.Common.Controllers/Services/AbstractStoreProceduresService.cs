@@ -345,7 +345,6 @@ namespace Microshaoft.Web
                                     );
             return r;
         }
-
         protected virtual
             (
                 bool Success
@@ -479,11 +478,12 @@ namespace Microshaoft.Web
                 statusCode = 500;
                 return Result();
             }
-            var connectionConfiguration = _configuration
-                                                .GetSection("Connections")
-                                                .GetSection(connectionID);
+            var connectionConfiguration =
+                                _configuration
+                                        .GetSection("Connections")
+                                        .GetSection(connectionID);
             connectionString = connectionConfiguration
-                                    .GetValue<string>("ConnectionString");
+                                        .GetValue<string>("ConnectionString");
             success = !connectionString.IsNullOrEmptyOrWhiteSpace();
             if (!success)
             {
@@ -492,7 +492,6 @@ namespace Microshaoft.Web
             }
             dataBaseType = connectionConfiguration
                                     .GetValue<string>("DataBaseType");
-
             success = !dataBaseType.IsNullOrEmptyOrWhiteSpace();
             if (!success)
             {
@@ -511,10 +510,12 @@ namespace Microshaoft.Web
                         .GetValue<bool>("EnableStatistics");
             if (enableStatistics)
             {
-                enableStatistics = routesConfiguration
+                if (routesConfiguration.GetSection("EnableStatistics").Exists())
+                {
+                    enableStatistics = routesConfiguration
                                         .GetValue<bool>("EnableStatistics");
+                }
             }
-
             success = !storeProcedureName.IsNullOrEmptyOrWhiteSpace();
             if (!success)
             {

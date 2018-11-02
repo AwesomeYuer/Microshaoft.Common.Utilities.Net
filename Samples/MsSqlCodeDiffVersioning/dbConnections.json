@@ -5,7 +5,7 @@
     "c1": {
       "DataBaseType": "mssql",
       "ConnectionString": "Initial Catalog=test;Data Source=localhost;User=sa;Password=!@#123QWE",
-      "enableStatistics": false,
+      "enableStatistics": true,
     },
     "c2": {
       "DataBaseType": "mssql",
