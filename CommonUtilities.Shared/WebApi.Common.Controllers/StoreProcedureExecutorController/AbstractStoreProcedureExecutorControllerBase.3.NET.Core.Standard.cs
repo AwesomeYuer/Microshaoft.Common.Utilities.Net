@@ -44,8 +44,6 @@ namespace Microshaoft.WebApi.Controllers
             _service = service;
         }
 
-
-
         [HttpDelete]
         [HttpGet]
         [HttpHead]
@@ -94,7 +92,7 @@ namespace Microshaoft.WebApi.Controllers
                             , parameters
                             , _onReadRowColumnProcessFunc
                             , Request.Method
-                            , 102
+                            //, 102
                         );
             if (r.StatusCode == 200)
             {
@@ -109,32 +107,42 @@ namespace Microshaoft.WebApi.Controllers
                                     , resultPathSegment5
                                     , resultPathSegment6
                                 );
-                
                 if 
                     (
                         (
                             HttpContext
                                 .Request
                                 .Method
-                            ==
+                            !=
                             "HttpPost"
                         )
-                        ||
+                        &&
                         (
                             HttpContext
                                 .Request
                                 .Method
-                            ==
+                            !=
                             "HttpPut"
                         )
                     )
                 {
-                    (
-                        (JObject)
-                        result
-                    )
-                    .Property("Inputs")
-                    .Remove();
+                    result["Outputs"]
+                        .Parent
+                        .AddBeforeSelf
+                            (
+                                new JProperty
+                                    (
+                                        "Inputs"
+                                        , new JObject
+                                            (
+                                                new JProperty
+                                                (
+                                                    "Parameters"
+                                                    , parameters
+                                                )
+                                            )
+                                    )
+                            );
                 }
             }
             else

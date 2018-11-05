@@ -153,6 +153,7 @@ namespace Microshaoft
                     IssuerSigningKey = signingKey,
                     ValidateIssuerSigningKey = true,
                     ValidateLifetime = false,
+                    
 
                 };
 
@@ -329,6 +330,7 @@ namespace Microshaoft
                                         IssuedAt = DateTime.Now,
                                         Subject = claimsIdentity,
                                         SigningCredentials = signingCredentials,
+                                          
                                     };
                 var tokenHandler = new JwtSecurityTokenHandler();
                 plainToken = tokenHandler.CreateToken(securityTokenDescriptor);

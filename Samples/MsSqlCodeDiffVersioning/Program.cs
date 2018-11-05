@@ -7,6 +7,7 @@
     using System;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     using System.Runtime.InteropServices;
 
  //xcopy ..\..\StoreProcedureWebApiExecutorsPlugins\MsSQL.StoreProcedureWebApiExecutor.Plugin\bin\Debug\netcoreapp2.1\*.plugin.* $(TargetDir) CompositionPlugins\ /Y
@@ -62,31 +63,52 @@
         }
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
-            var config =
-                    new ConfigurationBuilder()
-                            .AddJsonFile
-                                (
-                                    path: "hostings.json"
-                                    , optional: false
-                                    , reloadOnChange: true
-                                )
-                            .AddJsonFile
-                                (
-                                    path: "dbConnections.json"
-                                    , optional: false
-                                    , reloadOnChange: true
-                                )
-                            .AddJsonFile
-                                (
-                                    path: "dynamicLoadExecutorsPaths.json"
-                                    , optional: false
-                                    , reloadOnChange: true
-                                )
-                            .Build();
+            //var configuration =
+            //        new ConfigurationBuilder()
+
+            //                .Build();
+
+            var executingDirectory =
+                        Path
+                            .GetDirectoryName
+                                    (
+                                        Assembly
+                                            .GetExecutingAssembly()
+                                            .Location
+                                    );
             return
                 WebHost
                     .CreateDefaultBuilder(args)
-                    .UseConfiguration(config)
+                    //.UseConfiguration(configuration)
+                    .ConfigureAppConfiguration
+                    (
+                        (hostingContext, configuration) =>
+                        {
+                            configuration
+                                .SetBasePath(executingDirectory);
+                            configuration
+                                .AddJsonFile
+                                    (
+                                        path: "hostings.json"
+                                        , optional: false
+                                        , reloadOnChange: true
+                                    )
+                                .AddJsonFile
+                                    (
+                                        path: "dbConnections.json"
+                                        , optional: false
+                                        , reloadOnChange: true
+                                    )
+                                .AddJsonFile
+                                    (
+                                        path: "dynamicLoadExecutorsPaths.json"
+                                        , optional: false
+                                        , reloadOnChange: true
+                                    );
+
+                        }
+
+                    )
                     //.UseUrls("http://+:5000")
                     .UseStartup<Startup>();
         }

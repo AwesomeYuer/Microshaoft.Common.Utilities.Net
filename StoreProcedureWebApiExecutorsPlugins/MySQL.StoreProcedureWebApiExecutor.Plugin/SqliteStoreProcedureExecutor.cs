@@ -43,6 +43,7 @@
                                 , int       // column index
                                 , JProperty   //  JObject Field 对象
                             > onReadRowColumnProcessFunc = null
+                        , bool enableStatistics = false
                         , int commandTimeoutInSeconds = 90
                     )
         {

@@ -273,11 +273,11 @@
             //jsonp cross domain
             var search = document.getElementById("search").value;
             var beforeTime = document.getElementById("datepicker1").value;
-            var url = baseUrl + "/api/StoreProcedureExecutor/objects/Outputs/ResultSets/0/Rows?searchobjectname=" + search + "&beforetime=" + beforeTime;
+            var url = baseUrl + "/api/StoreProcedureExecutor/objects?searchobjectname=" + search + "&beforetime=" + beforeTime;
             $.getJSON(
                 url
                 , function (data) {
-                        $.each(data, function (i, item) {
+                        $.each(data.Outputs.ResultSets[0].Rows, function (i, item) {
                             var items = vm.Items();
                             var found = items.find(function (x) {
                                 return x.ID == item.ID;

@@ -4,6 +4,10 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="MetricsRegistry\MetricsRegistry.cs" />
+  </ItemGroup>
+
   <!--<ItemGroup>
     <Content Remove="wwwroot\libs\jquery-ui\jquery-ui-1.12.1.css" />
     <Content Remove="wwwroot\libs\jquery-ui\jquery-ui-1.12.1.js" />
@@ -56,6 +60,7 @@
 
   <ItemGroup>
     <Folder Include="CompositionPlugins\" />
+    <Folder Include="MetricsRegistry\" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

@@ -42,27 +42,25 @@ namespace Microshaoft.Web
             var ok = false;
             var errorMessage = string.Empty;
             var errorStatusCode = -1;
+            
             void ErrorResult()
             {
-                //context.Result = new ForbidResult();
-                context.Result = new ContentResult()
-                {
-                    StatusCode = errorStatusCode
-                     ,
-                    ContentType = "application/json"
-                     ,
-                    Content =
-$@"{{
-    StatusCode : {errorStatusCode}
-    , Message : ""{errorMessage}""
-}}"
-                };
-                //return;
+                context
+                    .Result = new JsonResult
+                                    (
+                                        new
+                                        {
+                                            StatusCode = errorStatusCode
+                                            , Message = errorMessage
+                                        }
+                                    )
+                                {
+                                    StatusCode = errorStatusCode
+                                    , ContentType = "application/json"
+                                };
             }
-
             var request = context.HttpContext.Request;
             StringValues jwtToken = string.Empty;
-            
             IConfiguration configuration =
                         (IConfiguration)context
                                             .HttpContext

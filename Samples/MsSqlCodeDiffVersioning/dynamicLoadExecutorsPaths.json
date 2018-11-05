@@ -2,6 +2,6 @@
   "DynamicLoadExecutorsPaths": [
     //"D:\\MyGitHub\\MsSqlCodeDiffVersioning\\MsSqlCodeDiffVersioning\\bin\\Debug\\netcoreapp2.1\\CompositionPlugins",
     ".\\CompositionPlugins\\",
-    
+    "aaaaaaaaaa",
   ]
 }
