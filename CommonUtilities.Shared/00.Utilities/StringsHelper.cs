@@ -4,6 +4,27 @@ namespace Microshaoft
     using System.Text;
     public static class StringHelper
     {
+
+        /// <summary>
+        /// Returns first non whitespace character
+        /// </summary>
+        /// <param name="target">Text to search in</param>
+        /// <returns>Non whitespace or default char</returns>
+        public static char FirstNonWhitespaceCharacter(this string target)
+        {
+            if (string.IsNullOrWhiteSpace(target))
+            {
+                return '\0';
+            }
+            for (int i = 0; i < target.Length; i++)
+            {
+                if (!char.IsWhiteSpace(target[i]))
+                {
+                    return target[i];
+                }
+            }
+            return '\0';
+        }
         public static int FindIndex
                                 (
                                     this string target
@@ -42,8 +63,6 @@ namespace Microshaoft
                 );
             return p;
         }
-
-
         public static bool IsNullOrEmptyOrWhiteSpace(this string target)
         {
             return 
