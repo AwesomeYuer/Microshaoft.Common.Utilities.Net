@@ -71,8 +71,141 @@
             return 0;
         }
     }
+
     public static class JsonHelper
     {
+        public static JTokenType TryParseJson(this string target, out JToken jToken)
+        {
+            var r = JTokenType.None;
+            jToken = null;
+            try
+            {
+                jToken = JToken.Parse(target);
+                if (jToken is JArray)
+                {
+                    r = JTokenType.Array;
+                }
+                else if (jToken is JObject)
+                {
+                    r = JTokenType.Object;
+                }
+            }
+            catch
+            {
+
+            }
+            return r;
+        }
+
+        public static bool IsJson(this string target, bool validate = false)
+        {
+            //IL_0018: Unknown result type (might be due to invalid IL or missing references)
+            var r = false;
+            char c = target.FirstNonWhitespaceCharacter();
+            r = (c == '{' || c == '[');
+            if (r && validate)
+            {
+                try
+                {
+                    JToken.Parse(target);
+                    r = true;
+                }
+                catch
+                {
+                    r = false;
+                }
+            }
+            return r;
+        }
+
+        public static bool IsJArray(this string target, bool validate = false)
+        {
+            //IL_0018: Unknown result type (might be due to invalid IL or missing references)
+            var r = false;
+            char c = target.FirstNonWhitespaceCharacter();
+            r = (c == '[');
+            if (r && validate)
+            {
+                try
+                {
+                    r = (TryParseJson(target, out _) == JTokenType.Array);
+                }
+                catch
+                {
+                    r = false;
+                }
+            }
+            return r;
+        }
+
+        public static bool TryParseJArray(this string target, out JArray jArray)
+        {
+            //IL_0018: Unknown result type (might be due to invalid IL or missing references)
+            var r = false;
+            jArray = null;
+            if (r)
+            {
+                try
+                {
+                    JToken jToken = null;
+                    r = (TryParseJson(target, out jToken) == JTokenType.Array);
+                    if (r)
+                    {
+                        jArray = jToken as JArray;
+                    }
+                }
+                catch
+                {
+                    r = false;
+                }
+            }
+            return r;
+        }
+
+        public static bool TryParseJObject(this string target, out JObject jObject)
+        {
+            //IL_0018: Unknown result type (might be due to invalid IL or missing references)
+            var r = false;
+            jObject = null;
+            if (r)
+            {
+                try
+                {
+                    JToken jToken = null;
+                    r = (TryParseJson(target, out jToken) == JTokenType.Object);
+                    if (r)
+                    {
+                        jObject = jToken as JObject;
+                    }
+                }
+                catch
+                {
+                    r = false;
+                }
+            }
+            return r;
+        }
+
+        public static bool IsJObject(this string target, bool validate = false)
+        {
+            //IL_0018: Unknown result type (might be due to invalid IL or missing references)
+            var r = false;
+            char c = StringHelper.FirstNonWhitespaceCharacter(target);
+            r = (c == '{');
+            if (r && validate)
+            {
+                try
+                {
+                    r = (TryParseJson(target, out _) == JTokenType.Object);
+                }
+                catch
+                {
+                    r = false;
+                }
+            }
+            return r;
+        }
+
         public static object GetPrimtiveTypeJValueAsObject
                                     (
                                         this JToken target

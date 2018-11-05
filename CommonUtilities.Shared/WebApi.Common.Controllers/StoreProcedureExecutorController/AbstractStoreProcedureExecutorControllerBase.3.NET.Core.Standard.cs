@@ -20,21 +20,49 @@ namespace Microshaoft.WebApi.Controllers
                     IStoreProceduresWebApiService
                             _service;
 
-
-        private Func
-                                <
-                                    IDataReader
-                                    , Type        // fieldType
-                                    , string    // fieldName
-                                    , int       // row index
-                                    , int       // column index
-                                    , JProperty   //  JObject Field 对象
-                                > _onReadRowColumnProcessFunc = null;
-        protected virtual Func<IDataReader, Type, string, int, int, JProperty> OnReadRowColumnProcessFunc
+        protected virtual JProperty OnReadRowColumnProcessFunc
+                                        (
+                                            IDataReader dataReader
+                                            , Type fieldType
+                                            , string fieldName
+                                            , int rowIndex
+                                            , int columnIndex
+                                        )
         {
-            get => _onReadRowColumnProcessFunc;
-            set => _onReadRowColumnProcessFunc = value;
+            JProperty field = null;
+            if (fieldType == typeof(string))
+            {
+                //if (fieldName.Contains("Json", StringComparison.OrdinalIgnoreCase))
+                {
+                    //fieldName = fieldName.Replace("json", "", System.StringComparison.OrdinalIgnoreCase);
+                    var s = dataReader.GetString(columnIndex);
+                    //var ss = s.Trim();
+                    if
+                        (
+                            //(ss.StartsWith("{") && ss.EndsWith("}"))
+                            //||
+                            //(ss.StartsWith("[") && ss.EndsWith("]"))
+                            s.IsJson()
+                        )
+                    {
+                        //try
+                        //{
+                            var jToken = JToken.Parse(s);
+                            field = new JProperty
+                                    (
+                                        fieldName
+                                        , jToken
+                                    );
+                        //}
+                        //catch
+                        //{
+                        //}
+                    }
+                }
+            }
+            return field;
         }
+
 
         public AbstractStoreProceduresExecutorControllerBase
                     (
@@ -90,7 +118,7 @@ namespace Microshaoft.WebApi.Controllers
                         (
                             routeName
                             , parameters
-                            , _onReadRowColumnProcessFunc
+                            , OnReadRowColumnProcessFunc
                             , Request.Method
                             //, 102
                         );

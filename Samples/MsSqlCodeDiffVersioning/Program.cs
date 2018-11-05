@@ -63,11 +63,6 @@
         }
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
-            //var configuration =
-            //        new ConfigurationBuilder()
-
-            //                .Build();
-
             var executingDirectory =
                         Path
                             .GetDirectoryName
@@ -105,9 +100,7 @@
                                         , optional: false
                                         , reloadOnChange: true
                                     );
-
                         }
-
                     )
                     //.UseUrls("http://+:5000")
                     .UseStartup<Startup>();
