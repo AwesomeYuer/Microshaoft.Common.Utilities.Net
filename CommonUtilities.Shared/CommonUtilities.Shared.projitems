@@ -194,6 +194,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Web.Filters\BearerTokenAuthorizeFilter.CoreStandard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\CommonController\AbstractCommonControllerBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\CommonController\AbstractActionCommonProcessingService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenModelBinder\HttpRequestHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\StoreProcedureExecutorController\AbstractStoreProcedureExecutorControllerBase.1.NET.All.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\StoreProcedureExecutorController\AbstractStoreProcedureExecutorControllerBase.3.NET.Core.Standard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\StoreProcedureExecutorController\AbstractStoreProcedureExecutorControllerBase.2.NET.Framework.cs" />
@@ -247,7 +248,6 @@
     <Content Include="$(MSBuildThisFileDirectory)DataAccess\Pager.StoreProcedure.Sample.sql" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenModelBinder\" />
     <Folder Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\StoreProcedureExecutorController\" />
     <Folder Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\Services\" />
   </ItemGroup>

@@ -62,8 +62,6 @@ namespace Microshaoft.WebApi.Controllers
             }
             return field;
         }
-
-
         public AbstractStoreProceduresExecutorControllerBase
                     (
                         IStoreProceduresWebApiService service
@@ -91,25 +89,26 @@ namespace Microshaoft.WebApi.Controllers
                     + "{resultPathSegment6?}"
                 )
         ]
-        public virtual ActionResult<JToken> ProcessActionRequest
-                            (
-                                [FromRoute]
-                                    string routeName
-                                , [ModelBinder(typeof(JTokenModelBinder))]
-                                    JToken parameters = null
-                                , [FromRoute]
-                                    string resultPathSegment1 = null
-                                , [FromRoute]
-                                    string resultPathSegment2 = null
-                                , [FromRoute]
-                                    string resultPathSegment3 = null
-                                , [FromRoute]
-                                    string resultPathSegment4 = null
-                                , [FromRoute]
-                                    string resultPathSegment5 = null
-                                , [FromRoute]
-                                    string resultPathSegment6 = null
-                            )
+        public virtual ActionResult<JToken> 
+                            ProcessActionRequest
+                                (
+                                    [FromRoute]
+                                        string routeName
+                                    , [ModelBinder(typeof(JTokenModelBinder))]
+                                        JToken parameters = null
+                                    , [FromRoute]
+                                        string resultPathSegment1 = null
+                                    , [FromRoute]
+                                        string resultPathSegment2 = null
+                                    , [FromRoute]
+                                        string resultPathSegment3 = null
+                                    , [FromRoute]
+                                        string resultPathSegment4 = null
+                                    , [FromRoute]
+                                        string resultPathSegment5 = null
+                                    , [FromRoute]
+                                        string resultPathSegment6 = null
+                                )
         {
             JToken result = null;
             (int StatusCode, JToken Result) r =
@@ -124,17 +123,7 @@ namespace Microshaoft.WebApi.Controllers
                         );
             if (r.StatusCode == 200)
             {
-                result = r
-                            .Result
-                            .GetDescendantByPath
-                                (
-                                    resultPathSegment1
-                                    , resultPathSegment2
-                                    , resultPathSegment3
-                                    , resultPathSegment4
-                                    , resultPathSegment5
-                                    , resultPathSegment6
-                                );
+                result = r.Result;
                 if 
                     (
                         (
@@ -172,6 +161,16 @@ namespace Microshaoft.WebApi.Controllers
                                     )
                             );
                 }
+                result = result
+                            .GetDescendantByPath
+                                (
+                                    resultPathSegment1
+                                    , resultPathSegment2
+                                    , resultPathSegment3
+                                    , resultPathSegment4
+                                    , resultPathSegment5
+                                    , resultPathSegment6
+                                );
             }
             else
             {

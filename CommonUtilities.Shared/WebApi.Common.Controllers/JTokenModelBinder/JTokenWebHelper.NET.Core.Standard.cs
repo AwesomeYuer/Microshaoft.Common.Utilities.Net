@@ -8,30 +8,14 @@ namespace Microshaoft.WebApi
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    public static class JTokenWebExtensions
+
+    public static class JTokenWebHelper
     {
         public static bool IsJsonRequest(this HttpRequest target)
         {
-            return JTokenWebHelper.IsJsonRequest(target);
-        }
-        public static JToken ToJToken(this IFormCollection target)
-        {
-            return
-                JTokenWebHelper.ToJToken(target);
+            return target.ContentType == "application/json";
         }
         public static JToken ToJToken(this IQueryCollection target)
-        {
-            return
-                JTokenWebHelper.ToJToken(target);
-        }
-    }
-    public static class JTokenWebHelper
-    {
-        public static bool IsJsonRequest(HttpRequest request)
-        {
-            return request.ContentType == "application/json";
-        }
-        public static JToken ToJToken(IQueryCollection target)
         {
             return
                  ToJToken
@@ -40,7 +24,7 @@ namespace Microshaoft.WebApi
                             target
                     );
         }
-        public static JToken ToJToken(IFormCollection target)
+        public static JToken ToJToken(this IFormCollection target)
         {
             return
                  ToJToken
@@ -51,7 +35,7 @@ namespace Microshaoft.WebApi
         }
         public static JToken ToJToken
                                 (
-                                    IEnumerable<KeyValuePair<string, StringValues>>
+                                    this IEnumerable<KeyValuePair<string, StringValues>>
                                             target
                                 )
         {
