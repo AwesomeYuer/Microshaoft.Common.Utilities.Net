@@ -39,11 +39,12 @@
                             {
                                 var columnName = column.ColumnName;
                                 var jToken = j[columnName];
-                                row[columnName] = jToken
-                                                    .GetPrimtiveTypeJValueAsObject
-                                                        (
-                                                            column.DataType
-                                                        );
+                                var jv = jToken
+                                            .GetPrimtiveTypeJValueAsObject
+                                                (
+                                                    column.DataType
+                                                );
+                                row[columnName] = (jv == null ? DBNull.Value : jv);
                             }
                             rows.Add(row);
                         }
