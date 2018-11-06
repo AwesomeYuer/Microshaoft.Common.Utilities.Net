@@ -8,9 +8,8 @@ namespace Microshaoft.WebApi.ModelBinders
     using Microsoft.Extensions.Logging.Abstractions;
     using Microsoft.Extensions.Primitives;
     using Newtonsoft.Json.Linq;
-    //using System.IO;
     using System.Threading.Tasks;
-    //using System.Web;
+    using Microshaoft.Web;
     public class JTokenModelBinder : IModelBinder
     {
         public async Task BindModelAsync(ModelBindingContext bindingContext)
@@ -32,10 +31,11 @@ namespace Microshaoft.WebApi.ModelBinders
                                     .Value;
             var ok = false;
             JToken parameters = null;
-            ok = request
+            ok = HttpRequestHelper
                     .TryParseJTokenParameters
                         (
-                            out parameters
+                            request
+                            , out parameters
                             , out var secretJwtToken
                             , async (x) =>
                             {
