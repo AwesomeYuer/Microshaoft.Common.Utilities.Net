@@ -20,7 +20,12 @@ namespace Microshaoft.WebApi.Controllers
                     IStoreProceduresWebApiService
                             _service;
 
-        protected virtual JProperty OnReadRowColumnProcessFunc
+        protected virtual 
+                    (
+                        bool NeedDefaultProcess
+                        , JProperty Field
+                    )
+                        OnReadRowColumnProcessFunc
                                         (
                                             IDataReader dataReader
                                             , Type fieldType
@@ -30,6 +35,7 @@ namespace Microshaoft.WebApi.Controllers
                                         )
         {
             JProperty field = null;
+            bool needDefaultProcess = true;
             if (fieldType == typeof(string))
             {
                 //if (fieldName.Contains("Json", StringComparison.OrdinalIgnoreCase))
@@ -53,6 +59,7 @@ namespace Microshaoft.WebApi.Controllers
                                         fieldName
                                         , jToken
                                     );
+                            needDefaultProcess = false;
                         //}
                         //catch
                         //{
@@ -60,7 +67,11 @@ namespace Microshaoft.WebApi.Controllers
                     }
                 }
             }
-            return field;
+            return 
+                (
+                    needDefaultProcess
+                    , field
+                );
         }
         public AbstractStoreProceduresExecutorControllerBase
                     (

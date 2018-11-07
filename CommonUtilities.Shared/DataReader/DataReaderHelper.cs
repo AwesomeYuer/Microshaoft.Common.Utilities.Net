@@ -95,10 +95,10 @@ namespace Microshaoft
                                         (x) =>
                                         {
                                             attribute =
-                                                        x
-                                                            .GetCustomAttributes
-                                                                (typeof(MemberAdditionalDefinitionAttribute), true)
-                                                            .FirstOrDefault() as MemberAdditionalDefinitionAttribute;
+                                                    x
+                                                        .GetCustomAttributes
+                                                            (typeof(MemberAdditionalDefinitionAttribute), true)
+                                                        .FirstOrDefault() as MemberAdditionalDefinitionAttribute;
                                             return x;
                                         }
                                     );
@@ -149,7 +149,11 @@ namespace Microshaoft
                                             , string    // fieldName
                                             , int       // row index
                                             , int       // column index
-                                            , JProperty   //  JObject Field 对象
+                                            ,
+                                                (
+                                                    bool needDefaultProcess
+                                                    , JProperty field   //  JObject Field 对象
+                                                )
                                         > onReadRowColumnProcessFunc = null
                              )
         {
@@ -206,7 +210,11 @@ namespace Microshaoft
                                             , string    // fieldName
                                             , int       // row index
                                             , int       // column index
-                                            , JProperty   //  JObject Field 对象
+                                            ,
+                                                (
+                                                    bool needDefaultProcess
+                                                    , JProperty field   //  JObject Field 对象
+                                                )
                                         > onReadRowColumnProcessFunc = null
                              )
         {
@@ -223,15 +231,19 @@ namespace Microshaoft
                     var needDefaultProcess = true;
                     if (onReadRowColumnProcessFunc != null)
                     {
-                        field = onReadRowColumnProcessFunc
-                                (
-                                    dataReader
-                                    , fieldType
-                                    , fieldName
-                                    , rowIndex
-                                    , fieldIndex
-                                );
-                        needDefaultProcess = (field == null);
+                        var r = onReadRowColumnProcessFunc
+                                    (
+                                        dataReader
+                                        , fieldType
+                                        , fieldName
+                                        , rowIndex
+                                        , fieldIndex
+                                    );
+                        needDefaultProcess = r.needDefaultProcess;
+                        if (r.field != null)
+                        {
+                            field = r.field;
+                        }
                         //fieldValue = NewMethod(dataReader, i, fieldType);
                     }
                     if (needDefaultProcess)

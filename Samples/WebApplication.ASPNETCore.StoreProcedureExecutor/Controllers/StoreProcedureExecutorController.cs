@@ -141,7 +141,11 @@ namespace Microshaoft.WebApi.Controllers
                                                             );
                                         }
                                     }
-                                    return field;
+                                    return
+                                        (
+                                            field == null
+                                            , field
+                                        );
                                 }
                                 , Request.Method
                             );

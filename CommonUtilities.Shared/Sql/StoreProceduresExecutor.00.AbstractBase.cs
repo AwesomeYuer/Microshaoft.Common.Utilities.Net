@@ -379,7 +379,11 @@
                                     , string    // fieldName
                                     , int       // row index
                                     , int       // column index
-                                    , JProperty   //  JObject Field 对象
+                                    ,
+                                        (
+                                            bool needDefaultProcess
+                                            , JProperty field   //  JObject Field 对象
+                                        )
                                 > onReadRowColumnProcessFunc = null
                             , int commandTimeout = 90
                         )
@@ -409,7 +413,11 @@
                                     , string    // fieldName
                                     , int       // row index
                                     , int       // column index
-                                    , JProperty   //  JObject Field 对象
+                                    ,
+                                        (
+                                            bool needDefaultProcess
+                                            , JProperty field   //  JObject Field 对象
+                                        )
                                 > onReadRowColumnProcessFunc = null
                             //, bool enableStatistics = false
                             , int commandTimeout = 90

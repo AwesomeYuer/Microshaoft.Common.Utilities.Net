@@ -1,4 +1,5 @@
-﻿namespace Microshaoft
+﻿#if !NETFRAMEWORK4_6_X
+namespace Microshaoft
 {
     using Newtonsoft.Json.Linq;
     using System;
@@ -19,11 +20,15 @@
                     , Func
                         <
                             IDataReader
-                            , Type        // fieldType
-                            , string    // fieldName
-                            , int       // row index
-                            , int       // column index
-                            , JProperty   //  JObject Field 对象
+                            , Type          // fieldType
+                            , string        // fieldName
+                            , int           // row index
+                            , int           // column index
+                            ,
+                                (
+                                    bool needDefaultProcess
+                                    , JProperty field   //  JObject Field 对象
+                                )
                         > onReadRowColumnProcessFunc = null
 
                     , bool enableStatistics = false
@@ -44,3 +49,4 @@
         }
     }
 }
+#endif

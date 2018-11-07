@@ -16,23 +16,27 @@ namespace Microshaoft.Web
             int StatusCode
             , JToken Result
         )
-                Process
-                     (
-                        string routeName
-                        , JToken parameters = null
-                        , Func
-                                <
-                                    IDataReader
-                                    , Type        // fieldType
-                                    , string    // fieldName
-                                    , int       // row index
-                                    , int       // column index
-                                    , JProperty   //  JObject Field 对象
-                                > onReadRowColumnProcessFunc = null
-                        , string httpMethod = "Get"
-                        //, bool enableStatistics = false
-                        , int commandTimeoutInSeconds = 101
-                    );
+            Process
+                (
+                    string routeName
+                    , JToken parameters = null
+                    , Func
+                            <
+                                IDataReader
+                                , Type        // fieldType
+                                , string    // fieldName
+                                , int       // row index
+                                , int       // column index
+                                , 
+                                    (
+                                        bool needDefaultProcess
+                                        , JProperty field   //  JObject Field 对象
+                                    )
+                            > onReadRowColumnProcessFunc = null
+                    , string httpMethod = "Get"
+                    //, bool enableStatistics = false
+                    , int commandTimeoutInSeconds = 101
+                );
     }
     public abstract class
                 AbstractStoreProceduresService
@@ -234,7 +238,11 @@ namespace Microshaoft.Web
                                         , string    // fieldName
                                         , int       // row index
                                         , int       // column index
-                                        , JProperty   //  JObject Field 对象
+                                        ,
+                                            (
+                                                bool needDefaultProcess
+                                                , JProperty field   //  JObject Field 对象
+                                            )
                                     > onReadRowColumnProcessFunc = null
                                 , string httpMethod = "Get"
                                 //, bool enableStatistics = false
@@ -296,7 +304,11 @@ namespace Microshaoft.Web
                                     , string    // fieldName
                                     , int       // row index
                                     , int       // column index
-                                    , JProperty   //  JObject Field 对象
+                                    ,
+                                        (
+                                            bool needDefaultProcess
+                                            , JProperty field   //  JObject Field 对象
+                                        )
                                 > onReadRowColumnProcessFunc = null
                             , bool enableStatistics = false
                             , int commandTimeoutInSeconds = 90
