@@ -420,7 +420,7 @@
                                         )
                                 > onReadRowColumnProcessFunc = null
                             //, bool enableStatistics = false
-                            , int commandTimeout = 90
+                            , int commandTimeoutInSeconds = 90
                         )
         {
             var dataSource = connection.DataSource;
@@ -434,12 +434,16 @@
                         TDbCommand command = new TDbCommand()
                         {
                             CommandType = CommandType.StoredProcedure
-                            , CommandTimeout = commandTimeout
+                            , CommandTimeout = commandTimeoutInSeconds
                             , CommandText = storeProcedureName
                             , Connection = connection
                         }
                     )
                 {
+                    if (commandTimeoutInSeconds > 0)
+                    {
+                        command.CommandTimeout = commandTimeoutInSeconds;
+                    }
                     List<TDbParameter>
                         dbParameters
                             = GenerateExecuteParameters
