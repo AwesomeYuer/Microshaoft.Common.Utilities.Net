@@ -21,7 +21,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\bin\Debug\NET46x\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NETFRAMEWORK4_X</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETFRAMEWORK4_X;NETFRAMEWORK4_6_X</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>CommonUtilities.ruleset</CodeAnalysisRuleSet>

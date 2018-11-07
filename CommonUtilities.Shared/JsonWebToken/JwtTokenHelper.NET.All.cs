@@ -185,6 +185,8 @@ namespace Microshaoft
                                 , out SecurityToken plainToken
                                 , out string secretTokenString
                                 //, IIdentity identity = null
+                                , DateTime? notBefore = null
+                                , DateTime? expires = null
                                 , string signingCredentialsAlgorithm
                                             = SecurityAlgorithms
                                                 .HmacSha256Signature
@@ -228,6 +230,8 @@ namespace Microshaoft
                             , plainTextSecurityKey
                             , out plainToken
                             , out secretTokenString
+                            , notBefore
+                            , expires
                             //, identity
                             , signingCredentialsAlgorithm
                             , signingCredentialsDigest
@@ -245,6 +249,8 @@ namespace Microshaoft
                                 , out SecurityToken plainToken
                                 , out string secretTokenString
                                 //, IIdentity identity = null
+                                , DateTime? notBefore = null
+                                , DateTime? expires = null
                                 , string signingCredentialsAlgorithm
                                             = SecurityAlgorithms
                                                 .HmacSha256Signature
@@ -286,7 +292,8 @@ namespace Microshaoft
                             , out secretTokenString
                             , signingKey
                             , signingCredentials
-                            //, identity
+                            , notBefore
+                            , expires
                          );
             }
             catch //(Exception)
@@ -306,10 +313,11 @@ namespace Microshaoft
                         , out SecurityToken plainToken
                         , out string secretTokenString
                         , SecurityKey
-                                            signingKey
+                                        signingKey
                         , SigningCredentials
-                                                signingCredentials
-                        //, IIdentity identity = null
+                                            signingCredentials
+                        , DateTime? notBefore = null
+                        , DateTime? expires = null
                     )
         {
             bool r = false;
@@ -332,8 +340,18 @@ namespace Microshaoft
                                         IssuedAt = DateTime.Now,
                                         Subject = claimsIdentity,
                                         SigningCredentials = signingCredentials,
-                                          
                                     };
+                if (notBefore != null)
+                {
+                    securityTokenDescriptor
+                        .NotBefore = notBefore;
+                }
+                if (expires != null)
+                {
+                    securityTokenDescriptor
+                        .Expires = expires;
+                }
+
                 var tokenHandler = new JwtSecurityTokenHandler();
                 plainToken = tokenHandler.CreateToken(securityTokenDescriptor);
                 secretTokenString = tokenHandler.WriteToken(plainToken);

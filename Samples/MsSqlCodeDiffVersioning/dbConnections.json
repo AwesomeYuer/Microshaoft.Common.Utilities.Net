@@ -3,14 +3,16 @@
   "NeedAutoRefreshExecutedTimeForSlideExpire": false,
   "Connections": {
     "c1": {
-      "DataBaseType": "mssql",
-      "ConnectionString": "Initial Catalog=test;Data Source=localhost;User=sa;Password=!@#123QWE",
+      "dataBasetype": "mssql",
+      "connectionString": "Initial Catalog=test;Data Source=localhost;User=sa;Password=!@#123QWE",
       "enableStatistics": true,
+      "commandtimeoutInSeconds":  102,
     },
     "c2": {
-      "DataBaseType": "mssql",
+      "dataBaseType": "mssql",
       "ConnectionString": "Initial Catalog=test;Data Source=localhost;User=sa;Password=!@#123QWE",
-      "EnableStatistics": true
+      "EnaBleStatistics": true,
+      //"CommandTimeoutInSeconds": 100
       /*
 
       */
@@ -18,10 +20,11 @@
   },
   "Routes": {
     "objEcts": {
-      "HttpGet": {
-        "ConnectionID": "c1",
-        "StoreProcedureName": "zsp_zObjectsChangesLogsHistory_Get",
-        "EnableStatistics": true
+      "HttPGet": {
+        "connectionID": "c1",
+        "storeProcedureName": "zsp_zObjectsChangesLogsHistory_Get",
+        "EnableStatistics": true,
+        "commandtimeoutInSeconds": 103
       },
       "HttpPost": {
         "ConnectionID": "c1",

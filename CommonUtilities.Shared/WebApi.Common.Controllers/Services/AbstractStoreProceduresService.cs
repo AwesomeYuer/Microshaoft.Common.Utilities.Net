@@ -16,23 +16,27 @@ namespace Microshaoft.Web
             int StatusCode
             , JToken Result
         )
-                Process
-                     (
-                        string routeName
-                        , JToken parameters = null
-                        , Func
-                                <
-                                    IDataReader
-                                    , Type        // fieldType
-                                    , string    // fieldName
-                                    , int       // row index
-                                    , int       // column index
-                                    , JProperty   //  JObject Field 对象
-                                > onReadRowColumnProcessFunc = null
-                        , string httpMethod = "Get"
-                        //, bool enableStatistics = false
-                        , int commandTimeoutInSeconds = 101
-                    );
+            Process
+                (
+                    string routeName
+                    , JToken parameters = null
+                    , Func
+                            <
+                                IDataReader
+                                , Type        // fieldType
+                                , string    // fieldName
+                                , int       // row index
+                                , int       // column index
+                                , 
+                                    (
+                                        bool needDefaultProcess
+                                        , JProperty field   //  JObject Field 对象
+                                    )
+                            > onReadRowColumnProcessFunc = null
+                    , string httpMethod = "Get"
+                    //, bool enableStatistics = false
+                    , int commandTimeoutInSeconds = 101
+                );
     }
     public abstract class
                 AbstractStoreProceduresService
@@ -234,7 +238,11 @@ namespace Microshaoft.Web
                                         , string    // fieldName
                                         , int       // row index
                                         , int       // column index
-                                        , JProperty   //  JObject Field 对象
+                                        ,
+                                            (
+                                                bool needDefaultProcess
+                                                , JProperty field   //  JObject Field 对象
+                                            )
                                     > onReadRowColumnProcessFunc = null
                                 , string httpMethod = "Get"
                                 //, bool enableStatistics = false
@@ -264,7 +272,7 @@ namespace Microshaoft.Web
                                 , parameters
                                 , onReadRowColumnProcessFunc
                                 , r1.EnableStatistics
-                                , commandTimeoutInSeconds
+                                , r1.CommandTimeoutInSeconds
                             );
                 if (r2)
                 {
@@ -296,7 +304,11 @@ namespace Microshaoft.Web
                                     , string    // fieldName
                                     , int       // row index
                                     , int       // column index
-                                    , JProperty   //  JObject Field 对象
+                                    ,
+                                        (
+                                            bool needDefaultProcess
+                                            , JProperty field   //  JObject Field 对象
+                                        )
                                 > onReadRowColumnProcessFunc = null
                             , bool enableStatistics = false
                             , int commandTimeoutInSeconds = 90
@@ -350,6 +362,7 @@ namespace Microshaoft.Web
                 , string ConnectionString
                 , string DataBaseType
                 , string StoreProcedureName
+                , int CommandTimeoutInSeconds
                 , bool EnableStatistics
             )
             TryGetStoreProcedureInfo
@@ -358,11 +371,12 @@ namespace Microshaoft.Web
                             , string httpMethod
                         )
         {
-            var success = false;
+            var success = true;
             var statusCode = 500;
             var connectionString = string.Empty;
             var storeProcedureName = string.Empty;
             var dataBaseType = string.Empty;
+            var commandTimeoutInSeconds = 120;
             var enableStatistics = false;
             (
                 bool Result
@@ -370,9 +384,10 @@ namespace Microshaoft.Web
                 , string ConnectionString
                 , string DataBaseType
                 , string StoreProcedureName
+                , int CommandTimeoutInSeconds
                 , bool EnableStatistics
             )
-            Result()
+                Result()
             {
                 return
                     (
@@ -381,38 +396,13 @@ namespace Microshaoft.Web
                         , connectionString
                         , dataBaseType
                         , storeProcedureName
+                        , commandTimeoutInSeconds
                         , enableStatistics
                     );
             }
-            IConfigurationSection routesConfiguration = null;
-            try
-            {
-                routesConfiguration =
-                        _configuration
-                                .GetSection("Routes")
-                                //Ignore Case
-                                .GetChildren()
-                                .First
-                                    (
-                                        (x) =>
-                                        {
-                                            return
-                                                (
-                                                    string
-                                                        .Compare
-                                                            (
-                                                                x.Key
-                                                                , routeName
-                                                                , true
-                                                            )
-                                                    ==
-                                                    0
-                                                );
-                                        }
-                                    );
-                success = true;
-            }
-            catch// (Exception)
+            var routeConfiguration = _configuration
+                                        .GetSection($"Routes:{routeName}");
+            if (!routeConfiguration.Exists())
             {
                 success = false;
                 statusCode = 404;
@@ -421,45 +411,22 @@ namespace Microshaoft.Web
             {
                 return Result();
             }
-            try
+            if
+                (
+                    !httpMethod
+                        .StartsWith
+                            (
+                                "http"
+                                , StringComparison
+                                    .OrdinalIgnoreCase
+                            )
+                )
             {
-                routesConfiguration =
-                        routesConfiguration
-                            .GetChildren()
-                            .First
-                                (
-                                    (x) =>
-                                    {
-                                        if
-                                            (
-                                                !httpMethod
-                                                        .StartsWith
-                                                            (
-                                                                "http"
-                                                                , StringComparison
-                                                                    .OrdinalIgnoreCase
-                                                            )
-                                            )
-                                        {
-                                            httpMethod = "http" + httpMethod;
-                                        }
-                                        return
-                                            (
-                                                string
-                                                    .Compare
-                                                        (
-                                                            x.Key
-                                                            , httpMethod
-                                                            , true
-                                                        )
-                                                ==
-                                                0
-                                            );
-                                    }
-                                );
-                success = true;
+                httpMethod = "http" + httpMethod;
             }
-            catch// (Exception)
+            var actionConfiguration = routeConfiguration
+                                            .GetSection($"{httpMethod}");
+            if (!actionConfiguration.Exists())
             {
                 success = false;
                 statusCode = 403;
@@ -468,7 +435,7 @@ namespace Microshaoft.Web
             {
                 return Result();
             }
-            var connectionID = routesConfiguration
+            var connectionID = actionConfiguration
                                     .GetValue<string>("ConnectionID");
             success = !connectionID.IsNullOrEmptyOrWhiteSpace();
             if (!success)
@@ -478,8 +445,7 @@ namespace Microshaoft.Web
             }
             var connectionConfiguration =
                                 _configuration
-                                        .GetSection("Connections")
-                                        .GetSection(connectionID);
+                                        .GetSection($"Connections:{connectionID}");
             connectionString = connectionConfiguration
                                         .GetValue<string>("ConnectionString");
             success = !connectionString.IsNullOrEmptyOrWhiteSpace();
@@ -490,29 +456,32 @@ namespace Microshaoft.Web
             }
             dataBaseType = connectionConfiguration
                                     .GetValue<string>("DataBaseType");
+            if (connectionConfiguration.GetSection("CommandTimeoutInSeconds").Exists())
+            {
+                commandTimeoutInSeconds = connectionConfiguration.GetValue<int>("CommandTimeoutInSeconds");
+            }
             success = !dataBaseType.IsNullOrEmptyOrWhiteSpace();
             if (!success)
             {
                 statusCode = 500;
                 return Result();
             }
-            success = !connectionString.IsNullOrEmptyOrWhiteSpace();
-            if (!success)
-            {
-                statusCode = 500;
-                return Result();
-            }
-            storeProcedureName = routesConfiguration
+            storeProcedureName = actionConfiguration
                                         .GetValue<string>("StoreProcedureName");
             enableStatistics = connectionConfiguration
-                        .GetValue<bool>("EnableStatistics");
+                                        .GetValue<bool>("EnableStatistics");
             if (enableStatistics)
             {
-                if (routesConfiguration.GetSection("EnableStatistics").Exists())
+                if (actionConfiguration.GetSection("EnableStatistics").Exists())
                 {
-                    enableStatistics = routesConfiguration
-                                        .GetValue<bool>("EnableStatistics");
+                    enableStatistics = actionConfiguration
+                                            .GetValue<bool>("EnableStatistics");
                 }
+            }
+            if (actionConfiguration.GetSection("CommandTimeoutInSeconds").Exists())
+            {
+                commandTimeoutInSeconds = actionConfiguration
+                                                .GetValue<int>("CommandtimeoutInSeconds");
             }
             success = !storeProcedureName.IsNullOrEmptyOrWhiteSpace();
             if (!success)
@@ -520,7 +489,7 @@ namespace Microshaoft.Web
                 statusCode = 500;
                 return Result();
             }
-            success = true;
+            //success = true;
             statusCode = 200;
             return Result();
         }
