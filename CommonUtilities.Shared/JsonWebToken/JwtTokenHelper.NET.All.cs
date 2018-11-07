@@ -1,27 +1,16 @@
 ﻿#if NETCOREAPP2_X
 namespace Microshaoft
 {
-    using Microshaoft.WebApi;
-    using Microsoft.AspNetCore.Http;
-    //    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.Primitives;
     using Microsoft.IdentityModel.Tokens;
     using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Generic;
     using System.IdentityModel.Tokens.Jwt;
-    using System.IO;
-    //using Microsoft.IdentityModel.Tokens;
     using System.Linq;
     using System.Reflection;
     using System.Security.Claims;
     using System.Security.Principal;
     using System.Text;
-    using System.Web;
-
-    //#if NETFRAMEWORK4_X
-    //    using System.Web.Http.Controllers;
-    //#endif
 
     public class JsonWebTokenUser : IIdentity
     {
@@ -109,6 +98,8 @@ namespace Microshaoft
                                     , string plainTextSecurityKey
                                     , out JwtSecurityToken validatedPlainToken
                                     , out ClaimsPrincipal claimsPrincipal
+                                    , bool validateLifetime = false
+                                    , int clockSkewInSeconds = 300
                                 )
         {
             var signingKey = new SymmetricSecurityKey
@@ -127,6 +118,8 @@ namespace Microshaoft
                             , signingKey
                             , out validatedPlainToken
                             , out claimsPrincipal
+                            , validateLifetime
+                            , clockSkewInSeconds
                         );
             return r;
         }
@@ -136,6 +129,8 @@ namespace Microshaoft
                             , SecurityKey signingKey
                             , out JwtSecurityToken validatedPlainToken
                             , out ClaimsPrincipal claimsPrincipal
+                            , bool validateLifetime = false
+                            , int clockSkewInSeconds = 300
                         )
         {
             var r = false;
@@ -154,9 +149,8 @@ namespace Microshaoft
                     ValidateAudience = true,
                     IssuerSigningKey = signingKey,
                     ValidateIssuerSigningKey = true,
-                    ValidateLifetime = false,
-                    
-
+                    ValidateLifetime = validateLifetime,
+                    ClockSkew = TimeSpan.FromSeconds(clockSkewInSeconds)
                 };
 
                 claimsPrincipal = tokenHandler
