@@ -413,7 +413,7 @@ namespace Microshaoft.Web
                     );
             }
             var routeConfiguration = _configuration
-                                        .GetSection($"Routes:{routeName}");
+                                            .GetSection($"Routes:{routeName}");
             if (!routeConfiguration.Exists())
             {
                 success = false;
