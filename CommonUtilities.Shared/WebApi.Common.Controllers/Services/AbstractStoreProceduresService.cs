@@ -455,7 +455,7 @@ namespace Microshaoft.Web
             if (!success)
             {
                 statusCode = 500;
-                message = $"Database:{connectionID} error";
+                message = $"Database connectionID error";
                 return Result();
             }
             var connectionConfiguration =
@@ -467,7 +467,7 @@ namespace Microshaoft.Web
             if (!success)
             {
                 statusCode = 500;
-                message = $"Database:{connectionID} connection string error";
+                message = $"Database connection string error";
                 return Result();
             }
             dataBaseType = connectionConfiguration
