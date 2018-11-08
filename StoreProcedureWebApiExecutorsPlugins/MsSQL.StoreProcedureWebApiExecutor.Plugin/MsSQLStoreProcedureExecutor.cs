@@ -41,8 +41,8 @@
                                     , int       // column index
                                     ,
                                         (
-                                            bool needDefaultProcess
-                                            , JProperty field   //  JObject Field 对象
+                                            bool NeedDefaultProcess
+                                            , JProperty Field   //  JObject Field 对象
                                         )
                                 > onReadRowColumnProcessFunc = null
                         , bool enableStatistics = false

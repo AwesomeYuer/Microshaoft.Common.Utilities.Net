@@ -122,7 +122,12 @@ namespace Microshaoft.WebApi.Controllers
                                 )
         {
             JToken result = null;
-            (int StatusCode, JToken Result) r =
+            (
+                int StatusCode
+                , string Message
+                , JToken Result
+            )
+            r =
                 _service
                     .Process
                         (
@@ -185,7 +190,18 @@ namespace Microshaoft.WebApi.Controllers
             }
             else
             {
-                Response.StatusCode = r.StatusCode;
+                return
+                    new JsonResult
+                        (
+                            new
+                            {
+                                StatusCode = r.StatusCode
+                                , Message = r.Message
+                            }
+                        )
+                    {
+                        StatusCode = r.StatusCode
+                    };
             }
             return result;
         }
