@@ -32,19 +32,30 @@
                         var jArray = ((JArray)jValue);
                         var columns = dataTable.Columns;
                         var rows = dataTable.Rows;
-                        foreach (var j in jArray)
+                        foreach (JObject j in jArray)
                         {
                             var row = dataTable.NewRow();
+
                             foreach (DataColumn column in columns)
                             {
                                 var columnName = column.ColumnName;
-                                var jToken = j[columnName];
-                                var jv = jToken
-                                            .GetPrimtiveTypeJValueAsObject
+                                var b = j
+                                            .TryGetValue
                                                 (
-                                                    column.DataType
+                                                    columnName
+                                                    , StringComparison
+                                                            .OrdinalIgnoreCase
+                                                    , out var jToken
                                                 );
-                                row[columnName] = (jv == null ? DBNull.Value : jv);
+                                if (b)
+                                {
+                                    var jv = jToken
+                                                .GetPrimtiveTypeJValueAsObject
+                                                    (
+                                                        column.DataType
+                                                    );
+                                    row[columnName] = (jv == null ? DBNull.Value : jv);
+                                }
                             }
                             rows.Add(row);
                         }
