@@ -64,9 +64,9 @@ namespace Microshaoft.Win32
             int resp = 0;
             WTSSendMessage
                 (
-                    WTS_CURRENT_SERVER_HANDLE,
-                    WTSGetActiveConsoleSessionId(),
-                    title,
+                    WTS_CURRENT_SERVER_HANDLE
+                    , WTSGetActiveConsoleSessionId()
+                    , title,
                     title.Length,
                     message,
                     message.Length,
@@ -97,14 +97,16 @@ namespace Microshaoft.Win32
                 ShowMessageBox("WTSQueryUserToken failed", "AlertService Message");
             }
 
-            result = DuplicateTokenEx(
-                  hToken,
-                  GENERIC_ALL_ACCESS,
-                  ref sa,
-                  (int)SECURITY_IMPERSONATION_LEVEL.SecurityIdentification,
-                  (int)TOKEN_TYPE.TokenPrimary,
-                  ref hDupedToken
-               );
+            result = DuplicateTokenEx
+                (
+                    hToken
+                    , GENERIC_ALL_ACCESS
+                    , ref sa
+                    , (int) SECURITY_IMPERSONATION_LEVEL
+                                .SecurityIdentification
+                    , (int) TOKEN_TYPE.TokenPrimary
+                    , ref hDupedToken
+                );
 
             if (!result)
             {
@@ -119,18 +121,25 @@ namespace Microshaoft.Win32
                 ShowMessageBox("CreateEnvironmentBlock failed", "AlertService Message");
             }
 
-            result = CreateProcessAsUser(
-                                 hDupedToken,
-                                 app,
-                                 String.Empty,
-                                 ref sa, ref sa,
-                                 false, 0, IntPtr.Zero,
-                                 path, ref si, ref pi);
+            result = CreateProcessAsUser
+                            (
+                                 hDupedToken
+                                 , app
+                                 , string.Empty
+                                 , ref sa
+                                 , ref sa
+                                 , false
+                                 , 0
+                                 , IntPtr.Zero
+                                 , path
+                                 , ref si
+                                 , ref pi
+                            );
 
             if (!result)
             {
                 int error = Marshal.GetLastWin32Error();
-                string message = String.Format("CreateProcessAsUser Error: {0}", error);
+                string message = string.Format("CreateProcessAsUser Error: {0}", error);
                 ShowMessageBox(message, "AlertService Message");
             }
 
