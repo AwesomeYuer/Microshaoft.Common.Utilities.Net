@@ -14,28 +14,6 @@ namespace Microshaoft.WebApi.Controllers
         Oracle ,
         Sqlite
     }
-    public class StoreProcedureInfo
-    {
-        public string Name;
-        public string Alias;
-        public HttpMethodsFlags AllowedHttpMethods;
-        //public int CommandTimoutInSeconds = 120;
-    }
-    public class DataBaseConnectionInfo
-    {
-        public string ConnectionID;
-        public DataBasesType DataBaseType;
-        public string ConnectionString;
-        public IDictionary
-                    <string, StoreProcedureInfo>
-                            AllowExecuteWhiteList;
-        public int ConnectionTimeoutInSeconds = 120;
-
-
-        //public int CachedParametersDefinitionExpiredInSeconds = 3600;
-        //public bool NeedAutoRefreshExecutedTimeForSlideExpire = true;
-
-    }
     public abstract partial class 
             AbstractStoreProceduresExecutorControllerBase 
     {
