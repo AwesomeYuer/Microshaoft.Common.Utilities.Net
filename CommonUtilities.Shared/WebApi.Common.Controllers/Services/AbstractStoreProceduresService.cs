@@ -14,6 +14,7 @@ namespace Microshaoft.Web
     {
         (
             int StatusCode
+            , string Message
             , JToken Result
         )
             Process
@@ -29,8 +30,8 @@ namespace Microshaoft.Web
                                 , int       // column index
                                 , 
                                     (
-                                        bool needDefaultProcess
-                                        , JProperty field   //  JObject Field 对象
+                                        bool NeedDefaultProcess
+                                        , JProperty Field   //  JObject Field 对象
                                     )
                             > onReadRowColumnProcessFunc = null
                     , string httpMethod = "Get"
@@ -226,7 +227,11 @@ namespace Microshaoft.Web
         private IDictionary<string, IStoreProcedureExecutable>
                     _indexedExecutors;
         public
-            (int StatusCode, JToken Result)
+            (
+                int StatusCode
+                , string Message
+                , JToken Result
+            )
                         Process
                             (
                                 string routeName
@@ -240,8 +245,8 @@ namespace Microshaoft.Web
                                         , int       // column index
                                         ,
                                             (
-                                                bool needDefaultProcess
-                                                , JProperty field   //  JObject Field 对象
+                                                bool NeedDefaultProcess
+                                                , JProperty Field   //  JObject Field 对象
                                             )
                                     > onReadRowColumnProcessFunc = null
                                 , string httpMethod = "Get"
@@ -251,6 +256,7 @@ namespace Microshaoft.Web
         {
             JToken result = null;
             var statusCode = 500;
+            var message = string.Empty;
             var r1 = TryGetStoreProcedureInfo
                         (
                             routeName
@@ -282,10 +288,12 @@ namespace Microshaoft.Web
             else
             {
                 statusCode = r1.StatusCode;
+                message = r1.Message;
             }
             return
                 (
                     statusCode
+                    , message
                     , result
                 );
         }
@@ -306,8 +314,8 @@ namespace Microshaoft.Web
                                     , int       // column index
                                     ,
                                         (
-                                            bool needDefaultProcess
-                                            , JProperty field   //  JObject Field 对象
+                                            bool NeedDefaultProcess
+                                            , JProperty Field   //  JObject Field 对象
                                         )
                                 > onReadRowColumnProcessFunc = null
                             , bool enableStatistics = false
@@ -359,6 +367,7 @@ namespace Microshaoft.Web
             (
                 bool Success
                 , int StatusCode
+                , string Message
                 , string ConnectionString
                 , string DataBaseType
                 , string StoreProcedureName
@@ -373,6 +382,7 @@ namespace Microshaoft.Web
         {
             var success = true;
             var statusCode = 500;
+            string message = "ok";
             var connectionString = string.Empty;
             var storeProcedureName = string.Empty;
             var dataBaseType = string.Empty;
@@ -381,6 +391,7 @@ namespace Microshaoft.Web
             (
                 bool Result
                 , int StatusCode
+                , string Message
                 , string ConnectionString
                 , string DataBaseType
                 , string StoreProcedureName
@@ -393,6 +404,7 @@ namespace Microshaoft.Web
                     (
                         success
                         , statusCode
+                        , message
                         , connectionString
                         , dataBaseType
                         , storeProcedureName
@@ -406,6 +418,7 @@ namespace Microshaoft.Web
             {
                 success = false;
                 statusCode = 404;
+                message = $"{routeName} not found";
             }
             if (!success)
             {
@@ -430,6 +443,7 @@ namespace Microshaoft.Web
             {
                 success = false;
                 statusCode = 403;
+                message = $"{httpMethod} verb forbidden";
             }
             if (!success)
             {
@@ -441,6 +455,7 @@ namespace Microshaoft.Web
             if (!success)
             {
                 statusCode = 500;
+                message = $"Database:{connectionID} error";
                 return Result();
             }
             var connectionConfiguration =
@@ -452,6 +467,7 @@ namespace Microshaoft.Web
             if (!success)
             {
                 statusCode = 500;
+                message = $"Database:{connectionID} connection string error";
                 return Result();
             }
             dataBaseType = connectionConfiguration
@@ -464,6 +480,7 @@ namespace Microshaoft.Web
             if (!success)
             {
                 statusCode = 500;
+                message = $"Database Type error";
                 return Result();
             }
             storeProcedureName = actionConfiguration
@@ -487,6 +504,7 @@ namespace Microshaoft.Web
             if (!success)
             {
                 statusCode = 500;
+                message = $"Database StoreProcedure Name error";
                 return Result();
             }
             //success = true;

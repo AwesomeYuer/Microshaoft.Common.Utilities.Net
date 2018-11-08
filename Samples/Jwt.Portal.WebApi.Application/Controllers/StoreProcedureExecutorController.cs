@@ -87,7 +87,12 @@ namespace Microshaoft.WebApi.Controllers
                             );
             }
             JToken result = null;
-            (int StatusCode, JToken Result) r =
+            (
+                int StatusCode
+                , string Message
+                , JToken Result
+            )
+                r =
                     _service
                         .Process
                             (

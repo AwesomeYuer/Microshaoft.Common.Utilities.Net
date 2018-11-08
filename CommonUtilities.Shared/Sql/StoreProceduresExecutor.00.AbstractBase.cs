@@ -415,8 +415,8 @@
                                     , int       // column index
                                     ,
                                         (
-                                            bool needDefaultProcess
-                                            , JProperty field   //  JObject Field 对象
+                                            bool NeedDefaultProcess
+                                            , JProperty Field   //  JObject Field 对象
                                         )
                                 > onReadRowColumnProcessFunc = null
                             //, bool enableStatistics = false
@@ -552,21 +552,21 @@
                     if (dbParameters != null)
                     {
                         var outputParameters =
-                            dbParameters
-                                .Where
-                                    (
-                                        (x) =>
-                                        {
-                                            return
-                                                (
-                                                    x
-                                                        .Direction
-                                                    !=
-                                                    ParameterDirection
-                                                        .Input
-                                                );
-                                        }
-                                    );
+                                        dbParameters
+                                                .Where
+                                                    (
+                                                        (x) =>
+                                                        {
+                                                            return
+                                                                (
+                                                                    x
+                                                                        .Direction
+                                                                    !=
+                                                                    ParameterDirection
+                                                                        .Input
+                                                                );
+                                                        }
+                                                    );
                         foreach (var x in outputParameters)
                         {
                             if (jOutputParameters == null)
