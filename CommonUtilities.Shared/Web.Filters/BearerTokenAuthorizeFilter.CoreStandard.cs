@@ -206,8 +206,8 @@ namespace Microshaoft.Web
                                                         return
                                                             x.Value;
                                                     }
-                                                )
-                                            .ToArray();
+                                                );
+                                            //.ToArray();
                     ok = jwtAudiences
                              .Any
                                  (
