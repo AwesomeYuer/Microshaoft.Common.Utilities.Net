@@ -72,8 +72,9 @@
         }
     }
 
-    public static class JsonHelper
+    public static partial class JsonHelper
     {
+
         public static JTokenType TryParseJson(this string target, out JToken jToken)
         {
             var r = JTokenType.None;

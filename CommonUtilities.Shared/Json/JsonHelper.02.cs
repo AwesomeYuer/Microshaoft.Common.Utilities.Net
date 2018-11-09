@@ -2,8 +2,72 @@
 {
     using Newtonsoft.Json.Linq;
     using System;
-    public static class JTokenHelper
+    using System.Collections.Generic;
+
+    public static partial class JsonHelper
     {
+        public static IEnumerable<JValue> GetAllJValues(this JToken target)
+        {
+            if (target is JValue jValue)
+            {
+                yield return jValue;
+            }
+            else if (target is JArray jArray)
+            {
+                foreach (var result in GetAllJValuesFromJArray(jArray))
+                {
+                    yield return result;
+                }
+            }
+            else if (target is JProperty jProperty)
+            {
+                foreach (var result in GetAllJValuesFromJProperty(jProperty))
+                {
+                    yield return result;
+                }
+            }
+            else if (target is JObject jObject)
+            {
+                foreach (var result in GetAllValuesFromJObject(jObject))
+                {
+                    yield return result;
+                }
+            }
+        }
+
+        #region Private helpers
+
+        public static IEnumerable<JValue> GetAllJValuesFromJArray(this JArray target)
+        {
+            for (var i = 0; i < target.Count; i++)
+            {
+                foreach (var result in GetAllJValues(target[i]))
+                {
+                    yield return result;
+                }
+            }
+        }
+
+        public static IEnumerable<JValue> GetAllJValuesFromJProperty(this JProperty target)
+        {
+            foreach (var result in GetAllJValues(target.Value))
+            {
+                yield return result;
+            }
+        }
+
+        public static IEnumerable<JValue> GetAllValuesFromJObject(this JObject target)
+        {
+            foreach (var jToken in target.Children())
+            {
+                foreach (var result in GetAllJValues(jToken))
+                {
+                    yield return result;
+                }
+            }
+        }
+
+        #endregion
         public static JToken GetDescendantByKeysPath
                         (
                             this JToken target
@@ -34,8 +98,7 @@
                 }
                 if (jToken is JArray)
                 {
-                    var i = -1;
-                    var b = int.TryParse(key, out i);
+                    var b = int.TryParse(key, out var i);
                     if (b)
                     {
                         var ja = ((JArray)jToken);
@@ -57,14 +120,13 @@
                 {
                     if (ignoreCase)
                     {
-                        JToken j = null;
                         var b = ((JObject)jToken)
                                         .TryGetValue
                                             (
                                                 key
                                                 , StringComparison
                                                         .OrdinalIgnoreCase
-                                                , out j
+                                                , out var j
                                             );
                         if (b)
                         {
@@ -87,54 +149,9 @@
             }
             return jToken;
         }
-        //public static JToken GetDescendantByPath(this JToken target, params string[] paths)
-        //{
-        //    var jsonPath = string.Empty;
-        //    foreach (var path in paths)
-        //    {
-        //        if (path.IsNullOrEmptyOrWhiteSpace())
-        //        {
-        //            break;
-        //        }
-        //        int i = -1;
-        //        if (int.TryParse(path, out i))
-        //        {
-        //            //i--;
-        //            jsonPath += string.Format("[{0}]", i);
-        //        }
-        //        else
-        //        {
-        //            if (!jsonPath.IsNullOrEmptyOrWhiteSpace())
-        //            {
-        //                jsonPath += ".";
-        //            }
-        //            jsonPath += path;
-        //        }
-        //        //result = GetChild(segment, result);
-        //    }
-        //    if (!jsonPath.IsNullOrEmptyOrWhiteSpace())
-        //    {
-        //        target = target.SelectToken(jsonPath);
-        //    }
-
-        //    return target;
-        //}
-
-        //public static JToken GetChildByPath(this JToken target, string key)
-        //{
-        //    object oKey = key;
-        //    int iKey = -1;
-        //    if (int.TryParse(key, out iKey))
-        //    {
-        //        oKey = iKey;// - 1;
-        //    }
-        //    target = target[oKey];
-        //    return target;
-        //}
-
         public static bool TryGetNullableValue<T>
                             (
-                                JToken jToken
+                                this JToken target
                                 , ref T jTokenValue
                             )
                         where T : struct
@@ -143,9 +160,9 @@
             Nullable<T> output = null;
             //jTokenValue = default(T);
             //jTokenValue = jTokenValue;
-            if (jToken != null)
+            if (target != null)
             {
-                output = jToken.Value<Nullable<T>>();
+                output = target.Value<Nullable<T>>();
                 if (output.HasValue)
                 {
                     jTokenValue = output.Value;
@@ -156,16 +173,16 @@
         }
         public static bool TryGetNonNullValue<T>
                             (
-                                JToken jToken
+                                this JToken target
                                 , ref T jTokenValue
                             )
         {
             var r = false;
             //jTokenValue = default(T);
             //jTokenValue = jTokenValue;
-            if (jToken != null)
+            if (target != null)
             {
-                jTokenValue = jToken.Value<T>();
+                jTokenValue = target.Value<T>();
                 if (jTokenValue != null)
                 {
                     r = true;

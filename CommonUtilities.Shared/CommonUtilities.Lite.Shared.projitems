@@ -75,9 +75,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)HttpClientHelper\HttpClientHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\DynamicJson.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JsonFileHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonHelper.00.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonHelper.01..cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonHelper.02.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JsonReaderHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Json\JTokenHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KeyWordFilter\CharExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KeyWordFilter\FastFilter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KeyWordFilter\HashFilter.cs" />

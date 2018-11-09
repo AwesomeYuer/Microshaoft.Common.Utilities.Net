@@ -82,13 +82,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)FasterUtilities\Status.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpClientHelper\HttpClientHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)JsonWebToken\CliamsHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Json\JObjectExtensionMethodsManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonHelper.01..cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\DynamicJson.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Json\JObjectExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JsonFileHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonHelper.00.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JsonReaderHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Json\JTokenHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonHelper.02.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)JsonWebToken\JwtTokenHelper.NET.Framework.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)JsonWebToken\JwtTokenHelper.NET.All.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\KeyValueNode.cs" />
