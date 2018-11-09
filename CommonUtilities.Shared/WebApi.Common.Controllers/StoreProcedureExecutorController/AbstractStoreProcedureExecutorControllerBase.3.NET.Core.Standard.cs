@@ -178,7 +178,7 @@ namespace Microshaoft.WebApi.Controllers
                             );
                 }
                 result = result
-                            .GetDescendantByPath
+                            .GetDescendantByKeysPath
                                 (
                                     resultPathSegment1
                                     , resultPathSegment2
@@ -195,8 +195,8 @@ namespace Microshaoft.WebApi.Controllers
                         (
                             new
                             {
-                                StatusCode = r.StatusCode
-                                , Message = r.Message
+                                r.StatusCode
+                                , r.Message
                             }
                         )
                     {

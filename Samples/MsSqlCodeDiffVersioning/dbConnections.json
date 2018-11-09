@@ -28,45 +28,21 @@
       },
       "HttpPost": {
         "ConnectionID": "c1",
-        "StoreProcedureName": "zsp_zObjectsChangesLogsHistory_Get",
+        "StoreProcedureName": "zsp_zObjectsChangesLogsHistory_Get"
         //"EnableStatistics": true
       }
     },
-    "usEr": {
+    "masterdetails": {
       "HttPGet": {
+        "connectionID": "c1",
+        "storeProcedureName": "zsp_MasterDetails",
+        "EnableStatistics": true,
+        "commandtimeoutInSeconds": 103
+      },
+      "HttpPost": {
         "ConnectionID": "c1",
-        "StoreProcedureName": "usp_UsersHome_Get"
-      },
-      "HtTpPost": {
-        "ConnectionID": "c1",
-        "StoreProcedureName": "usp_UsersHome_Update"
-      }
-    },
-
-    "obj": {
-      "HttPGet": {
-        "ConnectionID": "c2",
-        "StoreProcedureName": "usp_UsersHome_Get"
-      },
-      "HtTpPost": {
-        "ConnectionID": "c2",
-        "StoreProcedureName": "usp_UsersHome_Update"
-      }
-    },
-    "users": {
-      "HttPGet": {
-        "ConnectionID": "c2",
-        "StoreProcedureName": "usp_UsersHome_Get"
-      },
-      "HtTpPost": {
-        "ConnectionID": "c2",
-        "StoreProcedureName": "usp_UsersHome_Update"
-      }
-    },
-    "userinfo": {
-      "HttPGet": {
-        "ConnectionID": "c2",
-        "StoreProcedureName": "usp_Userinfo"
+        "StoreProcedureName": "zsp_zObjectsChangesLogsHistory_Get"
+        //"EnableStatistics": true
       }
     }
   }

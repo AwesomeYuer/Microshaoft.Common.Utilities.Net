@@ -158,9 +158,10 @@ namespace Microshaoft.WebApi.Controllers
             {
                 result =
                     r.Result
-                        .GetDescendantByPath
+                        .GetDescendantByKeysPath
                             (
-                                "Outputs"
+                                true
+                                , "Outputs"
                                 , "ResultSets"
                                 , "0"
                                 , "Rows"
