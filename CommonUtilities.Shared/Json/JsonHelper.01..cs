@@ -8,7 +8,7 @@ namespace Microshaoft
     using System.ComponentModel;
     using System.Threading;
 
-    public static class JObjectExtensionMethodsManager
+    public static partial class JsonHelper
     {
         public static bool FreezeValueProperty
                                     (
