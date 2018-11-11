@@ -45,6 +45,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Collections\DictionaryExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\EmptyReadOnlyDictionary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\EnumerableHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ConcurrentDictionary\ConcurrentDictionaryHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\ConfigurationAppSettingsHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Console\ConsoleHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Console\DebugConsole.cs" />
@@ -65,7 +66,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)DynamicExpression\MethodCallExpressionHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EventLog\EventLogHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ExceptionStackTrace\StackTraceHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ExtensionsMethods\ConcurrentDictionaryExtensionsMethodsManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FasterUtilities\Native32.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FasterUtilities\NativeBufferPool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FasterUtilities\SafeConcurrentDictionary.cs" />
