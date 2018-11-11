@@ -48,30 +48,33 @@ namespace Microshaoft.Web
             }
             void RequestQueryStringHeaderProcess()
             {
-                var qs = target.QueryString.Value;
-                if (qs.IsNullOrEmptyOrWhiteSpace())
+                var queryString = target.QueryString.Value;
+                if (queryString.IsNullOrEmptyOrWhiteSpace())
                 {
                     return;
                 }
-                qs = HttpUtility
-                            .UrlDecode
-                                (
-                                    qs
-                                );
-                if (qs.IsNullOrEmptyOrWhiteSpace())
+                queryString = HttpUtility
+                                    .UrlDecode
+                                        (
+                                            queryString
+                                        );
+                if (queryString.IsNullOrEmptyOrWhiteSpace())
                 {
                     return;
                 }
-                qs = qs.TrimStart('?');
-                if (qs.IsNullOrEmptyOrWhiteSpace())
+                queryString = queryString.TrimStart('?');
+                if (queryString.IsNullOrEmptyOrWhiteSpace())
                 {
                     return;
                 }
                 var isJson = false;
                 try
                 {
-                    jToken = JToken.Parse(qs);
-                    isJson = jToken is JObject;
+                    if (queryString.IsJson())
+                    {
+                        jToken = JToken.Parse(queryString);
+                        isJson = jToken is JObject;
+                    }
                 }
                 catch
                 {
