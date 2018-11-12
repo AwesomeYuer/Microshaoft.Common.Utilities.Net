@@ -177,9 +177,9 @@ namespace Microshaoft.WebApi.Controllers
                                     )
                             );
                 }
-                JObject jObject = result
-                                        ["Outputs"]
-                                        ["Parameters"] as JObject;
+                var jObject = result
+                                    ["Outputs"]
+                                    ["Parameters"] as JObject;
                 if (jObject != null)
                 {
                     if 
@@ -194,7 +194,8 @@ namespace Microshaoft.WebApi.Controllers
                                     )
                         )
                     {
-                        Response.StatusCode = jv.Value<int>();
+                        Response
+                            .StatusCode = jv.Value<int>();
                     }
                 }
                 result = result
