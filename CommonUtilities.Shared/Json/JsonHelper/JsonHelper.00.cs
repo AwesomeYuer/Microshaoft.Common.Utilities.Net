@@ -75,7 +75,11 @@
     public static partial class JsonHelper
     {
 
-        public static JTokenType TryParseJson(this string target, out JToken jToken)
+        public static JTokenType TryParseJson
+                                    (
+                                        this string target
+                                        , out JToken jToken
+                                    )
         {
             var r = JTokenType.None;
             jToken = null;
@@ -139,7 +143,11 @@
             return r;
         }
 
-        public static bool TryParseJArray(this string target, out JArray jArray)
+        public static bool TryParseJArray
+                                (
+                                    this string target
+                                    , out JArray jArray
+                                )
         {
             //IL_0018: Unknown result type (might be due to invalid IL or missing references)
             var r = false;
@@ -163,7 +171,11 @@
             return r;
         }
 
-        public static bool TryParseJObject(this string target, out JObject jObject)
+        public static bool TryParseJObject
+                                (
+                                    this string target
+                                    , out JObject jObject
+                                )
         {
             //IL_0018: Unknown result type (might be due to invalid IL or missing references)
             var r = false;
@@ -314,11 +326,11 @@
                 (
                     typeof(float) == target
                     ||
-                    typeof(Double) == target
-                    ||
-                    typeof(Single) == target
+                    typeof(double) == target
                     ||
                     typeof(decimal) == target
+                    ||
+                    typeof(Single) == target
                 )
             {
                 r = JTokenType.Float;
@@ -359,7 +371,6 @@
                 r = JTokenType.String;
             }
             return r;
-
         }
         public static JToken MergeJsonTemplateToJToken
                         (
@@ -374,7 +385,14 @@
                     .ReadAllPaths
                         (
                             jsonTemplate
-                            , (isJArray, jsonPath, valueObject, valueType, reader) =>
+                            , 
+                                (
+                                    isJArray
+                                    , jsonPath
+                                    , valueObject
+                                    , valueType
+                                    , reader
+                                ) =>
                             {
                                 var vs = valueObject as string;
                                 if (vs != null)
