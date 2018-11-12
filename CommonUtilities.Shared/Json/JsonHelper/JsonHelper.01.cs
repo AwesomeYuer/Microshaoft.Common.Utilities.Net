@@ -186,22 +186,17 @@ namespace Microshaoft
                                         onPropertyChangedProcessAction
                             )
         {
-            var arr = path.Split('.');
-            JToken jToken = target[arr[0]];
-            for (var i = 1; i < arr.Length - 1; i++)
+            var a = path.Split('.');
+            JToken jToken = target[a[0]];
+            for (var i = 1; i < a.Length - 1; i++)
             {
-                jToken = jToken[arr[i]];
+                jToken = jToken[a[i]];
             }
 
             JObject j = jToken as JObject;
-            j[arr[arr.Length - 1]] = value;
+            j[a[a.Length - 1]] = value;
 
-            if (onPropertyChangedProcessAction != null)
-            {
-                onPropertyChangedProcessAction(
-                    target
-                );
-            }
+            onPropertyChangedProcessAction?.Invoke(target);
         }
         public static void Observe
                                 (
