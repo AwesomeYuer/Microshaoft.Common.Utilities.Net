@@ -177,6 +177,26 @@ namespace Microshaoft.WebApi.Controllers
                                     )
                             );
                 }
+                JObject jObject = result
+                                        ["Outputs"]
+                                        ["Parameters"] as JObject;
+                if (jObject != null)
+                {
+                    if 
+                        (
+                            jObject
+                                .TryGetValue
+                                    (
+                                        "HttpResponseStatusCode"
+                                        , StringComparison
+                                                .OrdinalIgnoreCase
+                                        , out var jv
+                                    )
+                        )
+                    {
+                        Response.StatusCode = jv.Value<int>();
+                    }
+                }
                 result = result
                             .GetDescendantByPathKeys
                                 (
