@@ -178,7 +178,7 @@ namespace Microshaoft.WebApi.Controllers
                             );
                 }
                 result = result
-                            .GetDescendantByKeysPath
+                            .GetDescendantByPathKeys
                                 (
                                     resultPathSegment1
                                     , resultPathSegment2

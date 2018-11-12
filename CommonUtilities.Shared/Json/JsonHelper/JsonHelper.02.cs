@@ -68,29 +68,29 @@
         }
 
         #endregion
-        public static JToken GetDescendantByKeysPath
+        public static JToken GetDescendantByPathKeys
                         (
                             this JToken target
-                            , params string[] keysPath
+                            , params string[] pathKeys
                         )
         {
             return
                 target
-                    .GetDescendantByKeysPath
+                    .GetDescendantByPathKeys
                         (
                             true
-                            , keysPath
+                            , pathKeys
                         );
         }
-        public static JToken GetDescendantByKeysPath
+        public static JToken GetDescendantByPathKeys
                                 (
                                     this JToken target
                                     , bool ignoreCase = true
-                                    , params string[] keysPath
+                                    , params string[] pathKeys
                                 )
         {
             JToken jToken = target;
-            foreach (var key in keysPath)
+            foreach (var key in pathKeys)
             {
                 if (key.IsNullOrEmptyOrWhiteSpace())
                 {
