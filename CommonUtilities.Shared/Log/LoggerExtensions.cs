@@ -17,12 +17,12 @@ namespace Microshaoft
                                         , string LoggingMessage
                                         , object[] LoggingArguments
                                     )
-                                > process
+                                > loggingProcess
                         )
         {
             if (target.IsEnabled(logLevel))
             {
-                var r = process();
+                var r = loggingProcess();
                 target
                     .Log
                         (
@@ -45,12 +45,12 @@ namespace Microshaoft
                                         , string LoggingMessage
                                         , object[] LoggingArguments
                                     )
-                                > process
+                                > loggingProcess
                         )
         {
             if (target.IsEnabled(logLevel))
             {
-                var r = process();
+                var r = loggingProcess();
                 target
                     .Log
                         (
@@ -72,12 +72,12 @@ namespace Microshaoft
                                         string LoggingMessage
                                         , object[] LoggingArguments
                                     )
-                                > process
+                                > loggingProcess
                         )
         {
             if (target.IsEnabled(logLevel))
             {
-                var r = process();
+                var r = loggingProcess();
                 target
                     .Log
                         (
@@ -99,12 +99,12 @@ namespace Microshaoft
                                 , string LoggingMessage
                                 , object[] LoggingArguments
                             )
-                        > process
+                        > loggingProcess
                 )
         {
             if (target.IsEnabled(logLevel))
             {
-                var r = process();
+                var r = loggingProcess();
                 target
                     .Log
                         (
@@ -127,13 +127,13 @@ namespace Microshaoft
                                 , Exception LoggingException
                                 , TState State
                             )
-                        > process
+                        > loggingProcess
                     , Func<TState, Exception, string> formatter
                 )
         {
             if (target.IsEnabled(logLevel))
             {
-                var r = process();
+                var r = loggingProcess();
                 target
                     .Log<TState>
                         (
