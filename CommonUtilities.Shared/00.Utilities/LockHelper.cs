@@ -5,7 +5,7 @@
     {
         public static void LockIf<T>
                             (
-                                T lockerObject
+                                this T lockerObject
                                 , Func<bool> onEnterLockPredictProcessFunc
                                 , Action onLockingProcessAction
                             )
@@ -21,10 +21,7 @@
                 }
             }
         }
-    }
-
-    public static class LockObjectExtensions
-    {
+    
         public static void LockIf
                             (
                                 this object target
@@ -32,8 +29,7 @@
                                 , Action onLockingProcessAction
                             )
         {
-            LockObjectHelper
-                    .LockIf<object>
+            LockIf<object>
                         (
                             target
                             , onEnterLockPredictProcessFunc

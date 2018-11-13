@@ -108,17 +108,17 @@ namespace Microshaoft.WebApi.Controllers
                                     , [ModelBinder(typeof(JTokenModelBinder))]
                                         JToken parameters = null
                                     , [FromRoute]
-                                        string resultPathSegment1 = null
+                                        string resultJsonPathSegment1 = null
                                     , [FromRoute]
-                                        string resultPathSegment2 = null
+                                        string resultJsonPathSegment2 = null
                                     , [FromRoute]
-                                        string resultPathSegment3 = null
+                                        string resultJsonPathSegment3 = null
                                     , [FromRoute]
-                                        string resultPathSegment4 = null
+                                        string resultJsonPathSegment4 = null
                                     , [FromRoute]
-                                        string resultPathSegment5 = null
+                                        string resultJsonPathSegment5 = null
                                     , [FromRoute]
-                                        string resultPathSegment6 = null
+                                        string resultJsonPathSegment6 = null
                                 )
         {
             JToken result = null;
@@ -201,12 +201,12 @@ namespace Microshaoft.WebApi.Controllers
                 result = result
                             .GetDescendantByPathKeys
                                 (
-                                    resultPathSegment1
-                                    , resultPathSegment2
-                                    , resultPathSegment3
-                                    , resultPathSegment4
-                                    , resultPathSegment5
-                                    , resultPathSegment6
+                                    resultJsonPathSegment1
+                                    , resultJsonPathSegment2
+                                    , resultJsonPathSegment3
+                                    , resultJsonPathSegment4
+                                    , resultJsonPathSegment5
+                                    , resultJsonPathSegment6
                                 );
             }
             else

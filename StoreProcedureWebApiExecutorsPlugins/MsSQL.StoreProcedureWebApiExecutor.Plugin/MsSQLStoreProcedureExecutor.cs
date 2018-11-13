@@ -5,7 +5,6 @@
     using System;
     using System.Composition;
     using System.Data;
-    using System.Data.Common;
     using System.Data.SqlClient;
     [Export(typeof(IStoreProcedureExecutable))]
     public class MsSQLStoreProcedureExecutorCompositionPlugin
@@ -64,8 +63,11 @@
                             = CachedParametersDefinitionExpiredInSeconds;
             }
             result = null;
-            SqlConnection connection = new SqlConnection(connectionString);
-            connection.StatisticsEnabled = enableStatistics;
+            var connection = new SqlConnection(connectionString);
+            if (enableStatistics)
+            {
+                connection.StatisticsEnabled = enableStatistics;
+            }
             result = _executor
                             .Execute
                                     (
