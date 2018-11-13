@@ -237,8 +237,7 @@
                 var _executingInfo = new ExecutingInfo()
                 {
                     DbParameters = nameIndexedParameters
-                    ,
-                    RecentExecutedTime = DateTime.Now
+                    , RecentExecutedTime = DateTime.Now
                 };
                 return _executingInfo;
             }
@@ -246,18 +245,18 @@
             connection.ConnectionString = connectionString;
             var key = $"{connection.DataSource}-{connection.Database}-{storeProcedureName}".ToUpper();
             var add = false;
-            var executingInfo
-                    = _dictionary
-                            .GetOrAdd
-                                    (
-                                        key
-                                        , (x) =>
-                                        {
-                                            var r = GetExecutingInfo();
-                                            add = true;
-                                            return r;
-                                        }
-                                    );
+            var executingInfo = 
+                                _dictionary
+                                        .GetOrAdd
+                                                (
+                                                    key
+                                                    , (x) =>
+                                                    {
+                                                        var r = GetExecutingInfo();
+                                                        add = true;
+                                                        return r;
+                                                    }
+                                                );
             var result = executingInfo.DbParameters;
             if (!add)
             {
@@ -302,33 +301,33 @@
             return result;
         }
         public IEnumerable<TDbParameter>
-                    GetDefinitionParameters
-                            (
-                                string connectionString
-                                , string storeProcedureName
-                                , bool includeReturnValueParameter = false
-                            )
+                                GetDefinitionParameters
+                                        (
+                                            string connectionString
+                                            , string storeProcedureName
+                                            , bool includeReturnValueParameter = false
+                                        )
         {
             var r = SqlHelper
                         .GetStoreProcedureDefinitionParameters
-                            <TDbConnection, TDbCommand, TDbParameter>
-                                (
-                                    connectionString
-                                    , storeProcedureName
-                                    , OnQueryDefinitionsSetInputParameterProcess
-                                    , OnQueryDefinitionsSetReturnParameterProcess
-                                    , OnQueryDefinitionsReadOneDbParameterProcess
-                                    , includeReturnValueParameter
-                                );
+                                <TDbConnection, TDbCommand, TDbParameter>
+                                    (
+                                        connectionString
+                                        , storeProcedureName
+                                        , OnQueryDefinitionsSetInputParameterProcess
+                                        , OnQueryDefinitionsSetReturnParameterProcess
+                                        , OnQueryDefinitionsReadOneDbParameterProcess
+                                        , includeReturnValueParameter
+                                    );
             return r;
         }
         public IDictionary<string, DbParameter>
-                    GetNameIndexedDefinitionParameters
-                            (
-                                string connectionString
-                                , string storeProcedureName
-                                , bool includeReturnValueParameter = false
-                            )
+                        GetNameIndexedDefinitionParameters
+                                (
+                                    string connectionString
+                                    , string storeProcedureName
+                                    , bool includeReturnValueParameter = false
+                                )
 
         {
             var dbParameters =
@@ -362,8 +361,8 @@
         public ParameterDirection GetParameterDirection(string parameterMode)
         {
             var r = SqlHelper
-                        .GetParameterDirection
-                            (parameterMode);
+                            .GetParameterDirection
+                                (parameterMode);
             return r;
         }
         public JToken
@@ -552,21 +551,21 @@
                     if (dbParameters != null)
                     {
                         var outputParameters =
-                                        dbParameters
-                                                .Where
-                                                    (
-                                                        (x) =>
-                                                        {
-                                                            return
-                                                                (
-                                                                    x
-                                                                        .Direction
-                                                                    !=
-                                                                    ParameterDirection
-                                                                        .Input
-                                                                );
-                                                        }
-                                                    );
+                                    dbParameters
+                                            .Where
+                                                (
+                                                    (x) =>
+                                                    {
+                                                        return
+                                                            (
+                                                                x
+                                                                    .Direction
+                                                                !=
+                                                                ParameterDirection
+                                                                    .Input
+                                                            );
+                                                    }
+                                                );
                         foreach (var x in outputParameters)
                         {
                             if (jOutputParameters == null)
@@ -574,11 +573,11 @@
                                 jOutputParameters = new JObject();
                             }
                             jOutputParameters
-                                .Add
-                                    (
-                                        x.ParameterName.TrimStart('@', '?')
-                                        , new JValue(x.Value)
-                                    );
+                                    .Add
+                                        (
+                                            x.ParameterName.TrimStart('@', '?')
+                                            , new JValue(x.Value)
+                                        );
                         }
                     }
                     if (jOutputParameters != null)
