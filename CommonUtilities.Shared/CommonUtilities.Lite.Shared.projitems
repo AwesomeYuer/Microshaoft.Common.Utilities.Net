@@ -87,6 +87,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)KeyWordFilter\IWordFilter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KeyWordFilter\TrieFilter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LinqDynamic\Linq.Dynamic.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Log\LoggerExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LongInteger\LongIntegerHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mapper\TinyMapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MEF.Composition\MEF.Contracts.cs" />
