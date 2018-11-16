@@ -209,15 +209,12 @@ namespace Microshaoft.Web
                         }
                     );
         }
-
         private int _cachedParametersDefinitionExpiredInSeconds = 3600;
         protected virtual int CachedParametersDefinitionExpiredInSeconds
         {
             get => _cachedParametersDefinitionExpiredInSeconds;
             private set => _cachedParametersDefinitionExpiredInSeconds = value;
         }
-
-
         private bool _needAutoRefreshExecutedTimeForSlideExpire = true;
         protected virtual bool NeedAutoRefreshExecutedTimeForSlideExpire
         {
@@ -225,37 +222,37 @@ namespace Microshaoft.Web
             private set => _needAutoRefreshExecutedTimeForSlideExpire = value;
         }
         private IDictionary<string, IStoreProcedureExecutable>
-                    _indexedExecutors;
+                                _indexedExecutors;
         public
             (
                 int StatusCode
                 , string Message
                 , JToken Result
             )
-                        Process
-                            (
-                                string routeName
-                                , JToken parameters = null
-                                , Func
-                                    <
-                                        IDataReader
-                                        , Type        // fieldType
-                                        , string    // fieldName
-                                        , int       // row index
-                                        , int       // column index
-                                        ,
-                                            (
-                                                bool NeedDefaultProcess
-                                                , JProperty Field   //  JObject Field 对象
-                                            )
-                                    > onReadRowColumnProcessFunc = null
-                                , string httpMethod = "Get"
-                                //, bool enableStatistics = false
-                                , int commandTimeoutInSeconds = 101
-                            )
+                    Process
+                        (
+                            string routeName
+                            , JToken parameters = null
+                            , Func
+                                <
+                                    IDataReader
+                                    , Type        // fieldType
+                                    , string    // fieldName
+                                    , int       // row index
+                                    , int       // column index
+                                    ,
+                                        (
+                                            bool NeedDefaultProcess
+                                            , JProperty Field   //  JObject Field 对象
+                                        )
+                                > onReadRowColumnProcessFunc = null
+                            , string httpMethod = "Get"
+                            //, bool enableStatistics = false
+                            , int commandTimeoutInSeconds = 101
+                        )
         {
             JToken result = null;
-            var statusCode = 500;
+            var statusCode = 200;
             var message = string.Empty;
             var r1 = TryGetStoreProcedureInfo
                         (
@@ -280,9 +277,56 @@ namespace Microshaoft.Web
                                 , r1.EnableStatistics
                                 , r1.CommandTimeoutInSeconds
                             );
+
+                var jObject = result
+                                    ["Outputs"]
+                                    ["Parameters"] as JObject;
+                if (jObject != null)
+                {
+                    if
+                        (
+                            jObject
+                                .TryGetValue
+                                    (
+                                        "HttpResponseStatusCode"
+                                        , StringComparison
+                                                .OrdinalIgnoreCase
+                                        , out var jv
+                                    )
+                        )
+                    {
+                        statusCode = jv.Value<int>();
+                    }
+                }
                 if (r2)
                 {
-                    statusCode = 200;
+                    var outputsConfiguration =
+                                _configuration
+                                        .GetSection($"Routes:{routeName}:{r1.HttpMethod}:Outputs");
+                    if (outputsConfiguration.Exists())
+                    {
+                        var outputs = outputsConfiguration.GetChildren();
+                        JToken newResult = null;
+                        foreach (var x in outputs)
+                        {
+                            var path = x.Get<string>();
+                            var jToken = result.SelectToken(x.Get<string>());
+                            if (x.Key != "$")
+                            {
+                                if (newResult == null)
+                                {
+                                    newResult = new JObject();
+                                }
+                                newResult[x.Key] = jToken;
+                            }
+                            else //if (x.Key == "$")
+                            {
+                                newResult = jToken;
+                                break;
+                            }
+                        }
+                        result = newResult;
+                    }
                 }
             }
             else
@@ -367,6 +411,7 @@ namespace Microshaoft.Web
             (
                 bool Success
                 , int StatusCode
+                , string HttpMethod
                 , string Message
                 , string ConnectionString
                 , string DataBaseType
@@ -387,10 +432,12 @@ namespace Microshaoft.Web
             var storeProcedureName = string.Empty;
             var dataBaseType = string.Empty;
             var commandTimeoutInSeconds = 120;
+            
             var enableStatistics = false;
             (
                 bool Result
                 , int StatusCode
+                , string HttpMethod
                 , string Message
                 , string ConnectionString
                 , string DataBaseType
@@ -404,6 +451,7 @@ namespace Microshaoft.Web
                     (
                         success
                         , statusCode
+                        , httpMethod
                         , message
                         , connectionString
                         , dataBaseType
@@ -509,6 +557,11 @@ namespace Microshaoft.Web
             }
             //success = true;
             statusCode = 200;
+
+
+
+
+
             return Result();
         }
     }

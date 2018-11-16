@@ -137,67 +137,9 @@ namespace Microshaoft.WebApi.Controllers
                             , Request.Method
                             //, 102
                         );
-            if (r.StatusCode == 200)
+            if (r.StatusCode != -1)
             {
                 result = r.Result;
-                if 
-                    (
-                        (
-                            HttpContext
-                                .Request
-                                .Method
-                            !=
-                            "HttpPost"
-                        )
-                        &&
-                        (
-                            HttpContext
-                                .Request
-                                .Method
-                            !=
-                            "HttpPut"
-                        )
-                    )
-                {
-                    result["Outputs"]
-                        .Parent
-                        .AddBeforeSelf
-                            (
-                                new JProperty
-                                    (
-                                        "Inputs"
-                                        , new JObject
-                                            (
-                                                new JProperty
-                                                (
-                                                    "Parameters"
-                                                    , parameters
-                                                )
-                                            )
-                                    )
-                            );
-                }
-                var jObject = result
-                                    ["Outputs"]
-                                    ["Parameters"] as JObject;
-                if (jObject != null)
-                {
-                    if 
-                        (
-                            jObject
-                                .TryGetValue
-                                    (
-                                        "HttpResponseStatusCode"
-                                        , StringComparison
-                                                .OrdinalIgnoreCase
-                                        , out var jv
-                                    )
-                        )
-                    {
-                        Response
-                            .StatusCode = jv.Value<int>();
-                    }
-                }
                 result = result
                             .GetDescendantByPathKeys
                                 (
@@ -208,6 +150,7 @@ namespace Microshaoft.WebApi.Controllers
                                     , resultJsonPathSegment5
                                     , resultJsonPathSegment6
                                 );
+                Response.StatusCode = r.StatusCode;
             }
             else
             {
