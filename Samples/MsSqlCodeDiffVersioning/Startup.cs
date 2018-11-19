@@ -9,9 +9,12 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.FileProviders;
+    using Newtonsoft.Json.Linq;
     using Swashbuckle.AspNetCore.Swagger;
     using System;
     using System.Collections.Generic;
+    using System.Data.SqlClient;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -35,6 +38,45 @@
                         CompatibilityVersion
                             .Version_2_1
                     );
+            SingleThreadAsyncDequeueProcessor<JToken> processor =
+                        new SingleThreadAsyncDequeueProcessor<JToken>();
+
+            AbstractStoreProceduresExecutor
+                <SqlConnection, SqlCommand, SqlParameter>
+                    executor = new MsSqlStoreProceduresExecutor();
+             
+            processor
+                .StartRunDequeueThreadProcess
+                    (
+                        (i, data) =>
+                        {
+                            Debugger.Break();
+
+                            JArray ja = new JArray(data);
+                            JObject jo = new JObject();
+                            jo["udt_vcidt"] = ja;
+                            var sqlConnection = new SqlConnection("Initial Catalog=test;Data Source=localhost;User=sa;Password=!@#123QWE");
+                            executor
+                                .Execute
+                                    (
+                                        sqlConnection
+                                        , "zsp_Test"
+                                        , jo
+                                    );
+                        }
+                        , 1000
+                        , 10 * 1000
+                    );
+
+
+            services
+                .AddSingleton<SingleThreadAsyncDequeueProcessor<JToken>>
+                (
+                    processor
+                
+                );
+
+
             services
                 //.AddTransient
                 .AddSingleton

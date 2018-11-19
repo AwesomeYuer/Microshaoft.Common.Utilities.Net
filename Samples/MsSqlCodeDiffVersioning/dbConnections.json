@@ -37,7 +37,12 @@
         "connectionID": "c1",
         "storeProcedureName": "zsp_MasterDetails",
         "EnableStatistics": true,
-        "commandtimeoutInSeconds": 103
+        "commandtimeoutInSeconds": 103,
+        "Outputs": {
+          "aaa": "Outputs.ResultSets[0].Rows",
+          "bbb": "Outputs.Parameters"
+
+        }
       },
       "HttpPost": {
         "ConnectionID": "c1",
