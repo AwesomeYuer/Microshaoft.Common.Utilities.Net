@@ -121,6 +121,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Pools\QueuedObjectsPool.Partial.01.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ReaderWriterLock\EasyReaderWriterLockSlim.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ReaderWriterLock\ReaderWriterLockSlimHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SingleThreadAsyncDequeueProcessor\CoreStandard\SingleThreadAsyncDequeueProcessorSlim.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Socket\BufferManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Socket\EchoServer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Socket\Microsoft.System.ServiceModel.Channels.SocketAsyncEventArgsPool.cs" />
