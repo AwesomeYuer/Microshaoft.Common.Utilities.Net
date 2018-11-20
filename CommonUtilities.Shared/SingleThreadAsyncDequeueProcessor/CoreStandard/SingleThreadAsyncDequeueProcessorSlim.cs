@@ -5,7 +5,7 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Threading;
-    public class SingleThreadAsyncDequeueProcessor<TQueueElement>
+    public class SingleThreadAsyncDequeueProcessorSlim<TQueueElement>
     {
         public int QueueLength
         {
@@ -20,7 +20,7 @@
                                     = new ConcurrentQueue<TQueueElement>();
         public delegate bool CaughtExceptionEventHandler
                                     (
-                                        SingleThreadAsyncDequeueProcessor<TQueueElement> sender
+                                        SingleThreadAsyncDequeueProcessorSlim<TQueueElement> sender
                                         , Exception exception
                                         , Exception newException
                                         , string innerExceptionMessage

@@ -38,20 +38,15 @@
                         CompatibilityVersion
                             .Version_2_1
                     );
-            SingleThreadAsyncDequeueProcessor<JToken> processor =
-                        new SingleThreadAsyncDequeueProcessor<JToken>();
-
-            AbstractStoreProceduresExecutor
-                <SqlConnection, SqlCommand, SqlParameter>
-                    executor = new MsSqlStoreProceduresExecutor();
-             
+            var processor =
+                        new SingleThreadAsyncDequeueProcessorSlim<JToken>();
+            var executor = new MsSqlStoreProceduresExecutor();
             processor
                 .StartRunDequeueThreadProcess
                     (
                         (i, data) =>
                         {
-                            Debugger.Break();
-
+                            //Debugger.Break();
                             JArray ja = new JArray(data);
                             JObject jo = new JObject();
                             jo["udt_vcidt"] = ja;
@@ -67,16 +62,11 @@
                         , 1000
                         , 10 * 1000
                     );
-
-
             services
-                .AddSingleton<SingleThreadAsyncDequeueProcessor<JToken>>
+                .AddSingleton<SingleThreadAsyncDequeueProcessorSlim<JToken>>
                 (
                     processor
-                
                 );
-
-
             services
                 //.AddTransient
                 .AddSingleton

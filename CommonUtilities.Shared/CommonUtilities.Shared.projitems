@@ -157,9 +157,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Pools\QueuedObjectsPool.Partial.02.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ReaderWriterLock\EasyReaderWriterLockSlim.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ReaderWriterLock\ReaderWriterLockSlimHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SingleThreadAsyncDequeueProcessor\SingleThreadAsyncDequeueProcessor.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SingleThreadAsyncDequeueProcessor\SingleThreadAsyncJObjectsDequeueProcessor.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SingleThreadAsyncDequeueProcessor\SingleThreadAsyncDequeueProcessor2.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SingleThreadAsyncDequeueProcessor\Framework\SingleThreadAsyncDequeueProcessor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SingleThreadAsyncDequeueProcessor\CoreStandard\SingleThreadAsyncDequeueProcessorSlim.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SingleThreadAsyncDequeueProcessor\Framework\SingleThreadAsyncJObjectsDequeueProcessor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SingleThreadAsyncDequeueProcessor\Framework\SingleThreadAsyncDequeueProcessor2.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Socket\BufferManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Socket\EchoServer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Socket\Microsoft.System.ServiceModel.Channels.SocketAsyncEventArgsPool.cs" />
@@ -248,6 +249,8 @@
     <Content Include="$(MSBuildThisFileDirectory)DataAccess\Pager.StoreProcedure.Sample.sql" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)SingleThreadAsyncDequeueProcessor\Framework\" />
+    <Folder Include="$(MSBuildThisFileDirectory)SingleThreadAsyncDequeueProcessor\CoreStandard\" />
     <Folder Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\StoreProcedureExecutorController\" />
     <Folder Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\Services\" />
   </ItemGroup>
