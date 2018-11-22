@@ -15,9 +15,27 @@
                     _queue.Count;
             }
         }
-        private ConcurrentQueue<TQueueElement>
+        private ConcurrentQueue
+                        <
+                            (
+                                long ID
+                                , DateTime? EnqueueTime
+                                , TQueueElement QueueElement
+                                , DateTime? DequeueTime
+                                , DateTime? DequeueProcessedTime
+                            )
+                        >
                             _queue
-                                    = new ConcurrentQueue<TQueueElement>();
+                                    = new ConcurrentQueue
+                                                <
+                                                    (
+                                                        long ID
+                                                        , DateTime? EnqueueTime
+                                                        , TQueueElement QueueElement
+                                                        , DateTime? DequeueTime
+                                                        , DateTime? DequeueProcessedTime
+                                                    )
+                                                >();
         public delegate bool CaughtExceptionEventHandler
                                     (
                                         SingleThreadAsyncDequeueProcessorSlim<TQueueElement> sender
@@ -27,15 +45,53 @@
                                     );
         public event CaughtExceptionEventHandler
                                             OnCaughtException;
-        public bool Enqueue(TQueueElement item)
+
+        private long _enqueued = 0;
+        public long Enqueued
+        {
+            get
+            {
+                return _enqueued;
+            }
+        }
+        private long _dequeued = 0;
+        public long Dequeued
+        {
+            get
+            {
+                return _dequeued;
+            }
+        }
+        public bool Enqueue(TQueueElement element)
         {
             var r = false;
-            _queue.Enqueue(item);
+
+            (
+                long ID
+                , DateTime? EnqueueTime
+                , TQueueElement QueueElement
+                , DateTime? DequeueTime
+                , DateTime? DequeueProcessedTime
+            )
+                item =
+                    (
+                        Interlocked.Increment(ref _enqueued)
+                        , DateTime.Now
+                        , element
+                        , null
+                        , null
+                    );
+            _queue
+                .Enqueue
+                    (
+                        item
+                    );
             return r;
         }
         public void StartRunDequeueThreadProcess
              (
                  Action<long, List<TQueueElement>> onBatchDequeuesProcessAction
+                , Func<long, TQueueElement, bool> onOnceDequeueProcessFunc = null
                 , int sleepInMilliseconds = 1000
                 , int waitOneBatchTimeOutInMilliseconds = 1000
                 , int waitOneBatchMaxDequeuedTimes = 100
@@ -52,8 +108,9 @@
                         {
                             DequeueProcess
                                 (
-                                    sleepInMilliseconds
-                                    , onBatchDequeuesProcessAction
+                                    onBatchDequeuesProcessAction
+                                    , onOnceDequeueProcessFunc
+                                    , sleepInMilliseconds
                                     , waitOneBatchTimeOutInMilliseconds
                                     , waitOneBatchMaxDequeuedTimes
                                 );
@@ -64,14 +121,16 @@
         private bool _isStartedDequeueProcess = false;
         private void DequeueProcess
             (
-                int sleepInMilliseconds = 100
-                , Action<long, List<TQueueElement>> onBatchDequeuesProcessAction = null
+                
+                Action<long, List<TQueueElement>> onBatchDequeuesProcessAction = null
+                , Func<long, TQueueElement, bool> onOnceDequeueProcessFunc = null
+                , int sleepInMilliseconds = 100
                 , int waitOneBatchTimeOutInMilliseconds = 1000
                 , int waitOneBatchMaxDequeuedTimes = 100
             )
         {
             List<TQueueElement> list = null;
-            long i = 0;
+            int i = 0;
             Stopwatch stopwatch = null;
             if (onBatchDequeuesProcessAction != null)
             {
@@ -89,13 +148,30 @@
                             {
                                 if (!_queue.IsEmpty)
                                 {
-                                    TQueueElement element = default(TQueueElement);
-                                    if (_queue.TryDequeue(out element))
+                                    if 
+                                        (
+                                            _queue
+                                                .TryDequeue
+                                                    (
+                                                        out var item
+                                                    )
+                                        )
                                     {
+                                        Interlocked.Increment(ref _dequeued);
+                                        i++;
+                                        var needAddToList = true;
+                                        item.DequeueTime = DateTime.Now;
+                                        if (onOnceDequeueProcessFunc != null)
+                                        {
+                                            needAddToList = onOnceDequeueProcessFunc(i, item.QueueElement);
+                                            item.DequeueProcessedTime = DateTime.Now;
+                                        }
                                         if (onBatchDequeuesProcessAction != null)
                                         {
-                                            i++;
-                                            list.Add(element);
+                                            if (needAddToList)
+                                            {
+                                                list.Add(item.QueueElement);
+                                            }
                                         }
                                     }
                                 }
@@ -150,7 +226,10 @@
                                {
                                    rr = OnCaughtException
                                            (
-                                               this, x, y, z
+                                               this
+                                               , x
+                                               , y
+                                               , z
                                            );
                                }
                                return rr;
