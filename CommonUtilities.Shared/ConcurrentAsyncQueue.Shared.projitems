@@ -11,7 +11,6 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)ConcurrentAsyncQueue\ConcurrentAsyncQueue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConcurrentAsyncQueue\KeyedStack.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SingleThreadAsyncDequeueProcessor\CoreStandard\SingleThreadAsyncDequeueProcessorSlim.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SingleThreadAsyncDequeueProcessor\Framework\SingleThreadAsyncDequeueProcessor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SingleThreadAsyncDequeueProcessor\Framework\SingleThreadAsyncDequeueProcessor2.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SingleThreadAsyncDequeueProcessor\Framework\SingleThreadAsyncJObjectsDequeueProcessor.cs" />

@@ -14,7 +14,6 @@
     using System;
     using System.Collections.Generic;
     using System.Data.SqlClient;
-    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -47,8 +46,8 @@
                         (i, data) =>
                         {
                             //Debugger.Break();
-                            JArray ja = new JArray(data);
-                            JObject jo = new JObject();
+                            var ja = new JArray(data);
+                            var jo = new JObject();
                             jo["udt_vcidt"] = ja;
                             var sqlConnection = new SqlConnection("Initial Catalog=test;Data Source=localhost;User=sa;Password=!@#123QWE");
                             executor
@@ -59,6 +58,7 @@
                                         , jo
                                     );
                         }
+                        , null
                         , 1000
                         , 10 * 1000
                     );

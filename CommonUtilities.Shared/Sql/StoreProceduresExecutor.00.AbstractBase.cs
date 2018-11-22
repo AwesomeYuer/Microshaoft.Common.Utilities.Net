@@ -443,14 +443,13 @@
                     {
                         command.CommandTimeout = commandTimeoutInSeconds;
                     }
-                    List<TDbParameter>
-                        dbParameters
+                    var dbParameters
                             = GenerateExecuteParameters
-                                        (
-                                            connection.ConnectionString
-                                            , storeProcedureName
-                                            , inputsParameters
-                                        );
+                                    (
+                                        connection.ConnectionString
+                                        , storeProcedureName
+                                        , inputsParameters
+                                    );
                     if (dbParameters != null)
                     {
                         var parameters = dbParameters.ToArray();
