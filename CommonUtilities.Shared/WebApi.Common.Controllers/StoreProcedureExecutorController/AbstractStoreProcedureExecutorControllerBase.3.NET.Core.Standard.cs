@@ -48,12 +48,11 @@ namespace Microshaoft.WebApi.Controllers
                             //(ss.StartsWith("{") && ss.EndsWith("}"))
                             //||
                             //(ss.StartsWith("[") && ss.EndsWith("]"))
-                            s.IsJson()
+                            s.IsJson(out var jToken, true)
                         )
                     {
                         //try
                         //{
-                            var jToken = JToken.Parse(s);
                             field = new JProperty
                                     (
                                         fieldName

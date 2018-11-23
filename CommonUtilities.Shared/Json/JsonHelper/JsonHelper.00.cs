@@ -102,17 +102,23 @@
             return r;
         }
 
-        public static bool IsJson(this string target, bool validate = false)
+        public static bool IsJson
+                            (
+                                this string target
+                                , out JToken jToken
+                                , bool validate = false
+                            )
         {
             //IL_0018: Unknown result type (might be due to invalid IL or missing references)
             var r = false;
+            jToken = null;
             char c = target.FirstNonWhitespaceCharacter();
             r = (c == '{' || c == '[');
             if (r && validate)
             {
                 try
                 {
-                    JToken.Parse(target);
+                    jToken = JToken.Parse(target);
                     r = true;
                 }
                 catch

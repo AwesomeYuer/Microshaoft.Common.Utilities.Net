@@ -1,6 +1,7 @@
 ﻿#if NETCOREAPP2_X
 namespace Microshaoft.WebApi.ModelBinders
 {
+    using Microshaoft.Web;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc.ModelBinding;
     using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
@@ -9,7 +10,6 @@ namespace Microshaoft.WebApi.ModelBinders
     using Microsoft.Extensions.Primitives;
     using Newtonsoft.Json.Linq;
     using System.Threading.Tasks;
-    using Microshaoft.Web;
     public class JTokenModelBinder : IModelBinder
     {
         public async Task BindModelAsync(ModelBindingContext bindingContext)
@@ -31,16 +31,20 @@ namespace Microshaoft.WebApi.ModelBinders
                                     .Value;
             var ok = false;
             JToken parameters = null;
-            ok = HttpRequestHelper
+            ok = request
                     .TryParseJTokenParameters
                         (
-                            request
-                            , out parameters
+                            //request
+                            out parameters
                             , out var secretJwtToken
                             , async (x) =>
                             {
                                 var formCollectionModelBinder =
-                                            new FormCollectionModelBinder(NullLoggerFactory.Instance);
+                                            new FormCollectionModelBinder
+                                                    (
+                                                        NullLoggerFactory
+                                                                    .Instance
+                                                    );
                                 await formCollectionModelBinder.BindModelAsync(bindingContext);
                                 if (bindingContext.Result.IsModelSet)
                                 {
@@ -49,8 +53,8 @@ namespace Microshaoft.WebApi.ModelBinders
                                                     (
                                                         (IFormCollection)
                                                             bindingContext
-                                                                    .Result
-                                                                    .Model
+                                                                        .Result
+                                                                        .Model
                                                     );
                                 }
                             }
@@ -70,10 +74,10 @@ namespace Microshaoft.WebApi.ModelBinders
             bindingContext
                     .Result =
                         ModelBindingResult
-                                .Success
-                                    (
-                                        parameters
-                                    );
+                                        .Success
+                                            (
+                                                parameters
+                                            );
         }
     }
     //public class JTokenModelBinderProvider

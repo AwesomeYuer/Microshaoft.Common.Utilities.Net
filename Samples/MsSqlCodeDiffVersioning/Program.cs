@@ -99,6 +99,12 @@
                                         path: "dynamicLoadExecutorsPaths.json"
                                         , optional: false
                                         , reloadOnChange: true
+                                    )
+                                .AddJsonFile
+                                    (
+                                        path: "JwtValidation.json"
+                                        , optional: false
+                                        , reloadOnChange: true
                                     );
                         }
                     )

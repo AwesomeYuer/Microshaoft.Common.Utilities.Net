@@ -1,5 +1,3 @@
-
-
 namespace Microshaoft
 {
     using System;
@@ -7,13 +5,13 @@ namespace Microshaoft
     using System.Data;
     using System.Linq;
 
-    public static partial class DataTableListExtensionMethodsManager
+    public static partial class DataTableListHelper
     {
 #if NETFRAMEWORK4_X
-        public static DataRow[] FullTextSearch(this DataTable dataTable, string[] keyWords)
+        public static DataRow[] FullTextSearch(this DataTable target, string[] keyWords)
         {
             return
-                dataTable
+                target
                     .AsEnumerable()
                     .Where<DataRow>
                         (
@@ -93,11 +91,11 @@ namespace Microshaoft
             }
             return dataTable;
         }
-        public static List<TEntry> ToList<TEntry>(this DataTable dataTable)
+        public static List<TEntry> ToList<TEntry>(this DataTable target)
                                             where TEntry : new()
         {
             var type = typeof(TEntry);
-            var columns = dataTable.Columns;
+            var columns = target.Columns;
             var actions = new Dictionary<string, Action<object, object>>();
             foreach (DataColumn c in columns)
             {
@@ -111,7 +109,7 @@ namespace Microshaoft
                 actions[columnName] = action;
             }
             List<TEntry> list = null;
-            var rows = dataTable.Rows;
+            var rows = target.Rows;
             foreach (DataRow r in rows)
             {
                 var entry = new TEntry();

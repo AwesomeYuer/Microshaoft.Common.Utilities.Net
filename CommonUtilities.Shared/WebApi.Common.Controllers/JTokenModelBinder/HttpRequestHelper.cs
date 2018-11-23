@@ -70,9 +70,8 @@ namespace Microshaoft.Web
                 var isJson = false;
                 try
                 {
-                    if (queryString.IsJson())
+                    if (queryString.IsJson(out jToken, true))
                     {
-                        jToken = JToken.Parse(queryString);
                         isJson = jToken is JObject;
                     }
                 }
@@ -110,10 +109,10 @@ namespace Microshaoft.Web
                 target
                     .Headers
                     .TryGetValue
-                        (
-                           jwtTokenName
-                           , out jwtToken
-                        );
+                            (
+                               jwtTokenName
+                               , out jwtToken
+                            );
             }
             RequestQueryStringHeaderProcess();
             ExtractJwtToken();

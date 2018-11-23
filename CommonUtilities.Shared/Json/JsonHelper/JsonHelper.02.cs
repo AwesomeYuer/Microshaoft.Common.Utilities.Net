@@ -6,7 +6,10 @@
 
     public static partial class JsonHelper
     {
-        public static IEnumerable<JValue> GetAllJValues(this JToken target)
+        public static IEnumerable<JValue> GetAllJValues
+                        (
+                            this JToken target
+                        )
         {
             if (target is JValue jValue)
             {
@@ -14,21 +17,24 @@
             }
             else if (target is JArray jArray)
             {
-                foreach (var result in GetAllJValuesFromJArray(jArray))
+                var c = GetAllJValuesFromJArray(jArray);
+                foreach (var result in c)
                 {
                     yield return result;
                 }
             }
             else if (target is JProperty jProperty)
             {
-                foreach (var result in GetAllJValuesFromJProperty(jProperty))
+                var c = GetAllJValuesFromJProperty(jProperty);
+                foreach (var result in c)
                 {
                     yield return result;
                 }
             }
             else if (target is JObject jObject)
             {
-                foreach (var result in GetAllValuesFromJObject(jObject))
+                var c = GetAllValuesFromJObject(jObject);
+                foreach (var result in c)
                 {
                     yield return result;
                 }
