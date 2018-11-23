@@ -1,6 +1,7 @@
 ﻿namespace Microshaoft.WebApi.Controllers
 {
     using Microshaoft;
+    using Microshaoft.Web;
     using Microshaoft.WebApi.ModelBinders;
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json.Linq;
@@ -16,6 +17,7 @@
 
         [HttpGet]
         [Route("tracking")]
+        [BearerTokenBasedAuthorizeFilter(IsRequired = false)]
         public void
                     ProcessActionRequest
                         (

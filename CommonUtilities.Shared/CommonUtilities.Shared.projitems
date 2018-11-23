@@ -46,8 +46,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Caches\MruCache.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Caches\RefreshableCache.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Caches\XmlSerializersCache.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Collections\CollectionExtensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Collections\DictionaryExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Collections\CollectionHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Collections\DictionaryHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\EmptyReadOnlyDictionary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\EnumerableHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConcurrentAsyncQueue\ConcurrentAsyncQueue.cs" />
@@ -57,10 +57,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)CRC\CRC16.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CRC\CRC32.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CRC\CrcHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DataAccess\SqlCommandExtensionsMethodsManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataAccess\SqlCommandHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataReader\DataReaderHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataTable\DataTableHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DataTable\DataTableList.ExtensionMethodsManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataTable\DataTableListHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DynamicExpression\ExpressionTreeHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DynamicExpression\ExpressionTreeHelper.DynamicCallMethodExpressionTreeInvokerHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DynamicExpression\ExpressionTreeHelper.DynamicMemberAccessor.cs" />

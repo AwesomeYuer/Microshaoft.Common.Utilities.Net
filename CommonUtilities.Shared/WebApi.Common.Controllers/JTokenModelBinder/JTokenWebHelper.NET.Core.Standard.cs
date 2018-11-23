@@ -4,10 +4,8 @@ namespace Microshaoft.WebApi
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Primitives;
     using Newtonsoft.Json.Linq;
-    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
 
     public static class JTokenWebHelper
     {
@@ -35,35 +33,36 @@ namespace Microshaoft.WebApi
         }
         public static JToken ToJToken
                                 (
-                                    this IEnumerable<KeyValuePair<string, StringValues>>
-                                            target
+                                    this
+                                        IEnumerable
+                                            <KeyValuePair<string, StringValues>>
+                                                target
                                 )
         {
             IEnumerable<JProperty>
                 jProperties
-                        = target
-                            .Select
-                                (
-                                    (x) =>
+                    = target
+                        .Select
+                            (
+                                (x) =>
+                                {
+                                    JToken jToken = null;
+                                    if (x.Value.Count() > 1)
                                     {
-
-                                        JToken jToken = null;
-                                        if (x.Value.Count() > 1)
-                                        {
-                                            jToken = new JArray(x.Value);
-                                        }
-                                        else
-                                        {
-                                            jToken = new JValue(x.Value[0]);
-                                        }
-                                        return
-                                            new JProperty
-                                                (
-                                                    x.Key
-                                                    , jToken
-                                                );
+                                        jToken = new JArray(x.Value);
                                     }
-                                );
+                                    else
+                                    {
+                                        jToken = new JValue(x.Value[0]);
+                                    }
+                                    return
+                                        new JProperty
+                                            (
+                                                x.Key
+                                                , jToken
+                                            );
+                                }
+                            );
             var result = new JObject(jProperties);
             return result;
         }
