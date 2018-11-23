@@ -29,7 +29,7 @@ namespace Microshaoft.WebApi.Controllers
         [
             Route
                 (
-                    "v2/{routeName}/"
+                    "SingleFlattenResult/{routeName}/"
                 )
         ]
 
