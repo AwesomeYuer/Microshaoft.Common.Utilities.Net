@@ -22,7 +22,7 @@
                 MapToNew
                     (
                         source
-                        , 
+                        ,
                             (
                                 IEnumerable
                                     <
@@ -65,8 +65,8 @@
                                 .Split
                                     (
                                         '.'
-                                        , StringSplitOptions
-                                                .RemoveEmptyEntries
+                                        //, StringSplitOptions
+                                        //        .RemoveEmptyEntries
                                     );
                     var j = r;
                     var l = ss.Length;
