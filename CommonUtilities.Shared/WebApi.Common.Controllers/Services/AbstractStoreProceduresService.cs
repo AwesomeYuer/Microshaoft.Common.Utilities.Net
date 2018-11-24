@@ -306,49 +306,30 @@ namespace Microshaoft.Web
                                         .GetSection($"Routes:{routeName}:{r1.HttpMethod}:Outputs");
                     if (outputsConfiguration.Exists())
                     {
-                        var outputs = outputsConfiguration.GetChildren();
-                        JToken newResult = null;
-                        foreach (var x in outputs)
-                        {
-                            var path = x.Get<string>();
-                            var jToken = result.SelectToken(path);
-                            if (x.Key != "$")
-                            {
-                                if (newResult == null)
-                                {
-                                    newResult = new JObject();
-                                }
-                                var ss = x
-                                            .Key
-                                            .Split
-                                                (
-                                                    '.'
-                                                    , StringSplitOptions
-                                                            .RemoveEmptyEntries
-                                                );
-                                var j = newResult;
-                                var l = ss.Length;
-                                for (var i = 0; i < l; i++)
-                                {
-                                    var s = ss[i];
-                                    if (i < l - 1)
-                                    {
-                                        j[s] = new JObject();
-                                        j = j[s];
-                                    }
-                                    else
-                                    {
-                                        j[s] = jToken;
-                                    }
-                                }
-                            }
-                            else //if (x.Key == "$")
-                            {
-                                newResult = jToken;
-                                break;
-                            }
-                        }
-                        result = newResult;
+                        var mappings = 
+                                    outputsConfiguration
+                                        .GetChildren()
+                                        .Select
+                                            (
+                                                (x) =>
+                                                {
+                                                    (
+                                                        string TargetJPath
+                                                        , string SourceJPath
+                                                    )
+                                                        r =
+                                                            (
+                                                                x.Key
+                                                               , x.Get<string>()
+                                                            );
+                                                    return r;
+                                                }
+                                            );
+                        result = result
+                                    .MapToNew
+                                        (
+                                            mappings
+                                        );
                     }
                 }
             }

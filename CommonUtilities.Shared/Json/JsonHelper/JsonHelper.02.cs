@@ -6,6 +6,95 @@
 
     public static partial class JsonHelper
     {
+        public static JToken MapToNew
+                            (
+                                this JToken source
+                                , params
+                                    (
+                                        string TargetJPath
+                                        , string SourceJPath
+                                    )[]
+                                        mappings
+                            
+                            )
+        {
+            return
+                MapToNew
+                    (
+                        source
+                        , 
+                            (
+                                IEnumerable
+                                    <
+                                        (
+                                            string TargetJPath
+                                            , string SourceJPath
+                                        )
+                                    >
+                            )
+                                mappings
+                    );
+        }
+        //TargetJPath such as: SomeField[1] unsupported JArray 
+        public static JToken MapToNew
+                            (
+                                this JToken source
+                                , IEnumerable
+                                    <
+                                        (
+                                            string TargetJPath
+                                            , string SourceJPath
+                                        )
+                                    >
+                                        mappings
+
+                            )
+        {
+            JToken r = null;
+            foreach (var map in mappings)
+            {
+                var jToken = source.SelectToken(map.SourceJPath);
+                if (map.TargetJPath != "$")
+                {
+                    if (r == null)
+                    {
+                        r = new JObject();
+                    }
+                    var ss = map
+                                .TargetJPath
+                                .Split
+                                    (
+                                        '.'
+                                        , StringSplitOptions
+                                                .RemoveEmptyEntries
+                                    );
+                    var j = r;
+                    var l = ss.Length;
+                    for (var i = 0; i < l; i++)
+                    {
+                        var s = ss[i];
+                        if (i < l - 1)
+                        {
+                            if (j[s] == null)
+                            {
+                                j[s] = new JObject();
+                            }
+                            j = j[s];
+                        }
+                        else
+                        {
+                            j[s] = jToken;
+                        }
+                    }
+                }
+                else //if (x.Key == "$")
+                {
+                    r = jToken;
+                    break;
+                }
+            }
+            return r;
+        }
         public static IEnumerable<JValue> GetAllJValues
                         (
                             this JToken target
