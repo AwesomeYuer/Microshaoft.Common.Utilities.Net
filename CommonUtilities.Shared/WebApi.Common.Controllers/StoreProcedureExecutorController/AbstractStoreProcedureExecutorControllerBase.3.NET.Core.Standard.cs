@@ -91,12 +91,12 @@ namespace Microshaoft.WebApi.Controllers
             Route
                 (
                     "{routeName}/"
-                    + "{resultPathSegment1?}/"
-                    + "{resultPathSegment2?}/"
-                    + "{resultPathSegment3?}/"
-                    + "{resultPathSegment4?}/"
-                    + "{resultPathSegment5?}/"
-                    + "{resultPathSegment6?}"
+                    + "{resultJsonPathPart1?}/"
+                    + "{resultJsonPathPart2?}/"
+                    + "{resultJsonPathPart3?}/"
+                    + "{resultJsonPathPart4?}/"
+                    + "{resultJsonPathPart5?}/"
+                    + "{resultJsonPathPart6?}"
                 )
         ]
         public virtual ActionResult<JToken> 
@@ -107,17 +107,17 @@ namespace Microshaoft.WebApi.Controllers
                                     , [ModelBinder(typeof(JTokenModelBinder))]
                                         JToken parameters = null
                                     , [FromRoute]
-                                        string resultJsonPathSegment1 = null
+                                        string resultJsonPathPart1 = null
                                     , [FromRoute]
-                                        string resultJsonPathSegment2 = null
+                                        string resultJsonPathPart2 = null
                                     , [FromRoute]
-                                        string resultJsonPathSegment3 = null
+                                        string resultJsonPathPart3 = null
                                     , [FromRoute]
-                                        string resultJsonPathSegment4 = null
+                                        string resultJsonPathPart4 = null
                                     , [FromRoute]
-                                        string resultJsonPathSegment5 = null
+                                        string resultJsonPathPart5 = null
                                     , [FromRoute]
-                                        string resultJsonPathSegment6 = null
+                                        string resultJsonPathPart6 = null
                                 )
         {
             JToken result = null;
@@ -142,12 +142,12 @@ namespace Microshaoft.WebApi.Controllers
                 result = result
                             .GetDescendantByPathKeys
                                 (
-                                    resultJsonPathSegment1
-                                    , resultJsonPathSegment2
-                                    , resultJsonPathSegment3
-                                    , resultJsonPathSegment4
-                                    , resultJsonPathSegment5
-                                    , resultJsonPathSegment6
+                                    resultJsonPathPart1
+                                    , resultJsonPathPart2
+                                    , resultJsonPathPart3
+                                    , resultJsonPathPart4
+                                    , resultJsonPathPart5
+                                    , resultJsonPathPart6
                                 );
                 Response.StatusCode = r.StatusCode;
             }
