@@ -136,7 +136,8 @@
         {
             for (var i = 0; i < target.Count; i++)
             {
-                foreach (var result in GetAllJValues(target[i]))
+                var c = GetAllJValues(target[i]);
+                foreach (var result in c)
                 {
                     yield return result;
                 }
@@ -145,7 +146,8 @@
 
         public static IEnumerable<JValue> GetAllJValuesFromJProperty(this JProperty target)
         {
-            foreach (var result in GetAllJValues(target.Value))
+            var c = GetAllJValues(target.Value);
+            foreach (var result in c)
             {
                 yield return result;
             }
@@ -153,9 +155,11 @@
 
         public static IEnumerable<JValue> GetAllValuesFromJObject(this JObject target)
         {
-            foreach (var jToken in target.Children())
+            var c = target.Children();
+            foreach (var jToken in c)
             {
-                foreach (var result in GetAllJValues(jToken))
+                var cc = GetAllJValues(jToken);
+                foreach (var result in cc)
                 {
                     yield return result;
                 }
