@@ -40,7 +40,8 @@
         "commandtimeoutInSeconds": 103,
         "Outputs": {
           "aaa.bbb.ccc": "Outputs.ResultSets[0].Rows",
-          "bbb": "Outputs.Parameters"
+          "bbb": "Outputs.Parameters",
+          "aaa.bbb.ddd": "Outputs.Parameters"
 
         }
       },
