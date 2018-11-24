@@ -39,7 +39,7 @@
         "EnableStatistics": true,
         "commandtimeoutInSeconds": 103,
         "Outputs": {
-          "aaa": "Outputs.ResultSets[0].Rows",
+          "aaa.bbb.ccc": "Outputs.ResultSets[0].Rows",
           "bbb": "Outputs.Parameters"
 
         }

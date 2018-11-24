@@ -300,6 +300,7 @@ namespace Microshaoft.Web
                 }
                 if (r2)
                 {
+                    //support custom output nest json by JSONPath in JsonFile Config
                     var outputsConfiguration =
                                 _configuration
                                         .GetSection($"Routes:{routeName}:{r1.HttpMethod}:Outputs");
@@ -310,14 +311,36 @@ namespace Microshaoft.Web
                         foreach (var x in outputs)
                         {
                             var path = x.Get<string>();
-                            var jToken = result.SelectToken(x.Get<string>());
+                            var jToken = result.SelectToken(path);
                             if (x.Key != "$")
                             {
                                 if (newResult == null)
                                 {
                                     newResult = new JObject();
                                 }
-                                newResult[x.Key] = jToken;
+                                var ss = x
+                                            .Key
+                                            .Split
+                                                (
+                                                    '.'
+                                                    , StringSplitOptions
+                                                            .RemoveEmptyEntries
+                                                );
+                                var j = newResult;
+                                var l = ss.Length;
+                                for (var i = 0; i < l; i++)
+                                {
+                                    var s = ss[i];
+                                    if (i < l - 1)
+                                    {
+                                        j[s] = new JObject();
+                                        j = j[s];
+                                    }
+                                    else
+                                    {
+                                        j[s] = jToken;
+                                    }
+                                }
                             }
                             else //if (x.Key == "$")
                             {
@@ -557,11 +580,6 @@ namespace Microshaoft.Web
             }
             //success = true;
             statusCode = 200;
-
-
-
-
-
             return Result();
         }
     }

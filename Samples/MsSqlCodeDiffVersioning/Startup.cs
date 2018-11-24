@@ -37,8 +37,9 @@
                         CompatibilityVersion
                             .Version_2_1
                     );
+            #region 异步批量入库案例专用
             var processor =
-                        new SingleThreadAsyncDequeueProcessorSlim<JToken>();
+                new SingleThreadAsyncDequeueProcessorSlim<JToken>();
             var executor = new MsSqlStoreProceduresExecutor();
             processor
                 .StartRunDequeueThreadProcess
@@ -67,6 +68,8 @@
                 (
                     processor
                 );
+            #endregion
+
             services
                 //.AddTransient
                 .AddSingleton
