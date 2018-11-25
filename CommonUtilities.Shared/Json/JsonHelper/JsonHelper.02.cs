@@ -3,6 +3,7 @@
     using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     public static partial class JsonHelper
     {
@@ -15,7 +16,28 @@
                                         , string SourceJPath
                                     )[]
                                         mappings
-                            
+
+                            )
+        {
+            return
+                MapToNew
+                    (
+                        source
+                        , mappings
+                        , false
+                    );
+        }
+        public static JToken MapToNew
+                            (
+                                this JToken source
+                                , bool orderedTargetPaths = false
+                                , params
+                                    (
+                                        string TargetJPath
+                                        , string SourceJPath
+                                    )[]
+                                        mappings
+                                
                             )
         {
             return
@@ -33,6 +55,7 @@
                                     >
                             )
                                 mappings
+                         , orderedTargetPaths
                     );
         }
         //TargetJPath such as: SomeField[1] unsupported JArray 
@@ -47,20 +70,34 @@
                                         )
                                     >
                                         mappings
-
+                                , bool orderedTargetPaths = false
                             )
         {
             JToken r = null;
-            foreach (var map in mappings)
+            var c = mappings;
+            if (orderedTargetPaths)
             {
-                var jToken = source.SelectToken(map.SourceJPath);
-                if (map.TargetJPath != "$")
+                c = c
+                        .OrderBy
+                                (
+                                    (x) =>
+                                    {
+                                        return
+                                            x.TargetJPath;
+                                    }
+                                );
+            }
+            foreach (var x in c)
+            {
+                var jToken = source
+                                .SelectToken(x.SourceJPath);
+                if (x.TargetJPath != "$")
                 {
                     if (r == null)
                     {
                         r = new JObject();
                     }
-                    var ss = map
+                    var ss = x
                                 .TargetJPath
                                 .Split
                                     (
