@@ -39,10 +39,11 @@
         "EnableStatistics": true,
         "commandtimeoutInSeconds": 103,
         "Outputs": {
-          "aaa.bbb.ccc": "Outputs.ResultSets[0].Rows",
+          "aaa.bbb.ddd": "Outputs.ResultSets[0].Rows",
           "bbb": "Outputs.Parameters",
-          "aaa.bbb.ddd": "Outputs.Parameters"
-
+          "aaa.bbb.ccc": "Outputs.Parameters",
+          "AAa.ccc": "Outputs.Parameters",
+          "aaa.bbb.ccc": "Outputs.ResultSets[0].Rows"
         }
       },
       "HttpPost": {
