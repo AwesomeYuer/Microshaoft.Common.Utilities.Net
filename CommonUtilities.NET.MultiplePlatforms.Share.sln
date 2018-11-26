@@ -206,12 +206,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jwt.Portal.WebApi.Applicati
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jwt.Authorization.Center", "Samples\Jwt.Authorization.Center\Jwt.Authorization.Center.csproj", "{5E7BABBB-A5FF-4B4F-9B87-A8C4142C36E8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "40.StoreProcedureWebApiExecutor", "40.StoreProcedureWebApiExecutor", "{F81E58D5-FEDA-493B-927B-66745127123B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoreProcedureWebApiExecutorService.Core", "StoreProcedureWebApiExecutor\StoreProcedureWebApiExecutor.Core\StoreProcedureWebApiExecutorService.Core.csproj", "{85BE8162-EC4D-43DA-B054-A18119D72097}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "StoreProcedureWebApiExecutor.Shared", "CommonUtilities.Shared\StoreProcedureWebApiExecutor.Shared.shproj", "{CBA7FA05-6D20-45CF-B752-645AF269B0DA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00.SharedSource", "00.SharedSource", "{AA460D19-E158-4C00-B307-9EF3332AB276}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "20.Cross-Platforms", "20.Cross-Platforms", "{BC10D378-9C21-40BA-90FF-7E91AC5A87A2}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		CommonUtilities.Shared\CommonUtilities.Lite.Shared.projitems*{1b65919e-10ef-4fce-9fec-de547a62fc15}*SharedItemsImports = 4
 		CommonUtilities.Shared\WebApiUtilities.Shared.projitems*{1fbd68b8-839e-4c54-a00c-beac21119371}*SharedItemsImports = 13
 		CommonUtilities.Shared\CommonUtilities.Lite.Shared.projitems*{214a20f4-f017-42d8-8cc1-e35054a42e30}*SharedItemsImports = 4
-		Samples\SocketAsyncArgs.TCP.Echo.Server\ServerConsoleApp\ServerSharedProject\ServerSharedProject.projitems*{2f4cbf03-89f3-4250-a7d9-cba4b527ffc8}*SharedItemsImports = 4
 		Samples\SocketAsyncArgs.TCP.Echo.Server\ServerConsoleApp\ServerSharedProject\ServerSharedProject.projitems*{3f6feee0-0473-441f-a073-889503ec7710}*SharedItemsImports = 13
 		Test\CommonUtilities.Console.Test.Shared\CommonUtilities.Console.Test.Shared.projitems*{4abb4b40-9f74-40e0-aa24-6ed891bfcd4b}*SharedItemsImports = 4
 		Samples\SocketAsyncArgs.TCP.Echo.Server\ClientConsoleApp\ClientSharedProject\ClientSharedProject.projitems*{53ab334d-022f-485e-a755-fe59b38db953}*SharedItemsImports = 4
@@ -228,6 +237,7 @@ Global
 		CommonUtilities.Shared\EasyPerformanceCountersHelper.Shared.projitems*{b1913205-1d01-4a59-b0ca-b5c7460fb644}*SharedItemsImports = 13
 		CommonUtilities.Shared\EasyPerformanceCountersHelper.Shared.projitems*{bf7a1c0a-fe1f-4dd9-a044-c895cf6fbd97}*SharedItemsImports = 4
 		CommonUtilities.Shared\CommonUtilities.Shared.projitems*{c2af98f7-fe1f-46b9-8613-0ef72f6ff436}*SharedItemsImports = 4
+		CommonUtilities.Shared\StoreProcedureWebApiExecutor.Shared.projitems*{cba7fa05-6d20-45cf-b752-645af269b0da}*SharedItemsImports = 13
 		CommonUtilities.Shared\ConcurrentAsyncQueue.Shared.projitems*{d2527213-7cf7-47d9-88de-1c0ccd5f59db}*SharedItemsImports = 4
 		CommonUtilities.Shared\ConcurrentAsyncQueue.Shared.projitems*{debaf0d0-4a09-4fed-8a08-d782eb513a0d}*SharedItemsImports = 4
 		Samples\SocketAsyncArgs.TCP.Echo.Server\ClientConsoleApp\ClientSharedProject\ClientSharedProject.projitems*{e2a49f80-5e62-414d-bf57-8e1802b144a8}*SharedItemsImports = 13
@@ -995,6 +1005,22 @@ Global
 		{5E7BABBB-A5FF-4B4F-9B87-A8C4142C36E8}.Release|x64.Build.0 = Release|Any CPU
 		{5E7BABBB-A5FF-4B4F-9B87-A8C4142C36E8}.Release|x86.ActiveCfg = Release|Any CPU
 		{5E7BABBB-A5FF-4B4F-9B87-A8C4142C36E8}.Release|x86.Build.0 = Release|Any CPU
+		{85BE8162-EC4D-43DA-B054-A18119D72097}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85BE8162-EC4D-43DA-B054-A18119D72097}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85BE8162-EC4D-43DA-B054-A18119D72097}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{85BE8162-EC4D-43DA-B054-A18119D72097}.Debug|ARM.Build.0 = Debug|Any CPU
+		{85BE8162-EC4D-43DA-B054-A18119D72097}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{85BE8162-EC4D-43DA-B054-A18119D72097}.Debug|x64.Build.0 = Debug|Any CPU
+		{85BE8162-EC4D-43DA-B054-A18119D72097}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{85BE8162-EC4D-43DA-B054-A18119D72097}.Debug|x86.Build.0 = Debug|Any CPU
+		{85BE8162-EC4D-43DA-B054-A18119D72097}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85BE8162-EC4D-43DA-B054-A18119D72097}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85BE8162-EC4D-43DA-B054-A18119D72097}.Release|ARM.ActiveCfg = Release|Any CPU
+		{85BE8162-EC4D-43DA-B054-A18119D72097}.Release|ARM.Build.0 = Release|Any CPU
+		{85BE8162-EC4D-43DA-B054-A18119D72097}.Release|x64.ActiveCfg = Release|Any CPU
+		{85BE8162-EC4D-43DA-B054-A18119D72097}.Release|x64.Build.0 = Release|Any CPU
+		{85BE8162-EC4D-43DA-B054-A18119D72097}.Release|x86.ActiveCfg = Release|Any CPU
+		{85BE8162-EC4D-43DA-B054-A18119D72097}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1091,6 +1117,11 @@ Global
 		{4DB1AAE0-F1F9-4C69-825C-46EB0D6AEC45} = {38FF2F59-C5A3-4996-B35B-10F276D73856}
 		{02FAC9C9-0434-49BE-8A9E-0F0FBEFCA9FD} = {38FF2F59-C5A3-4996-B35B-10F276D73856}
 		{5E7BABBB-A5FF-4B4F-9B87-A8C4142C36E8} = {38FF2F59-C5A3-4996-B35B-10F276D73856}
+		{F81E58D5-FEDA-493B-927B-66745127123B} = {E402FB2A-AFF3-4187-8140-5837A01B1349}
+		{85BE8162-EC4D-43DA-B054-A18119D72097} = {BC10D378-9C21-40BA-90FF-7E91AC5A87A2}
+		{CBA7FA05-6D20-45CF-B752-645AF269B0DA} = {AA460D19-E158-4C00-B307-9EF3332AB276}
+		{AA460D19-E158-4C00-B307-9EF3332AB276} = {F81E58D5-FEDA-493B-927B-66745127123B}
+		{BC10D378-9C21-40BA-90FF-7E91AC5A87A2} = {F81E58D5-FEDA-493B-927B-66745127123B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ABDE4EA1-B6A3-41C1-AC23-2CA7A04C03AB}
