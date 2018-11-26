@@ -1010,19 +1010,7 @@
 
         #endregion
     
-
-    
-
-
-
-
-
-
-
-
-
-
-    public static void GetAlignSecondsDateTimes<T>
+        public static void GetAlignSecondsDateTimes<T>
                                 (
                                     this DateTime target
                                     , params Tuple<long, Func<DateTime, long, DateTime, T, T>>[] processAlignSecondsDateTimesFuncs
@@ -1093,9 +1081,6 @@
                                         ) ? time as DateTime? : null;
             return r;
         }
-
-
-
     }
     public enum DayOfKind
     {
