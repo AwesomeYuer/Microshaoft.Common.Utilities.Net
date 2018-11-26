@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\StoreProcedureWebApiExecutor\StoreProcedureWebApiExecutor.Core\StoreProcedureWebApiExecutorService.Core.csproj" />
+    <ProjectReference Include="..\..\StoreProcedureWebApiExecutor\StoreProcedureWebApiExecutor.Core\Microshaoft.StoreProcedureExecutorWebApiService.Core.csproj" />
   </ItemGroup>
 
 </Project>
