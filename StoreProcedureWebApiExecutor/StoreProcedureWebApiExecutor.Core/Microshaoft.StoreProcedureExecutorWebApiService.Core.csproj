@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-    <AssemblyName>Microshaoft.StoreProcedureExecutorWebApiService.ASP.NET.Core</AssemblyName>
+    <AssemblyName>Microshaoft.StoreProcedureExecutorWebApiService.Core</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>..\bin\Release\</OutputPath>
