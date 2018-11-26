@@ -150,7 +150,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jwt.Portal.WebApi.Applicati
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jwt.Authorization.Center", "Samples\Jwt.Authorization.Center\Jwt.Authorization.Center.csproj", "{5E7BABBB-A5FF-4B4F-9B87-A8C4142C36E8}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "40.StoreProcedureWebApisExecutor", "40.StoreProcedureWebApisExecutor", "{0B301574-3BFF-45F5-8FFB-2EBF13ED6B0E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "40.StoreProcedureWebApiExecutor", "40.StoreProcedureWebApiExecutor", "{0B301574-3BFF-45F5-8FFB-2EBF13ED6B0E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00.SharedSource", "00.SharedSource", "{933AE707-3B08-4A31-8DC6-29D4FFCC136C}"
 EndProject
@@ -158,7 +158,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "20.Cross-Platforms", "20.Cr
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "StoreProcedureWebApiExecutor.Shared", "CommonUtilities.Shared\StoreProcedureWebApiExecutor.Shared.shproj", "{CBA7FA05-6D20-45CF-B752-645AF269B0DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreProcedureWebApiExecutor.Core", "StoreProcedureWebApiExecutor\StoreProcedureWebApiExecutor.Core\StoreProcedureWebApiExecutor.Core.csproj", "{64DB75C2-4DBD-41F9-B1D9-9086D01BC4EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoreProcedureWebApiExecutorService.Core", "StoreProcedureWebApiExecutor\StoreProcedureWebApiExecutor.Core\StoreProcedureWebApiExecutorService.Core.csproj", "{64DB75C2-4DBD-41F9-B1D9-9086D01BC4EF}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution

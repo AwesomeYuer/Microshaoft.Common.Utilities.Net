@@ -11,8 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\CommonUtilities\CommonUtilities.Lite\CommonUtilities.Lite.NET.Core.2.x\CommonUtilities.Lite.NET.Core.2.x.csproj" />
-    <ProjectReference Include="..\..\CommonUtilities\WebApiUtilities\WebApiUtilities.NET.Core.2.x\WebApiUtilities.NET.Core.2.x.csproj" />
+    <ProjectReference Include="..\..\StoreProcedureWebApiExecutor\StoreProcedureWebApiExecutor.Core\StoreProcedureWebApiExecutorService.Core.csproj" />
   </ItemGroup>
 
 </Project>
