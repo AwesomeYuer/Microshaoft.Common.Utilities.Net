@@ -10,7 +10,11 @@
     public class TrackerController : ControllerBase
     {
         private SingleThreadAsyncDequeueProcessorSlim<JToken> _asyncDequeueProcessor;
-        public TrackerController(SingleThreadAsyncDequeueProcessorSlim<JToken> asyncDequeueProcessor)
+        public TrackerController
+                        (
+                            SingleThreadAsyncDequeueProcessorSlim<JToken>
+                                asyncDequeueProcessor
+                        )
         {
             _asyncDequeueProcessor = asyncDequeueProcessor;
         }

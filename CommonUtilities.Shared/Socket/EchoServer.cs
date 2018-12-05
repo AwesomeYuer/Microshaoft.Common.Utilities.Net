@@ -7,7 +7,7 @@
     public class EchoServer<T>
     {
         //Socket _socketListener;
-        private Action<SocketAsyncDataHandler<T>, byte[]> _onReceivedDataProcessAction;
+        private Action<SocketAsyncDataHandler<T>, byte[], int> _onReceivedDataProcessAction;
         public EchoServer
                     (
                         IPEndPoint localPoint
@@ -15,6 +15,7 @@
                             <
                                 SocketAsyncDataHandler<T>
                                 , byte[]
+                                , int
                             >
                             onReceivedDataProcessAction
                     )
@@ -81,9 +82,9 @@
                                     );
                             return saea;
                         }
-                        , (x, y, z) =>
+                        , (x, y, z, w) =>
                         {
-                            _onReceivedDataProcessAction?.Invoke(x, y);
+                            _onReceivedDataProcessAction?.Invoke(x, y, z);
                             return true;
                         }
                     );

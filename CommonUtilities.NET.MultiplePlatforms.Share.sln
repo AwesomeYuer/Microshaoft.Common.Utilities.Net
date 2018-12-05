@@ -208,7 +208,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jwt.Authorization.Center", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "40.StoreProcedureWebApiExecutor", "40.StoreProcedureWebApiExecutor", "{F81E58D5-FEDA-493B-927B-66745127123B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoreProcedureWebApiExecutorService.Core", "StoreProcedureWebApiExecutor\StoreProcedureWebApiExecutor.Core\StoreProcedureWebApiExecutorService.Core.csproj", "{85BE8162-EC4D-43DA-B054-A18119D72097}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microshaoft.StoreProcedureExecutorWebApiService.Core", "StoreProcedureWebApiExecutor\StoreProcedureWebApiExecutor.Core\Microshaoft.StoreProcedureExecutorWebApiService.Core.csproj", "{85BE8162-EC4D-43DA-B054-A18119D72097}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "StoreProcedureWebApiExecutor.Shared", "CommonUtilities.Shared\StoreProcedureWebApiExecutor.Shared.shproj", "{CBA7FA05-6D20-45CF-B752-645AF269B0DA}"
 EndProject
