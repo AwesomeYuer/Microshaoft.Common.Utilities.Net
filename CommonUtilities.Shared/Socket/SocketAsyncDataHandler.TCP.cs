@@ -458,21 +458,31 @@
             //    return;
             //}
             Interlocked.Increment(ref _receivedCount);
-            bool r = socket.ReceiveAsync(socketAsyncEventArgs);
-            if (!r)
+            //bool r = socket.ReceiveAsync(socketAsyncEventArgs);
+            //if (!r)
+            //{
+            //    Interlocked.Increment(ref _receivedSyncCount);
+            //    Console.WriteLine($"Explicitly: TriggerCompletedEvent Times: {_receivedSyncCount} @ {DateTime.Now:yyyy-MM-dd HH:mm.ss.fff}");
+            //    //avoid fall in endless loop and got stack overflow exception
+            //    if (socketAsyncEventArgs.BytesTransferred > 0)
+            //    {
+            //        onCompleted(socket, socketAsyncEventArgs);
+            //    }
+            //}
+            //else
+            //{
+            //    Interlocked.Increment(ref _receivedAsyncCount);
+            //    Console.WriteLine($"Implicitly: TriggerCompletedEvent Times: {_receivedAsyncCount} @ {DateTime.Now:yyyy-MM-dd HH:mm.ss.fff}");
+            //}
+            var willRaiseEvent = false;
+            do
             {
-                Interlocked.Increment(ref _receivedSyncCount);
-                Console.WriteLine($"Explicitly: TriggerCompletedEvent Times: {_receivedSyncCount} @ {DateTime.Now:yyyy-MM-dd HH:mm.ss.fff}");
-                //avoid fall in endless loop and got stack overflow exception
-                if (socketAsyncEventArgs.BytesTransferred > 0)
-                {
-                    onCompleted(socket, socketAsyncEventArgs);
-                }
+                willRaiseEvent = socket.ReceiveAsync(ReceiveSocketAsyncEventArgs);
             }
-            else
+            while (!willRaiseEvent);
+            if (socketAsyncEventArgs.BytesTransferred > 0)
             {
-                Interlocked.Increment(ref _receivedAsyncCount);
-                Console.WriteLine($"Implicitly: TriggerCompletedEvent Times: {_receivedAsyncCount} @ {DateTime.Now:yyyy-MM-dd HH:mm.ss.fff}");
+                onCompleted(socket, socketAsyncEventArgs);
             }
         }
 
