@@ -72,9 +72,26 @@ namespace Client
                                     );
                             return saea;
                         }
-                        , (x, y, z) =>
+                        , (x, y, z, w) =>
                         {
-                            var s = receiveEncoding.GetString(y);
+                            var offset = 4;
+                            var l = y.Length - z;
+#if NETCOREAPP2_X
+                            var buffer = new ReadOnlySpan<byte>(y, offset, l);
+#else
+                            var buffer = new byte[l];
+                            Buffer
+                                .BlockCopy
+                                    (
+                                        y
+                                        , offset
+                                        , buffer
+                                        , 0
+                                        , l
+                                    );
+#endif
+
+                            var s = receiveEncoding.GetString(buffer);
                             //Console.WriteLine("SocketID: {1}{0}Length: {2}{0}Data: {2}", "\r\n", x.SocketID, y.Length ,s);
                             Console.Write(s);
                             return true;
@@ -90,6 +107,7 @@ namespace Client
                     byte[] intBytes = BytesHelper.GetLengthHeaderBytes(buffer);
                     handler.SendDataSync(intBytes);
                     handler.SendDataSync(buffer);
+                    Console.WriteLine("Sended");
                 }
                 catch (Exception e)
                 {

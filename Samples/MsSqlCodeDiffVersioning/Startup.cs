@@ -37,6 +37,7 @@
                         CompatibilityVersion
                             .Version_2_1
                     );
+            
             #region 异步批量入库案例专用
             var processor =
                 new SingleThreadAsyncDequeueProcessorSlim<JToken>();
@@ -71,19 +72,20 @@
             #endregion
 
             services
-                //.AddTransient
                 .AddSingleton
                     <
                         IStoreProceduresWebApiService
                         , StoreProceduresExecuteService
                     >
                     ();
+            
+            #region 跨域策略
             services
-                .Add
-                    (
-                        ServiceDescriptor
-                            .Transient<ICorsService, WildcardCorsService>()
-                    );
+                    .Add
+                        (
+                            ServiceDescriptor
+                                .Transient<ICorsService, WildcardCorsService>()
+                        );
             services
                 .AddCors
                     (
@@ -116,6 +118,9 @@
 
                         }
                   );
+            #endregion
+
+
             services.AddResponseCaching();
 
             services

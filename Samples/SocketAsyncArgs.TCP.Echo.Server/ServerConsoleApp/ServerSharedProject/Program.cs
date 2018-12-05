@@ -27,9 +27,30 @@
             var es = new EchoServer<string>
                             (
                                 new IPEndPoint(ipa, port)
-                                , (x, y) =>
+                                , (x, y, z) =>
                                 {
-                                    var s = receiveEncoding.GetString(y);
+                                    var offset = 4;
+                                    var l = y.Length - z;
+#if NETCOREAPP2_X
+                                    var buffer = new ReadOnlySpan<byte>(y, offset, l);
+#else
+                                    var buffer = new byte[l];
+                                    Buffer
+                                        .BlockCopy
+                                            (
+                                                y
+                                                , offset
+                                                , buffer
+                                                , 0
+                                                , l
+                                            );
+#endif
+                                    var s = receiveEncoding
+                                                    .GetString
+                                                        (
+                                                            buffer
+                                                        );
+                                    buffer = null;
                                     s = string
                                             .Format
                                                 (
@@ -53,10 +74,10 @@
 
                                     Console.WriteLine($"Server ReceivedTotalBytesCount: {x.ReceivedTotalBytesCount} bytes");
 
-                                    var buffer = sendEncoding.GetBytes(s);
-                                    byte[] intBytes = BytesHelper.GetLengthHeaderBytes(buffer);
+                                    var bytes = sendEncoding.GetBytes(s);
+                                    byte[] intBytes = BytesHelper.GetLengthHeaderBytes(bytes);
                                     x.SendDataSync(intBytes);
-                                    x.SendDataSync(buffer);
+                                    x.SendDataSync(bytes);
                                 }
                             );
             Console.WriteLine("Hello World");

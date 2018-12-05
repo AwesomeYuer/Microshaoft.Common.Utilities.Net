@@ -163,6 +163,7 @@
                                     <
                                         SocketAsyncDataHandler<T>
                                         , byte[]
+                                        , int
                                         , SocketAsyncEventArgs
                                         , bool
                                     > onOneWholeDataPacketReceivedProcessFunc
@@ -205,7 +206,8 @@
                                 , Func
                                     <
                                         SocketAsyncDataHandler<T>
-                                        , byte[]
+                                        , byte[]                    //include header + body
+                                        , int                       //HeaderBytesCount
                                         , SocketAsyncEventArgs
                                         , bool
                                     > onOneWholeDataPacketReceivedProcessFunc
@@ -291,6 +293,17 @@
                                                         , 0
                                                         , data.Length
                                                     );
+#if NETCOREAPP2_X
+                                            l = HeaderBytesCount;
+                                            if (l > 4)
+                                            {
+                                                l = 4;
+                                            }
+                                            var intSpan = new Span<byte>(data, 0, l);
+                                            //Array.Reverse(intBytes);
+                                            bodyLength = BitConverter.ToInt32(intSpan);
+                                            intSpan = null;
+#else
                                             byte[] intBytes = new byte[4];
                                             l =
                                                     (
@@ -311,6 +324,8 @@
                                                     );
                                             //Array.Reverse(intBytes);
                                             bodyLength = BitConverter.ToInt32(intBytes, 0);
+#endif
+                                            data = null;
                                             p += r;
                                             // issue: reset buffer's Offset property and Count Property
                                             e.SetBuffer(p, bodyLength);
@@ -339,6 +354,7 @@
                                                     (
                                                         this
                                                         , data
+                                                        , HeaderBytesCount
                                                         , e
                                                     );
                                         }
@@ -433,9 +449,15 @@
                                 , EventHandler<SocketAsyncEventArgs> onCompleted
                             )
         {
-            Interlocked.Increment(ref _receivedCount);
+            
             // related Issue/Question:
             //https://github.com/dotnet/corefx/issues/26917
+
+            //if (socketAsyncEventArgs.LastOperation != SocketAsyncOperation.Receive)
+            //{
+            //    return;
+            //}
+            Interlocked.Increment(ref _receivedCount);
             bool r = socket.ReceiveAsync(socketAsyncEventArgs);
             if (!r)
             {
