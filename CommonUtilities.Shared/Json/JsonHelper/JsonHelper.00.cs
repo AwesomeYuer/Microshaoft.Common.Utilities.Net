@@ -247,8 +247,16 @@
             // with ""
             else if (underlyingType == typeof(string))
             {
-                var jValueString = target.Value<string>();
-                r = target.Value<string>();
+                var jValueString = string.Empty;
+                if (target.Type != JTokenType.String)
+                {
+                    jValueString = target.ToString();
+                }
+                else
+                {
+                    jValueString = target.Value<string>();
+                }
+                r = jValueString;
             }
             else if (underlyingType == typeof(Guid))
             {

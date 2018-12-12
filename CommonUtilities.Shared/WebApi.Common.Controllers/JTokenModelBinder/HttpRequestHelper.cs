@@ -3,9 +3,13 @@ namespace Microshaoft.Web
 {
     using System;
     using System.IO;
+    using System.Threading.Tasks;
     using System.Web;
     using Microshaoft.WebApi;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+    using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
+    using Microsoft.Extensions.Logging.Abstractions;
     using Microsoft.Extensions.Primitives;
     using Newtonsoft.Json.Linq;
 
@@ -16,7 +20,7 @@ namespace Microshaoft.Web
                         this HttpRequest target
                         , out JToken parameters
                         , out string secretJwtToken
-                        , Action<JToken> onFormProcessAction = null
+                        , Func<Task<JToken>> onFormProcessAction = null
                         , string jwtTokenName = "xJwtToken"
                     )
         {
@@ -29,7 +33,10 @@ namespace Microshaoft.Web
             {
                 if (target.HasFormContentType)
                 {
-                    onFormProcessAction?.Invoke(jToken);
+                    if (onFormProcessAction != null)
+                    {
+                        jToken = onFormProcessAction().Result;
+                    }
                 }
                 else
                 {
@@ -131,6 +138,32 @@ namespace Microshaoft.Web
             parameters = jToken;
             secretJwtToken = jwtToken;
             r = true;
+            return r;
+        }
+
+        public static async Task<JToken> GetFormJTokenAsync(this ModelBindingContext target)
+        {
+            JToken r = null;
+            var formCollectionModelBinder =
+                                            new FormCollectionModelBinder
+                                                    (
+                                                        NullLoggerFactory
+                                                                    .Instance
+                                                    );
+
+
+            await formCollectionModelBinder.BindModelAsync(target);
+            if (target.Result.IsModelSet)
+            {
+                r = JTokenWebHelper
+                            .ToJToken
+                                (
+                                    (IFormCollection)
+                                        target
+                                            .Result
+                                            .Model
+                                );
+            }
             return r;
         }
     }
