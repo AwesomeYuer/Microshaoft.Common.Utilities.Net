@@ -20,7 +20,7 @@ namespace Microshaoft.Web
                         this HttpRequest target
                         , out JToken parameters
                         , out string secretJwtToken
-                        , Func<Task<JToken>> onFormProcessAction = null
+                        , Func<Task<JToken>> onFormProcessFunc = null
                         , string jwtTokenName = "xJwtToken"
                     )
         {
@@ -33,9 +33,9 @@ namespace Microshaoft.Web
             {
                 if (target.HasFormContentType)
                 {
-                    if (onFormProcessAction != null)
+                    if (onFormProcessFunc != null)
                     {
-                        jToken = onFormProcessAction().Result;
+                        jToken = onFormProcessFunc().Result;
                     }
                 }
                 else
