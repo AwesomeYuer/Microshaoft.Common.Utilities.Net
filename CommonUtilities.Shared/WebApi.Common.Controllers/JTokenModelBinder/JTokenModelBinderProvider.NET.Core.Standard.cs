@@ -9,6 +9,7 @@ namespace Microshaoft.WebApi.ModelBinders
     using Microsoft.Extensions.Logging.Abstractions;
     using Microsoft.Extensions.Primitives;
     using Newtonsoft.Json.Linq;
+    using System;
     using System.Threading.Tasks;
     public class JTokenModelBinder : IModelBinder
     {
@@ -37,26 +38,11 @@ namespace Microshaoft.WebApi.ModelBinders
                             //request
                             out parameters
                             , out var secretJwtToken
-                            , async (x) =>
+                            ,  () =>
                             {
-                                var formCollectionModelBinder =
-                                            new FormCollectionModelBinder
-                                                    (
-                                                        NullLoggerFactory
-                                                                    .Instance
-                                                    );
-                                await formCollectionModelBinder.BindModelAsync(bindingContext);
-                                if (bindingContext.Result.IsModelSet)
-                                {
-                                    x = JTokenWebHelper
-                                                .ToJToken
-                                                    (
-                                                        (IFormCollection)
-                                                            bindingContext
-                                                                        .Result
-                                                                        .Model
-                                                    );
-                                }
+                                return
+                                    bindingContext
+                                        .GetFormJTokenAsync();
                             }
                             , jwtTokenName
                         );
