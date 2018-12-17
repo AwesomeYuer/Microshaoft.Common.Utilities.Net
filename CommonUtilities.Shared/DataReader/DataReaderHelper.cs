@@ -2,17 +2,17 @@ namespace Microshaoft
 {
     using System.Collections.Generic;
     using System.Data;
-    using System.Data.SqlClient;
+    //using System.Data.SqlClient;
     using System.Linq;
     using System;
     using Newtonsoft.Json.Linq;
-    public static class DataReaderExtensionsMethodsManager
+    public static class DataReaderHelper
     {
         public static IEnumerable<T> ExecuteRead<T>
-                (
-                    this IDataReader target
-                    , Func<int, IDataReader, T> onReadProcessFunc
-                )
+                        (
+                            this IDataReader target
+                            , Func<int, IDataReader, T> onReadProcessFunc
+                        )
         {
             try
             {
@@ -34,12 +34,9 @@ namespace Microshaoft
                 target.Dispose();
             }
         }
-    }
-    public static class DataReaderHelper
-    {
         public static IEnumerable<TEntry> AsEnumerable<TEntry>
                         (
-                            this SqlDataReader target
+                            this IDataReader target
                             , bool needDefinitionAttributeProcess = false
                         )
                             where TEntry : new()

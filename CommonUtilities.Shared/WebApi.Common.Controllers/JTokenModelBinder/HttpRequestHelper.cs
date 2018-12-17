@@ -20,7 +20,7 @@ namespace Microshaoft.Web
                         this HttpRequest target
                         , out JToken parameters
                         , out string secretJwtToken
-                        , Func<Task<JToken>> onFormProcessFunc = null
+                        , Func<Task<JToken>> onFormProcessFuncAsync = null
                         , string jwtTokenName = "xJwtToken"
                     )
         {
@@ -33,9 +33,9 @@ namespace Microshaoft.Web
             {
                 if (target.HasFormContentType)
                 {
-                    if (onFormProcessFunc != null)
+                    if (onFormProcessFuncAsync != null)
                     {
-                        jToken = onFormProcessFunc().Result;
+                        jToken = onFormProcessFuncAsync().Result;
                     }
                 }
                 else
@@ -141,17 +141,19 @@ namespace Microshaoft.Web
             return r;
         }
 
-        public static async Task<JToken> GetFormJTokenAsync(this ModelBindingContext target)
+        public static async 
+            Task<JToken> GetFormJTokenAsync
+                                (
+                                    this ModelBindingContext target
+                                )
         {
             JToken r = null;
             var formCollectionModelBinder =
-                                            new FormCollectionModelBinder
-                                                    (
-                                                        NullLoggerFactory
-                                                                    .Instance
-                                                    );
-
-
+                                new FormCollectionModelBinder
+                                        (
+                                            NullLoggerFactory
+                                                        .Instance
+                                        );
             await formCollectionModelBinder.BindModelAsync(target);
             if (target.Result.IsModelSet)
             {
