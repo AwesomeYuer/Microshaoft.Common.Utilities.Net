@@ -100,9 +100,9 @@ namespace Microshaoft
             }
             return dataTable;
         }
-        public static void DataTableRowsForEach
+        public static void RowsForEach
                                 (
-                                    DataTable dataTable
+                                    this DataTable target
                                     , Func<DataColumn, int, bool>
                                             processHeaderDataColumnFunc = null
                                     , Func<DataColumnCollection, bool>
@@ -118,7 +118,7 @@ namespace Microshaoft
             bool r = false;
             if (processHeaderDataColumnFunc != null)
             {
-                dataColumnCollection = dataTable.Columns;
+                dataColumnCollection = target.Columns;
                 foreach (DataColumn dc in dataColumnCollection)
                 {
                     i++;
@@ -133,7 +133,7 @@ namespace Microshaoft
             {
                 if (dataColumnCollection == null)
                 {
-                    dataColumnCollection = dataTable.Columns;
+                    dataColumnCollection = target.Columns;
                 }
                 r = processHeaderDataColumnsFunc(dataColumnCollection);
                 if (r)
@@ -145,10 +145,11 @@ namespace Microshaoft
             if
                 (
                     processRowDataColumnFunc != null
-                    || processRowFunc != null
+                    ||
+                    processRowFunc != null
                 )
             {
-                drc = dataTable.Rows;
+                drc = target.Rows;
                 if
                     (
                         (
@@ -158,7 +159,7 @@ namespace Microshaoft
                         && dataColumnCollection == null
                     )
                 {
-                    dataColumnCollection = dataTable.Columns;
+                    dataColumnCollection = target.Columns;
                 }
                 i = 0;
                 var j = 0;
@@ -184,10 +185,7 @@ namespace Microshaoft
                             }
                         }
                     }
-                    if (processRowFunc != null)
-                    {
-                        processRowFunc(dataColumnCollection, dataRow, i);
-                    }
+                    processRowFunc?.Invoke(dataColumnCollection, dataRow, i);
                 }
             }
         }
