@@ -16,11 +16,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\StringsHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\TryCatchFinallyHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataReader\DataReaderHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DynamicExpression\ExpressionTreeHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DynamicExpression\ExpressionTreeHelper.DynamicCallMethodExpressionTreeInvokerHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DynamicExpression\ExpressionTreeHelper.DynamicMemberAccessor.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DynamicExpression\ExpressionTreeHelper.DynamicPropertyAccessor.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DynamicExpression\MethodCallExpressionHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)JsonWebToken\CliamsHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JsonHelper\JsonHelper.00.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JsonHelper\JsonHelper.01.cs" />
