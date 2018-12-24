@@ -50,15 +50,15 @@ namespace Microshaoft
         }
         public static IEnumerable<TEntry> GetEnumerable<TEntry>
                 (
-                    IDataReader dataReader
+                    this IDataReader target
                     , Func<IDataReader, TEntry> onReadProcessFunc
                     , bool skipNull = true
                 )
                     where TEntry : new()
         {
-            while (dataReader.Read())
+            while (target.Read())
             {
-                var x = onReadProcessFunc(dataReader);
+                var x = onReadProcessFunc(target);
                 if (!skipNull)
                 {
                     yield
@@ -78,7 +78,7 @@ namespace Microshaoft
         }
         public static IEnumerable<TEntry> GetEnumerable<TEntry>
                 (
-                    IDataReader dataReader
+                    this IDataReader target
                     , bool needDefinitionAttributeProcess = false
                 )
                     where TEntry : new()
@@ -99,7 +99,7 @@ namespace Microshaoft
                                             return x;
                                         }
                                     );
-            while (dataReader.Read())
+            while (target.Read())
             {
                 TEntry entry = new TEntry();
                 foreach (var x in members)
@@ -128,7 +128,7 @@ namespace Microshaoft
                     setter
                             (
                                 entry
-                                , dataReader[dataColumnName]
+                                , target[dataColumnName]
                             );
                 }
                 yield
@@ -163,14 +163,14 @@ namespace Microshaoft
         }
         public static IEnumerable<JToken> GetColumnsJTokensEnumerable
                      (
-                        this IDataReader dataReader
+                        this IDataReader target
                      )
         {
-            var fieldsCount = dataReader.FieldCount;
+            var fieldsCount = target.FieldCount;
             for (var i = 0; i < fieldsCount; i++)
             {
-                var fieldType = dataReader.GetFieldType(i);
-                var fieldName = dataReader.GetName(i);
+                var fieldType = target.GetFieldType(i);
+                var fieldName = target.GetName(i);
                 yield
                     return
                         new JObject
@@ -199,7 +199,7 @@ namespace Microshaoft
         }
         public static IEnumerable<JToken> GetRowsJTokensEnumerable
                              (
-                                 IDataReader dataReader
+                                 this IDataReader target
                                  , Func
                                         <
                                             IDataReader
@@ -215,22 +215,22 @@ namespace Microshaoft
                                         > onReadRowColumnProcessFunc = null
                              )
         {
-            var fieldsCount = dataReader.FieldCount;
+            var fieldsCount = target.FieldCount;
             int rowIndex = 0;
-            while (dataReader.Read())
+            while (target.Read())
             {
                 JObject row = new JObject();
                 for (var fieldIndex = 0; fieldIndex < fieldsCount; fieldIndex++)
                 {
-                    var fieldType = dataReader.GetFieldType(fieldIndex);
-                    var fieldName = dataReader.GetName(fieldIndex);
+                    var fieldType = target.GetFieldType(fieldIndex);
+                    var fieldName = target.GetName(fieldIndex);
                     JProperty field = null;
                     var needDefaultProcess = true;
                     if (onReadRowColumnProcessFunc != null)
                     {
                         var r = onReadRowColumnProcessFunc
                                     (
-                                        dataReader
+                                        target
                                         , fieldType
                                         , fieldName
                                         , rowIndex
@@ -247,7 +247,7 @@ namespace Microshaoft
                     {
                         field = GetFieldJProperty
                                     (
-                                        dataReader
+                                        target
                                         , fieldIndex
                                         , fieldType
                                         , fieldName
@@ -264,9 +264,9 @@ namespace Microshaoft
                         row;
             }
         }
-        private static JProperty GetFieldJProperty
+        public static JProperty GetFieldJProperty
                             (
-                                IDataReader dataReader
+                                this IDataReader target
                                 , int i
                                 , Type fieldType
                                 , string fieldName
@@ -274,95 +274,95 @@ namespace Microshaoft
         {
             JProperty r = null;
             JValue fieldValue = null;
-            if (!dataReader.IsDBNull(i))
+            if (!target.IsDBNull(i))
             {
                 if
                     (
                         fieldType == typeof(bool)
                     )
                 {
-                    fieldValue = new JValue(dataReader.GetBoolean(i));
+                    fieldValue = new JValue(target.GetBoolean(i));
                 }
                 else if
                     (
                         fieldType == typeof(byte)
                     )
                 {
-                    fieldValue = new JValue(dataReader.GetByte(i));
+                    fieldValue = new JValue(target.GetByte(i));
                 }
                 else if
                     (
                         fieldType == typeof(char)
                     )
                 {
-                    fieldValue = new JValue(dataReader.GetChar(i));
+                    fieldValue = new JValue(target.GetChar(i));
                 }
                 else if
                     (
                         fieldType == typeof(DateTime)
                     )
                 {
-                    fieldValue = new JValue(dataReader.GetDateTime(i));
+                    fieldValue = new JValue(target.GetDateTime(i));
                 }
                 else if
                     (
                         fieldType == typeof(decimal)
                     )
                 {
-                    fieldValue = new JValue(dataReader.GetDecimal(i));
+                    fieldValue = new JValue(target.GetDecimal(i));
                 }
                 else if
                     (
                         fieldType == typeof(double)
                     )
                 {
-                    fieldValue = new JValue(dataReader.GetDouble(i));
+                    fieldValue = new JValue(target.GetDouble(i));
                 }
                 else if
                     (
                         fieldType == typeof(float)
                     )
                 {
-                    fieldValue = new JValue(dataReader.GetFloat(i));
+                    fieldValue = new JValue(target.GetFloat(i));
                 }
                 else if
                     (
                         fieldType == typeof(Guid)
                     )
                 {
-                    fieldValue = new JValue(dataReader.GetGuid(i));
+                    fieldValue = new JValue(target.GetGuid(i));
                 }
                 else if
                     (
                         fieldType == typeof(short)
                     )
                 {
-                    fieldValue = new JValue((long)dataReader.GetInt16(i));
+                    fieldValue = new JValue((long)target.GetInt16(i));
                 }
                 else if
                     (
                         fieldType == typeof(int)
                     )
                 {
-                    fieldValue = new JValue((long)dataReader.GetInt32(i));
+                    fieldValue = new JValue((long)target.GetInt32(i));
                 }
                 else if
                     (
                         fieldType == typeof(long)
                     )
                 {
-                    fieldValue = new JValue((long)dataReader.GetInt64(i));
+                    fieldValue = new JValue((long)target.GetInt64(i));
                 }
                 else if
                     (
                         fieldType == typeof(string)
                     )
                 {
-                    fieldValue = new JValue(dataReader.GetString(i));
+                    fieldValue = new JValue(target.GetString(i));
                 }
                 else
                 {
-                    fieldValue = new JValue(dataReader[i]);
+                    fieldValue = new JValue(target[i]);
                 }
             }
             r = new JProperty(fieldName, fieldValue);
