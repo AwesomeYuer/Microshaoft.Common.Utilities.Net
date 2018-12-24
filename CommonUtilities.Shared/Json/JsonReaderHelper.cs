@@ -7,6 +7,7 @@
     using System.Linq;
     using Microshaoft;
     using Newtonsoft.Json.Linq;
+    using System.Globalization;
     class Program123
     {
         static void Main(string[] args)
@@ -123,6 +124,8 @@ namespace Microshaoft
     using System.Collections.Generic;
     using System;
     using System.IO;
+    using System.Globalization;
+
     public static class JsonReaderHelper
     {
         public static void ReadAllPaths
@@ -320,6 +323,101 @@ namespace Microshaoft
                     yield return entry;
                 }
             }
+        }
+
+        public static void EnsureObjectStart(this JsonTextReader target)
+        {
+            if (target.TokenType != JsonToken.StartObject)
+            {
+                throw new InvalidDataException($"Unexpected JSON Token Type '{GetTokenString(target.TokenType)}'. Expected a JSON Object.");
+            }
+        }
+
+        public static void EnsureArrayStart(this JsonTextReader target)
+        {
+            if (target.TokenType != JsonToken.StartArray)
+            {
+                throw new InvalidDataException($"Unexpected JSON Token Type '{GetTokenString(target.TokenType)}'. Expected a JSON Array.");
+            }
+        }
+
+        public static int? ReadAsInt32(this JsonTextReader target, string propertyName)
+        {
+            target.Read();
+
+            if (target.TokenType != JsonToken.Integer)
+            {
+                throw new InvalidDataException($"Expected '{propertyName}' to be of type {JTokenType.Integer}.");
+            }
+
+            if (target.Value == null)
+            {
+                return null;
+            }
+
+            return Convert.ToInt32(target.Value, CultureInfo.InvariantCulture);
+        }
+
+        public static string ReadAsString(this JsonTextReader target, string propertyName)
+        {
+            target.Read();
+
+            if (target.TokenType != JsonToken.String)
+            {
+                throw new InvalidDataException($"Expected '{propertyName}' to be of type {JTokenType.String}.");
+            }
+
+            return target.Value?.ToString();
+        }
+
+        public static bool CheckRead(this JsonTextReader target)
+        {
+            if (!target.Read())
+            {
+                throw new InvalidDataException("Unexpected end when reading JSON.");
+            }
+
+            return true;
+        }
+
+        public static bool ReadForType(this JsonTextReader target, Type type)
+        {
+            // Explicitly read values as dates from JSON with reader.
+            // We do this because otherwise dates are read as strings
+            // and the JsonSerializer will use a conversion method that won't
+            // preserve UTC in DateTime.Kind for UTC ISO8601 dates
+            if (type == typeof(DateTime) || type == typeof(DateTime?))
+            {
+                target.ReadAsDateTime();
+            }
+            else if (type == typeof(DateTimeOffset) || type == typeof(DateTimeOffset?))
+            {
+                target.ReadAsDateTimeOffset();
+            }
+            else
+            {
+                target.Read();
+            }
+
+            // TokenType will be None if there is no more content
+            return target.TokenType != JsonToken.None;
+        }
+        public static string GetTokenString(this JsonToken target)
+        {
+            switch (target)
+            {
+                case JsonToken.None:
+                    break;
+                case JsonToken.StartObject:
+                    return JTokenType.Object.ToString();
+                case JsonToken.StartArray:
+                    return JTokenType.Array.ToString();
+                case JsonToken.PropertyName:
+                    return JTokenType.Property.ToString();
+                default:
+                    break;
+            }
+            return target.ToString();
         }
     }
 }
