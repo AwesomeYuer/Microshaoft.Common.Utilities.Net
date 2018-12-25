@@ -24,94 +24,16 @@ namespace Microshaoft
     using System.Text;
     using System.Xml;
     using System.Xml.Linq;
-    public class DynamicJson : DynamicObject
+    public partial class DynamicJson : DynamicObject
     {
-        public object _value = null;
-        public object Value
-        {
-            get
-            {
-                if (_isValue)
-                {
-                    return _value;
-                }
-                else
-                {
-                    throw new Exception("It is not a Value!");
-                }
-            }
-        }
-        private bool _isValue = false;
-        public bool IsValue
-        {
-            get
-            {
-                return _isValue;
-            }
-
-        }
-
-        public T GetValue<T>()
-        {
-            return (T) Value;
-        }
-
-        public DynamicJson this[string key]
-        {
-            get
-            {
-                var x = xml.Element(key);
-                var value = default(dynamic);
-                var r = XElementToDynamicJson(x, out value);
-                if (r == null)
-                {
-                    _value = value;
-                    r = this;
-                    _isValue = true;
-                }
-                return r;
-            }
-        }
-        public DynamicJson this[int index]
-        {
-            get
-            {
-                var x = xml
-                            .Elements()
-                            .ElementAt(index);
-                var value = default(dynamic);
-                var r = XElementToDynamicJson(x, out value);
-                if (r == null)
-                {
-                    _value = value;
-                    r = this;
-                    _isValue = true;
-                }
-                return r;
-            }
-        }
-        private DynamicJson XElementToDynamicJson
-                                (
-                                    XElement x
-                                    , out dynamic value
-                                )
-        {
-            DynamicJson r = null;
-            if (TryGet(x, out value))
-            {
-                r = value as DynamicJson;
-            }
-            else
-            {
-                throw new Exception("no member");
-            }
-            return r;
-        }
-
-
         private enum JsonType
         {
-            @string, number, boolean, @object, array, @null
+            @string
+            , number
+            , boolean
+            , @object
+            , array
+            , @null
         }
 
         // public static methods
@@ -125,7 +47,15 @@ namespace Microshaoft
         /// <summary>from JsonSring to DynamicJson</summary>
         public static dynamic Parse(string json, Encoding encoding)
         {
-            using (var reader = JsonReaderWriterFactory.CreateJsonReader(encoding.GetBytes(json), XmlDictionaryReaderQuotas.Max))
+            using
+                (
+                    var reader = JsonReaderWriterFactory
+                                    .CreateJsonReader
+                                        (
+                                            encoding.GetBytes(json)
+                                            , XmlDictionaryReaderQuotas.Max
+                                        )
+                )
             {
                 return ToValue(XElement.Load(reader));
             }
@@ -134,7 +64,15 @@ namespace Microshaoft
         /// <summary>from JsonSringStream to DynamicJson</summary>
         public static dynamic Parse(Stream stream)
         {
-            using (var reader = JsonReaderWriterFactory.CreateJsonReader(stream, XmlDictionaryReaderQuotas.Max))
+            using
+                (
+                    var reader = JsonReaderWriterFactory
+                                        .CreateJsonReader
+                                            (
+                                                stream
+                                                , XmlDictionaryReaderQuotas.Max
+                                            )
+                )
             {
                 return ToValue(XElement.Load(reader));
             }
@@ -143,7 +81,17 @@ namespace Microshaoft
         /// <summary>from JsonSringStream to DynamicJson</summary>
         public static dynamic Parse(Stream stream, Encoding encoding)
         {
-            using (var reader = JsonReaderWriterFactory.CreateJsonReader(stream, encoding, XmlDictionaryReaderQuotas.Max, _ => { }))
+            using
+                (
+                    var reader = JsonReaderWriterFactory
+                                    .CreateJsonReader
+                                        (
+                                            stream
+                                            , encoding
+                                            , XmlDictionaryReaderQuotas.Max
+                                            , _ => { }
+                                        )
+                )
             {
                 return ToValue(XElement.Load(reader));
             }
@@ -159,7 +107,13 @@ namespace Microshaoft
 
         private static dynamic ToValue(XElement element)
         {
-            var type = (JsonType)Enum.Parse(typeof(JsonType), element.Attribute("type").Value);
+            var type = (JsonType)
+                            Enum
+                                .Parse
+                                    (
+                                        typeof(JsonType)
+                                        , element.Attribute("type").Value
+                                    );
             switch (type)
             {
                 case JsonType.boolean:
@@ -328,7 +282,12 @@ namespace Microshaoft
 
         private object Deserialize(Type type)
         {
-            return (IsArray) ? DeserializeArray(type) : DeserializeObject(type);
+            return 
+                    (IsArray)
+                    ?
+                    DeserializeArray(type)
+                    :
+                    DeserializeObject(type);
         }
 
         private dynamic DeserializeValue(XElement element, Type elementType)
@@ -344,13 +303,25 @@ namespace Microshaoft
         private object DeserializeObject(Type targetType)
         {
             var result = Activator.CreateInstance(targetType);
-            var dict = targetType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Where(p => p.CanWrite)
-                .ToDictionary(pi => pi.Name, pi => pi);
+            var dict = targetType
+                            .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                            .Where(p => p.CanWrite)
+                            .ToDictionary(pi => pi.Name, pi => pi);
             foreach (var item in xml.Elements())
             {
                 PropertyInfo propertyInfo;
-                if (!dict.TryGetValue(item.Name.LocalName, out propertyInfo)) continue;
+                if
+                    (
+                        !dict
+                            .TryGetValue
+                                (
+                                    item.Name.LocalName
+                                    , out propertyInfo
+                                )
+                    )
+                {
+                    continue;
+                }
                 var value = DeserializeValue(item, propertyInfo.PropertyType);
                 propertyInfo.SetValue(result, value, null);
             }
@@ -385,9 +356,12 @@ namespace Microshaoft
         // Delete
         public override bool TryInvoke(InvokeBinder binder, object[] args, out object result)
         {
-            result = (IsArray)
-                ? Delete((int)args[0])
-                : Delete((string)args[0]);
+            result =
+                    (IsArray)
+                    ?
+                    Delete((int)args[0])
+                    :
+                    Delete((string)args[0]);
             return true;
         }
 
@@ -409,9 +383,18 @@ namespace Microshaoft
         {
             if (binder.Type == typeof(IEnumerable) || binder.Type == typeof(object[]))
             {
-                var ie = (IsArray)
-                    ? xml.Elements().Select(x => ToValue(x))
-                    : xml.Elements().Select(x => (dynamic)new KeyValuePair<string, object>(x.Name.LocalName, ToValue(x)));
+                var elements = xml.Elements();
+                var ie =
+                        (IsArray)
+                        ?
+                        elements
+                            .Select(x => DynamicJson.ToValue(x))
+                        :
+                        elements
+                            .Select
+                                (
+                                    x => (dynamic) new KeyValuePair<string, object>(x.Name.LocalName, DynamicJson.ToValue(x))
+                                );
                 result = (binder.Type == typeof(object[])) ? ie.ToArray() : ie;
             }
             else
@@ -435,16 +418,23 @@ namespace Microshaoft
 
         public override bool TryGetIndex(GetIndexBinder binder, object[] indexes, out object result)
         {
-            return (IsArray)
-                ? TryGet(xml.Elements().ElementAtOrDefault((int)indexes[0]), out result)
-                : TryGet(xml.Element((string)indexes[0]), out result);
+            var elements = xml.Elements();
+            return
+                (IsArray)
+                ?
+                TryGet(elements.ElementAtOrDefault((int)indexes[0]), out result)
+                :
+                TryGet(xml.Element((string)indexes[0]), out result);
         }
 
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
-            return (IsArray)
-                ? TryGet(xml.Elements().ElementAtOrDefault(int.Parse(binder.Name)), out result)
-                : TryGet(xml.Element(binder.Name), out result);
+            return
+                (IsArray)
+                ?
+                TryGet(xml.Elements().ElementAtOrDefault(int.Parse(binder.Name)), out result)
+                :
+                TryGet(xml.Element(binder.Name), out result);
         }
 
         private bool TrySet(string name, object value)
@@ -483,23 +473,33 @@ namespace Microshaoft
 
         public override bool TrySetIndex(SetIndexBinder binder, object[] indexes, object value)
         {
-            return (IsArray)
-                ? TrySet((int)indexes[0], value)
-                : TrySet((string)indexes[0], value);
+            return
+                (IsArray)
+                ?
+                TrySet((int)indexes[0], value)
+                :
+                TrySet((string)indexes[0], value);
         }
 
         public override bool TrySetMember(SetMemberBinder binder, object value)
         {
-            return (IsArray)
-                ? TrySet(int.Parse(binder.Name), value)
-                : TrySet(binder.Name, value);
+            return
+                (IsArray)
+                ?
+                TrySet(int.Parse(binder.Name), value)
+                :
+                TrySet(binder.Name, value);
         }
 
         public override IEnumerable<string> GetDynamicMemberNames()
         {
-            return (IsArray)
-                ? xml.Elements().Select((x, i) => i.ToString())
-                : xml.Elements().Select(x => x.Name.LocalName);
+            var elements = xml.Elements();
+            return
+                (IsArray)
+                ?
+                elements.Select((x, i) => i.ToString())
+                :
+                elements.Select(x => x.Name.LocalName);
         }
 
         /// <summary>Serialize to JsonString</summary>
