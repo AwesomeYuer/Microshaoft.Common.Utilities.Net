@@ -7,6 +7,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json.Linq;
     using System.Security.Claims;
+    using System.Web;
 
     [Authorize]
     [Route("api/[controller]")]
@@ -29,7 +30,9 @@
         {
             var jToken = Result(json);
             var callback = json["jsonp"].Value<string>();
-            var content = $"{callback}({jToken.ToString()})";
+            //Anti-XSS
+            callback = HttpUtility.JavaScriptStringEncode(callback);
+            var content = $"{HttpUtility.JavaScriptStringEncode(callback)}({jToken.ToString()})";
             return
                 Content
                 (
