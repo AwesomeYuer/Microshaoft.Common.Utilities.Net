@@ -32,7 +32,7 @@
             var callback = json["jsonp"].Value<string>();
             //Anti-XSS
             callback = HttpUtility.JavaScriptStringEncode(callback);
-            var content = $"{HttpUtility.JavaScriptStringEncode(callback)}({jToken.ToString()})";
+            var content = $"{callback}({jToken.ToString()})";
             return
                 Content
                 (
