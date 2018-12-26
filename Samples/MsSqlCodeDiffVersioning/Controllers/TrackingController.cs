@@ -29,6 +29,8 @@
                                 JToken parameters = null
                         )
         {
+            var i = 0;
+            i = 100 / i;
             var request = HttpContext.Request;
             parameters["User"] = HttpContext.User.Identity.Name;
             parameters["RemoteIP"] = HttpContext.Connection.RemoteIpAddress.ToString();

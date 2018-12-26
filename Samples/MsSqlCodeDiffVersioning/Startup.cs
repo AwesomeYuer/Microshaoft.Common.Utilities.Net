@@ -18,6 +18,9 @@
     using System.Linq;
     using System.Reflection;
 
+
+    using Microshaoft.Web;
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -145,6 +148,7 @@
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseRequestResponseGuard();
             app.UseCors();
             if (env.IsDevelopment())
             {
@@ -210,6 +214,9 @@
                                 );
                     }
                 );
+
+
+            
         }
         private static IEnumerable<string> GetExistsPaths(string configurationJsonFile, string sectionName)
         {
