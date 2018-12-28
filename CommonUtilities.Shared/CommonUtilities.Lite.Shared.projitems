@@ -73,11 +73,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)FasterUtilities\Status.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileSharding\FileShardingHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpClientHelper\HttpClientHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Json\DynamicJson.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\DynamicJson\DynamicJson.00.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\DynamicJson\DynamicJson.01.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JsonFileHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JsonHelper\JsonHelper.00.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JsonHelper\JsonHelper.01.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JsonHelper\JsonHelper.02.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonHelper\JsonHelper.03.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonHelper\JsonHelper.04.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JsonReaderHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KeyWordFilter\CharExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KeyWordFilter\FastFilter.cs" />
@@ -154,6 +157,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)WorkFlow\WorkFlowHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Xml\XmlCDATA.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Xml\XmlValidationHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Zip\GZipFileHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Zip\ZipHelper.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -161,8 +165,5 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)NuGet.Versioning\Resources.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Json\JsonHelper\" />
   </ItemGroup>
 </Project>
