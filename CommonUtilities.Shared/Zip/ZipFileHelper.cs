@@ -3,7 +3,7 @@
     using System;
     using System.IO;
     using System.IO.Compression;
-    public static class GZipFileHelper
+    public static class ZipFileHelper
     {
         public static bool Decompress
                             (
