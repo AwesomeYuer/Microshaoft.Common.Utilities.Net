@@ -19,7 +19,7 @@
                 {
                     if
                         (
-                            GZipFileHelper
+                            ZipFileHelper
                                 .Decompress
                                     (
                                         file

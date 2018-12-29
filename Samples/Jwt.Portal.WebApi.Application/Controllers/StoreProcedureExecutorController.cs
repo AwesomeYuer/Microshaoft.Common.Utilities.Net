@@ -60,14 +60,12 @@ namespace Microshaoft.WebApi.Controllers
         {
             var jsonObject = ((JObject)parameters);
             jsonObject
-                    .Add
-                        (
-                            "UserName"
-                            , HttpContext
+                    ["UserName"]
+                        = HttpContext
                                 .User
                                 .Identity
                                 .Name
-                        );
+                        ;
             if
                 (
                     HttpContext

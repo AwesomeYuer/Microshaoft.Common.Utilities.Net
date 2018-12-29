@@ -125,7 +125,9 @@ namespace Microshaoft.Web
             ExtractJwtToken();
             if
                 (
-                    string.Compare(target.Method, "post", true) == 0
+                    string.Compare(target.Method, "get", true) != 0
+                    &&
+                    string.Compare(target.Method, "head", true) != 0
                 )
             {
                 RequestFormBodyProcess();
