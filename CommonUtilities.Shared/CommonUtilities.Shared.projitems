@@ -249,7 +249,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Xml\XmlValidationHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileSharding\FileShardingHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Zip\ZipFileHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Zip\ZipHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)DataAccess\Pager.StoreProcedure.Sample.sql" />

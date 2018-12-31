@@ -17,7 +17,7 @@
             var directory = Path.GetDirectoryName(zippedFile);
             var zippedFileNameWithoutExtension = Path.GetFileNameWithoutExtension(zippedFile);
             directory = Path.Combine(directory, zippedFileNameWithoutExtension);
-            ZipHelper
+            ZipFileHelper
                 .Create
                     (
                         zippedFile
