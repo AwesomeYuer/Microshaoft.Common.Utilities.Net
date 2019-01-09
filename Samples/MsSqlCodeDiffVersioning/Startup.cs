@@ -18,9 +18,8 @@
     using System.Linq;
     using System.Reflection;
 
-
-    using Microshaoft.Web;
     using System.Diagnostics;
+
 
     public class Startup
     {
@@ -159,26 +158,35 @@
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            Stopwatch stopwatch = null;
             app
                 .UseRequestResponseGuard
                     <QueuedObjectsPool<Stopwatch>>
                         (
                             (injector, httpContext) =>
                             {
-                                injector.TryGet(out stopwatch);
+                                injector.TryGet(out var stopwatch);
+                                httpContext.Items["timing"] = stopwatch;
                                 stopwatch.Start();
                             }
                             ,
                             (injector, httpContext) =>
                             {
-                                stopwatch.Stop();
-                                var duration = stopwatch.ElapsedMilliseconds;
-                                httpContext
-                                    .Response
-                                    .Headers["X-Request-Response-Timing"] = duration.ToString() + "ms";
-                                stopwatch.Reset();
-                                injector.TryPut(stopwatch);
+                                var stopwatch = httpContext
+                                                    .Items["timing"] as Stopwatch;
+                                if (stopwatch != null)
+                                {
+                                    stopwatch.Stop();
+                                    var duration = stopwatch.ElapsedMilliseconds;
+                                    httpContext
+                                        .Response
+                                        .Headers["X-Request-Response-Timing"]
+                                                       = duration.ToString() + "ms";
+                                    stopwatch.Reset();
+                                    if (!injector.TryPut(stopwatch))
+                                    {
+                                        stopwatch = null;
+                                    }
+                                }
                             }
                         );
             app.UseCors();

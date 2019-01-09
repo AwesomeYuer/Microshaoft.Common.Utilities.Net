@@ -6,6 +6,7 @@ namespace Microshaoft.Web
     using System;
     using System.Threading.Tasks;
     public class RequestResponseGuardMiddleware<TInjector>
+            //竟然没有接口?
     {
         private readonly RequestDelegate _next;
         private readonly TInjector _injector;
@@ -24,18 +25,30 @@ namespace Microshaoft.Web
         }
         private Action<TInjector, HttpContext> _onAfterInvoked;
         private Action<TInjector, HttpContext> _onBeforeInvoking;
+        //必须是如下方法(竟然不用接口约束产生编译期错误),否则运行时错误
         public async Task Invoke(HttpContext context)
         {
-            _onBeforeInvoking?.Invoke(_injector, context);
+            _onBeforeInvoking?
+                        .Invoke
+                            (
+                                _injector
+                                , context
+                            );
             context
                 .Response
                 .OnStarting
                     (
                         () =>
                         {
-                            _onAfterInvoked?.Invoke(_injector, context);
+                            _onAfterInvoked?
+                                    .Invoke
+                                        (
+                                            _injector
+                                            , context
+                                        );
                             return
-                                Task.CompletedTask;
+                                Task
+                                    .CompletedTask;
                         }
                     );
             await _next(context);
@@ -46,8 +59,8 @@ namespace Microshaoft.Web
         public static IApplicationBuilder UseRequestResponseGuard<T>
             (
                 this IApplicationBuilder target
-                , Action<T, HttpContext> onBeforeInvokingProcess
-                , Action<T, HttpContext> onAfterInvokedProcess
+                , Action<T, HttpContext> onBeforeInvokingProcess = null
+                , Action<T, HttpContext> onAfterInvokedProcess = null
             )
         {
             return
