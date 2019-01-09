@@ -188,6 +188,32 @@
                                     }
                                 }
                             }
+                            //, //null
+                            //(injector, httpContext) =>
+                            //{
+                            //    var stopwatch = httpContext
+                            //                        .Items["timing"] as Stopwatch;
+                            //    if (stopwatch != null)
+                            //    {
+                            //        var duration = stopwatch.ElapsedMilliseconds;
+                            //    }
+                            //}
+                            //, //null
+                            //(injector, httpContext) =>
+                            //{
+                            //    var stopwatch = httpContext
+                            //                        .Items["timing"] as Stopwatch;
+                            //    if (stopwatch != null)
+                            //    {
+                            //        stopwatch.Stop();
+                            //        var duration = stopwatch.ElapsedMilliseconds;
+                            //        stopwatch.Reset();
+                            //        if (!injector.TryPut(stopwatch))
+                            //        {
+                            //            stopwatch = null;
+                            //        }
+                            //    }
+                            //}
                         );
             app.UseCors();
             if (env.IsDevelopment())

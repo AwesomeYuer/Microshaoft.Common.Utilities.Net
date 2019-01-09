@@ -10,66 +10,121 @@ namespace Microshaoft.Web
     {
         private readonly RequestDelegate _next;
         private readonly TInjector _injector;
+
         public RequestResponseGuardMiddleware
-                    (
-                        RequestDelegate next
-                        , TInjector injector
-                        , Action<TInjector, HttpContext> onBeforeInvokingProcess = null
-                        , Action<TInjector, HttpContext> onAfterInvokedProcess = null
-                    )
+            (
+                RequestDelegate next
+                , TInjector injector
+                , Action<TInjector, HttpContext> onBeforeInvokingProcess        = null
+                , Action<TInjector, HttpContext> onResponseStartingProcess      = null
+                , Action<TInjector, HttpContext> onAfterInvokedProcess          = null
+                , Action<TInjector, HttpContext> onResponseCompletedProcess     = null
+            )
         {
             _next = next;
             _injector = injector;
-            _onBeforeInvoking = onBeforeInvokingProcess;
-            _onAfterInvoked = onAfterInvokedProcess;
+
+            _onBeforeInvokingProcess = onBeforeInvokingProcess;
+            _onResponseStartingProcess = onResponseStartingProcess;
+
+            _onAfterInvokedProcess = onAfterInvokedProcess;
+            _onResponseCompletedProcess = onResponseCompletedProcess;
+
         }
-        private Action<TInjector, HttpContext> _onAfterInvoked;
-        private Action<TInjector, HttpContext> _onBeforeInvoking;
+        private Action<TInjector, HttpContext> _onBeforeInvokingProcess;
+        private Action<TInjector, HttpContext> _onResponseStartingProcess;
+        
+        private Action<TInjector, HttpContext> _onAfterInvokedProcess;
+        private Action<TInjector, HttpContext> _onResponseCompletedProcess;
+
         //必须是如下方法(竟然不用接口约束产生编译期错误),否则运行时错误
         public async Task Invoke(HttpContext context)
         {
-            _onBeforeInvoking?
+            _onBeforeInvokingProcess?
                         .Invoke
                             (
                                 _injector
                                 , context
                             );
-            context
-                .Response
-                .OnStarting
-                    (
-                        () =>
-                        {
-                            _onAfterInvoked?
-                                    .Invoke
-                                        (
-                                            _injector
-                                            , context
-                                        );
-                            return
-                                Task
-                                    .CompletedTask;
-                        }
-                    );
+            if (_onResponseStartingProcess != null)
+            {
+                context
+                    .Response
+                    .OnStarting
+                        (
+                            () =>
+                            {
+                                _onResponseStartingProcess?
+                                        .Invoke
+                                            (
+                                                _injector
+                                                , context
+                                            );
+                                return
+                                    Task
+                                        .CompletedTask;
+                            }
+                        );
+            }
+            if (_onResponseCompletedProcess != null)
+            {
+                context
+                    .Response
+                    .OnCompleted
+                        (
+                            () =>
+                            {
+                                _onResponseCompletedProcess?
+                                        .Invoke
+                                            (
+                                                _injector
+                                                , context
+                                            );
+                                return
+                                    Task
+                                        .CompletedTask;
+                            }
+                        );
+            }
+            
             await _next(context);
+            _onAfterInvokedProcess?
+                                .Invoke
+                                    (
+                                        _injector
+                                        , context
+                                    );
         }
     }
     public static class RequestResponseGuardMiddlewareExtensions
     {
-        public static IApplicationBuilder UseRequestResponseGuard<T>
+        public static IApplicationBuilder UseRequestResponseGuard<TInjector>
             (
                 this IApplicationBuilder target
-                , Action<T, HttpContext> onBeforeInvokingProcess = null
-                , Action<T, HttpContext> onAfterInvokedProcess = null
+                //, Action<TInjector, HttpContext> onBeforeInvokingProcess = null
+                //, Action<TInjector, HttpContext> onResponseStartingProcess = null
+
+                //, Action<TInjector, HttpContext> onAfterInvokedProcess = null
+                //, Action<TInjector, HttpContext> onResponseCompletedProcess = null
+                , params Action<TInjector, HttpContext>[] actions
+
             )
         {
+            
+
+
+
             return
                 target
                     .UseMiddleware
                         (
-                            typeof(RequestResponseGuardMiddleware<T>)
-                            , onBeforeInvokingProcess
-                            , onAfterInvokedProcess
+                            typeof(RequestResponseGuardMiddleware<TInjector>)
+                            , actions
+                        //, onBeforeInvokingProcess 
+                        //, onResponseStartingProcess
+
+                        ////, null // onAfterInvokedProcess
+                        ////, null //onResponseCompletedProcess
                         );
         }
     }
