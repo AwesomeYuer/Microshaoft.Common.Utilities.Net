@@ -20,6 +20,7 @@
 
 
     using Microshaoft.Web;
+    using System.Diagnostics;
 
     public class Startup
     {
@@ -68,10 +69,11 @@
                         , 10 * 1000
                     );
             services
-                .AddSingleton<SingleThreadAsyncDequeueProcessorSlim<JToken>>
-                (
-                    processor
-                );
+                .AddSingleton
+                    //<SingleThreadAsyncDequeueProcessorSlim<JToken>>
+                    (
+                        processor
+                    );
             #endregion
 
             services
@@ -82,6 +84,15 @@
                     >
                     ();
             
+            services
+                .AddSingleton
+                    //<
+                    //     QueuedObjectsPool<Stopwatch>
+                    //>
+                    (
+                        new QueuedObjectsPool<Stopwatch>(100, true)
+                    );
+
             #region 跨域策略
             services
                     .Add
@@ -148,7 +159,28 @@
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.UseRequestResponseGuard();
+            Stopwatch stopwatch = null;
+            app
+                .UseRequestResponseGuard
+                    <QueuedObjectsPool<Stopwatch>>
+                        (
+                            (injector, httpContext) =>
+                            {
+                                injector.TryGet(out stopwatch);
+                                stopwatch.Start();
+                            }
+                            ,
+                            (injector, httpContext) =>
+                            {
+                                stopwatch.Stop();
+                                var duration = stopwatch.ElapsedMilliseconds;
+                                httpContext
+                                    .Response
+                                    .Headers["X-Request-Response-Timing"] = duration.ToString() + "ms";
+                                stopwatch.Reset();
+                                injector.TryPut(stopwatch);
+                            }
+                        );
             app.UseCors();
             if (env.IsDevelopment())
             {

@@ -3,8 +3,8 @@
     using System;
     using System.Collections.Concurrent;
     using System.Threading;
-    using System.Diagnostics;
-    public partial class QueuedObjectsPool<T> where T: new()
+
+    public partial class QueuedObjectsPool<T> where T : new()
     {
         private readonly ConcurrentQueue<T> _pool = new ConcurrentQueue<T>();
         public ConcurrentQueue<T> Pool
@@ -62,54 +62,69 @@
         private long _maxCapacity = 0;
 
         
-        public QueuedObjectsPool(long maxCapacity)
+        public QueuedObjectsPool
+                    (
+                        long maxCapacity
+                        , bool needInitializePooledObjects = false
+                    )
         {
             _pool = new ConcurrentQueue<T>();
             _maxCapacity = maxCapacity;
-
+            if (needInitializePooledObjects)
+            {
+                for (var i = 0; i < _maxCapacity; i++)
+                {
+                    TryPutNew();
+                }
+            }
         }
         
 
-        public Func<bool> onEnablePerformanceCountersProcessFunc
-        {
-            get;
-            set;
-        }
-        public void PutNew()
-        {
-            var e = default(T);
-            e = new T();
-            Put(e);
-        }
-        public bool Put(T target)
+        //public Func<bool> onEnablePerformanceCountersProcessFunc
+        //{
+        //    get;
+        //    set;
+        //}
+        public bool TryPutNew()
         {
             var r = false;
-            if (target != null)
+            var e = default(T);
+            e = new T();
+            r = TryPut(e);
+            return r;
+        }
+        public bool TryPut(T item)
+        {
+            var r = false;
+            
+            if (item != null)
             {
                 if (_pool.Count < _maxCapacity)
                 {
-                    _pool.Enqueue(target);
+                    _pool.Enqueue(item);
                     Interlocked.Increment(ref _pooledObjectsReturnCount);
                     r = true;
                 }
                 else
                 {
+                    item = default(T);
                     Interlocked.Increment(ref _nonPooledObjectsReleaseCount);
                 }
             }
             return r;
         }
-        public T Get()
-        { 
-            T r;
-            if (!_pool.TryDequeue(out r))
+        public bool TryGet(out T item)
+        {
+            var r = false;
+            r = _pool.TryDequeue(out item);
+            if (r)
             {
-                r = new T();
-                Interlocked.Increment(ref _nonPooledObjectsGotCount);
+                Interlocked.Increment(ref _pooledObjectsGotCount);
             }
             else
             {
-                Interlocked.Increment(ref _pooledObjectsGotCount);
+                item = new T();
+                Interlocked.Increment(ref _nonPooledObjectsGotCount);
             }
             return r;
         }

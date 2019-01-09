@@ -31,8 +31,9 @@
             var r = false;
             if (_stack.TryPop(out item))
             {
-                T removed = default(T);
-                r = _dictionary.TryRemove(item, out removed);
+                //T removed = default(T);
+                r = _dictionary.TryRemove(item, out T removed);
+                removed = default(T);
             }
             return r;
         }
