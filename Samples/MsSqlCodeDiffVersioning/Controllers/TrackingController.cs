@@ -20,6 +20,26 @@
         }
 
         [HttpGet]
+        [Route("blobs")]
+        [BearerTokenBasedAuthorizeFilter(IsRequired = false)]
+        public ActionResult
+            ProcessActionRequest
+                (
+                    
+                )
+        {
+            var path = @"D:\a.png";
+            var stream = System.IO.File.OpenRead(path);
+            return File
+                    (
+                        stream
+                        , "image/jpeg"
+
+                    );
+        }
+
+
+        [HttpGet]
         [Route("tracking")]
         [BearerTokenBasedAuthorizeFilter(IsRequired = false)]
         public void
