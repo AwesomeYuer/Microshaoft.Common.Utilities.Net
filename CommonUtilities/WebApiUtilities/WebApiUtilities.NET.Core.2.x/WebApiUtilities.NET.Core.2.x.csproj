@@ -23,4 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\CommonUtilities.Lite\CommonUtilities.Lite.NET.Core.2.x\CommonUtilities.Lite.NET.Core.2.x.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="Microsoft.NETCore.App" Version="2.2.1" />
+  </ItemGroup>
 </Project>
