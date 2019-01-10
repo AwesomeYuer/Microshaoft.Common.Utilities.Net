@@ -50,6 +50,10 @@
       <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\system.composition.typedparts\1.0.31\lib\netstandard1.0\System.Composition.TypedParts.dll</HintPath>
     </Reference>
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Microsoft.NETCore.App" Version="2.2.1" />
+  </ItemGroup>
   
   
 </Project>
