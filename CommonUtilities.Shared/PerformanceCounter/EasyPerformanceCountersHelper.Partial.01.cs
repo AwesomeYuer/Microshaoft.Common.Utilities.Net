@@ -141,7 +141,7 @@ namespace Microshaoft
                                                 );
                 if (enableProcessedAverageTimerCounter)
                 {
-                    r = _stopwatchsPool.Get(); //Stopwatch.StartNew();
+                    _stopwatchsPool.TryGet(out r); //Stopwatch.StartNew();
                     r.Restart();
                 }
             }
@@ -203,7 +203,7 @@ namespace Microshaoft
                         performanceCounter
                                     .IncrementBy(stopwatch.ElapsedTicks);
                         stopwatch.Reset();
-                        var r = _stopwatchsPool.Put(stopwatch);
+                        var r = _stopwatchsPool.TryPut(stopwatch);
                         if (!r)
                         {
                             stopwatch.Stop();
@@ -356,7 +356,7 @@ namespace Microshaoft
                                                                             .ProcessedAverageTimerCounter
                                                                 );
                         var reThrowException = false;
-                        var stopwatch = _stopwatchsPool.Get();
+                        _stopwatchsPool.TryGet(out var stopwatch);
                         //stopwatch.Reset();
                         container
                             .ProcessedAverageTimerPerformanceCounter
@@ -454,7 +454,7 @@ namespace Microshaoft
                                                 }
                                             );
                         stopwatch.Reset();
-                        var rr = _stopwatchsPool.Put(stopwatch);
+                        var rr = _stopwatchsPool.TryPut(stopwatch);
                         if (!rr)
                         {
                             stopwatch.Stop();

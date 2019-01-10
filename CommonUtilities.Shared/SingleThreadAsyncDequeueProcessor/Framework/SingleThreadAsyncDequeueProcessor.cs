@@ -200,7 +200,7 @@ namespace Microshaoft
                             Stopwatch stopwatchEnqueue = null;
                             if (_isAttachedPerformanceCounters)
                             {
-                                stopwatchEnqueue = _stopwatchsPool.Get();
+                                _stopwatchsPool.TryGet(out stopwatchEnqueue);
                             }
                             stopwatchEnqueue.Start();
                             var element = Tuple
@@ -333,7 +333,7 @@ namespace Microshaoft
                                         var stopwatchEnqueue = element.Item1;
                                         if (enabledCountPerformance)
                                         {
-                                            stopwatchDequeue = _stopwatchsPool.Get();
+                                            _stopwatchsPool.TryGet(out stopwatchDequeue);
                                         }
 
                                         _timerCounters[0].Item2 = stopwatchEnqueue;
@@ -394,7 +394,7 @@ namespace Microshaoft
                                         if (stopwatchEnqueue != null)
                                         {
                                             stopwatchEnqueue.Reset();
-                                            var r = _stopwatchsPool.Put(stopwatchEnqueue);
+                                            var r = _stopwatchsPool.TryPut(stopwatchEnqueue);
                                             if (!r)
                                             {
                                                 stopwatchEnqueue.Stop();
@@ -405,7 +405,7 @@ namespace Microshaoft
                                         {
                                             stopwatchDequeue.Reset();
 
-                                            var r = _stopwatchsPool.Put(stopwatchDequeue);
+                                            var r = _stopwatchsPool.TryPut(stopwatchDequeue);
                                             if (!r)
                                             {
                                                 stopwatchDequeue.Stop();
