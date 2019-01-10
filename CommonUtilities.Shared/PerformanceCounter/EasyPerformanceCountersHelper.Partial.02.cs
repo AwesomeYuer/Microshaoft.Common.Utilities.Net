@@ -263,7 +263,7 @@ namespace Microshaoft
                                     performanceCountersPairs
                                     , (x) =>
                                     {
-                                        var stopwatch = _stopwatchsPool.Get();
+                                        _stopwatchsPool.TryGet(out var stopwatch);
                                         stopwatchesInline[stopwatchIndex++] = stopwatch;
                                         stopwatch.Restart();
                                     }
@@ -353,7 +353,7 @@ namespace Microshaoft
                                                 , stopwatch
                                                 , onPerformanceCounterChangeValueProcessFunc
                                             );
-                                    var rr = _stopwatchsPool.Put(stopwatch);
+                                    var rr = _stopwatchsPool.TryPut(stopwatch);
                                     if (!rr)
                                     {
                                         stopwatch.Stop();

@@ -288,9 +288,9 @@ namespace Microshaoft
                                                 Stopwatch stopwatchEnqueue = item.Item1;
                                                 if (enabledCountPerformance)
                                                 {
-                                                    stopwatchDequeue = Sender
-                                                                            ._stopwatchsPool
-                                                                            .Get();
+                                                     Sender
+                                                        ._stopwatchsPool
+                                                        .TryGet(out stopwatchDequeue);
                                                 }
                                                 
                                                 _timerCounters[0].Item2 = stopwatchEnqueue;
@@ -356,13 +356,13 @@ namespace Microshaoft
                                                 //池化
                                                 stopwatchEnqueue.Reset();
                                                 stopwatchDequeue.Reset();
-                                                var r = Sender._stopwatchsPool.Put(stopwatchDequeue);
+                                                var r = Sender._stopwatchsPool.TryPut(stopwatchDequeue);
                                                 if (!r)
                                                 {
                                                     stopwatchDequeue.Stop();
                                                     stopwatchDequeue = null;
                                                 }
-                                                r = Sender._stopwatchsPool.Put(stopwatchEnqueue);
+                                                r = Sender._stopwatchsPool.TryPut(stopwatchEnqueue);
                                                 if (!r)
                                                 {
                                                     stopwatchEnqueue.Stop();
@@ -606,7 +606,7 @@ namespace Microshaoft
                             Stopwatch stopwatchEnqueue = null;
                             if (_isAttachedPerformanceCounters)
                             {
-                                stopwatchEnqueue = _stopwatchsPool.Get();
+                                 _stopwatchsPool.TryGet(out stopwatchEnqueue);
                             }
                             stopwatchEnqueue.Start();
                             var element = Tuple
