@@ -17,10 +17,7 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
-
     using System.Diagnostics;
-
-
     public class Startup
     {
         public Startup(IConfiguration configuration)
