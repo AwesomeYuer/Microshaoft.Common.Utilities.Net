@@ -15,10 +15,14 @@ namespace Microshaoft.Web
             (
                 RequestDelegate next
                 , TInjector injector
-                , Action<TInjector, HttpContext> onBeforeInvokingProcess        = null
-                , Action<TInjector, HttpContext> onResponseStartingProcess      = null
-                , Action<TInjector, HttpContext> onAfterInvokedProcess          = null
-                , Action<TInjector, HttpContext> onResponseCompletedProcess     = null
+                , Action<TInjector, HttpContext>
+                                onBeforeInvokingProcess        = null
+                , Action<TInjector, HttpContext>
+                                onResponseStartingProcess      = null
+                , Action<TInjector, HttpContext>
+                                onAfterInvokedProcess          = null
+                , Action<TInjector, HttpContext>
+                                onResponseCompletedProcess     = null
             )
         {
             _next = next;
@@ -29,7 +33,6 @@ namespace Microshaoft.Web
 
             _onAfterInvokedProcess = onAfterInvokedProcess;
             _onResponseCompletedProcess = onResponseCompletedProcess;
-
         }
         private Action<TInjector, HttpContext> _onBeforeInvokingProcess;
         private Action<TInjector, HttpContext> _onResponseStartingProcess;
@@ -61,8 +64,8 @@ namespace Microshaoft.Web
                                                 , context
                                             );
                                 return
-                                    Task
-                                        .CompletedTask;
+                                        Task
+                                            .CompletedTask;
                             }
                         );
             }
@@ -81,12 +84,11 @@ namespace Microshaoft.Web
                                                 , context
                                             );
                                 return
-                                    Task
-                                        .CompletedTask;
+                                        Task
+                                            .CompletedTask;
                             }
                         );
             }
-            
             await _next(context);
             _onAfterInvokedProcess?
                                 .Invoke
@@ -103,28 +105,21 @@ namespace Microshaoft.Web
                 this IApplicationBuilder target
                 //, Action<TInjector, HttpContext> onBeforeInvokingProcess = null
                 //, Action<TInjector, HttpContext> onResponseStartingProcess = null
-
                 //, Action<TInjector, HttpContext> onAfterInvokedProcess = null
                 //, Action<TInjector, HttpContext> onResponseCompletedProcess = null
-                , params Action<TInjector, HttpContext>[] actions
-
+                , params Action<TInjector, HttpContext>[] processActions
             )
         {
-            
-
-
-
             return
                 target
                     .UseMiddleware
                         (
                             typeof(RequestResponseGuardMiddleware<TInjector>)
-                            , actions
-                        //, onBeforeInvokingProcess 
-                        //, onResponseStartingProcess
-
-                        ////, null // onAfterInvokedProcess
-                        ////, null //onResponseCompletedProcess
+                            , processActions
+                            //, onBeforeInvokingProcess 
+                            //, onResponseStartingProcess
+                            //, null // onAfterInvokedProcess
+                            //, null //onResponseCompletedProcess
                         );
         }
     }

@@ -87,7 +87,6 @@ namespace Microshaoft.Web
             if 
                 (
                     configurationTokenName.Exists()
-                    
                 )
             {
                 jwtTokenName = configurationTokenName.Value;
