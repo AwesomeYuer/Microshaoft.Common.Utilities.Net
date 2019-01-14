@@ -3,10 +3,7 @@
     using MySql.Data.MySqlClient;
     using Newtonsoft.Json.Linq;
     using System;
-    using System.Collections.Generic;
     using System.Data;
-    using System.Data.SqlClient;
-    using System.Linq;
     public class MySqlStoreProceduresExecutor
                     : AbstractStoreProceduresExecutor
                             <MySqlConnection, MySqlCommand, MySqlParameter>
@@ -66,6 +63,10 @@
             if (string.Compare(dbTypeName, "bool", true) == 0)
             {
                 dbTypeName = "Bit";
+            }
+            else if (string.Compare(dbTypeName, "tinyint", true) == 0)
+            {
+                dbTypeName = "Byte";
             }
             else if (string.Compare(dbTypeName, "smallint", true) == 0)
             {

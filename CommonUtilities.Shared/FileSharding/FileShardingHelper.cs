@@ -1,13 +1,11 @@
 ﻿namespace Microshaoft
 {
-    //using ICSharpCode.SharpZipLib.Zip;
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     public static class FileShardingHelper
     {
-
         public static IEnumerable<string> ShardingFileParts
                                         (
                                             string originalFile
@@ -83,7 +81,6 @@
             else
             {
                 //list.Add(zippedFileName);
-
                 var destPartFileName
                             = string.Format
                                     (
@@ -100,15 +97,12 @@
                 yield return destPartFileName;
             }
         }
-
-        
-
         public static IEnumerable<string> MergeShardedFilesParts
-                                                (
-                                                    string directory
-                                                    , string searchPattern = "*.*x"
-                                                    , string mergedFileExtensionName = ".zip"
-                                                )
+                                (
+                                    string directory
+                                    , string searchPattern = "*.*x"
+                                    , string mergedFileExtensionName = ".zip"
+                                )
         {
             var files = Directory
                                 .EnumerateFiles
@@ -181,7 +175,6 @@
                 }
             }
         }
-
         private static IEnumerable<string> MergePartialFilesGroupProcess
                                     (
                                         string mergedFileName
@@ -271,6 +264,5 @@
             list.Clear();
             list = null;
         }
-        
     }
 }
