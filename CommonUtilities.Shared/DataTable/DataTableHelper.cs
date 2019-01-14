@@ -1,4 +1,3 @@
-
 namespace Microshaoft
 {
     using System;
@@ -89,7 +88,6 @@ namespace Microshaoft
                     dataColumnType = TypeHelper.GetNullableUnderlyingType(dataColumnType);
 
                 }
-
                 dataColumnsCollection
                     .Add
                         (
@@ -191,5 +189,3 @@ namespace Microshaoft
         }
     }
 }
-
-

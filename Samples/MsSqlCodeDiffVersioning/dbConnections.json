@@ -6,12 +6,21 @@
       "dataBasetype": "mssql",
       "connectionString": "Initial Catalog=test;Data Source=localhost;User=sa;Password=!@#123QWE",
       "enableStatistics": true,
-      "commandtimeoutInSeconds":  102,
+      "commandtimeoutInSeconds": 102
     },
     "c2": {
       "dataBaseType": "mssql",
       "ConnectionString": "Initial Catalog=test;Data Source=localhost;User=sa;Password=!@#123QWE",
-      "EnaBleStatistics": true,
+      "EnaBleStatistics": true
+      //"CommandTimeoutInSeconds": 100
+      /*
+
+      */
+    },
+    "c3": {
+      "dataBaseType": "mysql",
+      "ConnectionString": "server=vm-003-mysql.eastus.cloudapp.azure.com;uid=root;pwd=password;database=Test",
+      "EnaBleStatistics": true
       //"CommandTimeoutInSeconds": 100
       /*
 
@@ -50,6 +59,21 @@
         "ConnectionID": "c1",
         "StoreProcedureName": "zsp_zObjectsChangesLogsHistory_Get"
         //"EnableStatistics": true
+      }
+    },
+    "mysql": {
+      "HttPGet": {
+        "connectionID": "c3",
+        "storeProcedureName": "zsp_test",
+        "EnableStatistics": true,
+        "commandtimeoutInSeconds": 103,
+        "Outputs": {
+          "aaa.bbb.ddd": "Outputs.ResultSets[0].Rows",
+          "bbb": "Outputs.Parameters",
+          "aaa.bbb.ccc": "Outputs.Parameters",
+          "AAa.ccc": "Outputs.Parameters",
+          "aaa.bbb.ccc": "Outputs.ResultSets[0].Rows"
+        }
       }
     }
   }
