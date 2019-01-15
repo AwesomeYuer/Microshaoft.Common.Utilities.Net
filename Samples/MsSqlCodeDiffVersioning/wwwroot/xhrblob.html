@@ -16,7 +16,9 @@
                     img.src = url.createObjectURL(this.response);
                 }
             }
-            xhr.open('GET', 'http://localhost:5000/api/tracker/blobs');
+            var url = 'http://localhost:5000/api/tracker/blobs';
+            url = 'http://localhost:5000/1.jpg';
+            xhr.open('GET', url);
             xhr.responseType = 'blob';
             xhr.send();
         }
