@@ -21,6 +21,9 @@
     using System.Diagnostics;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Http.Features;
+    using Microsoft.AspNetCore.Routing;
+    using Microsoft.AspNetCore.Mvc.Abstractions;
+    using Newtonsoft.Json;
 
     public class Startup
     {
@@ -169,8 +172,9 @@
                             {
                                 middleware
                                     .OnFilterProcessFunc
-                                        = (injector, httpContext) =>
+                                        = (injector, httpContext, @event) =>
                                         {
+                                            Console.WriteLine($"event: {@event}");
                                             if (!httpContext.Items.ContainsKey(timingKey))
                                             {
                                                 injector.TryGet(out var stopwatch);
@@ -184,8 +188,9 @@
                                         };
                                 middleware
                                     .OnInvokingProcessAsync
-                                        = async (injector, httpContext) =>
+                                        = async (injector, httpContext, @event) =>
                                         {
+                                            Console.WriteLine($"event: {@event}");
                                             if (!httpContext.Items.ContainsKey(timingKey))
                                             {
                                                 injector.TryGet(out var stopwatch);
@@ -199,17 +204,27 @@
                                             var url = httpRequestFeature.RawTarget;
                                             var result = false;
                                             if
-                                            (
-                                                //request.ContentType == "image/jpeg"
-                                                url.EndsWith("error.js")
-                                            )
+                                                (
+                                                    //request.ContentType == "image/jpeg"
+                                                    url.EndsWith("error.js")
+                                                )
                                             {
                                                 var response = httpContext.Response;
-                                                response.StatusCode = 500;
+                                                var errorStatusCode = 500;
+                                                var errorMessage = $"error in Middleware: [{middleware.GetType().Name}]";
+                                                response.StatusCode = errorStatusCode;
+                                                var jsonResult =
+                                                        new
+                                                        {
+                                                            StatusCode = errorStatusCode
+                                                            ,
+                                                            Message = errorMessage
+                                                        };
+                                                var json = JsonConvert.SerializeObject(jsonResult);
                                                 await
                                                     response
                                                         .WriteAsync
-                                                                ("error");
+                                                                (json);
                                                 result = false;
                                             }
                                             else
@@ -222,8 +237,9 @@
                                         };
                                 middleware
                                     .OnResponseStartingProcess
-                                        = (injector, httpContext, x) =>
+                                        = (injector, httpContext, @event) =>
                                         {
+                                            Console.WriteLine($"event: {@event}");
                                             var stopwatch = httpContext
                                                                 .Items[timingKey] as Stopwatch;
                                             if (stopwatch != null)
@@ -243,14 +259,15 @@
                                         };
                                 middleware
                                     .OnAfterInvokedNextProcess
-                                        = (injector, httpContext, x) =>
+                                        = (injector, httpContext, @event) =>
                                         {
-
+                                            Console.WriteLine($"event: {@event}");
                                         };
                                 middleware
                                     .OnResponseCompletedProcess
-                                        = (injector, httpContext, x) =>
+                                        = (injector, httpContext, @event) =>
                                         {
+                                            Console.WriteLine($"event: {@event}");
                                             if
                                                 (
                                                     httpContext
