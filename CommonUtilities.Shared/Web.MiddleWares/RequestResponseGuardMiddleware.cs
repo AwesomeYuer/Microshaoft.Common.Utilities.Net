@@ -25,8 +25,8 @@ namespace Microshaoft.Web
                                     .Invoke(this);
         }
 
-        public Func<TInjector, HttpContext, bool> OnFilterProcessFunc;
-        public Func<TInjector, HttpContext, Task<bool>> OnInvokingProcessAsync;
+        public Func<TInjector, HttpContext, string, bool> OnFilterProcessFunc;
+        public Func<TInjector, HttpContext, string, Task<bool>> OnInvokingProcessAsync;
         public Action<TInjector, HttpContext, string> OnResponseStartingProcess;
         
         public Action<TInjector, HttpContext, string> OnAfterInvokedNextProcess;
@@ -39,7 +39,12 @@ namespace Microshaoft.Web
             bool needNext = true;
             if (OnFilterProcessFunc != null)
             {
-                filtered = OnFilterProcessFunc(_injector, context);
+                filtered = OnFilterProcessFunc
+                                    (
+                                        _injector
+                                        , context
+                                        , nameof(OnFilterProcessFunc)
+                                    );
                 if (filtered)
                 {
                     if (OnResponseStartingProcess != null)
@@ -90,6 +95,7 @@ namespace Microshaoft.Web
                                             (
                                                 _injector
                                                 , context
+                                                , nameof(OnInvokingProcessAsync)
                                             ).Result;
                     } 
                 }
@@ -112,7 +118,9 @@ namespace Microshaoft.Web
         public static IApplicationBuilder UseRequestResponseGuard<TInjector>
             (
                 this IApplicationBuilder target
-                , Action<RequestResponseGuardMiddleware<TInjector>> onInitializeProcess = null
+                , Action
+                    <RequestResponseGuardMiddleware<TInjector>>
+                        onInitializeCallbackProcesses = null
 
             )
         {
@@ -121,7 +129,7 @@ namespace Microshaoft.Web
                     .UseMiddleware
                         (
                             typeof(RequestResponseGuardMiddleware<TInjector>)
-                            , onInitializeProcess
+                            , onInitializeCallbackProcesses
                         );
         }
     }
