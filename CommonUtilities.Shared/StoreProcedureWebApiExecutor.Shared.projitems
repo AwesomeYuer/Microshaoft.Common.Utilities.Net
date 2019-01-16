@@ -24,6 +24,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)JsonWebToken\JwtTokenHelper.NET.Framework.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)JsonWebToken\JwtTokenHelper.NET.All.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JsonReaderHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Log\LoggerExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MEF.Composition\MEFHelper.NET.Core.Standard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MemberAdditionalDefinitionAttribute\MemberAdditionalDefinitionAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pools\QueuedObjectsPool.Partial.01.cs" />

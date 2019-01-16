@@ -3,7 +3,6 @@ namespace Microshaoft.Web
 {
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
-    using Microsoft.Extensions.Configuration;
     using Newtonsoft.Json;
     using System;
     using System.Net;
@@ -14,7 +13,6 @@ namespace Microshaoft.Web
         private readonly RequestDelegate _next;
         private readonly TInjector _injector;
         
-
         public Func<HttpContext, TInjector, Exception, (bool ReThrow, bool Detail, HttpStatusCode StatusCode)> OnCaughtExceptionProcessFunc;
         public Action<HttpContext, TInjector, bool, Exception> OnFinallyProcessAction;
 
@@ -30,7 +28,6 @@ namespace Microshaoft.Web
             onInitializeCallbackProcesses?.Invoke(this);
         }
 
-
         public ExceptionGuardMiddleware
             (
                 RequestDelegate next
@@ -41,19 +38,24 @@ namespace Microshaoft.Web
             ) : this(next, onInitializeCallbackProcesses)
         {
             _injector = injector;
-
-
-
-
         }
-
         
         //必须是如下方法(竟然不用接口约束产生编译期错误),否则运行时错误
         public async Task Invoke(HttpContext context)
         {
             var caughtException = false;
             Exception exception = null;
-            (bool ReThrow, bool Detail, HttpStatusCode StatusCode) r = (false, false, HttpStatusCode.OK);
+            (
+                bool ReThrow
+                , bool ResponseDetails
+                , HttpStatusCode ResponseStatusCode
+            )
+                r = 
+                    (
+                        false
+                        , false
+                        , HttpStatusCode.OK
+                    );
             try
             {
                 await _next(context);
@@ -67,19 +69,19 @@ namespace Microshaoft.Web
                     r = OnCaughtExceptionProcessFunc(context, _injector, exception);
                 }
                 var response = context.Response;
-                response.StatusCode = (int)r.StatusCode;
-                var errorMessage = "";
-                if (r.Detail)
+                response.StatusCode = (int)r.ResponseStatusCode;
+                var errorMessage = "InternalServerError";
+                if (r.ResponseDetails)
                 {
                     errorMessage = exception.ToString();
                 }
                 var jsonResult =
-                    new
-                    {
-                        StatusCode = r.StatusCode
-                        ,
-                        Message = errorMessage
-                    };
+                            new
+                            {
+                                StatusCode = r.ResponseStatusCode
+                                ,
+                                Message = errorMessage
+                            };
                 var json = JsonConvert.SerializeObject(jsonResult);
                 await context.Response.WriteAsync(json);
                 if (r.ReThrow)
@@ -89,15 +91,10 @@ namespace Microshaoft.Web
             }
             finally
             {
-
                 OnFinallyProcessAction?
                     .Invoke(context, _injector, caughtException, exception);
-
-                
-                
             }
         }
-        
     }
 
     public static class ExceptionGuardMiddlewareMiddlewareExtensions
