@@ -41,6 +41,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Type\TypeHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Cors\WildCardCorsService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Filters\BearerTokenAuthorizeFilter.CoreStandard.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Web.MiddleWares\AbstractCommonMiddlewareBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Web.MiddleWares\ExceptionGuardMiddleware.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.MiddleWares\RequestResponseGuardMiddleware.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenModelBinder\HttpRequestHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\StoreProcedureExecutorController\AbstractStoreProcedureExecutorControllerBase.1.NET.All.cs" />

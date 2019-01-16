@@ -24,6 +24,8 @@
     using Microsoft.AspNetCore.Routing;
     using Microsoft.AspNetCore.Mvc.Abstractions;
     using Newtonsoft.Json;
+    using System.Net;
+    using Microsoft.Extensions.Logging;
 
     public class Startup
     {
@@ -95,6 +97,8 @@
                     (
                         new QueuedObjectsPool<Stopwatch>(100, true)
                     );
+
+
 
             #region 跨域策略
             services
@@ -283,7 +287,26 @@
             app.UseCors();
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                app
+                    .UseExceptionGuard<IConfiguration>
+                        (
+                            (middleware) =>
+                            {
+                                middleware
+                                    .OnCaughtExceptionProcessFunc
+                                        = (httpContext, injector, exception) =>
+                                        {
+                                            var r = (
+                                                                false
+                                                                , true
+                                                                , HttpStatusCode.InternalServerError
+                                                            
+                                                        );
+                                            return r;
+                                        };
+                            }
+                        );
+                //app.UseDeveloperExceptionPage();
             }
             else
             {
