@@ -3,27 +3,27 @@
     using Microshaoft;
     using Microshaoft.Web;
     using Microsoft.AspNetCore.Builder;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Cors.Infrastructure;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Http.Features;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.FileProviders;
+    using Microsoft.Extensions.Logging;
+    using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
     using Swashbuckle.AspNetCore.Swagger;
     using System;
     using System.Collections.Generic;
     using System.Data.SqlClient;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
+    using System.Net;
     using System.Reflection;
-    using System.Diagnostics;
     using System.Threading.Tasks;
-    using Microsoft.AspNetCore.Http.Features;
-    using Microsoft.AspNetCore.Routing;
-    using Microsoft.AspNetCore.Mvc.Abstractions;
-    using Newtonsoft.Json;
 
     public class Startup
     {
@@ -137,7 +137,6 @@
                   );
             #endregion
 
-
             services.AddResponseCaching();
 
             services
@@ -152,7 +151,7 @@
                                         , new Info
                                         {
                                             Title = "My API"
-                                                ,
+                                            ,
                                             Version = "v1"
                                         }
                                     );
@@ -161,8 +160,15 @@
 
         }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure
+                        (
+                            IApplicationBuilder app
+                            , IHostingEnvironment env
+                            , IConfiguration configuration
+                            , ILoggerFactory loggerFactory
+                        )
         {
+            var logger = loggerFactory.CreateLogger("Microshaoft.Logger");
             string timingKey = nameof(timingKey);
             app
                 .UseRequestResponseGuard
@@ -199,8 +205,8 @@
                                             }
                                             var request = httpContext.Request;
                                             var httpRequestFeature = httpContext
-                                                                        .Features
-                                                                        .Get<IHttpRequestFeature>();
+                                                                            .Features
+                                                                            .Get<IHttpRequestFeature>();
                                             var url = httpRequestFeature.RawTarget;
                                             var result = false;
                                             if
@@ -283,7 +289,48 @@
             app.UseCors();
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                app
+                    .UseExceptionGuard<IConfiguration>
+                        (
+                            (middleware) =>
+                            {
+                                middleware
+                                    .OnCaughtExceptionProcessFunc
+                                        = (httpContext, injector, exception) =>
+                                        {
+                                            var r = 
+                                                    (
+                                                        false
+                                                        , false
+                                                        , HttpStatusCode
+                                                                .InternalServerError
+                                                    );
+                                            logger
+                                                .LogOnDemand
+                                                    (
+                                                        LogLevel.Error
+                                                        , () =>
+                                                        {
+                                                            (
+                                                                Exception LoggingException
+                                                                , string LoggingMessage
+                                                                , object[] LoggingArguments
+                                                            )
+                                                                log =
+                                                                    (
+                                                                        exception
+                                                                        , "yxy ++++++" + exception.Message
+                                                                        , null
+                                                                    );
+                                                             return
+                                                                log;
+                                                        }
+                                                    );
+                                            return r;
+                                        };
+                            }
+                        );
+                //app.UseDeveloperExceptionPage();
             }
             else
             {
@@ -346,9 +393,6 @@
                                 );
                     }
                 );
-
-
-
         }
         private static IEnumerable<string> GetExistsPaths(string configurationJsonFile, string sectionName)
         {

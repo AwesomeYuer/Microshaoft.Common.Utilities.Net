@@ -4,6 +4,7 @@
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Logging;
     using System;
     using System.IO;
     using System.Linq;
@@ -75,6 +76,13 @@
                 WebHost
                     .CreateDefaultBuilder(args)
                     //.UseConfiguration(configuration)
+
+                    .ConfigureLogging(builder =>
+                    {
+                        builder.SetMinimumLevel(LogLevel.Error);
+                        builder.AddConsole();
+                    })
+
                     .ConfigureAppConfiguration
                     (
                         (hostingContext, configuration) =>
