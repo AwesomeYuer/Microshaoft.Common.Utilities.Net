@@ -5,6 +5,8 @@
     using Microshaoft.WebApi.ModelBinders;
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json.Linq;
+    using System.Text.Encodings.Web;
+
     [Route("api/[controller]")]
     [ApiController]
     public class TrackerController : ControllerBase
@@ -14,8 +16,10 @@
                         (
                             SingleThreadAsyncDequeueProcessorSlim<JToken>
                                 asyncDequeueProcessor
+                            
                         )
         {
+
             _asyncDequeueProcessor = asyncDequeueProcessor;
         }
 

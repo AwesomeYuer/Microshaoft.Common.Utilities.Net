@@ -66,10 +66,15 @@ namespace Microshaoft.Web
                 caughtException = true;
                 if (OnCaughtExceptionProcessFunc != null)
                 {
-                    r = OnCaughtExceptionProcessFunc(context, _injector, exception);
+                    r = OnCaughtExceptionProcessFunc
+                                (
+                                    context
+                                    , _injector
+                                    , exception
+                                );
                 }
                 var response = context.Response;
-                response.StatusCode = (int)r.ResponseStatusCode;
+                response.StatusCode = (int) r.ResponseStatusCode;
                 var errorMessage = "InternalServerError";
                 if (r.ResponseDetails)
                 {
@@ -79,11 +84,12 @@ namespace Microshaoft.Web
                             new
                             {
                                 StatusCode = r.ResponseStatusCode
-                                ,
-                                Message = errorMessage
+                                , Message = errorMessage
                             };
                 var json = JsonConvert.SerializeObject(jsonResult);
-                await context.Response.WriteAsync(json);
+                await
+                    response
+                        .WriteAsync(json);
                 if (r.ReThrow)
                 {
                     throw;
@@ -92,12 +98,18 @@ namespace Microshaoft.Web
             finally
             {
                 OnFinallyProcessAction?
-                    .Invoke(context, _injector, caughtException, exception);
+                                    .Invoke
+                                        (
+                                            context
+                                            , _injector
+                                            , caughtException
+                                            , exception
+                                        );
             }
         }
     }
 
-    public static class ExceptionGuardMiddlewareMiddlewareExtensions
+    public static class ExceptionGuardMiddlewareExtensions
     {
         public static IApplicationBuilder UseExceptionGuard<TInjector>
             (
