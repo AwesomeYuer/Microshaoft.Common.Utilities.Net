@@ -11,13 +11,13 @@ namespace Microshaoft.Web
         private readonly RequestDelegate _next;
         private readonly TInjector _injector;
         public RequestResponseGuardMiddleware
-            (
-                RequestDelegate next
-                , TInjector injector
-                , Action
-                    <RequestResponseGuardMiddleware<TInjector>>
-                        onInitializeCallbackProcesses = null
-            )
+                (
+                    RequestDelegate next
+                    , TInjector injector
+                    , Action
+                        <RequestResponseGuardMiddleware<TInjector>>
+                            onInitializeCallbackProcesses = null
+                )
         {
             _next = next;
             _injector = injector;
