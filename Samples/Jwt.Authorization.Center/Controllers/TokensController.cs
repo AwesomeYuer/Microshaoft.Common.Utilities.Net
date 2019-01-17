@@ -9,6 +9,7 @@
     using System;
     using System.IdentityModel.Tokens.Jwt;
     using System.Security.Claims;
+    using System.Text.Encodings.Web;
     using System.Web;
 
     [Authorize]
@@ -19,6 +20,24 @@
 
     public class TokensController : ControllerBase
     {
+        HtmlEncoder _htmlEncoder;
+        JavaScriptEncoder _javaScriptEncoder;
+        UrlEncoder _urlEncoder;
+
+        public TokensController
+                        (
+                            HtmlEncoder htmlEncoder
+                            , JavaScriptEncoder javascriptEncoder
+                            , UrlEncoder urlEncoder
+                        )
+        {
+            _htmlEncoder = htmlEncoder;
+            _javaScriptEncoder = javascriptEncoder;
+            _urlEncoder = urlEncoder;
+        }
+
+
+
         [HttpGet]
         [Route("jsonp")]
         public ActionResult Issue2
@@ -27,14 +46,21 @@
                             //    string callback
                             //,
                             [ModelBinder(typeof(JTokenModelBinder))]
-                                JToken json
+                                JToken parameters
                         )
         {
-            var jToken = Result(json);
-            var callback = json["jsonp"].Value<string>();
+            var jToken = Result(parameters);
+            var callback = parameters["callback"].Value<string>();
             //Anti-XSS
+
+            
+
             callback = HttpUtility.JavaScriptStringEncode(callback);
+            Console.WriteLine(callback);
+            callback = _javaScriptEncoder.Encode(callback);
+            Console.WriteLine(callback);
             var content = $"{callback}({jToken.ToString()})";
+            
             return
                 Content
                 (
@@ -47,10 +73,10 @@
         public ActionResult<JToken> Issue
                         (
                             [ModelBinder(typeof(JTokenModelBinder))]
-                                JToken json
+                                JToken parameters
                         )
         {
-            return Result(json);
+            return Result(parameters);
         }
 
         private JToken Result(JToken json)
