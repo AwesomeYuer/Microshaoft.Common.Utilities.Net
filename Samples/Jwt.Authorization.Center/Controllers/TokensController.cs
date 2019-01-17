@@ -6,6 +6,8 @@
     using Microsoft.AspNetCore.Cors;
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json.Linq;
+    using System;
+    using System.IdentityModel.Tokens.Jwt;
     using System.Security.Claims;
     using System.Web;
 
@@ -88,6 +90,13 @@
                                                     ,{ R:""manger1"",D:""HR1"" }
                                                 ]"
                                             )
+                                        ,
+                                        new Claim
+                                        (
+                                            JwtRegisteredClaimNames.Jti
+                                            , Guid.NewGuid().ToString()
+                                            , ClaimValueTypes.String
+                                        )
                                     }
                                     , "0123456789ABCDEF"
                                     , out var plainToken
