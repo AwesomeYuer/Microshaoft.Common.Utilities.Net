@@ -6,6 +6,38 @@ namespace Microshaoft
     public static class LoggerExtensions
     {
         public static void LogOnDemand
+                (
+                   this ILogger target
+                    , LogLevel logLevel
+                    , Func<string> messageFactory
+                )
+        {
+            var loggingFormatArguments = new object[] { };
+            target
+                .LogOnDemand
+                    (
+                        logLevel
+                        , messageFactory
+                        , loggingFormatArguments
+                    );
+            loggingFormatArguments = null;
+        }
+        public static void LogOnDemand
+                                (
+                                   this ILogger target
+                                    , LogLevel logLevel
+                                    , Func<string> messageFactory
+                                    , params object[] loggingFormatArguments
+                                )
+        {
+            if (target.IsEnabled(logLevel))
+            {
+                var message = messageFactory();
+                target.Log(logLevel, message, loggingFormatArguments);
+            }
+        }
+
+        public static void LogOnDemand
                         (
                             this ILogger target
                             , LogLevel logLevel
@@ -15,11 +47,12 @@ namespace Microshaoft
                                         EventId LoggingEventId
                                         , Exception LoggingException
                                         , string LoggingMessage
-                                        , object[] LoggingArguments
+                                        , object[] loggingFormatArguments
                                     )
                                 > loggingPreprocess
                         )
         {
+            
             if (target.IsEnabled(logLevel))
             {
                 var r = loggingPreprocess();
@@ -30,7 +63,7 @@ namespace Microshaoft
                             , r.LoggingEventId
                             , r.LoggingException
                             , r.LoggingMessage
-                            , r.LoggingArguments
+                            , r.loggingFormatArguments
                         );
             }
         }
@@ -43,7 +76,7 @@ namespace Microshaoft
                                     (
                                         EventId LoggingEventId
                                         , string LoggingMessage
-                                        , object[] LoggingArguments
+                                        , object[] loggingFormatArguments
                                     )
                                 > loggingPreprocess
                         )
@@ -58,7 +91,7 @@ namespace Microshaoft
                             , r.LoggingEventId
                             //, r.LoggingException
                             , r.LoggingMessage
-                            , r.LoggingArguments
+                            , r.loggingFormatArguments
                         );
             }
         }
@@ -70,7 +103,7 @@ namespace Microshaoft
                                 <
                                     (
                                         string LoggingMessage
-                                        , object[] LoggingArguments
+                                        , object[] loggingFormatArguments
                                     )
                                 > loggingPreprocess
                         )
@@ -83,7 +116,7 @@ namespace Microshaoft
                         (
                             logLevel
                             , r.LoggingMessage
-                            , r.LoggingArguments
+                            , r.loggingFormatArguments
                         );
             }
         }
@@ -97,7 +130,7 @@ namespace Microshaoft
                             (
                                 Exception LoggingException
                                 , string LoggingMessage
-                                , object[] LoggingArguments
+                                , object[] loggingFormatArguments
                             )
                         > loggingPreprocess
                 )
@@ -111,7 +144,7 @@ namespace Microshaoft
                             logLevel
                             , r.LoggingException
                             , r.LoggingMessage
-                            , r.LoggingArguments
+                            , r.loggingFormatArguments
                         );
             }
         }
