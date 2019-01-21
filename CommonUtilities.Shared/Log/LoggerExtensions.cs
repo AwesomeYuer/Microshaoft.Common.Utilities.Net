@@ -36,6 +36,115 @@ namespace Microshaoft
                 target.Log(logLevel, message, loggingFormatArguments);
             }
         }
+        public static void LogOnDemand
+                                (
+                                   this ILogger target
+                                    , LogLevel logLevel
+                                    , Exception exception
+                                    , Func<string> messageFactory
+                                    
+                                )
+        {
+            var loggingFormatArguments = new object[] { };
+            target
+                .LogOnDemand
+                    (
+                        logLevel
+                        , exception
+                        , messageFactory
+                        , loggingFormatArguments
+                    );
+            loggingFormatArguments = null;
+        }
+        public static void LogOnDemand
+                                (
+                                   this ILogger target
+                                    , LogLevel logLevel
+                                    , Exception exception
+                                    , Func<string> messageFactory
+                                    , params object[] loggingFormatArguments
+                                )
+        {
+            if (target.IsEnabled(logLevel))
+            {
+                var message = messageFactory();
+                target.Log(logLevel, exception, message, loggingFormatArguments);
+            }
+        }
+
+        public static void LogOnDemand
+                         (
+                            this ILogger target
+                             , LogLevel logLevel
+                             , EventId eventId
+                             , Exception exception
+                             , Func<string> messageFactory
+                         )
+        {
+            var loggingFormatArguments = new object[] { };
+            target
+                .LogOnDemand
+                    (
+                        logLevel
+                        , eventId
+                        , exception
+                        , messageFactory
+                        , loggingFormatArguments
+                    );
+            loggingFormatArguments = null;
+        }
+        public static void LogOnDemand
+                                (
+                                   this ILogger target
+                                    , LogLevel logLevel
+                                    , EventId eventId
+                                    , Exception exception
+                                    , Func<string> messageFactory
+                                    , params object[] loggingFormatArguments
+                                )
+        {
+            if (target.IsEnabled(logLevel))
+            {
+                var message = messageFactory();
+                target.Log(logLevel, eventId, exception, message, loggingFormatArguments);
+            }
+        }
+
+
+        public static void LogOnDemand
+                         (
+                            this ILogger target
+                             , LogLevel logLevel
+                             , EventId eventId
+                             , Func<string> messageFactory
+                         )
+        {
+            var loggingFormatArguments = new object[] { };
+            target
+                .LogOnDemand
+                    (
+                        logLevel
+                        , eventId
+                        , messageFactory
+                        , loggingFormatArguments
+                    );
+            loggingFormatArguments = null;
+        }
+        public static void LogOnDemand
+                                (
+                                   this ILogger target
+                                    , LogLevel logLevel
+                                    , EventId eventId
+                                    , Func<string> messageFactory
+                                    , params object[] loggingFormatArguments
+                                )
+        {
+            if (target.IsEnabled(logLevel))
+            {
+                var message = messageFactory();
+                target.Log(logLevel, eventId, message, loggingFormatArguments);
+            }
+        }
 
         public static void LogOnDemand
                         (
