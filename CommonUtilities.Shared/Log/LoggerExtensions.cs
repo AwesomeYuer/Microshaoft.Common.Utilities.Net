@@ -33,7 +33,13 @@ namespace Microshaoft
             if (target.IsEnabled(logLevel))
             {
                 var message = messageFactory();
-                target.Log(logLevel, message, loggingFormatArguments);
+                target
+                    .Log
+                        (
+                            logLevel
+                            , message
+                            , loggingFormatArguments
+                        );
             }
         }
         public static void LogOnDemand
@@ -68,7 +74,14 @@ namespace Microshaoft
             if (target.IsEnabled(logLevel))
             {
                 var message = messageFactory();
-                target.Log(logLevel, exception, message, loggingFormatArguments);
+                target
+                    .Log
+                        (
+                            logLevel
+                            , exception
+                            , message
+                            , loggingFormatArguments
+                        );
             }
         }
 
@@ -106,11 +119,17 @@ namespace Microshaoft
             if (target.IsEnabled(logLevel))
             {
                 var message = messageFactory();
-                target.Log(logLevel, eventId, exception, message, loggingFormatArguments);
+                target
+                    .Log
+                        (
+                            logLevel
+                            , eventId
+                            , exception
+                            , message
+                            , loggingFormatArguments
+                        );
             }
         }
-
-
         public static void LogOnDemand
                          (
                             this ILogger target
@@ -142,7 +161,14 @@ namespace Microshaoft
             if (target.IsEnabled(logLevel))
             {
                 var message = messageFactory();
-                target.Log(logLevel, eventId, message, loggingFormatArguments);
+                target
+                    .Log
+                        (
+                            logLevel
+                            , eventId
+                            , message
+                            , loggingFormatArguments
+                        );
             }
         }
 
@@ -198,7 +224,6 @@ namespace Microshaoft
                         (
                             logLevel
                             , r.LoggingEventId
-                            //, r.LoggingException
                             , r.LoggingMessage
                             , r.loggingFormatArguments
                         );
