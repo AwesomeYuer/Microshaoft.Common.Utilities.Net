@@ -11,15 +11,14 @@
     [ApiController]
     public class TrackerController : ControllerBase
     {
-        private SingleThreadAsyncDequeueProcessorSlim<JToken> _asyncDequeueProcessor;
+        private SingleThreadAsyncDequeueProcessorSlim<JToken>
+                        _asyncDequeueProcessor;
         public TrackerController
                         (
                             SingleThreadAsyncDequeueProcessorSlim<JToken>
                                 asyncDequeueProcessor
-                            
                         )
         {
-
             _asyncDequeueProcessor = asyncDequeueProcessor;
         }
 
@@ -27,10 +26,10 @@
         [Route("blobs")]
         [BearerTokenBasedAuthorizeFilter(IsRequired = false)]
         public ActionResult
-            ProcessActionRequest
-                (
+                        ProcessActionRequest
+                            (
                     
-                )
+                            )
         {
             var path = @"D:\a.png";
             var stream = System.IO.File.OpenRead(path);
@@ -38,10 +37,8 @@
                     (
                         stream
                         , "image/jpeg"
-
                     );
         }
-
 
         [HttpGet]
         [Route("tracking")]
@@ -53,7 +50,6 @@
                                 JToken parameters = null
                         )
         {
-
             var i = 0;
             i = 100 / i;
             var request = HttpContext.Request;
