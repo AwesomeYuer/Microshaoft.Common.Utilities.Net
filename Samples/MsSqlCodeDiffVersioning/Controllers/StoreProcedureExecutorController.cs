@@ -14,7 +14,10 @@ namespace Microshaoft.WebApi.Controllers
     public class StoreProcedureExecutorController
                     : AbstractStoreProceduresExecutorControllerBase
     {
-        public StoreProcedureExecutorController(IStoreProceduresWebApiService service)
+        public StoreProcedureExecutorController
+                            (
+                                IStoreProceduresWebApiService service
+                            )
                 : base(service)
         {
         }
@@ -38,9 +41,6 @@ namespace Microshaoft.WebApi.Controllers
         //{
         //    return base.ProcessActionRequest(routeName, parameters, resultJsonPathPart1, resultJsonPathPart2, resultJsonPathPart3, resultJsonPathPart4, resultJsonPathPart5, resultJsonPathPart6);
         //}
-
-
-
 
         [HttpDelete]
         [HttpGet]

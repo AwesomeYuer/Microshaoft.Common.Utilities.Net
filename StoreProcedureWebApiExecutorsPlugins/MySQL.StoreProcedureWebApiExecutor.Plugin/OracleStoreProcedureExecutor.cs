@@ -1,23 +1,21 @@
-﻿#if !XAMARIN && NETFRAMEWORK4_X
-namespace Microshaoft.StoreProcedureExecutors
+﻿namespace Microshaoft.StoreProcedureExecutors
 {
     using Microshaoft;
     using Newtonsoft.Json.Linq;
-    using Npgsql;
     using Oracle.ManagedDataAccess.Client;
+    using System;
     using System.Composition;
-    using System.Data.Common;
-
+    using System.Data;
     [Export(typeof(IStoreProcedureExecutable))]
     public class OracleStoreProcedureExecutorCompositionPlugin
                         : IStoreProcedureExecutable
-                            , IStoreProcedureParametersSetCacheAutoRefreshable
+                            , IParametersDefinitionCacheAutoRefreshable
     {
         public AbstractStoreProceduresExecutor
                     <OracleConnection, OracleCommand, OracleParameter>
                         _executor = new OracleStoreProceduresExecutor();
-        public string DataBaseType => "oracle";////this.GetType().Name;
-        public int CachedExecutingParametersExpiredInSeconds
+        public string DataBaseType => "Oracle";////this.GetType().Name;
+        public int CachedParametersDefinitionExpiredInSeconds
         {
             get;
             set;
@@ -31,33 +29,52 @@ namespace Microshaoft.StoreProcedureExecutors
                     (
                         string connectionString
                         , string storeProcedureName
-                        , JToken parameters
                         , out JToken result
+                        , JToken parameters
+                        , Func
+                                <
+                                    IDataReader
+                                    , Type        // fieldType
+                                    , string    // fieldName
+                                    , int       // row index
+                                    , int       // column index
+                                    ,
+                                        (
+                                            bool NeedDefaultProcess
+                                            , JProperty Field   //  JObject Field 对象
+                                        )
+                                > onReadRowColumnProcessFunc = null
+                        , bool enableStatistics = false
                         , int commandTimeoutInSeconds = 90
                     )
         {
             if
                 (
-                    CachedExecutingParametersExpiredInSeconds > 0
+                    CachedParametersDefinitionExpiredInSeconds > 0
                     &&
                     _executor
-                        .CachedExecutingParametersExpiredInSeconds
+                        .CachedParametersDefinitionExpiredInSeconds
                     !=
-                    CachedExecutingParametersExpiredInSeconds
+                    CachedParametersDefinitionExpiredInSeconds
                 )
             {
                 _executor
-                        .CachedExecutingParametersExpiredInSeconds
-                            = CachedExecutingParametersExpiredInSeconds;
+                        .CachedParametersDefinitionExpiredInSeconds
+                            = CachedParametersDefinitionExpiredInSeconds;
             }
             result = null;
-            DbConnection connection = new OracleConnection(connectionString);
+            var connection = new OracleConnection(connectionString);
+            //if (enableStatistics)
+            //{
+            //    connection.StatisticsEnabled = enableStatistics;
+            //}
             result = _executor
                             .Execute
                                     (
                                         connection
                                         , storeProcedureName
                                         , parameters
+                                        , onReadRowColumnProcessFunc
                                         , commandTimeoutInSeconds
                                     );
             if (NeedAutoRefreshExecutedTimeForSlideExpire)
@@ -73,4 +90,3 @@ namespace Microshaoft.StoreProcedureExecutors
         }
     }
 }
-#endif
