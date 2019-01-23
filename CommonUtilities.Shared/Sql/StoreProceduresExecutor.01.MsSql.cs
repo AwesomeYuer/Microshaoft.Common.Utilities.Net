@@ -306,11 +306,10 @@ from
         {
             return
                 parameter
-                    .SetParameterValue
+                    .SetGetObjectValue
                         (
                             jValue
                         );
-
         }
     }
 }

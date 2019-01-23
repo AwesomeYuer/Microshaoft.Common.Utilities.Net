@@ -6,7 +6,7 @@
     using System.Data.SqlClient;
     public static partial class DbParameterHelper
     {
-        public static object SetParameterValue
+        public static object SetGetObjectValue
                                     (
                                         this SqlParameter target
                                         , JToken jValue 
