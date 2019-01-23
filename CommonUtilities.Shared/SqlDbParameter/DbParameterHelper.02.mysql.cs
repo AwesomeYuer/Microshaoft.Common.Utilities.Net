@@ -5,7 +5,7 @@
     using System;
     public static partial class DbParameterHelper
     {
-        public static object SetParameterValue
+        public static object SetGetObjectValue
                                     (
                                         this MySqlParameter target
                                         , JToken jValue
@@ -59,7 +59,6 @@
                         r = rr;
                     }
                 }
-
                 else if
                     (
                         target.MySqlDbType == MySqlDbType.Bit

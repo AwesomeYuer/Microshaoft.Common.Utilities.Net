@@ -86,7 +86,7 @@ namespace Microshaoft
         {
             return
                 parameter
-                    .SetParameterValue
+                    .SetGetObjectValue
                         (
                             jValue
                         );

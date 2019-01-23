@@ -7,7 +7,7 @@ namespace Microshaoft
     using System;
     public static partial class DbParameterHelper
     {
-        public static object SetParameterValue
+        public static object SetGetObjectValue
                                     (
                                         this NpgsqlParameter target
                                         , JToken jValue
