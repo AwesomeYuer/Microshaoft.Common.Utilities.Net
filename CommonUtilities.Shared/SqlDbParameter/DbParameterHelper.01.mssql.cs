@@ -6,7 +6,7 @@
     using System.Data.SqlClient;
     public static partial class DbParameterHelper
     {
-        public static object SetGetObjectValue
+        public static object SetGetValueAsObject
                                     (
                                         this SqlParameter target
                                         , JToken jValue 
@@ -29,37 +29,51 @@
                     var dataTable = parameterValue as DataTable;
                     if (dataTable != null)
                     {
-                        var jArray = ((JArray)jValue);
-                        var columns = dataTable.Columns;
-                        var rows = dataTable.Rows;
-                        foreach (JObject j in jArray)
+                        if
+                            (
+                                jValue != null
+                                &&
+                                jValue.Type != JTokenType.Null
+                                &&
+                                jValue.Type != JTokenType.Undefined
+                                &&
+                                jValue.Type != JTokenType.None
+                            )
                         {
-                            var row = dataTable.NewRow();
-
-                            foreach (DataColumn column in columns)
+                            var jArray = jValue as JArray;
+                            if (jArray != null)
                             {
-                                var columnName = column.ColumnName;
-                                var b = j
-                                            .TryGetValue
-                                                (
-                                                    columnName
-                                                    , StringComparison
-                                                            .OrdinalIgnoreCase
-                                                    , out var jToken
-                                                );
-                                if (b)
+                                var columns = dataTable.Columns;
+                                var rows = dataTable.Rows;
+                                foreach (JObject j in jArray)
                                 {
-                                    var jv = jToken
-                                                .GetPrimtiveTypeJValueAsObject
-                                                    (
-                                                        column.DataType
-                                                    );
-                                    row[columnName] = (jv == null ? DBNull.Value : jv);
+                                    var row = dataTable.NewRow();
+                                    foreach (DataColumn column in columns)
+                                    {
+                                        var columnName = column.ColumnName;
+                                        var b = j
+                                                    .TryGetValue
+                                                        (
+                                                            columnName
+                                                            , StringComparison
+                                                                    .OrdinalIgnoreCase
+                                                            , out var jToken
+                                                        );
+                                        if (b)
+                                        {
+                                            var jv = jToken
+                                                        .GetPrimtiveTypeJValueAsObject
+                                                            (
+                                                                column.DataType
+                                                            );
+                                            row[columnName] = (jv == null ? DBNull.Value : jv);
+                                        }
+                                    }
+                                    rows.Add(row);
                                 }
+                                r = dataTable;
                             }
-                            rows.Add(row);
                         }
-                        r = dataTable;
                     }
                 }
             }
@@ -157,6 +171,7 @@
                         target.SqlDbType == SqlDbType.Decimal
                     )
                 {
+
                     var b = decimal
                                 .TryParse
                                     (

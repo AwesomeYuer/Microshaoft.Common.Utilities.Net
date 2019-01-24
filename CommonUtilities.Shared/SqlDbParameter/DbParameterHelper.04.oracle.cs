@@ -5,162 +5,180 @@
     using Oracle.ManagedDataAccess.Client;
     public static partial class DbParameterHelper
     {
-        public static object SetGetObjectValue
+        public static object SetGetValueAsObject
                                     (
                                         this OracleParameter target
                                         , JToken jValue 
                                     )
         {
             object r = null;
-            var jValueText = jValue.ToString();
             if
                 (
-                    target.OracleDbType == OracleDbType.Varchar2
+                    jValue == null
                     ||
-                    target.OracleDbType == OracleDbType.NVarchar2
+                    jValue.Type == JTokenType.Null
                     ||
-                    target.OracleDbType == OracleDbType.Char
+                    jValue.Type == JTokenType.Undefined
                     ||
-                    target.OracleDbType == OracleDbType.NChar
+                    jValue.Type == JTokenType.None
                 )
             {
-                r = jValueText;
+                r = DBNull.Value;
             }
-            else if
-                (
-                    target.OracleDbType == OracleDbType.Date
-                    ||
-                    target.OracleDbType == OracleDbType.TimeStamp
-                    ||
-                    target.OracleDbType == OracleDbType.TimeStampLTZ
-                    ||
-                    target.OracleDbType == OracleDbType.TimeStampTZ
-                )
+            else
             {
-                var b = DateTime
-                            .TryParse
-                                (
-                                    jValueText
-                                    , out var rr
-                                );
-                if (b)
+                var jValueText = jValue.ToString();
+                if
+                    (
+                        target.OracleDbType == OracleDbType.Varchar2
+                        ||
+                        target.OracleDbType == OracleDbType.NVarchar2
+                        ||
+                        target.OracleDbType == OracleDbType.Char
+                        ||
+                        target.OracleDbType == OracleDbType.NChar
+                    )
                 {
-                    r = rr;
+                    r = jValueText;
                 }
-            }
-            else if
-                (
-                    target.OracleDbType == OracleDbType.Boolean
-                )
-            {
-                var b = bool
-                            .TryParse
-                                (
-                                    jValueText
-                                    , out var rr
-                                );
-                if (b)
+                else if
+                    (
+                        target.OracleDbType == OracleDbType.Date
+                        ||
+                        target.OracleDbType == OracleDbType.TimeStamp
+                        ||
+                        target.OracleDbType == OracleDbType.TimeStampLTZ
+                        ||
+                        target.OracleDbType == OracleDbType.TimeStampTZ
+                    )
                 {
-                    r = rr;
+                    var b = DateTime
+                                .TryParse
+                                    (
+                                        jValueText
+                                        , out var rr
+                                    );
+                    if (b)
+                    {
+                        r = rr;
+                    }
                 }
-            }
-            else if
-                (
-                    target.OracleDbType == OracleDbType.Decimal
-                )
-            {
-                var b = decimal
-                            .TryParse
-                                (
-                                    jValueText
-                                    , out var rr
-                                );
-                if (b)
+                else if
+                    (
+                        target.OracleDbType == OracleDbType.Boolean
+                    )
                 {
-                    r = rr;
+                    var b = bool
+                                .TryParse
+                                    (
+                                        jValueText
+                                        , out var rr
+                                    );
+                    if (b)
+                    {
+                        r = rr;
+                    }
                 }
-            }
-            else if
-                (
-                    target.OracleDbType == OracleDbType.Double
-                )
-            {
-                var b = double
-                            .TryParse
-                                (
-                                    jValueText
-                                    , out var rr
-                                );
-                if (b)
+                else if
+                    (
+                        target.OracleDbType == OracleDbType.Decimal
+                    )
                 {
-                    r = rr;
+                    var b = decimal
+                                .TryParse
+                                    (
+                                        jValueText
+                                        , out var rr
+                                    );
+                    if (b)
+                    {
+                        r = rr;
+                    }
                 }
-            }
-            else if
-                (
-                    target.OracleDbType == OracleDbType.Raw
-                )
-            {
-                var b = Guid
-                            .TryParse
-                                (
-                                    jValueText
-                                    , out var rr
-                                );
-                if (b)
+                else if
+                    (
+                        target.OracleDbType == OracleDbType.Double
+                    )
                 {
-                    r = rr;
+                    var b = double
+                                .TryParse
+                                    (
+                                        jValueText
+                                        , out var rr
+                                    );
+                    if (b)
+                    {
+                        r = rr;
+                    }
                 }
-            }
-            else if
-                (
-                    target.OracleDbType == OracleDbType.Long
-                    ||
-                    target.OracleDbType == OracleDbType.Int64
-                )
-            {
-                var b = long
-                            .TryParse
-                                (
-                                    jValueText
-                                    , out var rr
-                                );
-                if (b)
+                else if
+                    (
+                        target.OracleDbType == OracleDbType.Raw
+                    )
                 {
-                    r = rr;
+                    var b = Guid
+                                .TryParse
+                                    (
+                                        jValueText
+                                        , out var rr
+                                    );
+                    if (b)
+                    {
+                        r = rr;
+                    }
                 }
-            }
-            else if
-                (
-                    target.OracleDbType == OracleDbType.Int32
-                )
-            {
-                var b = int
-                            .TryParse
-                                (
-                                    jValueText
-                                    , out var rr
-                                );
-                if (b)
+                else if
+                    (
+                        target.OracleDbType == OracleDbType.Long
+                        ||
+                        target.OracleDbType == OracleDbType.Int64
+                    )
                 {
-                    r = rr;
+                    var b = long
+                                .TryParse
+                                    (
+                                        jValueText
+                                        , out var rr
+                                    );
+                    if (b)
+                    {
+                        r = rr;
+                    }
                 }
-            }
-            else if
-                (
-                    target.OracleDbType == OracleDbType.Int16
-                )
-            {
-                var b = short
-                            .TryParse
-                                (
-                                    jValueText
-                                    , out var rr
-                                );
-                if (b)
+                else if
+                    (
+                        target.OracleDbType == OracleDbType.Int32
+                    )
                 {
-                    r = rr;
+                    var b = int
+                                .TryParse
+                                    (
+                                        jValueText
+                                        , out var rr
+                                    );
+                    if (b)
+                    {
+                        r = rr;
+                    }
                 }
+                else if
+                    (
+                        target.OracleDbType == OracleDbType.Int16
+                    )
+                {
+                    var b = short
+                                .TryParse
+                                    (
+                                        jValueText
+                                        , out var rr
+                                    );
+                    if (b)
+                    {
+                        r = rr;
+                    }
+                }
+
+
             }
             return r;
         }

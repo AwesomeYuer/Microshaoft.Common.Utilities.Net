@@ -7,7 +7,12 @@ namespace Microshaoft
     using System;
     using System.Data;
     public class NpgSqlStoreProceduresExecutor
-                    : AbstractStoreProceduresExecutor<NpgsqlConnection, NpgsqlCommand, NpgsqlParameter>
+                    : AbstractStoreProceduresExecutor
+                        <
+                            NpgsqlConnection
+                            , NpgsqlCommand
+                            , NpgsqlParameter
+                        >
     {
         protected override NpgsqlParameter
                         OnQueryDefinitionsSetInputParameterProcess
@@ -86,7 +91,7 @@ namespace Microshaoft
         {
             return
                 parameter
-                    .SetGetObjectValue
+                    .SetGetValueAsObject
                         (
                             jValue
                         );

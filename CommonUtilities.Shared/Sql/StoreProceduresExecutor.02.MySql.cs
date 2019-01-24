@@ -152,7 +152,7 @@
         {
             return
                 parameter
-                    .SetGetObjectValue
+                    .SetGetValueAsObject
                         (
                             jValue
                         );
