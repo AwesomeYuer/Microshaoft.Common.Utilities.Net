@@ -306,7 +306,7 @@ from
         {
             return
                 parameter
-                    .SetGetObjectValue
+                    .SetGetValueAsObject
                         (
                             jValue
                         );

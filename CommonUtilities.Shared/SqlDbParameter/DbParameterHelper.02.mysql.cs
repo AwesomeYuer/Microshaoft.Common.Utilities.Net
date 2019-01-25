@@ -5,7 +5,7 @@
     using System;
     public static partial class DbParameterHelper
     {
-        public static object SetGetObjectValue
+        public static object SetGetValueAsObject
                                     (
                                         this MySqlParameter target
                                         , JToken jValue

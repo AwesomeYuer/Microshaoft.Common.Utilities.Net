@@ -9,7 +9,7 @@
     using System.Data.SqlClient;
     public static partial class DbParameterHelper
     {
-        public static object SetGetObjectValue
+        public static object SetGetValueAsObject
                                     (
                                         this DbParameter target
                                         , JToken jValue
@@ -17,14 +17,14 @@
         {
             var type = target.GetType();
             return
-                SetGetObjectValue
+                SetGetValueAsObject
                     (
                         target
                         , type
                         , jValue
                     );
         }
-        public static object SetGetObjectValue<TDbParameter>
+        public static object SetGetValueAsObject<TDbParameter>
                             (
                                 this DbParameter target
                                 , JToken jValue
@@ -32,14 +32,14 @@
         {
             var type = typeof(TDbParameter);
             return
-                SetGetObjectValue
+                SetGetValueAsObject
                     (
                         target
                         , type
                         , jValue
                     );
         }
-        public static object SetGetObjectValue
+        public static object SetGetValueAsObject
                                     (
                                         this DbParameter target
                                         , Type targetDbParameterType
@@ -50,22 +50,22 @@
             if (targetDbParameterType == typeof(SqlParameter))
             {
                 var parameter = (SqlParameter)target;
-                r = parameter.SetGetObjectValue(jValue);
+                r = parameter.SetGetValueAsObject(jValue);
             }
             else if (targetDbParameterType == typeof(MySqlParameter))
             {
                 var parameter = (MySqlParameter)target;
-                r = parameter.SetGetObjectValue(jValue);
+                r = parameter.SetGetValueAsObject(jValue);
             }
             else if (targetDbParameterType == typeof(NpgsqlParameter))
             {
                 var parameter = (NpgsqlParameter)target;
-                r = parameter.SetGetObjectValue(jValue);
+                r = parameter.SetGetValueAsObject(jValue);
             }
             else if (targetDbParameterType == typeof(OracleParameter))
             {
                 var parameter = (OracleParameter)target;
-                r = parameter.SetGetObjectValue(jValue);
+                r = parameter.SetGetValueAsObject(jValue);
             }
             return r;
         }
