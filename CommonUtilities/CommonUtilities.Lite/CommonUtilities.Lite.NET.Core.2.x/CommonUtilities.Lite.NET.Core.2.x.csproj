@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <RootNamespace>CommonUtilities.Lite.NET.Core._2.x</RootNamespace>
+    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -18,6 +19,7 @@
   </PropertyGroup>
   <Import Project="..\..\..\CommonUtilities.Shared\CommonUtilities.Lite.Shared.projitems" Label="Shared" />
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Connections.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.Composition" Version="1.0.31" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="2.2.1" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
@@ -27,6 +29,8 @@
     <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="2.18.3" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.6.0" />
+    <PackageReference Include="System.Reactive.Core" Version="4.1.2" />
+    <PackageReference Include="System.Threading.Channels" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="Microsoft.NETCore.App" Version="2.2.1" />

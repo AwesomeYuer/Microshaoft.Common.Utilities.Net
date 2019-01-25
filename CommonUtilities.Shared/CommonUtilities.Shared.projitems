@@ -110,6 +110,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)MEF.Composition\MEFHelper.NET.Core.Standard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MEF.Composition\MEFHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MemberAdditionalDefinitionAttribute\MemberAdditionalDefinitionAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Observable\ObservableExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\FloatRange.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\GlobalSuppressions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\HashCodeCombiner.cs" />

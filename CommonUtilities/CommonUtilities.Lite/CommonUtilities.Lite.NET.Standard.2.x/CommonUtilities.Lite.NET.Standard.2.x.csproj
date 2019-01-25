@@ -9,6 +9,7 @@
   
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
 
   
@@ -19,6 +20,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DefineConstants>TRACE;DEBUG;NETCOREAPP;NETCOREAPP2_1;NETSTANDARD2_X</DefineConstants>
     <PlatformTarget>AnyCPU</PlatformTarget>
+    <WarningLevel>0</WarningLevel>
   </PropertyGroup>
 
   
@@ -34,6 +36,7 @@
   <Import Project="..\..\..\CommonUtilities.Shared\CommonUtilities.Lite.Shared.projitems" Label="Shared" />
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Connections.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="2.2.1" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
