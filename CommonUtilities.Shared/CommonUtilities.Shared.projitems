@@ -103,6 +103,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)KeyWordFilter\TrieFilter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LinqDynamic\Linq.Dynamic.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Log\LoggerExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Log\LoggingMessageHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LongInteger\LongIntegerHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mapper\TinyMapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MEF.Composition\MEF.Contracts.cs" />
@@ -171,6 +172,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Sql\StoreProceduresExecutor.02.MySql.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\StoreProceduresExecutor.05.Sqlite.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System.Buffers.ArrayPool\ArrayPool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tcp\BufferExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tcp\DuplexPipe.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tcp\SocketAwaitable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tcp\SocketReceiver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tcp\SocketSender.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tcp\TcpConnection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Throttler\RateGate\RateGate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Throttler\RateLimiters\FixedTokenBucket.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Throttler\RateLimiters\IThrottleStrategy.cs" />
