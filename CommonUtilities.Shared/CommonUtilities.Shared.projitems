@@ -191,6 +191,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Type\TypeHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UAC\UacHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Cors\WildCardCorsService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Web.Filters\RequestJTokenValidationFilter.CoreStandard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Filters\BearerTokenAuthorizeFilter.CoreStandard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Filters\CustomFilters.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.MiddleWares\AbstractCommonMiddlewareBase.cs" />

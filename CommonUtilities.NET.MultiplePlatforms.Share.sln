@@ -206,6 +206,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00.SharedSource", "00.Share
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "20.Cross-Platforms", "20.Cross-Platforms", "{BC10D378-9C21-40BA-90FF-7E91AC5A87A2}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "60.RequestJTokenValidatorsPlugins", "60.RequestJTokenValidatorsPlugins", "{79B08178-6512-4DCC-A9BE-89939AD33B2E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JTokenModelParameterValidatorSamplePlugin", "JTokenModelParameterValidatorsPlugins\JTokenModelParameterValidatorSamplePlugin\JTokenModelParameterValidatorSamplePlugin.csproj", "{B5ACC7C2-D81A-44B6-9452-80BBC188CF24}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		CommonUtilities.Shared\CommonUtilities.Lite.Shared.projitems*{1b65919e-10ef-4fce-9fec-de547a62fc15}*SharedItemsImports = 4
@@ -944,6 +948,22 @@ Global
 		{85BE8162-EC4D-43DA-B054-A18119D72097}.Release|x64.Build.0 = Release|Any CPU
 		{85BE8162-EC4D-43DA-B054-A18119D72097}.Release|x86.ActiveCfg = Release|Any CPU
 		{85BE8162-EC4D-43DA-B054-A18119D72097}.Release|x86.Build.0 = Release|Any CPU
+		{B5ACC7C2-D81A-44B6-9452-80BBC188CF24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5ACC7C2-D81A-44B6-9452-80BBC188CF24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5ACC7C2-D81A-44B6-9452-80BBC188CF24}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{B5ACC7C2-D81A-44B6-9452-80BBC188CF24}.Debug|ARM.Build.0 = Debug|Any CPU
+		{B5ACC7C2-D81A-44B6-9452-80BBC188CF24}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B5ACC7C2-D81A-44B6-9452-80BBC188CF24}.Debug|x64.Build.0 = Debug|Any CPU
+		{B5ACC7C2-D81A-44B6-9452-80BBC188CF24}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B5ACC7C2-D81A-44B6-9452-80BBC188CF24}.Debug|x86.Build.0 = Debug|Any CPU
+		{B5ACC7C2-D81A-44B6-9452-80BBC188CF24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5ACC7C2-D81A-44B6-9452-80BBC188CF24}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5ACC7C2-D81A-44B6-9452-80BBC188CF24}.Release|ARM.ActiveCfg = Release|Any CPU
+		{B5ACC7C2-D81A-44B6-9452-80BBC188CF24}.Release|ARM.Build.0 = Release|Any CPU
+		{B5ACC7C2-D81A-44B6-9452-80BBC188CF24}.Release|x64.ActiveCfg = Release|Any CPU
+		{B5ACC7C2-D81A-44B6-9452-80BBC188CF24}.Release|x64.Build.0 = Release|Any CPU
+		{B5ACC7C2-D81A-44B6-9452-80BBC188CF24}.Release|x86.ActiveCfg = Release|Any CPU
+		{B5ACC7C2-D81A-44B6-9452-80BBC188CF24}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1040,6 +1060,8 @@ Global
 		{CBA7FA05-6D20-45CF-B752-645AF269B0DA} = {AA460D19-E158-4C00-B307-9EF3332AB276}
 		{AA460D19-E158-4C00-B307-9EF3332AB276} = {F81E58D5-FEDA-493B-927B-66745127123B}
 		{BC10D378-9C21-40BA-90FF-7E91AC5A87A2} = {F81E58D5-FEDA-493B-927B-66745127123B}
+		{79B08178-6512-4DCC-A9BE-89939AD33B2E} = {E402FB2A-AFF3-4187-8140-5837A01B1349}
+		{B5ACC7C2-D81A-44B6-9452-80BBC188CF24} = {79B08178-6512-4DCC-A9BE-89939AD33B2E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ABDE4EA1-B6A3-41C1-AC23-2CA7A04C03AB}

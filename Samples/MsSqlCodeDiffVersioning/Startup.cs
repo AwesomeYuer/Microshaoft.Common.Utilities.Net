@@ -44,6 +44,10 @@
                         CompatibilityVersion
                             .Version_2_1
                     );
+            services
+              .AddSingleton
+                    <ValidateModelFilterAttribute>
+                        ();
 
             #region 异步批量入库案例专用
             var processor =
