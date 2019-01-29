@@ -1,15 +1,14 @@
-﻿using System;
-using System.Composition;
-using Microshaoft.Web;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
-
-namespace Microshaoft.JTokenParameterValidators
+﻿namespace Microshaoft.JTokenParameterValidators
 {
+    using System;
+    using System.Composition;
+    using Microshaoft.Web;
+    using Microsoft.AspNetCore.Mvc;
+    using Newtonsoft.Json.Linq;
+
     [Export(typeof(IJTokenModelParameterValidator))]
     public class SimpleValidator1 : IJTokenModelParameterValidator
     {
-        //private string _name = ;
         public string Name => this.GetType().Name;
 
         public (bool IsValid, JsonResult result) Validate(JToken parameters)
@@ -35,9 +34,6 @@ namespace Microshaoft.JTokenParameterValidators
                 };
                 isValid = false;
             }
-
-
-           
             return (isValid, result);
         }
     }
