@@ -24,7 +24,7 @@
     using System.Net;
     using System.Reflection;
     using System.Threading.Tasks;
-    using FluentValidation;
+
 
     public class Startup
     {
