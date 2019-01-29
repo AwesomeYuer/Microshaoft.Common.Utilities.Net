@@ -33,7 +33,8 @@
         "connectionID": "c1",
         "storeProcedureName": "zsp_zObjectsChangesLogsHistory_Get",
         "EnableStatistics": true,
-        "commandtimeoutInSeconds": 103
+        "commandtimeoutInSeconds": 103,
+        "vAlidator": "simpleValidator1"
       },
       "HttpPost": {
         "ConnectionID": "c1",

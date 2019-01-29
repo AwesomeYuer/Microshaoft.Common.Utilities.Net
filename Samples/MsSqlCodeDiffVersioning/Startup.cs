@@ -24,6 +24,7 @@
     using System.Net;
     using System.Reflection;
     using System.Threading.Tasks;
+    using FluentValidation;
 
     public class Startup
     {
@@ -37,6 +38,8 @@
         }
         public void ConfigureServices(IServiceCollection services)
         {
+            
+
             services
                 .AddMvc()
                 .SetCompatibilityVersion
@@ -44,6 +47,15 @@
                         CompatibilityVersion
                             .Version_2_1
                     );
+
+
+            services
+              .AddSingleton<ValidateModelFilterAttribute>
+                (
+                    
+                );
+
+
 
             #region 异步批量入库案例专用
             var processor =
