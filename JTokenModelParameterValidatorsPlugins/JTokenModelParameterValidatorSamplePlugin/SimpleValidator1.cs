@@ -6,12 +6,12 @@
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json.Linq;
 
-    [Export(typeof(IJTokenModelParameterValidator))]
-    public class SimpleValidator1 : IJTokenModelParameterValidator
+    [Export(typeof(IJTokenParameterValidator))]
+    public class SimpleValidator1 : IJTokenParameterValidator
     {
         public string Name => this.GetType().Name;
 
-        public (bool IsValid, JsonResult result) Validate(JToken parameters)
+        public (bool IsValid, IActionResult Result) Validate(JToken parameters)
         {
             JsonResult result = null;
             var isValid = true;
@@ -23,14 +23,12 @@
                                        new
                                        {
                                            StatusCode = 400
-                                           ,
-                                           Message = "效验不通过ccc"
+                                           , Message = "invalidate ccc"
                                        }
                                    )
                 {
                     StatusCode = 400
-                                   ,
-                    ContentType = "application/json"
+                    , ContentType = "application/json"
                 };
                 isValid = false;
             }

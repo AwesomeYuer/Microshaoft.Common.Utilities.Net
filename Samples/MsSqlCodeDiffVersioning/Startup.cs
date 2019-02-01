@@ -46,7 +46,7 @@
                     );
             services
               .AddSingleton
-                    <ValidateModelFilterAttribute>
+                    <JTokenParametersValidateFilterAttribute>
                         ();
 
             #region 异步批量入库案例专用

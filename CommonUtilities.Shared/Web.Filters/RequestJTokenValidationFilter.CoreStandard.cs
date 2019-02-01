@@ -1,11 +1,9 @@
 ﻿#if NETCOREAPP2_X
 namespace Microshaoft.Web
 {
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Filters;
     using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.Primitives;
     using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Generic;
@@ -13,60 +11,64 @@ namespace Microshaoft.Web
     using System.Linq;
     using System.Reflection;
 
-    public interface IJTokenModelParameterValidator
+    public interface IJTokenParameterValidator
     {
-        string Name { get; }
-
-
-        (bool IsValid, JsonResult result) Validate(JToken parameters);
-
+        string Name
+        {
+            get;
+        }
+        (
+            bool IsValid
+            , IActionResult Result
+        )
+            Validate
+                (
+                    JToken parameters
+                );
     }
 
-    public class ValidateModelFilterAttribute
-                    :
-                        //AuthorizeAttribute
-                        Attribute
-                        , IActionFilter
+    public class JTokenParametersValidateFilterAttribute
+                                :
+                                    //AuthorizeAttribute
+                                    Attribute
+                                    , IActionFilter
     {
         private object _locker = new object();
         private readonly IConfiguration _configuration;
-        private IDictionary<string, IJTokenModelParameterValidator>
+        private IDictionary<string, IJTokenParameterValidator>
                         _indexedValidators;
-        public ValidateModelFilterAttribute(IConfiguration configuration)
+        public JTokenParametersValidateFilterAttribute(IConfiguration configuration)
         {
             _configuration = configuration;
             Initialize();
         }
         public virtual void Initialize()
         {
-            //InstanceID = Interlocked.Increment(ref InstancesSeed);
-            LoadDynamicExecutors();
-
-
+            DynamicLoadValidators();
         }
-        protected virtual string[] GetDynamicLoadExecutorsPathsProcess()
+        protected virtual string[] GetDynamicLoadValidatorsPathsProcess
+                                    (
+                                        string dynamicLoadExecutorsPathsJsonFile = "dynamicLoadValidatorsPathsPaths.json"
+                                    )
         {
-
-
-            var result =
-                    _configuration
-                        .GetSection("DynamicLoadExecutorsPaths")
-                        .AsEnumerable()
-                        .Select
-                            (
-                                (x) =>
-                                {
-                                    return
-                                        x.Value;
-                                }
-                            )
-                        .ToArray();
+            var result = _configuration
+                                .GetSection("DynamicLoadValidatorsPaths")
+                                .AsEnumerable()
+                                .Select
+                                    (
+                                        (x) =>
+                                        {
+                                            return
+                                                x.Value;
+                                        }
+                                    )
+                                .ToArray();
             return result;
         }
-        protected virtual void LoadDynamicExecutors
-                        (
-                           string dynamicLoadExecutorsPathsJsonFile = "dynamicLoadExecutorsPaths.json"
-                        )
+        protected virtual void DynamicLoadValidators
+                                (
+                                   string dynamicLoadExecutorsPathsJsonFile = "dynamicLoadValidatorsPathsPaths.json"
+                                )
         {
             var executingDirectory = Path
                                         .GetDirectoryName
@@ -76,10 +78,9 @@ namespace Microshaoft.Web
                                                         .Location
                                                 );
             var validators =
-                    GetDynamicLoadExecutorsPathsProcess
+                    GetDynamicLoadValidatorsPathsProcess
                             (
-                               
-                            //dynamicLoadExecutorsPathsJsonFile
+                                dynamicLoadExecutorsPathsJsonFile
                             )
                         .Select
                             (
@@ -125,25 +126,22 @@ namespace Microshaoft.Web
                                     var r =
                                         CompositionHelper
                                             .ImportManyExportsComposeParts
-                                                <IJTokenModelParameterValidator>
+                                                <IJTokenParameterValidator>
                                                     (x);
                                     return r;
                                 }
                             );
-            var indexedValidators =
-                    validators
-                       
-                        .ToDictionary
-                            (
-                                (x) =>
-                                {
-                                    return
-                                        x.Name;
-                                }
-
-                                , StringComparer
-                                        .OrdinalIgnoreCase
-                            );
+            var indexedValidators = validators
+                                        .ToDictionary
+                                            (
+                                                (x) =>
+                                                {
+                                                    return
+                                                        x.Name;
+                                                }
+                                                , StringComparer
+                                                        .OrdinalIgnoreCase
+                                            );
             _locker
                 .LockIf
                     (
@@ -160,28 +158,34 @@ namespace Microshaoft.Web
         }
         public virtual void OnActionExecuting(ActionExecutingContext context)
         {
-            (bool IsValid, JsonResult Result)
-                    r = (IsValid: true, null);
-
+            
             var httpContext = context.HttpContext;
             var request = httpContext.Request;
             var routeName = (string)context.ActionArguments["routeName"];
             var httpMethod = $"http{request.Method}";
 
             var validatorConfiguration =
-                                _configuration
-                                        .GetSection($"Routes:{routeName}:{httpMethod}:Validator");
+                    _configuration
+                            .GetSection($"Routes:{routeName}:{httpMethod}:Validator");
             if (validatorConfiguration.Exists())
             {
+                (
+                    bool IsValid
+                    , IActionResult Result
+                )
+                 r =
+                    (
+                        IsValid: true
+                        , Result: null
+                    );
                 var validatorName = validatorConfiguration.Value;
                 var parameters = context.ActionArguments["parameters"] as JToken;
                 var rr = _indexedValidators
-                                       .TryGetValue
-                                               (
-                                                   validatorName
-                                                   , out var validator
-                                               );
-
+                                    .TryGetValue
+                                            (
+                                                validatorName
+                                                , out var validator
+                                            );
                 if (rr)
                 {
                     r = validator.Validate(parameters);
@@ -194,14 +198,12 @@ namespace Microshaoft.Web
                                         new
                                         {
                                             StatusCode = 400
-                                            ,
-                                            Message = "无法效验"
+                                            , Message = "can't validate"
                                         }
                                     )
                     {
                         StatusCode = 400
-                                    ,
-                        ContentType = "application/json"
+                        , ContentType = "application/json"
                     };
                 }
                 if (!r.IsValid)
@@ -210,8 +212,6 @@ namespace Microshaoft.Web
                         .Result = r.Result;
                 }
             }    
-        
-            
         }
         public virtual void OnActionExecuted(ActionExecutedContext context)
         {
