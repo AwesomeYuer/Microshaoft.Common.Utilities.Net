@@ -155,8 +155,7 @@
                                         , new Info
                                         {
                                             Title = "My API"
-                                            ,
-                                            Version = "v1"
+                                            , Version = "v1"
                                         }
                                     );
                         }
@@ -375,8 +374,7 @@
                                                         (
                                                             wwwroot
                                                         )
-                                ,
-                                RequestPath = ""
+                                , RequestPath = ""
                             }
                         );
             }

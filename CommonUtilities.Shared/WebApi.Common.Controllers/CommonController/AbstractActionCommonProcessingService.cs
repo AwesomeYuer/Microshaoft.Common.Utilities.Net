@@ -45,7 +45,7 @@ namespace Microshaoft.Web
             
         }
 
-        protected virtual string[] GetDynamicLoadExecutorsPathsProcess
+        protected virtual string[] GetDynamicExecutorsPathsProcess
             (
                 string dynamicLoadExecutorsPathsJsonFile
                             = "dynamicLoadExecutorsPaths.json"
@@ -77,7 +77,7 @@ namespace Microshaoft.Web
                         )
         {
             var processors =
-                    GetDynamicLoadExecutorsPathsProcess
+                    GetDynamicExecutorsPathsProcess
                             (
                                 dynamicLoadExecutorsPathsJsonFile
                             )

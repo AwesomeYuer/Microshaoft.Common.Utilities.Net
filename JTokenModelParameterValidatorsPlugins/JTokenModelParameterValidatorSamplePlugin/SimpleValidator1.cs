@@ -9,23 +9,48 @@
     [Export(typeof(IJTokenParameterValidator))]
     public class SimpleValidator1 : IJTokenParameterValidator
     {
-        public string Name => this.GetType().Name;
-
-        public (bool IsValid, IActionResult Result) Validate(JToken parameters)
+        public string Name
+        {
+            private set;
+            get;
+        }
+        public SimpleValidator1()
+        {
+            Name = GetType().Name;
+        }
+        public 
+                (
+                    bool IsValid
+                    , IActionResult Result
+                )
+                    Validate
+                        (
+                            JToken parameters
+                        )
         {
             JsonResult result = null;
             var isValid = true;
             var jObject = parameters as JObject;
-            if (!jObject.TryGetValue("ccc", StringComparison.OrdinalIgnoreCase,out _))
+            if 
+                (
+                    jObject
+                        .TryGetValue
+                            (
+                                "ccc"
+                                , StringComparison
+                                        .OrdinalIgnoreCase
+                                ,out _
+                            )
+                )
             {
                 result = new JsonResult
-                                   (
-                                       new
-                                       {
-                                           StatusCode = 400
-                                           , Message = "invalidate ccc"
-                                       }
-                                   )
+                                (
+                                    new
+                                    {
+                                        StatusCode = 400
+                                        , Message = "invalidate, must remove ccc"
+                                    }
+                                )
                 {
                     StatusCode = 400
                     , ContentType = "application/json"

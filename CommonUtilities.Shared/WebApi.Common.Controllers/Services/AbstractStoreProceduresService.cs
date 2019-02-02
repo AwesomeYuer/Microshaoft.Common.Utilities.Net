@@ -79,11 +79,11 @@ namespace Microshaoft.Web
                         .GetValue<bool>("NeedAutoRefreshExecutedTimeForSlideExpire");
             LoadDynamicExecutors();
         }
-        protected virtual string[] GetDynamicLoadExecutorsPathsProcess()
+        protected virtual string[] GetDynamicExecutorsPathsProcess()
         {
             var result =
                     _configuration
-                        .GetSection("DynamicLoadExecutorsPaths")
+                        .GetSection("DynamicExecutorsPaths")
                         .AsEnumerable()
                         .Select
                             (
@@ -99,7 +99,7 @@ namespace Microshaoft.Web
 
         protected virtual void LoadDynamicExecutors
                         (
-                            string dynamicLoadExecutorsPathsJsonFile = "dynamicLoadExecutorsPaths.json"
+                            //string dynamicLoadExecutorsPathsJsonFile = "dynamicCompositionPluginsPaths.json"
                         )
         {
             var executingDirectory = Path
@@ -110,9 +110,9 @@ namespace Microshaoft.Web
                                                         .Location
                                                 );
             var executors =
-                    GetDynamicLoadExecutorsPathsProcess
+                    GetDynamicExecutorsPathsProcess
                             (
-                            //dynamicLoadExecutorsPathsJsonFile
+                                //dynamicLoadExecutorsPathsJsonFile
                             )
                         .Select
                             (

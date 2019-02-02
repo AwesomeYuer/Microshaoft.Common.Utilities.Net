@@ -44,15 +44,15 @@ namespace Microshaoft.Web
         }
         public virtual void Initialize()
         {
-            DynamicLoadValidators();
+            LoadDynamicValidators();
         }
-        protected virtual string[] GetDynamicLoadValidatorsPathsProcess
+        protected virtual string[] GetDynamicValidatorsPathsProcess
                                     (
-                                        string dynamicLoadExecutorsPathsJsonFile = "dynamicLoadValidatorsPathsPaths.json"
+                                        //string dynamicLoadExecutorsPathsJsonFile = "dynamicCompostionPluginsPaths.json"
                                     )
         {
             var result = _configuration
-                                .GetSection("DynamicLoadValidatorsPaths")
+                                .GetSection("DynamicValidatorsPaths")
                                 .AsEnumerable()
                                 .Select
                                     (
@@ -65,9 +65,9 @@ namespace Microshaoft.Web
                                 .ToArray();
             return result;
         }
-        protected virtual void DynamicLoadValidators
+        protected virtual void LoadDynamicValidators
                                 (
-                                   string dynamicLoadExecutorsPathsJsonFile = "dynamicLoadValidatorsPathsPaths.json"
+                                   //string dynamicValidatorsPathsJsonFile = "dynamicValidatorsPaths.json"
                                 )
         {
             var executingDirectory = Path
@@ -78,9 +78,9 @@ namespace Microshaoft.Web
                                                         .Location
                                                 );
             var validators =
-                    GetDynamicLoadValidatorsPathsProcess
+                    GetDynamicValidatorsPathsProcess
                             (
-                                dynamicLoadExecutorsPathsJsonFile
+                                //dynamicValidatorsPathsJsonFile
                             )
                         .Select
                             (
