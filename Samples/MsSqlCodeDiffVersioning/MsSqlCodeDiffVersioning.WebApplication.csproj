@@ -41,7 +41,7 @@
     <Content Update="dbConnections.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Update="dynamicLoadExecutorsPaths.json">
+    <Content Update="dynamicCompositionPluginsPaths.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Update="JwtValidation.Development.json">
@@ -71,5 +71,9 @@
   <ItemGroup>
     <ProjectReference Include="..\..\StoreProcedureWebApiExecutor\StoreProcedureWebApiExecutor.Core\Microshaoft.StoreProcedureExecutorWebApiService.Core.csproj" />
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="# only for Windows/dos cmd&#xD;&#xA;xcopy ..\..\StoreProcedureWebApiExecutorsPlugins\MsSQL.StoreProcedureWebApiExecutor.Plugin\bin\Debug\netcoreapp2.2\*plugin* $(TargetDir)CompositionPlugins\ /Y&#xD;&#xA;xcopy..\..\StoreProcedureWebApiExecutorsPlugins\MySQL.StoreProcedureWebApiExecutor.Plugin\bin\Debug\netcoreapp2.2\*plugin* $(TargetDir)CompositionPlugins\ /Y&#xD;&#xA;xcopy ..\..\JTokenModelParameterValidatorsPlugins\JTokenModelParameterValidatorSamplePlugin\bin\Debug\netcoreapp2.2\*plugin* $(TargetDir)CompositionPlugins\ /Y&#xD;&#xA;" />
+  </Target>
 
 </Project>

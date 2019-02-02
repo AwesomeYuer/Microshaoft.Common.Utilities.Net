@@ -12,7 +12,7 @@ namespace Microshaoft.WebApi.Controllers
     [EnableCors("AllowAllOrigins")]
     //[Authorize]
     //[ValidateModelFilter]
-    [ServiceFilter(typeof(ValidateModelFilterAttribute))]
+    [ServiceFilter(typeof(JTokenParametersValidateFilterAttribute))]
     public class StoreProcedureExecutorController
                     : AbstractStoreProceduresExecutorControllerBase
     {
