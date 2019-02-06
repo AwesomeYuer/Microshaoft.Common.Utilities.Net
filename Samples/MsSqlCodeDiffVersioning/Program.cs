@@ -1,4 +1,9 @@
-﻿namespace WebApplication.ASPNetCore
+﻿//rem only for Windows/dos cmd
+//rem xcopy ..\..\StoreProcedureWebApiExecutorsPlugins\MsSQL.StoreProcedureWebApiExecutor.Plugin\bin\Debug\netcoreapp2.2\*plugin* $(TargetDir)CompositionPlugins\ /Y
+//rem xcopy ..\..\StoreProcedureWebApiExecutorsPlugins\MySQL.StoreProcedureWebApiExecutor.Plugin\bin\Debug\netcoreapp2.2\*plugin* $(TargetDir)CompositionPlugins\ /Y
+//rem xcopy ..\..\JTokenModelParameterValidatorsPlugins\JTokenModelParameterValidatorSamplePlugin\bin\Debug\netcoreapp2.2\*plugin* $(TargetDir)CompositionPlugins\ /Y
+
+namespace WebApplication.ASPNetCore
 {
     using Microshaoft;
     using Microsoft.AspNetCore;
@@ -11,9 +16,6 @@
     using System.Reflection;
     using System.Runtime.InteropServices;
 
-//xcopy ..\..\StoreProcedureWebApiExecutorsPlugins\MsSQL.StoreProcedureWebApiExecutor.Plugin\bin\Debug\netcoreapp2.2\*.plugin.* $(TargetDir)CompositionPlugins\ /Y
-//xcopy..\..\StoreProcedureWebApiExecutorsPlugins\MySQL.StoreProcedureWebApiExecutor.Plugin\bin\Debug\netcoreapp2.2\*.plugin.* $(TargetDir)CompositionPlugins\ /Y
-//xcopy ..\..\JTokenModelParameterValidatorsPlugins\JTokenModelParameterValidatorSamplePlugin\bin\Debug\netcoreapp2.2\*plugin.* $(TargetDir)CompositionPlugins\ /Y
 
     public class Program
     { 
