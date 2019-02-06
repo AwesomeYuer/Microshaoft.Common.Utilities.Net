@@ -123,11 +123,10 @@ namespace Microshaoft.Web
                             (
                                 (x) =>
                                 {
-                                    var r =
-                                        CompositionHelper
-                                            .ImportManyExportsComposeParts
-                                                <IJTokenParameterValidator>
-                                                    (x);
+                                    var r = CompositionHelper
+                                                .ImportManyExportsComposeParts
+                                                    <IJTokenParameterValidator>
+                                                        (x);
                                     return r;
                                 }
                             );
@@ -158,15 +157,15 @@ namespace Microshaoft.Web
         }
         public virtual void OnActionExecuting(ActionExecutingContext context)
         {
-            
             var httpContext = context.HttpContext;
             var request = httpContext.Request;
-            var routeName = (string)context.ActionArguments["routeName"];
+            var routeName = (string) context.ActionArguments["routeName"];
             var httpMethod = $"http{request.Method}";
 
             var validatorConfiguration =
                     _configuration
-                            .GetSection($"Routes:{routeName}:{httpMethod}:Validator");
+                            .GetSection
+                                ($"Routes:{routeName}:{httpMethod}:RequestValidator");
             if (validatorConfiguration.Exists())
             {
                 (

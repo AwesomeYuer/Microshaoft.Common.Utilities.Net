@@ -34,7 +34,7 @@
         "storeProcedureName": "zsp_zObjectsChangesLogsHistory_Get",
         "EnableStatistics": true,
         "commandtimeoutInSeconds": 103,
-        "vAlidator": "simpleValidator1"
+        "requestvAlidator": "simpleValidator1"
       },
       "HttpPost": {
         "ConnectionID": "c1",
