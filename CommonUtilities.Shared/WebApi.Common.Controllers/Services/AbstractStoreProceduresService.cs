@@ -155,11 +155,10 @@ namespace Microshaoft.Web
                             (
                                 (x) =>
                                 {
-                                    var r =
-                                        CompositionHelper
-                                            .ImportManyExportsComposeParts
-                                                <IStoreProcedureExecutable>
-                                                    (x);
+                                    var r = CompositionHelper
+                                                .ImportManyExportsComposeParts
+                                                    <IStoreProcedureExecutable>
+                                                        (x);
                                     return r;
                                 }
                             );
@@ -301,30 +300,29 @@ namespace Microshaoft.Web
                 if (r2)
                 {
                     //support custom output nest json by JSONPath in JsonFile Config
-                    var outputsConfiguration =
-                                _configuration
-                                        .GetSection($"Routes:{routeName}:{r1.HttpMethod}:Outputs");
+                    var outputsConfiguration = _configuration
+                                                    .GetSection
+                                                        ($"Routes:{routeName}:{r1.HttpMethod}:Outputs");
                     if (outputsConfiguration.Exists())
                     {
-                        var mappings = 
-                                    outputsConfiguration
-                                        .GetChildren()
-                                        .Select
-                                            (
-                                                (x) =>
-                                                {
-                                                    (
-                                                        string TargetJPath
-                                                        , string SourceJPath
-                                                    )
-                                                        r =
-                                                            (
-                                                                x.Key
-                                                               , x.Get<string>()
-                                                            );
-                                                    return r;
-                                                }
-                                            );
+                        var mappings = outputsConfiguration
+                                            .GetChildren()
+                                            .Select
+                                                (
+                                                    (x) =>
+                                                    {
+                                                        (
+                                                            string TargetJPath
+                                                            , string SourceJPath
+                                                        )
+                                                            r =
+                                                                (
+                                                                    x.Key
+                                                                   , x.Get<string>()
+                                                                );
+                                                        return r;
+                                                    }
+                                                );
                         result = result
                                     .MapToNew
                                         (
