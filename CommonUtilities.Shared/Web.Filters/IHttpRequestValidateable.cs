@@ -4,7 +4,7 @@ namespace Microshaoft.Web
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Filters;
 
-    public interface IHttpRequestValidateable<TParameter>
+    public interface IHttpRequestValidateable<TParameters>
     {
         string Name
         {
@@ -16,7 +16,7 @@ namespace Microshaoft.Web
         )
             Validate
                 (
-                    TParameter parameter
+                    TParameters parameters
                     , ActionExecutingContext actionExecutingContext
                 );
     }

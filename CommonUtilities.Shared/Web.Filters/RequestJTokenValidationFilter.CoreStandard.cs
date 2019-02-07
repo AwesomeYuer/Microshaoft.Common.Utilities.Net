@@ -60,59 +60,58 @@ namespace Microshaoft.Web
                                                         .GetExecutingAssembly()
                                                         .Location
                                                 );
-            var validators =
-                    GetDynamicValidatorsPathsProcess
-                            (
-                                //dynamicValidatorsPathsJsonFile
-                            )
-                        .Select
-                            (
-                                (x) =>
-                                {
-                                    var path = x;
-                                    if (!path.IsNullOrEmptyOrWhiteSpace())
-                                    {
-                                        if
-                                            (
-                                                x.StartsWith(".")
-                                            )
-                                        {
-                                            path = path.TrimStart('.', '\\', '/');
-                                        }
-                                        path = Path.Combine
-                                                        (
-                                                            executingDirectory
-                                                            , path
-                                                        );
-                                    }
-                                    return path;
-                                }
-                            )
-                        .Where
-                            (
-                                (x) =>
-                                {
-                                    return
+            var validators = GetDynamicValidatorsPathsProcess
                                         (
-                                            !x
-                                                .IsNullOrEmptyOrWhiteSpace()
-                                            &&
-                                            Directory
-                                                .Exists(x)
+                                            //dynamicValidatorsPathsJsonFile
+                                        )
+                                    .Select
+                                        (
+                                            (x) =>
+                                            {
+                                                var path = x;
+                                                if (!path.IsNullOrEmptyOrWhiteSpace())
+                                                {
+                                                    if
+                                                        (
+                                                            x.StartsWith(".")
+                                                        )
+                                                    {
+                                                        path = path.TrimStart('.', '\\', '/');
+                                                    }
+                                                    path = Path.Combine
+                                                                    (
+                                                                        executingDirectory
+                                                                        , path
+                                                                    );
+                                                }
+                                                return path;
+                                            }
+                                        )
+                                    .Where
+                                        (
+                                            (x) =>
+                                            {
+                                                return
+                                                    (
+                                                        !x
+                                                            .IsNullOrEmptyOrWhiteSpace()
+                                                        &&
+                                                        Directory
+                                                            .Exists(x)
+                                                    );
+                                            }
+                                        )
+                                    .SelectMany
+                                        (
+                                            (x) =>
+                                            {
+                                                var r = CompositionHelper
+                                                            .ImportManyExportsComposeParts
+                                                                <IHttpRequestValidateable<JToken>>
+                                                                    (x);
+                                                return r;
+                                            }
                                         );
-                                }
-                            )
-                        .SelectMany
-                            (
-                                (x) =>
-                                {
-                                    var r = CompositionHelper
-                                                .ImportManyExportsComposeParts
-                                                    <IHttpRequestValidateable<JToken>>
-                                                        (x);
-                                    return r;
-                                }
-                            );
             var indexedValidators = validators
                                         .ToDictionary
                                             (
@@ -163,11 +162,11 @@ namespace Microshaoft.Web
                 var validatorName = validatorConfiguration.Value;
                 var parameter = context.ActionArguments["parameters"] as JToken;
                 var hasValidator = _indexedValidators
-                                    .TryGetValue
-                                            (
-                                                validatorName
-                                                , out var validator
-                                            );
+                                            .TryGetValue
+                                                    (
+                                                        validatorName
+                                                        , out var validator
+                                                    );
                 if (hasValidator)
                 {
                     r = validator
