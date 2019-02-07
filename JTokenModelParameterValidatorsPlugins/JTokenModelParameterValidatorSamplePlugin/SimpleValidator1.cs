@@ -22,18 +22,20 @@
         public 
                 (
                     bool IsValid
-                    , IActionResult Result
+                    ,
+                    IActionResult Result
                 )
                     Validate
                         (
                             JToken parameters
-                            , ActionExecutingContext actionExecutingContext
+                            ,
+                            ActionExecutingContext actionExecutingContext
                         )
         {
             var httpContext = actionExecutingContext.HttpContext;
             var request = httpContext.Request;
 
-            JsonResult result = null;
+            IActionResult result = null;
             var isValid = true;
             var jObject = parameters as JObject;
             if 
@@ -62,7 +64,14 @@
                 };
                 isValid = false;
             }
-            return (isValid, result);
+            httpContext = null;
+            request = null;
+            return
+                (
+                    IsValid: isValid
+                    ,
+                    Result: result
+                );
         }
     }
 }
