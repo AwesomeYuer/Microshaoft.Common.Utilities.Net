@@ -38,6 +38,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="routes.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Update="dbConnections.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -106,6 +106,12 @@ namespace WebApplication.ASPNetCore
                                     )
                                 .AddJsonFile
                                     (
+                                        path: "routes.json"
+                                        , optional: false
+                                        , reloadOnChange: true
+                                    )
+                                .AddJsonFile
+                                    (
                                         path: "dynamicCompositionPluginsPaths.json"
                                         , optional: false
                                         , reloadOnChange: true
