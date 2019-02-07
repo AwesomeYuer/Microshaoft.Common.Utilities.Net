@@ -152,7 +152,8 @@ namespace Microshaoft.Web
             {
                 (
                     bool IsValid
-                    , IActionResult Result
+                    ,
+                    IActionResult Result
                 )
                  r =
                     (
@@ -197,6 +198,8 @@ namespace Microshaoft.Web
                     context
                         .Result = r.Result;
                 }
+                httpContext = null;
+                request = null;
             }    
         }
         public virtual void OnActionExecuted(ActionExecutedContext context)

@@ -97,7 +97,7 @@
                     //     QueuedObjectsPool<Stopwatch>
                     //>
                     (
-                        new QueuedObjectsPool<Stopwatch>(100, true)
+                        new QueuedObjectsPool<Stopwatch>(1024, true)
                     );
 
             #region 跨域策略
@@ -181,36 +181,43 @@
                             {
                                 middleware
                                     .OnFilterProcessFunc
-                                        = (injector, httpContext, @event) =>
+                                        = (stopwatchesPool, httpContext, @event) =>
                                         {
                                             Console.WriteLine($"event: {@event}");
-                                            if (!httpContext.Items.ContainsKey(timingKey))
-                                            {
-                                                injector.TryGet(out var stopwatch);
-                                                stopwatch.Start();
-                                                httpContext.Items[timingKey] = stopwatch;
-                                            }
                                             var httpRequestFeature = httpContext.Features.Get<IHttpRequestFeature>();
                                             var url = httpRequestFeature.RawTarget;
-                                            var r = url.EndsWith("js");
+                                            httpRequestFeature = null;
+                                            var r = url.Contains("/api/", StringComparison.OrdinalIgnoreCase);
+                                            if (r)
+                                            {
+                                                if (!httpContext.Items.ContainsKey(timingKey))
+                                                {
+                                                    stopwatchesPool.TryGet(out var stopwatch);
+                                                    stopwatch.Start();
+                                                    httpContext.Items[timingKey] = stopwatch;
+                                                    stopwatch = null;
+                                                }
+                                            }
                                             return r;
                                         };
                                 middleware
                                     .OnInvokingProcessAsync
-                                        = async (injector, httpContext, @event) =>
+                                        = async (stopwatchesPool, httpContext, @event) =>
                                         {
                                             Console.WriteLine($"event: {@event}");
                                             if (!httpContext.Items.ContainsKey(timingKey))
                                             {
-                                                injector.TryGet(out var stopwatch);
+                                                stopwatchesPool.TryGet(out var stopwatch);
                                                 stopwatch.Start();
                                                 httpContext.Items[timingKey] = stopwatch;
+                                                stopwatch = null;
                                             }
-                                            var request = httpContext.Request;
+                                            //var request = httpContext.Request;
                                             var httpRequestFeature = httpContext
                                                                             .Features
                                                                             .Get<IHttpRequestFeature>();
                                             var url = httpRequestFeature.RawTarget;
+                                            httpRequestFeature = null;
                                             var result = false;
                                             if
                                                 (
@@ -246,7 +253,7 @@
                                         };
                                 middleware
                                     .OnResponseStartingProcess
-                                        = (injector, httpContext, @event) =>
+                                        = (stopwatchesPool, httpContext, @event) =>
                                         {
                                             Console.WriteLine($"event: {@event}");
                                             var stopwatch = httpContext
@@ -256,25 +263,23 @@
                                                 stopwatch.Stop();
                                                 var duration = stopwatch.ElapsedMilliseconds;
                                                 httpContext
-                                                        .Response
-                                                        .Headers["X-Request-Response-Timing"]
-                                                            = duration.ToString() + "ms";
+                                                    .Response
+                                                    .Headers["X-Request-Response-Timing"]
+                                                                = duration.ToString() + "ms";
                                                 stopwatch.Reset();
-                                                if (!injector.TryPut(stopwatch))
-                                                {
-                                                    stopwatch = null;
-                                                }
+                                                stopwatchesPool.TryPut(stopwatch);
+                                                stopwatch = null;
                                             }
                                         };
                                 middleware
                                     .OnAfterInvokedNextProcess
-                                        = (injector, httpContext, @event) =>
+                                        = (stopwatchesPool, httpContext, @event) =>
                                         {
                                             Console.WriteLine($"event: {@event}");
                                         };
                                 middleware
                                     .OnResponseCompletedProcess
-                                        = (injector, httpContext, @event) =>
+                                        = (stopwatchesPool, httpContext, @event) =>
                                         {
                                             Console.WriteLine($"event: {@event}");
                                             if
