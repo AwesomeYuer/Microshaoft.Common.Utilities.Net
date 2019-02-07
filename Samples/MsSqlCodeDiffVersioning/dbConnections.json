@@ -26,57 +26,6 @@
 
       */
     }
-  },
-  "Routes": {
-    "objEcts": {
-      "HttPGet": {
-        "connectionID": "c1",
-        "storeProcedureName": "zsp_zObjectsChangesLogsHistory_Get",
-        "EnableStatistics": true,
-        "commandtimeoutInSeconds": 103,
-        "requestvAlidator": "simpleValidator1"
-      },
-      "HttpPost": {
-        "ConnectionID": "c1",
-        "StoreProcedureName": "zsp_zObjectsChangesLogsHistory_Get"
-        //"EnableStatistics": true
-      }
-    },
-    "masterdetails": {
-      "HttPGet": {
-        "connectionID": "c1",
-        "storeProcedureName": "zsp_MasterDetails",
-        "EnableStatistics": true,
-        "commandtimeoutInSeconds": 103,
-        "Outputs": {
-          "aaa.bbb.ddd": "Outputs.ResultSets[0].Rows",
-          "bbb": "Outputs.Parameters",
-          "aaa.bbb.ccc": "Outputs.Parameters",
-          "AAa.ccc": "Outputs.Parameters",
-          "aaa.bbb.ccc": "Outputs.ResultSets[0].Rows"
-        }
-      },
-      "HttpPost": {
-        "ConnectionID": "c1",
-        "StoreProcedureName": "zsp_zObjectsChangesLogsHistory_Get"
-        //"EnableStatistics": true
-      }
-    },
-    "mysql": {
-      "HttPGet": {
-        "connectionID": "c3",
-        "storeProcedureName": "zsp_test",
-        "EnableStatistics": true,
-        "commandtimeoutInSeconds": 103,
-        "Outputs": {
-          "aaa.bbb.ddd": "Outputs.ResultSets[0].Rows",
-          "bbb": "Outputs.Parameters",
-          "aaa.bbb.ccc": "Outputs.Parameters",
-          "AAa.ccc": "Outputs.Parameters",
-          "aaa.bbb.ccc": "Outputs.ResultSets[0].Rows"
-        }
-      }
-    }
   }
 }
 
