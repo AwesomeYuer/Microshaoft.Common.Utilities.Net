@@ -1,13 +1,14 @@
 ﻿namespace Microshaoft.JTokenParameterValidators
 {
-    using System;
-    using System.Composition;
     using Microshaoft.Web;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Filters;
     using Newtonsoft.Json.Linq;
+    using System;
+    using System.Composition;
 
-    [Export(typeof(IJTokenParameterValidator))]
-    public class SimpleValidator1 : IJTokenParameterValidator
+    [Export(typeof(IHttpRequestValidateable<JToken>))]
+    public class SimpleValidator1 : IHttpRequestValidateable<JToken>
     {
         public string Name
         {
@@ -26,8 +27,12 @@
                     Validate
                         (
                             JToken parameters
+                            , ActionExecutingContext actionExecutingContext
                         )
         {
+            var httpContext = actionExecutingContext.HttpContext;
+            var request = httpContext.Request;
+
             JsonResult result = null;
             var isValid = true;
             var jObject = parameters as JObject;

@@ -10,23 +10,6 @@ namespace Microshaoft.Web
     using System.IO;
     using System.Linq;
     using System.Reflection;
-
-    public interface IJTokenParameterValidator
-    {
-        string Name
-        {
-            get;
-        }
-        (
-            bool IsValid
-            , IActionResult Result
-        )
-            Validate
-                (
-                    JToken parameters
-                );
-    }
-
     public class JTokenParametersValidateFilterAttribute
                                 :
                                     //AuthorizeAttribute
@@ -35,7 +18,7 @@ namespace Microshaoft.Web
     {
         private object _locker = new object();
         private readonly IConfiguration _configuration;
-        private IDictionary<string, IJTokenParameterValidator>
+        private IDictionary<string, IHttpRequestValidateable<JToken>>
                         _indexedValidators;
         public JTokenParametersValidateFilterAttribute(IConfiguration configuration)
         {
@@ -125,7 +108,7 @@ namespace Microshaoft.Web
                                 {
                                     var r = CompositionHelper
                                                 .ImportManyExportsComposeParts
-                                                    <IJTokenParameterValidator>
+                                                    <IHttpRequestValidateable<JToken>>
                                                         (x);
                                     return r;
                                 }
@@ -159,8 +142,8 @@ namespace Microshaoft.Web
         {
             var httpContext = context.HttpContext;
             var request = httpContext.Request;
-            var routeName = (string) context.ActionArguments["routeName"];
             var httpMethod = $"http{request.Method}";
+            var routeName = (string) context.ActionArguments["routeName"];
 
             var validatorConfiguration =
                     _configuration
@@ -178,16 +161,21 @@ namespace Microshaoft.Web
                         , Result: null
                     );
                 var validatorName = validatorConfiguration.Value;
-                var parameters = context.ActionArguments["parameters"] as JToken;
-                var rr = _indexedValidators
+                var parameter = context.ActionArguments["parameters"] as JToken;
+                var hasValidator = _indexedValidators
                                     .TryGetValue
                                             (
                                                 validatorName
                                                 , out var validator
                                             );
-                if (rr)
+                if (hasValidator)
                 {
-                    r = validator.Validate(parameters);
+                    r = validator
+                            .Validate
+                                (
+                                    parameter
+                                    , context
+                                );
                 }
                 else
                 {
