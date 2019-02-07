@@ -1,7 +1,6 @@
 ﻿#if NETCOREAPP2_X
 namespace Microshaoft.Web
 {
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -21,10 +20,5 @@ namespace Microshaoft.Web
                     , ActionExecutingContext actionExecutingContext
                 );
     }
-
-    //public interface IJTokenParameterValidator : IParameterValidateable<JToken>
-    //{
-        
-    //}
 }
 #endif
