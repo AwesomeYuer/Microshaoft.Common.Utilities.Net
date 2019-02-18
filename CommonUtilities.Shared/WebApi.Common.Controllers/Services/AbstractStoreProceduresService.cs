@@ -253,30 +253,29 @@ namespace Microshaoft.Web
             JToken result = null;
             var statusCode = 200;
             var message = string.Empty;
-            var r1 = TryGetStoreProcedureInfo
+            var has = TryGetStoreProcedureInfo
                         (
                             routeName
                             , httpMethod
                         );
             if 
                 (
-                    r1.Success
+                    has.Success
                     &&
-                    r1.StatusCode == 200
+                    has.StatusCode == 200
                 )
             {
-                var r2 = Process
-                            (
-                                r1.ConnectionString
-                                , r1.DataBaseType
-                                , r1.StoreProcedureName
-                                , out result
-                                , parameters
-                                , onReadRowColumnProcessFunc
-                                , r1.EnableStatistics
-                                , r1.CommandTimeoutInSeconds
-                            );
-
+                var success = Process
+                                (
+                                    has.ConnectionString
+                                    , has.DataBaseType
+                                    , has.StoreProcedureName
+                                    , out result
+                                    , parameters
+                                    , onReadRowColumnProcessFunc
+                                    , has.EnableStatistics
+                                    , has.CommandTimeoutInSeconds
+                                );
                 var jObject = result
                                     ["Outputs"]
                                     ["Parameters"] as JObject;
@@ -297,12 +296,12 @@ namespace Microshaoft.Web
                         statusCode = jv.Value<int>();
                     }
                 }
-                if (r2)
+                if (success)
                 {
                     //support custom output nest json by JSONPath in JsonFile Config
                     var outputsConfiguration = _configuration
                                                     .GetSection
-                                                        ($"Routes:{routeName}:{r1.HttpMethod}:Outputs");
+                                                        ($"Routes:{routeName}:{has.HttpMethod}:Outputs");
                     if (outputsConfiguration.Exists())
                     {
                         var mappings = outputsConfiguration
@@ -333,8 +332,8 @@ namespace Microshaoft.Web
             }
             else
             {
-                statusCode = r1.StatusCode;
-                message = r1.Message;
+                statusCode = has.StatusCode;
+                message = has.Message;
             }
             return
                 (

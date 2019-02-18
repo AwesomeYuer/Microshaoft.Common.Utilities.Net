@@ -198,7 +198,6 @@ namespace Microshaoft.Web
                     context
                         .Result = r.Result;
                 }
-                
             }
             httpContext = null;
             request = null;
