@@ -129,11 +129,14 @@
                             options
                                 .AddPolicy
                                     (
-                                        "AllowAllOrigins"
+                                        "AllowAllAny"
                                         ,
                                         (builder) =>
                                         {
-                                            builder.AllowAnyOrigin();
+                                            builder
+                                                .AllowAnyOrigin()
+                                                .AllowAnyHeader()
+                                                .AllowAnyMethod();
                                         }
                                     );
 

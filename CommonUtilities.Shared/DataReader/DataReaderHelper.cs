@@ -188,6 +188,18 @@ namespace Microshaoft
                                     ,
                                     new JProperty
                                         (
+                                            "title"
+                                            , fieldName
+                                        )
+                                        ,
+                                    new JProperty
+                                        (
+                                            "data"
+                                            , fieldName
+                                        )
+                                    ,
+                                    new JProperty
+                                        (
                                             "ColumnType"
                                             , fieldType
                                                 .GetJTokenType()

@@ -1,5 +1,23 @@
 {
   "Routes": {
+    "sp_helptext": {
+      "HttPGet": {
+        "connectionID": "c1",
+        "storeProcedureName": "sp_helptext",
+        "EnableStatistics": true,
+        "commandtimeoutInSeconds": 103
+      }
+
+    },
+    "usp_executesql": {
+      "HttPPost": {
+        "connectionID": "c1",
+        "storeProcedureName": "usp_executesql",
+        "EnableStatistics": true,
+        "commandtimeoutInSeconds": 103
+      }
+
+    },
     "objEcts": {
       "HttPGet": {
         "connectionID": "c1",
@@ -50,4 +68,4 @@
       }
     }
   }
-}
+  }
