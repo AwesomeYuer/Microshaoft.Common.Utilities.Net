@@ -105,7 +105,8 @@
                     SELECT
                         * 
                     FROM
-                        information_schema.parameters a 
+                        --information_schema.parameters a 
+                        zv_all_PARAMETERS a
                     WHERE
                         a.SPECIFIC_NAME = @ProcedureName
                     ";

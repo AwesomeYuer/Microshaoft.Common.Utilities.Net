@@ -9,7 +9,7 @@ namespace Microshaoft.WebApi.Controllers
 
     [Route("api/[controller]")]
     //[ApiController]
-    [EnableCors("AllowAllOrigins")]
+    [EnableCors("AllowAllAny")]
     //[Authorize]
     //[ValidateModelFilter]
     [ServiceFilter(typeof(JTokenParametersValidateFilterAttribute))]

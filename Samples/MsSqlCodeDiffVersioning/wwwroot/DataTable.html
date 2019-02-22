@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+
+    <link rel="stylesheet" type="text/css" href="libs/datatables/DataTables-1.10.18/css/jquery.dataTables.css" />
+    <link rel="stylesheet" type="text/css" href="libs/datatables/AutoFill-2.3.0/css/autoFill.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="libs/datatables/Buttons-1.5.2/css/buttons.dataTables.css" />
+    <link rel="stylesheet" type="text/css" href="libs/datatables/ColReorder-1.5.0/css/colReorder.dataTables.css" />
+    <link rel="stylesheet" type="text/css" href="libs/datatables/FixedColumns-3.2.5/css/fixedColumns.dataTables.css" />
+    <link rel="stylesheet" type="text/css" href="libs/datatables/FixedHeader-3.1.4/css/fixedHeader.dataTables.css" />
+    <link rel="stylesheet" type="text/css" href="libs/datatables/KeyTable-2.4.0/css/keyTable.dataTables.css" />
+    <link rel="stylesheet" type="text/css" href="libs/datatables/Responsive-2.2.2/css/responsive.dataTables.css" />
+    <link rel="stylesheet" type="text/css" href="libs/datatables/RowGroup-1.0.3/css/rowGroup.dataTables.css" />
+    <link rel="stylesheet" type="text/css" href="libs/datatables/RowReorder-1.2.4/css/rowReorder.dataTables.css" />
+    <link rel="stylesheet" type="text/css" href="libs/datatables/Scroller-1.5.0/css/scroller.dataTables.css" />
+    <link rel="stylesheet" type="text/css" href="libs/datatables/Select-1.2.6/css/select.dataTables.css" />
+    <script src="libs/jQuery/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="libs/datatables/JSZip-2.5.0/jszip.js"></script>
+    <script type="text/javascript" src="libs/datatables/pdfmake-0.1.36/pdfmake.js"></script>
+    <script type="text/javascript" src="libs/datatables/pdfmake-0.1.36/vfs_fonts.js"></script>
+    <script type="text/javascript" src="libs/datatables/DataTables-1.10.18/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" src="libs/datatables/AutoFill-2.3.0/js/dataTables.autoFill.js"></script>
+    <script type="text/javascript" src="libs/datatables/Buttons-1.5.2/js/dataTables.buttons.js"></script>
+    <script type="text/javascript" src="libs/datatables/Buttons-1.5.2/js/buttons.colVis.js"></script>
+    <script type="text/javascript" src="libs/datatables/Buttons-1.5.2/js/buttons.flash.js"></script>
+    <script type="text/javascript" src="libs/datatables/Buttons-1.5.2/js/buttons.html5.js"></script>
+    <script type="text/javascript" src="libs/datatables/Buttons-1.5.2/js/buttons.print.js"></script>
+    <script type="text/javascript" src="libs/datatables/ColReorder-1.5.0/js/dataTables.colReorder.js"></script>
+    <script type="text/javascript" src="libs/datatables/FixedColumns-3.2.5/js/dataTables.fixedColumns.js"></script>
+    <script type="text/javascript" src="libs/datatables/FixedHeader-3.1.4/js/dataTables.fixedHeader.js"></script>
+    <script type="text/javascript" src="libs/datatables/KeyTable-2.4.0/js/dataTables.keyTable.js"></script>
+    <script type="text/javascript" src="libs/datatables/Responsive-2.2.2/js/dataTables.responsive.js"></script>
+    <script type="text/javascript" src="libs/datatables/RowGroup-1.0.3/js/dataTables.rowGroup.js"></script>
+    <script type="text/javascript" src="libs/datatables/RowReorder-1.2.4/js/dataTables.rowReorder.js"></script>
+    <script type="text/javascript" src="libs/datatables/Scroller-1.5.0/js/dataTables.scroller.js"></script>
+    <script type="text/javascript" src="libs/datatables/Select-1.2.6/js/dataTables.select.js"></script>
+    <script>
+        function dynamicAjaxBind() {
+            var id = "#example";
+            if ($.fn.DataTable.isDataTable(id)) {
+                $(id).DataTable().clear().destroy();
+                $(id).html('');
+            }
+            var sql = document.getElementById("ta").value;
+            $.ajax({
+                type: 'post',
+
+                url: 'http://localhost:5000/api/StoreProcedureExecutor/usp_executesql',
+                data: { sql: sql },
+                success: function (d) {
+                    $(id).DataTable({
+                        //destroy: true,
+                        //searching: false,
+                        dom: "Bfrtip",
+                        data: d.Outputs.ResultSets[0].Rows,
+                        columns: d.Outputs.ResultSets[0].Columns
+                    });
+                },
+                //contentType: "application/json",
+                //dataType: 'json',
+            });
+
+
+        }
+
+
+
+
+
+        //debugger;
+    </script>
+
+</head>
+
+<body>
+    <table id="example" class="display" style="width:100%">
+        <!-- <thead>
+            <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Office</th>
+                <th>Extn.</th>
+                <th>Start date</th>
+                <th>Salary</th>
+            </tr>
+        </thead> -->
+    </table>
+    <button onclick="dynamicAjaxBind()">dynamicAjaxBind</button>
+    <textarea id="ta" rows="10" cols="100"></textarea>
+
+</body>
+
+</html>
