@@ -37,6 +37,7 @@
     <script type="text/javascript" src="libs/datatables/RowReorder-1.2.4/js/dataTables.rowReorder.js"></script>
     <script type="text/javascript" src="libs/datatables/Scroller-1.5.0/js/dataTables.scroller.js"></script>
     <script type="text/javascript" src="libs/datatables/Select-1.2.6/js/dataTables.select.js"></script>
+    <script src="libs/splitjs/split.js"></script>
     <script>
         function dynamicAjaxBind() {
             var id = "#example";
@@ -72,12 +73,64 @@
 
         //debugger;
     </script>
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
 
+        body {
+            padding: 8px;
+            background-color: #F6F6F6;
+            box-sizing: border-box;
+        }
+
+        .split {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .content {
+            border: 1px solid #C0C0C0;
+            box-shadow: inset 0 1px 2px #e4e4e4;
+            background-color: #fff;
+        }
+
+        .gutter {
+            background-color: transparent;
+            background-repeat: no-repeat;
+            background-position: 50%;
+        }
+
+            .gutter.gutter-horizontal {
+                cursor: col-resize;
+                background-image: url('../grips/vertical.png');
+            }
+
+            .gutter.gutter-vertical {
+                cursor: row-resize;
+                background-image: url('../grips/horizontal.png');
+            }
+
+            .split.split-horizontal,
+            .gutter.gutter-horizontal {
+                height: 100%;
+                float: left;
+            }
+    </style>
 </head>
 
 <body>
-    <table id="example" class="display" style="width:100%">
-        <!-- <thead>
+    <div id="a" class="split content">
+        <button onclick="dynamicAjaxBind()">dynamicAjaxBind</button>
+        <textarea id="ta" rows="3" cols="100"></textarea>
+    </div>
+    <div id="b" class="split content">
+        <table id="example" class="display" style="width:100%">
+            <!-- <thead>
             <tr>
                 <th>Name</th>
                 <th>Position</th>
@@ -87,9 +140,28 @@
                 <th>Salary</th>
             </tr>
         </thead> -->
-    </table>
-    <button onclick="dynamicAjaxBind()">dynamicAjaxBind</button>
-    <textarea id="ta" rows="10" cols="100"></textarea>
+        </table>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <script>
+
+        Split(['#a', '#b'], {
+            gutterSize: 20,
+            cursor: 'pointer',
+            direction: 'vertical',
+        });
+
+
+    </script>
 
 </body>
 
