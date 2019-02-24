@@ -439,6 +439,16 @@
                         }
                     )
                 {
+                    if (isSqlConnection)
+                    {
+                        var sqlCommand = command as SqlCommand;
+                        sqlCommand.StatementCompleted += SqlCommand_StatementCompleted;
+
+
+
+                    }
+
+
                     if (commandTimeoutInSeconds > 0)
                     {
                         command.CommandTimeout = commandTimeoutInSeconds;
@@ -626,6 +636,11 @@
                 }
                 connection = null;
             }
+        }
+
+        private void SqlCommand_StatementCompleted(object sender, StatementCompletedEventArgs e)
+        {
+            Console.WriteLine(e.RecordCount);
         }
     }
 }
