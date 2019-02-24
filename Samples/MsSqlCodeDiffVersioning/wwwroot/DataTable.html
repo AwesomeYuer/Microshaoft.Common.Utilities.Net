@@ -1,10 +1,8 @@
 ﻿<!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="utf-8" />
-    <title></title>
-
+    <title>DataTable JS</title>
     <link rel="stylesheet" type="text/css" href="libs/datatables/DataTables-1.10.18/css/jquery.dataTables.css" />
     <link rel="stylesheet" type="text/css" href="libs/datatables/AutoFill-2.3.0/css/autoFill.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="libs/datatables/Buttons-1.5.2/css/buttons.dataTables.css" />
@@ -42,7 +40,6 @@
         function dynamicAjaxBind() {
             var id = "#example";
             var id2 = "#example2";
-
             if ($.fn.DataTable.isDataTable(id)) {
                 $(id).DataTable().clear().destroy();
                 $(id).html('');
@@ -54,7 +51,6 @@
             var sql = document.getElementById("ta").value;
             $.ajax({
                 type: 'post',
-
                 url: 'http://localhost:5000/api/StoreProcedureExecutor/usp_executesql',
                 data: { sql: sql },
                 success: function (d) {
@@ -76,14 +72,7 @@
                 //contentType: "application/json",
                 //dataType: 'json',
             });
-
-
         }
-
-
-
-
-
         //debugger;
     </script>
     <style>
@@ -91,13 +80,11 @@
         body {
             height: 100%;
         }
-
         body {
             padding: 8px;
             background-color: #F6F6F6;
             box-sizing: border-box;
         }
-
         .split {
             -webkit-box-sizing: border-box;
             -moz-box-sizing: border-box;
@@ -105,37 +92,31 @@
             overflow-y: auto;
             overflow-x: hidden;
         }
-
         .content {
             border: 1px solid #C0C0C0;
             box-shadow: inset 0 1px 2px #e4e4e4;
             background-color: #fff;
         }
-
         .gutter {
             background-color: transparent;
             background-repeat: no-repeat;
             background-position: 50%;
         }
-
-            .gutter.gutter-horizontal {
-                cursor: col-resize;
-                background-image: url('../grips/vertical.png');
-            }
-
-            .gutter.gutter-vertical {
-                cursor: row-resize;
-                background-image: url('../grips/horizontal.png');
-            }
-
-            .split.split-horizontal,
-            .gutter.gutter-horizontal {
-                height: 100%;
-                float: left;
-            }
+        .gutter.gutter-horizontal {
+            cursor: col-resize;
+            background-image: url('../grips/vertical.png');
+        }
+        .gutter.gutter-vertical {
+            cursor: row-resize;
+            background-image: url('../grips/horizontal.png');
+        }
+        .split.split-horizontal,
+        .gutter.gutter-horizontal {
+            height: 100%;
+            float: left;
+        }
     </style>
 </head>
-
 <body>
     <div id="a" class="split content">
         <button onclick="dynamicAjaxBind()">dynamicAjaxBind</button>
@@ -154,8 +135,6 @@
             </tr>
         </thead> -->
         </table>
-
-
         <table id="example2" class="display" style="width:100%">
             <!-- <thead>
             <tr>
@@ -169,27 +148,12 @@
         </thead> -->
         </table>
     </div>
-    
-
-
-
-
-
-
-
-
-
     <script>
-
         Split(['#a', '#b'], {
             gutterSize: 20,
             cursor: 'pointer',
             direction: 'vertical',
         });
-
-
     </script>
-
 </body>
-
 </html>
