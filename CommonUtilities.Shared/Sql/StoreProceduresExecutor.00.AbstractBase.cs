@@ -508,6 +508,7 @@
                                             );
 
                     int resultSetID = 0;
+                    int messageID = 0;
                     JArray recordCounts = null;
                     JArray messages = null;
                     if (statisticsEnabled)
@@ -533,11 +534,24 @@
                         onSqlInfoMessageEventHandlerProcessAction =
                         (sender, sqlInfoMessageEventArgs) =>
                         {
+                            messageID++;
                             messages
                                 .Add
                                     (
                                         new JObject()
                                         {
+
+                                            {
+                                                "MessageID"
+                                                , messageID
+                                            }
+                                            ,
+                                            {
+                                                "ResultSetID"
+                                                , resultSetID
+                                            }
+                                            ,
+
                                             {
                                                 "Source"
                                                 , sqlInfoMessageEventArgs.Source
@@ -546,6 +560,11 @@
                                             {
                                                 "Message"
                                                 , sqlInfoMessageEventArgs.Message
+                                            }
+                                            ,
+                                            {
+                                                "DealTime"
+                                                , DateTime.Now
                                             }
                                         }
                                     );
