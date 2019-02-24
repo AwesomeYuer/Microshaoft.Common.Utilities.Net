@@ -38,15 +38,15 @@
     <script src="libs/splitjs/split.js"></script>
     <script>
         function dynamicAjaxBind() {
-            var id = "#example";
-            var id2 = "#example2";
-            if ($.fn.DataTable.isDataTable(id)) {
-                $(id).DataTable().clear().destroy();
-                $(id).html('');
+            var output1 = "#output1";
+            var output2 = "#output2";
+            if ($.fn.DataTable.isDataTable(output1)) {
+                $(output1).DataTable().clear().destroy();
+                $(output1).html('');
             }
-            if ($.fn.DataTable.isDataTable(id2)) {
-                $(id2).DataTable().clear().destroy();
-                $(id2).html('');
+            if ($.fn.DataTable.isDataTable(output2)) {
+                $(output2).DataTable().clear().destroy();
+                $(output2).html('');
             }
             var sql = document.getElementById("ta").value;
             $.ajax({
@@ -54,17 +54,17 @@
                 url: 'http://localhost:5000/api/StoreProcedureExecutor/usp_executesql',
                 data: { sql: sql },
                 success: function (d) {
-                    $(id).DataTable({
+                    $(output1).DataTable({
                         //destroy: true,
                         //searching: false,
-                        dom: "Bfrtip1",
+                        //dom: "Bfrtip1",
                         data: d.Outputs.ResultSets[0].Rows,
                         columns: d.Outputs.ResultSets[0].Columns
                     });
-                    $(id2).DataTable({
+                    $(output2).DataTable({
                         //destroy: true,
                         //searching: false,
-                        dom: "Bfrtip2",
+                        //dom: "Bfrtip2",
                         data: d.DataBaseStatistics.Messages,
                         columns: [
                                     //{
@@ -139,7 +139,7 @@
     </style>
 </head>
 <body>
-    <div id="a" class="split content" align="center">
+    <div id="up" class="split content" align="center">>
         <br />
         <textarea id="ta" rows="5" cols="100">
 set statistics io on
@@ -155,8 +155,8 @@ sys.objects
         </textarea>
         <button onclick="dynamicAjaxBind()" accesskey="x">E(<b><u>X</u></b>)exute</button>
     </div>
-    <div id="b" class="split content">
-        <table id="example" class="display" style="width:100%">
+    <div id="down" class="split content">
+        <table id="output1" class="display" style="width:100%">
             <!-- <thead>
             <tr>
                 <th>Name</th>
@@ -173,7 +173,7 @@ sys.objects
         <hr />
         <br />
 
-        <table id="example2" class="display" style="width:100%">
+        <table id="output2" class="display" style="width:100%">
             <!-- <thead>
             <tr>
                 <th>Name</th>
@@ -187,7 +187,7 @@ sys.objects
         </table>
     </div>
     <script>
-        Split(['#a', '#b'], {
+        Split(['#up', '#down'], {
             gutterSize: 10,
             cursor: 'pointer',
             direction: 'vertical',
