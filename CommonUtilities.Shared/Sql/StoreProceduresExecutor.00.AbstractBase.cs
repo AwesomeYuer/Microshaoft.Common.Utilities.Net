@@ -424,8 +424,16 @@
         {
             var dataSource = connection.DataSource;
             var dataBaseName = connection.Database;
-            var isSqlConnection = connection is SqlConnection;
-            SqlConnection sqlConnection = null;
+            SqlConnection sqlConnection = connection as SqlConnection;
+            var isSqlConnection = (sqlConnection != null);
+            var statisticsEnabled = false;
+            if (isSqlConnection)
+            {
+                statisticsEnabled = sqlConnection.StatisticsEnabled;
+            }
+            SqlCommand sqlCommand = null;
+            StatementCompletedEventHandler onStatementCompletedEventHandlerProcessAction = null;
+            SqlInfoMessageEventHandler onSqlInfoMessageEventHandlerProcessAction = null;
             try
             {
                 using
@@ -439,15 +447,6 @@
                         }
                     )
                 {
-                    if (isSqlConnection)
-                    {
-                        var sqlCommand = command as SqlCommand;
-                        sqlCommand.StatementCompleted += SqlCommand_StatementCompleted;
-
-
-
-                    }
-
 
                     if (commandTimeoutInSeconds > 0)
                     {
@@ -484,22 +483,6 @@
                             "DurationInMilliseconds"
                             , null
                         }
-                        //,
-                        //{
-                        //    "DataBaseStatistics"
-                        //    , null
-                        //}
-                        //,
-                        //{
-                        //    "Inputs"
-                        //    , new JObject
-                        //        {
-                        //            {
-                        //                "Parameters"
-                        //                    , inputsParameters
-                        //            }
-                        //        }
-                        //}
                         ,
                         {
                             "Outputs"
@@ -523,6 +506,53 @@
                                                 CommandBehavior
                                                     .CloseConnection
                                             );
+
+                    int resultSetID = 0;
+                    JArray recordCounts = null;
+                    JArray messages = null;
+                    if (statisticsEnabled)
+                    {
+                        recordCounts = new JArray();
+                        messages = new JArray();
+                        sqlCommand = command as SqlCommand;
+                        onStatementCompletedEventHandlerProcessAction =
+                                (sender, statementCompletedEventArgs) =>
+                                {
+                                    recordCounts.Add(statementCompletedEventArgs.RecordCount);
+                                    //recordCount = statementCompletedEventArgs.RecordCount;
+                                    //(
+                                    //    (JArray)
+                                    //        result
+                                    //            ["Outputs"]
+                                    //            ["ResultSets"]
+                                    //)
+                                    //[resultSetID]
+                                    //["RecordCount"] = statementCompletedEventArgs.RecordCount;
+                                };
+                        sqlCommand.StatementCompleted += onStatementCompletedEventHandlerProcessAction;
+                        onSqlInfoMessageEventHandlerProcessAction =
+                        (sender, sqlInfoMessageEventArgs) =>
+                        {
+                            messages
+                                .Add
+                                    (
+                                        new JObject()
+                                        {
+                                            {
+                                                "Source"
+                                                , sqlInfoMessageEventArgs.Source
+                                            }
+                                            ,
+                                            {
+                                                "Message"
+                                                , sqlInfoMessageEventArgs.Message
+                                            }
+                                        }
+                                    );
+
+                        };
+                        sqlConnection.InfoMessage += onSqlInfoMessageEventHandlerProcessAction;
+                    }
                     do
                     {
                         var columns = dataReader
@@ -532,15 +562,7 @@
                                             (
                                                 onReadRowColumnProcessFunc
                                             );
-                        (
-                            (JArray)
-                                result
-                                    ["Outputs"]
-                                    ["ResultSets"]
-                        )
-                        .Add
-                            (
-                                new JObject
+                        var resultSet = new JObject
                                 {
                                     {
                                         "Columns"
@@ -551,8 +573,30 @@
                                         "Rows"
                                         , new JArray(rows)
                                     }
-                                }
+                                    //,
+                                    //{
+                                    //    "RecordCount"
+                                    //    , recordCounts[resultSetID]
+                                    //}
+                                };
+                        (
+                            (JArray)
+                                result
+                                    ["Outputs"]
+                                    ["ResultSets"]
+                        )
+                        .Add
+                            (
+                                resultSet
                             );
+                        //if (recordCounts != null)
+                        //{
+                        //    if (recordCounts.Count > resultSetID)
+                        //    {
+                        //        resultSet["RecordCount"] = recordCounts[resultSetID];
+                        //    }
+                        //}
+                        resultSetID++;
                     }
                     while (dataReader.NextResult());
                     dataReader.Close();
@@ -593,28 +637,52 @@
                     {
                         result["Outputs"]["Parameters"] = jOutputParameters;
                     }
-                    if (isSqlConnection)
+                    if (statisticsEnabled)
                     {
-                        sqlConnection = connection as SqlConnection;
-                        if (sqlConnection != null)
+                        //if (sqlConnection.StatisticsEnabled)
                         {
-                            if (sqlConnection.StatisticsEnabled)
+                            var j = new JObject();
+                            var statistics = sqlConnection.RetrieveStatistics();
+                            var json = JsonHelper.Serialize(statistics);
+                            var jStatistics = JObject.Parse(json);
+                            var parent = result["DurationInMilliseconds"];
+                            parent
+                                .Parent
+                                .AddAfterSelf
+                                    (
+                                        new JProperty
+                                                (
+                                                    "DataBaseStatistics"
+                                                    , jStatistics
+                                                )
+                                    );
+                            if (messages != null)
                             {
-                                var j = new JObject();
-                                var statistics = sqlConnection.RetrieveStatistics();
-                                var json = JsonHelper.Serialize(statistics);
-                                var jStatistics = JObject.Parse(json);
-                                result["DurationInMilliseconds"]
-                                        .Parent
-                                        .AddAfterSelf
+                                result["DataBaseStatistics"]["Messages"] = messages;
+                            }
+                            if (recordCounts != null)
+                            {
+                                parent
+                                    .Parent
+                                    .AddAfterSelf
                                             (
                                                 new JProperty
                                                         (
-                                                            "DataBaseStatistics"
-                                                            , jStatistics
+                                                            "RecordCounts"
+                                                            , recordCounts
                                                         )
                                             );
                             }
+                        }
+                        if (onStatementCompletedEventHandlerProcessAction != null)
+                        {
+                            sqlCommand.StatementCompleted -= onStatementCompletedEventHandlerProcessAction;
+                            onStatementCompletedEventHandlerProcessAction = null;
+                        }
+                        if (onSqlInfoMessageEventHandlerProcessAction != null)
+                        {
+                            sqlConnection.InfoMessage -= onSqlInfoMessageEventHandlerProcessAction;
+                            onSqlInfoMessageEventHandlerProcessAction = null;
                         }
                     }
                     return result;
@@ -624,6 +692,16 @@
             {
                 if (isSqlConnection)
                 {
+                    if (onStatementCompletedEventHandlerProcessAction != null)
+                    {
+                        sqlCommand.StatementCompleted -= onStatementCompletedEventHandlerProcessAction;
+                        onStatementCompletedEventHandlerProcessAction = null;
+                    }
+                    if (onSqlInfoMessageEventHandlerProcessAction != null)
+                    {
+                        sqlConnection.InfoMessage -= onSqlInfoMessageEventHandlerProcessAction;
+                        onSqlInfoMessageEventHandlerProcessAction = null;
+                    }
                     if (sqlConnection.StatisticsEnabled)
                     {
                         sqlConnection.StatisticsEnabled = false;

@@ -3,7 +3,6 @@
     using Microshaoft;
     using Newtonsoft.Json.Linq;
     using System;
-    using System.Collections.Generic;
     using System.Composition;
     using System.Data;
     using System.Data.SqlClient;
@@ -65,34 +64,9 @@
             }
             result = null;
             var connection = new SqlConnection(connectionString);
-            JArray messages = null;
-            SqlInfoMessageEventHandler onSqlInfoMessageProcessAction = null;
             if (enableStatistics)
             {
                 connection.StatisticsEnabled = enableStatistics;
-                messages = new JArray();
-                onSqlInfoMessageProcessAction =
-                        (sender, sqlInfoMessageEventArgs) =>
-                        {
-                            messages
-                                .Add
-                                    (
-                                        new JObject()
-                                        {
-                                            {
-                                                "Source"
-                                                , sqlInfoMessageEventArgs.Source
-                                            }
-                                            ,
-                                            {
-                                                "Message"
-                                                , sqlInfoMessageEventArgs.Message
-                                            }
-                                        }
-                                    );
-                    
-                        };
-                connection.InfoMessage += onSqlInfoMessageProcessAction;
             }
             result = _executor
                             .Execute
@@ -103,14 +77,6 @@
                                         , onReadRowColumnProcessFunc
                                         , commandTimeoutInSeconds
                                     );
-            if (messages != null)
-            {
-                result["DataBaseStatistics"]["Messages"] = messages;
-            }
-            if (onSqlInfoMessageProcessAction != null)
-            {
-                connection.InfoMessage -= onSqlInfoMessageProcessAction;
-            }
             if (NeedAutoRefreshExecutedTimeForSlideExpire)
             {
                 _executor
