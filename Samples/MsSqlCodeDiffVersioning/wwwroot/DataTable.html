@@ -41,9 +41,15 @@
     <script>
         function dynamicAjaxBind() {
             var id = "#example";
+            var id2 = "#example2";
+
             if ($.fn.DataTable.isDataTable(id)) {
                 $(id).DataTable().clear().destroy();
                 $(id).html('');
+            }
+            if ($.fn.DataTable.isDataTable(id2)) {
+                $(id2).DataTable().clear().destroy();
+                $(id2).html('');
             }
             var sql = document.getElementById("ta").value;
             $.ajax({
@@ -55,9 +61,16 @@
                     $(id).DataTable({
                         //destroy: true,
                         //searching: false,
-                        dom: "Bfrtip",
+                        dom: "Bfrtip1",
                         data: d.Outputs.ResultSets[0].Rows,
                         columns: d.Outputs.ResultSets[0].Columns
+                    });
+                    $(id2).DataTable({
+                        //destroy: true,
+                        //searching: false,
+                        dom: "Bfrtip2",
+                        data: d.DataBaseStatistics.Messages,
+                        columns: [{ "title": "Source", "data": "Source" }, { "title": "Message", "data": "Message" }]
                     });
                 },
                 //contentType: "application/json",
@@ -130,6 +143,20 @@
     </div>
     <div id="b" class="split content">
         <table id="example" class="display" style="width:100%">
+            <!-- <thead>
+            <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Office</th>
+                <th>Extn.</th>
+                <th>Start date</th>
+                <th>Salary</th>
+            </tr>
+        </thead> -->
+        </table>
+
+
+        <table id="example2" class="display" style="width:100%">
             <!-- <thead>
             <tr>
                 <th>Name</th>
