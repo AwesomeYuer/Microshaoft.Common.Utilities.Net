@@ -520,15 +520,6 @@
                                 (sender, statementCompletedEventArgs) =>
                                 {
                                     recordCounts.Add(statementCompletedEventArgs.RecordCount);
-                                    //recordCount = statementCompletedEventArgs.RecordCount;
-                                    //(
-                                    //    (JArray)
-                                    //        result
-                                    //            ["Outputs"]
-                                    //            ["ResultSets"]
-                                    //)
-                                    //[resultSetID]
-                                    //["RecordCount"] = statementCompletedEventArgs.RecordCount;
                                 };
                         sqlCommand.StatementCompleted += onStatementCompletedEventHandlerProcessAction;
                         onSqlInfoMessageEventHandlerProcessAction =
@@ -536,39 +527,36 @@
                         {
                             messageID++;
                             messages
-                                .Add
-                                    (
-                                        new JObject()
-                                        {
-
+                                    .Add
+                                        (
+                                            new JObject()
                                             {
-                                                "MessageID"
-                                                , messageID
+                                                {
+                                                    "MessageID"
+                                                    , messageID
+                                                }
+                                                ,
+                                                {
+                                                    "ResultSetID"
+                                                    , resultSetID
+                                                }
+                                                ,
+                                                {
+                                                    "Source"
+                                                    , sqlInfoMessageEventArgs.Source
+                                                }
+                                                ,
+                                                {
+                                                    "Message"
+                                                    , sqlInfoMessageEventArgs.Message
+                                                }
+                                                ,
+                                                {
+                                                    "DealTime"
+                                                    , DateTime.Now
+                                                }
                                             }
-                                            ,
-                                            {
-                                                "ResultSetID"
-                                                , resultSetID
-                                            }
-                                            ,
-
-                                            {
-                                                "Source"
-                                                , sqlInfoMessageEventArgs.Source
-                                            }
-                                            ,
-                                            {
-                                                "Message"
-                                                , sqlInfoMessageEventArgs.Message
-                                            }
-                                            ,
-                                            {
-                                                "DealTime"
-                                                , DateTime.Now
-                                            }
-                                        }
-                                    );
-
+                                        );
                         };
                         sqlConnection.InfoMessage += onSqlInfoMessageEventHandlerProcessAction;
                     }
@@ -592,11 +580,6 @@
                                         "Rows"
                                         , new JArray(rows)
                                     }
-                                    //,
-                                    //{
-                                    //    "RecordCount"
-                                    //    , recordCounts[resultSetID]
-                                    //}
                                 };
                         (
                             (JArray)
@@ -608,13 +591,6 @@
                             (
                                 resultSet
                             );
-                        //if (recordCounts != null)
-                        //{
-                        //    if (recordCounts.Count > resultSetID)
-                        //    {
-                        //        resultSet["RecordCount"] = recordCounts[resultSetID];
-                        //    }
-                        //}
                         resultSetID++;
                     }
                     while (dataReader.NextResult());
@@ -664,8 +640,8 @@
                             var statistics = sqlConnection.RetrieveStatistics();
                             var json = JsonHelper.Serialize(statistics);
                             var jStatistics = JObject.Parse(json);
-                            var parent = result["DurationInMilliseconds"];
-                            parent
+                            var jCurrent = result["DurationInMilliseconds"];
+                            jCurrent
                                 .Parent
                                 .AddAfterSelf
                                     (
@@ -681,7 +657,7 @@
                             }
                             if (recordCounts != null)
                             {
-                                parent
+                                jCurrent
                                     .Parent
                                     .AddAfterSelf
                                             (
@@ -733,11 +709,6 @@
                 }
                 connection = null;
             }
-        }
-
-        private void SqlCommand_StatementCompleted(object sender, StatementCompletedEventArgs e)
-        {
-            Console.WriteLine(e.RecordCount);
         }
     }
 }
