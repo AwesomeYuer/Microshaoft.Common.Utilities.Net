@@ -55,16 +55,16 @@
                 data: { sql: sql },
                 success: function (d) {
                     $(output1).DataTable({
-                        //destroy: true,
+                        destroy: true,
                         //searching: false,
-                        //dom: "Bfrtip1",
+                        dom: "Bfrtip",
                         data: d.Outputs.ResultSets[0].Rows,
                         columns: d.Outputs.ResultSets[0].Columns
                     });
                     $(output2).DataTable({
-                        //destroy: true,
+                        destroy: true,
                         //searching: false,
-                        //dom: "Bfrtip2",
+                        dom: "Bfrtip",
                         data: d.DataBaseStatistics.Messages,
                         columns: [
                                     //{
@@ -90,6 +90,26 @@
                             ]
                     });
                 },
+                error: function (x, y, z) {
+                    d = JSON.parse(x.responseText);
+                    $(output2).DataTable({
+                        //destroy: true,
+                        //searching: false,
+                        dom: "Bfrtip",
+                        data: [d],
+                        columns: [
+                            {
+                                "title": "Message"
+                                , "data": "Message"
+                            },
+                            {
+                                "title": "StatusCode"
+                                , "data": "StatusCode"
+                            }
+                        ]
+                    });
+
+                }
                 //contentType: "application/json",
                 //dataType: 'json',
             });
@@ -139,7 +159,7 @@
     </style>
 </head>
 <body>
-    <div id="up" class="split content" align="center">
+    <div id="up" class="split content" align="center">>
         <br />
         <textarea id="ta" rows="5" cols="100">
 set statistics io on
@@ -156,6 +176,7 @@ sys.objects
         <button onclick="dynamicAjaxBind()" accesskey="x">E(<b><u>X</u></b>)exute</button>
     </div>
     <div id="down" class="split content">
+        Data:<br />
         <table id="output1" class="display" style="width:100%">
             <!-- <thead>
             <tr>
@@ -172,7 +193,7 @@ sys.objects
         <br />
         <hr />
         <br />
-
+        Messages:<br />
         <table id="output2" class="display" style="width:100%">
             <!-- <thead>
             <tr>
