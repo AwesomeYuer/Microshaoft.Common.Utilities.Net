@@ -36,36 +36,42 @@ namespace Microshaoft.WebApi.Controllers
         {
             JProperty field = null;
             bool needDefaultProcess = true;
-            if (fieldType == typeof(string))
+            if (!dataReader.IsDBNull(columnIndex))
             {
-                //if (fieldName.Contains("Json", StringComparison.OrdinalIgnoreCase))
+                if (fieldType == typeof(string))
                 {
-                    //fieldName = fieldName.Replace("json", "", System.StringComparison.OrdinalIgnoreCase);
-                    var s = dataReader.GetString(columnIndex);
-                    //var ss = s.Trim();
-                    if
-                        (
-                            //(ss.StartsWith("{") && ss.EndsWith("}"))
-                            //||
-                            //(ss.StartsWith("[") && ss.EndsWith("]"))
-                            s.IsJson(out var jToken, true)
-                        )
+                    //if (fieldName.Contains("Json", StringComparison.OrdinalIgnoreCase))
                     {
-                        //try
-                        //{
-                            field = new JProperty
-                                    (
-                                        fieldName
-                                        , jToken
-                                    );
-                            needDefaultProcess = false;
-                        //}
-                        //catch
-                        //{
-                        //}
+                        //fieldName = fieldName.Replace("json", "", System.StringComparison.OrdinalIgnoreCase);
+                        {
+                            var s = dataReader.GetString(columnIndex);
+                            //var ss = s.Trim();
+                            if
+                                (
+                                    //(ss.StartsWith("{") && ss.EndsWith("}"))
+                                    //||
+                                    //(ss.StartsWith("[") && ss.EndsWith("]"))
+                                    s.IsJson(out var jToken, true)
+                                )
+                            {
+                                //try
+                                //{
+                                field = new JProperty
+                                        (
+                                            fieldName
+                                            , jToken
+                                        );
+                                needDefaultProcess = false;
+                                //}
+                                //catch
+                                //{
+                                //}
+                            }
+                        }
                     }
                 }
             }
+            
             return 
                 (
                     needDefaultProcess
