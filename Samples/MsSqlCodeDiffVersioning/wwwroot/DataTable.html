@@ -37,58 +37,74 @@
     <script type="text/javascript" src="libs/datatables/Select-1.2.6/js/dataTables.select.js"></script>
     <script src="libs/splitjs/split.js"></script>
     <script>
+        var binded1 = false;
+        var binded2 = false;
         function dynamicAjaxBind() {
             var output1 = "#output1";
             var output2 = "#output2";
-            if ($.fn.DataTable.isDataTable(output1)) {
-                $(output1).DataTable().clear().destroy();
-                $(output1).html('');
+
+
+            if (binded1) {
+                if ($.fn.DataTable.isDataTable(output1)) {
+                    $(output1).DataTable().clear().destroy();
+                    $(output1).html('');
+                }
             }
-            if ($.fn.DataTable.isDataTable(output2)) {
-                $(output2).DataTable().clear().destroy();
-                $(output2).html('');
+            if (binded2) {
+                if ($.fn.DataTable.isDataTable(output2)) {
+                    $(output2).DataTable().clear().destroy();
+                    $(output2).html('');
+                }
             }
+            binded1 = false;
+            binded2 = false;
             var sql = document.getElementById("ta").value;
             $.ajax({
                 type: 'post',
                 url: 'http://localhost:5000/api/StoreProcedureExecutor/usp_executesql',
                 data: { sql: sql },
                 success: function (d) {
-                    $(output1).DataTable({
-                        destroy: true,
-                        //searching: false,
-                        dom: "Bfrtip",
-                        data: d.Outputs.ResultSets[0].Rows,
-                        columns: d.Outputs.ResultSets[0].Columns
-                    });
-                    $(output2).DataTable({
-                        destroy: true,
-                        //searching: false,
-                        dom: "Bfrtip",
-                        data: d.DataBaseStatistics.Messages,
-                        columns: [
-                                    //{
-                                    //    "title": "MessageID",
-                                    //    "data": "MessageID"
-                                    //},
-                                    {
-                                        "title": "ResultSetID"
-                                        , "data": "ResultSetID"
-                                    },
-                                    //{
-                                    //    "title": "Source",
-                                    //    "data": "Source"
-                                    //},
-                                    {
-                                        "title": "Message"
-                                        , "data": "Message"
-                                    },
-                                    {
-                                        "title": "DealTime"
-                                        , "data": "DealTime"
-                                    }
+                    if (d.Outputs.ResultSets[0].Columns.length > 0) {
+                        $(output1).DataTable({
+                            destroy: true,
+                            //searching: false,
+                            dom: "Bfrtip",
+                            data: d.Outputs.ResultSets[0].Rows,
+                            columns: d.Outputs.ResultSets[0].Columns
+                        });
+                        binded1 = true;
+                    }
+                    if (d.DataBaseStatistics.Messages.length > 0) {
+                        $(output2).DataTable({
+                            destroy: true,
+                            //searching: false,
+                            dom: "Bfrtip",
+                            data: d.DataBaseStatistics.Messages,
+                            columns: [
+                                //{
+                                //    "title": "MessageID",
+                                //    "data": "MessageID"
+                                //},
+                                {
+                                    "title": "ResultSetID"
+                                    , "data": "ResultSetID"
+                                },
+                                //{
+                                //    "title": "Source",
+                                //    "data": "Source"
+                                //},
+                                {
+                                    "title": "Message"
+                                    , "data": "Message"
+                                },
+                                {
+                                    "title": "DealTime"
+                                    , "data": "DealTime"
+                                }
                             ]
-                    });
+                        });
+                        binded2 = true;
+                    }
                 },
                 error: function (x, y, z) {
                     d = JSON.parse(x.responseText);
@@ -108,6 +124,7 @@
                             }
                         ]
                     });
+                    binded2 = true;
 
                 }
                 //contentType: "application/json",
