@@ -109,7 +109,7 @@
                 error: function (x, y, z) {
                     d = JSON.parse(x.responseText);
                     $(output2).DataTable({
-                        //destroy: true,
+                        destroy: true,
                         //searching: false,
                         dom: "Bfrtip",
                         data: [d],
@@ -125,7 +125,6 @@
                         ]
                     });
                     binded2 = true;
-
                 }
                 //contentType: "application/json",
                 //dataType: 'json',
