@@ -173,7 +173,7 @@
     </style>
 </head>
 <body>
-    <div id="up" class="split content" align="center">>
+    <div id="up" class="split content" align="center">
         <br />
         <textarea id="ta" rows="5" cols="100">
 set statistics io on
@@ -189,9 +189,9 @@ sys.objects
         </textarea>
         <button onclick="dynamicAjaxBind()" accesskey="x">E(<b><u>X</u></b>)exute</button>
     </div>
-    <div id="down" class="split content">
+    <div id="down" class="split content" style="overflow:auto">
         Data:<br />
-        <table id="output1" class="display" style="width:100%">
+        <table id="output1" class="display">
             <!-- <thead>
             <tr>
                 <th>Name</th>
@@ -207,8 +207,9 @@ sys.objects
         <br />
         <hr />
         <br />
+
         Messages:<br />
-        <table id="output2" class="display" style="width:100%">
+        <table id="output2" class="display">
             <!-- <thead>
             <tr>
                 <th>Name</th>
