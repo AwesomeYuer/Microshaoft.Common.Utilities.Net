@@ -5,6 +5,8 @@
     using System.Collections.Generic;
     using System.Data;
     using System.Data.Common;
+    using System.Data.SqlClient;
+
     public static class SqlHelper
     {
         public static JValue
@@ -101,12 +103,16 @@
                 var dataBase = connection.Database;
                 string procedureSchema = string.Empty;
                 string parameterName = string.Empty;
-                var commandText = @"
+                string schemaParameters = "information_schema.parameters";
+                if (connection is SqlConnection)
+                {
+                    schemaParameters = "zv_all_PARAMETERS";
+                }
+                var commandText = $@"
                     SELECT
                         * 
                     FROM
-                        --information_schema.parameters a 
-                        zv_all_PARAMETERS a
+                        {schemaParameters} a 
                     WHERE
                         a.SPECIFIC_NAME = @ProcedureName
                     ";
