@@ -182,7 +182,7 @@
         private class ExecutingInfo
         {
             public IDictionary<string, DbParameter> DbParameters;
-            public DateTime RecentExecutedTime;
+            public DateTime RecentParametersDefinitionCacheUsedTime;
             public object Locker = new object();
         }
         private
@@ -214,7 +214,7 @@
                 )
             {
                 executingInfo
-                    .RecentExecutedTime = DateTime.Now;
+                    .RecentParametersDefinitionCacheUsedTime = DateTime.Now;
             }
         }
         public IDictionary<string, DbParameter>
@@ -237,7 +237,7 @@
                 var _executingInfo = new ExecutingInfo()
                 {
                     DbParameters = nameIndexedParameters
-                    , RecentExecutedTime = DateTime.Now
+                    , RecentParametersDefinitionCacheUsedTime = DateTime.Now
                 };
                 return _executingInfo;
             }
@@ -273,7 +273,7 @@
                                                             .SecondsDiffNow
                                                                 (
                                                                     executingInfo
-                                                                            .RecentExecutedTime
+                                                                            .RecentParametersDefinitionCacheUsedTime
                                                                 );
                                     var r =
                                             (
@@ -294,6 +294,8 @@
                                                         , storeProcedureName
                                                         , includeReturnValueParameter
                                                     );
+                                    executingInfo
+                                        .RecentParametersDefinitionCacheUsedTime = DateTime.Now;
                                 }
                             );
                 }
