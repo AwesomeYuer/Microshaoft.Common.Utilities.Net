@@ -103,16 +103,16 @@
                 var dataBase = connection.Database;
                 string procedureSchema = string.Empty;
                 string parameterName = string.Empty;
-                string schemaParameters = "information_schema.parameters";
+                string parametersSchema = "information_schema.parameters";
                 if (connection is SqlConnection)
                 {
-                    schemaParameters = "zv_all_PARAMETERS";
+                    parametersSchema = "zv_all_PARAMETERS";
                 }
                 var commandText = $@"
                     SELECT
                         * 
                     FROM
-                        {schemaParameters} a 
+                        {parametersSchema} a 
                     WHERE
                         a.SPECIFIC_NAME = @ProcedureName
                     ";
