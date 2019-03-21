@@ -281,6 +281,7 @@ namespace Microshaoft.Web
                                     ["Parameters"] as JObject;
                 if (jObject != null)
                 {
+                    JToken jv = null;
                     if
                         (
                             jObject
@@ -289,11 +290,26 @@ namespace Microshaoft.Web
                                         "HttpResponseStatusCode"
                                         , StringComparison
                                                 .OrdinalIgnoreCase
-                                        , out var jv
+                                        , out jv
                                     )
                         )
                     {
                         statusCode = jv.Value<int>();
+                    }
+                    jv = null;
+                    if
+                        (
+                            jObject
+                                .TryGetValue
+                                    (
+                                        "HttpResponseMessage"
+                                        , StringComparison
+                                                .OrdinalIgnoreCase
+                                        , out jv
+                                    )
+                        )
+                    {
+                        message = jv.Value<string>();
                     }
                 }
                 if (success)
