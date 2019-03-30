@@ -10,6 +10,38 @@ namespace Microshaoft.Web
     using System.IO;
     using System.Linq;
     using System.Reflection;
+
+    public interface IStoreProceduresService
+    {
+        bool
+               Process
+                       (
+                           string connectionString
+                           , string dataBaseType
+                           , string storeProcedureName
+                           , out JToken result
+                           , JToken parameters = null
+                           , Func
+                               <
+                                   IDataReader
+                                   , Type        // fieldType
+                                   , string    // fieldName
+                                   , int       // row index
+                                   , int       // column index
+                                   ,
+                                       (
+                                           bool NeedDefaultProcess
+                                           , JProperty Field   //  JObject Field 对象
+                                       )
+                               > onReadRowColumnProcessFunc = null
+                           , bool enableStatistics = false
+                           , int commandTimeoutInSeconds = 90
+                       );
+    }
+
+
+
+
     public interface IStoreProceduresWebApiService
     {
         (
@@ -41,7 +73,7 @@ namespace Microshaoft.Web
     }
     public abstract class
                 AbstractStoreProceduresService
-                                : IStoreProceduresWebApiService
+                                : IStoreProceduresWebApiService , IStoreProceduresService
     {
         private class StoreProcedureComparer
                         : IEqualityComparer<IStoreProcedureExecutable>
@@ -358,7 +390,7 @@ namespace Microshaoft.Web
                     , result
                 );
         }
-        protected virtual bool
+        public virtual bool
                 Process
                         (
                             string connectionString

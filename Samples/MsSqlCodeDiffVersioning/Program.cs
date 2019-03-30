@@ -124,7 +124,7 @@ namespace WebApplication.ASPNetCore
                                     );
                         }
                     )
-                    .UseUrls("http://+:5000")
+                    //.UseUrls("http://+:5000", "https://+:5001")
                     .UseStartup<Startup>();
         }
     }

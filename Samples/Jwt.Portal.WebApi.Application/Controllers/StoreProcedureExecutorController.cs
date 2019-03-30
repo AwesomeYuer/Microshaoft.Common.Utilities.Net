@@ -16,7 +16,7 @@ namespace Microshaoft.WebApi.Controllers
     public class StoreProcedureExecutorController
                     : AbstractStoreProceduresExecutorControllerBase
     {
-        public StoreProcedureExecutorController(IStoreProceduresWebApiService service)
+        public StoreProcedureExecutorController(AbstractStoreProceduresService service)
                 : base(service)
         {
         }

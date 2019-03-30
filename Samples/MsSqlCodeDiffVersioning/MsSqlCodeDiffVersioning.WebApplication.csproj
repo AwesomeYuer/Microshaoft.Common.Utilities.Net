@@ -8,6 +8,16 @@
     <Compile Remove="MetricsRegistry\MetricsRegistry.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="makecert\makehttpssslcert.cmd.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="makecert\makehttpssslcert.cmd.txt">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
   <!--<ItemGroup>
     <Content Remove="wwwroot\libs\jquery-ui\jquery-ui-1.12.1.css" />
     <Content Remove="wwwroot\libs\jquery-ui\jquery-ui-1.12.1.js" />
