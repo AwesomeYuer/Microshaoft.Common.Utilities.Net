@@ -59,7 +59,7 @@
             var sql = document.getElementById("ta").value;
             $.ajax({
                 type: 'post',
-                url: 'http://localhost:5000/api/StoreProcedureExecutor/usp_executesql',
+                url: 'https://localhost:5001/api/StoreProcedureExecutor/usp_executesql',
                 data: { sql: sql },
                 success: function (d) {
                     if (d.Outputs.ResultSets[0].Columns.length > 0) {

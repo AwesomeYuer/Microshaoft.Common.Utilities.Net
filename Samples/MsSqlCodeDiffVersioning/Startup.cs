@@ -86,7 +86,7 @@
             services
                 .AddSingleton
                     <
-                        IStoreProceduresWebApiService
+                        AbstractStoreProceduresService
                         , StoreProceduresExecuteService
                     >
                     ();
@@ -345,7 +345,7 @@
             }
             else
             {
-                //app.UseHsts();
+                app.UseHsts();
             }
             //app.UseHttpsRedirection();
             app.UseMvc();
@@ -402,6 +402,8 @@
                                 );
                     }
                 );
+
+            app.UseHttpsRedirection();
         }
         private static IEnumerable<string> GetExistsPaths(string configurationJsonFile, string sectionName)
         {

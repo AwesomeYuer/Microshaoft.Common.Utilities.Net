@@ -5,7 +5,8 @@
         "connectionID": "c1",
         "storeProcedureName": "sp_helptext",
         "EnableStatistics": true,
-        "commandtimeoutInSeconds": 103
+        "commandtimeoutInSeconds": 103,
+        "Scope": "sp_down" 
       }
 
     },

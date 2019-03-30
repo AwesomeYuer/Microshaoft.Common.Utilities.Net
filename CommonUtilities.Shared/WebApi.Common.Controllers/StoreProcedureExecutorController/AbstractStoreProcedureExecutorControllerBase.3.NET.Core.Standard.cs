@@ -17,7 +17,7 @@ namespace Microshaoft.WebApi.Controllers
                         ControllerBase
     {
         protected readonly
-                    IStoreProceduresWebApiService
+                    AbstractStoreProceduresService
                             _service;
 
         protected virtual 
@@ -80,7 +80,7 @@ namespace Microshaoft.WebApi.Controllers
         }
         public AbstractStoreProceduresExecutorControllerBase
                     (
-                        IStoreProceduresWebApiService service
+                        AbstractStoreProceduresService service
                     )
         {
             _service = service;
