@@ -188,8 +188,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Throttler\RateLimiters\TokenBucket.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Throttler\Throttler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TimeBasedIdentity\TimeBasedIdentityGenerator.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Type\TypeExtensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Type\TypeHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Type\TypeHelper.02.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Type\TypeHelper.01.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Type\TypeHelper.03.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UAC\UacHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Cors\WildCardCorsService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Filters\IHttpRequestValidateable.cs" />
@@ -250,6 +251,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Xml\XmlValidationHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileSharding\FileShardingHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Zip\ZipFileHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ZTemp\Temp.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)DataAccess\Pager.StoreProcedure.Sample.sql" />
