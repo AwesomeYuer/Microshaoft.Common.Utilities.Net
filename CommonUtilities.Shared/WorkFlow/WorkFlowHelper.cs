@@ -23,44 +23,147 @@ namespace Microshaoft
     using System.Xaml;
     using System.Xml;
     using System.Runtime.DurableInstancing;
+    using System.Activities.Expressions;
+    using System.Collections.Concurrent;
+
     public static class WorkFlowHelper
     {
+
+        #region Member
+        /// <summary>
+        /// Compiled Expressions Type Cache
+        /// </summary>
+        private static ConcurrentDictionary
+                            <
+                                string
+                                ,
+                                    (
+                                        string WorkFlowID
+                                        , Activity WorkFlowActivity
+                                        , Type WorkFlowType
+                                        , DateTime CompiledTime
+                                    )
+                            > _cache = new ConcurrentDictionary
+                                                <
+                                                    string
+                                                    ,
+                                                        (
+                                                            string WorkFlowID
+                                                            , Activity WorkFlowActivity
+                                                            , Type WorkFlowType
+                                                            , DateTime CompiledTime
+                                                        )
+                                                >();
+        /// <summary>
+        /// Object for lock, make one Expressions Type only be compiled once
+        /// </summary>
+        private static object _locker = new object();
+        #endregion
+
         public static WorkflowApplication CreateWorkflowApplication
                                             (
-                                                string xaml
+                                                string workFlowID
+                                                , Func<string> getDefinitionXamlProcessFunc
                                                 //, string localAssemblyFilePath = null
                                                 , Func<InstanceStore> onPersistProcessFunc = null
                                             )
         {
-            var activity = XamlToActivity
+            var workflow = GetOrAdd
                                 (
-                                    xaml
-                                    //, localAssemblyFilePath
+                                    workFlowID
+                                    , () =>
+                                    {
+                                        var r = getDefinitionXamlProcessFunc();
+                                        return r;
+                                    }
                                 );
-            WorkflowApplication workflowApplication = new WorkflowApplication(activity);
+            var activity = workflow.WorkFlowActivity;
+            var workflowApplication = new WorkflowApplication(activity);
             if (onPersistProcessFunc != null)
             {
                 workflowApplication.InstanceStore = onPersistProcessFunc();
             }
-            return workflowApplication;
+            return
+                workflowApplication;
         }
-        public static Activity XamlToActivity
-                                    (
-                                        string xaml
-                                        //, string localAssemblyFilePath = null
-                                    )
+
+        public static
+                    (
+                        string WorkFlowID
+                        , Activity WorkFlowActivity
+                        , Type WorkFlowType
+                        , DateTime CompiledTime
+                    )
+                        GetOrAdd
+                            (
+                                string workFlowID
+                                , Func<string> getDefinitionXamlProcessFunc
+                            )
+        {
+            var cached = _cache
+                            .TryGetValue
+                                (
+                                    workFlowID
+                                    , out
+                                        (
+                                            string WorkFlowID
+                                            , Activity WorkFlowActivity
+                                            , Type WorkFlowType
+                                            , DateTime CompiledTime
+                                        )
+                                            workFlow
+                                );
+            //if (!cached)
+            {
+                _locker
+                    .LockIf
+                        (
+                            () =>
+                            {
+                                return !cached;
+                            }
+                            ,
+                            () =>
+                            {
+                                var xaml = getDefinitionXamlProcessFunc();
+                                (
+                                    string WorkFlowID
+                                    , Activity WorkFlowActivity
+                                    , Type WorkFlowType
+                                    , DateTime CompiledTime
+                                ) x = Compile(xaml);
+                                cached = _cache
+                                            .TryAdd
+                                                (
+                                                    workFlowID
+                                                    , x
+                                                );
+                                if (cached)
+                                {
+                                    workFlow = x;
+                                }
+                            }
+                        );
+            }
+            return
+                workFlow;
+        }
+
+         public static 
+                    (
+                        string WorkFlowID
+                        , Activity WorkFlowActivity
+                        , Type WorkFlowType
+                        , DateTime CompiledTime
+
+                    ) 
+                        Compile
+                            (
+                                string xaml
+                                //, string localAssemblyFilePath = null
+                            )
         {
             Assembly localAssembly = null;
-            //if (string.IsNullOrEmpty(localAssemblyFilePath))
-            //{
-            //    localAssembly = Assembly
-            //                        .GetExecutingAssembly();
-            //}
-            //else
-            //{
-            //    localAssembly = Assembly
-            //                        .LoadFrom(localAssemblyFilePath);
-            //}
             var stringReader = new StringReader(xaml);
             var xmlReader = XmlReader.Create(stringReader);
             var xamlXmlReader = new XamlXmlReader
@@ -85,7 +188,72 @@ namespace Microshaoft
                                             CompileExpressions = true
                                         }
                                     );
-            return activity;
+            var type = GetCompiledResultType((DynamicActivity)activity);
+            CompileExpressions(type, activity);
+            return
+                (
+                     WorkFlowID         :   string.Empty
+                     , WorkFlowActivity :   activity
+                     , WorkFlowType     :   type
+                     , CompiledTime     :   DateTime.Now
+                );
+        }
+        private static Type GetCompiledResultType(DynamicActivity activity)
+        {
+            TextExpressionCompilerSettings settings = GetCompilerSettings(activity);
+            TextExpressionCompilerResults results = new TextExpressionCompiler(settings).Compile();
+            if (results.HasErrors)
+            {
+                throw new Exception("Compilation failed.");
+            }
+            return
+                results
+                    .ResultType;
+        }
+        private static TextExpressionCompilerSettings GetCompilerSettings(DynamicActivity dynamicActivity)
+        {
+            int num = dynamicActivity.Name.LastIndexOf('.');
+            //int length = dynamicActivity.Name.Length;
+            string text = (num > 0) ? dynamicActivity.Name.Substring(num + 1) : dynamicActivity.Name;
+            text += "_CompiledExpressionRoot";
+            string activityNamespace = (num > 0) ? dynamicActivity.Name.Substring(0, num) : null;
+            return
+                new TextExpressionCompilerSettings
+                {
+                    Activity = dynamicActivity
+                        ,
+                    ActivityName = text
+                        ,
+                    ActivityNamespace = activityNamespace
+                        ,
+                    RootNamespace = null
+                        ,
+                    GenerateAsPartialClass = false
+                        ,
+                    AlwaysGenerateSource = true //if false,sometime return null type after compile
+                        ,
+                    Language = "C#"
+                };
+        }
+        private static void CompileExpressions(Type type, Activity activity)
+        {
+            ICompiledExpressionRoot
+                compiledExpressionRoot =
+                    Activator
+                        .CreateInstance
+                            (
+                                type
+                                , new object[]
+                                    {
+                                        activity
+                                    }
+                            ) as ICompiledExpressionRoot;
+            CompiledExpressionInvoker
+                .SetCompiledExpressionRootForImplementation
+                    (
+                        activity
+                        , compiledExpressionRoot
+                    );
         }
         public static TrackingProfile GetTrackingProfileFromJson
             (
