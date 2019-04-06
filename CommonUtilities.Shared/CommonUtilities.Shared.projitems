@@ -9,11 +9,11 @@
     <Import_RootNamespace>CommonUtilities.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory).NET35\ConcurrentQueue.Net35.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory).NET35\HttpClient.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory).NET35\Parallel.NET35.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory).NET35\Tuple.Net35.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory).NET35\WriteableTuple.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.NET35\ConcurrentQueue.Net35.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.NET35\HttpClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.NET35\Parallel.NET35.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.NET35\Tuple.Net35.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.NET35\WriteableTuple.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\BytesHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\CompressHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\CryptographyHelper.cs" />
@@ -251,7 +251,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Xml\XmlValidationHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileSharding\FileShardingHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Zip\ZipFileHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ZTemp\Temp.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)0.Temp\Temp.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)DataAccess\Pager.StoreProcedure.Sample.sql" />

@@ -9,11 +9,12 @@
     <Import_RootNamespace>CommonUtilities.Lite.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory).NET35\ConcurrentQueue.Net35.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory).NET35\HttpClient.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory).NET35\Parallel.NET35.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory).NET35\Tuple.Net35.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory).NET35\WriteableTuple.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)0.Temp\Temp.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.NET35\ConcurrentQueue.Net35.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.NET35\HttpClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.NET35\Parallel.NET35.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.NET35\Tuple.Net35.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.NET35\WriteableTuple.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\BytesHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\CompressHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\CryptographyHelper.cs" />
