@@ -68,7 +68,7 @@ namespace Microshaoft
                                                 , Func<InstanceStore> onPersistProcessFunc = null
                                             )
         {
-            var workflow = GetOrAdd
+            var workflow = GetOrAddWorkFlow
                                 (
                                     workFlowID
                                     , () =>
@@ -94,7 +94,7 @@ namespace Microshaoft
                         , Type WorkFlowType
                         , DateTime CompiledTime
                     )
-                        GetOrAdd
+                        GetOrAddWorkFlow
                             (
                                 string workFlowID
                                 , Func<string> getDefinitionXamlProcessFunc
@@ -163,33 +163,39 @@ namespace Microshaoft
                                 //, string localAssemblyFilePath = null
                             )
         {
-            Assembly localAssembly = null;
             var stringReader = new StringReader(xaml);
-            var xmlReader = XmlReader.Create(stringReader);
+            var xmlReader = XmlReader
+                                    .Create(stringReader);
             var xamlXmlReader = new XamlXmlReader
-                                                (
-                                                    xmlReader
-                                                    , new XamlXmlReaderSettings()
-                                                    {
-                                                        LocalAssembly = localAssembly
-                                                    }
-                                                );
+                                            (
+                                                xmlReader
+                                            );
             var xamlReader = ActivityXamlServices
                                         .CreateReader
                                             (
                                                 xamlXmlReader
                                             );
-            var activity = ActivityXamlServices
-                                .Load
-                                    (
-                                        xamlReader
-                                        , new ActivityXamlServicesSettings()
-                                        {
-                                            CompileExpressions = true
-                                        }
-                                    );
-            var type = GetCompiledResultType((DynamicActivity)activity);
-            CompileExpressions(type, activity);
+            var activity =
+                    ActivityXamlServices
+                                        .Load
+                                            (
+                                                xamlReader
+                                                , new ActivityXamlServicesSettings()
+                                                    {
+                                                        CompileExpressions = true
+                                                    }
+                                            );
+            if
+                (
+                    TryGetCompiledResultType
+                        (
+                            (DynamicActivity) activity
+                            , out var type
+                        )
+                )
+            {
+                CompileExpressions(type, activity);
+            }
             return
                 (
                      WorkFlowID         :   string.Empty
@@ -198,31 +204,57 @@ namespace Microshaoft
                      , CompiledTime     :   DateTime.Now
                 );
         }
-        private static Type GetCompiledResultType(DynamicActivity activity)
+        private static bool TryGetCompiledResultType
+                                    (
+                                        DynamicActivity activity
+                                        , out Type type
+                                    )
         {
-            TextExpressionCompilerSettings settings = GetCompilerSettings(activity);
-            TextExpressionCompilerResults results = new TextExpressionCompiler(settings).Compile();
-            if (results.HasErrors)
+            type = null;
+            var settings = GetCompilerSettings(activity);
+            var results = new TextExpressionCompiler
+                                            (settings)
+                                                .Compile();
+            var r = results.HasErrors;
+            if (!r)
             {
-                throw new Exception("Compilation failed.");
+                type = results
+                            .ResultType;
+                r = (type != null);
             }
-            return
-                results
-                    .ResultType;
+            return r;
         }
-        private static TextExpressionCompilerSettings GetCompilerSettings(DynamicActivity dynamicActivity)
+        private static TextExpressionCompilerSettings
+                                        GetCompilerSettings
+                                                (
+                                                    DynamicActivity dynamicActivity
+                                                )
         {
-            int num = dynamicActivity.Name.LastIndexOf('.');
+            int index = dynamicActivity.Name.LastIndexOf('.');
             //int length = dynamicActivity.Name.Length;
-            string text = (num > 0) ? dynamicActivity.Name.Substring(num + 1) : dynamicActivity.Name;
-            text += "_CompiledExpressionRoot";
-            string activityNamespace = (num > 0) ? dynamicActivity.Name.Substring(0, num) : null;
+            string activityName = 
+                        (
+                            (index > 0)
+                            ?
+                            dynamicActivity.Name.Substring(index + 1)
+                            :
+                            dynamicActivity.Name
+                        );
+            activityName += "_CompiledExpressionRoot";
+            string activityNamespace =
+                        (
+                            (index > 0)
+                            ?
+                            dynamicActivity.Name.Substring(0, index)
+                            :
+                            null
+                        );
             return
                 new TextExpressionCompilerSettings
                 {
                     Activity = dynamicActivity
                         ,
-                    ActivityName = text
+                    ActivityName = activityName
                         ,
                     ActivityNamespace = activityNamespace
                         ,
@@ -278,16 +310,17 @@ namespace Microshaoft
             }
             return trackingProfile;
         }
-        public static TrackingParticipant GetTrackingParticipantFromJson<TTrackingParticipant>
-                                                    (
-                                                        string json
-                                                        , bool isArray = false
-                                                    )
+        public static TrackingParticipant
+                            GetTrackingParticipantFromJson<TTrackingParticipant>
+                                (
+                                    string json
+                                    , bool isArray = false
+                                )
             where TTrackingParticipant : TrackingParticipant, new()
         {
             TrackingParticipant trackingParticipant = null;
             TrackingProfile trackingProfile
-                    = GetTrackingProfileFromJson(json, isArray);
+                                = GetTrackingProfileFromJson(json, isArray);
             if (trackingProfile != null)
             {
                 trackingParticipant = new TTrackingParticipant();
