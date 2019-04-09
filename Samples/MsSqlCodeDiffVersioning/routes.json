@@ -16,8 +16,8 @@
         "storeProcedureName": "usp_executesql",
         "EnableStatistics": true,
         "commandtimeoutInSeconds": 103
-      }
-
+      },
+      "operations": ["a1", "a2"]
     },
     "objEcts": {
       "HttPGet": {
@@ -25,7 +25,8 @@
         "storeProcedureName": "zsp_zObjectsChangesLogsHistory_Get",
         "EnableStatistics": true,
         "commandtimeoutInSeconds": 103,
-        "requestvAlidator": "simpleValidator1"
+        "requestvAlidator": "simpleValidator1",
+        "operations": [ "a1", "a2" ]
       },
       "HttpPost": {
         "ConnectionID": "c1",

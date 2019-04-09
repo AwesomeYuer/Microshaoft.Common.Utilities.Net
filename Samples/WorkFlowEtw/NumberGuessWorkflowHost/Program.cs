@@ -1,7 +1,7 @@
 ﻿namespace NumberGuessWorkflowHost
 {
     using Microshaoft;
-    using NumberGuessWorkflowActivities;
+    //using NumberGuessWorkflowActivities;
     //using NumberGuessWorkflowActivities;
     using System;
     using System.Activities;
@@ -15,7 +15,8 @@
 <Activity mc:Ignorable=""sap sap2010 sads"" x:Class=""NumberGuessWorkflowActivities.FlowchartNumberGuessWorkflow"" local:FlowchartNumberGuessWorkflow.MaxNumber=""100""
  xmlns=""http://schemas.microsoft.com/netfx/2009/xaml/activities""
  xmlns:av=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
- xmlns:local=""clr-namespace:NumberGuessWorkflowActivities;assembly=NumberGuessWorkflowActivities""
+ xmlns:local=""clr-namespace:NumberGuessWorkflowActivities;NumberGuessWorkflowActivities""
+
  xmlns:mc=""http://schemas.openxmlformats.org/markup-compatibility/2006""
  xmlns:mca=""clr-namespace:Microsoft.CSharp.Activities;assembly=System.Activities""
  xmlns:sads=""http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger""
