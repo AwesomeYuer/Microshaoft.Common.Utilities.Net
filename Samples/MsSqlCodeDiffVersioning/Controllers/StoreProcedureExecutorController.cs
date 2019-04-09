@@ -59,6 +59,7 @@ namespace Microshaoft.WebApi.Controllers
         ]
         // this is a test for new route as above
         // you can set it use public for test
+        [OperationsAuthorizeFilter]
         public ActionResult<JToken>
                            ProcessActionRequest
                                 (

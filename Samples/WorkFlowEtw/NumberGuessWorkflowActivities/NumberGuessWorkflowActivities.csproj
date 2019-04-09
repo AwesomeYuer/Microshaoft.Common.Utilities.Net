@@ -56,22 +56,19 @@
     </XamlAppDef>
   </ItemGroup>
   <ItemGroup>
-    <XamlAppDef Include="SequentialNumberGuessWorkflow.xaml">
+    <Content Include="Xaml\FlowchartNumberGuessWorkflow.xaml.xml">
+      <Generator>MSBuild:Compile</Generator>
+    </Content>
+    <Content Include="Xaml\SequentialNumberGuessWorkflow.xaml.xml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </XamlAppDef>
+    </Content>
   </ItemGroup>
   <ItemGroup>
-    <XamlAppDef Include="FlowchartNumberGuessWorkflow.xaml">
+    <Content Include="Xaml\StateMachineNumberGuessWorkflow.xaml.xml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </XamlAppDef>
-  </ItemGroup>
-  <ItemGroup>
-    <XamlAppDef Include="StateMachineNumberGuessWorkflow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </XamlAppDef>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
