@@ -1,13 +1,11 @@
-﻿/*
-# Microshaoft
+﻿#if NETFRAMEWORK4_X
+/*
 /r:System.Xaml.dll
 /r:System.Activities.dll
 /r:System.Activities.DurableInstancing.dll
 /r:System.Runtime.DurableInstancing.dll
 /r:"D:\Microshaoft.Nuget.Packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll"
 */
-
-#if NETFRAMEWORK4_X
 namespace Microshaoft
 {
     using Newtonsoft.Json.Linq;
@@ -47,7 +45,7 @@ namespace Microshaoft
         private static object _locker = new object();
         #endregion
 
-        public static WorkflowApplication CreateWorkflowApplication
+        public static WorkflowApplication CreateApplication
                                             (
                                                 string definitionID
                                                 , Func<string> getDefinitionXamlProcessFunc
@@ -109,7 +107,7 @@ namespace Microshaoft
                             ,
                             () =>
                             {
-                                //Console.WriteLine($"Compile {definitionID}");
+                                Console.WriteLine($"Compile {definitionID}");
                                 var xaml = getDefinitionXamlProcessFunc();
                                 r = Compile(definitionID, xaml);
                                 cached = _cache
@@ -447,7 +445,5 @@ namespace Microshaoft
         }
     }
 }
-
-
 
 #endif

@@ -282,7 +282,7 @@
         xmlns:local=""clr-namespace:NumberGuessWorkflowActivities;assembly=NumberGuessWorkflowActivities""
         */
             var wfApp = WorkFlowHelper
-                            .CreateWorkflowApplication
+                            .CreateApplication
                                 (
                                     "aa"
                                     , () =>
