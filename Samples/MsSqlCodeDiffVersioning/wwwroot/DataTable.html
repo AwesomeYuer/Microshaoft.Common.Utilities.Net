@@ -57,9 +57,10 @@
             binded1 = false;
             binded2 = false;
             var sql = document.getElementById("ta").value;
+			var url = "https://local.bank-of-china.com/a.json";
             $.ajax({
                 type: 'post',
-                url: 'https://localhost:5001/api/StoreProcedureExecutor/usp_executesql',
+                url: url,
                 data: { sql: sql },
                 success: function (d) {
                     if (d.Outputs.ResultSets[0].Columns.length > 0) {
