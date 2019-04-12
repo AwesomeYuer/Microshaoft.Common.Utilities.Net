@@ -1,7 +1,7 @@
 ﻿namespace NumberGuessWorkflowHost
 {
     using Microshaoft;
-    //using NumberGuessWorkflowActivities;
+    using NumberGuessWorkflowActivities;
     //using NumberGuessWorkflowActivities;
     using System;
     using System.Activities;
@@ -275,12 +275,12 @@
 
             var inputs = new Dictionary<string, object>() { { "MaxNumber", 100 } };
 
-        //WorkflowApplication wfApp =
-        //    new WorkflowApplication(new FlowchartNumberGuessWorkflow(), inputs);
+            //WorkflowApplication wfApp =
+            //    new WorkflowApplication(new FlowchartNumberGuessWorkflow());
 
-        /*
-        xmlns:local=""clr-namespace:NumberGuessWorkflowActivities;assembly=NumberGuessWorkflowActivities""
-        */
+            /*
+            xmlns:local=""clr-namespace:NumberGuessWorkflowActivities;assembly=NumberGuessWorkflowActivities""
+            */
             var wfApp = WorkFlowHelper
                             .CreateApplication
                                 (

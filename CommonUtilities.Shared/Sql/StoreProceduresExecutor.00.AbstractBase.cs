@@ -565,17 +565,18 @@
                     do
                     {
                         var columns = dataReader
-                                        .GetColumnsJTokensEnumerable();
+                                        .GetColumnsJArray();
                         var rows = dataReader
                                         .AsRowsJTokensEnumerable
                                             (
-                                                onReadRowColumnProcessFunc
+                                                columns
+                                                , onReadRowColumnProcessFunc
                                             );
                         var resultSet = new JObject
                                 {
                                     {
                                         "Columns"
-                                        , new JArray(columns)
+                                        , columns
                                     }
                                     ,
                                     {

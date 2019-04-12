@@ -138,6 +138,7 @@ namespace Microshaoft
         public static IEnumerable<JToken> AsRowsJTokensEnumerable
                              (
                                     this IDataReader target
+                                    , JArray columns = null
                                     , Func
                                         <
                                             IDataReader
@@ -157,10 +158,12 @@ namespace Microshaoft
                 GetRowsJTokensEnumerable
                     (
                         target
-                         , onReadRowColumnProcessFunc
+                        , columns 
+                        , onReadRowColumnProcessFunc
                     );
         }
-        public static IEnumerable<JToken> GetColumnsJTokensEnumerable
+        [Obsolete]
+        private static IEnumerable<JToken> GetColumnsJTokensEnumerable
                      (
                         this IDataReader target
                      )
@@ -170,6 +173,10 @@ namespace Microshaoft
             {
                 var fieldType = target.GetFieldType(i);
                 var fieldName = target.GetName(i);
+                if (fieldName.IsNullOrEmptyOrWhiteSpace())
+                {
+                    fieldName = $"Unknown-{i}";
+                }
                 yield
                     return
                         new JObject
@@ -208,9 +215,78 @@ namespace Microshaoft
                                 );
             }
         }
+        public static JArray GetColumnsJArray
+                     (
+                        this IDataReader target
+                     )
+        {
+            var fieldsCount = target.FieldCount;
+            HashSet<string> hashSet = null;
+            JArray r = null;
+            for (var i = 0; i < fieldsCount; i++)
+            {
+                if (r == null)
+                {
+                    r = new JArray();
+                    hashSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                }
+                var fieldType = target.GetFieldType(i);
+                var fieldName = target.GetName(i);
+                if (fieldName.IsNullOrEmptyOrWhiteSpace())
+                {
+                    fieldName = $"Column-{i + 1}";
+                }
+                while (hashSet.Contains(fieldName))
+                {
+                    fieldName += "_1";
+                }
+                hashSet.Add(fieldName);
+                r.Add
+                    (
+                        new JObject
+                                (
+                                    new JProperty
+                                        (
+                                            "ColumnName"
+                                            , fieldName
+                                        )
+                                    ,
+                                    new JProperty
+                                        (
+                                            "Title"
+                                            , fieldName
+                                        )
+                                    ,
+                                    new JProperty
+                                        (
+                                            "title"
+                                            , fieldName
+                                        )
+                                        ,
+                                    new JProperty
+                                        (
+                                            "data"
+                                            , fieldName
+                                        )
+                                    ,
+                                    new JProperty
+                                        (
+                                            "ColumnType"
+                                            , fieldType
+                                                .GetJTokenType()
+                                                .ToString()
+                                        )
+                                )
+                    );
+
+            }
+            hashSet = null;
+            return r;
+        }
         public static IEnumerable<JToken> GetRowsJTokensEnumerable
                              (
                                  this IDataReader target
+                                 , JArray columns = null
                                  , Func
                                         <
                                             IDataReader
@@ -234,7 +310,20 @@ namespace Microshaoft
                 for (var fieldIndex = 0; fieldIndex < fieldsCount; fieldIndex++)
                 {
                     var fieldType = target.GetFieldType(fieldIndex);
-                    var fieldName = target.GetName(fieldIndex);
+                    var fieldName = string.Empty;
+                    if (columns != null)
+                    {
+                        fieldName = columns[fieldIndex]["ColumnName"].Value<string>();
+                    }
+                    else
+                    {
+                        target.GetName(fieldIndex);
+                        if (fieldName.IsNullOrEmptyOrWhiteSpace())
+                        {
+                            fieldName = $"Unknown-{fieldIndex}";
+                        }
+                    }
+
                     JProperty field = null;
                     var needDefaultProcess = true;
                     if (onReadRowColumnProcessFunc != null)
