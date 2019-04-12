@@ -26,7 +26,19 @@
         "EnableStatistics": true,
         "commandtimeoutInSeconds": 103,
         "requestvAlidator": "simpleValidator1",
-        "operations": [ "a1", "a2" ]
+        "operations": [ "a1", "a2" ],
+        "InputsParameters": [
+          {
+            "Name": "P1",
+            "Value": 12345,
+            "Overrideable": true
+          },
+          {
+            "ParameterName": "P2",
+            "Overrideable": false,
+            "Value": "aaaaaaaaaa"
+          }
+        ]
       },
       "HttpPost": {
         "ConnectionID": "c1",

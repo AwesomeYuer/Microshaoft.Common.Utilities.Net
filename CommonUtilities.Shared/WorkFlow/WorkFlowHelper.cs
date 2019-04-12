@@ -62,7 +62,8 @@ namespace Microshaoft
                                         return r;
                                     }
                                 );
-            var activity = definition.Activity;
+            var activity = CreateNewInstance(definition.Type, definition.Activity);
+
             var workflowApplication = new WorkflowApplication(activity);
             if (onPersistProcessFunc != null)
             {
@@ -154,17 +155,13 @@ namespace Microshaoft
                                                 CompileExpressions = true
                                             }
                                         );
-            if
+
+            TryGetCompiledResultType
                 (
-                    TryGetCompiledResultType
-                        (
-                            (DynamicActivity)activity
-                            , out var type
-                        )
-                )
-            {
-                CompileExpressions(type, activity);
-            }
+                    (DynamicActivity)activity
+                    , out var type
+                );
+            
             return
                 new WorkFlowDefinition()
                 {
@@ -240,8 +237,9 @@ namespace Microshaoft
                     Language = "C#"
                 };
         }
-        private static void CompileExpressions(Type type, Activity activity)
+        private static Activity CreateNewInstance(Type type, Activity activity)
         {
+            Activity r = null;
             ICompiledExpressionRoot
                 compiledExpressionRoot =
                     Activator
@@ -259,6 +257,8 @@ namespace Microshaoft
                         activity
                         , compiledExpressionRoot
                     );
+            r = (Activity) compiledExpressionRoot;
+            return r;
         }
         public static TrackingProfile GetTrackingProfileFromJson
             (
