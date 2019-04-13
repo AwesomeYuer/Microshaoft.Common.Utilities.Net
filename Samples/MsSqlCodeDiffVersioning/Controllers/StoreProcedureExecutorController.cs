@@ -54,7 +54,7 @@ namespace Microshaoft.WebApi.Controllers
         [
             Route
                 (
-                    "{routeName}"
+                    "sync/{routeName}"
                 )
         ]
         // this is a test for new route as above

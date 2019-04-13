@@ -262,7 +262,7 @@ namespace Microshaoft
                                             "title"
                                             , fieldName
                                         )
-                                        ,
+                                    ,
                                     new JProperty
                                         (
                                             "data"

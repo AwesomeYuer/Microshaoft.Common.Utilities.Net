@@ -77,7 +77,7 @@
                 right = vm.SelectedItem().ID;
             }
             var ids = left + ',' + right;
-            var url = baseUrl + "/api/StoreProcedureExecutor/objects/Outputs/ResultSets/0/Rows?SearchIdsList=" + ids;
+            var url = baseUrl + "/api/StoreProcedureExecutor/sync/objects/Outputs/ResultSets/0/Rows?SearchIdsList=" + ids;
             $.getJSON(
                 url
                 , function (data) {
@@ -273,7 +273,7 @@
             //jsonp cross domain
             var search = document.getElementById("search").value;
             var beforeTime = document.getElementById("datepicker1").value;
-            var url = baseUrl + "/api/StoreProcedureExecutor/objects?searchobjectname=" + search + "&beforetime=" + beforeTime;
+            var url = baseUrl + "/api/StoreProcedureExecutor/async/objects?searchobjectname=" + search + "&beforetime=" + beforeTime;
             $.getJSON(
                 url
                 , function (data) {
