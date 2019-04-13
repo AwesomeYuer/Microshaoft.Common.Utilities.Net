@@ -58,52 +58,69 @@
             binded2 = false;
             var sql = document.getElementById("ta").value;
             var url = "https://local.bank-of-china.com/a.json";
-            url = 'https://localhost:5001/api/StoreProcedureExecutor/usp_executesql';
+            url = 'https://localhost:5001/api/StoreProcedureExecutor/sync/usp_executesql';
+            var downloader = document.getElementById("downloader");
+            var download = (document.getElementById("download").checked == true);
+            var rowcount = parseInt(document.getElementById("rowcount").value);
+            if (download) {
+                url += '/outputs/resultsets/0/rows';
+            }
+
             $.ajax({
                 type: 'post',
                 url: url,
-                data: { sql: sql },
+                data: { sql: sql,rowcount: rowcount},
                 success: function (d) {
-                    if (d.Outputs.ResultSets[0].Columns.length > 0) {
-                        $(output1).DataTable({
-                            destroy: true,
-                            //searching: false,
-                            dom: "Bfrtip",
-                            data: d.Outputs.ResultSets[0].Rows,
-                            columns: d.Outputs.ResultSets[0].Columns
-                        });
-                        binded1 = true;
+                    if (download) {
+                        var blob = new Blob([JSON.stringify(d)], { type: "application/json" });
+                        var URL = window.URL || window.webkitURL;
+                        var downloadUrl = URL.createObjectURL(blob);
+                        downloader.href = downloadUrl;
+                        downloader.download = "aaa.json";
+                        downloader.click();
                     }
-                    if (d.DataBaseStatistics.Messages.length > 0) {
-                        $(output2).DataTable({
-                            destroy: true,
-                            //searching: false,
-                            dom: "Bfrtip",
-                            data: d.DataBaseStatistics.Messages,
-                            columns: [
-                                //{
-                                //    "title": "MessageID",
-                                //    "data": "MessageID"
-                                //},
-                                {
-                                    "title": "ResultSetID"
-                                    , "data": "ResultSetID"
-                                },
-                                //{
-                                //    "title": "Source",
-                                //    "data": "Source"
-                                //},
-                                {
-                                    "title": "Message"
-                                    , "data": "Message"
-                                },
-                                {
-                                    "title": "DealTime"
-                                    , "data": "DealTime"
-                                }
-                            ]
-                        });
-                        binded2 = true;
+                    else {
+                        if (d.Outputs.ResultSets[0].Columns.length > 0) {
+                            $(output1).DataTable({
+                                destroy: true,
+                                //searching: false,
+                                dom: "Bfrtip",
+                                data: d.Outputs.ResultSets[0].Rows,
+                                columns: d.Outputs.ResultSets[0].Columns
+                            });
+                            binded1 = true;
+                        }
+                        if (d.DataBaseStatistics.Messages.length > 0) {
+                            $(output2).DataTable({
+                                destroy: true,
+                                //searching: false,
+                                dom: "Bfrtip",
+                                data: d.DataBaseStatistics.Messages,
+                                columns: [
+                                    //{
+                                    //    "title": "MessageID",
+                                    //    "data": "MessageID"
+                                    //},
+                                    {
+                                        "title": "ResultSetID"
+                                        , "data": "ResultSetID"
+                                    },
+                                    //{
+                                    //    "title": "Source",
+                                    //    "data": "Source"
+                                    //},
+                                    {
+                                        "title": "Message"
+                                        , "data": "Message"
+                                    },
+                                    {
+                                        "title": "DealTime"
+                                        , "data": "DealTime"
+                                    }
+                                ]
+                            });
+                            binded2 = true;
+                        }
                     }
                 },
                 error: function (x, y, z) {
@@ -175,7 +192,9 @@
     </style>
 </head>
 <body>
+    <a id="downloader" target="_blank">download</a>
     <div id="up" class="split content" align="center">
+        rowCount: <input type="text" id="rowcount" value="100" />
         <br />
         <textarea id="ta" rows="5" cols="100">
 set statistics io on
@@ -190,6 +209,10 @@ sys.objects
 
         </textarea>
         <button onclick="dynamicAjaxBind()" accesskey="x">E(<b><u>X</u></b>)exute</button>
+
+        <input type="checkbox" name="checkbox" id="download" value="value">
+        <label for="download">download</label>
+
     </div>
     <div id="down" class="split content" style="overflow:auto">
         Data:<br />

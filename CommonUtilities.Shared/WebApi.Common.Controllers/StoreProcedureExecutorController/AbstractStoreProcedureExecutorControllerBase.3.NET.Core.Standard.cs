@@ -8,6 +8,7 @@ namespace Microshaoft.WebApi.Controllers
     using Newtonsoft.Json.Linq;
     using System;
     using System.Data;
+    using System.Threading.Tasks;
 
     [Route("api/[controller]")]
     [ApiController]
@@ -96,7 +97,7 @@ namespace Microshaoft.WebApi.Controllers
         [
             Route
                 (
-                    "{routeName}/"
+                    "sync/{routeName}/"
                     + "{resultJsonPathPart1?}/"
                     + "{resultJsonPathPart2?}/"
                     + "{resultJsonPathPart3?}/"
@@ -105,7 +106,7 @@ namespace Microshaoft.WebApi.Controllers
                     + "{resultJsonPathPart6?}"
                 )
         ]
-        public virtual ActionResult<JToken> 
+        public virtual ActionResult<JToken>
                             ProcessActionRequest
                                 (
                                     [FromRoute]
@@ -173,6 +174,70 @@ namespace Microshaoft.WebApi.Controllers
                     };
             }
             return result;
+        }
+
+
+        [HttpDelete]
+        [HttpGet]
+        [HttpHead]
+        [HttpOptions]
+        [HttpPatch]
+        [HttpPost]
+        [HttpPut]
+        [
+            Route
+                (
+                    "async/{routeName}/"
+                    + "{resultJsonPathPart1?}/"
+                    + "{resultJsonPathPart2?}/"
+                    + "{resultJsonPathPart3?}/"
+                    + "{resultJsonPathPart4?}/"
+                    + "{resultJsonPathPart5?}/"
+                    + "{resultJsonPathPart6?}"
+                )
+        ]
+        public virtual async Task<ActionResult<JToken>>
+                            ProcessActionRequestAsync
+                                (
+                                    [FromRoute]
+                                        string routeName
+                                    , [ModelBinder(typeof(JTokenModelBinder))]
+                                        JToken parameters = null
+                                    , [FromRoute]
+                                        string resultJsonPathPart1 = null
+                                    , [FromRoute]
+                                        string resultJsonPathPart2 = null
+                                    , [FromRoute]
+                                        string resultJsonPathPart3 = null
+                                    , [FromRoute]
+                                        string resultJsonPathPart4 = null
+                                    , [FromRoute]
+                                        string resultJsonPathPart5 = null
+                                    , [FromRoute]
+                                        string resultJsonPathPart6 = null
+                                )
+        {
+            var r = await
+                        Task
+                            .Run
+                                (
+                                    ()=>
+                                    {
+                                        var rr = ProcessActionRequest
+                                                    (
+                                                        routeName
+                                                        , parameters
+                                                        , resultJsonPathPart1
+                                                        , resultJsonPathPart2
+                                                        , resultJsonPathPart3
+                                                        , resultJsonPathPart4
+                                                        , resultJsonPathPart5
+                                                        , resultJsonPathPart6
+                                                    );
+                                        return rr;
+                                    }
+                                );
+            return r;
         }
     }
 }
