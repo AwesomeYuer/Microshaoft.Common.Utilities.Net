@@ -93,6 +93,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Json\JsonReaderHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)JsonWebToken\JwtTokenHelper.NET.Framework.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)JsonWebToken\JwtTokenHelper.NET.All.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\JTokenWrapper\JArrayWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\JTokenWrapper\JTokenWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\KeyValueNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KeyWordFilter\CharExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KeyWordFilter\FastFilter.cs" />
@@ -247,6 +249,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)WindowsAPI\CreateProcessAsUser.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorkFlow\ActivityFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorkFlow\CommonJsonIoActivities\AbstractDynamicJsonIoActivity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WorkFlow\CommonJsonIoActivities\AbstractJTokenWrapperIoActivity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorkFlow\CommonJsonIoActivities\AbstractJTokenIoActivity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorkFlow\WorkFlowHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Xml\XmlCDATA.cs" />

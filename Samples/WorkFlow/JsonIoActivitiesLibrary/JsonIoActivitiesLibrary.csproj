@@ -48,6 +48,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="JTokenWrapperIoActivity1.cs" />
     <Compile Include="JTokenIoActivity1.cs" />
     <Compile Include="DynamicJsonIoActivity1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
