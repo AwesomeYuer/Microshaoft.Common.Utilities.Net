@@ -1,5 +1,5 @@
 ﻿#if NETFRAMEWORK4_X
-namespace Microshaoft
+namespace Microshaoft.WorkFlows.Activities
 {
     using Newtonsoft.Json.Linq;
     using System;

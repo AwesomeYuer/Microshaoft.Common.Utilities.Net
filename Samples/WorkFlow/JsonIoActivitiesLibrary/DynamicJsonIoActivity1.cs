@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Activities;
 using Newtonsoft.Json.Linq;
-namespace Microshaoft
+namespace Microshaoft.WorkFlows.Activities
 {
 
     public sealed class DynamicJsonIoActivity1 : AbstractDynamicJsonIoActivity
@@ -12,6 +12,8 @@ namespace Microshaoft
         public override DynamicJson OnExecuteProcess(NativeActivityContext context)
         {
             dynamic parameter = Inputs.Get(context);
+            var xx = parameter["F1"].GetValue<int>();
+            Console.WriteLine($"Inputs F1:{xx} @ {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffff")}");
             var i = -1;
             if (!parameter.IsDefined("RunningCount"))
             {

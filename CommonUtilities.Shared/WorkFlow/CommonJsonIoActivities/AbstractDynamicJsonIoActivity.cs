@@ -1,5 +1,5 @@
 ﻿#if NETFRAMEWORK4_X
-namespace Microshaoft
+namespace Microshaoft.WorkFlows.Activities
 {
     using System;
     using System.Activities;

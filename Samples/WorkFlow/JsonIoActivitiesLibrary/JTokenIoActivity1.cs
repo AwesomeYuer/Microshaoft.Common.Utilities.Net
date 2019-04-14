@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Activities;
-using Newtonsoft.Json.Linq;
-using Microshaoft;
-
-namespace Microshaoft
+﻿namespace Microshaoft.WorkFlows.Activities
 {
+    using Newtonsoft.Json.Linq;
+    using System.Activities;
 
     public sealed class JTokenIoActivity1 : AbstractJTokenIoActivity
     {
