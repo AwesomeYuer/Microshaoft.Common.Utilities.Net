@@ -108,6 +108,12 @@
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <XamlAppDef Include="JTokenWrapperIoWorkFlow1.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </XamlAppDef>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy $(SolutionDir)Samples\WorkFlow\WorkFlows\*.xaml $(SolutionDir)\Samples\WorkFlow\WorkflowsHost\$(OutDir) /Y</PostBuildEvent>

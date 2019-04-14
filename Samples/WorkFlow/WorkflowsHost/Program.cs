@@ -1,6 +1,7 @@
 ﻿namespace WorkflowConsoleApplication
 {
     using Microshaoft;
+    using Newtonsoft.Json.Linq;
     using System;
     using System.Activities;
     using System.Activities.Tracking;
@@ -9,15 +10,18 @@
     using System.Threading.Tasks;
     class Program
     {
-        private static string _xaml = File.OpenText("DynamicJsonIoWorkFlow.xaml").ReadToEnd();
+        private static string _xaml = File.OpenText("JTokenWrapperIoWorkFlow1.xaml").ReadToEnd();
 
         static void Main()
         {
+            JTokenWrapperIoWorkFlowTest(1);
+            Console.ReadLine();
+            return;
             System.Threading.Tasks.Parallel
                     .For
                         (
                             1
-                            , 100
+                            , 2
                             , new ParallelOptions()
                             {
                                 MaxDegreeOfParallelism = Environment.ProcessorCount
@@ -27,7 +31,8 @@
 
                                 //try
                                 //{
-                                DynamicJsonIoWorkFlowTest(x);
+                                JTokenWrapperIoWorkFlowTest(x);
+                                //DynamicJsonIoWorkFlowTest(x);
                                 //}
                                 //catch (Exception e)
                                 //{
@@ -38,6 +43,54 @@
                             }
                         );
             Console.ReadLine();
+        }
+
+        private static void JTokenWrapperIoWorkFlowTest(int i)
+        {
+            JTokenWrapper dj = JTokenWrapper.Parse($@"{{""F1"":2222}}");
+            var xx = ((JObject)dj.Token)["F1"].Value<int>();
+            var inputs = new Dictionary<string, object>()
+            {
+                { "Inputs", dj}
+            };
+            var wfApp = WorkFlowHelper
+                                .CreateApplication
+                                    (
+                                        "aa"
+                                        , () =>
+                                        {
+                                            return
+                                                _xaml;
+                                        }
+                                        , inputs
+                                    );
+            wfApp.Completed = (e) =>
+            {
+                //int Turns = Convert.ToInt32(e.Outputs["Turns"]);
+                //Console.WriteLine("Congratulations, you guessed the number in {0} turns.", Turns);
+
+                //syncEvent.Set();
+            };
+
+            wfApp.Aborted = (e) =>
+            {
+                Console.WriteLine(e.Reason);
+                //syncEvent.Set();
+            };
+
+            wfApp.OnUnhandledException = (e) =>
+            {
+                Console.WriteLine(e.UnhandledException.ToString());
+                return UnhandledExceptionAction.Terminate;
+            };
+
+            wfApp.Idle = (e) =>
+            {
+                //idleEvent.Set();
+            };
+
+            wfApp.Run();
+
         }
 
         private static void DynamicJsonIoWorkFlowTest(int i)
