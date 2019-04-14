@@ -1,11 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Microshaoft
+﻿namespace Microshaoft
 {
+    using Newtonsoft.Json.Linq;
     public class JTokenWrapper
     {
         //private ConcurrentDictionary<string, JTokenWrapper> _properties = new ConcurrentDictionary<string, JTokenWrapper>();
@@ -15,35 +10,9 @@ namespace Microshaoft
         {
             Token = jToken;
         }
-        //private JTokenWrapper GetOrAddProperty(string propertyName)
-        //{
-        //    return
-        //        _properties
-        //            .GetOrAdd
-        //                (
-        //                    propertyName
-        //                    , (x) =>
-        //                    {
-        //                        var jToken = _jToken[propertyName];
-        //                        var r = new JTokenWrapper(jToken);
-        //                        return
-        //                            r;
-        //                    }
-        //                );
-        //}
-        //public JToken this[string propertyName]
-        //{
-        //    get
-        //    {
-        //        //var jTokenWrapper = GetOrAddProperty(propertyName);
-        //        return jTokenWrapper;
-        //    }
-        //    set
-        //    {
-        //        var jTokenWrapper = GetOrAddProperty(propertyName);
-        //        jTokenWrapper._jToken[propertyName] = value._jToken;  
-        //    }
-        //}
+
+      
+
         public static JTokenWrapper Parse(string json)
         {
             var jToken = JToken.Parse(json);
@@ -51,24 +20,18 @@ namespace Microshaoft
             return r;
         }
         public static T ParseAs<T>(string json)
-                     where T : JContainer
+                                where T : JContainer
         {
-            
             var j = JToken.Parse(json);
             var r = (T) j;
             return r;
         }
 
         public T TokenAs<T>()
-            where T : JContainer
+                        where T : JContainer
         {
-            var r = (T) this.Token;
+            var r = (T) Token;
             return r;
         }
-        //public T Value<T>()
-        //{
-        //    return
-        //        _jToken.Value<T>();
-        //}
     }
 }
