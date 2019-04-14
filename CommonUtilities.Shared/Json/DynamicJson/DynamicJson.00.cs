@@ -119,6 +119,24 @@ namespace Microshaoft
                 case JsonType.boolean:
                     return (bool)element;
                 case JsonType.number:
+                    var s = element.Value;
+                    var b = false;
+                    b = int.TryParse(s, out var i);
+                    if (b)
+                    {
+                        return i;
+                    }
+                    b = long.TryParse(s, out var l);
+                    if (b)
+                    {
+                        return l;
+                    }
+                    //b = float.TryParse(s, out var f);
+                    //if (b)
+                    //{
+                    //    return f;
+                    //}
+                    //b = decimal.TryParse()
                     return (double)element;
                 case JsonType.@string:
                     return (string)element;

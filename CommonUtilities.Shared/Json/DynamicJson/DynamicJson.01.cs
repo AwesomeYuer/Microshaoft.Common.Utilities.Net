@@ -39,7 +39,34 @@ namespace Microshaoft
         {
             return (T)Value;
         }
+        public int Count()
+        {
+            if (IsArray)
+            {
+                return
+                    xml
+                        .Elements()
+                        .Count();
+            }
+            else
+            {
+                throw new Exception("not array");
+            }
+        }
 
+
+        public void Add(object o)
+        {
+            if (IsArray)
+            {
+                var type = GetJsonType(o);
+                xml.Add(new XElement("item", CreateTypeAttr(type), CreateJsonNode(o)));
+            }
+            else
+            {
+                throw new Exception("not array");
+            }
+        }
         public DynamicJson this[string key]
         {
             get
