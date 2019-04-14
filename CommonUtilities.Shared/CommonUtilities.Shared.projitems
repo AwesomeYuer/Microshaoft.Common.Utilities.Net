@@ -246,6 +246,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)WebMvcApiFiltersAttributes\Class1.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WindowsAPI\CreateProcessAsUser.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorkFlow\ActivityFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WorkFlow\CommonJsonIoActivities\AbstractDynamicJsonIoActivity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WorkFlow\CommonJsonIoActivities\AbstractJTokenIoActivity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorkFlow\WorkFlowHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Xml\XmlCDATA.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Xml\XmlValidationHelper.cs" />
