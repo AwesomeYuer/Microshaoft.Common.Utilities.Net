@@ -6,48 +6,18 @@
 
     public sealed class ApprovalEntryActivity : AbstractJTokenWrapperIoActivity
     {
-        public override JTokenWrapper ExecuteProcess(NativeActivityContext context)
+        public override JTokenWrapper OnExecuteProcess(NativeActivityContext context)
         {
-            JToken parameter = Inputs.Get(context).Token;
-            JArray steps = null;
-            if (parameter["Steps"] == null)
-            {
-                steps = new JArray();
-                parameter["Steps"] = steps;
-            }
-            else
-            {
-                steps = (JArray)parameter["Steps"];
-            }
-            steps
-                .Add
-                    (
-                        $"Execute:{this.GetType().Name}@{DateTime.Now}"
-                    );
-            var r = new JTokenWrapper(parameter);
-            return r;
+            var inputs = Inputs.Get(context);
+            return
+                inputs;
         }
 
         public override JTokenWrapper OnResumeBookmarkProcess(NativeActivityContext context, Bookmark bookmark)
         {
-            JToken parameter = Inputs.Get(context).Token;
-            JArray steps = null;
-            if (parameter["Steps"] == null)
-            {
-                steps = new JArray();
-                parameter["Steps"] = steps;
-            }
-            else
-            {
-                steps = (JArray)parameter["Steps"];
-            }
-            steps
-                .Add
-                    (
-                        $"Resume:{this.GetType().Name}@{DateTime.Now}"
-                    );
-            var r = new JTokenWrapper(parameter);
-            return r;
+            var inputs = Inputs.Get(context);
+            return
+                inputs;
         }
     }
 }

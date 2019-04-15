@@ -10,7 +10,7 @@
     using System.Threading.Tasks;
     class Program
     {
-        private static string _xaml = File.OpenText("JTokenWrapperIoWorkFlow1.xaml").ReadToEnd();
+        private static string _xaml = File.OpenText("ApprovalStateMachineWorkFlow1.xaml").ReadToEnd();
 
         static void Main()
         {

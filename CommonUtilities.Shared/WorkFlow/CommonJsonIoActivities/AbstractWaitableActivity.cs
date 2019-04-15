@@ -4,37 +4,29 @@ namespace Microshaoft.WorkFlows.Activities
     using Newtonsoft.Json.Linq;
     using System;
     using System.Activities;
+    using System.Diagnostics;
 
-    public abstract class AbstractJTokenWrapperIoActivity : NativeActivity<JTokenWrapper>
+    public abstract class AbstractWaitableActivity : NativeActivity<JTokenWrapper>
     {
         [RequiredArgument]
         public InArgument<JTokenWrapper> Inputs { get; set; }
 
-        public abstract JTokenWrapper OnExecuteProcess(NativeActivityContext context);
+        [RequiredArgument]
+        public InArgument<string> BookmarkName { get; set; }
+
+        public abstract bool ExecuteProcess(NativeActivityContext context);
         
 
         protected override void Execute(NativeActivityContext context)
         {
             var inputs = Inputs.Get(context);
-            JObject jObject = inputs.TokenAs<JObject>();
-            var bookmarkName = string.Empty;
-            if
-                (
-                    jObject
-                        .TryGetValue
-                            (
-                                "bookmarkName"
-                                , StringComparison.OrdinalIgnoreCase
-                                , out var j
-                            )
-                )
+            var needWait = ExecuteProcess(context);
+            if (needWait)
             {
-                bookmarkName = j.Value<string>();
-            }
-            var hasBookmark = bookmarkName.IsNullOrEmptyOrWhiteSpace();
-            if (hasBookmark)
-            {
-                context
+                var bookmarkName = BookmarkName.Get(context);
+                if (!bookmarkName.IsNullOrEmptyOrWhiteSpace())
+                {
+                    context
                         .CreateBookmark
                             (
                                 bookmarkName
@@ -42,28 +34,42 @@ namespace Microshaoft.WorkFlows.Activities
                                     (
                                         (x, y, z) =>
                                         {
-                                            var result = OnResumeBookmarkProcess(x, y);
-                                            Result
+                                            var needExit = OnResumeBookmarkProcess(x, y);
+                                            if (needExit)
+                                            {
+                                                Debug.Assert(Object.ReferenceEquals(context, x), $"{nameof(context)} ReferenceEquals {nameof(x)}");
+                                                var parameter = Inputs.Get(x);
+                                                Result
                                                 .Set
                                                     (
                                                         context
-                                                        , result
+                                                        , parameter
                                                     );
+                                            }
+
 
                                         }
                                     )
                             );
+
+                }
+                else
+                {
+                    var parameter = inputs.TokenAs<JObject>();
+                    parameter["ApprovalAction"] = "同意";
+                    Result
+                        .Set
+                            (
+                                context
+                                , inputs
+                            );
+
+                }
+                    
             }
-            else
-            {
-                var result = OnExecuteProcess(context);
-                Result
-                    .Set
-                        (
-                            context
-                            , result
-                        );
-            }
+
+            
+                 
         }
 
         // NativeActivity derived activities that do asynchronous operations by calling 
@@ -77,7 +83,7 @@ namespace Microshaoft.WorkFlows.Activities
             }
         }
 
-        public abstract JTokenWrapper OnResumeBookmarkProcess
+        public abstract bool OnResumeBookmarkProcess
                                     (
                                         NativeActivityContext context
                                         , Bookmark bookmark

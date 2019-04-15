@@ -4,7 +4,6 @@
  xmlns:m="clr-namespace:Microshaoft;assembly=Microshaoft.Common.Utilities.NET.Framework.4.7.x"
  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
  xmlns:mca="clr-namespace:Microsoft.CSharp.Activities;assembly=System.Activities"
- xmlns:mwa="clr-namespace:Microshaoft.WorkFlows.Activities;assembly=ApprovalActivitiesLibrary"
  xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
  xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
  xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
@@ -14,12 +13,19 @@
  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <x:Members>
     <x:Property Name="Inputs" Type="InArgument(m:JTokenWrapper)" />
+    <x:Property Name="BookmarkName" Type="InArgument(x:String)" />
+    <x:Property Name="argument1" Type="InArgument(x:String)" />
   </x:Members>
   <this:ApprovalStateMachineWorkFlow1.Inputs>
     <InArgument x:TypeArguments="m:JTokenWrapper">
       <mca:CSharpValue x:TypeArguments="m:JTokenWrapper">null</mca:CSharpValue>
     </InArgument>
   </this:ApprovalStateMachineWorkFlow1.Inputs>
+  <this:ApprovalStateMachineWorkFlow1.BookmarkName>
+    <InArgument x:TypeArguments="x:String">
+      <mca:CSharpValue x:TypeArguments="x:String">string.Empty</mca:CSharpValue>
+    </InArgument>
+  </this:ApprovalStateMachineWorkFlow1.BookmarkName>
   <sap2010:ExpressionActivityEditor.ExpressionActivityEditor>C#</sap2010:ExpressionActivityEditor.ExpressionActivityEditor>
   <sap2010:WorkflowViewState.IdRef>WorkFlows.ApprovalStateMachineWorkFlow1_1</sap2010:WorkflowViewState.IdRef>
   <TextExpression.NamespacesForImplementation>
@@ -65,25 +71,20 @@
     <StateMachine.InitialState>
       <State x:Name="__ReferenceID0" DisplayName="发起阶段" sap2010:WorkflowViewState.IdRef="State_1">
         <State.Entry>
-          <mwa:ApprovalEntryActivity sap2010:WorkflowViewState.IdRef="ApprovalEntryActivity_1">
-            <mwa:ApprovalEntryActivity.Inputs>
-              <InArgument x:TypeArguments="m:JTokenWrapper">
-                <mca:CSharpValue x:TypeArguments="m:JTokenWrapper">Inputs</mca:CSharpValue>
-              </InArgument>
-            </mwa:ApprovalEntryActivity.Inputs>
-          </mwa:ApprovalEntryActivity>
+          <Sequence sap2010:WorkflowViewState.IdRef="Sequence_1">
+            <WriteLine sap2010:WorkflowViewState.IdRef="WriteLine_2" Text="进入发起阶段" />
+          </Sequence>
         </State.Entry>
         <State.Exit>
-          <mwa:ApprovalExitActivity sap2010:WorkflowViewState.IdRef="ApprovalExitActivity_1">
-            <mwa:ApprovalExitActivity.Inputs>
-              <InArgument x:TypeArguments="m:JTokenWrapper">
-                <mca:CSharpValue x:TypeArguments="m:JTokenWrapper">Inputs</mca:CSharpValue>
-              </InArgument>
-            </mwa:ApprovalExitActivity.Inputs>
-          </mwa:ApprovalExitActivity>
+          <Sequence sap2010:WorkflowViewState.IdRef="Sequence_2">
+            <WriteLine sap2010:WorkflowViewState.IdRef="WriteLine_3" Text="离开发起阶段" />
+          </Sequence>
         </State.Exit>
         <State.Transitions>
           <Transition DisplayName="同意前进" sap2010:WorkflowViewState.IdRef="Transition_6">
+            <Transition.Condition>
+              <mca:CSharpValue x:TypeArguments="x:Boolean">Inputs.TokenAs&lt;JObject&gt;()["ApprovalAction"].Value&lt;string&gt;() == "同意"</mca:CSharpValue>
+            </Transition.Condition>
             <Transition.To>
               <State x:Name="__ReferenceID1" DisplayName="一级审批阶段" sap2010:WorkflowViewState.IdRef="State_2">
                 <State.Transitions>
@@ -132,12 +133,27 @@
     <x:Reference>__ReferenceID1</x:Reference>
     <x:Reference>__ReferenceID2</x:Reference>
     <x:Reference>__ReferenceID3</x:Reference>
-    <sads:DebugSymbol.Symbol>d21EOlxNeUdpdEh1YlxNaWNyb3NoYW9mdC5Db21tb24uVXRpbGl0aWVzLk5ldC40eFxTYW1wbGVzXFdvcmtGbG93XFdvcmtGbG93c1xBcHByb3ZhbFN0YXRlTWFjaGluZVdvcmtGbG93MS54YW1sDxQHFFABAkADiAESAgEBQgeBAQ8CARRYD30XAgENZBd5HwIBBHUfdY4BAgECRAtKJwIBGk0LUyYCARdcF1yrAQIBEWEXYasBAgEPaB9oswECAQptH22zAQIBCHIfcq0BAgEGRxFHXAIBG1ARUFwCARg=</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>d21EOlxNeUdpdEh1YlxNaWNyb3NoYW9mdC5Db21tb24uVXRpbGl0aWVzLk5ldC40eFxTYW1wbGVzXFdvcmtGbG93XFdvcmtGbG93c1xBcHByb3ZhbFN0YXRlTWFjaGluZVdvcmtGbG93MS54YW1sExoHGlEBAxUHFVABAkYDiQESAgEBSAeCAQ8CAR5ZD34XAgETZRd6HwIBBHYfdo4BAgECSgtMFgIBKE8LURYCASVWD1adAQIBIF0XXasBAgEZYhdiqwECARVpH2mzAQIBDm4fbrMBAgEKcx9zrQECAQZLDUtWAgEpUA1QVgIBJktLS1MCASpQS1BTAgEn</sads:DebugSymbol.Symbol>
   </StateMachine>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
-      <sap2010:ViewStateData Id="ApprovalEntryActivity_1" sap:VirtualizedContainerService.HintSize="200,22" />
-      <sap2010:ViewStateData Id="ApprovalExitActivity_1" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="WriteLine_2" sap:VirtualizedContainerService.HintSize="209.333333333333,62.6666666666667" />
+      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="231.333333333333,186.666666666667">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="WriteLine_3" sap:VirtualizedContainerService.HintSize="209.333333333333,62.6666666666667" />
+      <sap2010:ViewStateData Id="Sequence_2" sap:VirtualizedContainerService.HintSize="231.333333333333,186.666666666667">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
       <sap2010:ViewStateData Id="Transition_5" sap:VirtualizedContainerService.HintSize="534.666666666667,522">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -216,7 +232,7 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Transition_6">
+      <sap2010:ViewStateData Id="Transition_6" sap:VirtualizedContainerService.HintSize="462.666666666667,522">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <av:PointCollection x:Key="ConnectorLocation">300,230.666666666667 300,299.333333333333</av:PointCollection>
@@ -225,7 +241,7 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="State_1" sap:VirtualizedContainerService.HintSize="114,61.3333333333333">
+      <sap2010:ViewStateData Id="State_1" sap:VirtualizedContainerService.HintSize="326.666666666667,634.666666666667">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <av:Point x:Key="ShapeLocation">243,169.333333333333</av:Point>

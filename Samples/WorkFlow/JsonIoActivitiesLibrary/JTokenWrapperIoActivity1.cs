@@ -6,7 +6,7 @@
 
     public sealed class JTokenWrapperIoActivity1 : AbstractJTokenWrapperIoActivity
     {
-        public override JTokenWrapper ExecuteProcess(NativeActivityContext context)
+        public override JTokenWrapper OnExecuteProcess(NativeActivityContext context)
         {
             JToken parameter = Inputs.Get(context).Token;
             JArray steps = null;
