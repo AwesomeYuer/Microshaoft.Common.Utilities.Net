@@ -48,8 +48,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApprovalExitActivity.cs" />
-    <Compile Include="ApprovalEntryActivity.cs" />
+    <Compile Include="ApprovalActivity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -65,6 +64,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy $(TargetPath) $(SolutionDir)Samples\WorkFlow\WorkflowsHost\$(OutDir) /Y
+xcopy $(TargetPath) $(SolutionDir)Samples\WorkFlow\WorkflowsHostFormsApplication\$(OutDir) /Y
 xcopy $(TargetPath) $(SolutionDir)Samples\WorkFlow\WorkFlows\$(OutDir) /Y</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

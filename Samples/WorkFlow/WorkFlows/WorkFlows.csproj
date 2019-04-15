@@ -54,6 +54,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="JTokenWrapperIoWorkFlow1.xaml.txt">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Content>
     <XamlAppDef Include="WorkFlow1.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -107,26 +111,30 @@
     </XamlAppDef>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="JTokenIoWorkFlow1.xaml.xml">
+    <Content Include="JTokenIoWorkFlow1.xaml.txt">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <XamlAppDef Include="JTokenWrapperIoWorkFlow1.xaml">
+    <Content Include="ApprovalStateMachineWorkFlow1.xaml.txt">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </XamlAppDef>
+    </Content>
   </ItemGroup>
   <ItemGroup>
-    <XamlAppDef Include="ApprovalStateMachineWorkFlow1.xaml">
+    <XamlAppDef Include="ApprovalStateMachineWorkFlow2.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </XamlAppDef>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy $(SolutionDir)Samples\WorkFlow\WorkFlows\*.xaml $(SolutionDir)\Samples\WorkFlow\WorkflowsHost\$(OutDir) /Y</PostBuildEvent>
+    <PostBuildEvent>xcopy $(SolutionDir)Samples\WorkFlow\WorkFlows\*.xaml $(SolutionDir)\Samples\WorkFlow\WorkflowsHost\$(OutDir) /Y
+xcopy $(SolutionDir)Samples\WorkFlow\WorkFlows\*.xaml $(SolutionDir)\Samples\WorkFlow\WorkflowsHostFormsApplication\$(OutDir) /Y
+
+
+</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

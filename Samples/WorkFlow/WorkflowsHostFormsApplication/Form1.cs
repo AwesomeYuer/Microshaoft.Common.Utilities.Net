@@ -16,7 +16,7 @@ namespace WorkflowsHostFormsApplication
 {
     public partial class Form1 : Form
     {
-        private static string _xaml = File.OpenText("ApprovalStateMachineWorkFlow1.xaml").ReadToEnd();
+        private static string _xaml = File.OpenText("ApprovalStateMachineWorkFlow2.xaml").ReadToEnd();
         public Form1()
         {
             InitializeComponent();
@@ -41,6 +41,7 @@ namespace WorkflowsHostFormsApplication
                                         }
                                         , inputs
                                     );
+            
             wfApp.Completed = (e) =>
             {
                 //int Turns = Convert.ToInt32(e.Outputs["Turns"]);
@@ -64,12 +65,20 @@ namespace WorkflowsHostFormsApplication
 
             wfApp.Idle = (e) =>
             {
-                //idleEvent.Set();
+                Console.WriteLine($"Idle {wfApp.Id}");
+                wfApp.Unload();
+            };
+
+            wfApp.Unloaded = (e) =>
+            {
+                Console.WriteLine($"Unloaded {wfApp.Id}");
+
+
             };
 
             wfApp.Run();
 
-            
+            Console.WriteLine($"wfApp.Run {wfApp.Id}");
 
 
         }

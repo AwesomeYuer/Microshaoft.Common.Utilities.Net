@@ -290,6 +290,7 @@
                                         return
                                             _xaml;
                                     }
+                                    
                                 );
             wfApp.Completed = (e) =>
             {

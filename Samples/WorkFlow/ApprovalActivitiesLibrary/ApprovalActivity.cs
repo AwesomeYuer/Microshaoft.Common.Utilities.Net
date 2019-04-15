@@ -6,9 +6,11 @@
 
     public sealed class ApprovalActivity : AbstractJTokenWrapperIoActivity
     {
-        public  JTokenWrapper OnExecuteProcess(NativeActivityContext context)
+        public  override JTokenWrapper OnExecuteProcess(NativeActivityContext context)
         {
             var inputs = Inputs.Get(context);
+            var jObject = inputs.TokenAs<JObject>();
+            //jObject["ApprovalAction"] = "同意";
             return
                 inputs;
         }
