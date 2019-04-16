@@ -45,29 +45,44 @@
                             {
                                 var columns = dataTable.Columns;
                                 var rows = dataTable.Rows;
-                                foreach (JObject j in jArray)
+                                foreach (var j in jArray)
                                 {
                                     var row = dataTable.NewRow();
+                                    var i = 0;
                                     foreach (DataColumn column in columns)
                                     {
                                         var columnName = column.ColumnName;
-                                        var b = j
-                                                    .TryGetValue
-                                                        (
-                                                            columnName
-                                                            , StringComparison
-                                                                    .OrdinalIgnoreCase
-                                                            , out var jToken
-                                                        );
-                                        if (b)
+                                        if (i == 0 && j is JValue)
                                         {
-                                            var jv = jToken
-                                                        .GetPrimtiveTypeJValueAsObject
-                                                            (
-                                                                column.DataType
-                                                            );
+                                            object jv = (JValue) j;
                                             row[columnName] = (jv == null ? DBNull.Value : jv);
+                                            break;
                                         }
+                                        else
+                                        {
+                                            var jo = j as JObject;
+                                            if (jo != null)
+                                            {
+                                                var b = jo
+                                                            .TryGetValue
+                                                                (
+                                                                    columnName
+                                                                    , StringComparison
+                                                                            .OrdinalIgnoreCase
+                                                                    , out var jToken
+                                                                );
+                                                if (b)
+                                                {
+                                                    var jv = jToken
+                                                                .GetPrimtiveTypeJValueAsObject
+                                                                    (
+                                                                        column.DataType
+                                                                    );
+                                                    row[columnName] = (jv == null ? DBNull.Value : jv);
+                                                }
+                                            }
+                                        }
+                                        i++;
                                     }
                                     rows.Add(row);
                                 }

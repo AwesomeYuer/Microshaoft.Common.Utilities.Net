@@ -248,6 +248,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)WindowsAPI\CreateProcessAsUser.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorkFlow\ActivityFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorkFlow\CommonJsonIoActivities\AbstractDynamicJsonIoActivity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WorkFlow\CommonJsonIoActivities\AbstractWaitableActivity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorkFlow\CommonJsonIoActivities\AbstractJTokenWrapperIoActivity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorkFlow\CommonJsonIoActivities\AbstractJTokenIoActivity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorkFlow\WorkFlowHelper.cs" />

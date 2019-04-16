@@ -71,19 +71,36 @@
         function GetObjectsTexts() {
             //debugger;
             var left = vm.SelectedItem().ID;
-            var right = vm.SelectedDetailItem().ID;
+            var right = -1;
+            if (vm.SelectedDetailItem() != undefined) {
+                right = vm.SelectedDetailItem().ID;
+            }
             if (left > right) {
-                left = vm.SelectedDetailItem().ID;
-                right = vm.SelectedItem().ID;
+
+                left += right ;
+                right = left - right;
+                left -= right;
+
             }
             var ids = left + ',' + right;
             var url = baseUrl + "/api/StoreProcedureExecutor/sync/objects/Outputs/ResultSets/0/Rows?SearchIdsList=" + ids;
             $.getJSON(
                 url
                 , function (data) {
+
+                    var x1 = { Name: data[0].ObjectName, Text: data[0].TSQLCommand, TimeStamp: data[0].PostTime };
+                    var x2;
+                    if (data.length <= 1) {
+                        x2 = x1;
+                    }
+                    else {
+                        x2 = { Name: data[1].ObjectName, Text: data[1].TSQLCommand, TimeStamp: data[1].PostTime }
+                    }
+                    
+
                     diffUsingJS(parseInt(vm.SelectedDiffViewType()),
-                        { Name: data[0].ObjectName, Text: data[0].TSQLCommand, TimeStamp: data[0].PostTime },
-                        { Name: data[1].ObjectName, Text: data[1].TSQLCommand, TimeStamp: data[1].PostTime }
+                        x1, x2
+                        
                     );
                 }
             );

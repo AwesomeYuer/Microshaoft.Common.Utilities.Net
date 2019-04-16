@@ -10,73 +10,67 @@ namespace Microshaoft.WorkFlows.Activities
         [RequiredArgument]
         public InArgument<JTokenWrapper> Inputs { get; set; }
 
-        public abstract JTokenWrapper ExecuteProcess(NativeActivityContext context);
-        
+
+        [RequiredArgument]
+        public InArgument<bool> AutoSetBookmark { get; set; }
+
+        public abstract JTokenWrapper OnExecuteProcess(NativeActivityContext context);
+
 
         protected override void Execute(NativeActivityContext context)
         {
-            JToken parameter = Inputs.Get(context).Token;
-            if (parameter is JArray)
-            {
+            var inputs = Inputs.Get(context);
+            JObject jObject = inputs.TokenAs<JObject>();
 
+            var result = OnExecuteProcess(context);
+            var autoSetBookmark = AutoSetBookmark.Get(context);
+            if (!autoSetBookmark)
+            {
+                return;
             }
-            else if (parameter is JObject)
+
+
+
+
+            var bookmarkName = string.Empty;
+
+            var hasBookmark = jObject
+                        .TryGetValue
+                            (
+                                "bookmarkName"
+                                , StringComparison.OrdinalIgnoreCase
+                                , out var j
+                            );
+            if (hasBookmark)
             {
-                ((JObject)parameter)["F2"] = "aaaaaaaaaaaaaa";
-
-
-                var bookmark = parameter["bookmark"];
-                var jObject = (JObject)parameter;
-                var hasBookmark = jObject
-                                    .TryGetValue
-                                        (
-                                            "bookmark"
-                                            , StringComparison.OrdinalIgnoreCase
-                                            , out var o
-                                        );
-                if (hasBookmark)
-                {
-                    var bookmarkName = o.Value<string>();
-                    context
+                bookmarkName = j.Value<string>();
+            }
+            hasBookmark = !bookmarkName.IsNullOrEmptyOrWhiteSpace();
+            if (!hasBookmark)
+            {
+                bookmarkName = "aaaaaaaaaa";
+                jObject["BookmarkName"] = bookmarkName;
+                context
                         .CreateBookmark
                             (
                                 bookmarkName
                                 , new BookmarkCallback
                                     (
-                                        (x, y, z) =>
-                                        {
-                                            var result = OnResumeBookmarkProcess(x, y);
-                                            Result
-                                                .Set
-                                                    (
-                                                        context
-                                                        , result
-                                                    );
-
-                                        }
+                                        OnBookmarkCallback
                                     )
                             );
-                }
-                else
-                {
-                    var result = ExecuteProcess(context);
-                    Result
-                       .Set
-                           (
-                               context
-                               , result
-                           );
-                }
+                
             }
-            else
-            {
-                throw
-                    new ArgumentException
-                            (
-                                "Argument is not JToken"
-                                , "Inputs"
-                            );
-            }
+            //else
+            //{
+            //    var result = OnExecuteProcess(context);
+            //    Result
+            //        .Set
+            //            (
+            //                context
+            //                , result
+            //            );
+            //}
         }
 
         // NativeActivity derived activities that do asynchronous operations by calling 
@@ -96,6 +90,18 @@ namespace Microshaoft.WorkFlows.Activities
                                         , Bookmark bookmark
                                       //  , object state
                                     );
+
+        private void OnBookmarkCallback(NativeActivityContext context, Bookmark bookmark, object state)
+        {
+            var result = OnResumeBookmarkProcess(context, bookmark);
+            Result
+                .Set
+                    (
+                        context
+                        , result
+                    );
+
+        }
     }
 }
 #endif
