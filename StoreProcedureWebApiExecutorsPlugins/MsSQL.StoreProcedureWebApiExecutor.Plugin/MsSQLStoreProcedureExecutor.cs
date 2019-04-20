@@ -69,14 +69,14 @@
                 connection.StatisticsEnabled = enableStatistics;
             }
             result = _executor
-                            .Execute
+                            .ExecuteAsync
                                     (
                                         connection
                                         , storeProcedureName
                                         , parameters
                                         , onReadRowColumnProcessFunc
                                         , commandTimeoutInSeconds
-                                    );
+                                    ).Result;
             if (NeedAutoRefreshExecutedTimeForSlideExpire)
             {
                 _executor

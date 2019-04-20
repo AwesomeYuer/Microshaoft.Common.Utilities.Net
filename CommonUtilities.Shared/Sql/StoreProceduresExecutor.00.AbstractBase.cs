@@ -8,7 +8,7 @@
     using System.Data.Common;
     using System.Data.SqlClient;
     using System.Linq;
-    public abstract class
+    public abstract partial class
             AbstractStoreProceduresExecutor
                     <TDbConnection, TDbCommand, TDbParameter>
                         where
@@ -367,44 +367,44 @@
                                 (parameterMode);
             return r;
         }
-        public JToken
-                    Execute
-                        (
-                            DbConnection connection
-                            , string storeProcedureName
-                            , string p = null //string.Empty
-                            , Func
-                                <
-                                    IDataReader
-                                    , Type        // fieldType
-                                    , string    // fieldName
-                                    , int       // row index
-                                    , int       // column index
-                                    ,
-                                        (
-                                            bool needDefaultProcess
-                                            , JProperty field   //  JObject Field 对象
-                                        )
-                                > onReadRowColumnProcessFunc = null
-                            , int commandTimeout = 90
-                        )
-        {
-            var inputsParameters = JToken.Parse(p);
-            return
-                Execute
-                    (
-                        connection
-                        , storeProcedureName
-                        , inputsParameters
-                        , onReadRowColumnProcessFunc
-                        , commandTimeout
-                    );
-        }
+        //public JToken
+        //            Execute
+        //                (
+        //                    DbConnection connection
+        //                    , string storeProcedureName
+        //                    , string p = null //string.Empty
+        //                    , Func
+        //                        <
+        //                            IDataReader
+        //                            , Type        // fieldType
+        //                            , string    // fieldName
+        //                            , int       // row index
+        //                            , int       // column index
+        //                            ,
+        //                                (
+        //                                    bool needDefaultProcess
+        //                                    , JProperty field   //  JObject Field 对象
+        //                                )
+        //                        > onReadRowColumnProcessFunc = null
+        //                    , int commandTimeout = 90
+        //                )
+        //{
+        //    var inputsParameters = JToken.Parse(p);
+        //    return
+        //        Execute
+        //            (
+        //                connection
+        //                , storeProcedureName
+        //                , inputsParameters
+        //                , onReadRowColumnProcessFunc
+        //                , commandTimeout
+        //            );
+        //}
 
         public JToken
-                    Execute
+                    Execute111111111
                         (
-                            DbConnection connection
+                            TDbConnection connection
                             , string storeProcedureName
                             , JToken inputsParameters = null //string.Empty
                             , Func
