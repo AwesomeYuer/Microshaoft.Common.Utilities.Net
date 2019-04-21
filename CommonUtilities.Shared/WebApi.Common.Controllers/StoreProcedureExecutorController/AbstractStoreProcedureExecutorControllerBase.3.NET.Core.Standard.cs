@@ -217,27 +217,55 @@ namespace Microshaoft.WebApi.Controllers
                                         string resultJsonPathPart6 = null
                                 )
         {
-            var r = await
-                        Task
-                            .Run
+
+            JToken result = null;
+            (
+                int StatusCode
+                , string Message
+                , JToken Result
+            )
+            r = await
+                _service
+                    .ProcessAsync
+                        (
+                            routeName
+                            , parameters
+                            , OnReadRowColumnProcessFunc
+                            , Request.Method
+                        //, 102
+                        );
+            if (r.StatusCode != -1)
+            {
+                result = r.Result;
+                result = result
+                            .GetDescendantByPathKeys
                                 (
-                                    ()=>
-                                    {
-                                        var rr = ProcessActionRequest
-                                                    (
-                                                        routeName
-                                                        , parameters
-                                                        , resultJsonPathPart1
-                                                        , resultJsonPathPart2
-                                                        , resultJsonPathPart3
-                                                        , resultJsonPathPart4
-                                                        , resultJsonPathPart5
-                                                        , resultJsonPathPart6
-                                                    );
-                                        return rr;
-                                    }
+                                    resultJsonPathPart1
+                                    , resultJsonPathPart2
+                                    , resultJsonPathPart3
+                                    , resultJsonPathPart4
+                                    , resultJsonPathPart5
+                                    , resultJsonPathPart6
                                 );
-            return r;
+                Response.StatusCode = r.StatusCode;
+            }
+            else
+            {
+                return
+                    new JsonResult
+                        (
+                            new
+                            {
+                                r.StatusCode
+                                ,
+                                r.Message
+                            }
+                        )
+                    {
+                        StatusCode = r.StatusCode
+                    };
+            }
+            return result;
         }
     }
 }
