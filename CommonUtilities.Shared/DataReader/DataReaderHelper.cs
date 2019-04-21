@@ -135,6 +135,7 @@ namespace Microshaoft
                         entry;
             }
         }
+        //to do: .NET Core 3.0 IAsyncEnumerable
         public static IEnumerable<JToken> AsRowsJTokensEnumerable
                              (
                                     this IDataReader target
