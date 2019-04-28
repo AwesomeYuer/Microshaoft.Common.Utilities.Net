@@ -48,15 +48,13 @@ namespace Microshaoft
                                         (x) =>
                                         {
                                             var controllerActionDescriptor = (ControllerActionDescriptor)x;
-                                            var rr =
-                                                    (
-                                                        controllerActionDescriptor
-                                                                .ControllerTypeInfo
-                                                                .UnderlyingSystemType
-                                                                .BaseType 
-                                                        ==
-                                                        typeof(AbstractStoreProceduresExecutorControllerBase)
-                                                    );
+                                            var rr = typeof(AbstractStoreProceduresExecutorControllerBase)
+                                                                .IsAssignableFrom
+                                                                    (
+                                                                        controllerActionDescriptor
+                                                                            .ControllerTypeInfo
+                                                                            .UnderlyingSystemType
+                                                                    );
                                             return rr;
                                         }
                                     );
@@ -80,8 +78,14 @@ namespace Microshaoft
                                                     (x) =>
                                                     {
                                                         return
-                                                        x.RouteValues["action"].EndsWith("async", StringComparison.OrdinalIgnoreCase);
-                                                        
+                                                            x
+                                                                .RouteValues["action"]
+                                                                .EndsWith
+                                                                    (
+                                                                        "async"
+                                                                        , StringComparison
+                                                                                .OrdinalIgnoreCase
+                                                                    );
                                                     }
                                                 )
                                             .ToList()
@@ -95,14 +99,14 @@ namespace Microshaoft
                                                     (x) =>
                                                     {
                                                         return
-                                                        !x
-                                                            .RouteValues["action"]
-                                                            .EndsWith
-                                                                (
-                                                                    "async"
-                                                                    , StringComparison
-                                                                        .OrdinalIgnoreCase
-                                                                );
+                                                            !x
+                                                                .RouteValues["action"]
+                                                                .EndsWith
+                                                                    (
+                                                                        "async"
+                                                                        , StringComparison
+                                                                            .OrdinalIgnoreCase
+                                                                    );
                                                     }
                                                 )
                                             .ToList()
