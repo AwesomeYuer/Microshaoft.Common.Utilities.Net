@@ -10,16 +10,39 @@ namespace Microshaoft.Web
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Threading.Tasks;
 
     public interface IStoreProceduresService
     {
-        bool
+        (bool Success, JToken Result)
                Process
                        (
                            string connectionString
                            , string dataBaseType
                            , string storeProcedureName
-                           , out JToken result
+                           , JToken parameters = null
+                           , Func
+                               <
+                                   IDataReader
+                                   , Type        // fieldType
+                                   , string    // fieldName
+                                   , int       // row index
+                                   , int       // column index
+                                   ,
+                                       (
+                                           bool NeedDefaultProcess
+                                           , JProperty Field   //  JObject Field 对象
+                                       )
+                               > onReadRowColumnProcessFunc = null
+                           , bool enableStatistics = false
+                           , int commandTimeoutInSeconds = 90
+                       );
+        Task<(bool Success, JToken Result)>
+               ProcessAsync
+                       (
+                           string connectionString
+                           , string dataBaseType
+                           , string storeProcedureName
                            , JToken parameters = null
                            , Func
                                <
@@ -282,6 +305,11 @@ namespace Microshaoft.Web
                             , int commandTimeoutInSeconds = 101
                         )
         {
+            (
+                int StatusCode
+                , string Message
+                , JToken Result
+            ) r = (StatusCode: 200, Message: string.Empty, Result: null);
             JToken result = null;
             var statusCode = 200;
             var message = string.Empty;
@@ -297,86 +325,21 @@ namespace Microshaoft.Web
                     has.StatusCode == 200
                 )
             {
-                var success = Process
-                                (
-                                    has.ConnectionString
-                                    , has.DataBaseType
-                                    , has.StoreProcedureName
-                                    , out result
-                                    , parameters
-                                    , onReadRowColumnProcessFunc
-                                    , has.EnableStatistics
-                                    , has.CommandTimeoutInSeconds
-                                );
-                var jObject = result
-                                    ["Outputs"]
-                                    ["Parameters"] as JObject;
-                if (jObject != null)
-                {
-                    JToken jv = null;
-                    if
+                
+                var rr = Process
                         (
-                            jObject
-                                .TryGetValue
-                                    (
-                                        "HttpResponseStatusCode"
-                                        , StringComparison
-                                                .OrdinalIgnoreCase
-                                        , out jv
-                                    )
-                        )
-                    {
-                        statusCode = jv.Value<int>();
-                    }
-                    jv = null;
-                    if
-                        (
-                            jObject
-                                .TryGetValue
-                                    (
-                                        "HttpResponseMessage"
-                                        , StringComparison
-                                                .OrdinalIgnoreCase
-                                        , out jv
-                                    )
-                        )
-                    {
-                        message = jv.Value<string>();
-                    }
-                }
-                if (success)
-                {
-                    //support custom output nest json by JSONPath in JsonFile Config
-                    var outputsConfiguration = _configuration
-                                                    .GetSection
-                                                        ($"Routes:{routeName}:{has.HttpMethod}:Outputs");
-                    if (outputsConfiguration.Exists())
-                    {
-                        var mappings = outputsConfiguration
-                                            .GetChildren()
-                                            .Select
-                                                (
-                                                    (x) =>
-                                                    {
-                                                        (
-                                                            string TargetJPath
-                                                            , string SourceJPath
-                                                        )
-                                                            r =
-                                                                (
-                                                                    x.Key
-                                                                   , x.Get<string>()
-                                                                );
-                                                        return r;
-                                                    }
-                                                );
-                        result = result
-                                    .MapToNew
-                                        (
-                                            mappings
-                                        );
-                    }
-                }
+                            has.ConnectionString
+                            , has.DataBaseType
+                            , has.StoreProcedureName
+                            , parameters
+                            , onReadRowColumnProcessFunc
+                            , has.EnableStatistics
+                            , has.CommandTimeoutInSeconds
+                        );
+                result = rr.Result;
+                var success = rr.Success;
+
+                AfterProcess(routeName, ref result, ref statusCode, ref message, has, success);
             }
             else
             {
@@ -390,13 +353,157 @@ namespace Microshaoft.Web
                     , result
                 );
         }
-        public virtual bool
+
+        public async
+            Task<(int StatusCode, string Message, JToken Result)>
+            ProcessAsync
+                (
+                    string routeName
+                    , JToken parameters = null
+                    , Func
+                        <
+                            IDataReader
+                            , Type        // fieldType
+                            , string    // fieldName
+                            , int       // row index
+                            , int       // column index
+                            ,
+                                (
+                                    bool NeedDefaultProcess
+                                    , JProperty Field   //  JObject Field 对象
+                                )
+                        > onReadRowColumnProcessFunc = null
+                    , string httpMethod = "Get"
+                    //, bool enableStatistics = false
+                    , int commandTimeoutInSeconds = 101
+                )
+        {
+            (
+                int StatusCode
+                , string Message
+                , JToken Result
+            ) r = (StatusCode: 200, Message: string.Empty, Result: null);
+            JToken result = null;
+            var statusCode = 200;
+            var message = string.Empty;
+            var has = TryGetStoreProcedureInfo
+                        (
+                            routeName
+                            , httpMethod
+                        );
+            if
+                (
+                    has.Success
+                    &&
+                    has.StatusCode == 200
+                )
+            {
+                var rr = await ProcessAsync
+                                    (
+                                        has.ConnectionString
+                                        , has.DataBaseType
+                                        , has.StoreProcedureName
+                                        , parameters
+                                        , onReadRowColumnProcessFunc
+                                        , has.EnableStatistics
+                                        , has.CommandTimeoutInSeconds
+                                    );
+                result = rr.Result;
+                var success = rr.Success;
+                AfterProcess(routeName, ref result, ref statusCode, ref message, has, success);
+            }
+            else
+            {
+                statusCode = has.StatusCode;
+                message = has.Message;
+            }
+            return
+                (
+                    statusCode
+                    , message
+                    , result
+                );
+        }
+
+        private void AfterProcess(string routeName, ref JToken result, ref int statusCode, ref string message, (bool Success, int StatusCode, string HttpMethod, string Message, string ConnectionString, string DataBaseType, string StoreProcedureName, int CommandTimeoutInSeconds, bool EnableStatistics) has, bool success)
+        {
+            var jObject = result
+                            ["Outputs"]
+                            ["Parameters"] as JObject;
+            if (jObject != null)
+            {
+                JToken jv = null;
+                if
+                    (
+                        jObject
+                            .TryGetValue
+                                (
+                                    "HttpResponseStatusCode"
+                                    , StringComparison
+                                            .OrdinalIgnoreCase
+                                    , out jv
+                                )
+                    )
+                {
+                    statusCode = jv.Value<int>();
+                }
+                jv = null;
+                if
+                    (
+                        jObject
+                            .TryGetValue
+                                (
+                                    "HttpResponseMessage"
+                                    , StringComparison
+                                            .OrdinalIgnoreCase
+                                    , out jv
+                                )
+                    )
+                {
+                    message = jv.Value<string>();
+                }
+            }
+            if (success)
+            {
+                //support custom output nest json by JSONPath in JsonFile Config
+                var outputsConfiguration = _configuration
+                                                .GetSection
+                                                    ($"Routes:{routeName}:{has.HttpMethod}:Outputs");
+                if (outputsConfiguration.Exists())
+                {
+                    var mappings = outputsConfiguration
+                                        .GetChildren()
+                                        .Select
+                                            (
+                                                (x) =>
+                                                {
+                                                    (
+                                                        string TargetJPath
+                                                        , string SourceJPath
+                                                    )
+                                                        rrr =
+                                                            (
+                                                                x.Key
+                                                               , x.Get<string>()
+                                                            );
+                                                    return rrr;
+                                                }
+                                            );
+                    result = result
+                                .MapToNew
+                                    (
+                                        mappings
+                                    );
+                }
+            }
+        }
+
+        public virtual (bool Success, JToken Result)
                 Process
                         (
                             string connectionString
                             , string dataBaseType
                             , string storeProcedureName
-                            , out JToken result
                             , JToken parameters = null
                             , Func
                                 <
@@ -415,35 +522,42 @@ namespace Microshaoft.Web
                             , int commandTimeoutInSeconds = 90
                         )
         {
-            var r = false;
-            result = null;
+            (bool Success, JToken Result) r = (Success: false, Result: null);
+
+            JToken result = null;
             var beginTime = DateTime.Now;
             IStoreProcedureExecutable executor = null;
-            r = _indexedExecutors
-                        .TryGetValue
-                            (
-                                dataBaseType
-                                , out executor
-                            );
-            if (r)
+            var success = _indexedExecutors
+                                .TryGetValue
+                                    (
+                                        dataBaseType
+                                        , out executor
+                                    );
+            if (success)
             {
                 r = executor
-                        .Execute
-                            (
-                                connectionString
-                                , storeProcedureName
-                                , out result
-                                , parameters
-                                , onReadRowColumnProcessFunc
-                                , enableStatistics
-                                , commandTimeoutInSeconds
-                            );
+                            .Execute
+                                (
+                                    connectionString
+                                    , storeProcedureName
+                                    , parameters
+                                    , onReadRowColumnProcessFunc
+                                    , enableStatistics
+                                    , commandTimeoutInSeconds
+                                );
+                result = r.Result;
             }
-            if (!r)
+            if (!success)
             {
-                result = null;
+                //result = null;
                 return r;
             }
+            AfterExecute(result, beginTime);
+            return r;
+        }
+
+        private static void AfterExecute(JToken result, DateTime beginTime)
+        {
             result["BeginTime"] = beginTime;
             var endTime = DateTime.Now;
             result["EndTime"] = endTime;
@@ -454,6 +568,64 @@ namespace Microshaoft.Web
                                         beginTime
                                         , endTime
                                     );
+        }
+
+        public virtual async Task<(bool Success, JToken Result)>
+            ProcessAsync
+                (
+                    string connectionString
+                    , string dataBaseType
+                    , string storeProcedureName
+                    //, out JToken result
+                    , JToken parameters = null
+                    , Func
+                        <
+                            IDataReader
+                            , Type        // fieldType
+                            , string    // fieldName
+                            , int       // row index
+                            , int       // column index
+                            ,
+                                (
+                                    bool NeedDefaultProcess
+                                    , JProperty Field   //  JObject Field 对象
+                                )
+                        > onReadRowColumnProcessFunc = null
+                    , bool enableStatistics = false
+                    , int commandTimeoutInSeconds = 90
+                )
+        {
+            (bool Success, JToken Result) r = (Success : false, Result : null);
+            
+            JToken result = null;
+            var beginTime = DateTime.Now;
+            IStoreProcedureExecutable executor = null;
+            var success = _indexedExecutors
+                                .TryGetValue
+                                    (
+                                        dataBaseType
+                                        , out executor
+                                    );
+            if (success)
+            {
+                r = await executor
+                            .ExecuteAsync
+                                (
+                                    connectionString
+                                    , storeProcedureName
+                                    , parameters
+                                    , onReadRowColumnProcessFunc
+                                    , enableStatistics
+                                    , commandTimeoutInSeconds
+                                );
+                result = r.Result;
+            }
+            if (!success)
+            {
+                //result = null;
+                return r;
+            }
+            AfterExecute(result, beginTime);
             return r;
         }
         protected virtual
@@ -608,6 +780,8 @@ namespace Microshaoft.Web
             statusCode = 200;
             return Result();
         }
+
+
     }
 }
 #endif

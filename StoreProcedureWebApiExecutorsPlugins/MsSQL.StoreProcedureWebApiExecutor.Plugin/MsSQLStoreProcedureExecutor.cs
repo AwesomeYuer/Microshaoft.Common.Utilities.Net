@@ -6,6 +6,8 @@
     using System.Composition;
     using System.Data;
     using System.Data.SqlClient;
+    using System.Threading.Tasks;
+
     [Export(typeof(IStoreProcedureExecutable))]
     public class MsSQLStoreProcedureExecutorCompositionPlugin
                         : IStoreProcedureExecutable
@@ -25,11 +27,10 @@
             get;
             set;
         }
-        public bool Execute
+        public (bool Success, JToken Result) Execute
                     (
                         string connectionString
                         , string storeProcedureName
-                        , out JToken result
                         , JToken parameters
                         , Func
                                 <
@@ -48,6 +49,42 @@
                         , int commandTimeoutInSeconds = 90
                     )
         {
+            (bool Success, JToken Result) r = (Success: false, Result: null);
+            SqlConnection connection;
+            BeforeExecutingProcess(connectionString, enableStatistics, out connection);
+            var result = _executor
+                                .Execute
+                                    (
+                                        connection
+                                        , storeProcedureName
+                                        , parameters
+                                        , onReadRowColumnProcessFunc
+                                        , commandTimeoutInSeconds
+                                    );
+            AfterExecutedProcess(storeProcedureName, connection);
+            r.Success = (result != null);
+            r.Result = result;
+            return r;
+        }
+        private void AfterExecutedProcess(string storeProcedureName, SqlConnection connection)
+        {
+            if (NeedAutoRefreshExecutedTimeForSlideExpire)
+            {
+                _executor
+                    .RefreshCachedExecuted
+                        (
+                            connection
+                            , storeProcedureName
+                        );
+            }
+        }
+        private void BeforeExecutingProcess
+                        (
+                            string connectionString
+                            , bool enableStatistics
+                            , out SqlConnection connection
+                        )
+        {
             if
                 (
                     CachedParametersDefinitionExpiredInSeconds > 0
@@ -62,31 +99,52 @@
                         .CachedParametersDefinitionExpiredInSeconds
                             = CachedParametersDefinitionExpiredInSeconds;
             }
-            result = null;
-            var connection = new SqlConnection(connectionString);
+            connection = new SqlConnection(connectionString);
             if (enableStatistics)
             {
                 connection.StatisticsEnabled = enableStatistics;
             }
-            result = _executor
-                            .Execute
-                                    (
-                                        connection
-                                        , storeProcedureName
-                                        , parameters
-                                        , onReadRowColumnProcessFunc
-                                        , commandTimeoutInSeconds
-                                    );
-            if (NeedAutoRefreshExecutedTimeForSlideExpire)
-            {
-                _executor
-                    .RefreshCachedExecuted
-                        (
-                            connection
-                            , storeProcedureName
-                        );
-            }
-            return true;
+        }
+
+        public async Task<(bool Success, JToken Result)> 
+                    ExecuteAsync
+                            (
+                                string connectionString
+                                , string storeProcedureName
+                                , JToken parameters
+                                , Func
+                                        <
+                                            IDataReader
+                                            , Type        // fieldType
+                                            , string    // fieldName
+                                            , int       // row index
+                                            , int       // column index
+                                            ,
+                                                (
+                                                    bool NeedDefaultProcess
+                                                    , JProperty Field   //  JObject Field 对象
+                                                )
+                                        > onReadRowColumnProcessFunc = null
+                                , bool enableStatistics = false
+                                , int commandTimeoutInSeconds = 90
+                            )
+        {
+            (bool Success, JToken Result) r = (Success: false, Result: null);
+            SqlConnection connection;
+            BeforeExecutingProcess(connectionString, enableStatistics, out connection);
+            var result = await _executor
+                                    .ExecuteAsync
+                                            (
+                                                connection
+                                                , storeProcedureName
+                                                , parameters
+                                                , onReadRowColumnProcessFunc
+                                                , commandTimeoutInSeconds
+                                            );
+            AfterExecutedProcess(storeProcedureName, connection);
+            r.Success = (result != null);
+            r.Result = result;
+            return r;
         }
     }
 }

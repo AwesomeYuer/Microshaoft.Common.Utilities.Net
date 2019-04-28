@@ -290,7 +290,7 @@
             //jsonp cross domain
             var search = document.getElementById("search").value;
             var beforeTime = document.getElementById("datepicker1").value;
-            var url = baseUrl + "/api/StoreProcedureExecutor/async/objects?searchobjectname=" + search + "&beforetime=" + beforeTime;
+            var url = baseUrl + "/api/StoreProcedureExecutor/objects?searchobjectname=" + search + "&beforetime=" + beforeTime;
             $.getJSON(
                 url
                 , function (data) {

@@ -5,6 +5,7 @@ namespace Microshaoft.WebApi.Controllers
     using Microshaoft.WebApi.ModelBinders;
     using Microsoft.AspNetCore.Cors;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Infrastructure;
     using Newtonsoft.Json.Linq;
 
     [Route("api/[controller]")]
@@ -19,8 +20,9 @@ namespace Microshaoft.WebApi.Controllers
         public StoreProcedureExecutorController
                             (
                                 AbstractStoreProceduresService service
+                                , IActionSelector actionSelector
                             )
-                : base(service)
+                : base(service, actionSelector)
         {
         }
         //[
@@ -44,39 +46,39 @@ namespace Microshaoft.WebApi.Controllers
         //    return base.ProcessActionRequest(routeName, parameters, resultJsonPathPart1, resultJsonPathPart2, resultJsonPathPart3, resultJsonPathPart4, resultJsonPathPart5, resultJsonPathPart6);
         //}
 
-        [HttpDelete]
-        [HttpGet]
-        [HttpHead]
-        [HttpOptions]
-        [HttpPatch]
-        [HttpPost]
-        [HttpPut]
-        [
-            Route
-                (
-                    "sync/{routeName}"
-                )
-        ]
-        // this is a test for new route as above
-        // you can set it use public for test
-        [OperationsAuthorizeFilter]
-        public ActionResult<JToken>
-                           ProcessActionRequest
-                                (
-                                    [FromRoute]
-                                        string routeName
-                                    , [ModelBinder(typeof(JTokenModelBinder))]
-                                        JToken parameters = null
-                                )
-        {
-            return
-                base
-                    .ProcessActionRequest
-                        (
-                            routeName
-                            , parameters
-                        );
-        }
+        //[HttpDelete]
+        //[HttpGet]
+        //[HttpHead]
+        //[HttpOptions]
+        //[HttpPatch]
+        //[HttpPost]
+        //[HttpPut]
+        //[
+        //    Route
+        //        (
+        //            "{routeName}"
+        //        )
+        //]
+        //// this is a test for new route as above
+        //// you can set it use public for test
+        //[OperationsAuthorizeFilter]
+        //public ActionResult<JToken>
+        //                   ProcessActionRequest
+        //                        (
+        //                            [FromRoute]
+        //                                string routeName
+        //                            , [ModelBinder(typeof(JTokenModelBinder))]
+        //                                JToken parameters = null
+        //                        )
+        //{
+        //    return
+        //        base
+        //            .ProcessActionRequest
+        //                (
+        //                    routeName
+        //                    , parameters
+        //                );
+        //}
     }
 }
 #endif

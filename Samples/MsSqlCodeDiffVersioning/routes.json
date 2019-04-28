@@ -12,6 +12,7 @@
     },
     "usp_executesql": {
       "HttPPost": {
+        "isexecuteAsync": true,
         "connectionID": "c1",
         "storeProcedureName": "usp_executesql",
         "EnableStatistics": true,
