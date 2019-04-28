@@ -51,9 +51,9 @@
         {
             (bool Success, JToken Result) r = (Success: false, Result: null);
             SqlConnection connection;
-            NewMethod(connectionString, enableStatistics, out connection);
+            BeforeExecutingProcess(connectionString, enableStatistics, out connection);
             var result = _executor
-                            .Execute
+                                .Execute
                                     (
                                         connection
                                         , storeProcedureName
@@ -61,15 +61,13 @@
                                         , onReadRowColumnProcessFunc
                                         , commandTimeoutInSeconds
                                     );
-            r = NewMethod1(storeProcedureName, result, connection);
-            return r;
-        }
-
-        private (bool Success, JToken Result) NewMethod1(string storeProcedureName, JToken result, SqlConnection connection)
-        {
-            (bool Success, JToken Result) r;
+            AfterExecutedProcess(storeProcedureName, connection);
             r.Success = (result != null);
             r.Result = result;
+            return r;
+        }
+        private void AfterExecutedProcess(string storeProcedureName, SqlConnection connection)
+        {
             if (NeedAutoRefreshExecutedTimeForSlideExpire)
             {
                 _executor
@@ -79,10 +77,13 @@
                             , storeProcedureName
                         );
             }
-            return r;
         }
-
-        private void NewMethod(string connectionString, bool enableStatistics, out SqlConnection connection)
+        private void BeforeExecutingProcess
+                        (
+                            string connectionString
+                            , bool enableStatistics
+                            , out SqlConnection connection
+                        )
         {
             if
                 (
@@ -130,20 +131,20 @@
         {
             (bool Success, JToken Result) r = (Success: false, Result: null);
             SqlConnection connection;
-            NewMethod(connectionString, enableStatistics, out connection);
+            BeforeExecutingProcess(connectionString, enableStatistics, out connection);
             var result = await _executor
-                            .ExecuteAsync
-                                    (
-                                        connection
-                                        , storeProcedureName
-                                        , parameters
-                                        , onReadRowColumnProcessFunc
-                                        , commandTimeoutInSeconds
-                                    );
-            r = NewMethod1(storeProcedureName, result, connection);
+                                    .ExecuteAsync
+                                            (
+                                                connection
+                                                , storeProcedureName
+                                                , parameters
+                                                , onReadRowColumnProcessFunc
+                                                , commandTimeoutInSeconds
+                                            );
+            AfterExecutedProcess(storeProcedureName, connection);
+            r.Success = (result != null);
+            r.Result = result;
             return r;
         }
-
-       
     }
 }

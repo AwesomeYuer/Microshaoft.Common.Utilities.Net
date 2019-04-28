@@ -61,6 +61,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenModelBinder\JTokenWebHelper.NET.Core.Standard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\IStoreProcedureExecutable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenModelBinder\JTokenModelBinderProvider.NET.Core.Standard.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\SyncAsyncActionSelector.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)SingleThreadAsyncDequeueProcessor\CoreStandard\" />

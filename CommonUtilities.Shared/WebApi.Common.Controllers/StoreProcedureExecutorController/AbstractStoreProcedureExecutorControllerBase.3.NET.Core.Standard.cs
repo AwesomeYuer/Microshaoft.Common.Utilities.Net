@@ -5,6 +5,7 @@ namespace Microshaoft.WebApi.Controllers
     using Microshaoft.Web;
     using Microshaoft.WebApi.ModelBinders;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Infrastructure;
     using Newtonsoft.Json.Linq;
     using System;
     using System.Data;
@@ -79,12 +80,17 @@ namespace Microshaoft.WebApi.Controllers
                     , field
                 );
         }
+
+        protected IActionSelector _actionSelector;
+
         public AbstractStoreProceduresExecutorControllerBase
                     (
                         AbstractStoreProceduresService service
+                        , IActionSelector actionSelector
                     )
         {
             _service = service;
+            _actionSelector = actionSelector;
         }
 
         [HttpDelete]
@@ -97,7 +103,7 @@ namespace Microshaoft.WebApi.Controllers
         [
             Route
                 (
-                    "sync/{routeName}/"
+                    "{routeName}/"
                     + "{resultJsonPathPart1?}/"
                     + "{resultJsonPathPart2?}/"
                     + "{resultJsonPathPart3?}/"
@@ -187,7 +193,7 @@ namespace Microshaoft.WebApi.Controllers
         [
             Route
                 (
-                    "async/{routeName}/"
+                    "{routeName}/"
                     + "{resultJsonPathPart1?}/"
                     + "{resultJsonPathPart2?}/"
                     + "{resultJsonPathPart3?}/"

@@ -33,7 +33,7 @@
             }
         }
 
-        private static void NewMethod2
+        private static void DataReadingProcess
                         (
                             Func<IDataReader, Type, string, int, int, (bool NeedDefaultProcess, JProperty Field)> onReadRowColumnProcessFunc
                             , JObject result
@@ -42,7 +42,7 @@
                         )
         {
             var columns = dataReader
-                                            .GetColumnsJArray();
+                                .GetColumnsJArray();
             var rows = dataReader
                             .AsRowsJTokensEnumerable
                                 (
@@ -71,11 +71,9 @@
                 (
                     resultSet
                 );
-            
-
         }
 
-        private static void NewMethod1
+        private static void ResultProcess
                             (
                                 SqlConnection sqlConnection
                                 , bool statisticsEnabled
@@ -175,7 +173,7 @@
             }
         }
 
-        private void NewMethod
+        private void InitializeProcess
                         (
                             DbConnection connection
                             , string storeProcedureName
@@ -191,7 +189,6 @@
                             , out List<TDbParameter> dbParameters
                             , out JObject result
                             , AdditionalInfo additionalInfo
-
                         )
         {
             var dataSource = connection.DataSource;
@@ -213,19 +210,17 @@
             command = new TDbCommand()
             {
                 CommandType = CommandType.StoredProcedure
-                ,
-                CommandTimeout = commandTimeoutInSeconds
-                ,
-                CommandText = storeProcedureName
-                ,
-                Connection = connection
+                , CommandTimeout = commandTimeoutInSeconds
+                , CommandText = storeProcedureName
+                , Connection = connection
             };
             //)
             //{
 
             if (commandTimeoutInSeconds > 0)
             {
-                command.CommandTimeout = commandTimeoutInSeconds;
+                command
+                    .CommandTimeout = commandTimeoutInSeconds;
             }
             dbParameters = GenerateExecuteParameters
                             (
@@ -240,7 +235,6 @@
                     .Parameters
                     .AddRange(parameters);
             }
-
             result = new JObject
                     {
                         {
@@ -284,51 +278,64 @@
                 {
                     additionalInfo.recordCounts = new JArray();
                 }
-
                 sqlCommand = command as SqlCommand;
                 onStatementCompletedEventHandlerProcessAction =
-                        (sender, statementCompletedEventArgs) =>
+                    (sender, statementCompletedEventArgs) =>
                         {
-                            additionalInfo.recordCounts.Add(statementCompletedEventArgs.RecordCount);
+                            additionalInfo
+                                .recordCounts
+                                .Add
+                                    (
+                                        statementCompletedEventArgs
+                                                            .RecordCount
+                                    );
                         };
-                sqlCommand.StatementCompleted += onStatementCompletedEventHandlerProcessAction;
+                sqlCommand
+                    .StatementCompleted += onStatementCompletedEventHandlerProcessAction;
                 onSqlInfoMessageEventHandlerProcessAction =
                 (sender, sqlInfoMessageEventArgs) =>
-                {
-                    additionalInfo.messageID++;
-                    additionalInfo.messages
-                            .Add
-                                (
-                                    new JObject()
-                                    {
+                        {
+                            additionalInfo
+                                .messageID++;
+                            additionalInfo
+                                    .messages
+                                    .Add
+                                        (
+                                            new JObject()
+                                            {
                                                 {
                                                     "MessageID"
-                                                    , additionalInfo.messageID
+                                                    , additionalInfo
+                                                            .messageID
                                                 }
                                                 ,
                                                 {
                                                     "ResultSetID"
-                                                    , additionalInfo.resultSetID
+                                                    , additionalInfo
+                                                            .resultSetID
                                                 }
                                                 ,
                                                 {
                                                     "Source"
-                                                    , sqlInfoMessageEventArgs.Source
+                                                    , sqlInfoMessageEventArgs
+                                                                        .Source
                                                 }
                                                 ,
                                                 {
                                                     "Message"
-                                                    , sqlInfoMessageEventArgs.Message
+                                                    , sqlInfoMessageEventArgs
+                                                                        .Message
                                                 }
                                                 ,
                                                 {
                                                     "DealTime"
                                                     , DateTime.Now
                                                 }
-                                    }
-                                );
-                };
-                sqlConnection.InfoMessage += onSqlInfoMessageEventHandlerProcessAction;
+                                            }
+                                        );
+                        };
+                sqlConnection
+                        .InfoMessage += onSqlInfoMessageEventHandlerProcessAction;
             }
         }
 
@@ -369,18 +376,14 @@
             var additionalInfo = new AdditionalInfo()
             {
                 resultSetID = 0
-                ,
-                messageID = 0
-                ,
-                recordCounts = null
-                ,
-                messages = null
-
+                , messageID = 0
+                , recordCounts = null
+                , messages = null
             };
 
             try
             {
-                NewMethod
+                InitializeProcess
                     (
                         connection
                         , storeProcedureName
@@ -396,8 +399,6 @@
                         , out dbParameters
                         , out result
                         , additionalInfo
-
-
                     );
                 connection.Open();
                 var dataReader = command
@@ -408,12 +409,17 @@
                                         );
                 do
                 {
-                    NewMethod2(onReadRowColumnProcessFunc, result, dataReader);
+                    DataReadingProcess
+                            (
+                                onReadRowColumnProcessFunc
+                                , result
+                                , dataReader
+                            );
                     additionalInfo.resultSetID++;
                 }
                 while (dataReader.NextResult());
                 dataReader.Close();
-                NewMethod1
+                ResultProcess
                         (
                             sqlConnection
                             , statisticsEnabled
@@ -497,18 +503,14 @@
             var additionalInfo = new AdditionalInfo()
             {
                 resultSetID = 0
-                ,
-                messageID = 0
-                ,
-                recordCounts = null
-                ,
-                messages = null
-
+                , messageID = 0
+                , recordCounts = null
+                , messages = null
             };
 
             try
             {
-                NewMethod
+                InitializeProcess
                     (
                         connection
                         , storeProcedureName
@@ -524,37 +526,41 @@
                         , out dbParameters
                         , out result
                         , additionalInfo
-
-
                     );
                 connection.Open();
                 var dataReader = await command
-                                    .ExecuteReaderAsync
-                                        (
-                                            CommandBehavior
-                                                .CloseConnection
-                                        );
+                                            .ExecuteReaderAsync
+                                                (
+                                                    CommandBehavior
+                                                        .CloseConnection
+                                                );
                 do
                 {
-                    NewMethod2(onReadRowColumnProcessFunc, result, dataReader);
-                    additionalInfo.resultSetID++;
+                    DataReadingProcess
+                        (
+                            onReadRowColumnProcessFunc
+                            , result
+                            , dataReader
+                        );
+                    additionalInfo
+                            .resultSetID++;
                 }
                 while
                     (
                         await dataReader.NextResultAsync()
                     );
                 dataReader.Close();
-                NewMethod1
-                        (
-                            sqlConnection
-                            , statisticsEnabled
-                            , sqlCommand
-                            , ref onStatementCompletedEventHandlerProcessAction
-                            , ref onSqlInfoMessageEventHandlerProcessAction
-                            , dbParameters
-                            , result
-                            , additionalInfo
-                        );
+                ResultProcess
+                    (
+                        sqlConnection
+                        , statisticsEnabled
+                        , sqlCommand
+                        , ref onStatementCompletedEventHandlerProcessAction
+                        , ref onSqlInfoMessageEventHandlerProcessAction
+                        , dbParameters
+                        , result
+                        , additionalInfo
+                    );
                 return result;
             }
             finally
@@ -586,7 +592,6 @@
                 }
                 command.Dispose();
                 //command = null;
-
                 //dbParameters = null;
             }
         }

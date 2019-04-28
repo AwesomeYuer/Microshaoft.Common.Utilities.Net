@@ -339,7 +339,7 @@ namespace Microshaoft.Web
                 result = rr.Result;
                 var success = rr.Success;
 
-                NewMethod(routeName, ref result, ref statusCode, ref message, has, success);
+                AfterProcess(routeName, ref result, ref statusCode, ref message, has, success);
             }
             else
             {
@@ -410,7 +410,7 @@ namespace Microshaoft.Web
                                     );
                 result = rr.Result;
                 var success = rr.Success;
-                NewMethod(routeName, ref result, ref statusCode, ref message, has, success);
+                AfterProcess(routeName, ref result, ref statusCode, ref message, has, success);
             }
             else
             {
@@ -425,11 +425,11 @@ namespace Microshaoft.Web
                 );
         }
 
-        private void NewMethod(string routeName, ref JToken result, ref int statusCode, ref string message, (bool Success, int StatusCode, string HttpMethod, string Message, string ConnectionString, string DataBaseType, string StoreProcedureName, int CommandTimeoutInSeconds, bool EnableStatistics) has, bool success)
+        private void AfterProcess(string routeName, ref JToken result, ref int statusCode, ref string message, (bool Success, int StatusCode, string HttpMethod, string Message, string ConnectionString, string DataBaseType, string StoreProcedureName, int CommandTimeoutInSeconds, bool EnableStatistics) has, bool success)
         {
             var jObject = result
-                                                ["Outputs"]
-                                                ["Parameters"] as JObject;
+                            ["Outputs"]
+                            ["Parameters"] as JObject;
             if (jObject != null)
             {
                 JToken jv = null;
@@ -552,11 +552,11 @@ namespace Microshaoft.Web
                 //result = null;
                 return r;
             }
-            NewMethod1(result, beginTime);
+            AfterExecute(result, beginTime);
             return r;
         }
 
-        private static void NewMethod1(JToken result, DateTime beginTime)
+        private static void AfterExecute(JToken result, DateTime beginTime)
         {
             result["BeginTime"] = beginTime;
             var endTime = DateTime.Now;
@@ -625,7 +625,7 @@ namespace Microshaoft.Web
                 //result = null;
                 return r;
             }
-            NewMethod1(result, beginTime);
+            AfterExecute(result, beginTime);
             return r;
         }
         protected virtual
