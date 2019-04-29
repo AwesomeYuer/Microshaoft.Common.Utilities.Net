@@ -1,7 +1,6 @@
 ﻿#if NETCOREAPP2_X
 namespace Microshaoft
 {
-    using Microshaoft.WebApi.Controllers;
     using Microsoft.AspNetCore.Mvc.Abstractions;
     using Microsoft.AspNetCore.Mvc.Controllers;
     using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -17,6 +16,8 @@ namespace Microshaoft
     {
         private ActionSelector _actionSelector;
         private readonly IConfiguration _configuration;
+        public int InterceptCandidatesCount = 1;
+        public string[] FilterControllerNamePrefixs;
 
         public SyncAsyncActionSelector
                     (
@@ -34,83 +35,60 @@ namespace Microshaoft
                                         );
             _configuration = configuration;
         }
+
+        public
+            Func
+                <
+                    RouteContext
+                    , IReadOnlyList<ActionDescriptor>
+                    , IConfiguration
+                    , IReadOnlyList<ActionDescriptor>
+                >
+                    OnSelectSyncAsyncActionCandidate = null;
+
+
         public ActionDescriptor SelectBestCandidate
                                         (
                                             RouteContext context
                                             , IReadOnlyList<ActionDescriptor> candidates
                                         )
         {
-            if (candidates.Count > 1)
+            if (OnSelectSyncAsyncActionCandidate != null)
             {
-                var r = candidates
-                                .All
+                if (candidates.Count > InterceptCandidatesCount)
+                {
+                    var r = candidates
+                                .Any
                                     (
                                         (x) =>
                                         {
-                                            var controllerActionDescriptor = (ControllerActionDescriptor)x;
-                                            var rr = typeof(AbstractStoreProceduresExecutorControllerBase)
-                                                                .IsAssignableFrom
-                                                                    (
-                                                                        controllerActionDescriptor
-                                                                            .ControllerTypeInfo
-                                                                            .UnderlyingSystemType
-                                                                    );
-                                            return rr;
+                                            return
+                                                FilterControllerNamePrefixs
+                                                    .Any
+                                                        (
+                                                            (xx) =>
+                                                            {
+                                                                return
+                                                                    ((ControllerActionDescriptor)x)
+                                                                        .ControllerName
+                                                                        .StartsWith
+                                                                            (
+                                                                                xx
+                                                                                , StringComparison
+                                                                                        .OrdinalIgnoreCase
+                                                                            );
+                                                            }
+                                                        );
                                         }
                                     );
-                if (r)
-                {
-                    var routeName = context.RouteData.Values["routeName"].ToString();
-                    var httpMethod = $"Http{context.HttpContext.Request.Method}";
-                    var isExecuteAsync = false;
-                    var isExecuteAsyncConfiguration =
-                                _configuration
-                                    .GetSection($"Routes:{routeName}:{httpMethod}:IsExecuteAsync");
-                    if (isExecuteAsyncConfiguration.Exists())
+                    if (r)
                     {
-                        isExecuteAsync = isExecuteAsyncConfiguration.Get<bool>();
-                    }
-                    if (isExecuteAsync)
-                    {
-                        candidates = candidates
-                                            .Where
-                                                (
-                                                    (x) =>
-                                                    {
-                                                        return
-                                                            x
-                                                                .RouteValues["action"]
-                                                                .EndsWith
-                                                                    (
-                                                                        "async"
-                                                                        , StringComparison
-                                                                                .OrdinalIgnoreCase
-                                                                    );
-                                                    }
-                                                )
-                                            .ToList()
-                                            .AsReadOnly();
-                    }
-                    else
-                    {
-                        candidates = candidates
-                                            .Where
-                                                (
-                                                    (x) =>
-                                                    {
-                                                        return
-                                                            !x
-                                                                .RouteValues["action"]
-                                                                .EndsWith
-                                                                    (
-                                                                        "async"
-                                                                        , StringComparison
-                                                                            .OrdinalIgnoreCase
-                                                                    );
-                                                    }
-                                                )
-                                            .ToList()
-                                            .AsReadOnly();
+                        candidates = OnSelectSyncAsyncActionCandidate
+                                        (
+                                            context
+                                            , candidates
+                                            , _configuration
+                                        );
                     }
                 }
             }
