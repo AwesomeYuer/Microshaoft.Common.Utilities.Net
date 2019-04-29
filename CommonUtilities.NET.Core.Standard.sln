@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2036
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.156
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "000.Solution Items", "000.Solution Items", "{85BAAC83-9159-4E88-929C-FC9A98556042}"
 	ProjectSection(SolutionItems) = preProject
@@ -155,6 +155,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00.SharedSource", "00.SharedSource", "{AA460D19-E158-4C00-B307-9EF3332AB276}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "20.Cross-Platforms", "20.Cross-Platforms", "{BC10D378-9C21-40BA-90FF-7E91AC5A87A2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "60.RequestJTokenValidatorsPlugins", "60.RequestJTokenValidatorsPlugins", "{1464E5F2-2E8D-40C4-ABF9-4FF45D1E60B8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JTokenModelParameterValidatorSamplePlugin", "JTokenModelParameterValidatorsPlugins\JTokenModelParameterValidatorSamplePlugin\JTokenModelParameterValidatorSamplePlugin.csproj", "{D7307C16-71FF-4DDA-B631-C8DFB115CD10}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -468,6 +472,22 @@ Global
 		{85BE8162-EC4D-43DA-B054-A18119D72097}.Release|x64.Build.0 = Release|Any CPU
 		{85BE8162-EC4D-43DA-B054-A18119D72097}.Release|x86.ActiveCfg = Release|Any CPU
 		{85BE8162-EC4D-43DA-B054-A18119D72097}.Release|x86.Build.0 = Release|Any CPU
+		{D7307C16-71FF-4DDA-B631-C8DFB115CD10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7307C16-71FF-4DDA-B631-C8DFB115CD10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7307C16-71FF-4DDA-B631-C8DFB115CD10}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{D7307C16-71FF-4DDA-B631-C8DFB115CD10}.Debug|ARM.Build.0 = Debug|Any CPU
+		{D7307C16-71FF-4DDA-B631-C8DFB115CD10}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D7307C16-71FF-4DDA-B631-C8DFB115CD10}.Debug|x64.Build.0 = Debug|Any CPU
+		{D7307C16-71FF-4DDA-B631-C8DFB115CD10}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D7307C16-71FF-4DDA-B631-C8DFB115CD10}.Debug|x86.Build.0 = Debug|Any CPU
+		{D7307C16-71FF-4DDA-B631-C8DFB115CD10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7307C16-71FF-4DDA-B631-C8DFB115CD10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7307C16-71FF-4DDA-B631-C8DFB115CD10}.Release|ARM.ActiveCfg = Release|Any CPU
+		{D7307C16-71FF-4DDA-B631-C8DFB115CD10}.Release|ARM.Build.0 = Release|Any CPU
+		{D7307C16-71FF-4DDA-B631-C8DFB115CD10}.Release|x64.ActiveCfg = Release|Any CPU
+		{D7307C16-71FF-4DDA-B631-C8DFB115CD10}.Release|x64.Build.0 = Release|Any CPU
+		{D7307C16-71FF-4DDA-B631-C8DFB115CD10}.Release|x86.ActiveCfg = Release|Any CPU
+		{D7307C16-71FF-4DDA-B631-C8DFB115CD10}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -540,6 +560,8 @@ Global
 		{CBA7FA05-6D20-45CF-B752-645AF269B0DA} = {AA460D19-E158-4C00-B307-9EF3332AB276}
 		{AA460D19-E158-4C00-B307-9EF3332AB276} = {F81E58D5-FEDA-493B-927B-66745127123B}
 		{BC10D378-9C21-40BA-90FF-7E91AC5A87A2} = {AA460D19-E158-4C00-B307-9EF3332AB276}
+		{1464E5F2-2E8D-40C4-ABF9-4FF45D1E60B8} = {E402FB2A-AFF3-4187-8140-5837A01B1349}
+		{D7307C16-71FF-4DDA-B631-C8DFB115CD10} = {1464E5F2-2E8D-40C4-ABF9-4FF45D1E60B8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ABDE4EA1-B6A3-41C1-AC23-2CA7A04C03AB}
