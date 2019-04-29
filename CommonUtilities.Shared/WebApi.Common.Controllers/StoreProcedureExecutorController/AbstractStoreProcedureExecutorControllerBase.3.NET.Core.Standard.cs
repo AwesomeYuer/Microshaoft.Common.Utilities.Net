@@ -112,6 +112,18 @@ namespace Microshaoft.WebApi.Controllers
                     + "{resultJsonPathPart6?}"
                 )
         ]
+        [
+            Route
+                (
+                    "sync/{routeName}/"
+                    + "{resultJsonPathPart1?}/"
+                    + "{resultJsonPathPart2?}/"
+                    + "{resultJsonPathPart3?}/"
+                    + "{resultJsonPathPart4?}/"
+                    + "{resultJsonPathPart5?}/"
+                    + "{resultJsonPathPart6?}"
+                )
+        ]
         public virtual ActionResult<JToken>
                             ProcessActionRequest
                                 (
@@ -182,7 +194,6 @@ namespace Microshaoft.WebApi.Controllers
             return result;
         }
 
-
         [HttpDelete]
         [HttpGet]
         [HttpHead]
@@ -194,6 +205,18 @@ namespace Microshaoft.WebApi.Controllers
             Route
                 (
                     "{routeName}/"
+                    + "{resultJsonPathPart1?}/"
+                    + "{resultJsonPathPart2?}/"
+                    + "{resultJsonPathPart3?}/"
+                    + "{resultJsonPathPart4?}/"
+                    + "{resultJsonPathPart5?}/"
+                    + "{resultJsonPathPart6?}"
+                )
+        ]
+        [
+            Route
+                (
+                    "async/{routeName}/"
                     + "{resultJsonPathPart1?}/"
                     + "{resultJsonPathPart2?}/"
                     + "{resultJsonPathPart3?}/"

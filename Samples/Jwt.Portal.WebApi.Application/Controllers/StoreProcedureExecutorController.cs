@@ -6,6 +6,7 @@ namespace Microshaoft.WebApi.Controllers
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Cors;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Infrastructure;
     using Newtonsoft.Json.Linq;
     using System;
 
@@ -16,8 +17,12 @@ namespace Microshaoft.WebApi.Controllers
     public class StoreProcedureExecutorController
                     : AbstractStoreProceduresExecutorControllerBase
     {
-        public StoreProcedureExecutorController(AbstractStoreProceduresService service)
-                : base(service)
+        public StoreProcedureExecutorController
+                        (
+                            AbstractStoreProceduresService service
+                            , IActionSelector actionSelector
+                        )
+                : base(service,actionSelector)
         {
         }
 

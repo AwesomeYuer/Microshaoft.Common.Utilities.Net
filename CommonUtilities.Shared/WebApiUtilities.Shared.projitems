@@ -24,7 +24,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\CommonController\AbstractActionCommonProcessingService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\CommonController\AbstractCommonControllerBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\SyncAsyncActionSelector.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\IStoreProcedureExecutable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\HttpMethodsFlags.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenModelBinder\HttpRequestHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenModelBinder\JTokenModelBinder.NET.Framework.cs" />
