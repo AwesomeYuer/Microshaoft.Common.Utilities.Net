@@ -1,0 +1,6 @@
+﻿language: csharp
+mono: none
+dotnet: 2.2.203
+solution: CommonUtilities.NET.Core.Standard.sln
+
+
