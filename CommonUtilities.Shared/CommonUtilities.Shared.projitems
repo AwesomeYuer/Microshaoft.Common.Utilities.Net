@@ -9,6 +9,14 @@
     <Import_RootNamespace>CommonUtilities.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ActivatorUtilities\ActivatorUtilities.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ActivatorUtilities\ActivatorUtilitiesConstructorAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ActivatorUtilities\ObjectFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\HashCodeCombiner\HashCodeCombiner.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\NonCapturingTimer\NonCapturingTimer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ParameterDefaultValue\ParameterDefaultValue.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\TypeNameHelper\TypeNameHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ValueStopwatch\ValueStopwatch.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.NET35\ConcurrentQueue.Net35.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.NET35\HttpClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.NET35\Parallel.NET35.cs" />
@@ -111,6 +119,18 @@
     <Compile Include="$(MSBuildThisFileDirectory)MEF.Composition\MEFHelper.NET.Core.Standard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MEF.Composition\MEFHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MemberAdditionalDefinitionAttribute\MemberAdditionalDefinitionAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ObjectPool\src\DefaultObjectPool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ObjectPool\src\DefaultObjectPoolProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ObjectPool\src\DefaultPooledObjectPolicy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ObjectPool\src\DisposableObjectPool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ObjectPool\src\IPooledObjectPolicy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ObjectPool\src\LeakTrackingObjectPool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ObjectPool\src\LeakTrackingObjectPoolProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ObjectPool\src\ObjectPool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ObjectPool\src\ObjectPoolProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ObjectPool\src\ObjectPoolProviderExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ObjectPool\src\PooledObjectPolicy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ObjectPool\src\StringBuilderPooledObjectPolicy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Observable\ObservableExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\FloatRange.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\GlobalSuppressions.cs" />
@@ -133,6 +153,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\VersionRangeComparer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\VersionRangeFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\VersionRangeFormatter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)OTP\TotpHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)OTP\Totp.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)OTP\OtpHashAlgorithm.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PerformanceCounter\Containers\00.IPerformanceCountersContainer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PerformanceCounter\Containers\00.IPerformanceCountersValuesClearable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PerformanceCounter\Containers\10.AbstractPerformanceCountersContainer.cs" />
@@ -273,5 +296,8 @@
     <Folder Include="$(MSBuildThisFileDirectory)SingleThreadAsyncDequeueProcessor\CoreStandard\" />
     <Folder Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\StoreProcedureExecutorController\" />
     <Folder Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\NonCapturingTimer\Microsoft.Extensions.NonCapturingTimer.Sources.csproj" />
   </ItemGroup>
 </Project>
