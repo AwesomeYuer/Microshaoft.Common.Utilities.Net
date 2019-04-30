@@ -5,7 +5,9 @@ Microshaoft.Common.Utilities.Net.4x (including the repo) is licensed under the M
 
 Contact:
   Microshaoft@gmail.com
+
   Microshaoft@msn.com
+  
   Microshaoft@qq.com
 
   2016-10-24
