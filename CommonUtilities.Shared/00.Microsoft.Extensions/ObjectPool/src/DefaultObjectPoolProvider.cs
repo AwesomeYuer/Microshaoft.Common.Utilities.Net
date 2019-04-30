@@ -1,10 +1,9 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using System;
-
 namespace Microshaoft.Extensions.ObjectPool
 {
+    using System;
     public class DefaultObjectPoolProvider : ObjectPoolProvider
     {
         public int MaximumRetained { get; set; } = Environment.ProcessorCount * 2;

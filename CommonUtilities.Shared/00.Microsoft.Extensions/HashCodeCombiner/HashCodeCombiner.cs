@@ -1,13 +1,12 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-
 namespace Microshaoft.Extensions.Internal
 {
-    internal struct HashCodeCombiner
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Runtime.CompilerServices;
+    public struct HashCodeCombiner
     {
         private long _combinedHash64;
 

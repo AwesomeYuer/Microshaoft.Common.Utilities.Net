@@ -297,7 +297,4 @@
     <Folder Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\StoreProcedureExecutorController\" />
     <Folder Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\Services\" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\NonCapturingTimer\Microsoft.Extensions.NonCapturingTimer.Sources.csproj" />
-  </ItemGroup>
 </Project>

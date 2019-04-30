@@ -1,12 +1,11 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using System;
-using System.Runtime.CompilerServices;
-using System.Threading;
-
 namespace Microshaoft.Extensions.ObjectPool
 {
+    using System;
+    using System.Runtime.CompilerServices;
+    using System.Threading;
     internal sealed class DisposableObjectPool<T> : DefaultObjectPool<T>, IDisposable where T : class
     {
         private volatile bool _isDisposed;
