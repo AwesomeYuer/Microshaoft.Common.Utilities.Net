@@ -11,6 +11,11 @@ namespace Microshaoft.Web
                         Attribute
                         , IActionFilter
     {
+
+
+
+        private IConfiguration _configuration;
+        private object _locker = new object();
         public OperationsAuthorizeFilter()
         {
             Initialize();
@@ -44,17 +49,28 @@ namespace Microshaoft.Web
             }
             var httpContext = context.HttpContext;
             var request = httpContext.Request;
-            
-            IConfiguration configuration =
-                        (IConfiguration) httpContext
-                                            .RequestServices
-                                            .GetService
-                                                (
-                                                    typeof(IConfiguration)
-                                                );
+            _locker
+                .LockIf
+                    (
+                        () =>
+                        {
+                            return
+                                (_configuration == null);
+                        }
+                        , () =>
+                        {
+                            _configuration = (IConfiguration)
+                                                httpContext
+                                                    .RequestServices
+                                                    .GetService
+                                                        (
+                                                            typeof(IConfiguration)
+                                                        );
+                        }
+                    );
             var routeName = (string)context.ActionArguments["routeName"];
             var httpMethod = $"http{request.Method}";
-            var operationsConfiguration = configuration
+            var operationsConfiguration = _configuration
                                                     .GetSection
                                                         ($"Routes:{routeName}:{httpMethod}:Operations");
             if (operationsConfiguration.Exists())

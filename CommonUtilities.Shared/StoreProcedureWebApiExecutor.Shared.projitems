@@ -49,6 +49,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Web.Filters\OperationsAuthorizeFilter.CoreStandard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Filters\BearerTokenAuthorizeFilter.CoreStandard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Filters\IHttpRequestValidateable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Web.Filters\RequestJTokenParametersProcessFilter.CoreStandard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Filters\RequestJTokenValidationFilter.CoreStandard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.MiddleWares\AbstractCommonMiddlewareBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.MiddleWares\ExceptionGuardMiddleware.cs" />

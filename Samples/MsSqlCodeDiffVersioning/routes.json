@@ -16,7 +16,25 @@
         "connectionID": "c1",
         "storeProcedureName": "usp_executesql",
         "EnableStatistics": true,
-        "commandtimeoutInSeconds": 103
+        "commandtimeoutInSeconds": 103,
+        "InputsParameters": [
+          {
+            "Name": "A",
+            "Value": 1,
+            "AllowOverride": true
+          },
+          {
+            "Name": "B",
+            "Value": true,
+            "AllowOverride": true
+          },
+          {
+            "Name": "c",
+            "Value": "asdsadsad",
+            "AllowOverride": true
+          }
+
+        ]
       },
       "operations": ["a1", "a2"]
     },
@@ -30,21 +48,45 @@
         "operations": [ "a1", "a2" ],
         "InputsParameters": [
           {
-            "Name": "P1",
-            "Value": 12345,
-            "Overrideable": true
+            "Name": "A",
+            "Value": 1,
+            "AllowOverride": true
           },
           {
-            "ParameterName": "P2",
-            "Overrideable": false,
-            "Value": "aaaaaaaaaa"
+            "Name": "B",
+            "Value": true,
+            "AllowOverride": true
+          },
+          {
+            "Name": "c",
+            "Value": "asdsadsad",
+            "AllowOverride": true
           }
+
         ]
       },
       "HttpPost": {
         "ConnectionID": "c1",
-        "StoreProcedureName": "zsp_zObjectsChangesLogsHistory_Get"
-        //"EnableStatistics": true
+        "StoreProcedureName": "zsp_zObjectsChangesLogsHistory_Get",
+        //"EnableStatistics": true,
+        "InputsParameters": [
+          {
+            "Name": "A",
+            "Value": 1,
+            "AllowOverride": true
+          },
+          {
+            "Name": "B",
+            "Value": true,
+            "AllowOverride": true
+          },
+          {
+            "Name": "c",
+            "Value": "asdsadsad",
+            "AllowOverride": true
+          }
+
+        ]
       }
     },
     "masterdetails": {
@@ -58,7 +100,7 @@
           "bbb": "Outputs.Parameters",
           "aaa.bbb.ccc": "Outputs.Parameters",
           "AAa.ccc": "Outputs.Parameters",
-          "aaa.bbb.ccc": "Outputs.ResultSets[0].Rows"
+          "aaa.bbb.cccd": "Outputs.ResultSets[0].Rows"
         }
       },
       "HttpPost": {
