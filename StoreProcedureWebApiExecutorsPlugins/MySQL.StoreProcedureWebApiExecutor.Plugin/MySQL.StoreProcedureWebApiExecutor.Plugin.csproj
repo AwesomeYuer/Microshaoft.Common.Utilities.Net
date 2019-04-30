@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Composition" Version="1.0.31" />
-    <PackageReference Include="MySql.Data" Version="8.0.15" />
+    <PackageReference Include="MySql.Data" Version="8.0.16" />
     <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="2.18.6" />
   </ItemGroup>
 
