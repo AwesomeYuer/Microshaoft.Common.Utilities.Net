@@ -21,6 +21,7 @@
   <Import Project="..\..\..\CommonUtilities.Shared\CommonUtilities.Shared.projitems" Label="Shared" />
 
   <ItemGroup>
+    <PackageReference Include="IBM.Data.DB2.Core" Version="1.3.0.100" />
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.4" />
     <PackageReference Include="Microsoft.AspNetCore.ResponseCaching" Version="2.2.0" />
     <PackageReference Include="Microsoft.Composition" Version="1.0.31" />
