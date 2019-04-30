@@ -124,6 +124,8 @@ namespace Microshaoft.WebApi.Controllers
                     + "{resultJsonPathPart6?}"
                 )
         ]
+        [OperationsAuthorizeFilter]
+        [RequestJTokenParametersDefaultProcessFilter]
         public virtual ActionResult<JToken>
                             ProcessActionRequest
                                 (
@@ -225,6 +227,8 @@ namespace Microshaoft.WebApi.Controllers
                     + "{resultJsonPathPart6?}"
                 )
         ]
+        [OperationsAuthorizeFilter]
+        [RequestJTokenParametersDefaultProcessFilter]
         public virtual async Task<ActionResult<JToken>>
                             ProcessActionRequestAsync
                                 (

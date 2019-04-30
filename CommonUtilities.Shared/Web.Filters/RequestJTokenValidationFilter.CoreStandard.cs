@@ -199,8 +199,6 @@ namespace Microshaoft.Web
                         .Result = r.Result;
                 }
             }
-            httpContext = null;
-            request = null;
         }
         public virtual void OnActionExecuted(ActionExecutedContext context)
         {

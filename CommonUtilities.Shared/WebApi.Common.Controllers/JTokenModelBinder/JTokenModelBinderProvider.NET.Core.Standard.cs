@@ -13,6 +13,9 @@ namespace Microshaoft.WebApi.ModelBinders
     using System.Threading.Tasks;
     public class JTokenModelBinder : IModelBinder
     {
+        //public JTokenModelBinder()
+        //{ }
+
         public async Task BindModelAsync(ModelBindingContext bindingContext)
         {
             var request = bindingContext
@@ -57,6 +60,14 @@ namespace Microshaoft.WebApi.ModelBinders
                             , secretJwtToken
                         );
             }
+            //request
+            //        .HttpContext
+            //        .Items
+            //        .Add
+            //            (
+            //                "RequestJTokenParameters"
+            //                , parameters
+            //            );
             bindingContext
                     .Result =
                         ModelBindingResult
