@@ -349,10 +349,7 @@
                         (actionSelector) =>
                         {
                             actionSelector
-                                .FilterControllerNamePrefixs =
-                                    new string[] { "storeProcedureExecutor" };
-                            actionSelector
-                                .OnSelectSyncAsyncActionCandidate =
+                                .OnSelectSyncAsyncActionCandidates =
                                     (routeContext, candidates, _) =>
                                     {
                                         var r =
