@@ -6,25 +6,31 @@ namespace Microshaoft
     using System.Composition.Hosting;
     using System.IO;
     using System.Linq;
-    using System.Reflection;
     using System.Runtime.Loader;
 
     public static class ContainerConfigurationExtensions
     {
-        public static ContainerConfiguration WithAssembliesByPath(this ContainerConfiguration configuration, string path, SearchOption searchOption = SearchOption.TopDirectoryOnly)
+        public static ContainerConfiguration WithAssembliesByPath
+                        (
+                            this ContainerConfiguration configuration
+                            , string path
+                            , string searchPattern = "*.dll"
+                            , SearchOption searchOption = SearchOption.TopDirectoryOnly
+                        )
         {
-            return WithAssembliesByPath(configuration, path, null, searchOption);
+            return WithAssembliesByPath(configuration, path, searchPattern, searchOption);
         }
         public static ContainerConfiguration WithAssembliesByPath
             (
                 this ContainerConfiguration configuration
                 , string path
                 , AttributedModelProvider conventions
+                , string searchPattern = "*.dll"
                 , SearchOption searchOption = SearchOption.TopDirectoryOnly
             )
         {
             var assemblies = Directory
-                .GetFiles(path, "*.dll", searchOption)
+                .GetFiles(path, searchPattern, searchOption)
                 //.Select
                 //    (
                 //        (x) =>
@@ -55,6 +61,7 @@ namespace Microshaoft
         public static IEnumerable<T> ImportManyExportsComposeParts<T>
                     (
                         string path
+                        , string searchPattern = "*.dll"
                         , SearchOption searchOption = SearchOption.TopDirectoryOnly
                     )
         {
@@ -64,7 +71,7 @@ namespace Microshaoft
                             .GetFiles
                                 (
                                     path
-                                    , "*.dll"
+                                    , searchPattern
                                     , SearchOption.AllDirectories
                                 )
                             .Select
@@ -75,7 +82,10 @@ namespace Microshaoft
                                 )
                             .ToList();
             var configuration = new ContainerConfiguration()
-                                        .WithAssemblies(assemblies);
+                                        .WithAssemblies
+                                            (
+                                                assemblies
+                                            );
             using (var container = configuration.CreateContainer())
             {
                 result = container.GetExports<T>();

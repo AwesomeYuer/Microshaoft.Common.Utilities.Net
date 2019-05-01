@@ -108,7 +108,7 @@ namespace Microshaoft.Web
                                                 var r = CompositionHelper
                                                             .ImportManyExportsComposeParts
                                                                 <IHttpRequestValidateable<JToken>>
-                                                                    (x);
+                                                                    (x, "*Validator*plugin*.dll");
                                                 return r;
                                             }
                                         );

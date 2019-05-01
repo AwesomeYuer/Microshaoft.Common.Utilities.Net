@@ -203,8 +203,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="IBM.Data.DB2.Core" Version="1.3.0.100" />
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.4" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="2.2.4" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
+    <PackageReference Include="MySql.Data" Version="8.0.16" />
+    <PackageReference Include="Npgsql" Version="4.0.6" />
+    <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="2.18.6" />
     <PackageReference Include="SecurityCodeScan.VS2017" Version="3.2.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
@@ -250,5 +255,9 @@
   <ItemGroup>
     <ProjectReference Include="..\..\StoreProcedureWebApiExecutor\StoreProcedureWebApiExecutor.Core\Microshaoft.StoreProcedureExecutorWebApiService.Core.csproj" />
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy ..\..\StoreProcedureWebApiExecutorsPlugins\MsSQL.StoreProcedureWebApiExecutor.Plugin\bin\Debug\netcoreapp2.2\*plugin* $(TargetDir)CompositionPlugins\ /Y&#xD;&#xA;xcopy ..\..\StoreProcedureWebApiExecutorsPlugins\MySQL.StoreProcedureWebApiExecutor.Plugin\bin\Debug\netcoreapp2.2\*plugin* $(TargetDir)CompositionPlugins\ /Y&#xD;&#xA;xcopy ..\..\JTokenModelParameterValidatorsPlugins\JTokenModelParameterValidatorSamplePlugin\bin\Debug\netcoreapp2.2\*plugin* $(TargetDir)CompositionPlugins\ /Y&#xD;&#xA;&#xD;&#xA;rem xcopy ..\..\StoreProcedureWebApiExecutorsPlugins\MySQL.StoreProcedureWebApiExecutor.Plugin\bin\Debug\netcoreapp2.2\*mysql.data* $(TargetDir)CompositionPlugins\ /Y&#xD;&#xA;rem xcopy ..\..\StoreProcedureWebApiExecutorsPlugins\MySQL.StoreProcedureWebApiExecutor.Plugin\bin\Debug\netcoreapp2.2\*npgsql* $(TargetDir)CompositionPlugins\ /Y&#xD;&#xA;rem xcopy ..\..\StoreProcedureWebApiExecutorsPlugins\MySQL.StoreProcedureWebApiExecutor.Plugin\bin\Debug\netcoreapp2.2\*sqlite* $(TargetDir)CompositionPlugins\ /Y&#xD;&#xA;rem xcopy ..\..\StoreProcedureWebApiExecutorsPlugins\MySQL.StoreProcedureWebApiExecutor.Plugin\bin\Debug\netcoreapp2.2\*oracle* $(TargetDir)CompositionPlugins\ /Y&#xD;&#xA;rem xcopy ..\..\StoreProcedureWebApiExecutorsPlugins\MySQL.StoreProcedureWebApiExecutor.Plugin\bin\Debug\netcoreapp2.2\*db2* $(TargetDir)CompositionPlugins\ /Y&#xD;&#xA;&#xD;&#xA;rem xcopy ..\..\StoreProcedureWebApiExecutorsPlugins\MySQL.StoreProcedureWebApiExecutor.Plugin\bin\Debug\netcoreapp2.2\*mysql.data* $(TargetDir) /Y&#xD;&#xA;rem xcopy ..\..\StoreProcedureWebApiExecutorsPlugins\MySQL.StoreProcedureWebApiExecutor.Plugin\bin\Debug\netcoreapp2.2\*npgsql* $(TargetDir) /Y&#xD;&#xA;rem xcopy ..\..\StoreProcedureWebApiExecutorsPlugins\MySQL.StoreProcedureWebApiExecutor.Plugin\bin\Debug\netcoreapp2.2\*sqlite* $(TargetDir) /Y&#xD;&#xA;rem xcopy ..\..\StoreProcedureWebApiExecutorsPlugins\MySQL.StoreProcedureWebApiExecutor.Plugin\bin\Debug\netcoreapp2.2\*oracle* $(TargetDir) /Y&#xD;&#xA;rem xcopy ..\..\StoreProcedureWebApiExecutorsPlugins\MySQL.StoreProcedureWebApiExecutor.Plugin\bin\Debug\netcoreapp2.2\*db2* $(TargetDir) /Y&#xD;&#xA;" />
+  </Target>
 
 </Project>
