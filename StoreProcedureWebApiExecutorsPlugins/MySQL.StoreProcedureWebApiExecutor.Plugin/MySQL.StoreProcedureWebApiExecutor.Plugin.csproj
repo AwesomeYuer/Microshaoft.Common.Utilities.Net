@@ -6,6 +6,7 @@
   </PropertyGroup>
   
   <ItemGroup>
+    <Compile Remove="SqlDbParameter\DbParameterHelper.00.cs" />
     <Compile Remove="SqlDbParameter\DbParameterHelper.01.mssql.cs" />
   </ItemGroup>
 
