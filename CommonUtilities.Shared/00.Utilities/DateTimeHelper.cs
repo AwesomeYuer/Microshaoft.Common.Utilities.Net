@@ -10,6 +10,7 @@
     public static class TimeSpanHelper
     {
         public const int TimeSpanTicksPerSecond = 10000000;
+        private static readonly double _timestampToTicks = TimeSpan.TicksPerSecond / (double)Stopwatch.Frequency;
 
         public static long PerformanceCounterTicks(this TimeSpan target)
         {
@@ -19,6 +20,18 @@
         public static double ToWellFormatSeconds(this TimeSpan target)
         {
             return Math.Round(target.TotalMilliseconds / 1000, 7, MidpointRounding.ToEven);
+        }
+        public static TimeSpan GetNowElapsedTime(this long target)
+        {
+            var endTimestamp = Stopwatch.GetTimestamp();
+            return
+                GetElapsedTime(target, endTimestamp);
+        }
+        public static TimeSpan GetElapsedTime(long beginTimestamp, long endTimestamp)
+        {
+            var timestampDelta = endTimestamp - beginTimestamp;
+            var ticks = (long)(_timestampToTicks * timestampDelta);
+            return new TimeSpan(ticks);
         }
     }
 

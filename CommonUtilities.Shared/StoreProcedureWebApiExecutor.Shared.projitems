@@ -9,6 +9,26 @@
     <Import_RootNamespace>CommonUtilities.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ActivatorUtilities\ActivatorUtilities.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ActivatorUtilities\ActivatorUtilitiesConstructorAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ActivatorUtilities\ObjectFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\HashCodeCombiner\HashCodeCombiner.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\NonCapturingTimer\NonCapturingTimer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ObjectPool\src\DefaultObjectPool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ObjectPool\src\DefaultObjectPoolProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ObjectPool\src\DefaultPooledObjectPolicy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ObjectPool\src\DisposableObjectPool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ObjectPool\src\IPooledObjectPolicy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ObjectPool\src\LeakTrackingObjectPool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ObjectPool\src\LeakTrackingObjectPoolProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ObjectPool\src\ObjectPool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ObjectPool\src\ObjectPoolProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ObjectPool\src\ObjectPoolProviderExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ObjectPool\src\PooledObjectPolicy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ObjectPool\src\StringBuilderPooledObjectPolicy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ParameterDefaultValue\ParameterDefaultValue.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\TypeNameHelper\TypeNameHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ValueStopwatch\ValueStopwatch.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\DateTimeHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\LockHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Assembly\AssemblyHelper.cs" />
