@@ -13,14 +13,13 @@ namespace Microshaoft
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
 
     public class SyncAsyncActionSelector : IActionSelector
     {
         private ActionSelector _actionSelector;
         private readonly IConfiguration _configuration;
-        public int InterceptCandidatesCount = 1;
-        public string[] FilterControllerNamePrefixs;
-
+        
         public SyncAsyncActionSelector
                     (
                         IActionDescriptorCollectionProvider actionDescriptorCollectionProvider
@@ -46,8 +45,7 @@ namespace Microshaoft
                     , IConfiguration
                     , IReadOnlyList<ActionDescriptor>
                 >
-                    OnSelectSyncAsyncActionCandidate = null;
-
+                    OnSelectSyncAsyncActionCandidates = null;
 
         public ActionDescriptor SelectBestCandidate
                                         (
@@ -55,43 +53,45 @@ namespace Microshaoft
                                             , IReadOnlyList<ActionDescriptor> candidates
                                         )
         {
-            if (OnSelectSyncAsyncActionCandidate != null)
+            if 
+                (
+                    candidates.Count == 2
+                    &&
+                    OnSelectSyncAsyncActionCandidates != null
+                )
             {
-                if (candidates.Count > InterceptCandidatesCount)
-                {
-                    var r = candidates
-                                .Any
-                                    (
-                                        (actionDescriptor) =>
+                //候选方法仅有 Async/Sync Task/Non-Task 返回类型的区别
+                //这里不用 Action 对应的方法名字后缀 Async/Sync 作为区分
+                var sum = candidates
+                            .Select
+                                (
+                                    (actionDescriptor) =>
+                                    {
+                                        var r = 0;
+                                        if
+                                            (
+                                                ((ControllerActionDescriptor) actionDescriptor)
+                                                    .MethodInfo
+                                                    .ReturnType
+                                                    .BaseType
+                                                ==
+                                                typeof(Task)
+                                            )
                                         {
-                                            return
-                                                FilterControllerNamePrefixs
-                                                    .Any
-                                                        (
-                                                            (controllerNamePrefix) =>
-                                                            {
-                                                                return
-                                                                    ((ControllerActionDescriptor) actionDescriptor)
-                                                                        .ControllerName
-                                                                        .StartsWith
-                                                                            (
-                                                                                controllerNamePrefix
-                                                                                , StringComparison
-                                                                                        .OrdinalIgnoreCase
-                                                                            );
-                                                            }
-                                                        );
+                                            r = 1;
                                         }
+                                        return r;
+                                    }
+                                )
+                            .Sum();
+                if (sum == 1)
+                {
+                    candidates = OnSelectSyncAsyncActionCandidates
+                                    (
+                                        context
+                                        , candidates
+                                        , _configuration
                                     );
-                    if (r)
-                    {
-                        candidates = OnSelectSyncAsyncActionCandidate
-                                        (
-                                            context
-                                            , candidates
-                                            , _configuration
-                                        );
-                    }
                 }
             }
             return
@@ -105,12 +105,13 @@ namespace Microshaoft
 
         public IReadOnlyList<ActionDescriptor> SelectCandidates(RouteContext context)
         {
-            return
-                _actionSelector
-                    .SelectCandidates
-                        (
-                            context
-                        );
+            throw new NotImplementedException();
+            //return
+            //    _actionSelector
+            //        .SelectCandidates
+            //            (
+            //                context
+            //            );
         }
     }
 
