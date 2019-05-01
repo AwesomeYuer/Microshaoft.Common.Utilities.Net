@@ -3,7 +3,7 @@
     using Newtonsoft.Json.Linq;
     using System;
     using Oracle.ManagedDataAccess.Client;
-    public static partial class MySqlDbParameterHelper
+    public static partial class OracleDbParameterHelper
     {
         public static object SetGetValueAsObject
                                     (

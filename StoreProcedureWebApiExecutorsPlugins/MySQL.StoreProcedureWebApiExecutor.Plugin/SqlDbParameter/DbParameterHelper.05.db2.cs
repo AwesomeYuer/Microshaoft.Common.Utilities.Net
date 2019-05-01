@@ -4,7 +4,7 @@
     using System;
     using IBM.Data.DB2.Core;
 
-    public static partial class MySqlDbParameterHelper
+    public static partial class DB2DbParameterHelper
     {
         public static object SetGetValueAsObject
                                     (
