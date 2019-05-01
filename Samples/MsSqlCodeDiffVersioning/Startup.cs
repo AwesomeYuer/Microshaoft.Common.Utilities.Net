@@ -182,7 +182,7 @@
         {
             var logger = loggerFactory.CreateLogger("Microshaoft.Logger");
             string timingKey = "beginTimestamp";
-
+            
             app
                 .UseRequestResponseGuard
                     <QueuedObjectsPool<Stopwatch>>
@@ -340,107 +340,103 @@
                 app.UseHsts();
             }
             //app.UseHttpsRedirection();
-            app.UseMvc();
+            
 
             #region SyncAsyncActionSelector 拦截处理
-            var actionSelector = (SyncAsyncActionSelector)
-                                        app
-                                            .ApplicationServices
-                                            .GetServices<IActionSelector>()
-                                            .First
-                                                (
-                                                    (x) =>
-                                                    {
-                                                        return
-                                                            (
-                                                                x.GetType()
-                                                                ==
-                                                                typeof(SyncAsyncActionSelector)
-                                                            );
-                                                    }
-                                                );
-            actionSelector
-                .FilterControllerNamePrefixs = new string[] { "storeProcedureExecutor" };
-            actionSelector
-                .OnSelectSyncAsyncActionCandidate = (routeContext, candidates, _) =>
-                {
-                    var r = candidates
-                                .All
-                                    (
-                                        (x) =>
+            app
+                .UseCustomActionSelector<SyncAsyncActionSelector>
+                    (
+                        (actionSelector) =>
+                        {
+                            actionSelector
+                                .FilterControllerNamePrefixs =
+                                    new string[] { "storeProcedureExecutor" };
+                            actionSelector
+                                .OnSelectSyncAsyncActionCandidate =
+                                    (routeContext, candidates, _) =>
+                                    {
+                                        var r =
+                                            candidates
+                                                .All
+                                                    (
+                                                        (actionDescriptor) =>
+                                                        {
+                                                            var controllerActionDescriptor = (ControllerActionDescriptor) actionDescriptor;
+                                                            var rr = typeof(AbstractStoreProceduresExecutorControllerBase)
+                                                                        .IsAssignableFrom
+                                                                            (
+                                                                                controllerActionDescriptor
+                                                                                    .ControllerTypeInfo
+                                                                                    .UnderlyingSystemType
+                                                                            );
+                                                            return rr;
+                                                        }
+                                                    );
+                                        if (r)
                                         {
-                                            var controllerActionDescriptor = (ControllerActionDescriptor)x;
-                                            var rr = typeof(AbstractStoreProceduresExecutorControllerBase)
-                                                        .IsAssignableFrom
+                                            var httpContext = routeContext.HttpContext;
+                                            var request = httpContext.Request;
+                                            var routeName = routeContext.RouteData.Values["routeName"].ToString();
+                                            var httpMethod = $"Http{request.Method}";
+                                            var isExecuteAsync = false;
+                                            var isExecuteAsyncConfiguration =
+                                                        configuration
+                                                            .GetSection($"Routes:{routeName}:{httpMethod}:IsExecuteAsync");
+                                            if (isExecuteAsyncConfiguration.Exists())
+                                            {
+                                                isExecuteAsync = isExecuteAsyncConfiguration.Get<bool>();
+                                            }
+                                            if (isExecuteAsync)
+                                            {
+                                                candidates =
+                                                        candidates
+                                                            .Where
+                                                                (
+                                                                    (actionDescriptor) =>
+                                                                    {
+                                                                        return
+                                                                            actionDescriptor
+                                                                                .RouteValues["action"]
+                                                                                .EndsWith
+                                                                                    (
+                                                                                        "async"
+                                                                                        , StringComparison
+                                                                                                .OrdinalIgnoreCase
+                                                                                    );
+                                                                    }
+                                                                )
+                                                            .ToList()
+                                                            .AsReadOnly();
+                                            }
+                                            else
+                                            {
+                                                candidates =
+                                                    candidates
+                                                        .Where
                                                             (
-                                                                controllerActionDescriptor
-                                                                    .ControllerTypeInfo
-                                                                    .UnderlyingSystemType
-                                                            );
-                                            return rr;
+                                                                (actionDescriptor) =>
+                                                                {
+                                                                    return
+                                                                        !actionDescriptor
+                                                                            .RouteValues["action"]
+                                                                            .EndsWith
+                                                                                (
+                                                                                    "async"
+                                                                                    , StringComparison
+                                                                                        .OrdinalIgnoreCase
+                                                                                );
+                                                                }
+                                                            )
+                                                        .ToList()
+                                                        .AsReadOnly();
+                                            }
                                         }
-                                    );
-                    if (r)
-                    {
-                        var httpContext = routeContext.HttpContext;
-                        var request = httpContext.Request;
-                        var routeName = routeContext.RouteData.Values["routeName"].ToString();
-                        var httpMethod = $"Http{request.Method}";
-                        var isExecuteAsync = false;
-                        var isExecuteAsyncConfiguration =
-                                    configuration
-                                        .GetSection($"Routes:{routeName}:{httpMethod}:IsExecuteAsync");
-                        if (isExecuteAsyncConfiguration.Exists())
-                        {
-                            isExecuteAsync = isExecuteAsyncConfiguration.Get<bool>();
+                                        return candidates;
+                                    };
                         }
-                        if (isExecuteAsync)
-                        {
-                            candidates = candidates
-                                                .Where
-                                                    (
-                                                        (x) =>
-                                                        {
-                                                            return
-                                                                x
-                                                                    .RouteValues["action"]
-                                                                    .EndsWith
-                                                                        (
-                                                                            "async"
-                                                                            , StringComparison
-                                                                                    .OrdinalIgnoreCase
-                                                                        );
-                                                        }
-                                                    )
-                                                .ToList()
-                                                .AsReadOnly();
-                        }
-                        else
-                        {
-                            candidates = candidates
-                                                .Where
-                                                    (
-                                                        (x) =>
-                                                        {
-                                                            return
-                                                                !x
-                                                                    .RouteValues["action"]
-                                                                    .EndsWith
-                                                                        (
-                                                                            "async"
-                                                                            , StringComparison
-                                                                                .OrdinalIgnoreCase
-                                                                        );
-                                                        }
-                                                    )
-                                                .ToList()
-                                                .AsReadOnly();
-                        }
-                    }
-                    return candidates;
-                }; 
+                    );
             #endregion
-
+            app.UseMvc();
             Console.WriteLine(Directory.GetCurrentDirectory());
 
             app.UseDefaultFiles
