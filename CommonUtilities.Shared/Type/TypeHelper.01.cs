@@ -8,6 +8,7 @@ namespace Microshaoft
     using System.Reflection;
 #if !PORTABLE
     using System.Reflection.Emit;
+    using System.Runtime.CompilerServices;
 #endif
 
     public static partial class TypeHelper
@@ -220,6 +221,16 @@ namespace Microshaoft
         public static bool IsPublic(this MemberInfo target)
         {
             return (target as FieldInfo)?.IsPublic ?? (target as PropertyInfo).IsPublic();
+        }
+
+        public static bool IsAsync(this MethodInfo target)
+        {
+            Type attributeType = typeof(AsyncStateMachineAttribute);
+            var attribute = (AsyncStateMachineAttribute)
+                                    target
+                                        .GetCustomAttribute(attributeType);
+            var r = (attribute != null);
+            return r;
         }
 
         public static bool IsNotPublic(this ConstructorInfo target)

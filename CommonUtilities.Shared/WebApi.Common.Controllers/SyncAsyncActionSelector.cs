@@ -67,20 +67,17 @@ namespace Microshaoft
                                 (
                                     (actionDescriptor) =>
                                     {
-                                        var r = 0;
-                                        if
-                                            (
-                                                ((ControllerActionDescriptor) actionDescriptor)
-                                                    .MethodInfo
-                                                    .ReturnType
-                                                    .BaseType
-                                                ==
-                                                typeof(Task)
-                                            )
+                                        var isAsync =  ((ControllerActionDescriptor)actionDescriptor)
+                                                            .MethodInfo
+                                                            .IsAsync();
+                                        if (isAsync)
                                         {
-                                            r = 1;
+                                            return 1;
                                         }
-                                        return r;
+                                        else
+                                        {
+                                            return 0;
+                                        }
                                     }
                                 )
                             .Sum();
