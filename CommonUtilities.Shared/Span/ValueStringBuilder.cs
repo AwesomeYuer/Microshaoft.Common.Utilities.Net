@@ -3,8 +3,9 @@
 // See the LICENSE file in the project root for more information.
 namespace Microshaoft
 {
+    using Microshaoft.Buffers;
     using System;
-    using System.Buffers;
+    //using System.Buffers;
     using System.Diagnostics;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;

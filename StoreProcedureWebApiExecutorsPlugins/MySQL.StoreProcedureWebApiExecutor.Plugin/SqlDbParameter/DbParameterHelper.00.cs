@@ -1,10 +1,13 @@
 ﻿namespace Microshaoft
 {
+    using MySql.Data.MySqlClient;
     using Newtonsoft.Json.Linq;
+    using Npgsql;
+    using Oracle.ManagedDataAccess.Client;
     using System;
     using System.Data.Common;
     using System.Data.SqlClient;
-    public static partial class DbParameterHelper
+    public static partial class MySqlDbParameterHelper
     {
         public static object SetGetValueAsObject
                                     (
@@ -49,21 +52,21 @@
                 var parameter = (SqlParameter)target;
                 r = parameter.SetGetValueAsObject(jValue);
             }
-            //else if (targetDbParameterType == typeof(MySqlParameter))
-            //{
-            //    var parameter = (MySqlParameter)target;
-            //    r = parameter.SetGetValueAsObject(jValue);
-            //}
-            //else if (targetDbParameterType == typeof(NpgsqlParameter))
-            //{
-            //    var parameter = (NpgsqlParameter)target;
-            //    r = parameter.SetGetValueAsObject(jValue);
-            //}
-            //else if (targetDbParameterType == typeof(OracleParameter))
-            //{
-            //    var parameter = (OracleParameter)target;
-            //    r = parameter.SetGetValueAsObject(jValue);
-            //}
+            else if (targetDbParameterType == typeof(MySqlParameter))
+            {
+                var parameter = (MySqlParameter)target;
+                r = parameter.SetGetValueAsObject(jValue);
+            }
+            else if (targetDbParameterType == typeof(NpgsqlParameter))
+            {
+                var parameter = (NpgsqlParameter)target;
+                r = parameter.SetGetValueAsObject(jValue);
+            }
+            else if (targetDbParameterType == typeof(OracleParameter))
+            {
+                var parameter = (OracleParameter)target;
+                r = parameter.SetGetValueAsObject(jValue);
+            }
             return r;
         }
     }

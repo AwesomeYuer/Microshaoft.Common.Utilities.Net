@@ -1,14 +1,16 @@
-﻿namespace Microshaoft
+﻿#if !XAMARIN
+namespace Microshaoft
 {
     using Newtonsoft.Json.Linq;
+    using Npgsql;
+    using NpgsqlTypes;
     using System;
-    using Oracle.ManagedDataAccess.Client;
-    public static partial class DbParameterHelper
+    public static partial class MySqlDbParameterHelper
     {
         public static object SetGetValueAsObject
                                     (
-                                        this OracleParameter target
-                                        , JToken jValue 
+                                        this NpgsqlParameter target
+                                        , JToken jValue
                                     )
         {
             object r = null;
@@ -29,27 +31,21 @@
             {
                 var jValueText = jValue.ToString();
                 if
-                    (
-                        target.OracleDbType == OracleDbType.Varchar2
-                        ||
-                        target.OracleDbType == OracleDbType.NVarchar2
-                        ||
-                        target.OracleDbType == OracleDbType.Char
-                        ||
-                        target.OracleDbType == OracleDbType.NChar
-                    )
+                (
+                    target.NpgsqlDbType == NpgsqlDbType.Varchar
+                    ||
+                    target.NpgsqlDbType == NpgsqlDbType.Text
+                    ||
+                    target.NpgsqlDbType == NpgsqlDbType.Char
+                )
                 {
                     r = jValueText;
                 }
                 else if
                     (
-                        target.OracleDbType == OracleDbType.Date
+                        target.NpgsqlDbType == NpgsqlDbType.Date
                         ||
-                        target.OracleDbType == OracleDbType.TimeStamp
-                        ||
-                        target.OracleDbType == OracleDbType.TimeStampLTZ
-                        ||
-                        target.OracleDbType == OracleDbType.TimeStampTZ
+                        target.NpgsqlDbType == NpgsqlDbType.Time
                     )
                 {
                     var b = DateTime
@@ -65,7 +61,7 @@
                 }
                 else if
                     (
-                        target.OracleDbType == OracleDbType.Boolean
+                        target.NpgsqlDbType == NpgsqlDbType.Bit
                     )
                 {
                     var b = bool
@@ -81,23 +77,9 @@
                 }
                 else if
                     (
-                        target.OracleDbType == OracleDbType.Decimal
-                    )
-                {
-                    var b = decimal
-                                .TryParse
-                                    (
-                                        jValueText
-                                        , out var rr
-                                    );
-                    if (b)
-                    {
-                        r = rr;
-                    }
-                }
-                else if
-                    (
-                        target.OracleDbType == OracleDbType.Double
+                        target.NpgsqlDbType == NpgsqlDbType.Double
+                        ||
+                        target.NpgsqlDbType == NpgsqlDbType.Real
                     )
                 {
                     var b = double
@@ -113,7 +95,7 @@
                 }
                 else if
                     (
-                        target.OracleDbType == OracleDbType.Raw
+                        target.NpgsqlDbType == NpgsqlDbType.Uuid
                     )
                 {
                     var b = Guid
@@ -128,11 +110,9 @@
                     }
                 }
                 else if
-                    (
-                        target.OracleDbType == OracleDbType.Long
-                        ||
-                        target.OracleDbType == OracleDbType.Int64
-                    )
+                   (
+                        target.NpgsqlDbType == NpgsqlDbType.Bigint
+                   )
                 {
                     var b = long
                                 .TryParse
@@ -146,41 +126,24 @@
                     }
                 }
                 else if
-                    (
-                        target.OracleDbType == OracleDbType.Int32
-                    )
+                   (
+                        target.NpgsqlDbType == NpgsqlDbType.Numeric
+                   )
                 {
-                    var b = int
-                                .TryParse
-                                    (
-                                        jValueText
-                                        , out var rr
-                                    );
+                    var b = decimal
+                               .TryParse
+                                   (
+                                       jValueText
+                                       , out var rr
+                                   );
                     if (b)
                     {
                         r = rr;
                     }
                 }
-                else if
-                    (
-                        target.OracleDbType == OracleDbType.Int16
-                    )
-                {
-                    var b = short
-                                .TryParse
-                                    (
-                                        jValueText
-                                        , out var rr
-                                    );
-                    if (b)
-                    {
-                        r = rr;
-                    }
-                }
-
-
             }
             return r;
         }
     }
 }
+#endif
