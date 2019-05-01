@@ -5,7 +5,7 @@ namespace Microshaoft
     using Npgsql;
     using NpgsqlTypes;
     using System;
-    public static partial class MySqlDbParameterHelper
+    public static partial class NpgsqlDbParameterHelper
     {
         public static object SetGetValueAsObject
                                     (
