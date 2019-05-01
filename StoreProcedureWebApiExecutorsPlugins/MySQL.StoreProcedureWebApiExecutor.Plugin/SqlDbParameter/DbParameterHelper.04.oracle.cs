@@ -1,14 +1,14 @@
 ﻿namespace Microshaoft
 {
-    using MySql.Data.MySqlClient;
     using Newtonsoft.Json.Linq;
     using System;
-    public static partial class DbParameterHelper
+    using Oracle.ManagedDataAccess.Client;
+    public static partial class MySqlDbParameterHelper
     {
         public static object SetGetValueAsObject
                                     (
-                                        this MySqlParameter target
-                                        , JToken jValue
+                                        this OracleParameter target
+                                        , JToken jValue 
                                     )
         {
             object r = null;
@@ -30,22 +30,26 @@
                 var jValueText = jValue.ToString();
                 if
                     (
-                        target.MySqlDbType == MySqlDbType.VarChar
+                        target.OracleDbType == OracleDbType.Varchar2
                         ||
-                        target.MySqlDbType == MySqlDbType.Text
+                        target.OracleDbType == OracleDbType.NVarchar2
                         ||
-                        target.MySqlDbType == MySqlDbType.VarString
+                        target.OracleDbType == OracleDbType.Char
+                        ||
+                        target.OracleDbType == OracleDbType.NChar
                     )
                 {
                     r = jValueText;
                 }
                 else if
                     (
-                        target.MySqlDbType == MySqlDbType.DateTime
+                        target.OracleDbType == OracleDbType.Date
                         ||
-                        target.MySqlDbType == MySqlDbType.Date
+                        target.OracleDbType == OracleDbType.TimeStamp
                         ||
-                        target.MySqlDbType == MySqlDbType.DateTime
+                        target.OracleDbType == OracleDbType.TimeStampLTZ
+                        ||
+                        target.OracleDbType == OracleDbType.TimeStampTZ
                     )
                 {
                     var b = DateTime
@@ -61,7 +65,7 @@
                 }
                 else if
                     (
-                        target.MySqlDbType == MySqlDbType.Bit
+                        target.OracleDbType == OracleDbType.Boolean
                     )
                 {
                     var b = bool
@@ -77,7 +81,7 @@
                 }
                 else if
                     (
-                        target.MySqlDbType == MySqlDbType.Decimal
+                        target.OracleDbType == OracleDbType.Decimal
                     )
                 {
                     var b = decimal
@@ -93,10 +97,10 @@
                 }
                 else if
                     (
-                        target.MySqlDbType == MySqlDbType.Float
+                        target.OracleDbType == OracleDbType.Double
                     )
                 {
-                    var b = float
+                    var b = double
                                 .TryParse
                                     (
                                         jValueText
@@ -109,29 +113,13 @@
                 }
                 else if
                     (
-                        target.MySqlDbType == MySqlDbType.Guid
+                        target.OracleDbType == OracleDbType.Raw
                     )
                 {
                     var b = Guid
                                 .TryParse
                                     (
                                         jValueText
-                                        , out Guid rr
-                                    );
-                    if (b)
-                    {
-                        r = rr;
-                    }
-                }
-                else if
-                    (
-                        target.MySqlDbType == MySqlDbType.UInt16
-                    )
-                {
-                    var b = ushort
-                                .TryParse
-                                    (
-                                        jValueText
                                         , out var rr
                                     );
                     if (b)
@@ -141,12 +129,12 @@
                 }
                 else if
                     (
-                        target.MySqlDbType == MySqlDbType.UInt24
+                        target.OracleDbType == OracleDbType.Long
                         ||
-                        target.MySqlDbType == MySqlDbType.UInt32
+                        target.OracleDbType == OracleDbType.Int64
                     )
                 {
-                    var b = uint
+                    var b = long
                                 .TryParse
                                     (
                                         jValueText
@@ -159,42 +147,8 @@
                 }
                 else if
                     (
-                        target.MySqlDbType == MySqlDbType.UInt64
+                        target.OracleDbType == OracleDbType.Int32
                     )
-                {
-                    var b = ulong
-                                .TryParse
-                                    (
-                                        jValueText
-                                        , out var rr
-                                    );
-                    if (b)
-                    {
-                        r = rr;
-                    }
-                }
-                else if
-                   (
-                       target.MySqlDbType == MySqlDbType.Int16
-                   )
-                {
-                    var b = short
-                                .TryParse
-                                    (
-                                        jValueText
-                                        , out var rr
-                                    );
-                    if (b)
-                    {
-                        r = rr;
-                    }
-                }
-                else if
-                   (
-                        target.MySqlDbType == MySqlDbType.Int24
-                        ||
-                        target.MySqlDbType == MySqlDbType.Int32
-                   )
                 {
                     var b = int
                                 .TryParse
@@ -208,21 +162,23 @@
                     }
                 }
                 else if
-                   (
-                        target.MySqlDbType == MySqlDbType.Int64
-                   )
+                    (
+                        target.OracleDbType == OracleDbType.Int16
+                    )
                 {
-                    var b = long
+                    var b = short
                                 .TryParse
                                     (
                                         jValueText
-                                        , out long rr
+                                        , out var rr
                                     );
                     if (b)
                     {
                         r = rr;
                     }
                 }
+
+
             }
             return r;
         }
