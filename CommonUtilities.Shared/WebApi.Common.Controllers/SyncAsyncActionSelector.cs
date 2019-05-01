@@ -1,12 +1,14 @@
 ﻿#if NETCOREAPP2_X
 namespace Microshaoft
 {
+    using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Mvc.Abstractions;
     using Microsoft.AspNetCore.Mvc.Controllers;
     using Microsoft.AspNetCore.Mvc.Infrastructure;
     using Microsoft.AspNetCore.Mvc.Internal;
     using Microsoft.AspNetCore.Routing;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using System;
     using System.Collections.Generic;
@@ -60,20 +62,20 @@ namespace Microshaoft
                     var r = candidates
                                 .Any
                                     (
-                                        (x) =>
+                                        (actionDescriptor) =>
                                         {
                                             return
                                                 FilterControllerNamePrefixs
                                                     .Any
                                                         (
-                                                            (xx) =>
+                                                            (controllerNamePrefix) =>
                                                             {
                                                                 return
-                                                                    ((ControllerActionDescriptor)x)
+                                                                    ((ControllerActionDescriptor) actionDescriptor)
                                                                         .ControllerName
                                                                         .StartsWith
                                                                             (
-                                                                                xx
+                                                                                controllerNamePrefix
                                                                                 , StringComparison
                                                                                         .OrdinalIgnoreCase
                                                                             );
@@ -109,6 +111,46 @@ namespace Microshaoft
                         (
                             context
                         );
+        }
+    }
+
+    public static class ActionSelectorApplicationBuilderExtensions
+    {
+        public static IApplicationBuilder UseCustomActionSelector<TActionSelector>
+            (
+                this IApplicationBuilder target
+                , Action<TActionSelector> OnActionSelectorInitializeProcessAction
+            )
+                 where
+                        TActionSelector : IActionSelector
+        {
+            var type = typeof(TActionSelector);
+            TActionSelector actionSelector = (TActionSelector)
+                                                target
+                                                    .ApplicationServices
+                                                    .GetServices<IActionSelector>()
+                                                    .FirstOrDefault
+                                                        (
+                                                            (_) =>
+                                                            {
+                                                                return
+                                                                    (
+                                                                        _.GetType()
+                                                                        ==
+                                                                        type
+                                                                    );
+                                                            }
+                                                        );
+            if (actionSelector != null)
+            {
+                OnActionSelectorInitializeProcessAction(actionSelector);
+            }
+            else
+            {
+                throw new Exception($"can't found and use typeof({type.Name}) custom action selector!");
+            }
+            return
+                target;
         }
     }
 }
