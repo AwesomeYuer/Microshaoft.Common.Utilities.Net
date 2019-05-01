@@ -2,8 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
+    <!--<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>-->
   </PropertyGroup>
-
+  
   <ItemGroup>
     <Compile Remove="SqlDbParameter\DbParameterHelper.01.mssql.cs" />
   </ItemGroup>

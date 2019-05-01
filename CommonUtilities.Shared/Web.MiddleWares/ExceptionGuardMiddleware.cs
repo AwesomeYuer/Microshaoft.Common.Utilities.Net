@@ -60,6 +60,7 @@ namespace Microshaoft.Web
             {
                 await _next(context);
             }
+
             catch (Exception e)
             {
                 exception = e;

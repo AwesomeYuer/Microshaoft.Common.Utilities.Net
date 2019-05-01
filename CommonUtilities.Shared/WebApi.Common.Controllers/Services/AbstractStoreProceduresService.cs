@@ -213,7 +213,7 @@ namespace Microshaoft.Web
                                     var r = CompositionHelper
                                                 .ImportManyExportsComposeParts
                                                     <IStoreProcedureExecutable>
-                                                        (x);
+                                                        (x, "*StoreProcedure*plugin*.dll");
                                     return r;
                                 }
                             );
