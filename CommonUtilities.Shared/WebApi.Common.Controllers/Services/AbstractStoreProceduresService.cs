@@ -7,6 +7,7 @@ namespace Microshaoft.Web
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -425,7 +426,26 @@ namespace Microshaoft.Web
                 );
         }
 
-        private void AfterProcess(string routeName, ref JToken result, ref int statusCode, ref string message, (bool Success, int StatusCode, string HttpMethod, string Message, string ConnectionString, string DataBaseType, string StoreProcedureName, int CommandTimeoutInSeconds, bool EnableStatistics) has, bool success)
+        private void AfterProcess
+                        (
+                            string routeName
+                            , ref JToken result
+                            , ref int statusCode
+                            , ref string message
+                            , 
+                                (
+                                    bool Success
+                                    , int StatusCode
+                                    , string HttpMethod
+                                    , string Message
+                                    , string ConnectionString
+                                    , string DataBaseType
+                                    , string StoreProcedureName
+                                    , int CommandTimeoutInSeconds
+                                    , bool EnableStatistics
+                                ) has
+                            , bool success
+                        )
         {
             var jObject = result
                             ["Outputs"]
@@ -525,13 +545,13 @@ namespace Microshaoft.Web
             (bool Success, JToken Result) r = (Success: false, Result: null);
 
             JToken result = null;
+            var beginTimeStamp = Stopwatch.GetTimestamp();
             var beginTime = DateTime.Now;
-            IStoreProcedureExecutable executor = null;
             var success = _indexedExecutors
                                 .TryGetValue
                                     (
                                         dataBaseType
-                                        , out executor
+                                        , out var executor
                                     );
             if (success)
             {
@@ -552,22 +572,23 @@ namespace Microshaoft.Web
                 //result = null;
                 return r;
             }
-            AfterExecute(result, beginTime);
+            AfterExecute(result, beginTime, beginTimeStamp);
             return r;
         }
 
-        private static void AfterExecute(JToken result, DateTime beginTime)
+        private static void AfterExecute
+                (
+                    JToken result
+                    , DateTime beginTime
+                    , long beginTimeStamp
+                )
         {
             result["BeginTime"] = beginTime;
-            var endTime = DateTime.Now;
-            result["EndTime"] = endTime;
+            result["EndTime"] = DateTime.Now;
             result["DurationInMilliseconds"]
-                    = DateTimeHelper
-                            .MillisecondsDiff
-                                    (
-                                        beginTime
-                                        , endTime
-                                    );
+                = beginTimeStamp
+                        .GetNowElapsedTime()
+                        .TotalMilliseconds;
         }
 
         public virtual async Task<(bool Success, JToken Result)>
@@ -598,13 +619,14 @@ namespace Microshaoft.Web
             (bool Success, JToken Result) r = (Success : false, Result : null);
             
             JToken result = null;
+            
+            var beginTimeStamp = Stopwatch.GetTimestamp();
             var beginTime = DateTime.Now;
-            IStoreProcedureExecutable executor = null;
             var success = _indexedExecutors
                                 .TryGetValue
                                     (
                                         dataBaseType
-                                        , out executor
+                                        , out var executor
                                     );
             if (success)
             {
@@ -625,7 +647,7 @@ namespace Microshaoft.Web
                 //result = null;
                 return r;
             }
-            AfterExecute(result, beginTime);
+            AfterExecute(result, beginTime, beginTimeStamp);
             return r;
         }
         protected virtual

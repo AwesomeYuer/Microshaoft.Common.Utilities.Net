@@ -11,7 +11,6 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Controllers;
     using Microsoft.AspNetCore.Mvc.Infrastructure;
-    using Microsoft.AspNetCore.Mvc.Internal;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.FileProviders;
@@ -182,7 +181,7 @@
                         )
         {
             var logger = loggerFactory.CreateLogger("Microshaoft.Logger");
-            string timingKey = nameof(timingKey);
+            string timingKey = "beginTimestamp";
 
             app
                 .UseRequestResponseGuard
@@ -201,13 +200,13 @@
                                             var r = url.Contains("/api/", StringComparison.OrdinalIgnoreCase);
                                             if (r)
                                             {
-                                                if (!httpContext.Items.ContainsKey(timingKey))
-                                                {
-                                                    stopwatchesPool.TryGet(out var stopwatch);
-                                                    stopwatch.Start();
-                                                    httpContext.Items[timingKey] = stopwatch;
-                                                    stopwatch = null;
-                                                }
+                                                httpContext
+                                                    .Items
+                                                    .TryAdd
+                                                        (
+                                                            timingKey
+                                                            , Stopwatch.GetTimestamp()
+                                                        );
                                             }
                                             return r;
                                         };
@@ -216,14 +215,6 @@
                                         = async (stopwatchesPool, httpContext, @event) =>
                                         {
                                             Console.WriteLine($"event: {@event}");
-                                            if (!httpContext.Items.ContainsKey(timingKey))
-                                            {
-                                                stopwatchesPool.TryGet(out var stopwatch);
-                                                stopwatch.Start();
-                                                httpContext.Items[timingKey] = stopwatch;
-                                                stopwatch = null;
-                                            }
-                                            //var request = httpContext.Request;
                                             var httpRequestFeature = httpContext
                                                                             .Features
                                                                             .Get<IHttpRequestFeature>();
@@ -244,8 +235,7 @@
                                                         new
                                                         {
                                                             StatusCode = errorStatusCode
-                                                            ,
-                                                            Message = errorMessage
+                                                            , Message = errorMessage
                                                         };
                                                 var json = JsonConvert.SerializeObject(jsonResult);
                                                 await
@@ -267,19 +257,22 @@
                                         = (stopwatchesPool, httpContext, @event) =>
                                         {
                                             Console.WriteLine($"event: {@event}");
-                                            var stopwatch = httpContext
-                                                                .Items[timingKey] as Stopwatch;
-                                            if (stopwatch != null)
+                                            var r = httpContext
+                                                        .Items
+                                                        .Remove
+                                                            (
+                                                                timingKey
+                                                                , out var removed
+                                                            );
+                                            if (r)
                                             {
-                                                stopwatch.Stop();
-                                                var duration = stopwatch.ElapsedMilliseconds;
+                                                var beginTimestamp = (long) removed;
+                                                var duration = beginTimestamp.GetNowElapsedTime();
                                                 httpContext
                                                     .Response
                                                     .Headers["X-Request-Response-Timing"]
-                                                                = duration.ToString() + "ms";
-                                                stopwatch.Reset();
-                                                stopwatchesPool.TryPut(stopwatch);
-                                                stopwatch = null;
+                                                                = $"{duration.TotalMilliseconds} ms";
+                                                removed = null;
                                             }
                                         };
                                 middleware
@@ -293,15 +286,6 @@
                                         = (stopwatchesPool, httpContext, @event) =>
                                         {
                                             Console.WriteLine($"event: {@event}");
-                                            if
-                                                (
-                                                    httpContext
-                                                        .Items
-                                                        .Remove(timingKey, out var removed)
-                                                )
-                                            {
-                                                removed = null;
-                                            }
                                         };
                             }
                         );
