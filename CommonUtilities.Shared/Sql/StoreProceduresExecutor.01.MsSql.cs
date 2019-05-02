@@ -191,17 +191,17 @@ from
 		SELECT
 			*
 		FROM
-			sys.columns a
+			sys.columns aa
 		WHERE
-			object_id
+			aa.object_id
 			IN
 				(
 					SELECT
-						aa.type_table_object_id
+						aaa.type_table_object_id
 					FROM
-						sys.table_types aa
+						sys.table_types aaa
 					WHERE
-						aa.name = @userDefinedTableTypeName
+						aaa.name = @userDefinedTableTypeName
 				)
 	) a
 		inner join
