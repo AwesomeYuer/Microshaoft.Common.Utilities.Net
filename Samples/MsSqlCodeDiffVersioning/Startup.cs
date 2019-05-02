@@ -375,15 +375,15 @@
                                             var request = httpContext.Request;
                                             var routeName = routeContext.RouteData.Values["routeName"].ToString();
                                             var httpMethod = $"Http{request.Method}";
-                                            var isExecuteAsync = false;
-                                            var isExecuteAsyncConfiguration =
+                                            var isAsyncExecuting = false;
+                                            var isAsyncExecutingConfiguration =
                                                         configuration
-                                                            .GetSection($"Routes:{routeName}:{httpMethod}:IsExecuteAsync");
-                                            if (isExecuteAsyncConfiguration.Exists())
+                                                            .GetSection($"Routes:{routeName}:{httpMethod}:isAsyncExecuting");
+                                            if (isAsyncExecutingConfiguration.Exists())
                                             {
-                                                isExecuteAsync = isExecuteAsyncConfiguration.Get<bool>();
+                                                isAsyncExecuting = isAsyncExecutingConfiguration.Get<bool>();
                                             }
-                                            if (isExecuteAsync)
+                                            if (isAsyncExecuting)
                                             {
                                                 candidates =
                                                         candidates
