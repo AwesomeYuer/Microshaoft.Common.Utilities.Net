@@ -13,9 +13,10 @@ namespace Microshaoft
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Threading.Tasks;
 
-    public class SyncAsyncActionSelector : IActionSelector
+    public class SyncAsyncActionSelector 
+                                : IActionSelector
+                                    , IServiceProvider
     {
         private ActionSelector _actionSelector;
         private readonly IConfiguration _configuration;
@@ -110,6 +111,12 @@ namespace Microshaoft
             //                context
             //            );
         }
+
+        public object GetService(Type serviceType)
+        {
+            return
+                this;
+        }
     }
 
     public static class ActionSelectorApplicationBuilderExtensions
@@ -120,12 +127,14 @@ namespace Microshaoft
                 , Action<TActionSelector> OnActionSelectorInitializeProcessAction
             )
                  where
-                        TActionSelector : IActionSelector
+                        TActionSelector : IActionSelector, IServiceProvider
         {
             var type = typeof(TActionSelector);
             TActionSelector actionSelector = (TActionSelector)
                                                 target
                                                     .ApplicationServices
+                                                    //.GetRequiredService<TActionSelector>();
+                                                    //.GetService(typeof(IActionSelector));
                                                     .GetServices<IActionSelector>()
                                                     .FirstOrDefault
                                                         (
