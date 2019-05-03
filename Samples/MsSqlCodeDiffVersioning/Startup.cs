@@ -9,6 +9,7 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Http.Features;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Abstractions;
     using Microsoft.AspNetCore.Mvc.Controllers;
     using Microsoft.AspNetCore.Mvc.Infrastructure;
     using Microsoft.Extensions.Configuration;
@@ -349,26 +350,28 @@
                         (actionSelector) =>
                         {
                             actionSelector
-                                .OnSelectSyncAsyncActionCandidates =
-                                    (routeContext, candidates, _) =>
+                                .OnSelectSyncAsyncActionCandidate =
+                                    (routeContext, candidatesPair, _) =>
                                     {
-                                        var r =
-                                            candidates
-                                                .All
-                                                    (
-                                                        (actionDescriptor) =>
-                                                        {
-                                                            var controllerActionDescriptor = (ControllerActionDescriptor) actionDescriptor;
-                                                            var rr = typeof(AbstractStoreProceduresExecutorControllerBase)
-                                                                        .IsAssignableFrom
-                                                                            (
-                                                                                controllerActionDescriptor
-                                                                                    .ControllerTypeInfo
-                                                                                    .UnderlyingSystemType
-                                                                            );
-                                                            return rr;
-                                                        }
-                                                    );
+                                        ActionDescriptor candidate = null;
+                                        var type = typeof(AbstractStoreProceduresExecutorControllerBase);
+                                        var asyncCandidate = candidatesPair.AsyncCandidate;
+                                        var syncCandidate = candidatesPair.SyncCandidate;
+                                        var r = type.IsAssignableFrom
+                                                        (
+                                                            ((ControllerActionDescriptor) asyncCandidate)
+                                                                .ControllerTypeInfo
+                                                                .UnderlyingSystemType
+                                                        );
+                                        if (r)
+                                        {
+                                            r = type.IsAssignableFrom
+                                                        (
+                                                            ((ControllerActionDescriptor) syncCandidate)
+                                                                .ControllerTypeInfo
+                                                                .UnderlyingSystemType
+                                                        );
+                                        }
                                         if (r)
                                         {
                                             var httpContext = routeContext.HttpContext;
@@ -383,52 +386,9 @@
                                             {
                                                 isAsyncExecuting = isAsyncExecutingConfiguration.Get<bool>();
                                             }
-                                            if (isAsyncExecuting)
-                                            {
-                                                candidates =
-                                                        candidates
-                                                            .Where
-                                                                (
-                                                                    (actionDescriptor) =>
-                                                                    {
-                                                                        return
-                                                                            actionDescriptor
-                                                                                .RouteValues["action"]
-                                                                                .EndsWith
-                                                                                    (
-                                                                                        "async"
-                                                                                        , StringComparison
-                                                                                                .OrdinalIgnoreCase
-                                                                                    );
-                                                                    }
-                                                                )
-                                                            .ToList()
-                                                            .AsReadOnly();
-                                            }
-                                            else
-                                            {
-                                                candidates =
-                                                    candidates
-                                                        .Where
-                                                            (
-                                                                (actionDescriptor) =>
-                                                                {
-                                                                    return
-                                                                        !actionDescriptor
-                                                                            .RouteValues["action"]
-                                                                            .EndsWith
-                                                                                (
-                                                                                    "async"
-                                                                                    , StringComparison
-                                                                                        .OrdinalIgnoreCase
-                                                                                );
-                                                                }
-                                                            )
-                                                        .ToList()
-                                                        .AsReadOnly();
-                                            }
+                                            candidate = (isAsyncExecuting ? asyncCandidate : syncCandidate);
                                         }
-                                        return candidates;
+                                        return candidate;
                                     };
                         }
                     );
