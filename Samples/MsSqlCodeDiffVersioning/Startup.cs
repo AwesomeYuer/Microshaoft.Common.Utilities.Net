@@ -31,6 +31,7 @@
 
     public class Startup
     {
+        private const string _dateTimeFormat = "yyyy-MM-dd HH:mm:ss.fffff";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -206,7 +207,11 @@
                                                     .TryAdd
                                                         (
                                                             timingKey
-                                                            , Stopwatch.GetTimestamp()
+                                                            ,
+                                                                (
+                                                                    BeginTime : DateTime.Now 
+                                                                    , BeginTimestamp : Stopwatch.GetTimestamp()
+                                                                )
                                                         );
                                             }
                                             return r;
@@ -267,13 +272,27 @@
                                                             );
                                             if (r)
                                             {
-                                                var beginTimestamp = (long) removed;
-                                                var duration = beginTimestamp.GetNowElapsedTime();
+                                                var valueTuple = 
+                                                            (
+                                                                (ValueTuple<DateTime, long>)
+                                                                //(DateTime BeginTime, long BeginTimestamp)
+                                                                    removed
+                                                            );
+                                                removed = null;
+                                                var beginTime = valueTuple.Item1;
                                                 httpContext
                                                     .Response
-                                                    .Headers["X-Request-Response-Timing"]
-                                                                = $"{duration.TotalMilliseconds} ms";
-                                                removed = null;
+                                                    .Headers["X-Request-Receive-BeginTime"]
+                                                                = beginTime.ToString(_dateTimeFormat);
+                                                httpContext
+                                                    .Response
+                                                    .Headers["X-Response-Send-BeginTime"]
+                                                                = DateTime.Now.ToString(_dateTimeFormat);
+                                                var duration = valueTuple.Item2.GetNowElapsedTime();
+                                                httpContext
+                                                    .Response
+                                                    .Headers["X-Request-Response-Timing-In-Milliseconds"]
+                                                                = duration.TotalMilliseconds.ToString();
                                             }
                                         };
                                 middleware
@@ -357,7 +376,8 @@
                                         var type = typeof(AbstractStoreProceduresExecutorControllerBase);
                                         var asyncCandidate = candidatesPair.AsyncCandidate;
                                         var syncCandidate = candidatesPair.SyncCandidate;
-                                        var r = type.IsAssignableFrom
+                                        var r = type
+                                                    .IsAssignableFrom
                                                         (
                                                             ((ControllerActionDescriptor) asyncCandidate)
                                                                 .ControllerTypeInfo
@@ -365,7 +385,8 @@
                                                         );
                                         if (r)
                                         {
-                                            r = type.IsAssignableFrom
+                                            r = type
+                                                    .IsAssignableFrom
                                                         (
                                                             ((ControllerActionDescriptor) syncCandidate)
                                                                 .ControllerTypeInfo
@@ -374,9 +395,14 @@
                                         }
                                         if (r)
                                         {
-                                            var httpContext = routeContext.HttpContext;
-                                            var request = httpContext.Request;
-                                            var routeName = routeContext.RouteData.Values["routeName"].ToString();
+                                            var httpContext = routeContext
+                                                                .HttpContext;
+                                            var request = httpContext
+                                                                .Request;
+                                            var routeName = routeContext
+                                                                .RouteData
+                                                                .Values["routeName"]
+                                                                .ToString();
                                             var httpMethod = $"Http{request.Method}";
                                             var isAsyncExecuting = false;
                                             var isAsyncExecutingConfiguration =

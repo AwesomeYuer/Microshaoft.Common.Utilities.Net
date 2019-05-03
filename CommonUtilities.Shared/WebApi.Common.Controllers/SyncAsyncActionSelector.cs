@@ -18,7 +18,7 @@ namespace Microshaoft
                                 : IActionSelector
                                     , IServiceProvider
     {
-        private ActionSelector _actionSelector;
+        private readonly ActionSelector _actionSelector;
         private readonly IConfiguration _configuration;
         
         public SyncOrAsyncActionSelector
@@ -72,27 +72,27 @@ namespace Microshaoft
                 ActionDescriptor asyncCandidate = null;
                 ActionDescriptor syncCandidate = null;
                 var count = candidates
-                                .Select
-                                    (
-                                        (actionDescriptor) =>
-                                        {
-                                            var isAsync =  ((ControllerActionDescriptor) actionDescriptor)
-                                                                .MethodInfo
-                                                                .IsAsync();
-                                            if (isAsync)
+                                    .Select
+                                        (
+                                            (actionDescriptor) =>
                                             {
-                                                asyncCandidate = actionDescriptor;
-                                                return 1;
+                                                var isAsync =  ((ControllerActionDescriptor) actionDescriptor)
+                                                                    .MethodInfo
+                                                                    .IsAsync();
+                                                if (isAsync)
+                                                {
+                                                    asyncCandidate = actionDescriptor;
+                                                }
+                                                else
+                                                {
+                                                    syncCandidate = actionDescriptor;
+                                                }
+                                                return isAsync;
                                             }
-                                            else
-                                            {
-                                                syncCandidate = actionDescriptor;
-                                                return 0;
-                                            }
-                                        }
-                                    )
-                                .Sum();
-                if (count == 1)
+                                        )
+                                    .Distinct()
+                                    .Count();
+                if (count == 2)
                 {
                     var candidatesPair = 
                                         (
