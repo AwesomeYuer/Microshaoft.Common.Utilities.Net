@@ -14,19 +14,23 @@ namespace Microshaoft
     using System.Collections.Generic;
     using System.Linq;
 
-    public class SyncAsyncActionSelector 
+    public class SyncOrAsyncActionSelector 
                                 : IActionSelector
                                     , IServiceProvider
     {
-        private ActionSelector _actionSelector;
+        private readonly ActionSelector _actionSelector;
         private readonly IConfiguration _configuration;
         
-        public SyncAsyncActionSelector
+        public SyncOrAsyncActionSelector
                     (
-                        IActionDescriptorCollectionProvider actionDescriptorCollectionProvider
-                        , ActionConstraintCache actionConstraintCache
-                        , ILoggerFactory loggerFactory
-                        , IConfiguration configuration
+                        IActionDescriptorCollectionProvider
+                                    actionDescriptorCollectionProvider
+                        , ActionConstraintCache
+                                    actionConstraintCache
+                        , ILoggerFactory
+                                    loggerFactory
+                        , IConfiguration
+                                    configuration
                     )
         {
             _actionSelector = new ActionSelector
@@ -50,7 +54,7 @@ namespace Microshaoft
                     , IConfiguration
                     , ActionDescriptor
                 >
-                    OnSelectSyncAsyncActionCandidate = null;
+                    OnSelectSyncOrAsyncActionCandidate = null;
 
         public ActionDescriptor SelectBestCandidate
                                         (
@@ -62,40 +66,40 @@ namespace Microshaoft
                 (
                     candidates.Count == 2
                     &&
-                    OnSelectSyncAsyncActionCandidate != null
+                    OnSelectSyncOrAsyncActionCandidate != null
                 )
             {
                 ActionDescriptor asyncCandidate = null;
                 ActionDescriptor syncCandidate = null;
-                var sum = candidates
-                            .Select
-                                (
-                                    (actionDescriptor) =>
-                                    {
-                                        var isAsync =  ((ControllerActionDescriptor) actionDescriptor)
-                                                            .MethodInfo
-                                                            .IsAsync();
-                                        if (isAsync)
-                                        {
-                                            asyncCandidate = actionDescriptor;
-                                            return 1;
-                                        }
-                                        else
-                                        {
-                                            syncCandidate = actionDescriptor;
-                                            return 0;
-                                        }
-                                    }
-                                )
-                            .Sum();
-                if (sum == 1)
+                var count = candidates
+                                    .Select
+                                        (
+                                            (actionDescriptor) =>
+                                            {
+                                                var isAsync =  ((ControllerActionDescriptor) actionDescriptor)
+                                                                    .MethodInfo
+                                                                    .IsAsync();
+                                                if (isAsync)
+                                                {
+                                                    asyncCandidate = actionDescriptor;
+                                                }
+                                                else
+                                                {
+                                                    syncCandidate = actionDescriptor;
+                                                }
+                                                return isAsync;
+                                            }
+                                        )
+                                    .Distinct()
+                                    .Count();
+                if (count == 2)
                 {
                     var candidatesPair = 
                                         (
                                             AsyncCandidate : asyncCandidate
                                             , SyncCandidate : syncCandidate
                                         );
-                    var candidate = OnSelectSyncAsyncActionCandidate
+                    var candidate = OnSelectSyncOrAsyncActionCandidate
                                         (
                                             context
                                             , candidatesPair
@@ -103,13 +107,11 @@ namespace Microshaoft
                                         );
                     if (candidate != null)
                     {
-                        candidates = EnumerableHelper
-                                            .Range//<ActionDescriptor>
-                                                (
-                                                    candidate
-                                                )
-                                            .ToList()
-                                            .AsReadOnly();
+                        candidates = new List<ActionDescriptor>()
+                                            {
+                                                candidate
+                                            }
+                                        .AsReadOnly();
                     }
                 }
             }
@@ -135,47 +137,54 @@ namespace Microshaoft
 
         public object GetService(Type serviceType)
         {
-            return
-                this;
+            throw new NotImplementedException();
+            //return
+            //    this;
         }
     }
 
-    public static class ActionSelectorApplicationBuilderExtensions
+    public static partial class ActionSelectorServiceExtensions
     {
         public static IApplicationBuilder UseCustomActionSelector<TActionSelector>
-            (
-                this IApplicationBuilder target
-                , Action<TActionSelector> OnActionSelectorInitializeProcessAction
-            )
+                    (
+                        this IApplicationBuilder
+                                            target
+                        , Action<TActionSelector>
+                                            OnActionSelectorInitializeProcessAction
+                    )
                  where
                         TActionSelector : IActionSelector, IServiceProvider
         {
             var type = typeof(TActionSelector);
-            TActionSelector actionSelector = (TActionSelector)
-                                                target
-                                                    .ApplicationServices
-                                                    //.GetRequiredService<TActionSelector>();
-                                                    //.GetService(typeof(IActionSelector));
-                                                    .GetServices<IActionSelector>()
-                                                    .FirstOrDefault
+            TActionSelector actionSelector = 
+                                (TActionSelector)
+                                    target
+                                        .ApplicationServices
+                                        //.GetRequiredService<TActionSelector>();
+                                        //.GetService(typeof(IActionSelector));
+                                        .GetServices<IActionSelector>()
+                                        .FirstOrDefault
+                                            (
+                                                (_) =>
+                                                {
+                                                    return
                                                         (
-                                                            (_) =>
-                                                            {
-                                                                return
-                                                                    (
-                                                                        _.GetType()
-                                                                        ==
-                                                                        type
-                                                                    );
-                                                            }
+                                                            _.GetType()
+                                                            ==
+                                                            type
                                                         );
+                                                }
+                                            );
             if (actionSelector != null)
             {
-                OnActionSelectorInitializeProcessAction(actionSelector);
+                OnActionSelectorInitializeProcessAction
+                                            (actionSelector);
             }
             else
             {
-                throw new Exception($"can't found and use typeof({type.Name}) custom action selector!");
+                throw
+                    new Exception
+                            ($"can't found and use typeof({type.Name}) custom action selector!");
             }
             return
                 target;

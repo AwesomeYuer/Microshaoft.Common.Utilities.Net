@@ -113,16 +113,15 @@ namespace Microshaoft.Web
             }
         }
     }
-    public static class RequestResponseGuardMiddlewareExtensions
+    public static partial class RequestResponseGuardMiddlewareApplicationBuilderExtensions
     {
         public static IApplicationBuilder UseRequestResponseGuard<TInjector>
-            (
-                this IApplicationBuilder target
-                , Action
-                    <RequestResponseGuardMiddleware<TInjector>>
-                        onInitializeCallbackProcesses = null
-
-            )
+                (
+                    this IApplicationBuilder target
+                    , Action
+                        <RequestResponseGuardMiddleware<TInjector>>
+                            onInitializeCallbackProcesses = null
+                )
         {
             return
                 target

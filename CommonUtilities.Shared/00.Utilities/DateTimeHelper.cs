@@ -27,9 +27,9 @@
             return
                 GetElapsedTime(target, endTimestamp);
         }
-        public static TimeSpan GetElapsedTime(long beginTimestamp, long endTimestamp)
+        public static TimeSpan GetElapsedTime(this long target, long endTimestamp)
         {
-            var timestampDelta = endTimestamp - beginTimestamp;
+            var timestampDelta = endTimestamp - target;
             var ticks = (long)(_timestampToTicks * timestampDelta);
             return new TimeSpan(ticks);
         }
