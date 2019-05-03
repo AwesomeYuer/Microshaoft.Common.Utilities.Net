@@ -42,11 +42,15 @@ namespace Microshaoft
             Func
                 <
                     RouteContext
-                    , IReadOnlyList<ActionDescriptor>
+                    , 
+                        (
+                            ActionDescriptor AsyncCandidate
+                            , ActionDescriptor SyncCandidate
+                        )
                     , IConfiguration
-                    , IReadOnlyList<ActionDescriptor>
+                    , ActionDescriptor
                 >
-                    OnSelectSyncAsyncActionCandidates = null;
+                    OnSelectSyncAsyncActionCandidate = null;
 
         public ActionDescriptor SelectBestCandidate
                                         (
@@ -58,25 +62,27 @@ namespace Microshaoft
                 (
                     candidates.Count == 2
                     &&
-                    OnSelectSyncAsyncActionCandidates != null
+                    OnSelectSyncAsyncActionCandidate != null
                 )
             {
-                //候选方法仅有 Async/Sync Task/Non-Task 返回类型的区别
-                //这里不用 Action 对应的方法名字后缀 Async/Sync 作为区分
+                ActionDescriptor asyncCandidate = null;
+                ActionDescriptor syncCandidate = null;
                 var sum = candidates
                             .Select
                                 (
                                     (actionDescriptor) =>
                                     {
-                                        var isAsync =  ((ControllerActionDescriptor)actionDescriptor)
+                                        var isAsync =  ((ControllerActionDescriptor) actionDescriptor)
                                                             .MethodInfo
                                                             .IsAsync();
                                         if (isAsync)
                                         {
+                                            asyncCandidate = actionDescriptor;
                                             return 1;
                                         }
                                         else
                                         {
+                                            syncCandidate = actionDescriptor;
                                             return 0;
                                         }
                                     }
@@ -84,12 +90,27 @@ namespace Microshaoft
                             .Sum();
                 if (sum == 1)
                 {
-                    candidates = OnSelectSyncAsyncActionCandidates
-                                    (
-                                        context
-                                        , candidates
-                                        , _configuration
-                                    );
+                    var candidatesPair = 
+                                        (
+                                            AsyncCandidate : asyncCandidate
+                                            , SyncCandidate : syncCandidate
+                                        );
+                    var candidate = OnSelectSyncAsyncActionCandidate
+                                        (
+                                            context
+                                            , candidatesPair
+                                            , _configuration
+                                        );
+                    if (candidate != null)
+                    {
+                        candidates = EnumerableHelper
+                                            .Range//<ActionDescriptor>
+                                                (
+                                                    candidate
+                                                )
+                                            .ToList()
+                                            .AsReadOnly();
+                    }
                 }
             }
             return
