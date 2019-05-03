@@ -151,7 +151,7 @@
             services.AddResponseCaching();
 
             services
-                .AddSingleton<IActionSelector, SyncAsyncActionSelector>();
+                .AddSingleton<IActionSelector, SyncOrAsyncActionSelector>();
 
             services
                 .AddSwaggerGen
@@ -345,12 +345,12 @@
 
             #region SyncAsyncActionSelector 拦截处理
             app
-                .UseCustomActionSelector<SyncAsyncActionSelector>
+                .UseCustomActionSelector<SyncOrAsyncActionSelector>
                     (
                         (actionSelector) =>
                         {
                             actionSelector
-                                .OnSelectSyncAsyncActionCandidate =
+                                .OnSelectSyncOrAsyncActionCandidate =
                                     (routeContext, candidatesPair, _) =>
                                     {
                                         ActionDescriptor candidate = null;

@@ -110,7 +110,7 @@ namespace Microshaoft.Web
         }
     }
 
-    public static class ExceptionGuardMiddlewareExtensions
+    public static partial class RequestResponseGuardMiddwareExtensions
     {
         public static IApplicationBuilder UseExceptionGuard<TInjector>
             (
