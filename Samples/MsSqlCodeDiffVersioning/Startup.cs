@@ -288,11 +288,15 @@
                                                     .Response
                                                     .Headers["X-Response-Send-BeginTime"]
                                                                 = DateTime.Now.ToString(_dateTimeFormat);
-                                                var duration = valueTuple.Item2.GetNowElapsedTime();
+                                                //var duration = valueTuple.Item2.GetNowElapsedTime();
                                                 httpContext
                                                     .Response
                                                     .Headers["X-Request-Response-Timing-In-Milliseconds"]
-                                                                = duration.TotalMilliseconds.ToString();
+                                                                = valueTuple
+                                                                        .Item2
+                                                                        .GetNowElapsedTime()
+                                                                        .TotalMilliseconds
+                                                                        .ToString();
                                             }
                                         };
                                 middleware

@@ -63,9 +63,6 @@ namespace Microshaoft.Web
                        );
     }
 
-
-
-
     public interface IStoreProceduresWebApiService
     {
         (
@@ -94,7 +91,39 @@ namespace Microshaoft.Web
                     //, bool enableStatistics = false
                     , int commandTimeoutInSeconds = 101
                 );
+
+        Task
+            <
+             (
+               int StatusCode
+               , string Message
+               , JToken Result
+             )
+            >
+            ProcessAsync
+                (
+                    string routeName
+                    , JToken parameters = null
+                    , Func
+                            <
+                                IDataReader
+                                , Type        // fieldType
+                                , string    // fieldName
+                                , int       // row index
+                                , int       // column index
+                                , 
+                                    (
+                                        bool NeedDefaultProcess
+                                        , JProperty Field   //  JObject Field 对象
+                                    )
+                            > onReadRowColumnProcessFunc = null
+                    , string httpMethod = "Get"
+                    //, bool enableStatistics = false
+                    , int commandTimeoutInSeconds = 101
+                );
+
     }
+
     public abstract class
                 AbstractStoreProceduresService
                                 : IStoreProceduresWebApiService , IStoreProceduresService
