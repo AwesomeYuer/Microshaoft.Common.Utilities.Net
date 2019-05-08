@@ -1,5 +1,5 @@
 ﻿language: csharp
-sudo: true
+sudo: required
 dist: xenial
 env:
   global:
