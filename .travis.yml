@@ -1,6 +1,14 @@
 ﻿language: csharp
+sudo: required
+dist: xenial
+env:
+  global:
+    - DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
 mono: none
-dotnet: 2.2.203
-solution: CommonUtilities.NET.Core.Standard.sln
-
-
+branches:
+  only:
+    - master
+install:
+  - ./00.build@Travis-CI/get-dotnet.sh
+script:
+  - ./00.build@Travis-CI/buildss.sh
