@@ -9,6 +9,6 @@ branches:
   only:
     - master
 install:
-  - ./build_travis-ci/get-dotnet.sh
+  - ./00.build@travis-ci/get-dotnet.sh
 script:
-  - ./build_travis-ci/build.sh
+  - ./00.build@travis-ci/build.sh
