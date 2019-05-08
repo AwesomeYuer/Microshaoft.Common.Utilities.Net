@@ -8,7 +8,7 @@ mono: none
 branches:
   only:
     - master
-before_script:
+before_install:
   - chmod a+x ./00.build@travis-ci
 install:
   - ./00.build@travis-ci/get-dotnet.sh
