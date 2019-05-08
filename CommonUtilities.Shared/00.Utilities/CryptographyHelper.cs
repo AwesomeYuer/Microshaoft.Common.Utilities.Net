@@ -1,4 +1,5 @@
-﻿namespace Microshaoft
+﻿#pragma warning disable SCS0006
+namespace Microshaoft
 {
     using System;
     using System.IO;
@@ -256,6 +257,7 @@
             HashAlgorithm hashAlgorithm;
             if (signHashMode == HashSignatureMode.SHA1)
             {
+
                 hashAlgorithm = new SHA1CryptoServiceProvider();
             }
             else //(hashSignatureMode == HashSignatureMode.MD5)

@@ -335,11 +335,11 @@ namespace Microshaoft.Web
                             , int commandTimeoutInSeconds = 101
                         )
         {
-            (
-                int StatusCode
-                , string Message
-                , JToken Result
-            ) r = (StatusCode: 200, Message: string.Empty, Result: null);
+            //(
+            //    int StatusCode
+            //    , string Message
+            //    , JToken Result
+            //) r = (StatusCode: 200, Message: string.Empty, Result: null);
             JToken result = null;
             var statusCode = 200;
             var message = string.Empty;
@@ -408,11 +408,6 @@ namespace Microshaoft.Web
                     , int commandTimeoutInSeconds = 101
                 )
         {
-            (
-                int StatusCode
-                , string Message
-                , JToken Result
-            ) r = (StatusCode: 200, Message: string.Empty, Result: null);
             JToken result = null;
             var statusCode = 200;
             var message = string.Empty;

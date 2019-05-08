@@ -20,6 +20,7 @@ namespace Microshaoft.Web
         /// 构造注入
         /// </summary>
         /// <param name="options"></param>
+        [Obsolete]
         public WildcardCorsService(IOptions<CorsOptions> options) : base(options)
         {
 
