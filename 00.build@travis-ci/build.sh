@@ -1,10 +1,10 @@
 #!/bin/bash
-pwd
+#pwd
 set -ex
-pwd
+#pwd
 source ./00.build@travis-ci/activate.sh
 
-pwd
+#pwd
 dotnet build ./CommonUtilities.NET.Core.Standard.sln
 
 # dotnet test
