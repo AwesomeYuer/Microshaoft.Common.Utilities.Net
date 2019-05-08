@@ -74,13 +74,14 @@
             var right = -1;
             if (vm.SelectedDetailItem() != undefined) {
                 right = vm.SelectedDetailItem().ID;
+            } else {
+                right = left;
             }
             if (left > right) {
 
                 left += right ;
                 right = left - right;
                 left -= right;
-
             }
             var ids = left + ',' + right;
             var url = baseUrl + "/api/StoreProcedureExecutor/sync/objects/Outputs/ResultSets/0/Rows?SearchIdsList=" + ids;
@@ -135,6 +136,8 @@
 <body>
     <div>
         Search Object's Name Contains Text:<input id="search" type="text" />
+        Search Host Name Contains Text:<input id="searchHostName" type="text" />
+        Search DataBase Name Contains Text:<input id="searchDatabaseName" type="text" />
         Post Time Before:<input id="datepicker1" type="text" />
         <button onclick="GetMasterList()">Search and Append</button>
     </div>
@@ -290,7 +293,9 @@
             //jsonp cross domain
             var search = document.getElementById("search").value;
             var beforeTime = document.getElementById("datepicker1").value;
-            var url = baseUrl + "/api/StoreProcedureExecutor/objects?searchobjectname=" + search + "&beforetime=" + beforeTime;
+            var searchHostName = document.getElementById("searchHostName").value;
+            var searchDatabaseName = document.getElementById("searchDatabaseName").value;
+            var url = baseUrl + "/api/StoreProcedureExecutor/objects?searchobjectname=" + search + "&searchhostname=" + searchHostName + "&searchdatabasename=" + searchDatabaseName + "&beforetime=" + beforeTime;
             $.getJSON(
                 url
                 , function (data) {
