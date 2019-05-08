@@ -1,5 +1,5 @@
 ﻿language: csharp
-sudo: required
+sudo: true
 dist: xenial
 env:
   global:
@@ -9,7 +9,8 @@ branches:
   only:
     - master
 before_install:
-  - chmod a+x ./00.build@travis-ci
+  - chmod a+x ./00.build@travis-ci/get-dotnet.sh
+  - chmod a+x ./00.build@travis-ci/build.sh
 install:
   - ./00.build@travis-ci/get-dotnet.sh
 script:
