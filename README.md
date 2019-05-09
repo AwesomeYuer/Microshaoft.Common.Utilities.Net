@@ -1,5 +1,7 @@
 # Microshaoft.Common.Utilities.Net.4x
 
+At least since 2016-10-24
+
 License:
 Microshaoft.Common.Utilities.Net.4x (including the repo) is licensed under the MIT license.
 
@@ -10,8 +12,6 @@ Contact:
   Microshaoft@msn.com
   
   Microshaoft@qq.com
-
-  2016-10-24
 
 Azure Pipelines: [![Build Status](https://microshaoft.visualstudio.com/Microshaoft.Common.Utilities.Net.4x-GitHub/_apis/build/status/Microshaoft.Common.Utilities.Net.4x-GitHub-ASP.NET%20Core-CI?branchName=master)](https://microshaoft.visualstudio.com/Microshaoft.Common.Utilities.Net.4x-GitHub/_build/latest?definitionId=3?branchName=master)
 
