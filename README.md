@@ -14,15 +14,12 @@ Contact:
   Microshaoft@qq.com
 
 Azure Pipelines:
-
 	[![Build Status](https://microshaoft.visualstudio.com/Microshaoft.Common.Utilities.Net.4x-GitHub/_apis/build/status/Microshaoft.Common.Utilities.Net.4x-GitHub-ASP.NET%20Core-CI?branchName=master)](https://microshaoft.visualstudio.com/Microshaoft.Common.Utilities.Net.4x-GitHub/_build/latest?definitionId=3?branchName=master)
 
 AppVeyor:
-
 	[![Build status](https://ci.appveyor.com/api/projects/status/o2fe1j1xp4d97cb0/branch/master?svg=true)](https://ci.appveyor.com/project/Microshaoft/microshaoft-common-utilities-net-4x/branch/master)
 
 Travis-CI:
-
 	[![Build Status](https://travis-ci.org/Microshaoft/Microshaoft.Common.Utilities.Net.4x.svg?branch=master)](https://travis-ci.org/Microshaoft/Microshaoft.Common.Utilities.Net.4x)
 
 
