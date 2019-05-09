@@ -5,6 +5,6 @@ dist: xenial
 mono: none
 dotnet: 2.2.203
 install:
-- dotnet restore CommonUtilities.NET.Core.Standard.slns
+- dotnet restore CommonUtilities.NET.Core.Standard.sln
 script:
 - dotnet build CommonUtilities.NET.Core.Standard.sln
