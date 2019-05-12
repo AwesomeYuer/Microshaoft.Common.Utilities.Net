@@ -10,6 +10,8 @@ namespace WebApplication.ASPNetCore
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Primitives;
+    using Newtonsoft.Json.Linq;
     using System;
     using System.IO;
     using System.Linq;
@@ -87,41 +89,68 @@ namespace WebApplication.ASPNetCore
 
                     .ConfigureAppConfiguration
                     (
-                        (hostingContext, configuration) =>
+                        (hostingContext, configurationBuilder) =>
                         {
-                            configuration
-                                .SetBasePath(executingDirectory);
-                            configuration
-                                .AddJsonFile
-                                    (
-                                        path: "hostings.json"
-                                        , optional: false
-                                        , reloadOnChange: true
-                                    )
-                                .AddJsonFile
-                                    (
-                                        path: "dbConnections.json"
-                                        , optional: false
-                                        , reloadOnChange: true
-                                    )
-                                .AddJsonFile
-                                    (
-                                        path: "routes.json"
-                                        , optional: false
-                                        , reloadOnChange: true
-                                    )
-                                .AddJsonFile
-                                    (
-                                        path: "dynamicCompositionPluginsPaths.json"
-                                        , optional: false
-                                        , reloadOnChange: true
-                                    )
-                                .AddJsonFile
-                                    (
-                                        path: "JwtValidation.json"
-                                        , optional: false
-                                        , reloadOnChange: true
-                                    );
+                            var configuration = configurationBuilder
+                                                    .SetBasePath(executingDirectory)
+                                                    .AddJsonFile
+                                                        (
+                                                            path: "hostings.json"
+                                                            , optional: false
+                                                            , reloadOnChange: true
+                                                        )
+                                                    .AddJsonFile
+                                                        (
+                                                            path: "dbConnections.json"
+                                                            , optional: false
+                                                            , reloadOnChange: true
+                                                        )
+                                                    .AddJsonFile
+                                                        (
+                                                            path: "routes.json"
+                                                            , optional: false
+                                                            , reloadOnChange: true
+                                                        )
+                                                    .AddJsonFile
+                                                        (
+                                                            path: "dynamicCompositionPluginsPaths.json"
+                                                            , optional: false
+                                                            , reloadOnChange: true
+                                                        )
+                                                    .AddJsonFile
+                                                        (
+                                                            path: "JwtValidation.json"
+                                                            , optional: false
+                                                            , reloadOnChange: true
+                                                        )
+                                                    .Build();
+                            // register change callback
+                            ChangeToken
+                                    .OnChange<JToken>
+                                        (
+                                            () =>
+                                            {
+                                                return
+                                                    configuration.GetReloadToken();
+                                            }
+                                            , (x) =>
+                                            {
+                                                Console.WriteLine("Configuration changed");
+                                                configuration
+                                                    .AsEnumerable()
+                                                    .Select
+                                                        (
+                                                            (kvp) =>
+                                                            {
+                                                                Console.WriteLine($"Key:{kvp.Key}, Value:{kvp.Value}");
+                                                                return
+                                                                    kvp;
+                                                            }
+                                                        )
+                                                    .ToArray();
+                                            }
+                                            , new JObject()
+                                        );
                         }
                     )
                     //.UseUrls("http://+:5000", "https://+:5001")
