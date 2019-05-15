@@ -36,7 +36,7 @@ namespace Microshaoft.Web
                 throw new ArgumentException("CsvDelimiter cannot be empty");
             }
 
-            builder.AddMvcOptions(options => options.InputFormatters.Add(new CsvInputFormatter(csvFormatterOptions)));
+            //builder.AddMvcOptions(options => options.InputFormatters.Add(new CsvInputFormatter(csvFormatterOptions)));
             builder.AddMvcOptions(options => options.OutputFormatters.Add(new CsvOutputFormatter(csvFormatterOptions)));
 
             return builder;

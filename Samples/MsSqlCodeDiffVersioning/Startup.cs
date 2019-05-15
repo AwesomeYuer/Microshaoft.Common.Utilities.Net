@@ -161,7 +161,7 @@
             csvFormatterOptions.UseSingleLineHeaderInCsv = true;
             services.AddMvc(options =>
             {
-                options.InputFormatters.Add(new CsvInputFormatter(csvFormatterOptions));
+                //options.InputFormatters.Add(new CsvInputFormatter(csvFormatterOptions));
                 options.OutputFormatters.Add(new CsvOutputFormatter(csvFormatterOptions));
                 options.FormatterMappings.SetMediaTypeMappingForFormat("csv", MediaTypeHeaderValue.Parse("text/csv"));
             });

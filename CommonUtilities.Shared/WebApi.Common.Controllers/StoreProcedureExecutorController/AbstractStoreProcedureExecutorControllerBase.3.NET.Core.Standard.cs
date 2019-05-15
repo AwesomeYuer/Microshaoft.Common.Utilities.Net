@@ -348,7 +348,7 @@ namespace Microshaoft.WebApi.Controllers
                                         string e = "utf-8"
                                 )
         {
-            if (!CheckOperation("allowexport", HttpContext, routeName, out var failResult))
+            if (!CheckOperation("exporting", HttpContext, parameters, routeName, out var failResult))
             {
                 return
                     failResult;
@@ -412,7 +412,7 @@ namespace Microshaoft.WebApi.Controllers
                                 string e = "utf-8"
                         )
         {
-            if (!CheckOperation("allowexport", HttpContext, routeName, out var failResult))
+            if (!CheckOperation("exporting", HttpContext, parameters,routeName, out var failResult))
             {
                 return
                     failResult;
@@ -436,10 +436,29 @@ namespace Microshaoft.WebApi.Controllers
                         (
                             string operationConfigurationKey
                             , HttpContext httpContext
+                            , JToken parameters
                             , string routeName
                             , out JsonResult failResult
                         )
         {
+            var statusCode = 200;
+            var message = string.Empty;
+            failResult = null;
+            JsonResult result = null;
+            void FailResult()
+            {
+                result = new JsonResult
+                    (
+                        new
+                        {
+                            StatusCode = statusCode
+                            , Message = message
+                        }
+                    )
+                {
+                    StatusCode = statusCode
+                };
+            }
             var configuration = httpContext.RequestServices.GetService(typeof(IConfiguration)) as IConfiguration;
             var request = HttpContext
                                 .Request;
@@ -447,30 +466,40 @@ namespace Microshaoft.WebApi.Controllers
             var allowExport = false;
             var allowExportConfiguration =
                         configuration
-                            .GetSection($"Routes:{routeName}:{httpMethod}:{operationConfigurationKey}");
-            failResult = null;
+                            .GetSection($"Routes:{routeName}:{httpMethod}:{operationConfigurationKey}:allow");
             if (allowExportConfiguration.Exists())
             {
                 allowExport = allowExportConfiguration.Get<bool>();
             }
             if (!allowExport)
             {
-                failResult = new JsonResult
-                    (
-                        new
-                        {
-                            StatusCode = 403
-                            , Message = "forbidden export"
-                        }
-                    )
-                {
-                    StatusCode = 403
-                };
+                statusCode = 403;
+                message = "forbidden export";
+                FailResult();
             }
+            else //(allowExport)
+            {
+                var allowExportOperationsConfiguration =
+                       configuration
+                           .GetSection($"Routes:{routeName}:{httpMethod}:{operationConfigurationKey}:operations");
+                if (allowExportOperationsConfiguration.Exists())
+                {
+                    var operations = allowExportOperationsConfiguration.Get<string[]>();
+                    //var userName = "anonymous";
+                    var user = httpContext.User;
+                    //to do: User-Role-Action/Operation 鉴权
+                }
+                if (!allowExport)
+                {
+                    statusCode = 403;
+                    message = "forbidden export operation";
+                    FailResult();
+                }
+            }
+            failResult = result;
             return
                 allowExport;
         }
-
     }
 }
 #endif

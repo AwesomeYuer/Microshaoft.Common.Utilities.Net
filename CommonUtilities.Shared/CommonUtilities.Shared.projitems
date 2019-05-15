@@ -220,10 +220,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Web.Filters\RequestJTokenValidationFilter.CoreStandard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Filters\BearerTokenAuthorizeFilter.CoreStandard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Filters\CustomFilters.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Web.Formatters\CSV\CsvFormatterMvcBuilderExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Formatters\CSV\CsvFormatterMvcCoreBuilderExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Formatters\CSV\CsvFormatterOptions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Web.Formatters\CSV\CsvInputFormatter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Formatters\CSV\CsvOutputFormatter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.MiddleWares\AbstractCommonMiddlewareBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.MiddleWares\ExceptionGuardMiddleware.cs" />
