@@ -16,6 +16,7 @@
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.FileProviders;
     using Microsoft.Extensions.Logging;
+    using Microsoft.Net.Http.Headers;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
     using Swashbuckle.AspNetCore.Swagger;
@@ -153,6 +154,17 @@
 
             services
                 .AddSingleton<IActionSelector, SyncOrAsyncActionSelector>();
+
+            var csvFormatterOptions = new CsvFormatterOptions();
+            csvFormatterOptions.CsvDelimiter = ",";
+            csvFormatterOptions.IncludeExcelDelimiterHeader = true;
+            csvFormatterOptions.UseSingleLineHeaderInCsv = true;
+            services.AddMvc(options =>
+            {
+                options.InputFormatters.Add(new CsvInputFormatter(csvFormatterOptions));
+                options.OutputFormatters.Add(new CsvOutputFormatter(csvFormatterOptions));
+                options.FormatterMappings.SetMediaTypeMappingForFormat("csv", MediaTypeHeaderValue.Parse("text/csv"));
+            });
 
             services
                 .AddSwaggerGen

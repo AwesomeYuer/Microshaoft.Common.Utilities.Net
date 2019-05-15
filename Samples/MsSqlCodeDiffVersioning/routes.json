@@ -17,6 +17,10 @@
         "storeProcedureName": "usp_executesql",
         "EnableStatistics": true,
         "commandtimeoutInSeconds": 103,
+        "exporting": {
+          "allow": true,
+          "operations": [ "a1", "a2" ]
+        },
         "InputsParameters": [
           {
             "Name": "A",

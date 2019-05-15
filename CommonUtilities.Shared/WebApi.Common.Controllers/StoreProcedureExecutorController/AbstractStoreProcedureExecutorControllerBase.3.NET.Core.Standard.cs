@@ -4,8 +4,10 @@ namespace Microshaoft.WebApi.Controllers
     using Microshaoft;
     using Microshaoft.Web;
     using Microshaoft.WebApi.ModelBinders;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Infrastructure;
+    using Microsoft.Extensions.Configuration;
     using Newtonsoft.Json.Linq;
     using System;
     using System.Data;
@@ -300,6 +302,175 @@ namespace Microshaoft.WebApi.Controllers
             }
             return result;
         }
+
+        [HttpDelete]
+        [HttpGet]
+        [HttpHead]
+        [HttpOptions]
+        [HttpPatch]
+        [HttpPost]
+        [HttpPut]
+        [
+            Route
+                (
+                    "export/{routeName}/"
+                    + "{resultJsonPathPart1?}/"
+                    + "{resultJsonPathPart2?}/"
+                    + "{resultJsonPathPart3?}/"
+                    + "{resultJsonPathPart4?}/"
+                    + "{resultJsonPathPart5?}/"
+                    + "{resultJsonPathPart6?}"
+                )
+        ]
+        [Produces("text/csv")]
+        [OperationsAuthorizeFilter]
+        [RequestJTokenParametersDefaultProcessFilter]
+        public virtual ActionResult<JToken>
+                            ProcessActionRequestForExport
+                                (
+                                    [FromRoute]
+                                        string routeName
+                                    , [ModelBinder(typeof(JTokenModelBinder))]
+                                        JToken parameters = null
+                                    , [FromRoute]
+                                        string resultJsonPathPart1 = null
+                                    , [FromRoute]
+                                        string resultJsonPathPart2 = null
+                                    , [FromRoute]
+                                        string resultJsonPathPart3 = null
+                                    , [FromRoute]
+                                        string resultJsonPathPart4 = null
+                                    , [FromRoute]
+                                        string resultJsonPathPart5 = null
+                                    , [FromRoute]
+                                        string resultJsonPathPart6 = null
+                                    , [FromQuery]
+                                        string e = "utf-8"
+                                )
+        {
+            if (!CheckOperation("allowexport", HttpContext, routeName, out var failResult))
+            {
+                return
+                    failResult;
+            }
+            return
+                ProcessActionRequest
+                    (
+                        routeName
+                        , parameters
+                        , resultJsonPathPart1
+                        , resultJsonPathPart2
+                        , resultJsonPathPart3
+                        , resultJsonPathPart4
+                        , resultJsonPathPart5
+                        , resultJsonPathPart6
+                    );
+        }
+
+        [HttpDelete]
+        [HttpGet]
+        [HttpHead]
+        [HttpOptions]
+        [HttpPatch]
+        [HttpPost]
+        [HttpPut]
+        [
+            Route
+                (
+                    "export/{routeName}/"
+                    + "{resultJsonPathPart1?}/"
+                    + "{resultJsonPathPart2?}/"
+                    + "{resultJsonPathPart3?}/"
+                    + "{resultJsonPathPart4?}/"
+                    + "{resultJsonPathPart5?}/"
+                    + "{resultJsonPathPart6?}"
+                )
+        ]
+        [Produces("text/csv")]
+        [OperationsAuthorizeFilter]
+        [RequestJTokenParametersDefaultProcessFilter]
+        public virtual async Task<ActionResult<JToken>>
+                    ProcessActionRequestForExportAsync
+                        (
+                            [FromRoute]
+                                string routeName
+                            , [ModelBinder(typeof(JTokenModelBinder))]
+                                JToken parameters = null
+                            , [FromRoute]
+                                string resultJsonPathPart1 = null
+                            , [FromRoute]
+                                string resultJsonPathPart2 = null
+                            , [FromRoute]
+                                string resultJsonPathPart3 = null
+                            , [FromRoute]
+                                string resultJsonPathPart4 = null
+                            , [FromRoute]
+                                string resultJsonPathPart5 = null
+                            , [FromRoute]
+                                string resultJsonPathPart6 = null
+                            , [FromQuery]
+                                string e = "utf-8"
+                        )
+        {
+            if (!CheckOperation("allowexport", HttpContext, routeName, out var failResult))
+            {
+                return
+                    failResult;
+            }
+            return
+                await
+                    ProcessActionRequestAsync
+                        (
+                            routeName
+                            , parameters
+                            , resultJsonPathPart1
+                            , resultJsonPathPart2
+                            , resultJsonPathPart3
+                            , resultJsonPathPart4
+                            , resultJsonPathPart5
+                            , resultJsonPathPart6
+                        );
+        }
+
+        private bool CheckOperation
+                        (
+                            string operationConfigurationKey
+                            , HttpContext httpContext
+                            , string routeName
+                            , out JsonResult failResult
+                        )
+        {
+            var configuration = httpContext.RequestServices.GetService(typeof(IConfiguration)) as IConfiguration;
+            var request = HttpContext
+                                .Request;
+            var httpMethod = $"Http{request.Method}";
+            var allowExport = false;
+            var allowExportConfiguration =
+                        configuration
+                            .GetSection($"Routes:{routeName}:{httpMethod}:{operationConfigurationKey}");
+            failResult = null;
+            if (allowExportConfiguration.Exists())
+            {
+                allowExport = allowExportConfiguration.Get<bool>();
+            }
+            if (!allowExport)
+            {
+                failResult = new JsonResult
+                    (
+                        new
+                        {
+                            StatusCode = 403
+                            , Message = "forbidden export"
+                        }
+                    )
+                {
+                    StatusCode = 403
+                };
+            }
+            return
+                allowExport;
+        }
+
     }
 }
 #endif
