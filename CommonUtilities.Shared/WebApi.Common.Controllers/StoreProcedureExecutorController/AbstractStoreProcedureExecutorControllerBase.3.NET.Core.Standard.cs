@@ -459,7 +459,12 @@ namespace Microshaoft.WebApi.Controllers
                     StatusCode = statusCode
                 };
             }
-            var configuration = httpContext.RequestServices.GetService(typeof(IConfiguration)) as IConfiguration;
+            var configuration = httpContext
+                                    .RequestServices
+                                    .GetService
+                                        (
+                                            typeof(IConfiguration)
+                                        ) as IConfiguration;
             var request = HttpContext
                                 .Request;
             var httpMethod = $"Http{request.Method}";

@@ -21,7 +21,7 @@
   <Import Project="..\..\..\CommonUtilities.Shared\CommonUtilities.Shared.projitems" Label="Shared" />
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.4" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.5" />
     <PackageReference Include="Microsoft.AspNetCore.ResponseCaching" Version="2.2.0" />
     <PackageReference Include="Microsoft.Composition" Version="1.0.31" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
@@ -33,7 +33,7 @@
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.6.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.6.1" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.4.0" />
     <PackageReference Include="System.Reactive.Core" Version="4.1.5" />
     <PackageReference Include="System.Reflection" Version="4.3.0" />
