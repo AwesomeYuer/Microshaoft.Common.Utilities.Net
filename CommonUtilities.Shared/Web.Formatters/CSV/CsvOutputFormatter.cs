@@ -45,7 +45,8 @@ namespace Microshaoft.Web
             {
                 throw new ArgumentNullException("type");
             }
-            return IsTypeOfIEnumerable(type);
+            return
+                IsTypeOfIEnumerable(type);
         }
 
         private bool IsTypeOfIEnumerable(Type type)
@@ -54,9 +55,14 @@ namespace Microshaoft.Web
             {
                 throw new ArgumentNullException("type");
             }
-            return typeof(IEnumerable).IsAssignableFrom(type);
+            return
+                typeof(IEnumerable)
+                    .IsAssignableFrom(type);
         }
-        public async override Task WriteResponseBodyAsync(OutputFormatterWriteContext context)
+        public async override Task WriteResponseBodyAsync
+                                    (
+                                        OutputFormatterWriteContext context
+                                    )
         {
             var httpContext = context
                                 .HttpContext;
@@ -75,8 +81,6 @@ namespace Microshaoft.Web
             }
             var response = httpContext
                                 .Response;
-            //httpContext.Features
-            
             using
                 (
                     var streamWriter = new StreamWriter
@@ -86,24 +90,33 @@ namespace Microshaoft.Web
                                                 )
                 )
             {
-                await
-                    response
-                        .Body
-                        .WriteAsync
-                            (
-                                new byte[] { 0xEF, 0xBB, 0xBF }
-                            );
-
+                if (e.GetType() == Encoding.UTF8.GetType())
+                {
+                    await
+                        response
+                            .Body
+                            .WriteAsync
+                                (
+                                    new byte[]
+                                    {
+                                        0xEF
+                                        , 0xBB
+                                        , 0xBF
+                                    }
+                                );
+                }
                 if (_options.IncludeExcelDelimiterHeader)
                 {
                     await
                         streamWriter
-                            .WriteLineAsync($"sep ={_options.CsvDelimiter}");
+                            .WriteLineAsync
+                                (
+                                    $"sep ={_options.CsvDelimiter}");
                 }
-                if (context.Object is JArray data)
+                if (context.Object is JArray jArray)
                 {
                     int i = 0;
-                    foreach (JObject jObject in data)
+                    foreach (JObject jObject in jArray)
                     {
                         var jProperties = jObject.Properties();
                         if (i == 0)
@@ -111,14 +124,14 @@ namespace Microshaoft.Web
                             if (_options.UseSingleLineHeaderInCsv)
                             {
                                 var propertiesNames = jProperties
-                                                            .Select
-                                                                (
-                                                                    (x) =>
-                                                                    {
-                                                                        return
-                                                                            x.Name;
-                                                                    }
-                                                                );
+                                                                .Select
+                                                                    (
+                                                                        (x) =>
+                                                                        {
+                                                                            return
+                                                                                x.Name;
+                                                                        }
+                                                                    );
                                 await
                                     streamWriter
                                         .WriteLineAsync
@@ -145,7 +158,12 @@ namespace Microshaoft.Web
                             var @value = string.Empty;
                             if (jValue != null)
                             {
-                                if (jValue.Type == JTokenType.String)
+                                if (jValue.Type == JTokenType.Date)
+                                {
+                                    //@value = ((DateTime) jValue).ToString("yyyy-MM-ddTHH:mm:ss.fffff");
+                                    @value = $@"""{((DateTime)jValue).ToString("yyyy-MM-ddTHH:mm:ss.fffff")}""";
+                                }
+                                else
                                 {
                                     @value = jValue.ToString();
                                     @value = @value.Replace(@"""", @"""""");
@@ -161,24 +179,6 @@ namespace Microshaoft.Web
                                     {
                                         @value = $@"""{@value}""";
                                     }
-                                    //Replace any \r or \n special characters from a new line with a space
-                                    //if (@value.Contains("\r"))
-                                    //{
-                                    //    @value = @value.Replace("\r", " ");
-                                    //}
-                                    //if (@value.Contains("\n"))
-                                    //{
-                                    //    @value = @value.Replace("\n", " ");
-                                    //}
-                                }
-                                else if (jValue.Type == JTokenType.Date)
-                                {
-                                    //@value = ((DateTime) jValue).ToString("yyyy-MM-ddTHH:mm:ss.fffff");
-                                    @value = $@"""{((DateTime)jValue).ToString("yyyy-MM-ddTHH:mm:ss.fffff")}""";
-                                }
-                                else
-                                {
-                                    @value = jValue.ToString();
                                 }
                             }
                             line += @value;
