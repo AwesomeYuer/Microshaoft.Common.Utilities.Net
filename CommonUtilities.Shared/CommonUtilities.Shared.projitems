@@ -172,6 +172,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Pools\QueuedObjectsPool.Partial.02.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ReaderWriterLock\EasyReaderWriterLockSlim.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ReaderWriterLock\ReaderWriterLockSlimHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pools\SafeObjectsPool\DefaultPolicy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pools\SafeObjectsPool\IPolicy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pools\SafeObjectsPool\Object.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pools\SafeObjectsPool\SafeObjectsPool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SingleThreadAsyncDequeueProcessor\Framework\SingleThreadAsyncDequeueProcessor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SingleThreadAsyncDequeueProcessor\CoreStandard\SingleThreadAsyncDequeueProcessorSlim.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SingleThreadAsyncDequeueProcessor\Framework\SingleThreadAsyncJObjectsDequeueProcessor.cs" />
