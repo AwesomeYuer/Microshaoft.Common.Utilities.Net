@@ -17,10 +17,17 @@
         "storeProcedureName": "usp_executesql",
         "EnableStatistics": true,
         "commandtimeoutInSeconds": 103,
-        "exporting": {
+        "DefaultAccessing": {
           "allow": true,
+          "needCheckOperations": true,
           "operations": [ "a1", "a2" ]
         },
+        "exporting": {
+          "allow": true,
+          "needCheckOperations": true,
+          "operations": [ "a1", "a2" ]
+        },
+
         "InputsParameters": [
           {
             "Name": "A",
@@ -39,8 +46,7 @@
           }
 
         ]
-      },
-      "operations": ["a1", "a2"]
+      }
     },
     "objEcts": {
       "HttPGet": {
