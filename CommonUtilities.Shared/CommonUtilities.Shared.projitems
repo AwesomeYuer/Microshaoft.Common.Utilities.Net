@@ -224,6 +224,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Web.Filters\RequestJTokenValidationFilter.CoreStandard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Filters\BearerTokenAuthorizeFilter.CoreStandard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Filters\CustomFilters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Web.Formatters\CSV\OptionalProducesAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Formatters\CSV\CsvFormatterMvcCoreBuilderExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Formatters\CSV\CsvFormatterOptions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Formatters\CSV\CsvOutputFormatter.cs" />
