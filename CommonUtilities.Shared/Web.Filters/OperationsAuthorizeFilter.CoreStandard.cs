@@ -1,23 +1,36 @@
 ﻿#if NETCOREAPP2_X
 namespace Microshaoft.Web
 {
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Filters;
     using Microsoft.Extensions.Configuration;
     using System;
+    public interface ICheckUserOperations
+    {
+        bool CheckUserOperations(HttpContext httpContext, string[] operations);
+
+    }
+
     public class OperationsAuthorizeFilter
                     :
                         //AuthorizeAttribute
                         Attribute
                         , IActionFilter
+                        , ICheckUserOperations
     {
-
-
-
         private IConfiguration _configuration;
         private object _locker = new object();
-        public OperationsAuthorizeFilter()
+        private string _authorizeConfigurationKeysPath = string.Empty;
+        private bool _allowDefault = false;
+        public OperationsAuthorizeFilter
+                        (
+                            string authorizeConfigurationKeysPath = "DefaultAccessing"
+                            , bool allowDefault = false
+                        )
         {
+            _authorizeConfigurationKeysPath = authorizeConfigurationKeysPath;
+            _allowDefault = allowDefault;
             Initialize();
         }
         public virtual void Initialize()
@@ -27,26 +40,23 @@ namespace Microshaoft.Web
 
         public virtual void OnActionExecuting(ActionExecutingContext context)
         {
-            //var ok = false;
-            //var errorMessage = string.Empty;
-            //var errorStatusCode = -1;
-            
-            //void ErrorResult()
-            //{
-            //    context
-            //        .Result = new JsonResult
-            //                        (
-            //                            new
-            //                            {
-            //                                StatusCode = errorStatusCode
-            //                                , Message = errorMessage
-            //                            }
-            //                        )
-            //                    {
-            //                        StatusCode = errorStatusCode
-            //                        , ContentType = "application/json"
-            //                    };
-            //}
+            var forbiddenMessage = string.Empty;
+            void setForbidResult()
+            {
+                var statusCode = 403;
+                var result = new JsonResult
+                    (
+                        new
+                        {
+                            StatusCode = statusCode
+                            , Message = forbiddenMessage
+                        }
+                    )
+                {
+                    StatusCode = statusCode
+                };
+                context.Result = result;
+            }
             var httpContext = context.HttpContext;
             var request = httpContext.Request;
             _locker
@@ -68,21 +78,57 @@ namespace Microshaoft.Web
                                                         );
                         }
                     );
-            var routeName = (string)context.ActionArguments["routeName"];
+            var routeName = (string) context.ActionArguments["routeName"];
             var httpMethod = $"http{request.Method}";
-            var operationsConfiguration = _configuration
+            var allow = _allowDefault;
+            var masterConfiguration = _configuration
                                                     .GetSection
-                                                        ($"Routes:{routeName}:{httpMethod}:Operations");
-            if (operationsConfiguration.Exists())
+                                                        ($"Routes:{routeName}:{httpMethod}:{_authorizeConfigurationKeysPath}");
+            if (masterConfiguration.Exists())
             {
-                var operations = operationsConfiguration.Get<string[]>();
-                //var userName = "anonymous";
-                var user = httpContext.User;
+                var configuration = masterConfiguration.GetSection($"allow");
+                if (configuration.Exists())
+                {
+                    allow = configuration.Get<bool>();
+                }
+                if (allow)
+                {
+                    configuration = masterConfiguration.GetSection($"needcheckoperations");
+                    var needCheckOperations = configuration.Get<bool>();
+                    if (needCheckOperations)
+                    {
+                        configuration = masterConfiguration.GetSection($"operations");
+                        if (configuration.Exists())
+                        {
+                            var operations = configuration.Get<string[]>();
+                            allow = CheckUserOperations(httpContext, operations);
+                            if (!allow)
+                            {
+                                forbiddenMessage = $"forbidden by {configuration.Key}";
+                                setForbidResult();
+                            }
+                        }
+                    }
+                }
+                else //(!allow)
+                {
+                    forbiddenMessage = $"forbidden by {configuration.Key}";
+                    setForbidResult();
+                }
             }
         }
         public virtual void OnActionExecuted(ActionExecutedContext context)
         {
 
+        }
+
+        public bool CheckUserOperations(HttpContext httpContext, string[] operations)
+        {
+            //to do
+
+            //var userName = "anonymous";
+            var user = httpContext.User;
+            return true;
         }
     }
 }

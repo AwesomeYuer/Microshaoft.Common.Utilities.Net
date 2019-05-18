@@ -4,10 +4,7 @@ namespace Microshaoft.WebApi.Controllers
     using Microshaoft;
     using Microshaoft.Web;
     using Microshaoft.WebApi.ModelBinders;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.Infrastructure;
-    using Microsoft.Extensions.Configuration;
     using Newtonsoft.Json.Linq;
     using System;
     using System.Data;
@@ -83,16 +80,16 @@ namespace Microshaoft.WebApi.Controllers
                 );
         }
 
-        protected IActionSelector _actionSelector;
+        
 
         public AbstractStoreProceduresExecutorControllerBase
                     (
                         AbstractStoreProceduresService service
-                        , IActionSelector actionSelector
+
                     )
         {
             _service = service;
-            _actionSelector = actionSelector;
+
         }
 
         [HttpDelete]
@@ -126,7 +123,7 @@ namespace Microshaoft.WebApi.Controllers
                     + "{resultJsonPathPart6?}"
                 )
         ]
-        [OperationsAuthorizeFilter]
+        [OperationsAuthorizeFilter("DefaultAccessing", false)]
         [RequestJTokenParametersDefaultProcessFilter]
         public virtual ActionResult<JToken>
                             ProcessActionRequest
@@ -229,7 +226,7 @@ namespace Microshaoft.WebApi.Controllers
                     + "{resultJsonPathPart6?}"
                 )
         ]
-        [OperationsAuthorizeFilter]
+        [OperationsAuthorizeFilter("DefaultAccessing", false)]
         [RequestJTokenParametersDefaultProcessFilter]
         public virtual async Task<ActionResult<JToken>>
                             ProcessActionRequestAsync
@@ -323,7 +320,7 @@ namespace Microshaoft.WebApi.Controllers
                 )
         ]
         [Produces("text/csv")]
-        [OperationsAuthorizeFilter]
+        [OperationsAuthorizeFilter("exporting", false)]
         [RequestJTokenParametersDefaultProcessFilter]
         public virtual ActionResult<JToken>
                             ProcessActionRequestForExport
@@ -348,11 +345,6 @@ namespace Microshaoft.WebApi.Controllers
                                         string e = "utf-8"
                                 )
         {
-            if (!CheckOperation("exporting", HttpContext, parameters, routeName, out var failResult))
-            {
-                return
-                    failResult;
-            }
             return
                 ProcessActionRequest
                     (
@@ -387,7 +379,7 @@ namespace Microshaoft.WebApi.Controllers
                 )
         ]
         [Produces("text/csv")]
-        [OperationsAuthorizeFilter]
+        [OperationsAuthorizeFilter("exporting", false)]
         [RequestJTokenParametersDefaultProcessFilter]
         public virtual async Task<ActionResult<JToken>>
                     ProcessActionRequestForExportAsync
@@ -412,11 +404,6 @@ namespace Microshaoft.WebApi.Controllers
                                 string e = "utf-8"
                         )
         {
-            if (!CheckOperation("exporting", HttpContext, parameters,routeName, out var failResult))
-            {
-                return
-                    failResult;
-            }
             return
                 await
                     ProcessActionRequestAsync
@@ -430,80 +417,6 @@ namespace Microshaoft.WebApi.Controllers
                             , resultJsonPathPart5
                             , resultJsonPathPart6
                         );
-        }
-
-        private bool CheckOperation
-                        (
-                            string operationConfigurationKey
-                            , HttpContext httpContext
-                            , JToken parameters
-                            , string routeName
-                            , out JsonResult failResult
-                        )
-        {
-            var statusCode = 200;
-            var message = string.Empty;
-            failResult = null;
-            JsonResult result = null;
-            void FailResult()
-            {
-                result = new JsonResult
-                    (
-                        new
-                        {
-                            StatusCode = statusCode
-                            , Message = message
-                        }
-                    )
-                {
-                    StatusCode = statusCode
-                };
-            }
-            var configuration = httpContext
-                                    .RequestServices
-                                    .GetService
-                                        (
-                                            typeof(IConfiguration)
-                                        ) as IConfiguration;
-            var request = HttpContext
-                                .Request;
-            var httpMethod = $"Http{request.Method}";
-            var allowExport = false;
-            var allowExportConfiguration =
-                        configuration
-                            .GetSection($"Routes:{routeName}:{httpMethod}:{operationConfigurationKey}:allow");
-            if (allowExportConfiguration.Exists())
-            {
-                allowExport = allowExportConfiguration.Get<bool>();
-            }
-            if (!allowExport)
-            {
-                statusCode = 403;
-                message = "forbidden export";
-                FailResult();
-            }
-            else //(allowExport)
-            {
-                var allowExportOperationsConfiguration =
-                       configuration
-                           .GetSection($"Routes:{routeName}:{httpMethod}:{operationConfigurationKey}:operations");
-                if (allowExportOperationsConfiguration.Exists())
-                {
-                    var operations = allowExportOperationsConfiguration.Get<string[]>();
-                    //var userName = "anonymous";
-                    var user = httpContext.User;
-                    //to do: User-Role-Action/Operation 鉴权
-                }
-                if (!allowExport)
-                {
-                    statusCode = 403;
-                    message = "forbidden export operation";
-                    FailResult();
-                }
-            }
-            failResult = result;
-            return
-                allowExport;
         }
     }
 }
