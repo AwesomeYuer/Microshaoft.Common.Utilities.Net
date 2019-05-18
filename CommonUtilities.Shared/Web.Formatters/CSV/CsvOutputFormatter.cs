@@ -69,7 +69,6 @@ namespace Microshaoft.Web
             var request = httpContext
                                 .Request;
             var encodingName = (string) request.Query["e"];
-
             Encoding e = null;
             if (!encodingName.IsNullOrEmptyOrWhiteSpace())
             {
@@ -111,7 +110,8 @@ namespace Microshaoft.Web
                         streamWriter
                             .WriteLineAsync
                                 (
-                                    $"sep ={_options.CsvDelimiter}");
+                                    $"sep ={_options.CsvDelimiter}"
+                                );
                 }
                 if (context.Object is JArray jArray)
                 {
@@ -123,15 +123,16 @@ namespace Microshaoft.Web
                         {
                             if (_options.UseSingleLineHeaderInCsv)
                             {
-                                var propertiesNames = jProperties
-                                                                .Select
-                                                                    (
-                                                                        (x) =>
-                                                                        {
-                                                                            return
-                                                                                x.Name;
-                                                                        }
-                                                                    );
+                                var propertiesNames =
+                                        jProperties
+                                                .Select
+                                                    (
+                                                        (x) =>
+                                                        {
+                                                            return
+                                                                x.Name;
+                                                        }
+                                                    );
                                 await
                                     streamWriter
                                         .WriteLineAsync
@@ -161,7 +162,7 @@ namespace Microshaoft.Web
                                 if (jValue.Type == JTokenType.Date)
                                 {
                                     //@value = ((DateTime) jValue).ToString("yyyy-MM-ddTHH:mm:ss.fffff");
-                                    @value = $@"""{((DateTime)jValue).ToString("yyyy-MM-ddTHH:mm:ss.fffff")}""";
+                                    @value = $@"""{((DateTime) jValue).ToString("yyyy-MM-ddTHH:mm:ss.fffff")}""";
                                 }
                                 else
                                 {

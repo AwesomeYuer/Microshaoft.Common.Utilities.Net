@@ -123,8 +123,22 @@ namespace Microshaoft.WebApi.Controllers
                     + "{resultJsonPathPart6?}"
                 )
         ]
+
+        [
+            Route
+                (
+                    "export/{routeName}/"
+                    + "{resultJsonPathPart1?}/"
+                    + "{resultJsonPathPart2?}/"
+                    + "{resultJsonPathPart3?}/"
+                    + "{resultJsonPathPart4?}/"
+                    + "{resultJsonPathPart5?}/"
+                    + "{resultJsonPathPart6?}"
+                )
+        ]
         [OperationsAuthorizeFilter("DefaultAccessing", false)]
         [RequestJTokenParametersDefaultProcessFilter]
+        [OptionalProduces("text/csv", RequestPathKey = "/export/")]
         public virtual ActionResult<JToken>
                             ProcessActionRequest
                                 (
@@ -226,8 +240,21 @@ namespace Microshaoft.WebApi.Controllers
                     + "{resultJsonPathPart6?}"
                 )
         ]
+        [
+            Route
+                (
+                    "export/{routeName}/"
+                    + "{resultJsonPathPart1?}/"
+                    + "{resultJsonPathPart2?}/"
+                    + "{resultJsonPathPart3?}/"
+                    + "{resultJsonPathPart4?}/"
+                    + "{resultJsonPathPart5?}/"
+                    + "{resultJsonPathPart6?}"
+                )
+        ]
         [OperationsAuthorizeFilter("DefaultAccessing", false)]
         [RequestJTokenParametersDefaultProcessFilter]
+        [OptionalProduces("text/csv", RequestPathKey = "/export/")]
         public virtual async Task<ActionResult<JToken>>
                             ProcessActionRequestAsync
                                 (
@@ -298,125 +325,6 @@ namespace Microshaoft.WebApi.Controllers
                     };
             }
             return result;
-        }
-
-        [HttpDelete]
-        [HttpGet]
-        [HttpHead]
-        [HttpOptions]
-        [HttpPatch]
-        [HttpPost]
-        [HttpPut]
-        [
-            Route
-                (
-                    "export/{routeName}/"
-                    + "{resultJsonPathPart1?}/"
-                    + "{resultJsonPathPart2?}/"
-                    + "{resultJsonPathPart3?}/"
-                    + "{resultJsonPathPart4?}/"
-                    + "{resultJsonPathPart5?}/"
-                    + "{resultJsonPathPart6?}"
-                )
-        ]
-        [Produces("text/csv")]
-        [OperationsAuthorizeFilter("exporting", false)]
-        [RequestJTokenParametersDefaultProcessFilter]
-        public virtual ActionResult<JToken>
-                            ProcessActionRequestForExport
-                                (
-                                    [FromRoute]
-                                        string routeName
-                                    , [ModelBinder(typeof(JTokenModelBinder))]
-                                        JToken parameters = null
-                                    , [FromRoute]
-                                        string resultJsonPathPart1 = null
-                                    , [FromRoute]
-                                        string resultJsonPathPart2 = null
-                                    , [FromRoute]
-                                        string resultJsonPathPart3 = null
-                                    , [FromRoute]
-                                        string resultJsonPathPart4 = null
-                                    , [FromRoute]
-                                        string resultJsonPathPart5 = null
-                                    , [FromRoute]
-                                        string resultJsonPathPart6 = null
-                                    , [FromQuery]
-                                        string e = "utf-8"
-                                )
-        {
-            return
-                ProcessActionRequest
-                    (
-                        routeName
-                        , parameters
-                        , resultJsonPathPart1
-                        , resultJsonPathPart2
-                        , resultJsonPathPart3
-                        , resultJsonPathPart4
-                        , resultJsonPathPart5
-                        , resultJsonPathPart6
-                    );
-        }
-
-        [HttpDelete]
-        [HttpGet]
-        [HttpHead]
-        [HttpOptions]
-        [HttpPatch]
-        [HttpPost]
-        [HttpPut]
-        [
-            Route
-                (
-                    "export/{routeName}/"
-                    + "{resultJsonPathPart1?}/"
-                    + "{resultJsonPathPart2?}/"
-                    + "{resultJsonPathPart3?}/"
-                    + "{resultJsonPathPart4?}/"
-                    + "{resultJsonPathPart5?}/"
-                    + "{resultJsonPathPart6?}"
-                )
-        ]
-        [Produces("text/csv")]
-        [OperationsAuthorizeFilter("exporting", false)]
-        [RequestJTokenParametersDefaultProcessFilter]
-        public virtual async Task<ActionResult<JToken>>
-                    ProcessActionRequestForExportAsync
-                        (
-                            [FromRoute]
-                                string routeName
-                            , [ModelBinder(typeof(JTokenModelBinder))]
-                                JToken parameters = null
-                            , [FromRoute]
-                                string resultJsonPathPart1 = null
-                            , [FromRoute]
-                                string resultJsonPathPart2 = null
-                            , [FromRoute]
-                                string resultJsonPathPart3 = null
-                            , [FromRoute]
-                                string resultJsonPathPart4 = null
-                            , [FromRoute]
-                                string resultJsonPathPart5 = null
-                            , [FromRoute]
-                                string resultJsonPathPart6 = null
-                            , [FromQuery]
-                                string e = "utf-8"
-                        )
-        {
-            return
-                await
-                    ProcessActionRequestAsync
-                        (
-                            routeName
-                            , parameters
-                            , resultJsonPathPart1
-                            , resultJsonPathPart2
-                            , resultJsonPathPart3
-                            , resultJsonPathPart4
-                            , resultJsonPathPart5
-                            , resultJsonPathPart6
-                        );
         }
     }
 }
