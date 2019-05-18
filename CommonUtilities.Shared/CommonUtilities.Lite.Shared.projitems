@@ -145,6 +145,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Pools\00.PoolManager\PoolsManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pools\ObjectsPool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pools\QueuedObjectsPool.Partial.01.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pools\SafeObjectsPool\DefaultPolicy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pools\SafeObjectsPool\IPolicy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pools\SafeObjectsPool\Object.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pools\SafeObjectsPool\SafeObjectsPool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ReaderWriterLock\EasyReaderWriterLockSlim.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ReaderWriterLock\ReaderWriterLockSlimHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SingleThreadAsyncDequeueProcessor\CoreStandard\SingleThreadAsyncDequeueProcessorSlim.cs" />
