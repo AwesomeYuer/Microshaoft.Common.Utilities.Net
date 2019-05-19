@@ -20,6 +20,7 @@ namespace Microshaoft.Web
         private readonly IConfiguration _configuration;
         private IDictionary<string, IHttpRequestValidateable<JToken>>
                         _indexedValidators;
+        public string AccessingConfigurationKey { get; set; } = "DefaultAccessing";
         public JTokenParametersValidateFilterAttribute(IConfiguration configuration)
         {
             _configuration = configuration;
@@ -147,7 +148,7 @@ namespace Microshaoft.Web
             var validatorConfiguration =
                     _configuration
                             .GetSection
-                                ($"Routes:{routeName}:{httpMethod}:RequestValidator");
+                                ($"Routes:{routeName}:{httpMethod}:{AccessingConfigurationKey}:RequestValidator");
             if (validatorConfiguration.Exists())
             {
                 (

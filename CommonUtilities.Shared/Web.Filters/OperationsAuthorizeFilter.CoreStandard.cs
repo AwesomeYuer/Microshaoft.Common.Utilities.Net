@@ -21,16 +21,14 @@ namespace Microshaoft.Web
     {
         private IConfiguration _configuration;
         private object _locker = new object();
-        private string _authorizeConfigurationKeysPath = string.Empty;
+        private string _accessingConfigurationKey = string.Empty;
         private bool _allowDefault = false;
+        public string AccessingConfigurationKey { get; set; } = "DefaultAccessing";
         public OperationsAuthorizeFilter
                         (
-                            string authorizeConfigurationKeysPath = "DefaultAccessing"
-                            , bool allowDefault = false
+                            bool allowDefault = false
                         )
         {
-            _authorizeConfigurationKeysPath = authorizeConfigurationKeysPath;
-            _allowDefault = allowDefault;
             Initialize();
         }
         public virtual void Initialize()
@@ -82,8 +80,8 @@ namespace Microshaoft.Web
             var httpMethod = $"http{request.Method}";
             var allow = _allowDefault;
             var masterConfiguration = _configuration
-                                                    .GetSection
-                                                        ($"Routes:{routeName}:{httpMethod}:{_authorizeConfigurationKeysPath}");
+                                            .GetSection
+                                                ($"Routes:{routeName}:{httpMethod}:{AccessingConfigurationKey}");
             if (masterConfiguration.Exists())
             {
                 var configuration = masterConfiguration.GetSection($"allow");

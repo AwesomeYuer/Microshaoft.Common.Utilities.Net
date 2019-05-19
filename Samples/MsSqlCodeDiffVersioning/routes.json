@@ -12,91 +12,123 @@
     },
     "usp_executesql": {
       "HttPPost": {
-        "isAsyncExecuting": true,
         "connectionID": "c1",
         "storeProcedureName": "usp_executesql",
-        "EnableStatistics": true,
-        "commandtimeoutInSeconds": 103,
         "DefaultAccessing": {
           "allow": true,
           "needCheckOperations": true,
-          "operations": [ "a1", "a2" ]
-        },
+          "operations": [ "a1", "a2" ],
+          "isAsyncExecuting": true,
+          "EnableStatistics": true,
+          "commandtimeoutInSeconds": 103,
+          "InputsParameters": [
+            {
+              "Name": "A",
+              "Value": 1,
+              "AllowOverride": true
+            },
+            {
+              "Name": "B",
+              "Value": true,
+              "AllowOverride": true
+            },
+            {
+              "Name": "c",
+              "Value": "asdsadsad",
+              "AllowOverride": true
+            }
+          ],
+          "Outputs1111": {
+            "aaa.bbb.ddd": "Outputs.ResultSets[0].Rows"
+          }
+
+          },
         "exporting": {
           "allow": true,
           "needCheckOperations": true,
-          "operations": [ "a1", "a2" ]
-        },
-
-        "InputsParameters": [
-          {
-            "Name": "A",
-            "Value": 1,
-            "AllowOverride": true
-          },
-          {
-            "Name": "B",
-            "Value": true,
-            "AllowOverride": true
-          },
-          {
-            "Name": "c",
-            "Value": "asdsadsad",
-            "AllowOverride": true
+          "operations": [ "a1", "a2" ],
+          "isAsyncExecuting": true,
+          "EnableStatistics": true,
+          "commandtimeoutInSeconds": 103,
+          "InputsParameters": [
+            {
+              "Name": "A",
+              "Value": 1,
+              "AllowOverride": true
+            },
+            {
+              "Name": "B",
+              "Value": true,
+              "AllowOverride": true
+            },
+            {
+              "Name": "c",
+              "Value": "asdsadsad",
+              "AllowOverride": true
+            }
+          ],
+          "Outputs": {
+            "$": "Outputs.ResultSets[0].Rows"
           }
-
-        ]
-      }
+        }
+        }
     },
     "objEcts": {
       "HttPGet": {
         "connectionID": "c1",
         "storeProcedureName": "zsp_zObjectsChangesLogsHistory_Get",
         "EnableStatistics": true,
-        "commandtimeoutInSeconds": 103,
-        "requestvAlidator": "simpleValidator1",
-        "operations": [ "a1", "a2" ],
-        "InputsParameters": [
-          {
-            "Name": "A",
-            "Value": 1,
-            "AllowOverride": true
-          },
-          {
-            "Name": "B",
-            "Value": true,
-            "AllowOverride": true
-          },
-          {
-            "Name": "c",
-            "Value": "asdsadsad",
-            "AllowOverride": true
-          }
+        "defaultAccessing": {
+          "allow": true,
+          "commandtimeoutInSeconds": 103,
+          "requestvAlidator": "simpleValidator1",
+          "operations": [ "a1", "a2" ],
+          "InputsParameters": [
+            {
+              "Name": "A",
+              "Value": 1,
+              "AllowOverride": true
+            },
+            {
+              "Name": "B",
+              "Value": true,
+              "AllowOverride": true
+            },
+            {
+              "Name": "c",
+              "Value": "asdsadsad",
+              "AllowOverride": true
+            }
 
-        ]
+          ]
+
+        }
       },
       "HttpPost": {
         "ConnectionID": "c1",
         "StoreProcedureName": "zsp_zObjectsChangesLogsHistory_Get",
         //"EnableStatistics": true,
-        "InputsParameters": [
-          {
-            "Name": "A",
-            "Value": 1,
-            "AllowOverride": true
-          },
-          {
-            "Name": "B",
-            "Value": true,
-            "AllowOverride": true
-          },
-          {
-            "Name": "c",
-            "Value": "asdsadsad",
-            "AllowOverride": true
-          }
+        "defaultaccessing": {
+          "allow": true,
+          "InputsParameters": [
+            {
+              "Name": "A",
+              "Value": 1,
+              "AllowOverride": true
+            },
+            {
+              "Name": "B",
+              "Value": true,
+              "AllowOverride": true
+            },
+            {
+              "Name": "c",
+              "Value": "asdsadsad",
+              "AllowOverride": true
+            }
 
-        ]
+          ]
+        }
       }
     },
     "masterdetails": {
@@ -104,13 +136,16 @@
         "connectionID": "c1",
         "storeProcedureName": "zsp_MasterDetails",
         "EnableStatistics": true,
-        "commandtimeoutInSeconds": 103,
-        "Outputs": {
-          "aaa.bbb.ddd": "Outputs.ResultSets[0].Rows",
-          "bbb": "Outputs.Parameters",
-          "aaa.bbb.ccc": "Outputs.Parameters",
-          "AAa.ccc": "Outputs.Parameters",
-          "aaa.bbb.cccd": "Outputs.ResultSets[0].Rows"
+        "defaultAccessing": {
+          "allow": true,
+          "commandtimeoutInSeconds": 103,
+          "Outputs": {
+            "aaa.bbb.ddd": "Outputs.ResultSets[0].Rows",
+            "bbb": "Outputs.Parameters",
+            "aaa.bbb.ccc": "Outputs.Parameters",
+            "AAa.ccc": "Outputs.Parameters",
+            "aaa.bbb.cccd": "Outputs.ResultSets[0].Rows"
+          }
         }
       },
       "HttpPost": {
@@ -125,14 +160,19 @@
         "storeProcedureName": "zsp_test",
         "EnableStatistics": true,
         "commandtimeoutInSeconds": 103,
-        "Outputs": {
-          "aaa.bbb.ddd": "Outputs.ResultSets[0].Rows",
-          "bbb": "Outputs.Parameters",
-          "aaa.bbb.ccc": "Outputs.Parameters",
-          "AAa.ccc": "Outputs.Parameters",
-          "aaa.bbb.ccc": "Outputs.ResultSets[0].Rows"
+        "defaultAccessing": {
+          "allow": true,
+          "EnableStatistics": true,
+          "commandtimeoutInSeconds": 103,
+          "Outputs": {
+            "aaa.bbb.ddd": "Outputs.ResultSets[0].Rows",
+            "bbb": "Outputs.Parameters",
+            "aaa.bbb.ccc": "Outputs.Parameters",
+            "AAa.ccc": "Outputs.Parameters",
+            "aaa.bbb.ccc": "Outputs.ResultSets[0].Rows"
+          }
         }
       }
     }
   }
-  }
+ }

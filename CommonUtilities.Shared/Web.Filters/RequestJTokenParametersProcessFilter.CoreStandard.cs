@@ -13,6 +13,9 @@ namespace Microshaoft.Web
     {
         private IConfiguration _configuration;
         private object _locker = new object();
+
+        public string AccessingConfigurationKey { get; set; } = "DefaultAccessing";
+
         public RequestJTokenParametersDefaultProcessFilterAttribute()
         {
             Initialize();
@@ -46,10 +49,11 @@ namespace Microshaoft.Web
                                                         );
                         }
                     );
+            
             var inputsParametersConfiguration =
                     _configuration
                             .GetSection
-                                ($"Routes:{routeName}:{httpMethod}:InputsParameters");
+                                ($"Routes:{routeName}:{httpMethod}:{AccessingConfigurationKey}:InputsParameters");
             if (inputsParametersConfiguration.Exists())
             {
                 var inputsParameters = inputsParametersConfiguration.GetChildren();
