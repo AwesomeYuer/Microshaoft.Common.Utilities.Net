@@ -507,39 +507,10 @@ namespace Microshaoft.Web
                     message = jv.Value<string>();
                 }
             }
-            if (success)
-            {
-                //support custom output nest json by JSONPath in JsonFile Config
-                var outputsConfiguration = _configuration
-                                                .GetSection
-                                                    ($"Routes:{routeName}:{has.HttpMethod}:Outputs");
-                if (outputsConfiguration.Exists())
-                {
-                    var mappings = outputsConfiguration
-                                        .GetChildren()
-                                        .Select
-                                            (
-                                                (x) =>
-                                                {
-                                                    (
-                                                        string TargetJPath
-                                                        , string SourceJPath
-                                                    )
-                                                        rrr =
-                                                            (
-                                                                x.Key
-                                                               , x.Get<string>()
-                                                            );
-                                                    return rrr;
-                                                }
-                                            );
-                    result = result
-                                .MapToNew
-                                    (
-                                        mappings
-                                    );
-                }
-            }
+            //if (success)
+            //{
+                
+            //}
         }
 
         public virtual (bool Success, JToken Result)
@@ -580,15 +551,15 @@ namespace Microshaoft.Web
             if (success)
             {
                 r = executor
-                            .Execute
-                                (
-                                    connectionString
-                                    , storeProcedureName
-                                    , parameters
-                                    , onReadRowColumnProcessFunc
-                                    , enableStatistics
-                                    , commandTimeoutInSeconds
-                                );
+                        .Execute
+                            (
+                                connectionString
+                                , storeProcedureName
+                                , parameters
+                                , onReadRowColumnProcessFunc
+                                , enableStatistics
+                                , commandTimeoutInSeconds
+                            );
                 result = r.Result;
             }
             if (!success)
@@ -787,10 +758,6 @@ namespace Microshaoft.Web
             }
             dataBaseType = connectionConfiguration
                                     .GetValue<string>("DataBaseType");
-            if (connectionConfiguration.GetSection("CommandTimeoutInSeconds").Exists())
-            {
-                commandTimeoutInSeconds = connectionConfiguration.GetValue<int>("CommandTimeoutInSeconds");
-            }
             success = !dataBaseType.IsNullOrEmptyOrWhiteSpace();
             if (!success)
             {
@@ -798,10 +765,12 @@ namespace Microshaoft.Web
                 message = $"Database Type error";
                 return Result();
             }
+            
             storeProcedureName = actionConfiguration
                                         .GetValue<string>("StoreProcedureName");
             enableStatistics = connectionConfiguration
                                         .GetValue<bool>("EnableStatistics");
+            var accessingConfiguration = actionConfiguration.GetSection("DefaultAccessing");
             if (enableStatistics)
             {
                 if (actionConfiguration.GetSection("EnableStatistics").Exists())
@@ -809,11 +778,37 @@ namespace Microshaoft.Web
                     enableStatistics = actionConfiguration
                                             .GetValue<bool>("EnableStatistics");
                 }
+                else
+                {
+                    if (accessingConfiguration.GetSection("EnableStatistics").Exists())
+                    {
+                        enableStatistics = accessingConfiguration
+                                                .GetValue<bool>("EnableStatistics");
+                    }
+                }
             }
-            if (actionConfiguration.GetSection("CommandTimeoutInSeconds").Exists())
+            
+            
+            if (accessingConfiguration.GetSection("CommandTimeoutInSeconds").Exists())
             {
-                commandTimeoutInSeconds = actionConfiguration
+                commandTimeoutInSeconds = accessingConfiguration
                                                 .GetValue<int>("CommandtimeoutInSeconds");
+            }
+            else
+            {
+                if (actionConfiguration.GetSection("CommandTimeoutInSeconds").Exists())
+                {
+                    commandTimeoutInSeconds = actionConfiguration
+                                                    .GetValue<int>("CommandtimeoutInSeconds");
+                }
+                else
+                {
+                    if (connectionConfiguration.GetSection("CommandTimeoutInSeconds").Exists())
+                    {
+                        commandTimeoutInSeconds = connectionConfiguration
+                                                        .GetValue<int>("CommandTimeoutInSeconds");
+                    }
+                }
             }
             success = !storeProcedureName.IsNullOrEmptyOrWhiteSpace();
             if (!success)
@@ -826,8 +821,6 @@ namespace Microshaoft.Web
             statusCode = 200;
             return Result();
         }
-
-
     }
 }
 #endif

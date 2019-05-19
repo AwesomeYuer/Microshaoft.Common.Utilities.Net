@@ -421,9 +421,16 @@
                                                                 .ToString();
                                             var httpMethod = $"Http{request.Method}";
                                             var isAsyncExecuting = false;
+
+                                            var accessingConfigurationKey = "DefaultAccessing";
+                                            if (request.Path.ToString().Contains("/export/", StringComparison.OrdinalIgnoreCase))
+                                            {
+                                                accessingConfigurationKey = "exporting";
+                                            }
                                             var isAsyncExecutingConfiguration =
                                                         configuration
-                                                            .GetSection($"Routes:{routeName}:{httpMethod}:isAsyncExecuting");
+                                                            .GetSection($"Routes:{routeName}:{httpMethod}:{accessingConfigurationKey}:isAsyncExecuting");
+
                                             if (isAsyncExecutingConfiguration.Exists())
                                             {
                                                 isAsyncExecuting = isAsyncExecutingConfiguration.Get<bool>();

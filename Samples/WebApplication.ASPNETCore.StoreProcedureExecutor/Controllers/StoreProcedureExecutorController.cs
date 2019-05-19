@@ -7,6 +7,7 @@ namespace Microshaoft.WebApi.Controllers
     using Microsoft.AspNetCore.Cors;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Infrastructure;
+    using Microsoft.Extensions.Configuration;
     using Newtonsoft.Json.Linq;
     using System;
 
@@ -20,8 +21,9 @@ namespace Microshaoft.WebApi.Controllers
         public StoreProcedureExecutorController
                             (
                                 AbstractStoreProceduresService service
+                                , IConfiguration configuration
                             )
-                : base(service)
+                : base(service, configuration)
         {
         }
 

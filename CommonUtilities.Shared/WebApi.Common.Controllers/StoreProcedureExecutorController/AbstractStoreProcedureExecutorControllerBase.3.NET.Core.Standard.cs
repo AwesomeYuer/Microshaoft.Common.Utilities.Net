@@ -5,9 +5,11 @@ namespace Microshaoft.WebApi.Controllers
     using Microshaoft.Web;
     using Microshaoft.WebApi.ModelBinders;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Configuration;
     using Newtonsoft.Json.Linq;
     using System;
     using System.Data;
+    using System.Linq;
     using System.Threading.Tasks;
 
     [Route("api/[controller]")]
@@ -20,6 +22,19 @@ namespace Microshaoft.WebApi.Controllers
         protected readonly
                     AbstractStoreProceduresService
                             _service;
+        protected readonly
+                    IConfiguration
+                            _configuration;
+
+        public AbstractStoreProceduresExecutorControllerBase
+                    (
+                        AbstractStoreProceduresService service
+                        , IConfiguration configuration
+                    )
+        {
+            _service = service;
+            _configuration = configuration;
+        }
 
         protected virtual 
                     (
@@ -82,15 +97,7 @@ namespace Microshaoft.WebApi.Controllers
 
         
 
-        public AbstractStoreProceduresExecutorControllerBase
-                    (
-                        AbstractStoreProceduresService service
-
-                    )
-        {
-            _service = service;
-
-        }
+        
 
         [HttpDelete]
         [HttpGet]
@@ -136,7 +143,7 @@ namespace Microshaoft.WebApi.Controllers
                     + "{resultJsonPathPart6?}"
                 )
         ]
-        [OperationsAuthorizeFilter("DefaultAccessing", false)]
+        [OperationsAuthorizeFilter(false)]
         [RequestJTokenParametersDefaultProcessFilter]
         [OptionalProduces("text/csv", RequestPathKey = "/export/")]
         public virtual ActionResult<JToken>
@@ -178,7 +185,9 @@ namespace Microshaoft.WebApi.Controllers
                         );
             if (r.StatusCode != -1)
             {
-                result = r.Result;
+                //support custom output nest json by JSONPath in JsonFile Config
+                result = Mapping(routeName, r.Result);
+
                 result = result
                             .GetDescendantByPathKeys
                                 (
@@ -205,6 +214,51 @@ namespace Microshaoft.WebApi.Controllers
                     {
                         StatusCode = r.StatusCode
                     };
+            }
+            return result;
+        }
+
+        private JToken Mapping
+                            (
+                                string routeName
+                                , JToken result
+                            )
+        {
+            var httpMethod = $"Http{Request.Method}";
+            var accessingConfigurationKey = "DefaultAccessing";
+            if (Request.Path.ToString().Contains("/export/", StringComparison.OrdinalIgnoreCase))
+            {
+                accessingConfigurationKey = "exporting";
+            }
+            var outputsConfiguration = _configuration
+                                            .GetSection
+                                                ($"Routes:{routeName}:{httpMethod}:{accessingConfigurationKey}:Outputs");
+
+            if (outputsConfiguration.Exists())
+            {
+                var mappings = outputsConfiguration
+                                    .GetChildren()
+                                    .Select
+                                        (
+                                            (x) =>
+                                            {
+                                                (
+                                                    string TargetJPath
+                                                    , string SourceJPath
+                                                )
+                                                    rrr =
+                                                        (
+                                                            x.Key
+                                                           , x.Get<string>()
+                                                        );
+                                                return rrr;
+                                            }
+                                        );
+                result = result
+                            .MapToNew
+                                (
+                                    mappings
+                                );
             }
             return result;
         }
@@ -252,7 +306,7 @@ namespace Microshaoft.WebApi.Controllers
                     + "{resultJsonPathPart6?}"
                 )
         ]
-        [OperationsAuthorizeFilter("DefaultAccessing", false)]
+        [OperationsAuthorizeFilter(false)]
         [RequestJTokenParametersDefaultProcessFilter]
         [OptionalProduces("text/csv", RequestPathKey = "/export/")]
         public virtual async Task<ActionResult<JToken>>
@@ -295,7 +349,8 @@ namespace Microshaoft.WebApi.Controllers
                         );
             if (r.StatusCode != -1)
             {
-                result = r.Result;
+                //support custom output nest json by JSONPath in JsonFile Config
+                result = Mapping(routeName, r.Result);
                 result = result
                             .GetDescendantByPathKeys
                                 (
