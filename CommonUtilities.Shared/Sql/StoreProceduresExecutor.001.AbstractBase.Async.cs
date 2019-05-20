@@ -35,9 +35,20 @@
 
         private static void DataReadingProcess
                         (
-                            Func<IDataReader, Type, string, int, int, (bool NeedDefaultProcess, JProperty Field)> onReadRowColumnProcessFunc
+                            Func
+                                <
+                                    IDataReader
+                                    , Type
+                                    , string
+                                    , int
+                                    , int
+                                    ,
+                                        (
+                                            bool NeedDefaultProcess
+                                            , JProperty Field
+                                        )
+                                > onReadRowColumnProcessFunc
                             , JObject result
-                           // , AdditionalInfo additionalInfo
                             , DbDataReader dataReader
                         )
         {
@@ -78,8 +89,10 @@
                                 SqlConnection sqlConnection
                                 , bool statisticsEnabled
                                 , SqlCommand sqlCommand
-                                , ref StatementCompletedEventHandler onStatementCompletedEventHandlerProcessAction
-                                , ref SqlInfoMessageEventHandler onSqlInfoMessageEventHandlerProcessAction
+                                , ref StatementCompletedEventHandler
+                                            onStatementCompletedEventHandlerProcessAction
+                                , ref SqlInfoMessageEventHandler
+                                            onSqlInfoMessageEventHandlerProcessAction
                                 , List<TDbParameter> dbParameters
                                 , JObject result
                                 , AdditionalInfo additionalInfo
@@ -89,21 +102,21 @@
             if (dbParameters != null)
             {
                 var outputParameters =
-                            dbParameters
-                                    .Where
-                                        (
-                                            (x) =>
-                                            {
-                                                return
-                                                    (
-                                                        x
-                                                            .Direction
-                                                        !=
-                                                        ParameterDirection
-                                                            .Input
-                                                    );
-                                            }
-                                        );
+                        dbParameters
+                                .Where
+                                    (
+                                        (x) =>
+                                        {
+                                            return
+                                                (
+                                                    x
+                                                        .Direction
+                                                    !=
+                                                    ParameterDirection
+                                                        .Input
+                                                );
+                                        }
+                                    );
                 foreach (var x in outputParameters)
                 {
                     if (jOutputParameters == null)
@@ -111,16 +124,20 @@
                         jOutputParameters = new JObject();
                     }
                     jOutputParameters
-                            .Add
-                                (
-                                    x.ParameterName.TrimStart('@', '?')
-                                    , new JValue(x.Value)
-                                );
+                        .Add
+                            (
+                                x
+                                    .ParameterName
+                                    .TrimStart('@', '?')
+                                , new JValue(x.Value)
+                            );
                 }
             }
             if (jOutputParameters != null)
             {
-                result["Outputs"]["Parameters"] = jOutputParameters;
+                result
+                    ["Outputs"]
+                    ["Parameters"] = jOutputParameters;
             }
             if (statisticsEnabled)
             {
@@ -141,33 +158,39 @@
                                             , jStatistics
                                         )
                             );
-                    
                     if (additionalInfo.messages != null)
                     {
-                        result["DataBaseStatistics"]["Messages"] = additionalInfo.messages;
+                        result
+                            ["DataBaseStatistics"]
+                            ["Messages"] = additionalInfo.messages;
                     }
                     if (additionalInfo.recordCounts != null)
                     {
                         jCurrent
                             .Parent
                             .AddAfterSelf
-                                    (
-                                        new JProperty
-                                                (
-                                                    "RecordCounts"
-                                                    , additionalInfo.recordCounts
-                                                )
-                                    );
+                                (
+                                    new JProperty
+                                            (
+                                                "RecordCounts"
+                                                , additionalInfo
+                                                        .recordCounts
+                                            )
+                                );
                     }
                 }
                 if (onStatementCompletedEventHandlerProcessAction != null)
                 {
-                    sqlCommand.StatementCompleted -= onStatementCompletedEventHandlerProcessAction;
+                    sqlCommand
+                        .StatementCompleted -=
+                            onStatementCompletedEventHandlerProcessAction;
                     onStatementCompletedEventHandlerProcessAction = null;
                 }
                 if (onSqlInfoMessageEventHandlerProcessAction != null)
                 {
-                    sqlConnection.InfoMessage -= onSqlInfoMessageEventHandlerProcessAction;
+                    sqlConnection
+                        .InfoMessage -=
+                            onSqlInfoMessageEventHandlerProcessAction;
                     onSqlInfoMessageEventHandlerProcessAction = null;
                 }
             }
@@ -183,8 +206,10 @@
                             , out bool isSqlConnection
                             , out bool statisticsEnabled
                             , out SqlCommand sqlCommand
-                            , out StatementCompletedEventHandler onStatementCompletedEventHandlerProcessAction
-                            , out SqlInfoMessageEventHandler onSqlInfoMessageEventHandlerProcessAction
+                            , out StatementCompletedEventHandler
+                                        onStatementCompletedEventHandlerProcessAction
+                            , out SqlInfoMessageEventHandler
+                                        onSqlInfoMessageEventHandlerProcessAction
                             , out TDbCommand command
                             , out List<TDbParameter> dbParameters
                             , out JObject result
@@ -291,12 +316,13 @@
                                     );
                         };
                 sqlCommand
-                    .StatementCompleted += onStatementCompletedEventHandlerProcessAction;
+                    .StatementCompleted +=
+                        onStatementCompletedEventHandlerProcessAction;
                 onSqlInfoMessageEventHandlerProcessAction =
                 (sender, sqlInfoMessageEventArgs) =>
                         {
                             additionalInfo
-                                .messageID++;
+                                .messageID ++;
                             additionalInfo
                                     .messages
                                     .Add
@@ -335,7 +361,8 @@
                                         );
                         };
                 sqlConnection
-                        .InfoMessage += onSqlInfoMessageEventHandlerProcessAction;
+                        .InfoMessage +=
+                            onSqlInfoMessageEventHandlerProcessAction;
             }
         }
 
@@ -367,8 +394,10 @@
             bool isSqlConnection = false;
             bool statisticsEnabled;
             SqlCommand sqlCommand = null;
-            StatementCompletedEventHandler onStatementCompletedEventHandlerProcessAction = null;
-            SqlInfoMessageEventHandler onSqlInfoMessageEventHandlerProcessAction = null;
+            StatementCompletedEventHandler
+                    onStatementCompletedEventHandlerProcessAction = null;
+            SqlInfoMessageEventHandler
+                    onSqlInfoMessageEventHandlerProcessAction = null;
             TDbCommand command = null;
             List<TDbParameter> dbParameters = null;
             JObject result = null;
@@ -440,13 +469,17 @@
                 {
                     if (onStatementCompletedEventHandlerProcessAction != null)
                     {
-                        sqlCommand.StatementCompleted -= onStatementCompletedEventHandlerProcessAction;
+                        sqlCommand
+                            .StatementCompleted -=
+                                onStatementCompletedEventHandlerProcessAction;
                         //onStatementCompletedEventHandlerProcessAction = null;
                         //sqlCommand = null;
                     }
                     if (onSqlInfoMessageEventHandlerProcessAction != null)
                     {
-                        sqlConnection.InfoMessage -= onSqlInfoMessageEventHandlerProcessAction;
+                        sqlConnection
+                            .InfoMessage -=
+                                onSqlInfoMessageEventHandlerProcessAction;
                         //onSqlInfoMessageEventHandlerProcessAction = null;
                     }
                     if (sqlConnection.StatisticsEnabled)
@@ -461,11 +494,9 @@
                 }
                 command.Dispose();
                 //command = null;
-
                 //dbParameters = null;
             }
         }
-
 
         public async Task<JToken>
             ExecuteAsync
@@ -494,8 +525,10 @@
             bool isSqlConnection = false;
             bool statisticsEnabled;
             SqlCommand sqlCommand = null;
-            StatementCompletedEventHandler onStatementCompletedEventHandlerProcessAction = null;
-            SqlInfoMessageEventHandler onSqlInfoMessageEventHandlerProcessAction = null;
+            StatementCompletedEventHandler
+                    onStatementCompletedEventHandlerProcessAction = null;
+            SqlInfoMessageEventHandler
+                    onSqlInfoMessageEventHandlerProcessAction = null;
             TDbCommand command = null;
             List<TDbParameter> dbParameters = null;
             JObject result = null;
@@ -528,12 +561,14 @@
                         , additionalInfo
                     );
                 connection.Open();
-                var dataReader = await command
-                                            .ExecuteReaderAsync
-                                                (
-                                                    CommandBehavior
-                                                        .CloseConnection
-                                                );
+                var dataReader =
+                        await
+                            command
+                                .ExecuteReaderAsync
+                                    (
+                                        CommandBehavior
+                                            .CloseConnection
+                                    );
                 do
                 {
                     DataReadingProcess
@@ -543,11 +578,13 @@
                             , dataReader
                         );
                     additionalInfo
-                            .resultSetID++;
+                            .resultSetID ++;
                 }
                 while
                     (
-                        await dataReader.NextResultAsync()
+                        await
+                            dataReader
+                                .NextResultAsync()
                     );
                 dataReader.Close();
                 ResultProcess
@@ -571,13 +608,17 @@
                 {
                     if (onStatementCompletedEventHandlerProcessAction != null)
                     {
-                        sqlCommand.StatementCompleted -= onStatementCompletedEventHandlerProcessAction;
+                        sqlCommand
+                            .StatementCompleted -=
+                                onStatementCompletedEventHandlerProcessAction;
                         //onStatementCompletedEventHandlerProcessAction = null;
                         //sqlCommand = null;
                     }
                     if (onSqlInfoMessageEventHandlerProcessAction != null)
                     {
-                        sqlConnection.InfoMessage -= onSqlInfoMessageEventHandlerProcessAction;
+                        sqlConnection
+                            .InfoMessage -=
+                                onSqlInfoMessageEventHandlerProcessAction;
                         //onSqlInfoMessageEventHandlerProcessAction = null;
                     }
                     if (sqlConnection.StatisticsEnabled)
@@ -595,6 +636,5 @@
                 //dbParameters = null;
             }
         }
-
     }
 }
