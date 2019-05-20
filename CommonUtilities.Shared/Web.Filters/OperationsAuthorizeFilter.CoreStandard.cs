@@ -9,7 +9,6 @@ namespace Microshaoft.Web
     public interface ICheckUserOperations
     {
         bool CheckUserOperations(HttpContext httpContext, string[] operations);
-
     }
 
     public class OperationsAuthorizeFilter
@@ -21,7 +20,6 @@ namespace Microshaoft.Web
     {
         private IConfiguration _configuration;
         private object _locker = new object();
-        private string _accessingConfigurationKey = string.Empty;
         private bool _allowDefault = false;
         public string AccessingConfigurationKey { get; set; } = "DefaultAccessing";
         public OperationsAuthorizeFilter
@@ -84,18 +82,21 @@ namespace Microshaoft.Web
                                                 ($"Routes:{routeName}:{httpMethod}:{AccessingConfigurationKey}");
             if (masterConfiguration.Exists())
             {
-                var configuration = masterConfiguration.GetSection($"allow");
+                var configuration = masterConfiguration
+                                            .GetSection($"allow");
                 if (configuration.Exists())
                 {
                     allow = configuration.Get<bool>();
                 }
                 if (allow)
                 {
-                    configuration = masterConfiguration.GetSection($"needcheckoperations");
+                    configuration = masterConfiguration
+                                            .GetSection($"needcheckoperations");
                     var needCheckOperations = configuration.Get<bool>();
                     if (needCheckOperations)
                     {
-                        configuration = masterConfiguration.GetSection($"operations");
+                        configuration = masterConfiguration
+                                            .GetSection($"operations");
                         if (configuration.Exists())
                         {
                             var operations = configuration.Get<string[]>();
