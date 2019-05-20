@@ -87,17 +87,12 @@ namespace Microshaoft.WebApi.Controllers
                     }
                 }
             }
-            
             return 
                 (
                     needDefaultProcess
                     , field
                 );
         }
-
-        
-
-        
 
         [HttpDelete]
         [HttpGet]
@@ -130,7 +125,6 @@ namespace Microshaoft.WebApi.Controllers
                     + "{resultJsonPathPart6?}"
                 )
         ]
-
         [
             Route
                 (
@@ -186,8 +180,7 @@ namespace Microshaoft.WebApi.Controllers
             if (r.StatusCode != -1)
             {
                 //support custom output nest json by JSONPath in JsonFile Config
-                result = Mapping(routeName, r.Result);
-
+                result = MapByConfiguration(routeName, r.Result);
                 result = result
                             .GetDescendantByPathKeys
                                 (
@@ -218,7 +211,7 @@ namespace Microshaoft.WebApi.Controllers
             return result;
         }
 
-        private JToken Mapping
+        private JToken MapByConfiguration
                             (
                                 string routeName
                                 , JToken result
@@ -226,7 +219,18 @@ namespace Microshaoft.WebApi.Controllers
         {
             var httpMethod = $"Http{Request.Method}";
             var accessingConfigurationKey = "DefaultAccessing";
-            if (Request.Path.ToString().Contains("/export/", StringComparison.OrdinalIgnoreCase))
+            if 
+                (
+                    Request
+                        .Path
+                        .ToString()
+                        .Contains
+                            (
+                                "/export/"
+                                , StringComparison
+                                        .OrdinalIgnoreCase
+                            )
+                )
             {
                 accessingConfigurationKey = "exporting";
             }
@@ -237,23 +241,23 @@ namespace Microshaoft.WebApi.Controllers
             if (outputsConfiguration.Exists())
             {
                 var mappings = outputsConfiguration
-                                    .GetChildren()
-                                    .Select
-                                        (
-                                            (x) =>
-                                            {
-                                                (
-                                                    string TargetJPath
-                                                    , string SourceJPath
-                                                )
-                                                    rrr =
-                                                        (
-                                                            x.Key
-                                                           , x.Get<string>()
-                                                        );
-                                                return rrr;
-                                            }
-                                        );
+                                        .GetChildren()
+                                        .Select
+                                            (
+                                                (x) =>
+                                                {
+                                                    (
+                                                        string TargetJPath
+                                                        , string SourceJPath
+                                                    )
+                                                        rrr =
+                                                            (
+                                                                x.Key
+                                                               , x.Get<string>()
+                                                            );
+                                                    return rrr;
+                                                }
+                                            );
                 result = result
                             .MapToNew
                                 (
@@ -338,19 +342,23 @@ namespace Microshaoft.WebApi.Controllers
                 , JToken Result
             )
             r = await
-                _service
-                    .ProcessAsync
-                        (
-                            routeName
-                            , parameters
-                            , OnReadRowColumnProcessFunc
-                            , Request.Method
-                        //, 102
-                        );
+                    _service
+                        .ProcessAsync
+                            (
+                                routeName
+                                , parameters
+                                , OnReadRowColumnProcessFunc
+                                , Request.Method
+                                //, 102
+                            );
             if (r.StatusCode != -1)
             {
                 //support custom output nest json by JSONPath in JsonFile Config
-                result = Mapping(routeName, r.Result);
+                result = MapByConfiguration
+                                (
+                                    routeName
+                                    , r.Result
+                                );
                 result = result
                             .GetDescendantByPathKeys
                                 (
@@ -371,15 +379,15 @@ namespace Microshaoft.WebApi.Controllers
                             new
                             {
                                 r.StatusCode
-                                ,
-                                r.Message
+                                , r.Message
                             }
                         )
                     {
                         StatusCode = r.StatusCode
                     };
             }
-            return result;
+            return
+                result;
         }
     }
 }
