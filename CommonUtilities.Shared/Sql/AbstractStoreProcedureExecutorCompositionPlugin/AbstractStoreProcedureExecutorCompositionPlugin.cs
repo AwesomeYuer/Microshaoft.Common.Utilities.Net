@@ -64,8 +64,7 @@
                     )
         {
             (bool Success, JToken Result) r = (Success: false, Result: null);
-            TDbConnection connection;
-            BeforeExecutingProcess(connectionString, enableStatistics, out connection);
+            BeforeExecutingProcess(connectionString, enableStatistics, out TDbConnection connection);
             var result = Executor
                                 .Execute
                                     (
@@ -145,8 +144,7 @@
                             )
         {
             (bool Success, JToken Result) r = (Success: false, Result: null);
-            TDbConnection connection;
-            BeforeExecutingProcess(connectionString, enableStatistics, out connection);
+            BeforeExecutingProcess(connectionString, enableStatistics, out TDbConnection connection);
             var result = await Executor
                                     .ExecuteAsync
                                             (

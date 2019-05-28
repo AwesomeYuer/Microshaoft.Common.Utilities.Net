@@ -26,8 +26,7 @@
                         parameterValue != null
                     )
                 {
-                    var dataTable = parameterValue as DataTable;
-                    if (dataTable != null)
+                    if (parameterValue is DataTable dataTable)
                     {
                         if
                             (
@@ -40,8 +39,7 @@
                                 jValue.Type != JTokenType.None
                             )
                         {
-                            var jArray = jValue as JArray;
-                            if (jArray != null)
+                            if (jValue is JArray jArray)
                             {
                                 var columns = dataTable.Columns;
                                 var rows = dataTable.Rows;
@@ -54,7 +52,7 @@
                                         var columnName = column.ColumnName;
                                         if (i == 0 && j is JValue)
                                         {
-                                            object jv = (JValue) j;
+                                            object jv = (JValue)j;
                                             row[columnName] = (jv == null ? DBNull.Value : jv);
                                             break;
                                         }
