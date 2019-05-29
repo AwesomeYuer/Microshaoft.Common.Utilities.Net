@@ -45,15 +45,15 @@
                     (
                         source
                         ,
-                            (
-                                IEnumerable
-                                    <
-                                        (
-                                            string TargetJPath
-                                            , string SourceJPath
-                                        )
-                                    >
-                            )
+                            //(
+                            //    IEnumerable
+                            //        <
+                            //            (
+                            //                string TargetJPath
+                            //                , string SourceJPath
+                            //            )
+                            //        >
+                            //)
                                 mappings
                          , orderedTargetPaths
                     );
@@ -87,24 +87,23 @@
                                     }
                                 );
             }
-            foreach (var x in c)
+            foreach (var (TargetJPath, SourceJPath) in c)
             {
                 var jToken = source
-                                .SelectToken(x.SourceJPath);
-                if (x.TargetJPath != "$")
+                                .SelectToken(SourceJPath);
+                if (TargetJPath != "$")
                 {
                     if (r == null)
                     {
                         r = new JObject();
                     }
-                    var ss = x
-                                .TargetJPath
-                                .Split
-                                    (
-                                        '.'
-                                        //, StringSplitOptions
-                                        //        .RemoveEmptyEntries
-                                    );
+                    var ss = TargetJPath
+                                    .Split
+                                        (
+                                            '.'
+                                            //, StringSplitOptions
+                                            //        .RemoveEmptyEntries
+                                        );
                     var j = r;
                     var l = ss.Length;
                     for (var i = 0; i < l; i++)
@@ -139,14 +138,18 @@
         {
             if (target is JValue jValue)
             {
-                yield return jValue;
+                yield
+                    return
+                        jValue;
             }
             else if (target is JArray jArray)
             {
                 var c = GetAllJValuesFromJArray(jArray);
                 foreach (var result in c)
                 {
-                    yield return result;
+                    yield
+                        return
+                            result;
                 }
             }
             else if (target is JProperty jProperty)
@@ -293,12 +296,11 @@
                         where T : struct
         {
             var r = false;
-            Nullable<T> output = null;
             //jTokenValue = default(T);
             //jTokenValue = jTokenValue;
             if (target != null)
             {
-                output = target.Value<Nullable<T>>();
+                T? output = target.Value<T?>();
                 if (output.HasValue)
                 {
                     jTokenValue = output.Value;

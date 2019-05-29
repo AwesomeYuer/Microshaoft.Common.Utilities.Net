@@ -6,7 +6,6 @@
     using System.Collections.Generic;
     using System.Data;
     using System.Data.Common;
-    using System.Data.SqlClient;
     using System.Linq;
     public abstract partial class
             AbstractStoreProceduresExecutor
@@ -72,14 +71,13 @@
             var jProperties = (JObject)inputsParameters;
             foreach (KeyValuePair<string, JToken> jProperty in jProperties)
             {
-                DbParameter dbParameter = null;
                 if
                     (
                         dbParameters
                             .TryGetValue
                                 (
                                     jProperty.Key
-                                    , out dbParameter
+                                    , out DbParameter dbParameter
                                 )
                     )
                 {
@@ -199,17 +197,16 @@
                                 , string storeProcedureName
                             )
         {
-            var dataSource = connection.DataSource;
-            var dataBase = connection.Database;
+            //var dataSource = connection.DataSource;
+            //var dataBase = connection.Database;
             var key = $"{connection.DataSource}-{connection.Database}-{storeProcedureName}".ToUpper();
-            ExecutingInfo executingInfo = null;
             if
                 (
                     _dictionary
                         .TryGetValue
                             (
                                 key
-                                , out executingInfo
+                                , out ExecutingInfo executingInfo
                             )
                 )
             {

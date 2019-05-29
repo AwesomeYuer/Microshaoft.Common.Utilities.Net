@@ -24,10 +24,6 @@ namespace Microshaoft.Web
                         , string jwtTokenName = "xJwtToken"
                     )
         {
-            var r = false;
-            parameters = null;
-            secretJwtToken = string.Empty;
-
             JToken jToken = null;
             void RequestFormBodyProcess()
             {
@@ -139,7 +135,7 @@ namespace Microshaoft.Web
             }
             parameters = jToken;
             secretJwtToken = jwtToken;
-            r = true;
+            bool r = true;
             return r;
         }
 
@@ -160,13 +156,13 @@ namespace Microshaoft.Web
             if (target.Result.IsModelSet)
             {
                 r = JTokenWebHelper
-                            .ToJToken
-                                (
-                                    (IFormCollection)
-                                        target
-                                            .Result
-                                            .Model
-                                );
+                                .ToJToken
+                                    (
+                                        (IFormCollection)
+                                            target
+                                                .Result
+                                                .Model
+                                    );
             }
             return r;
         }

@@ -523,7 +523,6 @@
         {
             SqlConnection sqlConnection = null;
             bool isSqlConnection = false;
-            bool statisticsEnabled;
             SqlCommand sqlCommand = null;
             StatementCompletedEventHandler
                     onStatementCompletedEventHandlerProcessAction = null;
@@ -551,7 +550,7 @@
                         , commandTimeoutInSeconds
                         , out sqlConnection
                         , out isSqlConnection
-                        , out statisticsEnabled
+                        , out bool statisticsEnabled
                         , out sqlCommand
                         , out onStatementCompletedEventHandlerProcessAction
                         , out onSqlInfoMessageEventHandlerProcessAction

@@ -15,7 +15,10 @@ namespace Microshaoft.Web
 
     public interface IStoreProceduresService
     {
-        (bool Success, JToken Result)
+        (
+            bool Success
+            , JToken Result
+        )
                Process
                        (
                            string connectionString
@@ -38,7 +41,13 @@ namespace Microshaoft.Web
                            , bool enableStatistics = false
                            , int commandTimeoutInSeconds = 90
                        );
-        Task<(bool Success, JToken Result)>
+        Task
+            <
+                (
+                    bool Success
+                    , JToken Result
+                )
+            >
                ProcessAsync
                        (
                            string connectionString
@@ -94,11 +103,11 @@ namespace Microshaoft.Web
 
         Task
             <
-             (
-               int StatusCode
-               , string Message
-               , JToken Result
-             )
+                (
+                    int StatusCode
+                    , string Message
+                    , JToken Result
+                )
             >
             ProcessAsync
                 (
@@ -107,10 +116,10 @@ namespace Microshaoft.Web
                     , Func
                             <
                                 IDataReader
-                                , Type        // fieldType
-                                , string    // fieldName
-                                , int       // row index
-                                , int       // column index
+                                , Type          // fieldType
+                                , string        // fieldName
+                                , int           // row index
+                                , int           // column index
                                 , 
                                     (
                                         bool NeedDefaultProcess

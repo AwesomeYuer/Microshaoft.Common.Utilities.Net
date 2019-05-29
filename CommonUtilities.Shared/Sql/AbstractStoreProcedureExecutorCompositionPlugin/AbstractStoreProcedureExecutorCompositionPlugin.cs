@@ -49,10 +49,10 @@
                         , Func
                                 <
                                     IDataReader
-                                    , Type        // fieldType
-                                    , string    // fieldName
-                                    , int       // row index
-                                    , int       // column index
+                                    , Type          // fieldType
+                                    , string        // fieldName
+                                    , int           // row index
+                                    , int           // column index
                                     ,
                                         (
                                             bool NeedDefaultProcess
@@ -63,9 +63,21 @@
                         , int commandTimeoutInSeconds = 90
                     )
         {
-            (bool Success, JToken Result) r = (Success: false, Result: null);
-            TDbConnection connection;
-            BeforeExecutingProcess(connectionString, enableStatistics, out connection);
+            (
+                bool Success
+                , JToken Result
+            )
+                r =
+                    (
+                        Success : false
+                        , Result : null
+                    );
+            BeforeExecutingProcess
+                    (
+                        connectionString
+                        , enableStatistics
+                        , out TDbConnection connection
+                    );
             var result = Executor
                                 .Execute
                                     (
@@ -75,12 +87,20 @@
                                         , onReadRowColumnProcessFunc
                                         , commandTimeoutInSeconds
                                     );
-            AfterExecutedProcess(storeProcedureName, connection);
+            AfterExecutedProcess
+                (
+                    storeProcedureName
+                    , connection
+                );
             r.Success = (result != null);
             r.Result = result;
             return r;
         }
-        protected virtual void AfterExecutedProcess(string storeProcedureName, TDbConnection connection)
+        protected virtual void AfterExecutedProcess
+                                    (
+                                        string storeProcedureName
+                                        , TDbConnection connection
+                                    )
         {
             if (NeedAutoRefreshExecutedTimeForSlideExpire)
             {
@@ -144,9 +164,21 @@
                                 , int commandTimeoutInSeconds = 90
                             )
         {
-            (bool Success, JToken Result) r = (Success: false, Result: null);
-            TDbConnection connection;
-            BeforeExecutingProcess(connectionString, enableStatistics, out connection);
+            (
+                bool Success
+                , JToken Result
+            )
+                r =
+                    (
+                        Success : false
+                        , Result : null
+                    );
+            BeforeExecutingProcess
+                    (
+                        connectionString
+                        , enableStatistics
+                        , out TDbConnection connection
+                    );
             var result = await Executor
                                     .ExecuteAsync
                                             (
@@ -156,7 +188,11 @@
                                                 , onReadRowColumnProcessFunc
                                                 , commandTimeoutInSeconds
                                             );
-            AfterExecutedProcess(storeProcedureName, connection);
+            AfterExecutedProcess
+                (
+                    storeProcedureName
+                    , connection
+                );
             r.Success = (result != null);
             r.Result = result;
             return r;
