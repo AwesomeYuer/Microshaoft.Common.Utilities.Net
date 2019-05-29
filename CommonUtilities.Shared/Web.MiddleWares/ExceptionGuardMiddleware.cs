@@ -13,16 +13,36 @@ namespace Microshaoft.Web
         private readonly RequestDelegate _next;
         private readonly TInjector _injector;
         
-        public Func<HttpContext, TInjector, Exception, (bool ReThrow, bool Detail, HttpStatusCode StatusCode)> OnCaughtExceptionProcessFunc;
-        public Action<HttpContext, TInjector, bool, Exception> OnFinallyProcessAction;
+        public Func
+                    <
+                        HttpContext
+                        , TInjector
+                        , Exception
+                        , 
+                            (
+                                bool ReThrow
+                                , bool Detail
+                                , HttpStatusCode StatusCode
+                            )
+                    >
+                        OnCaughtExceptionProcessFunc;
+        public
+            Action
+                <
+                    HttpContext
+                    , TInjector
+                    , bool
+                    , Exception
+                >
+                    OnFinallyProcessAction;
 
         private ExceptionGuardMiddleware
-            (
-                RequestDelegate next
-                , Action
-                    <ExceptionGuardMiddleware<TInjector>>
-                        onInitializeCallbackProcesses = null
-            )
+                    (
+                        RequestDelegate next
+                        , Action
+                            <ExceptionGuardMiddleware<TInjector>>
+                                onInitializeCallbackProcesses = null
+                    )
         {
             _next = next;
             onInitializeCallbackProcesses?.Invoke(this);
@@ -60,7 +80,6 @@ namespace Microshaoft.Web
             {
                 await _next(context);
             }
-
             catch (Exception e)
             {
                 exception = e;

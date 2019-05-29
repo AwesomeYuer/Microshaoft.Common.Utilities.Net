@@ -52,14 +52,13 @@
                                         var columnName = column.ColumnName;
                                         if (i == 0 && j is JValue)
                                         {
-                                            object jv = (JValue)j;
-                                            row[columnName] = (jv == null ? DBNull.Value : jv);
+                                            object jv = (JValue) j;
+                                            row[columnName] = (jv ?? DBNull.Value);
                                             break;
                                         }
                                         else
                                         {
-                                            var jo = j as JObject;
-                                            if (jo != null)
+                                            if (j is JObject jo)
                                             {
                                                 var b = jo
                                                             .TryGetValue
@@ -76,7 +75,7 @@
                                                                     (
                                                                         column.DataType
                                                                     );
-                                                    row[columnName] = (jv == null ? DBNull.Value : jv);
+                                                    row[columnName] = (jv ?? DBNull.Value);
                                                 }
                                             }
                                         }
