@@ -120,8 +120,7 @@ namespace Microshaoft
                         var i = 0;
                         foreach (var jToken in jArray)
                         {
-                            var jObject = jToken as JObject;
-                            if (jObject != null)
+                            if (jToken is JObject jObject)
                             {
                                 Travel
                                     (
@@ -138,8 +137,7 @@ namespace Microshaoft
                     }
                     else
                     {
-                        var jObject = jProperty.Value as JObject;
-                        if (jObject != null)
+                        if (jProperty.Value is JObject jObject)
                         {
                             Travel
                                 (

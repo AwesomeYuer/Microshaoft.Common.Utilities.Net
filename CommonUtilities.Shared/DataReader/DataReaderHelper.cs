@@ -281,7 +281,7 @@ namespace Microshaoft
                     );
 
             }
-            hashSet = null;
+
             return r;
         }
         public static IEnumerable<JToken> GetRowsJTokensEnumerable
@@ -300,7 +300,8 @@ namespace Microshaoft
                                                     bool needDefaultProcess
                                                     , JProperty field   //  JObject Field 对象
                                                 )
-                                        > onReadRowColumnProcessFunc = null
+                                        >
+                                            onReadRowColumnProcessFunc = null
                              )
         {
             var fieldsCount = target.FieldCount;
@@ -342,7 +343,6 @@ namespace Microshaoft
                         {
                             field = r.field;
                         }
-                        //fieldValue = NewMethod(dataReader, i, fieldType);
                     }
                     if (needDefaultProcess)
                     {
@@ -359,7 +359,7 @@ namespace Microshaoft
                         row.Add(field);
                     }
                 }
-                rowIndex++;
+                rowIndex ++;
                 yield
                     return
                         row;
@@ -373,7 +373,6 @@ namespace Microshaoft
                                 , string fieldName
                             )
         {
-            JProperty r = null;
             JValue fieldValue = null;
             if (!target.IsDBNull(i))
             {
@@ -438,21 +437,21 @@ namespace Microshaoft
                         fieldType == typeof(short)
                     )
                 {
-                    fieldValue = new JValue((long)target.GetInt16(i));
+                    fieldValue = new JValue(target.GetInt16(i));
                 }
                 else if
                     (
                         fieldType == typeof(int)
                     )
                 {
-                    fieldValue = new JValue((long)target.GetInt32(i));
+                    fieldValue = new JValue(target.GetInt32(i));
                 }
                 else if
                     (
                         fieldType == typeof(long)
                     )
                 {
-                    fieldValue = new JValue((long)target.GetInt64(i));
+                    fieldValue = new JValue(target.GetInt64(i));
                 }
                 else if
                     (
@@ -466,7 +465,7 @@ namespace Microshaoft
                     fieldValue = new JValue(target[i]);
                 }
             }
-            r = new JProperty(fieldName, fieldValue);
+            JProperty r = new JProperty(fieldName, fieldValue);
             return r;
         }
     }

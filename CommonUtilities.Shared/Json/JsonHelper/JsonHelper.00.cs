@@ -109,11 +109,10 @@
                                 , bool validate = false
                             )
         {
-            //IL_0018: Unknown result type (might be due to invalid IL or missing references)
-            var r = false;
             jToken = null;
             char c = target.FirstNonWhitespaceCharacter();
-            r = (c == '{' || c == '[');
+            //IL_0018: Unknown result type (might be due to invalid IL or missing references)
+            bool r = (c == '{' || c == '[');
             if (r && validate)
             {
                 try
@@ -131,15 +130,19 @@
 
         public static bool IsJArray(this string target, bool validate = false)
         {
-            //IL_0018: Unknown result type (might be due to invalid IL or missing references)
-            var r = false;
             char c = target.FirstNonWhitespaceCharacter();
-            r = (c == '[');
+            //IL_0018: Unknown result type (might be due to invalid IL or missing references)
+            bool r = (c == '[');
             if (r && validate)
             {
                 try
                 {
-                    r = (TryParseJson(target, out _) == JTokenType.Array);
+                    r = 
+                        (
+                            TryParseJson(target, out _)
+                            ==
+                            JTokenType.Array
+                        );
                 }
                 catch
                 {
@@ -162,8 +165,16 @@
             {
                 try
                 {
-                    JToken jToken = null;
-                    r = (TryParseJson(target, out jToken) == JTokenType.Array);
+                    r = 
+                        (
+                            TryParseJson
+                                (
+                                    target
+                                    , out JToken jToken
+                                ) 
+                            ==
+                            JTokenType.Array
+                        );
                     if (r)
                     {
                         jArray = jToken as JArray;
@@ -190,8 +201,7 @@
             {
                 try
                 {
-                    JToken jToken = null;
-                    r = (TryParseJson(target, out jToken) == JTokenType.Object);
+                    r = (TryParseJson(target, out JToken jToken) == JTokenType.Object);
                     if (r)
                     {
                         jObject = jToken as JObject;
@@ -247,7 +257,7 @@
             // with ""
             else if (underlyingType == typeof(string))
             {
-                var jValueString = string.Empty;
+                string jValueString;
                 if (target.Type != JTokenType.String)
                 {
                     jValueString = target.ToString();
@@ -408,8 +418,7 @@
                                     , reader
                                 ) =>
                             {
-                                var vs = valueObject as string;
-                                if (vs != null)
+                                if (valueObject is string vs)
                                 {
                                     vs = vs.Trim();
                                     if (vs.StartsWith(jsonTemplatePathPrefix))
