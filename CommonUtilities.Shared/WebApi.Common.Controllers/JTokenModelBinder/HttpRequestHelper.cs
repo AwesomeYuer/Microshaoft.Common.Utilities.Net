@@ -152,8 +152,15 @@ namespace Microshaoft.Web
                                             NullLoggerFactory
                                                         .Instance
                                         );
-            await formCollectionModelBinder.BindModelAsync(target);
-            if (target.Result.IsModelSet)
+            await
+                formCollectionModelBinder
+                            .BindModelAsync(target);
+            if 
+                (
+                    target
+                        .Result
+                        .IsModelSet
+                )
             {
                 r = JTokenWebHelper
                                 .ToJToken
