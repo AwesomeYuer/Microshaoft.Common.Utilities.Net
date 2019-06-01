@@ -255,27 +255,16 @@
                     nvarchar(10)
                     ,
                         CASE
-
                             WHEN
-
                                 c.parameter_id = 0
-
                                     THEN
-
                                         'OUT'
-
                             WHEN
-
                                 c.is_output = 1
-
                                     THEN
-
                                         'INOUT'
-
                             ELSE
-
                                 'IN'
-
                         END
                 )                                   AS PARAMETER_MODE
         ,
@@ -284,19 +273,12 @@
                     nvarchar(10)
                     ,
                         CASE
-
                             WHEN
-
                                 c.parameter_id = 0
-
                                     THEN
-
                                         'YES'
-
                             ELSE
-
                                 'NO'
-
                         END
                 )                                           AS IS_RESULT
         , convert(nvarchar(10), 'NO')                       AS AS_LOCATOR
@@ -314,17 +296,12 @@
                     sysname
                     ,
                         CASE
-
                             WHEN
-
                                 c.system_type_id IN(35, 99, 167, 175, 231, 239)
-
                                     THEN--[n]char /[n]varchar /[n]text
-
                                         SERVERPROPERTY('collation')
-
                         END
-                )                                               AS COLLATION_NAME
+                )                                              AS COLLATION_NAME
         , convert(sysname, null)                               AS CHARACTER_SET_CATALOG
         , convert(sysname, null) collate catalog_default       AS CHARACTER_SET_SCHEMA
         ,
@@ -333,23 +310,14 @@
                     sysname
                     ,
                         CASE
-
                             WHEN
-
                                 c.system_type_id IN(35, 167, 175)
-
                                     THEN
-
                                         SERVERPROPERTY('sqlcharsetname')-- char / varchar / text
-
                             WHEN
-
                                 c.system_type_id IN(99, 231, 239)
-
                                     THEN
-
                                         N'UNICODE'-- nchar / nvarchar / ntext
-
                         END
                 )                                               AS CHARACTER_SET_NAME
         ,
@@ -358,15 +326,10 @@
                     tinyint
                     ,
                         CASE-- int / decimal / numeric / real / float / money
-
                             WHEN
-
                                 c.system_type_id IN(48, 52, 56, 59, 60, 62, 106, 108, 122, 127)
-
                                     THEN
-
                                         c.precision
-
                         END
                 )                                               AS NUMERIC_PRECISION
         ,
@@ -375,45 +338,28 @@
                     smallint
                         ,
                             CASE-- int / money / decimal / numeric
-
                                 WHEN
-
                                     c.system_type_id IN(48, 52, 56, 60, 106, 108, 122, 127)
-
                                         THEN
-
                                             10
-
                                 WHEN
-
                                     c.system_type_id IN(59, 62)
-
                                         THEN
-
                                             2
-
                             END
                 )                                               AS NUMERIC_PRECISION_RADIX
         , --real / float
-
             convert
                 (
                     int
                     ,
                         CASE-- datetime / smalldatetime
-
                             WHEN
-
                                 c.system_type_id IN(40, 41, 42, 43, 58, 61)
-
                                     THEN
-
                                         NULL
-
                             ELSE
-
                                 ODBCSCALE(c.system_type_id, c.scale)
-
                         END
                 )                                               AS NUMERIC_SCALE
         ,
@@ -422,15 +368,10 @@
                     smallint
                     ,
                         CASE-- datetime / smalldatetime
-
                             WHEN
-
                                 c.system_type_id IN(40, 41, 42, 43, 58, 61)
-
                                     THEN
-
                                         ODBCSCALE(c.system_type_id, c.scale)
-
                         END
                 )                                               AS DATETIME_PRECISION
         , convert(nvarchar(30), null)                           AS INTERVAL_TYPE
@@ -441,15 +382,10 @@
                     sysname
                     ,
                         CASE
-
                             WHEN
-
                                 u.schema_id <> 4
-
                                     THEN
-
                                         DB_NAME()
-
                         END
                 )                                               AS USER_DEFINED_TYPE_CATALOG
         ,
@@ -458,15 +394,10 @@
                     sysname
                     ,
                         CASE
-
                             WHEN
-
                                 u.schema_id <> 4
-
                                     THEN
-
                                         SCHEMA_NAME(u.schema_id)
-
                         END
                 )                                               AS USER_DEFINED_TYPE_SCHEMA
         ,
@@ -475,45 +406,28 @@
                     sysname
                     ,
                         CASE
-
                             WHEN
-
                                 u.schema_id <> 4
-
                                     THEN
-
                                         u.name
-
                             END
                 )                                               AS USER_DEFINED_TYPE_NAME
         , convert(sysname, null)                                AS SCOPE_CATALOG
         , convert(sysname, null) collate catalog_default        AS SCOPE_SCHEMA
         , convert(sysname, null) collate catalog_default        AS SCOPE_NAME
     FROM
-
         sys.all_objects o
-
             JOIN
-
                 sys.all_parameters c
-
                     ON
-
                         c.object_id = o.object_id
-
             JOIN
-
                 sys.types u
-
                     ON
-
                         u.user_type_id = c.user_type_id
     WHERE
-
         o.type IN('P', 'FN', 'TF', 'IF', 'IS', 'AF', 'PC', 'FS', 'FT')
 )
-        "
-        ;
-
+        ";
     }
 }

@@ -55,8 +55,10 @@
                                 SqlParameter parameter
                             )
         {
-            parameter.SqlDbType = SqlDbType.NVarChar;
-            return parameter;
+            parameter
+                .SqlDbType = SqlDbType.NVarChar;
+            return
+                parameter;
         }
         protected override SqlParameter
                         OnQueryDefinitionsSetReturnParameterProcess
@@ -75,7 +77,7 @@
                                , string connectionString
                            )
         {
-            var originalDbTypeName = (string)(reader["DATA_TYPE"]);
+            var originalDbTypeName = (string) reader["DATA_TYPE"];
             var dbTypeName = originalDbTypeName;
             if (string.Compare(dbTypeName, "sql_variant", true) == 0)
             {
@@ -119,17 +121,17 @@
                                         (
                                             (short)
                                                 (
-                                                    (int)o
+                                                    (int) o
                                                 )
                                         )
-                                    //& 255
+                                        //& 255
                                     )
                             );
                 }
                 o = reader["NUMERIC_PRECISION"];
                 if (o != DBNull.Value)
                 {
-                    parameter.Precision = ((byte) o);
+                    parameter.Precision = (byte) o;
                 }
             }
             else if (parameter.SqlDbType == SqlDbType.Udt)
@@ -152,7 +154,8 @@
                                     );
                 parameter.Value = dataTable;
             }
-            return parameter;
+            return
+                parameter;
         }
         public Type GetTypeBySqlDbTypeName(string sqlDbTypeName)
         {
@@ -216,10 +219,8 @@ from
                         SqlCommand command = new SqlCommand()
                         {
                             CommandText = commandText
-                            ,
-                            CommandType = CommandType.Text
-                            ,
-                            Connection = connection
+                            , CommandType = CommandType.Text
+                            , Connection = connection
                         }
                     )
                 {
@@ -236,7 +237,7 @@ from
                                     (
                                         userDefinedTableTypeName != null
                                         ?
-                                        (object)userDefinedTableTypeName
+                                        (object) userDefinedTableTypeName
                                         :
                                         DBNull.Value
                                     );
@@ -245,7 +246,9 @@ from
                     command
                         .Parameters
                         .Add
-                            (dbParameterUserDefinedTableTypeName);
+                            (
+                                dbParameterUserDefinedTableTypeName
+                            );
                     connection.Open();
                     var dataReader
                             = command
@@ -260,8 +263,8 @@ from
                             (
                                 (x, reader) =>
                                 {
-                                    var columnName = (string)(reader["ColumnName"]);
-                                    var columnTypeName = (string)(reader["columnTypeName"]);
+                                    var columnName = (string) reader["ColumnName"];
+                                    var columnTypeName = (string) reader["columnTypeName"];
                                     var columnType = GetTypeBySqlDbTypeName(columnTypeName);
                                     dataTable
                                         .Columns
