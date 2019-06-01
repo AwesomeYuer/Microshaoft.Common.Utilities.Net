@@ -12,7 +12,8 @@
                                         , JToken jValue
                                     )
         {
-            var type = target.GetType();
+            var type = target
+                            .GetType();
             return
                 SetGetValueAsObject
                     (
@@ -46,8 +47,9 @@
             object r = null;
             if (targetDbParameterType == typeof(SqlParameter))
             {
-                var parameter = (SqlParameter)target;
-                r = parameter.SetGetValueAsObject(jValue);
+                var parameter = (SqlParameter) target;
+                r = parameter
+                        .SetGetValueAsObject(jValue);
             }
             //else if (targetDbParameterType == typeof(MySqlParameter))
             //{

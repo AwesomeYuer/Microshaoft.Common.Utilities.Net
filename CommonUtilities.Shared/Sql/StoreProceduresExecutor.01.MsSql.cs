@@ -129,7 +129,7 @@
                 o = reader["NUMERIC_PRECISION"];
                 if (o != DBNull.Value)
                 {
-                    parameter.Precision = ((byte)o);
+                    parameter.Precision = ((byte) o);
                 }
             }
             else if (parameter.SqlDbType == SqlDbType.Udt)
@@ -156,12 +156,11 @@
         }
         public Type GetTypeBySqlDbTypeName(string sqlDbTypeName)
         {
-            Type r = null;
             _dbTypesMapper
                     .TryGetValue
                         (
                             sqlDbTypeName
-                            , out r
+                            , out var r
                         );
             return r;
         }

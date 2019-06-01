@@ -235,15 +235,13 @@
                 {
                     break;
                 }
-                if (jToken is JArray)
+                if (jToken is JArray jArray)
                 {
-                    var b = int.TryParse(key, out var i);
-                    if (b)
+                    if (int.TryParse(key, out var i))
                     {
-                        var ja = ((JArray)jToken);
-                        if (i >= 0 && i < ja.Count)
+                        if (i >= 0 && i < jArray.Count)
                         {
-                            jToken = ja[i];
+                            jToken = jArray[i];
                         }
                         else
                         {
@@ -255,19 +253,21 @@
                         break;
                     }
                 }
-                else if (jToken is JObject)
+                else if (jToken is JObject jObject)
                 {
                     if (ignoreCase)
                     {
-                        var b = ((JObject)jToken)
-                                        .TryGetValue
-                                            (
-                                                key
-                                                , StringComparison
-                                                        .OrdinalIgnoreCase
-                                                , out var j
-                                            );
-                        if (b)
+                        if 
+                            (
+                                jObject
+                                    .TryGetValue
+                                        (
+                                            key
+                                            , StringComparison
+                                                    .OrdinalIgnoreCase
+                                            , out var j
+                                        )
+                            )
                         {
                             jToken = j;
                         }
@@ -286,7 +286,8 @@
                     break;
                 }
             }
-            return jToken;
+            return
+                jToken;
         }
         public static bool TryGetNullableValue<T>
                             (
