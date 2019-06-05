@@ -2,6 +2,9 @@
 namespace Microshaoft.Web
 {
     using Microsoft.AspNetCore.Mvc.Formatters;
+    using Microsoft.AspNetCore.Routing;
+    //using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure;
+    using Microsoft.Extensions.Configuration;
     using Newtonsoft.Json.Linq;
     using System;
     using System.Collections;
@@ -9,6 +12,8 @@ namespace Microshaoft.Web
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using System.Web;
+
     /// <summary>
     /// Original code taken from
     /// http://www.tugberkugurlu.com/archive/creating-custom-csvmediatypeformatter-in-asp-net-web-api-for-comma-separated-values-csv-format
@@ -59,6 +64,10 @@ namespace Microshaoft.Web
                 typeof(IEnumerable)
                     .IsAssignableFrom(type);
         }
+
+        private IConfiguration _configuration;
+        private object _locker = new object();
+
         public async override Task WriteResponseBodyAsync
                                     (
                                         OutputFormatterWriteContext context
@@ -68,6 +77,32 @@ namespace Microshaoft.Web
                                 .HttpContext;
             var request = httpContext
                                 .Request;
+            var httpMethod = $"http{request.Method}";
+            var routeName = (string) httpContext
+                                        .GetRouteData()
+                                        .Values["routeName"];
+            _locker
+                .LockIf
+                    (
+                        () =>
+                        {
+                            return
+                                (_configuration == null);
+                        }
+                        , () =>
+                        {
+                            _configuration = (IConfiguration)
+                                                    httpContext
+                                                            .RequestServices
+                                                            .GetService
+                                                                (
+                                                                    typeof(IConfiguration)
+                                                                );
+
+                        }
+                    );
+
+
             var encodingName = (string) request.Query["e"];
             Encoding e = null;
             if (!encodingName.IsNullOrEmptyOrWhiteSpace())
@@ -79,7 +114,25 @@ namespace Microshaoft.Web
                 e = Encoding.UTF8;
             }
             var response = httpContext
-                                .Response;
+                                    .Response;
+            var downloadFileName = routeName;
+            var downloadFileNameConfiguration = _configuration
+                                                .GetSection
+                                                    (
+                                                        $"Routes:{routeName}:{httpMethod}:Exporting:DownloadFileName"
+                                                    );
+            if (downloadFileNameConfiguration.Exists())
+            {
+                downloadFileName = downloadFileNameConfiguration.Value;
+            }
+            downloadFileName = HttpUtility.UrlEncode(downloadFileName, e);
+            response
+                .Headers
+                .Add
+                    (
+                        "Content-Disposition"
+                        , $@"attachment; filename=""{downloadFileName}"""
+                    );
             using
                 (
                     var streamWriter = new StreamWriter
@@ -123,7 +176,20 @@ namespace Microshaoft.Web
                         {
                             if (_options.UseSingleLineHeaderInCsv)
                             {
-                                var propertiesNames =
+                                string columnsHeaderLine;
+                                var columnsHeaderLineConfiguration =
+                                        _configuration
+                                                .GetSection
+                                                    (
+                                                        $"Routes:{routeName}:{httpMethod}:Exporting:ColumnsHeaderLine"
+                                                    );
+                                if (columnsHeaderLineConfiguration.Exists())
+                                {
+                                    columnsHeaderLine = columnsHeaderLineConfiguration.Value;
+                                }
+                                else
+                                {
+                                    var propertiesNames =
                                         jProperties
                                                 .Select
                                                     (
@@ -133,17 +199,21 @@ namespace Microshaoft.Web
                                                                 x.Name;
                                                         }
                                                     );
+                                    columnsHeaderLine = string
+                                                            .Join
+                                                                (
+                                                                    _options
+                                                                        .CsvDelimiter
+                                                                    , propertiesNames
+                                                                );
+                                }
+
+                                
                                 await
                                     streamWriter
                                         .WriteLineAsync
                                                 (
-                                                    string
-                                                        .Join
-                                                            (
-                                                                _options
-                                                                    .CsvDelimiter
-                                                                , propertiesNames
-                                                            )
+                                                    columnsHeaderLine
                                                 );
                             }
                         }
@@ -168,6 +238,11 @@ namespace Microshaoft.Web
                                 {
                                     @value = jValue.ToString();
                                     @value = @value.Replace(@"""", @"""""");
+                                    if (jValue.Type == JTokenType.String)
+                                    {
+                                        //避免在Excel中csv文本数字自动变科学计数法
+                                        @value += "\t";
+                                    }
                                     //Check if the value contans a delimiter and place it in quotes if so
                                     if
                                         (

@@ -2,12 +2,14 @@
 namespace Microshaoft.WebApi.Controllers
 {
     using Microshaoft;
+    //using Microshaoft.CompositionPlugins;
     using Microshaoft.Web;
     using Microshaoft.WebApi.ModelBinders;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
     using Newtonsoft.Json.Linq;
     using System;
+    using System.Collections.Generic;
     using System.Data;
     using System.Linq;
     using System.Threading.Tasks;
@@ -25,7 +27,6 @@ namespace Microshaoft.WebApi.Controllers
         protected readonly
                     IConfiguration
                             _configuration;
-
         public AbstractStoreProceduresExecutorControllerBase
                     (
                         AbstractStoreProceduresService service
@@ -34,6 +35,61 @@ namespace Microshaoft.WebApi.Controllers
         {
             _service = service;
             _configuration = configuration;
+        }
+        private JToken MapByConfiguration
+                    (
+                        string routeName
+                        , JToken result
+                    )
+        {
+            var httpMethod = $"Http{Request.Method}";
+            var accessingConfigurationKey = "DefaultAccessing";
+            if
+                (
+                    Request
+                        .Path
+                        .ToString()
+                        .Contains
+                            (
+                                "/export/"
+                                , StringComparison
+                                        .OrdinalIgnoreCase
+                            )
+                )
+            {
+                accessingConfigurationKey = "exporting";
+            }
+            var outputsConfiguration = _configuration
+                                            .GetSection
+                                                ($"Routes:{routeName}:{httpMethod}:{accessingConfigurationKey}:Outputs");
+
+            if (outputsConfiguration.Exists())
+            {
+                var mappings = outputsConfiguration
+                                    .GetChildren()
+                                    .Select
+                                        (
+                                            (x) =>
+                                            {
+                                                (
+                                                    string TargetJPath
+                                                    , string SourceJPath
+                                                )
+                                                    rrr =
+                                                        (
+                                                            x.Key
+                                                            , x.Get<string>()
+                                                        );
+                                                return rrr;
+                                            }
+                                        );
+                result = result
+                            .MapToNew
+                                (
+                                    mappings
+                                );
+            }
+            return result;
         }
 
         protected virtual 
@@ -210,62 +266,29 @@ namespace Microshaoft.WebApi.Controllers
             }
             return result;
         }
-
-        private JToken MapByConfiguration
-                            (
-                                string routeName
-                                , JToken result
-                            )
+                [HttpGet]
+        [Route("admin/{routeName}")]
+        public IDictionary<string, IStoreProcedureExecutable>
+                    Admin
+                        (
+                            string routeName
+                        )
         {
-            var httpMethod = $"Http{Request.Method}";
-            var accessingConfigurationKey = "DefaultAccessing";
-            if 
-                (
-                    Request
-                        .Path
-                        .ToString()
-                        .Contains
-                            (
-                                "/export/"
-                                , StringComparison
-                                        .OrdinalIgnoreCase
-                            )
-                )
-            {
-                accessingConfigurationKey = "exporting";
-            }
-            var outputsConfiguration = _configuration
-                                            .GetSection
-                                                ($"Routes:{routeName}:{httpMethod}:{accessingConfigurationKey}:Outputs");
+            return
+                _service
+                    .IndexedExecutors
+                    //.Select
+                    //    (
+                    //        (x) =>
+                    //        {
+                    //            x.Value
 
-            if (outputsConfiguration.Exists())
-            {
-                var mappings = outputsConfiguration
-                                        .GetChildren()
-                                        .Select
-                                            (
-                                                (x) =>
-                                                {
-                                                    (
-                                                        string TargetJPath
-                                                        , string SourceJPath
-                                                    )
-                                                        rrr =
-                                                            (
-                                                                x.Key
-                                                               , x.Get<string>()
-                                                            );
-                                                    return rrr;
-                                                }
-                                            );
-                result = result
-                            .MapToNew
-                                (
-                                    mappings
-                                );
-            }
-            return result;
+                    //        }
+                    
+                    //    )
+                    ;
         }
+
 
         [HttpDelete]
         [HttpGet]

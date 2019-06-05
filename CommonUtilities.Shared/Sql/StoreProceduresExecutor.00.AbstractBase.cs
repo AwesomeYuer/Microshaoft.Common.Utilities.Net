@@ -7,6 +7,14 @@
     using System.Data;
     using System.Data.Common;
     using System.Linq;
+
+    public class ExecutingInfo
+    {
+        public IDictionary<string, DbParameter> DbParameters;
+        public DateTime RecentParametersDefinitionCacheUsedTime;
+        public object Locker = new object();
+    }
+
     public abstract partial class
             AbstractStoreProceduresExecutor
                     <TDbConnection, TDbCommand, TDbParameter>
@@ -22,6 +30,12 @@
             get;
             set;
         }
+        public ConcurrentDictionary<string, ExecutingInfo> Cache
+        {
+            get => _dictionary;
+            private set => _dictionary = value;
+        }
+
         protected abstract TDbParameter
                  OnQueryDefinitionsSetInputParameterProcess
                         (
@@ -92,8 +106,7 @@
                             dbParameterValue != null
                         )
                     {
-                        DataTable dataTable = dbParameterValue as DataTable;
-                        if (dataTable != null)
+                        if (dbParameterValue is DataTable)
                         {
                             includeValueClone = true;
                         }
@@ -177,12 +190,7 @@
             }
             return result;
         }
-        private class ExecutingInfo
-        {
-            public IDictionary<string, DbParameter> DbParameters;
-            public DateTime RecentParametersDefinitionCacheUsedTime;
-            public object Locker = new object();
-        }
+
         private
             ConcurrentDictionary<string, ExecutingInfo>
                 _dictionary
@@ -238,8 +246,10 @@
                 };
                 return _executingInfo;
             }
-            DbConnection connection = new TDbConnection();
-            connection.ConnectionString = connectionString;
+            DbConnection connection = new TDbConnection
+            {
+                ConnectionString = connectionString
+            };
             var key = $"{connection.DataSource}-{connection.Database}-{storeProcedureName}".ToUpper();
             var add = false;
             var executingInfo = 

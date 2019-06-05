@@ -31,7 +31,7 @@
                             , bool enableStatistics
                             , out SqlConnection connection
                         )
-        {
+        {         
             base
                 .BeforeExecutingProcess
                     (
