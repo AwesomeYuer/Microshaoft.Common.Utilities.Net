@@ -47,6 +47,8 @@
           "allow": true,
           "needCheckOperations": true,
           "operations": [ "a1", "a2" ],
+          "downloadFileName": "测试下载",
+          "columnsHeaderLine": "字段1,列2,属性3,域4",
           "isAsyncExecuting": true,
           "EnableStatistics": true,
           "commandtimeoutInSeconds": 103,

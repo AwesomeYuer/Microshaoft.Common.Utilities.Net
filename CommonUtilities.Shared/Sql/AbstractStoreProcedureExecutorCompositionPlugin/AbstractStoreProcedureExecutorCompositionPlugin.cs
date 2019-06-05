@@ -133,8 +133,10 @@
                         .CachedParametersDefinitionExpiredInSeconds
                             = CachedParametersDefinitionExpiredInSeconds;
             }
-            connection = new TDbConnection();
-            connection.ConnectionString = connectionString;
+            connection = new TDbConnection
+            {
+                ConnectionString = connectionString
+            };
             //if (enableStatistics)
             //{
             //    connection.StatisticsEnabled = enableStatistics;

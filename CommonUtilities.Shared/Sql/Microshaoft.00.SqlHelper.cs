@@ -20,9 +20,8 @@
                             where
                                 TDbParameter : DbParameter
         {
-            JValue r = null;
-            TDbParameter dbParameter = (TDbParameter)target;
-            r = onDbParameterToJValueProcessFunc(dbParameter);
+            TDbParameter dbParameter = (TDbParameter) target;
+            JValue r = onDbParameterToJValueProcessFunc(dbParameter);
             return r;
         }
         public static TDbParameter ShallowClone<TDbParameter>
@@ -35,12 +34,14 @@
                             where
                                 TDbParameter : DbParameter , new()
         {
-            var clone = new TDbParameter();
-            clone.ParameterName = target.ParameterName;
-            clone.Size = target.Size;
-            clone.Direction = target.Direction;
-            clone.Scale = target.Scale;
-            clone.Precision = target.Precision;
+            var clone = new TDbParameter
+            {
+                ParameterName = target.ParameterName
+                , Size = target.Size
+                , Direction = target.Direction
+                , Scale = target.Scale
+                , Precision = target.Precision
+            };
             if (includeValue)
             {
                 //Shallow copy
@@ -52,15 +53,14 @@
                         targetValue != null
                     )
                 {
-                    DataTable dataTable = targetValue as DataTable;
-                    if (dataTable != null)
+                    if (targetValue is DataTable dataTable)
                     {
                         clone.Value = dataTable.Clone();
                     }
                     else
                     {
                         //Shallow copy
-                        clone.Value = target.Value;
+                        clone.Value = targetValue;
                     }
                 }
             }
@@ -97,8 +97,10 @@
             DbConnection connection = null;
             try
             {
-                connection = new TDbConnection();
-                connection.ConnectionString = connectionString;
+                connection = new TDbConnection
+                {
+                    ConnectionString = connectionString
+                };
                 var dataSource = connection.DataSource;
                 var dataBase = connection.Database;
                 string procedureSchema = string.Empty;
@@ -128,29 +130,31 @@
                     //)
                 {
                     //command.CommandType = CommandType.StoredProcedure;
-                    TDbParameter dbParameterProcedureName = new TDbParameter();
-                    dbParameterProcedureName.ParameterName = "@ProcedureName";
-                    dbParameterProcedureName.Direction = ParameterDirection.Input;
-                    dbParameterProcedureName.Size = 128;
-                    dbParameterProcedureName
-                            .Value = 
-                                    (
-                                        storeProcedureName != null 
-                                        ?
-                                        (object)storeProcedureName
-                                        :
-                                        DBNull.Value
-                                    );
-
+                    TDbParameter dbParameterProcedureName = new TDbParameter
+                    {
+                        ParameterName = "@ProcedureName"
+                        ,Direction = ParameterDirection.Input
+                        ,Size = 128
+                        ,Value =
+                            (
+                                storeProcedureName != null
+                                ?
+                                (object) storeProcedureName
+                                :
+                                DBNull.Value
+                            )
+                    };
                     dbParameterProcedureName 
                             = onQueryDefinitionsSetInputParameterProcessFunc
                                     (
                                         dbParameterProcedureName
                                     );
                     command.Parameters.Add(dbParameterProcedureName);
-                    TDbParameter dbParameterReturn = new TDbParameter();
-                    dbParameterReturn.ParameterName = "@RETURN_VALUE";
-                    dbParameterReturn.Direction = ParameterDirection.ReturnValue;
+                    TDbParameter dbParameterReturn = new TDbParameter
+                    {
+                        ParameterName = "@RETURN_VALUE"
+                        , Direction = ParameterDirection.ReturnValue
+                    };
                     dbParameterReturn 
                         = onQueryDefinitionsSetReturnParameterProcessFunc
                                 (
@@ -173,7 +177,7 @@
                                                 var dbParameter = new TDbParameter();
                                                 dbParameter
                                                     .ParameterName 
-                                                        = (string)(reader["PARAMETER_NAME"]);
+                                                        = (string) reader["PARAMETER_NAME"];
                                                 if (reader["CHARACTER_MAXIMUM_LENGTH"] != DBNull.Value)
                                                 {
                                                     dbParameter
@@ -207,7 +211,8 @@
                                                 return r;
                                             }
                                         );
-                    return dbParameters;
+                    return
+                        dbParameters;
                 }
             }
             finally

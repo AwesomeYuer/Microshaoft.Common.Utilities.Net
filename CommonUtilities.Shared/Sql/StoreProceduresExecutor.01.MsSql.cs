@@ -95,15 +95,17 @@
             {
                 dbTypeName = "Structured";
             }
-            SqlDbType dbType;
-            var r = Enum
+            
+            if 
+                (
+                    Enum
                         .TryParse
                             (
                                 dbTypeName
                                 , true
-                                , out dbType
-                            );
-            if (r)
+                                , out SqlDbType dbType
+                            )
+                )
             {
                 parameter
                     .SqlDbType = dbType;
@@ -177,8 +179,10 @@
             SqlConnection connection = null;
             try
             {
-                connection = new SqlConnection();
-                connection.ConnectionString = connectionString;
+                connection = new SqlConnection
+                {
+                    ConnectionString = connectionString
+                };
                 var dataSource = connection.DataSource;
                 var dataBase = connection.Database;
                 string procedureSchema = string.Empty;
@@ -225,24 +229,21 @@ from
                     )
                 {
                     //command.CommandType = CommandType.StoredProcedure;
-                    SqlParameter dbParameterUserDefinedTableTypeName = new SqlParameter();
-                    dbParameterUserDefinedTableTypeName
-                            .ParameterName = "@userDefinedTableTypeName";
-                    dbParameterUserDefinedTableTypeName
-                            .Direction = ParameterDirection.Input;
-                    dbParameterUserDefinedTableTypeName
-                            .Size = 128;
-                    dbParameterUserDefinedTableTypeName
-                            .Value =
+                    SqlParameter dbParameterUserDefinedTableTypeName = new SqlParameter
+                    {
+                        ParameterName = "@userDefinedTableTypeName",
+                        Direction = ParameterDirection.Input,
+                        Size = 128,
+                        Value =
                                     (
                                         userDefinedTableTypeName != null
                                         ?
-                                        (object) userDefinedTableTypeName
+                                        (object)userDefinedTableTypeName
                                         :
                                         DBNull.Value
-                                    );
-                    dbParameterUserDefinedTableTypeName
-                            .SqlDbType = SqlDbType.VarChar;
+                                    ),
+                        SqlDbType = SqlDbType.VarChar
+                    };
                     command
                         .Parameters
                         .Add

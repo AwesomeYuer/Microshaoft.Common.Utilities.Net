@@ -272,9 +272,7 @@ namespace Microshaoft.Web
                                 ,
                                 (x) =>
                                 {
-                                    IParametersDefinitionCacheAutoRefreshable
-                                        rr = x as IParametersDefinitionCacheAutoRefreshable;
-                                    if (rr != null)
+                                    if (x is IParametersDefinitionCacheAutoRefreshable rr)
                                     {
                                         rr
                                             .CachedParametersDefinitionExpiredInSeconds
@@ -314,6 +312,12 @@ namespace Microshaoft.Web
             get => _needAutoRefreshExecutedTimeForSlideExpire;
             private set => _needAutoRefreshExecutedTimeForSlideExpire = value;
         }
+        public IDictionary<string, IStoreProcedureExecutable> IndexedExecutors
+        {
+            get => _indexedExecutors;
+            set => _indexedExecutors = value;
+        }
+
         private IDictionary<string, IStoreProcedureExecutable>
                                 _indexedExecutors;
         public

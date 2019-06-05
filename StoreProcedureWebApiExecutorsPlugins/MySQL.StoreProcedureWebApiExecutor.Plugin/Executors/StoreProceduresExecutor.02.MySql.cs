@@ -34,7 +34,7 @@
                                , string connectionString
                            )
         {
-            var originalDbTypeName = (string)(reader["DATA_TYPE"]);
+            var originalDbTypeName = (string) reader["DATA_TYPE"];
             var dbTypeName = originalDbTypeName;
             //bit
             //tinyint
@@ -125,10 +125,11 @@
                 o = reader["NUMERIC_PRECISION"];
                 if (o != DBNull.Value)
                 {
-                    parameter.Precision = ((byte)((uint)o));
+                    parameter.Precision = ((byte)((uint) o));
                 }
             }
-            return parameter;
+            return
+                parameter;
         }
         
         protected override MySqlParameter

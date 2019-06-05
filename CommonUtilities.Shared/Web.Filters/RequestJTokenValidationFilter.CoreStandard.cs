@@ -153,8 +153,7 @@ namespace Microshaoft.Web
             {
                 (
                     bool IsValid
-                    ,
-                    IActionResult Result
+                    , IActionResult Result
                 )
                  r =
                     (
