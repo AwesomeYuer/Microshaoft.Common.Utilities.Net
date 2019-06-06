@@ -155,15 +155,35 @@
             services
                 .AddSingleton<IActionSelector, SyncOrAsyncActionSelector>();
 
-            var csvFormatterOptions = new CsvFormatterOptions();
-            csvFormatterOptions.CsvDelimiter = ",";
-            csvFormatterOptions.IncludeExcelDelimiterHeader = true;
-            csvFormatterOptions.UseSingleLineHeaderInCsv = true;
+            var csvFormatterOptions = new CsvFormatterOptions
+            {
+                CsvDelimiter = ",",
+                IncludeExcelDelimiterHeader = false,
+                UseSingleLineHeaderInCsv = true
+            };
             services.AddMvc(options =>
             {
                 //options.InputFormatters.Add(new CsvInputFormatter(csvFormatterOptions));
-                options.OutputFormatters.Add(new CsvOutputFormatter(csvFormatterOptions));
-                options.FormatterMappings.SetMediaTypeMappingForFormat("csv", MediaTypeHeaderValue.Parse("text/csv"));
+                options
+                    .OutputFormatters
+                    .Add
+                        (
+                            new CsvOutputFormatter
+                                        (
+                                            csvFormatterOptions
+                                        )
+                        );
+                options
+                    .FormatterMappings
+                    .SetMediaTypeMappingForFormat
+                        (
+                            "csv"
+                            , MediaTypeHeaderValue
+                                    .Parse
+                                        (
+                                            "text/csv"
+                                        )
+                        );
             });
 
             services
@@ -268,7 +288,8 @@
                                             }
                                             return
                                                 await
-                                                    Task.FromResult(result);
+                                                    Task
+                                                        .FromResult(result);
                                         };
                                 middleware
                                     .OnResponseStartingProcess

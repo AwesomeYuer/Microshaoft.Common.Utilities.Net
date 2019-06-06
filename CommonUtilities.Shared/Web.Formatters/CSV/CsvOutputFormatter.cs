@@ -3,11 +3,11 @@ namespace Microshaoft.Web
 {
     using Microsoft.AspNetCore.Mvc.Formatters;
     using Microsoft.AspNetCore.Routing;
-    //using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure;
     using Microsoft.Extensions.Configuration;
     using Newtonsoft.Json.Linq;
     using System;
     using System.Collections;
+    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Text;
@@ -27,8 +27,11 @@ namespace Microshaoft.Web
             get;
             private set;
         }
-
-        public CsvOutputFormatter(CsvFormatterOptions csvFormatterOptions)
+        public CsvOutputFormatter
+                        (
+                            CsvFormatterOptions
+                                    csvFormatterOptions
+                        )
         {
             ContentType = "text/csv";
             SupportedMediaTypes
@@ -41,28 +44,36 @@ namespace Microshaoft.Web
                                 .MediaTypeHeaderValue
                                 .Parse("text/csv")
                         );
-            _options = csvFormatterOptions ?? throw new ArgumentNullException(nameof(csvFormatterOptions));
+            _options = csvFormatterOptions
+                            ??
+                                throw
+                                    new
+                                        ArgumentNullException
+                                            (
+                                                nameof(csvFormatterOptions)
+                                            );
         }
 
         protected override bool CanWriteType(Type type)
         {
             if (type == null)
             {
-                throw new ArgumentNullException("type");
+                throw
+                    new ArgumentNullException("type");
             }
             return
                 IsTypeOfIEnumerable(type);
         }
-
         private bool IsTypeOfIEnumerable(Type type)
         {
             if (type == null)
             {
-                throw new ArgumentNullException("type");
+                throw
+                    new ArgumentNullException("type");
             }
             return
                 typeof(IEnumerable)
-                    .IsAssignableFrom(type);
+                        .IsAssignableFrom(type);
         }
 
         private IConfiguration _configuration;
@@ -70,7 +81,8 @@ namespace Microshaoft.Web
 
         public async override Task WriteResponseBodyAsync
                                     (
-                                        OutputFormatterWriteContext context
+                                        OutputFormatterWriteContext
+                                                                context
                                     )
         {
             var httpContext = context
@@ -79,8 +91,8 @@ namespace Microshaoft.Web
                                 .Request;
             var httpMethod = $"http{request.Method}";
             var routeName = (string) httpContext
-                                        .GetRouteData()
-                                        .Values["routeName"];
+                                            .GetRouteData()
+                                            .Values["routeName"];
             _locker
                 .LockIf
                     (
@@ -101,13 +113,12 @@ namespace Microshaoft.Web
 
                         }
                     );
-
-
             var encodingName = (string) request.Query["e"];
             Encoding e = null;
             if (!encodingName.IsNullOrEmptyOrWhiteSpace())
             {
-                e = Encoding.GetEncoding(encodingName);
+                e = Encoding
+                        .GetEncoding(encodingName);
             }
             else
             {
@@ -116,11 +127,12 @@ namespace Microshaoft.Web
             var response = httpContext
                                     .Response;
             var downloadFileName = routeName;
-            var downloadFileNameConfiguration = _configuration
-                                                .GetSection
-                                                    (
-                                                        $"Routes:{routeName}:{httpMethod}:Exporting:DownloadFileName"
-                                                    );
+            var downloadFileNameConfiguration =
+                    _configuration
+                            .GetSection
+                                (
+                                    $"Routes:{routeName}:{httpMethod}:Exporting:DownloadFileName"
+                                );
             if (downloadFileNameConfiguration.Exists())
             {
                 downloadFileName = downloadFileNameConfiguration.Value;
@@ -168,6 +180,55 @@ namespace Microshaoft.Web
                 }
                 if (context.Object is JArray jArray)
                 {
+                    var outputColumnsConfiguration =
+                            _configuration
+                                    .GetSection
+                                        (
+                                            $"Routes:{routeName}:{httpMethod}:Exporting:OutputColumns"
+                                        );
+                    Dictionary<string, string> outputColumns = null;
+                    if (outputColumnsConfiguration.Exists())
+                    {
+                        outputColumns = outputColumnsConfiguration
+                                                .GetChildren()
+                                                .ToDictionary
+                                                    (
+                                                        (x) =>
+                                                        {
+                                                            return
+                                                                x
+                                                                    .GetValue<string>
+                                                                            ("ColumnName");
+                                                        }
+                                                        , (x) =>
+                                                        {
+                                                            return
+                                                                x
+                                                                    .GetValue<string>
+                                                                            ("ColumnTitle");
+                                                        }
+                                                        , StringComparer
+                                                                .OrdinalIgnoreCase
+                                                    );
+                        if (_options.UseSingleLineHeaderInCsv)
+                        {
+                            var columnsHeaderLine =
+                                            string
+                                                .Join
+                                                    (
+                                                        _options
+                                                            .CsvDelimiter
+                                                        , outputColumns
+                                                                    .Values
+                                                    );
+                            await
+                                streamWriter
+                                    .WriteLineAsync
+                                            (
+                                                columnsHeaderLine
+                                            );
+                        }
+                    }
                     int i = 0;
                     foreach (JObject jObject in jArray)
                     {
@@ -176,21 +237,10 @@ namespace Microshaoft.Web
                         {
                             if (_options.UseSingleLineHeaderInCsv)
                             {
-                                string columnsHeaderLine;
-                                var columnsHeaderLineConfiguration =
-                                        _configuration
-                                                .GetSection
-                                                    (
-                                                        $"Routes:{routeName}:{httpMethod}:Exporting:ColumnsHeaderLine"
-                                                    );
-                                if (columnsHeaderLineConfiguration.Exists())
-                                {
-                                    columnsHeaderLine = columnsHeaderLineConfiguration.Value;
-                                }
-                                else
+                                if (outputColumns == null)
                                 {
                                     var propertiesNames =
-                                        jProperties
+                                            jProperties
                                                 .Select
                                                     (
                                                         (x) =>
@@ -199,26 +249,40 @@ namespace Microshaoft.Web
                                                                 x.Name;
                                                         }
                                                     );
-                                    columnsHeaderLine = string
-                                                            .Join
-                                                                (
-                                                                    _options
-                                                                        .CsvDelimiter
-                                                                    , propertiesNames
-                                                                );
+                                    var columnsHeaderLine = string
+                                                                .Join
+                                                                    (
+                                                                        _options
+                                                                            .CsvDelimiter
+                                                                        , propertiesNames
+                                                                    );
+                                    await
+                                        streamWriter
+                                            .WriteLineAsync
+                                                    (
+                                                        columnsHeaderLine
+                                                    );
                                 }
-
-                                
-                                await
-                                    streamWriter
-                                        .WriteLineAsync
-                                                (
-                                                    columnsHeaderLine
-                                                );
                             }
                         }
                         string line = string.Empty;
                         var j = 0;
+                        if (outputColumns != null)
+                        {
+                            jProperties = jProperties
+                                                .Where
+                                                    (
+                                                        (x) =>
+                                                        {
+                                                            return
+                                                                outputColumns
+                                                                        .ContainsKey
+                                                                            (
+                                                                                x.Name
+                                                                            );
+                                                        }
+                                                    );
+                        }
                         foreach (var jProperty in jProperties)
                         {
                             if (j > 0)
@@ -232,7 +296,7 @@ namespace Microshaoft.Web
                                 if (jValue.Type == JTokenType.Date)
                                 {
                                     //@value = ((DateTime) jValue).ToString("yyyy-MM-ddTHH:mm:ss.fffff");
-                                    @value = $@"""{((DateTime) jValue).ToString("yyyy-MM-ddTHH:mm:ss.fffff")}""";
+                                    @value = $@"""{((DateTime) jValue).ToString("yyyy-MM-dd HH:mm:ss.fff")}""";
                                 }
                                 else
                                 {
