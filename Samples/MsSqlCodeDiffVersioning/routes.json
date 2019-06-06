@@ -48,7 +48,21 @@
           "needCheckOperations": true,
           "operations": [ "a1", "a2" ],
           "downloadFileName": "测试下载.csv",
-          "columnsHeaderLine": "字段1,列2,属性3,域4",
+          "outputColumns": [
+            {
+              "columnName": "f1",
+              "columnTitle": "字段1"
+            },
+            {
+              "columnName": "f2",
+              "columnTitle": "字段2"
+            },
+            {
+              "columnName": "f3",
+              "columnTitle": "字段3"
+            }
+
+          ],
           "isAsyncExecuting": true,
           "EnableStatistics": true,
           "commandtimeoutInSeconds": 103,

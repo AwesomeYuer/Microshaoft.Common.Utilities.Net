@@ -142,6 +142,36 @@ namespace Microshaoft.WebApi.Controllers
                         }
                     }
                 }
+                else if (fieldType == typeof(DateTime))
+                {
+                    var path = Request.Path.ToString();
+                    needDefaultProcess = true;
+                    if
+                        (
+                            !path
+                                .Contains
+                                    (
+                                        "/export/"
+                                        , StringComparison
+                                                .OrdinalIgnoreCase
+                                    )
+                        )
+                    {
+                        var s = dataReader
+                                        .GetDateTime(columnIndex)
+                                        .ToString
+                                            (
+                                                "yyyy-MM-ddTHH:mm:ss.fffzzz"
+                                            );
+                        JValue jValue = new JValue(s);
+                        field = new JProperty
+                                        (
+                                            fieldName
+                                            , jValue
+                                        );
+                        needDefaultProcess = false;
+                    }
+                }
             }
             return 
                 (
