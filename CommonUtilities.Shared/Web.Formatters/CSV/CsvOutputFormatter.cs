@@ -21,6 +21,12 @@ namespace Microshaoft.Web
     /// </summary>
     public class CsvOutputFormatter : OutputFormatter
     {
+        private readonly byte[] _utf8HeaderBytes = new byte[]
+                                                        {
+                                                            0xEF
+                                                            , 0xBB
+                                                            , 0xBF
+                                                        };
         private readonly CsvFormatterOptions _options;
         public string ContentType
         {
@@ -161,12 +167,7 @@ namespace Microshaoft.Web
                             .Body
                             .WriteAsync
                                 (
-                                    new byte[]
-                                    {
-                                        0xEF
-                                        , 0xBB
-                                        , 0xBF
-                                    }
+                                    _utf8HeaderBytes
                                 );
                 }
                 if (_options.IncludeExcelDelimiterHeader)
