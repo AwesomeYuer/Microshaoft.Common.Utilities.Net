@@ -58,16 +58,22 @@ namespace Microshaoft
             if (index != -1)
             {
                 if (deducedGenericArguments[index] == null)
+                {
                     deducedGenericArguments[index] = typeUsingArguments;
+                }
                 else if (deducedGenericArguments[index] != typeUsingArguments)
+                {
                     throw new NotImplementedException("Generic variance is not implemented.");
+                }
             }
             else if (typeUsingParameters.IsGenericType() && typeUsingArguments.IsGenericType())
             {
                 var childArgumentsUsingParameters = typeUsingParameters.GenericTypeArguments;
                 var childArgumentsUsingArguments = typeUsingArguments.GenericTypeArguments;
                 for (var i = 0; i < childArgumentsUsingParameters.Length; i++)
+                {
                     DeduceGenericArguments(genericParameters, deducedGenericArguments, childArgumentsUsingParameters[i], childArgumentsUsingArguments[i]);
+                }
             }
         }
 
@@ -75,13 +81,18 @@ namespace Microshaoft
         {
             return target.GetTypeInfo().ImplementedInterfaces.Single(implementedInterface =>
             {
-                if (implementedInterface.GetGenericTypeDefinition() != interfaceDefinition) return false;
-
+                if (implementedInterface.GetGenericTypeDefinition() != interfaceDefinition)
+                {
+                    return false;
+                }
                 var implementedInterfaceArguments = implementedInterface.GenericTypeArguments;
                 for (var i = 0; i < interfaceGenericArguments.Length; i++)
                 {
                     // This assumes the interface type parameters are not covariant or contravariant
-                    if (implementedInterfaceArguments[i].GetGenericTypeDefinitionIfGeneric() != interfaceGenericArguments[i].GetGenericTypeDefinitionIfGeneric()) return false;
+                    if (implementedInterfaceArguments[i].GetGenericTypeDefinitionIfGeneric() != interfaceGenericArguments[i].GetGenericTypeDefinitionIfGeneric())
+                    {
+                        return false;
+                    }
                 }
 
                 return true;
@@ -120,9 +131,15 @@ namespace Microshaoft
         {
             while (true)
             {
-                foreach (var memberInfo in target.GetTypeInfo().DeclaredMembers)
+                IEnumerable<MemberInfo> declaredMembers = target
+                                                            .GetTypeInfo()
+                                                            .DeclaredMembers;
+                foreach (var memberInfo in declaredMembers)
                 {
-                    yield return memberInfo;
+                    yield
+                        return
+                      
+                        memberInfo;
                 }
 
                 target = target.BaseType();
