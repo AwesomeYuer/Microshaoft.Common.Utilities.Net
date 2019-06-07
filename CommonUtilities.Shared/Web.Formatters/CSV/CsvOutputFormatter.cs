@@ -7,10 +7,10 @@ namespace Microshaoft.Web
     using Newtonsoft.Json.Linq;
     using System;
     using System.Collections;
-    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Text;
+    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using System.Web;
 
@@ -21,6 +21,8 @@ namespace Microshaoft.Web
     /// </summary>
     public class CsvOutputFormatter : OutputFormatter
     {
+
+        private readonly Regex _digitsRegex = new Regex(@"^\d+$");
         private readonly byte[] _utf8HeaderBytes = new byte[]
                                                         {
                                                             0xEF
@@ -91,6 +93,44 @@ namespace Microshaoft.Web
                                                                 context
                                     )
         {
+            string getValue(JToken jToken)
+            {
+                var @value = string.Empty;
+                if (jToken != null)
+                {
+                    if (jToken.Type == JTokenType.Date)
+                    {
+                        //@value = ((DateTime) jValue).ToString("yyyy-MM-ddTHH:mm:ss.fffff");
+                        @value = $@"""{((DateTime) jToken).ToString("yyyy-MM-dd HH:mm:ss.fff")}""";
+                    }
+                    else
+                    {
+                        @value = jToken.ToString();
+                        @value = @value.Replace(@"""", @"""""");
+                        if (jToken.Type == JTokenType.String)
+                        {
+                            if (_digitsRegex.IsMatch(@value))
+                            {
+                                //避免在Excel中csv文本数字自动变科学计数法
+                                @value += "\t";
+                            }
+                        }
+                        //Check if the value contains a delimiter and place it in quotes if so
+                        if
+                            (
+                                @value.Contains(_options.CsvDelimiter)
+                                ||
+                                @value.Contains("\r")
+                                ||
+                                @value.Contains("\n")
+                            )
+                        {
+                            @value = $@"""{@value}""";
+                        }
+                    }
+                }
+                return @value;
+            }
             var httpContext = context
                                 .HttpContext;
             var request = httpContext
@@ -145,12 +185,12 @@ namespace Microshaoft.Web
             }
             downloadFileName = HttpUtility.UrlEncode(downloadFileName, e);
             response
-                .Headers
-                .Add
-                    (
-                        "Content-Disposition"
-                        , $@"attachment; filename=""{downloadFileName}"""
-                    );
+                    .Headers
+                    .Add
+                        (
+                            "Content-Disposition"
+                            , $@"attachment; filename=""{downloadFileName}"""
+                        );
             using
                 (
                     var streamWriter = new StreamWriter
@@ -187,30 +227,29 @@ namespace Microshaoft.Web
                                         (
                                             $"Routes:{routeName}:{httpMethod}:Exporting:OutputColumns"
                                         );
-                    Dictionary<string, string> outputColumns = null;
+                    (string ColumnName, string ColumnTitle)[] outputColumns =  null;
                     if (outputColumnsConfiguration.Exists())
                     {
-                        outputColumns = outputColumnsConfiguration
+                        outputColumns =
+                            outputColumnsConfiguration
                                                 .GetChildren()
-                                                .ToDictionary
+                                                .Select
                                                     (
                                                         (x) =>
                                                         {
                                                             return
-                                                                x
-                                                                    .GetValue<string>
-                                                                            ("ColumnName");
-                                                        }
-                                                        , (x) =>
-                                                        {
-                                                            return
-                                                                x
-                                                                    .GetValue<string>
-                                                                            ("ColumnTitle");
-                                                        }
-                                                        , StringComparer
-                                                                .OrdinalIgnoreCase
-                                                    );
+                                                                (
+                                                                    ColumnName: x
+                                                                        .GetValue<string>
+                                                                                ("ColumnName")
+                                                                    ,
+                                                                    ColumnTitle: x
+                                                                        .GetValue<string>
+                                                                            ("ColumnTitle")
+                                                                );
+                                                        }                                           
+                                                    )
+                                                .ToArray();
                         if (_options.UseSingleLineHeaderInCsv)
                         {
                             var columnsHeaderLine =
@@ -220,7 +259,14 @@ namespace Microshaoft.Web
                                                         _options
                                                             .CsvDelimiter
                                                         , outputColumns
-                                                                    .Values
+                                                                    .Select
+                                                                        (
+                                                                            (x) =>
+                                                                            {
+                                                                                return
+                                                                                    x.ColumnTitle;
+                                                                            }
+                                                                        )
                                                     );
                             await
                                 streamWriter
@@ -233,23 +279,22 @@ namespace Microshaoft.Web
                     int i = 0;
                     foreach (JObject jObject in jArray)
                     {
-                        var jProperties = jObject.Properties();
                         if (i == 0)
                         {
                             if (_options.UseSingleLineHeaderInCsv)
                             {
                                 if (outputColumns == null)
                                 {
-                                    var propertiesNames =
-                                            jProperties
-                                                .Select
-                                                    (
-                                                        (x) =>
-                                                        {
-                                                            return
-                                                                x.Name;
-                                                        }
-                                                    );
+                                    var propertiesNames = jObject
+                                                                .Properties()
+                                                                .Select
+                                                                    (
+                                                                        (x) =>
+                                                                        {
+                                                                            return
+                                                                                x.Name;
+                                                                        }
+                                                                    );
                                     var columnsHeaderLine = string
                                                                 .Join
                                                                     (
@@ -267,63 +312,46 @@ namespace Microshaoft.Web
                             }
                         }
                         string line = string.Empty;
-                        var j = 0;
-                        if (outputColumns != null)
+                        if (outputColumns == null)
                         {
-                            jProperties = jProperties
-                                                .Where
-                                                    (
-                                                        (x) =>
-                                                        {
-                                                            return
-                                                                outputColumns
-                                                                        .ContainsKey
-                                                                            (
-                                                                                x.Name
-                                                                            );
-                                                        }
-                                                    );
+                            var jProperties = jObject.Properties();
+                            var j = 0;
+                            foreach (var jProperty in jProperties)
+                            {
+                                if (j > 0)
+                                {
+                                    line += _options.CsvDelimiter;
+                                }
+                                var jValue = jProperty.Value;
+                                line += getValue(jProperty.Value);
+                                j++;
+                            }
                         }
-                        foreach (var jProperty in jProperties)
+                        else
                         {
-                            if (j > 0)
+                            var j = 0;
+                            foreach (var (columnName, columnTitle) in outputColumns)
                             {
-                                line += _options.CsvDelimiter;
-                            }
-                            var jValue = jProperty.Value;
-                            var @value = string.Empty;
-                            if (jValue != null)
-                            {
-                                if (jValue.Type == JTokenType.Date)
+                                if (j > 0)
                                 {
-                                    //@value = ((DateTime) jValue).ToString("yyyy-MM-ddTHH:mm:ss.fffff");
-                                    @value = $@"""{((DateTime) jValue).ToString("yyyy-MM-dd HH:mm:ss.fff")}""";
+                                    line += _options.CsvDelimiter;
                                 }
-                                else
+                                if 
+                                    (
+                                        jObject
+                                            .TryGetValue
+                                                (
+                                                    columnName
+                                                    , StringComparison
+                                                            .OrdinalIgnoreCase
+                                                    , out JToken jToken
+                                                )
+                                    )
                                 {
-                                    @value = jValue.ToString();
-                                    @value = @value.Replace(@"""", @"""""");
-                                    if (jValue.Type == JTokenType.String)
-                                    {
-                                        //避免在Excel中csv文本数字自动变科学计数法
-                                        @value += "\t";
-                                    }
-                                    //Check if the value contans a delimiter and place it in quotes if so
-                                    if
-                                        (
-                                            @value.Contains(_options.CsvDelimiter)
-                                            ||
-                                            @value.Contains("\r")
-                                            ||
-                                            @value.Contains("\n")
-                                        )
-                                    {
-                                        @value = $@"""{@value}""";
-                                    }
+                                    line += getValue(jToken);
                                 }
+                                j++;
                             }
-                            line += @value;
-                            j++;
                         }
                         await
                             streamWriter
