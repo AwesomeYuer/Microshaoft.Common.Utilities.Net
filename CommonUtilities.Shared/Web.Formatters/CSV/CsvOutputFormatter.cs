@@ -212,6 +212,7 @@ namespace Microshaoft.Web
                 }
                 if (_options.IncludeExcelDelimiterHeader)
                 {
+                    //乱码
                     await
                         streamWriter
                             .WriteLineAsync
@@ -227,47 +228,55 @@ namespace Microshaoft.Web
                                         (
                                             $"Routes:{routeName}:{httpMethod}:Exporting:OutputColumns"
                                         );
-                    (string ColumnName, string ColumnTitle)[] outputColumns =  null;
+                    (
+                        string ColumnName
+                        , string ColumnTitle
+                    ) [] outputColumns = null;
                     if (outputColumnsConfiguration.Exists())
                     {
                         outputColumns =
                             outputColumnsConfiguration
-                                                .GetChildren()
-                                                .Select
-                                                    (
-                                                        (x) =>
-                                                        {
-                                                            return
-                                                                (
-                                                                    ColumnName: x
+                                        .GetChildren()
+                                        .Select
+                                            (
+                                                (x) =>
+                                                {
+                                                    var columnName = x
                                                                         .GetValue<string>
-                                                                                ("ColumnName")
-                                                                    ,
-                                                                    ColumnTitle: x
-                                                                        .GetValue<string>
-                                                                            ("ColumnTitle")
-                                                                );
-                                                        }                                           
-                                                    )
-                                                .ToArray();
+                                                                                ("ColumnName");
+                                                    var columnTitle = x
+                                                                        .GetValue
+                                                                                (
+                                                                                    "ColumnTitle"
+                                                                                    , columnName
+                                                                                );
+                                                    return
+                                                        (
+                                                            ColumnName: columnName
+                                                            , ColumnTitle: columnTitle
+                                                        );
+                                                }                                           
+                                            )
+                                        .ToArray();
                         if (_options.UseSingleLineHeaderInCsv)
                         {
                             var columnsHeaderLine =
-                                            string
-                                                .Join
-                                                    (
-                                                        _options
-                                                            .CsvDelimiter
-                                                        , outputColumns
-                                                                    .Select
-                                                                        (
-                                                                            (x) =>
-                                                                            {
-                                                                                return
-                                                                                    x.ColumnTitle;
-                                                                            }
-                                                                        )
-                                                    );
+                                    string
+                                        .Join
+                                            (
+                                                _options
+                                                    .CsvDelimiter
+                                                , outputColumns
+                                                            .Select
+                                                                (
+                                                                    (x) =>
+                                                                    {
+                                                                        return
+                                                                            x
+                                                                                .ColumnTitle;
+                                                                    }
+                                                                )
+                                            );
                             await
                                 streamWriter
                                     .WriteLineAsync
@@ -286,22 +295,23 @@ namespace Microshaoft.Web
                                 if (outputColumns == null)
                                 {
                                     var propertiesNames = jObject
-                                                                .Properties()
-                                                                .Select
-                                                                    (
-                                                                        (x) =>
-                                                                        {
-                                                                            return
-                                                                                x.Name;
-                                                                        }
-                                                                    );
-                                    var columnsHeaderLine = string
-                                                                .Join
-                                                                    (
-                                                                        _options
-                                                                            .CsvDelimiter
-                                                                        , propertiesNames
-                                                                    );
+                                                            .Properties()
+                                                            .Select
+                                                                (
+                                                                    (x) =>
+                                                                    {
+                                                                        return
+                                                                            x.Name;
+                                                                    }
+                                                                );
+                                    var columnsHeaderLine =
+                                            string
+                                                .Join
+                                                    (
+                                                        _options
+                                                            .CsvDelimiter
+                                                        , propertiesNames
+                                                    );
                                     await
                                         streamWriter
                                             .WriteLineAsync
@@ -322,8 +332,8 @@ namespace Microshaoft.Web
                                 {
                                     line += _options.CsvDelimiter;
                                 }
-                                var jValue = jProperty.Value;
-                                line += getValue(jProperty.Value);
+                                var jToken = jProperty.Value;
+                                line += getValue(jToken);
                                 j++;
                             }
                         }

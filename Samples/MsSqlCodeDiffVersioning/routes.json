@@ -50,16 +50,16 @@
           "downloadFileName": "测试下载.csv",
           "outputColumns": [
             {
-              "columnName": "f1",
-              "columnTitle": "字段1"
+              "ColumnName": "f1",
+              "ColumnTitle": "字段1"
             },
             {
-              "columnName": "f2",
-              "columnTitle": "字段2"
+              "ColumnName": "f2",
+              "ColumnTitle111": "字段2"
             },
             {
-              "columnName": "f3",
-              "columnTitle": "字段3"
+              "ColumnName": "f3",
+              "ColumnTitle": "字段3"
             }
 
           ],
