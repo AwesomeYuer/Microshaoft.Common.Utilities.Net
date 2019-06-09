@@ -332,8 +332,8 @@ namespace Microshaoft.Web
                                 {
                                     line += _options.CsvDelimiter;
                                 }
-                                var jValue = jProperty.Value;
-                                line += getValue(jProperty.Value);
+                                var jToken = jProperty.Value;
+                                line += getValue(jToken);
                                 j++;
                             }
                         }
