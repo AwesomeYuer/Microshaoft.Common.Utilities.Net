@@ -136,13 +136,14 @@
                                 .AddPolicy
                                     (
                                         "AllowAllAny"
-                                        ,
-                                        (builder) =>
+                                        , (builder) =>
                                         {
                                             builder
                                                 .AllowAnyOrigin()
                                                 .AllowAnyHeader()
-                                                .AllowAnyMethod();
+                                                .AllowAnyMethod()
+                                                .WithExposedHeaders("*");
+                                                
                                         }
                                     );
 
@@ -161,30 +162,34 @@
                 IncludeExcelDelimiterHeader = false,
                 UseSingleLineHeaderInCsv = true
             };
-            services.AddMvc(options =>
-            {
-                //options.InputFormatters.Add(new CsvInputFormatter(csvFormatterOptions));
-                options
-                    .OutputFormatters
-                    .Add
-                        (
-                            new CsvOutputFormatter
-                                        (
-                                            csvFormatterOptions
-                                        )
-                        );
-                options
-                    .FormatterMappings
-                    .SetMediaTypeMappingForFormat
-                        (
-                            "csv"
-                            , MediaTypeHeaderValue
-                                    .Parse
-                                        (
-                                            "text/csv"
-                                        )
-                        );
-            });
+            services
+                .AddMvc
+                    (
+                        (options) =>
+                        {
+                            //options.InputFormatters.Add(new CsvInputFormatter(csvFormatterOptions));
+                            options
+                                .OutputFormatters
+                                .Add
+                                    (
+                                        new CsvOutputFormatter
+                                                    (
+                                                        csvFormatterOptions
+                                                    )
+                                    );
+                            options
+                                .FormatterMappings
+                                .SetMediaTypeMappingForFormat
+                                    (
+                                        "csv"
+                                        , MediaTypeHeaderValue
+                                                .Parse
+                                                    (
+                                                        "text/csv"
+                                                    )
+                                    );
+                        }
+                    );
 
             services
                 .AddSwaggerGen
