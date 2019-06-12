@@ -136,13 +136,14 @@
                                 .AddPolicy
                                     (
                                         "AllowAllAny"
-                                        ,
-                                        (builder) =>
+                                        , (builder) =>
                                         {
                                             builder
                                                 .AllowAnyOrigin()
                                                 .AllowAnyHeader()
-                                                .AllowAnyMethod();
+                                                .AllowAnyMethod()
+                                                .WithExposedHeaders("*");
+                                                
                                         }
                                     );
 
