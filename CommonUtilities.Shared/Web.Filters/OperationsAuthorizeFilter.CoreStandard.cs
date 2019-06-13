@@ -51,7 +51,8 @@ namespace Microshaoft.Web
                 {
                     StatusCode = statusCode
                 };
-                context.Result = result;
+                context
+                    .Result = result;
             }
             var httpContext = context.HttpContext;
             var request = httpContext.Request;
@@ -96,11 +97,16 @@ namespace Microshaoft.Web
                     if (needCheckOperations)
                     {
                         configuration = masterConfiguration
-                                            .GetSection($"operations");
+                                                .GetSection($"operations");
                         if (configuration.Exists())
                         {
-                            var operations = configuration.Get<string[]>();
-                            allow = CheckUserOperations(httpContext, operations);
+                            var operations = configuration
+                                                    .Get<string[]>();
+                            allow = CheckUserOperations
+                                            (
+                                                httpContext
+                                                , operations
+                                            );
                             if (!allow)
                             {
                                 forbiddenMessage = $"forbidden by {configuration.Key}";
