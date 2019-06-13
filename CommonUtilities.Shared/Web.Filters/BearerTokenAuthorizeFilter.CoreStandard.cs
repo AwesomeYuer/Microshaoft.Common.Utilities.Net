@@ -75,13 +75,13 @@ namespace Microshaoft.Web
             var request = context.HttpContext.Request;
             StringValues jwtToken = string.Empty;
             IConfiguration configuration =
-                        (IConfiguration)context
-                                            .HttpContext
-                                            .RequestServices
-                                            .GetService
-                                                (
-                                                    typeof(IConfiguration)
-                                                );
+                        (IConfiguration) context
+                                                .HttpContext
+                                                .RequestServices
+                                                .GetService
+                                                    (
+                                                        typeof(IConfiguration)
+                                                    );
             var jwtTokenName = "xJwtToken";
             var configurationTokenName = configuration.GetSection("TokenName");
             if 

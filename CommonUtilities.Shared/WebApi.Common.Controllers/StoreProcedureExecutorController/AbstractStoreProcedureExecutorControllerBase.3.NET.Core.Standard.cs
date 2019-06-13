@@ -62,34 +62,34 @@ namespace Microshaoft.WebApi.Controllers
             var outputsConfiguration = _configuration
                                             .GetSection
                                                 ($"Routes:{routeName}:{httpMethod}:{accessingConfigurationKey}:Outputs");
-
             if (outputsConfiguration.Exists())
             {
                 var mappings = outputsConfiguration
-                                    .GetChildren()
-                                    .Select
-                                        (
-                                            (x) =>
-                                            {
-                                                (
-                                                    string TargetJPath
-                                                    , string SourceJPath
-                                                )
-                                                    rrr =
-                                                        (
-                                                            x.Key
-                                                            , x.Get<string>()
-                                                        );
-                                                return rrr;
-                                            }
-                                        );
+                                        .GetChildren()
+                                        .Select
+                                            (
+                                                (x) =>
+                                                {
+                                                    (
+                                                        string TargetJPath
+                                                        , string SourceJPath
+                                                    )
+                                                        rrr =
+                                                            (
+                                                                x.Key
+                                                                , x.Get<string>()
+                                                            );
+                                                    return rrr;
+                                                }
+                                            );
                 result = result
                             .MapToNew
                                 (
                                     mappings
                                 );
             }
-            return result;
+            return
+                result;
         }
 
         protected virtual 
@@ -247,78 +247,34 @@ namespace Microshaoft.WebApi.Controllers
                                         string resultJsonPathPart6 = null
                                 )
         {
-            JToken result = null;
             (
                 int StatusCode
                 , string Message
                 , JToken Result
             )
-            r =
-                _service
-                    .Process
-                        (
-                            routeName
-                            , parameters
-                            , OnReadRowColumnProcessFunc
-                            , Request.Method
-                            //, 102
-                        );
-            if (r.StatusCode != -1)
-            {
-                //support custom output nest json by JSONPath in JsonFile Config
-                result = MapByConfiguration(routeName, r.Result);
-                result = result
-                            .GetDescendantByPathKeys
+                result =
+                        _service
+                            .Process
                                 (
-                                    resultJsonPathPart1
-                                    , resultJsonPathPart2
-                                    , resultJsonPathPart3
-                                    , resultJsonPathPart4
-                                    , resultJsonPathPart5
-                                    , resultJsonPathPart6
+                                    routeName
+                                    , parameters
+                                    , OnReadRowColumnProcessFunc
+                                    , Request.Method
+                                    //, 102
                                 );
-                Response.StatusCode = r.StatusCode;
-            }
-            else
-            {
-                return
-                    new JsonResult
-                        (
-                            new
-                            {
-                                r.StatusCode
-                                , r.Message
-                            }
-                        )
-                    {
-                        StatusCode = r.StatusCode
-                    };
-            }
-            return result;
-        }
-                [HttpGet]
-        [Route("admin/{routeName}")]
-        public IDictionary<string, IStoreProcedureExecutable>
-                    Admin
-                        (
-                            string routeName
-                        )
-        {
             return
-                _service
-                    .IndexedExecutors
-                    //.Select
-                    //    (
-                    //        (x) =>
-                    //        {
-                    //            x.Value
-
-                    //        }
-                    
-                    //    )
-                    ;
+                Result
+                    (
+                        routeName
+                        , resultJsonPathPart1
+                        , resultJsonPathPart2
+                        , resultJsonPathPart3
+                        , resultJsonPathPart4
+                        , resultJsonPathPart5
+                        , resultJsonPathPart6
+                        , result
+                    );
         }
-
 
         [HttpDelete]
         [HttpGet]
@@ -387,60 +343,125 @@ namespace Microshaoft.WebApi.Controllers
                                         string resultJsonPathPart6 = null
                                 )
         {
-
-            JToken result = null;
             (
                 int StatusCode
                 , string Message
                 , JToken Result
             )
-            r = await
-                    _service
-                        .ProcessAsync
+                result = await
+                            _service
+                                .ProcessAsync
+                                    (
+                                        routeName
+                                        , parameters
+                                        , OnReadRowColumnProcessFunc
+                                        , Request.Method
+                                        //, 102
+                                    );
+            return
+                Result
+                    (
+                        routeName
+                        , resultJsonPathPart1
+                        , resultJsonPathPart2
+                        , resultJsonPathPart3
+                        , resultJsonPathPart4
+                        , resultJsonPathPart5
+                        , resultJsonPathPart6
+                        , result
+                    );
+        }
+        [HttpGet]
+        [Route("admin/{routeName}")]
+        public IDictionary<string, IStoreProcedureExecutable>
+            Admin
+                (
+                    string routeName
+                )
+        {
+            return
+                _service
+                    .IndexedExecutors
+                    //.Select
+                    //    (
+                    //        (x) =>
+                    //        {
+                    //            x.Value
+
+                    //        }
+
+                    //    )
+                    ;
+        }
+
+        private ActionResult<JToken> Result
+                    (
+                        string routeName
+                        , string resultJsonPathPart1
+                        , string resultJsonPathPart2
+                        , string resultJsonPathPart3
+                        , string resultJsonPathPart4
+                        , string resultJsonPathPart5
+                        , string resultJsonPathPart6
+                        ,
                             (
-                                routeName
-                                , parameters
-                                , OnReadRowColumnProcessFunc
-                                , Request.Method
-                                //, 102
-                            );
-            if (r.StatusCode != -1)
+                                int StatusCode
+                                , string Message
+                                , JToken Result
+                            )
+                                result
+                    )
+        {
+            Response
+                    .StatusCode = result
+                                        .StatusCode;
+            if (result.StatusCode == 200)
             {
                 //support custom output nest json by JSONPath in JsonFile Config
-                result = MapByConfiguration
-                                (
-                                    routeName
-                                    , r.Result
-                                );
-                result = result
-                            .GetDescendantByPathKeys
-                                (
-                                    resultJsonPathPart1
-                                    , resultJsonPathPart2
-                                    , resultJsonPathPart3
-                                    , resultJsonPathPart4
-                                    , resultJsonPathPart5
-                                    , resultJsonPathPart6
-                                );
-                Response.StatusCode = r.StatusCode;
+                result
+                    .Result = MapByConfiguration
+                                    (
+                                        routeName
+                                        , result
+                                                .Result
+                                    );
+                result
+                    .Result = result
+                                    .Result
+                                    .GetDescendantByPathKeys
+                                            (
+                                                resultJsonPathPart1
+                                                , resultJsonPathPart2
+                                                , resultJsonPathPart3
+                                                , resultJsonPathPart4
+                                                , resultJsonPathPart5
+                                                , resultJsonPathPart6
+                                            );
             }
             else
             {
                 return
-                    new JsonResult
-                        (
-                            new
-                            {
-                                r.StatusCode
-                                , r.Message
-                            }
-                        )
+                    new
+                        JsonResult
+                            (
+                                new
+                                {
+                                    StatusCode = result.StatusCode
+                                    , Message = result.Message
+                                }
+                            )
                     {
-                        StatusCode = r.StatusCode
+                        StatusCode = result.StatusCode
+                        , ContentType = "application/json"
                     };
             }
             return
-                result;
+                    new
+                        ActionResult<JToken>
+                            (
+                                result
+                                    .Result
+                            );
         }
     }
 }

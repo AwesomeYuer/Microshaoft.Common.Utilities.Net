@@ -154,7 +154,7 @@ namespace Microshaoft.Web
                 return -1;
             }
         }
-        private static object _locker = new object();
+        private static readonly object _locker = new object();
         protected readonly IConfiguration _configuration;
 
         public AbstractStoreProceduresService(IConfiguration configuration)
@@ -369,7 +369,7 @@ namespace Microshaoft.Web
                 )
             {
                 
-                var rr = Process
+                var (Success, Result) = Process
                         (
                             has.ConnectionString
                             , has.DataBaseType
@@ -379,10 +379,17 @@ namespace Microshaoft.Web
                             , has.EnableStatistics
                             , has.CommandTimeoutInSeconds
                         );
-                result = rr.Result;
-                var success = rr.Success;
-
-                AfterProcess(routeName, ref result, ref statusCode, ref message, has, success);
+                result = Result;
+                //var success = rr.Success;
+                AfterProcess
+                        (
+                            routeName
+                            , ref result
+                            , ref statusCode
+                            , ref message
+                            //, has
+                            //, success
+                        );
             }
             else
             {
@@ -398,7 +405,14 @@ namespace Microshaoft.Web
         }
 
         public async
-            Task<(int StatusCode, string Message, JToken Result)>
+            Task
+                <
+                    (
+                        int StatusCode
+                        , string Message
+                        , JToken Result
+                    )
+                >
             ProcessAsync
                 (
                     string routeName
@@ -406,10 +420,10 @@ namespace Microshaoft.Web
                     , Func
                         <
                             IDataReader
-                            , Type        // fieldType
-                            , string    // fieldName
-                            , int       // row index
-                            , int       // column index
+                            , Type          // fieldType
+                            , string        // fieldName
+                            , int           // row index
+                            , int           // column index
                             ,
                                 (
                                     bool NeedDefaultProcess
@@ -436,19 +450,31 @@ namespace Microshaoft.Web
                     has.StatusCode == 200
                 )
             {
-                var rr = await ProcessAsync
-                                    (
-                                        has.ConnectionString
-                                        , has.DataBaseType
-                                        , has.StoreProcedureName
-                                        , parameters
-                                        , onReadRowColumnProcessFunc
-                                        , has.EnableStatistics
-                                        , has.CommandTimeoutInSeconds
-                                    );
-                result = rr.Result;
-                var success = rr.Success;
-                AfterProcess(routeName, ref result, ref statusCode, ref message, has, success);
+                var 
+                    (
+                        Success
+                        , Result
+                    ) = await
+                            ProcessAsync
+                                (
+                                    has.ConnectionString
+                                    , has.DataBaseType
+                                    , has.StoreProcedureName
+                                    , parameters
+                                    , onReadRowColumnProcessFunc
+                                    , has.EnableStatistics
+                                    , has.CommandTimeoutInSeconds
+                                );
+                result = Result;
+                AfterProcess
+                        (
+                            routeName
+                            , ref result
+                            , ref statusCode
+                            , ref message
+                            //, has
+                            //, success
+                        );
             }
             else
             {
@@ -469,19 +495,19 @@ namespace Microshaoft.Web
                             , ref JToken result
                             , ref int statusCode
                             , ref string message
-                            , 
-                                (
-                                    bool Success
-                                    , int StatusCode
-                                    , string HttpMethod
-                                    , string Message
-                                    , string ConnectionString
-                                    , string DataBaseType
-                                    , string StoreProcedureName
-                                    , int CommandTimeoutInSeconds
-                                    , bool EnableStatistics
-                                ) has
-                            , bool success
+                            //, 
+                            //    (
+                            //        bool Success
+                            //        , int StatusCode
+                            //        , string HttpMethod
+                            //        , string Message
+                            //        , string ConnectionString
+                            //        , string DataBaseType
+                            //        , string StoreProcedureName
+                            //        , int CommandTimeoutInSeconds
+                            //        , bool EnableStatistics
+                            //    ) has
+                            //, bool success
                         )
         {
             var jObject = result
@@ -520,38 +546,44 @@ namespace Microshaoft.Web
                     message = jv.Value<string>();
                 }
             }
-            //if (success)
-            //{
-                
-            //}
         }
 
-        public virtual (bool Success, JToken Result)
-                Process
-                        (
-                            string connectionString
-                            , string dataBaseType
-                            , string storeProcedureName
-                            , JToken parameters = null
-                            , Func
-                                <
-                                    IDataReader
-                                    , Type        // fieldType
-                                    , string    // fieldName
-                                    , int       // row index
-                                    , int       // column index
-                                    ,
-                                        (
-                                            bool NeedDefaultProcess
-                                            , JProperty Field   //  JObject Field 对象
-                                        )
-                                > onReadRowColumnProcessFunc = null
-                            , bool enableStatistics = false
-                            , int commandTimeoutInSeconds = 90
-                        )
+        public virtual
+                (
+                    bool Success
+                    , JToken Result
+                )
+                    Process
+                            (
+                                string connectionString
+                                , string dataBaseType
+                                , string storeProcedureName
+                                , JToken parameters = null
+                                , Func
+                                    <
+                                        IDataReader
+                                        , Type        // fieldType
+                                        , string    // fieldName
+                                        , int       // row index
+                                        , int       // column index
+                                        ,
+                                            (
+                                                bool NeedDefaultProcess
+                                                , JProperty Field   //  JObject Field 对象
+                                            )
+                                    > onReadRowColumnProcessFunc = null
+                                , bool enableStatistics = false
+                                , int commandTimeoutInSeconds = 90
+                            )
         {
-            (bool Success, JToken Result) r = (Success: false, Result: null);
-
+            (
+                bool Success
+                , JToken Result
+            ) r =
+                (
+                    Success: false
+                    , Result: null
+                );
             JToken result = null;
             var beginTimeStamp = Stopwatch.GetTimestamp();
             var beginTime = DateTime.Now;
@@ -624,21 +656,27 @@ namespace Microshaoft.Web
                     , int commandTimeoutInSeconds = 90
                 )
         {
-            (bool Success, JToken Result) r = (Success : false, Result : null);
-            
+            (
+                bool Success
+                , JToken Result
+            ) r =
+                (
+                    Success : false
+                    , Result : null
+                );
             JToken result = null;
-            
             var beginTimeStamp = Stopwatch.GetTimestamp();
             var beginTime = DateTime.Now;
             var success = _indexedExecutors
-                                .TryGetValue
-                                    (
-                                        dataBaseType
-                                        , out var executor
-                                    );
+                                    .TryGetValue
+                                        (
+                                            dataBaseType
+                                            , out var executor
+                                        );
             if (success)
             {
-                r = await executor
+                r = await
+                        executor
                             .ExecuteAsync
                                 (
                                     connectionString
@@ -655,7 +693,12 @@ namespace Microshaoft.Web
                 //result = null;
                 return r;
             }
-            AfterExecute(result, beginTime, beginTimeStamp);
+            AfterExecute
+                    (
+                        result
+                        , beginTime
+                        , beginTimeStamp
+                    );
             return r;
         }
         protected virtual
@@ -697,20 +740,20 @@ namespace Microshaoft.Web
                 , bool EnableStatistics
             )
                 Result()
-            {
-                return
-                    (
-                        success
-                        , statusCode
-                        , httpMethod
-                        , message
-                        , connectionString
-                        , dataBaseType
-                        , storeProcedureName
-                        , commandTimeoutInSeconds
-                        , enableStatistics
-                    );
-            }
+                    {
+                        return
+                            (
+                                success
+                                , statusCode
+                                , httpMethod
+                                , message
+                                , connectionString
+                                , dataBaseType
+                                , storeProcedureName
+                                , commandTimeoutInSeconds
+                                , enableStatistics
+                            );
+                    }
             var routeConfiguration = _configuration
                                             .GetSection($"Routes:{routeName}");
             if (!routeConfiguration.Exists())
@@ -780,10 +823,13 @@ namespace Microshaoft.Web
             }
             
             storeProcedureName = actionConfiguration
-                                        .GetValue<string>("StoreProcedureName");
+                                        .GetValue<string>
+                                            ("StoreProcedureName");
             enableStatistics = connectionConfiguration
-                                        .GetValue<bool>("EnableStatistics");
-            var accessingConfiguration = actionConfiguration.GetSection("DefaultAccessing");
+                                        .GetValue<bool>
+                                            ("EnableStatistics");
+            var accessingConfiguration = actionConfiguration
+                                            .GetSection("DefaultAccessing");
             if (enableStatistics)
             {
                 if (actionConfiguration.GetSection("EnableStatistics").Exists())
@@ -800,8 +846,6 @@ namespace Microshaoft.Web
                     }
                 }
             }
-            
-            
             if (accessingConfiguration.GetSection("CommandTimeoutInSeconds").Exists())
             {
                 commandTimeoutInSeconds = accessingConfiguration
