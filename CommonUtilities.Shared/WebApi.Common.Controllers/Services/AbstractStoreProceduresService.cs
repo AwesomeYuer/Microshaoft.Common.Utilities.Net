@@ -86,10 +86,10 @@ namespace Microshaoft.Web
                     , Func
                             <
                                 IDataReader
-                                , Type        // fieldType
-                                , string    // fieldName
-                                , int       // row index
-                                , int       // column index
+                                , Type          // fieldType
+                                , string        // fieldName
+                                , int           // row index
+                                , int           // column index
                                 , 
                                     (
                                         bool NeedDefaultProcess
@@ -167,10 +167,12 @@ namespace Microshaoft.Web
         {
             _cachedParametersDefinitionExpiredInSeconds =
                 _configuration
-                        .GetValue<int>("CachedParametersDefinitionExpiredInSeconds");
+                        .GetValue<int>
+                            ("CachedParametersDefinitionExpiredInSeconds");
             _needAutoRefreshExecutedTimeForSlideExpire =
                 _configuration
-                        .GetValue<bool>("NeedAutoRefreshExecutedTimeForSlideExpire");
+                        .GetValue<bool>
+                            ("NeedAutoRefreshExecutedTimeForSlideExpire");
             LoadDynamicExecutors();
         }
         protected virtual string[] GetDynamicExecutorsPathsProcess()
@@ -249,11 +251,11 @@ namespace Microshaoft.Web
                             (
                                 (x) =>
                                 {
-                                    var r = CompositionHelper
+                                    return
+                                        CompositionHelper
                                                 .ImportManyExportsComposeParts
                                                     <IStoreProcedureExecutable>
                                                         (x, "*StoreProcedure*plugin*.dll");
-                                    return r;
                                 }
                             );
             var indexedExecutors =
@@ -631,7 +633,14 @@ namespace Microshaoft.Web
                         .TotalMilliseconds;
         }
 
-        public virtual async Task<(bool Success, JToken Result)>
+        public virtual async
+                    Task
+                        <
+                            (
+                                bool Success
+                                , JToken Result
+                            )
+                        >
             ProcessAsync
                 (
                     string connectionString
@@ -642,10 +651,10 @@ namespace Microshaoft.Web
                     , Func
                         <
                             IDataReader
-                            , Type        // fieldType
-                            , string    // fieldName
-                            , int       // row index
-                            , int       // column index
+                            , Type          // fieldType
+                            , string        // fieldName
+                            , int           // row index
+                            , int           // column index
                             ,
                                 (
                                     bool NeedDefaultProcess
@@ -740,20 +749,20 @@ namespace Microshaoft.Web
                 , bool EnableStatistics
             )
                 Result()
-                    {
-                        return
-                            (
-                                success
-                                , statusCode
-                                , httpMethod
-                                , message
-                                , connectionString
-                                , dataBaseType
-                                , storeProcedureName
-                                , commandTimeoutInSeconds
-                                , enableStatistics
-                            );
-                    }
+            {
+                return
+                    (
+                        success
+                        , statusCode
+                        , httpMethod
+                        , message
+                        , connectionString
+                        , dataBaseType
+                        , storeProcedureName
+                        , commandTimeoutInSeconds
+                        , enableStatistics
+                    );
+            }
             var routeConfiguration = _configuration
                                             .GetSection($"Routes:{routeName}");
             if (!routeConfiguration.Exists())
@@ -802,9 +811,11 @@ namespace Microshaoft.Web
             }
             var connectionConfiguration =
                                 _configuration
-                                        .GetSection($"Connections:{connectionID}");
+                                        .GetSection
+                                            ($"Connections:{connectionID}");
             connectionString = connectionConfiguration
-                                        .GetValue<string>("ConnectionString");
+                                        .GetValue<string>
+                                            ("ConnectionString");
             success = !connectionString.IsNullOrEmptyOrWhiteSpace();
             if (!success)
             {
@@ -813,7 +824,8 @@ namespace Microshaoft.Web
                 return Result();
             }
             dataBaseType = connectionConfiguration
-                                    .GetValue<string>("DataBaseType");
+                                    .GetValue<string>
+                                        ("DataBaseType");
             success = !dataBaseType.IsNullOrEmptyOrWhiteSpace();
             if (!success)
             {
@@ -829,41 +841,47 @@ namespace Microshaoft.Web
                                         .GetValue<bool>
                                             ("EnableStatistics");
             var accessingConfiguration = actionConfiguration
-                                            .GetSection("DefaultAccessing");
+                                            .GetSection
+                                                ("DefaultAccessing");
             if (enableStatistics)
             {
                 if (actionConfiguration.GetSection("EnableStatistics").Exists())
                 {
                     enableStatistics = actionConfiguration
-                                            .GetValue<bool>("EnableStatistics");
+                                            .GetValue<bool>
+                                                ("EnableStatistics");
                 }
                 else
                 {
                     if (accessingConfiguration.GetSection("EnableStatistics").Exists())
                     {
                         enableStatistics = accessingConfiguration
-                                                .GetValue<bool>("EnableStatistics");
+                                                .GetValue<bool>
+                                                    ("EnableStatistics");
                     }
                 }
             }
             if (accessingConfiguration.GetSection("CommandTimeoutInSeconds").Exists())
             {
                 commandTimeoutInSeconds = accessingConfiguration
-                                                .GetValue<int>("CommandtimeoutInSeconds");
+                                                .GetValue<int>
+                                                    ("CommandtimeoutInSeconds");
             }
             else
             {
                 if (actionConfiguration.GetSection("CommandTimeoutInSeconds").Exists())
                 {
                     commandTimeoutInSeconds = actionConfiguration
-                                                    .GetValue<int>("CommandtimeoutInSeconds");
+                                                    .GetValue<int>
+                                                            ("CommandtimeoutInSeconds");
                 }
                 else
                 {
                     if (connectionConfiguration.GetSection("CommandTimeoutInSeconds").Exists())
                     {
                         commandTimeoutInSeconds = connectionConfiguration
-                                                        .GetValue<int>("CommandTimeoutInSeconds");
+                                                        .GetValue<int>
+                                                            ("CommandTimeoutInSeconds");
                     }
                 }
             }

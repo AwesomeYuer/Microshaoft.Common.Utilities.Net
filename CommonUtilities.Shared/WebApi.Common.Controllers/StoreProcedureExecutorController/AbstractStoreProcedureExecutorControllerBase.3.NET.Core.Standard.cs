@@ -70,16 +70,11 @@ namespace Microshaoft.WebApi.Controllers
                                             (
                                                 (x) =>
                                                 {
-                                                    (
-                                                        string TargetJPath
-                                                        , string SourceJPath
-                                                    )
-                                                        rrr =
-                                                            (
-                                                                x.Key
-                                                                , x.Get<string>()
-                                                            );
-                                                    return rrr;
+                                                    return
+                                                        (
+                                                            TargetJPath : x.Key
+                                                            , SourceJPath : x.Get<string>()
+                                                        );
                                                 }
                                             );
                 result = result
