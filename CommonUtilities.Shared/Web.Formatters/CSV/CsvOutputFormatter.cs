@@ -172,7 +172,7 @@ namespace Microshaoft.Web
             }
             var response = httpContext
                                     .Response;
-            var downloadFileName = routeName;
+            var downloadFileName = $"{routeName}.csv";
             var downloadFileNameConfiguration =
                     _configuration
                             .GetSection

@@ -41,7 +41,7 @@ namespace Microshaoft.WebApi.ModelBinders
                             //request
                             out parameters
                             , out var secretJwtToken
-                            ,  () =>
+                            , () =>
                             {
                                 return
                                     bindingContext
@@ -60,14 +60,6 @@ namespace Microshaoft.WebApi.ModelBinders
                             , secretJwtToken
                         );
             }
-            //request
-            //        .HttpContext
-            //        .Items
-            //        .Add
-            //            (
-            //                "RequestJTokenParameters"
-            //                , parameters
-            //            );
             bindingContext
                     .Result =
                         ModelBindingResult
@@ -77,28 +69,5 @@ namespace Microshaoft.WebApi.ModelBinders
                                             );
         }
     }
-    //public class JTokenModelBinderProvider
-    //                        : IModelBinderProvider
-    //                            , IModelBinder
-    //{
-    //    private IModelBinder _binder = new JTokenModelBinder();
-    //    public async Task BindModelAsync(ModelBindingContext bindingContext)
-    //    {
-    //        await _binder.BindModelAsync(bindingContext);
-    //    }
-    //    public IModelBinder GetBinder(ModelBinderProviderContext context)
-    //    {
-    //        if (context == null)
-    //        {
-    //            throw new ArgumentNullException(nameof(context));
-    //        }
-    //        if (context.Metadata.ModelType == typeof(JToken))
-    //        {
-    //            //_binder = new JTokenModelBinder();
-    //            return _binder;
-    //        }
-    //        return null;
-    //    }
-    //}
 }
 #endif
