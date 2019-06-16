@@ -350,11 +350,6 @@ namespace Microshaoft.Web
                             , int commandTimeoutInSeconds = 101
                         )
         {
-            //(
-            //    int StatusCode
-            //    , string Message
-            //    , JToken Result
-            //) r = (StatusCode: 200, Message: string.Empty, Result: null);
             JToken result = null;
             var statusCode = 200;
             var message = string.Empty;
@@ -383,14 +378,11 @@ namespace Microshaoft.Web
                         );
                 result = Result;
                 //var success = rr.Success;
-                AfterProcess
+                HttpResponseParametersProcess
                         (
-                            routeName
-                            , ref result
+                            ref result
                             , ref statusCode
                             , ref message
-                            //, has
-                            //, success
                         );
             }
             else
@@ -468,14 +460,11 @@ namespace Microshaoft.Web
                                     , has.CommandTimeoutInSeconds
                                 );
                 result = Result;
-                AfterProcess
+                HttpResponseParametersProcess
                         (
-                            routeName
-                            , ref result
+                            ref result
                             , ref statusCode
                             , ref message
-                            //, has
-                            //, success
                         );
             }
             else
@@ -491,33 +480,20 @@ namespace Microshaoft.Web
                 );
         }
 
-        private void AfterProcess
+        private void HttpResponseParametersProcess
                         (
-                            string routeName
-                            , ref JToken result
+                            ref JToken result
                             , ref int statusCode
                             , ref string message
-                            //, 
-                            //    (
-                            //        bool Success
-                            //        , int StatusCode
-                            //        , string HttpMethod
-                            //        , string Message
-                            //        , string ConnectionString
-                            //        , string DataBaseType
-                            //        , string StoreProcedureName
-                            //        , int CommandTimeoutInSeconds
-                            //        , bool EnableStatistics
-                            //    ) has
-                            //, bool success
                         )
         {
-            var jObject = result
-                            ["Outputs"]
-                            ["Parameters"] as JObject;
-            if (jObject != null)
+            if 
+                (
+                    result
+                        ["Outputs"]
+                        ["Parameters"] is JObject jObject
+                )
             {
-                JToken jv = null;
                 if
                     (
                         jObject
@@ -526,13 +502,12 @@ namespace Microshaoft.Web
                                     "HttpResponseStatusCode"
                                     , StringComparison
                                             .OrdinalIgnoreCase
-                                    , out jv
+                                    , out JToken jv
                                 )
                     )
                 {
                     statusCode = jv.Value<int>();
                 }
-                jv = null;
                 if
                     (
                         jObject

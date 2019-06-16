@@ -7,9 +7,14 @@ namespace Microshaoft.Web
     {
         public bool UseSingleLineHeaderInCsv { get; set; } = true;
 
-        public string CsvDelimiter { get; set; } = ";";
+        public string CsvColumnsDelimiter { get; set; } = ",";
 
-        public Encoding Encoding { get; set; } = Encoding.Default;
+        public Encoding Encoding { get; set; } = Encoding.UTF8;
+
+        public string DateTimeFormat { get; set; } = "yyyy-MM-ddTHH:mm:ss.FFFFFFFzzz";
+
+        //避免 Excel CSV 科学计数法
+        public string DigitsTextSuffix { get; set; } = "\t";
 
         public bool IncludeExcelDelimiterHeader { get; set; } = false;
     }
