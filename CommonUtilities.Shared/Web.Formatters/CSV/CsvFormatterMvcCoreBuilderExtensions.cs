@@ -55,7 +55,7 @@ namespace Microshaoft.Web
                 csvFormatterOptions = new CsvFormatterOptions();
             }
 
-            if (string.IsNullOrWhiteSpace(csvFormatterOptions.CsvDelimiter))
+            if (string.IsNullOrWhiteSpace(csvFormatterOptions.CsvColumnsDelimiter))
             {
                 throw
                     new

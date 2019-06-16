@@ -258,7 +258,7 @@ namespace Microshaoft.WebApi.Controllers
                                     //, 102
                                 );
             return
-                Result
+                ResultProcess
                     (
                         routeName
                         , resultJsonPathPart1
@@ -354,7 +354,7 @@ namespace Microshaoft.WebApi.Controllers
                                         //, 102
                                     );
             return
-                Result
+                ResultProcess
                     (
                         routeName
                         , resultJsonPathPart1
@@ -371,6 +371,7 @@ namespace Microshaoft.WebApi.Controllers
         public IDictionary<string, IStoreProcedureExecutable>
             Admin
                 (
+                    //必须有该参数
                     string routeName
                 )
         {
@@ -382,14 +383,12 @@ namespace Microshaoft.WebApi.Controllers
                     //        (x) =>
                     //        {
                     //            x.Value
-
                     //        }
-
                     //    )
                     ;
         }
 
-        private ActionResult<JToken> Result
+        private ActionResult<JToken> ResultProcess
                     (
                         string routeName
                         , string resultJsonPathPart1
@@ -451,12 +450,8 @@ namespace Microshaoft.WebApi.Controllers
                     };
             }
             return
-                    new
-                        ActionResult<JToken>
-                            (
-                                result
-                                    .Result
-                            );
+                result
+                    .Result;
         }
     }
 }

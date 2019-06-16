@@ -158,7 +158,7 @@
 
             var csvFormatterOptions = new CsvFormatterOptions
             {
-                CsvDelimiter = ",",
+                CsvColumnsDelimiter = ",",
                 IncludeExcelDelimiterHeader = false,
                 UseSingleLineHeaderInCsv = true
             };

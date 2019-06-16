@@ -101,7 +101,7 @@ namespace Microshaoft.Web
                     if (jToken.Type == JTokenType.Date)
                     {
                         //@value = ((DateTime) jValue).ToString("yyyy-MM-ddTHH:mm:ss.fffff");
-                        @value = $@"""{((DateTime) jToken).ToString("yyyy-MM-dd HH:mm:ss.fff")}""";
+                        @value = $@"""{((DateTime) jToken).ToString("yyyy-MM-ddTHH:mm:ss.FFFFFFFzzz")}""";
                     }
                     else
                     {
@@ -109,16 +109,19 @@ namespace Microshaoft.Web
                         @value = @value.Replace(@"""", @"""""");
                         if (jToken.Type == JTokenType.String)
                         {
-                            if (_digitsRegex.IsMatch(@value))
+                            if (!string.IsNullOrEmpty(_options.DigitsTextSuffix))
                             {
-                                //避免在Excel中csv文本数字自动变科学计数法
-                                @value += "\t";
+                                if (_digitsRegex.IsMatch(@value))
+                                {
+                                    //避免在Excel中csv文本数字自动变科学计数法
+                                    @value += _options.DigitsTextSuffix;
+                                }
                             }
                         }
                         //Check if the value contains a delimiter and place it in quotes if so
                         if
                             (
-                                @value.Contains(_options.CsvDelimiter)
+                                @value.Contains(_options.CsvColumnsDelimiter)
                                 ||
                                 @value.Contains("\r")
                                 ||
@@ -217,7 +220,7 @@ namespace Microshaoft.Web
                         streamWriter
                             .WriteLineAsync
                                 (
-                                    $"sep ={_options.CsvDelimiter}"
+                                    $"sep ={_options.CsvColumnsDelimiter}"
                                 );
                 }
                 if (context.Object is JArray jArray)
@@ -228,6 +231,7 @@ namespace Microshaoft.Web
                                         (
                                             $"Routes:{routeName}:{httpMethod}:Exporting:OutputColumns"
                                         );
+           
                     (
                         string ColumnName
                         , string ColumnTitle
@@ -260,23 +264,24 @@ namespace Microshaoft.Web
                                         .ToArray();
                         if (_options.UseSingleLineHeaderInCsv)
                         {
+                            var j = 0;
                             var columnsHeaderLine =
-                                    string
-                                        .Join
-                                            (
-                                                _options
-                                                    .CsvDelimiter
-                                                , outputColumns
-                                                            .Select
-                                                                (
-                                                                    (x) =>
-                                                                    {
-                                                                        return
-                                                                            x
-                                                                                .ColumnTitle;
-                                                                    }
-                                                                )
-                                            );
+                                        outputColumns
+                                                .Aggregate
+                                                    (
+                                                        string.Empty
+                                                        , (x, y) =>
+                                                        {
+                                                            if (j > 0)
+                                                            {
+                                                                x += _options.CsvColumnsDelimiter;
+                                                            }
+                                                            x += y.ColumnTitle;
+                                                            j++;
+                                                            return
+                                                                    x;
+                                                        }
+                                                    );
                             await
                                 streamWriter
                                     .WriteLineAsync
@@ -285,7 +290,7 @@ namespace Microshaoft.Web
                                             );
                         }
                     }
-                    int i = 0;
+                    var i = 0;
                     foreach (JObject jObject in jArray)
                     {
                         if (i == 0)
@@ -294,24 +299,26 @@ namespace Microshaoft.Web
                             {
                                 if (outputColumns == null)
                                 {
-                                    var propertiesNames = jObject
-                                                            .Properties()
-                                                            .Select
-                                                                (
-                                                                    (x) =>
+                                    var j = 0;
+                                    var columnsHeaderLine = 
+                                                    jObject
+                                                        .Properties()
+                                                        .Aggregate
+                                                            (
+                                                                string.Empty
+                                                                , (x, y) =>
+                                                                {
+                                                                    if (j > 0)
                                                                     {
-                                                                        return
-                                                                            x.Name;
+                                                                        x += _options
+                                                                                .CsvColumnsDelimiter;
                                                                     }
-                                                                );
-                                    var columnsHeaderLine =
-                                            string
-                                                .Join
-                                                    (
-                                                        _options
-                                                            .CsvDelimiter
-                                                        , propertiesNames
-                                                    );
+                                                                    x += y.Name;
+                                                                    j++;
+                                                                    return
+                                                                            x;
+                                                                }
+                                                            );
                                     await
                                         streamWriter
                                             .WriteLineAsync
@@ -330,7 +337,7 @@ namespace Microshaoft.Web
                             {
                                 if (j > 0)
                                 {
-                                    line += _options.CsvDelimiter;
+                                    line += _options.CsvColumnsDelimiter;
                                 }
                                 var jToken = jProperty.Value;
                                 line += getValue(jToken);
@@ -344,7 +351,7 @@ namespace Microshaoft.Web
                             {
                                 if (j > 0)
                                 {
-                                    line += _options.CsvDelimiter;
+                                    line += _options.CsvColumnsDelimiter;
                                 }
                                 if 
                                     (
