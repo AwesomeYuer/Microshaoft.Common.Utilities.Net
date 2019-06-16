@@ -101,7 +101,7 @@ namespace Microshaoft.Web
                     if (jToken.Type == JTokenType.Date)
                     {
                         //@value = ((DateTime) jValue).ToString("yyyy-MM-ddTHH:mm:ss.fffff");
-                        @value = $@"""{((DateTime) jToken).ToString("yyyy-MM-ddTHH:mm:ss.FFFFFFFzzz")}""";
+                        @value = $@"""{((DateTime) jToken).ToString(_options.DateTimeFormat)}""";
                     }
                     else
                     {
