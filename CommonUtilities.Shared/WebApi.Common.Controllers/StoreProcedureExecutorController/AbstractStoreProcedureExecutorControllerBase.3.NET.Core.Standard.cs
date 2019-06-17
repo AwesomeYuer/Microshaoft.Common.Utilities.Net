@@ -2,7 +2,6 @@
 namespace Microshaoft.WebApi.Controllers
 {
     using Microshaoft;
-    //using Microshaoft.CompositionPlugins;
     using Microshaoft.Web;
     using Microshaoft.WebApi.ModelBinders;
     using Microsoft.AspNetCore.Mvc;
