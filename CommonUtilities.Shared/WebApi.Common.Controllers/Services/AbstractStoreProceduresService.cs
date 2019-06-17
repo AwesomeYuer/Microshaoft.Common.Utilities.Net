@@ -539,10 +539,10 @@ namespace Microshaoft.Web
                                 , Func
                                     <
                                         IDataReader
-                                        , Type        // fieldType
-                                        , string    // fieldName
-                                        , int       // row index
-                                        , int       // column index
+                                        , Type          // fieldType
+                                        , string        // fieldName
+                                        , int           // row index
+                                        , int           // column index
                                         ,
                                             (
                                                 bool NeedDefaultProcess
@@ -586,14 +586,19 @@ namespace Microshaoft.Web
             }
             if (!success)
             {
-                //result = null;
-                return r;
+                return
+                        r;
             }
-            AfterExecute(result, beginTime, beginTimeStamp);
+            ResultTimingProcess
+                    (
+                        result
+                        , beginTime
+                        , beginTimeStamp
+                    );
             return r;
         }
 
-        private static void AfterExecute
+        private static void ResultTimingProcess
                 (
                     JToken result
                     , DateTime beginTime
@@ -674,16 +679,17 @@ namespace Microshaoft.Web
             }
             if (!success)
             {
-                //result = null;
-                return r;
+                return
+                        r;
             }
-            AfterExecute
+            ResultTimingProcess
                     (
                         result
                         , beginTime
                         , beginTimeStamp
                     );
-            return r;
+            return
+                    r;
         }
         protected virtual
             (
@@ -748,7 +754,8 @@ namespace Microshaoft.Web
             }
             if (!success)
             {
-                return Result();
+                return
+                    Result();
             }
             if
                 (
@@ -776,13 +783,15 @@ namespace Microshaoft.Web
                 return Result();
             }
             var connectionID = actionConfiguration
-                                    .GetValue<string>("ConnectionID");
+                                    .GetValue<string>
+                                        ("ConnectionID");
             success = !connectionID.IsNullOrEmptyOrWhiteSpace();
             if (!success)
             {
                 statusCode = 500;
                 message = $"Database connectionID error";
-                return Result();
+                return
+                    Result();
             }
             var connectionConfiguration =
                                 _configuration
@@ -796,17 +805,20 @@ namespace Microshaoft.Web
             {
                 statusCode = 500;
                 message = $"Database connection string error";
-                return Result();
+                return
+                    Result();
             }
             dataBaseType = connectionConfiguration
                                     .GetValue<string>
                                         ("DataBaseType");
-            success = !dataBaseType.IsNullOrEmptyOrWhiteSpace();
+            success = !dataBaseType
+                            .IsNullOrEmptyOrWhiteSpace();
             if (!success)
             {
                 statusCode = 500;
                 message = $"Database Type error";
-                return Result();
+                return
+                    Result();
             }
             
             storeProcedureName = actionConfiguration
@@ -865,11 +877,13 @@ namespace Microshaoft.Web
             {
                 statusCode = 500;
                 message = $"Database StoreProcedure Name error";
-                return Result();
+                return
+                    Result();
             }
             //success = true;
             statusCode = 200;
-            return Result();
+            return
+                Result();
         }
     }
 }
