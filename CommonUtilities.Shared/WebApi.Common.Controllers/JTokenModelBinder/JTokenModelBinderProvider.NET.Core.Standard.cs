@@ -18,10 +18,10 @@ namespace Microshaoft.WebApi.ModelBinders
 
         public async Task BindModelAsync(ModelBindingContext bindingContext)
         {
-            var request = bindingContext
-                                    .HttpContext
+            var httpContext = bindingContext
+                                    .HttpContext;
+            var request = httpContext
                                     .Request;
-
             IConfiguration configuration =
                         (IConfiguration) bindingContext
                                             .HttpContext
@@ -34,12 +34,11 @@ namespace Microshaoft.WebApi.ModelBinders
                                     .GetSection("TokenName")
                                     .Value;
             var ok = false;
-            JToken parameters = null;
             ok = request
                     .TryParseJTokenParameters
                         (
                             //request
-                            out parameters
+                            out JToken parameters
                             , out var secretJwtToken
                             , () =>
                             {
@@ -49,16 +48,36 @@ namespace Microshaoft.WebApi.ModelBinders
                             }
                             , jwtTokenName
                         );
+            if (ok)
+            {
+                if
+                    (
+                        !httpContext
+                            .Items
+                            .ContainsKey
+                                (
+                                    "requestJTokenParameters"
+                                )
+                    )
+                {
+                    httpContext
+                            .Items
+                            .Add
+                                (
+                                    "requestJTokenParameters"
+                                    , parameters
+                                );
+                }
+            }
             if (!StringValues.IsNullOrEmpty(secretJwtToken))
             {
-                request
-                    .HttpContext
-                    .Items
-                    .Add
-                        (
-                            jwtTokenName
-                            , secretJwtToken
-                        );
+                httpContext
+                        .Items
+                        .Add
+                            (
+                                jwtTokenName
+                                , secretJwtToken
+                            );
             }
             bindingContext
                     .Result =

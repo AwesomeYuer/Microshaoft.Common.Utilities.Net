@@ -5,6 +5,7 @@ namespace Microshaoft.Web
     using Microsoft.AspNetCore.Mvc.Filters;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Primitives;
+    using Newtonsoft.Json.Linq;
     using System;
     using System.Linq;
 
@@ -21,13 +22,6 @@ namespace Microshaoft.Web
                         Attribute
                         , IActionFilter
     {
-
-        //public static int InstancesSeed = 0;
-        //public int InstanceID
-        //{
-        //    private set;
-        //    get;
-        //}
         private bool _isRequired = true;
         public bool IsRequired
         {
@@ -72,7 +66,9 @@ namespace Microshaoft.Web
                                     , ContentType = "application/json"
                                 };
             }
-            var request = context.HttpContext.Request;
+            var httpContext = context.HttpContext;
+            var request = httpContext.Request;
+
             StringValues jwtToken = string.Empty;
             IConfiguration configuration =
                         (IConfiguration) context
@@ -91,10 +87,45 @@ namespace Microshaoft.Web
             {
                 jwtTokenName = configurationTokenName.Value;
             }
+            JToken parameters = null;
+            string secretJwtToken = string.Empty;
             if
                 (
-                    context
-                        .HttpContext
+                    httpContext
+                        .Items
+                        .TryGetValue
+                            (
+                                "requestJTokenParameters"
+                                , out object o
+                            )
+                )
+            {
+                parameters = (JToken) o;
+            }
+            else
+            {
+                ok = request
+                        .TryParseJTokenParameters
+                            (
+                                out parameters
+                                , out secretJwtToken
+                                , null
+                                , jwtTokenName
+                            );
+                if (ok)
+                {
+                    httpContext
+                            .Items
+                            .Add
+                                (
+                                    "requestJTokenParameters"
+                                    , parameters
+                                );
+                }
+            }
+            if
+                (
+                    httpContext
                         .Items
                         .TryGetValue
                             (
@@ -108,14 +139,6 @@ namespace Microshaoft.Web
             }
             else
             {
-                ok = request
-                        .TryParseJTokenParameters
-                            (
-                                out var parameters
-                                , out var secretJwtToken
-                                , null
-                                , jwtTokenName
-                            );
                 ok = !StringValues.IsNullOrEmpty(secretJwtToken);
                 if (ok)
                 {
@@ -147,13 +170,13 @@ namespace Microshaoft.Web
                 {
                     var jwtSecretKey = configurationSecretKey.Value;
                     ok = JwtTokenHelper
-                            .TryValidateToken
-                                (
-                                    jwtToken
-                                    , jwtSecretKey
-                                    , out var validatedPlainToken
-                                    , out var claimsPrincipal
-                                );
+                                .TryValidateToken
+                                    (
+                                        jwtToken
+                                        , jwtSecretKey
+                                        , out var validatedPlainToken
+                                        , out var claimsPrincipal
+                                    );
                     if (!ok)
                     {
                         errorStatusCode = 400;
