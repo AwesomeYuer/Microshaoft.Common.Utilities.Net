@@ -53,14 +53,19 @@ namespace Microshaoft.WebApi
                                     }
                                     else
                                     {
-                                        jToken = new JValue(x.Value[0]);
+                                        var valueText = x.Value[0];
+                                        if (!string.IsNullOrEmpty(valueText))
+                                        {
+                                            jToken = new JValue(x.Value[0]);
+                                        }
                                     }
                                     return
-                                        new JProperty
-                                            (
-                                                x.Key
-                                                , jToken
-                                            );
+                                            new
+                                                JProperty
+                                                    (
+                                                        x.Key
+                                                        , jToken
+                                                    );
                                 }
                             );
             var result = new JObject(jProperties);

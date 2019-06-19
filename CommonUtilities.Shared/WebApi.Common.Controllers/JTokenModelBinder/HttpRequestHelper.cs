@@ -85,6 +85,8 @@ namespace Microshaoft.Web
                 if (!isJson)
                 {
                     jToken = target.Query.ToJToken();
+
+                    //Console.WriteLine("target.Query.ToJToken()");
                 }
             }
             // 取 jwtToken 优先级顺序：Header → QueryString → Body
