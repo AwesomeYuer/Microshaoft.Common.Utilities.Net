@@ -17,7 +17,6 @@
             var r = false;
             foreach (var path in CompareJTokensPaths)
             {
-                
                 var xJTokenType = x.SelectToken(path).Type;
                 var yJTokenType = y.SelectToken(path).Type;
                 if (xJTokenType == yJTokenType)
@@ -74,7 +73,6 @@
 
     public static partial class JsonHelper
     {
-
         public static JTokenType TryParseJson
                                     (
                                         this string target
@@ -217,10 +215,9 @@
 
         public static bool IsJObject(this string target, bool validate = false)
         {
-            //IL_0018: Unknown result type (might be due to invalid IL or missing references)
-            var r = false;
             char c = StringHelper.FirstNonWhitespaceCharacter(target);
-            r = (c == '{');
+            //IL_0018: Unknown result type (might be due to invalid IL or missing references)
+            var r = (c == '{');
             if (r && validate)
             {
                 try

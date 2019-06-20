@@ -104,7 +104,6 @@ namespace Microshaoft
                         , messageFactory
                         , loggingFormatArguments
                     );
-            loggingFormatArguments = null;
         }
         public static void LogOnDemand
                                 (
@@ -147,7 +146,6 @@ namespace Microshaoft
                         , messageFactory
                         , loggingFormatArguments
                     );
-            loggingFormatArguments = null;
         }
         public static void LogOnDemand
                                 (
@@ -179,26 +177,25 @@ namespace Microshaoft
                             , Func
                                 <
                                     (
-                                        EventId LoggingEventId
-                                        , Exception LoggingException
-                                        , string LoggingMessage
+                                        EventId loggingEventId
+                                        , Exception loggingException
+                                        , string loggingMessage
                                         , object[] loggingFormatArguments
                                     )
                                 > loggingPreprocess
                         )
         {
-            
             if (target.IsEnabled(logLevel))
             {
-                var r = loggingPreprocess();
+                var (loggingEventId, loggingException, loggingMessage, loggingFormatArguments) = loggingPreprocess();
                 target
                     .Log
                         (
                             logLevel
-                            , r.LoggingEventId
-                            , r.LoggingException
-                            , r.LoggingMessage
-                            , r.loggingFormatArguments
+                            , loggingEventId
+                            , loggingException
+                            , loggingMessage
+                            , loggingFormatArguments
                         );
             }
         }
@@ -209,8 +206,8 @@ namespace Microshaoft
                             , Func
                                 <
                                     (
-                                        EventId LoggingEventId
-                                        , string LoggingMessage
+                                        EventId loggingEventId
+                                        , string loggingMessage
                                         , object[] loggingFormatArguments
                                     )
                                 > loggingPreprocess
@@ -218,14 +215,14 @@ namespace Microshaoft
         {
             if (target.IsEnabled(logLevel))
             {
-                var r = loggingPreprocess();
+                var (loggingEventId, loggingMessage, loggingFormatArguments) = loggingPreprocess();
                 target
                     .Log
                         (
                             logLevel
-                            , r.LoggingEventId
-                            , r.LoggingMessage
-                            , r.loggingFormatArguments
+                            , loggingEventId
+                            , loggingMessage
+                            , loggingFormatArguments
                         );
             }
         }
@@ -236,7 +233,7 @@ namespace Microshaoft
                             , Func
                                 <
                                     (
-                                        string LoggingMessage
+                                        string loggingMessage
                                         , object[] loggingFormatArguments
                                     )
                                 > loggingPreprocess
@@ -244,13 +241,13 @@ namespace Microshaoft
         {
             if (target.IsEnabled(logLevel))
             {
-                var r = loggingPreprocess();
+                var (loggingMessage, loggingFormatArguments) = loggingPreprocess();
                 target
                     .Log
                         (
                             logLevel
-                            , r.LoggingMessage
-                            , r.loggingFormatArguments
+                            , loggingMessage
+                            , loggingFormatArguments
                         );
             }
         }
@@ -262,8 +259,8 @@ namespace Microshaoft
                     , Func
                         <
                             (
-                                Exception LoggingException
-                                , string LoggingMessage
+                                Exception loggingException
+                                , string loggingMessage
                                 , object[] loggingFormatArguments
                             )
                         > loggingPreprocess
@@ -271,14 +268,14 @@ namespace Microshaoft
         {
             if (target.IsEnabled(logLevel))
             {
-                var r = loggingPreprocess();
+                var (loggingException, loggingMessage, loggingFormatArguments) = loggingPreprocess();
                 target
                     .Log
                         (
                             logLevel
-                            , r.LoggingException
-                            , r.LoggingMessage
-                            , r.loggingFormatArguments
+                            , loggingException
+                            , loggingMessage
+                            , loggingFormatArguments
                         );
             }
         }
@@ -290,8 +287,8 @@ namespace Microshaoft
                     , Func
                         <
                             (
-                                EventId LoggingEventId
-                                , Exception LoggingException
+                                EventId loggingEventId
+                                , Exception loggingException
                                 , TState State
                             )
                         > loggingPreprocess
@@ -300,14 +297,14 @@ namespace Microshaoft
         {
             if (target.IsEnabled(logLevel))
             {
-                var r = loggingPreprocess();
+                var (loggingEventId, loggingException, State) = loggingPreprocess();
                 target
-                    .Log<TState>
+                    .Log
                         (
                             logLevel
-                            , r.LoggingEventId
-                            , r.State
-                            , r.LoggingException
+                            , loggingEventId
+                            , State
+                            , loggingException
                             , formatter
                         );
             }

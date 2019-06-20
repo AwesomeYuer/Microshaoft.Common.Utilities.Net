@@ -2,19 +2,17 @@
 namespace Microshaoft.WebApi.ModelBinders
 {
     using Microshaoft.Web;
-    //using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc.ModelBinding;
-    //using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
     using Microsoft.Extensions.Configuration;
-    //using Microsoft.Extensions.Logging.Abstractions;
     using Microsoft.Extensions.Primitives;
     using Newtonsoft.Json.Linq;
-    //using System;
     using System.Threading.Tasks;
     public class JTokenModelBinder : IModelBinder
     {
         //public JTokenModelBinder()
         //{ }
+
+        private const string _itemKeyOfRequestJTokenParameters = "requestJTokenParameters";
 
         public async Task BindModelAsync(ModelBindingContext bindingContext)
         {
@@ -37,7 +35,6 @@ namespace Microshaoft.WebApi.ModelBinders
             ok = request
                     .TryParseJTokenParameters
                         (
-                            //request
                             out JToken parameters
                             , out var secretJwtToken
                             , () =>
@@ -56,7 +53,7 @@ namespace Microshaoft.WebApi.ModelBinders
                             .Items
                             .ContainsKey
                                 (
-                                    "requestJTokenParameters"
+                                    _itemKeyOfRequestJTokenParameters
                                 )
                     )
                 {
@@ -64,7 +61,7 @@ namespace Microshaoft.WebApi.ModelBinders
                             .Items
                             .Add
                                 (
-                                    "requestJTokenParameters"
+                                    _itemKeyOfRequestJTokenParameters
                                     , parameters
                                 );
                 }
