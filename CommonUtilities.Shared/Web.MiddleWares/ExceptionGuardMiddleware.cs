@@ -95,7 +95,7 @@ namespace Microshaoft.Web
                 }
                 var response = context.Response;
                 response.StatusCode = (int) r.ResponseStatusCode;
-                var errorMessage = "InternalServerError";
+                var errorMessage = "Internal Server Error";
                 if (r.ResponseDetails)
                 {
                     errorMessage = exception.ToString();
@@ -103,8 +103,8 @@ namespace Microshaoft.Web
                 var jsonResult =
                             new
                             {
-                                StatusCode = r.ResponseStatusCode
-                                , Message = errorMessage
+                                statusCode = r.ResponseStatusCode
+                                , message = errorMessage
                             };
                 var json = JsonConvert.SerializeObject(jsonResult);
                 await

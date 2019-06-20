@@ -44,12 +44,13 @@ namespace Microshaoft.Web
                     (
                         new
                         {
-                            StatusCode = statusCode
-                            , Message = forbiddenMessage
+                            statusCode
+                            , message = forbiddenMessage
                         }
                     )
                 {
                     StatusCode = statusCode
+                    , ContentType = "application/json"
                 };
                 context
                     .Result = result;

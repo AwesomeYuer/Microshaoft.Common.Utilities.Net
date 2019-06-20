@@ -54,8 +54,8 @@
                                 (
                                     new
                                     {
-                                        StatusCode = 400
-                                        , Message = "invalidate, must remove ccc"
+                                        statusCode = 400
+                                        , message = "invalidate, must remove ccc"
                                     }
                                 )
                 {
@@ -64,13 +64,10 @@
                 };
                 isValid = false;
             }
-            httpContext = null;
-            request = null;
             return
                 (
-                    IsValid: isValid
-                    ,
-                    Result: result
+                    IsValid : isValid
+                    , Result : result
                 );
         }
     }

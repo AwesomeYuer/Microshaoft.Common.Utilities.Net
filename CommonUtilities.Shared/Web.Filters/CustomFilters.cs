@@ -17,10 +17,14 @@ namespace Microshaoft.Web
                                     (
                                         new
                                         {
-                                            code = 500
+                                            statusCode = 500
                                             , message = context.Exception.Message
                                         }
-                                    );
+                                    )
+                                {
+                                    StatusCode = 500
+                                    , ContentType = "application/json"
+                                };
             context.ExceptionHandled = true;
         }
         public class CustomResultFilter : Attribute, IResultFilter

@@ -22,6 +22,7 @@ namespace Microshaoft.Web
                         Attribute
                         , IActionFilter
     {
+        private const string _itemKeyOfRequestJTokenParameters = "requestJTokenParameters";
         private bool _isRequired = true;
         public bool IsRequired
         {
@@ -57,8 +58,8 @@ namespace Microshaoft.Web
                                     (
                                         new
                                         {
-                                            StatusCode = errorStatusCode
-                                            , Message = errorMessage
+                                            statusCode = errorStatusCode
+                                            , message = errorMessage
                                         }
                                     )
                                 {
@@ -95,7 +96,7 @@ namespace Microshaoft.Web
                         .Items
                         .TryGetValue
                             (
-                                "requestJTokenParameters"
+                                _itemKeyOfRequestJTokenParameters
                                 , out object o
                             )
                 )
