@@ -439,8 +439,8 @@ namespace Microshaoft.WebApi.Controllers
                             (
                                 new
                                 {
-                                    StatusCode = result.StatusCode
-                                    , Message = result.Message
+                                    statusCode = result.StatusCode
+                                    , message = result.Message
                                 }
                             )
                     {
