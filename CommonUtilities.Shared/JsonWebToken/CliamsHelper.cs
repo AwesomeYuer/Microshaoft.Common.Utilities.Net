@@ -137,15 +137,17 @@
                                     )
         {
             IPAddress r = null;
-            var b = target
+            if 
+                (
+                    target
                         .TryGetClaimTypeValue
                             (
                                 claimType
                                 , out var claimValue
-                            );
-            if (b)
+                            )
+                )
             {
-                b = IPAddress
+                _ = IPAddress
                         .TryParse
                             (
                                 claimValue

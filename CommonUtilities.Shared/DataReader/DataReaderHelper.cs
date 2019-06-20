@@ -143,10 +143,10 @@ namespace Microshaoft
                                     , Func
                                         <
                                             IDataReader
-                                            , Type        // fieldType
-                                            , string    // fieldName
-                                            , int       // row index
-                                            , int       // column index
+                                            , Type          // fieldType
+                                            , string        // fieldName
+                                            , int           // row index
+                                            , int           // column index
                                             ,
                                                 (
                                                     bool needDefaultProcess
@@ -291,10 +291,10 @@ namespace Microshaoft
                                  , Func
                                         <
                                             IDataReader
-                                            , Type        // fieldType
-                                            , string    // fieldName
-                                            , int       // row index
-                                            , int       // column index
+                                            , Type          // fieldType
+                                            , string        // fieldName
+                                            , int           // row index
+                                            , int           // column index
                                             ,
                                                 (
                                                     bool needDefaultProcess
