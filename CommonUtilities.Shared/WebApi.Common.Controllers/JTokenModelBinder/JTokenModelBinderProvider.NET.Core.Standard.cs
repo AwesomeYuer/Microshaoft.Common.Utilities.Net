@@ -21,8 +21,7 @@ namespace Microshaoft.WebApi.ModelBinders
             var request = httpContext
                                     .Request;
             IConfiguration configuration =
-                        (IConfiguration) bindingContext
-                                            .HttpContext
+                        (IConfiguration) httpContext
                                             .RequestServices
                                             .GetService
                                                 (
