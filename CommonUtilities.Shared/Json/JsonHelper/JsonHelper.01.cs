@@ -255,8 +255,7 @@ namespace Microshaoft
                                             (
                                                 (sender, args) =>
                                                 {
-                                                    var jo = sender as JObject;
-                                                    if (jo != null)
+                                                    if (sender is JObject jo)
                                                     {
                                                         newValue = jo[args.PropertyName] as JValue;
                                                     }
@@ -287,9 +286,10 @@ namespace Test
     {
         static void Main(string[] args)
         {
-            var root = new JTree();
-
-            root.Teller = new Teller();
+            var root = new JTree
+            {
+                Teller = new Teller()
+            };
             root.Teller.Name = "2222";
 
 
