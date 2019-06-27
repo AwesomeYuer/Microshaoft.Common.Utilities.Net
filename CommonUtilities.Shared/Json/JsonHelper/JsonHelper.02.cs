@@ -233,6 +233,7 @@
             {
                 if (key.IsNullOrEmptyOrWhiteSpace())
                 {
+                    jToken = null;
                     break;
                 }
                 if (jToken is JArray jArray)
@@ -245,11 +246,13 @@
                         }
                         else
                         {
+                            jToken = null;
                             break;
                         }
                     }
                     else
                     {
+                        jToken = null;
                         break;
                     }
                 }
@@ -273,6 +276,7 @@
                         }
                         else
                         {
+                            jToken = null;
                             break;
                         }
                     }
@@ -283,6 +287,7 @@
                 }
                 else
                 {
+                    jToken = null;
                     break;
                 }
             }

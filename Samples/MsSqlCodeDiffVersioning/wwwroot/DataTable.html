@@ -39,20 +39,20 @@
     <script>
         var binded1 = false;
         var binded2 = false;
-        var outputsDataTables = null;
+        var usedDataTables = null;
         function dynamicAjaxBind() {
             if (binded1) {
-                outputsDataTables.forEach(function (item, index) {
-                    if ($.fn.DataTable.isDataTable(item)) {
-                        var eid = item.attr("id")
-                        $("#" + eid).DataTable().clear().destroy();
-                        $("#" + eid).html('');
+                usedDataTables.forEach(function (item, index) {
+                    var eid = "#" + item;
+                    if ($.fn.DataTable.isDataTable(eid)) {
+                        $(eid).DataTable().clear().destroy(true);
+                        $(eid).html('');
                     }
                 });
             }
             if (binded2) {
-                if ($.fn.DataTable.isDataTable(output2)) {
-                    $("#outputMessages").DataTable().clear().destroy();
+                if ($.fn.DataTable.isDataTable("#outputMessages")) {
+                    $("#outputMessages").DataTable().clear().destroy(true);
                     $("#outputMessages").html('');
                 }
             }
@@ -66,8 +66,23 @@
             var download = (document.getElementById("download").checked == true);
             var rowcount = parseInt(document.getElementById("rowcount").value);
             if (download) {
+                var resultSetID = parseInt(prompt("asdsad", 1)) - 1;
+                if (resultSetID < 0) { resultSetID = 0; }
+
+                //if (usedDataTables != null) {
+                //    if (usedDataTables.length > 1) {
+                //        do {
+                //            var input = parseInt(prompt("asdsad", 1));
+                //        }
+                //        while (input < 1 || input > outputsDataTables.length);
+                //        resultSetID = input - 1;
+                //    }
+                //}
+
+
+
                 url = downloadUrl;
-                url += '/outputs/resultsets/0/rows';
+                url += '/outputs/resultsets/' + resultSetID.toString() + '/rows';
             }
 
             $.ajax({
@@ -97,25 +112,27 @@
                     }
                     else {
                         if (d.Outputs.ResultSets.length > 0) {
+                            usedDataTables = new Array();
                             d.Outputs.ResultSets.forEach(function (item, index) {
-                                outputsDataTables = new Array();
                                 var eid = "DataOutput_" + index.toString();
-                                $("#DataOutputsPanel").before('<table id="' + eid + '" class="display">' + eid + '</table>');
+                                $("#DataOutputsPanel").append('<table id="' + eid + '" class="display"><!--' + eid + '--></table>');
                                 var e = $("#" + eid);
                                 e.DataTable({
                                     destroy: true,
+                                    retrieve:true,
                                     //searching: false,
                                     dom: "Bfrtip",
                                     data: item.Rows,
                                     columns: item.Columns
                                 });
-                                outputsDataTables.push(e)
+                                usedDataTables.push(eid)
                             });
                             binded1 = true;
                         }
                         if (d.DataBaseStatistics.Messages.length > 0) {
                             $("#outputMessages").DataTable({
                                 destroy: true,
+                                retrieve:true,
                                 //searching: false,
                                 dom: "Bfrtip",
                                 data: d.DataBaseStatistics.Messages,
@@ -148,7 +165,7 @@
                 },
                 error: function (x, y, z) {
                     d = JSON.parse(x.responseText);
-                    $(output2).DataTable({
+                    $("#outputMessages").DataTable({
                         destroy: true,
                         //searching: false,
                         dom: "Bfrtip",
@@ -156,14 +173,15 @@
                         columns: [
                             {
                                 "title": "Message"
-                                , "data": "Message"
+                                , "data": "message"
                             },
                             {
                                 "title": "StatusCode"
-                                , "data": "StatusCode"
+                                , "data": "statusCode"
                             }
                         ]
                     });
+                    alert(x.responseText);
                     binded2 = true;
                 }
                 //contentType: "application/json",
