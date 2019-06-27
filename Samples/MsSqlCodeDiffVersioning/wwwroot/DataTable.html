@@ -3,38 +3,9 @@
 <head>
     <meta charset="utf-8" />
     <title>MSSQL DataTable JS</title>
-    <link rel="stylesheet" type="text/css" href="libs/datatables/DataTables-1.10.18/css/jquery.dataTables.css" />
-    <link rel="stylesheet" type="text/css" href="libs/datatables/AutoFill-2.3.0/css/autoFill.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="libs/datatables/Buttons-1.5.2/css/buttons.dataTables.css" />
-    <link rel="stylesheet" type="text/css" href="libs/datatables/ColReorder-1.5.0/css/colReorder.dataTables.css" />
-    <link rel="stylesheet" type="text/css" href="libs/datatables/FixedColumns-3.2.5/css/fixedColumns.dataTables.css" />
-    <link rel="stylesheet" type="text/css" href="libs/datatables/FixedHeader-3.1.4/css/fixedHeader.dataTables.css" />
-    <link rel="stylesheet" type="text/css" href="libs/datatables/KeyTable-2.4.0/css/keyTable.dataTables.css" />
-    <link rel="stylesheet" type="text/css" href="libs/datatables/Responsive-2.2.2/css/responsive.dataTables.css" />
-    <link rel="stylesheet" type="text/css" href="libs/datatables/RowGroup-1.0.3/css/rowGroup.dataTables.css" />
-    <link rel="stylesheet" type="text/css" href="libs/datatables/RowReorder-1.2.4/css/rowReorder.dataTables.css" />
-    <link rel="stylesheet" type="text/css" href="libs/datatables/Scroller-1.5.0/css/scroller.dataTables.css" />
-    <link rel="stylesheet" type="text/css" href="libs/datatables/Select-1.2.6/css/select.dataTables.css" />
+    <link href="libs/datatables/1.10.19/css/jquery.dataTables.css" rel="stylesheet" />
     <script src="libs/jQuery/jquery-3.3.1.js"></script>
-    <script type="text/javascript" src="libs/datatables/JSZip-2.5.0/jszip.js"></script>
-    <script type="text/javascript" src="libs/datatables/pdfmake-0.1.36/pdfmake.js"></script>
-    <script type="text/javascript" src="libs/datatables/pdfmake-0.1.36/vfs_fonts.js"></script>
-    <script type="text/javascript" src="libs/datatables/DataTables-1.10.18/js/jquery.dataTables.js"></script>
-    <script type="text/javascript" src="libs/datatables/AutoFill-2.3.0/js/dataTables.autoFill.js"></script>
-    <script type="text/javascript" src="libs/datatables/Buttons-1.5.2/js/dataTables.buttons.js"></script>
-    <script type="text/javascript" src="libs/datatables/Buttons-1.5.2/js/buttons.colVis.js"></script>
-    <script type="text/javascript" src="libs/datatables/Buttons-1.5.2/js/buttons.flash.js"></script>
-    <script type="text/javascript" src="libs/datatables/Buttons-1.5.2/js/buttons.html5.js"></script>
-    <script type="text/javascript" src="libs/datatables/Buttons-1.5.2/js/buttons.print.js"></script>
-    <script type="text/javascript" src="libs/datatables/ColReorder-1.5.0/js/dataTables.colReorder.js"></script>
-    <script type="text/javascript" src="libs/datatables/FixedColumns-3.2.5/js/dataTables.fixedColumns.js"></script>
-    <script type="text/javascript" src="libs/datatables/FixedHeader-3.1.4/js/dataTables.fixedHeader.js"></script>
-    <script type="text/javascript" src="libs/datatables/KeyTable-2.4.0/js/dataTables.keyTable.js"></script>
-    <script type="text/javascript" src="libs/datatables/Responsive-2.2.2/js/dataTables.responsive.js"></script>
-    <script type="text/javascript" src="libs/datatables/RowGroup-1.0.3/js/dataTables.rowGroup.js"></script>
-    <script type="text/javascript" src="libs/datatables/RowReorder-1.2.4/js/dataTables.rowReorder.js"></script>
-    <script type="text/javascript" src="libs/datatables/Scroller-1.5.0/js/dataTables.scroller.js"></script>
-    <script type="text/javascript" src="libs/datatables/Select-1.2.6/js/dataTables.select.js"></script>
+    <script src="libs/datatables/1.10.19/js/jquery.dataTables.js"></script>
     <script src="libs/splitjs/split.js"></script>
     <script>
         var binded1 = false;
@@ -77,10 +48,10 @@
             $.ajax({
                 type: 'post',
                 url: url,
-                data: { sql: sql,rowcount: rowcount},
-				beforeSend: function(xhr) {
-					//xhr.setRequestHeader
-				},
+                data: { sql: sql, rowcount: rowcount },
+                beforeSend: function (xhr) {
+                    //xhr.setRequestHeader
+                },
                 success: function (d, textStatus, jqXHR) {
                     if (download) {
                         var filename = "";
@@ -108,7 +79,7 @@
                                 var e = $("#" + eid);
                                 e.DataTable({
                                     destroy: true,
-                                    retrieve:true,
+                                    retrieve: true,
                                     //searching: false,
                                     dom: "Bfrtip",
                                     data: item.Rows,
@@ -121,7 +92,7 @@
                         if (d.DataBaseStatistics.Messages.length > 0) {
                             $("#outputMessages").DataTable({
                                 destroy: true,
-                                retrieve:true,
+                                retrieve: true,
                                 //searching: false,
                                 dom: "Bfrtip",
                                 data: d.DataBaseStatistics.Messages,
@@ -157,7 +128,7 @@
                     $("#outputMessages").DataTable({
                         destroy: true,
                         //searching: false,
-                        retrieve:true,
+                        retrieve: true,
                         dom: "Bfrtip",
                         data: [d],
                         columns: [
@@ -178,18 +149,21 @@
                 //dataType: 'json',
             });
         }
-        //debugger;
-    </script>
+                            //debugger;
+
+/**/</script>
     <style>
         html,
         body {
             height: 100%;
         }
+
         body {
             padding: 8px;
             background-color: #F6F6F6;
             box-sizing: border-box;
         }
+
         .split {
             -webkit-box-sizing: border-box;
             -moz-box-sizing: border-box;
@@ -197,29 +171,34 @@
             overflow-y: auto;
             overflow-x: hidden;
         }
+
         .content {
             border: 1px solid #C0C0C0;
             box-shadow: inset 0 1px 2px #e4e4e4;
             background-color: #fff;
         }
+
         .gutter {
             background-color: transparent;
             background-repeat: no-repeat;
             background-position: 50%;
         }
-        .gutter.gutter-horizontal {
-            cursor: col-resize;
-            background-image: url('../grips/vertical.png');
-        }
-        .gutter.gutter-vertical {
-            cursor: row-resize;
-            background-image: url('../grips/horizontal.png');
-        }
-        .split.split-horizontal,
-        .gutter.gutter-horizontal {
-            height: 100%;
-            float: left;
-        }
+
+            .gutter.gutter-horizontal {
+                cursor: col-resize;
+                background-image: url('../grips/vertical.png');
+            }
+
+            .gutter.gutter-vertical {
+                cursor: row-resize;
+                background-image: url('../grips/horizontal.png');
+            }
+
+            .split.split-horizontal,
+            .gutter.gutter-horizontal {
+                height: 100%;
+                float: left;
+            }
     </style>
 </head>
 <body>
