@@ -430,6 +430,23 @@ namespace Microshaoft.WebApi.Controllers
                                                 , resultJsonPathPart5
                                                 , resultJsonPathPart6
                                             );
+                if (result.Result == null)
+                {
+                    return
+                           new
+                               JsonResult
+                                   (
+                                       new
+                                       {
+                                           statusCode = 404
+                                           , message = "data path not found"
+                                       }
+                                   )
+                           {
+                               StatusCode = 404
+                               , ContentType = "application/json"
+                           };
+                }
             }
             else
             {

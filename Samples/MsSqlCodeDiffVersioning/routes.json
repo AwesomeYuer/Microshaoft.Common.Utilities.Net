@@ -48,7 +48,7 @@
           "needCheckOperations": true,
           "operations": [ "a1", "a2" ],
           "downloadFileName": "测试下载.csv",
-          "outputColumns": [
+          "outputColumns11111": [
             {
               "ColumnName": "f1",
               "ColumnTitle": "字段1"
@@ -83,7 +83,7 @@
               "AllowOverride": true
             }
           ],
-          "Outputs": {
+          "Outputs111111": {
             "$": "Outputs.ResultSets[0].Rows"
           }
         }

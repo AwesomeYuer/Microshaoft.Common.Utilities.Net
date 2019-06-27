@@ -39,19 +39,21 @@
     <script>
         var binded1 = false;
         var binded2 = false;
+        var usedDataTables = null;
         function dynamicAjaxBind() {
-            var output1 = "#output1";
-            var output2 = "#output2";
             if (binded1) {
-                if ($.fn.DataTable.isDataTable(output1)) {
-                    $(output1).DataTable().clear().destroy();
-                    $(output1).html('');
-                }
+                usedDataTables.forEach(function (item, index) {
+                    var eid = "#" + item;
+                    if ($.fn.DataTable.isDataTable(eid)) {
+                        $(eid).DataTable().clear().destroy(true);
+                        $(eid).html('');
+                    }
+                });
             }
             if (binded2) {
-                if ($.fn.DataTable.isDataTable(output2)) {
-                    $(output2).DataTable().clear().destroy();
-                    $(output2).html('');
+                if ($.fn.DataTable.isDataTable("#outputMessages")) {
+                    $("#outputMessages").DataTable().clear().destroy(true);
+                    $("#outputMessages").html('');
                 }
             }
             binded1 = false;
@@ -64,8 +66,23 @@
             var download = (document.getElementById("download").checked == true);
             var rowcount = parseInt(document.getElementById("rowcount").value);
             if (download) {
+                var resultSetID = parseInt(prompt("asdsad", 1)) - 1;
+                if (resultSetID < 0) { resultSetID = 0; }
+
+                //if (usedDataTables != null) {
+                //    if (usedDataTables.length > 1) {
+                //        do {
+                //            var input = parseInt(prompt("asdsad", 1));
+                //        }
+                //        while (input < 1 || input > outputsDataTables.length);
+                //        resultSetID = input - 1;
+                //    }
+                //}
+
+
+
                 url = downloadUrl;
-                url += '/outputs/resultsets/0/rows';
+                url += '/outputs/resultsets/' + resultSetID.toString() + '/rows';
             }
 
             $.ajax({
@@ -77,7 +94,6 @@
 				},
                 success: function (d, textStatus, jqXHR) {
                     if (download) {
-                        
                         var filename = "";
                         var disposition = jqXHR.getResponseHeader('Content-Disposition');
                         if (disposition && disposition.indexOf('attachment') !== -1) {
@@ -95,19 +111,28 @@
                         downloader.click();
                     }
                     else {
-                        if (d.Outputs.ResultSets[0].Columns.length > 0) {
-                            $(output1).DataTable({
-                                destroy: true,
-                                //searching: false,
-                                dom: "Bfrtip",
-                                data: d.Outputs.ResultSets[0].Rows,
-                                columns: d.Outputs.ResultSets[0].Columns
+                        if (d.Outputs.ResultSets.length > 0) {
+                            usedDataTables = new Array();
+                            d.Outputs.ResultSets.forEach(function (item, index) {
+                                var eid = "DataOutput_" + index.toString();
+                                $("#DataOutputsPanel").append('<table id="' + eid + '" class="display"><!--' + eid + '--></table>');
+                                var e = $("#" + eid);
+                                e.DataTable({
+                                    destroy: true,
+                                    retrieve:true,
+                                    //searching: false,
+                                    dom: "Bfrtip",
+                                    data: item.Rows,
+                                    columns: item.Columns
+                                });
+                                usedDataTables.push(eid)
                             });
                             binded1 = true;
                         }
                         if (d.DataBaseStatistics.Messages.length > 0) {
-                            $(output2).DataTable({
+                            $("#outputMessages").DataTable({
                                 destroy: true,
+                                retrieve:true,
                                 //searching: false,
                                 dom: "Bfrtip",
                                 data: d.DataBaseStatistics.Messages,
@@ -140,7 +165,7 @@
                 },
                 error: function (x, y, z) {
                     d = JSON.parse(x.responseText);
-                    $(output2).DataTable({
+                    $("#outputMessages").DataTable({
                         destroy: true,
                         //searching: false,
                         dom: "Bfrtip",
@@ -148,14 +173,15 @@
                         columns: [
                             {
                                 "title": "Message"
-                                , "data": "Message"
+                                , "data": "message"
                             },
                             {
                                 "title": "StatusCode"
-                                , "data": "StatusCode"
+                                , "data": "statusCode"
                             }
                         ]
                     });
+                    alert(x.responseText);
                     binded2 = true;
                 }
                 //contentType: "application/json",
@@ -214,11 +240,12 @@
         <textarea id="ta" rows="5" cols="100">
 set statistics io on
 set statistics time on
-select '""' as F
+set statistics profile on
+select '"111"' as F
 from
 sys.objects
 
-select '""' as F, *
+select '"222"' as F, *
 from
 sys.objects
 
@@ -231,36 +258,28 @@ sys.objects
     </div>
     <div id="down" class="split content" style="overflow:auto">
         Data:<br />
-        <table id="output1" class="display">
-            <!-- <thead>
-            <tr>
-                <th>Name</th>
-                <th>Position</th>
-                <th>Office</th>
-                <th>Extn.</th>
-                <th>Start date</th>
-                <th>Salary</th>
-            </tr>
-        </thead> -->
-        </table>
-
+        <div id="DataOutputsPanel">
+            
+        </div>
         <br />
         <hr />
         <br />
-
         Messages:<br />
-        <table id="output2" class="display">
-            <!-- <thead>
-            <tr>
-                <th>Name</th>
-                <th>Position</th>
-                <th>Office</th>
-                <th>Extn.</th>
-                <th>Start date</th>
-                <th>Salary</th>
-            </tr>
-        </thead> -->
-        </table>
+        <div id="MessagesOutputsPanel">
+            <table id="outputMessages" class="display">
+                <!-- <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Position</th>
+                        <th>Office</th>
+                        <th>Extn.</th>
+                        <th>Start date</th>
+                        <th>Salary</th>
+                    </tr>
+                </thead> -->
+            </table>
+        </div>
+        
     </div>
     <script>
         Split(['#up', '#down'], {
