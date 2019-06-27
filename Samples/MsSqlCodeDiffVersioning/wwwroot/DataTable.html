@@ -70,19 +70,6 @@
             if (download) {
                 var resultSetID = parseInt(prompt("asdsad", 1)) - 1;
                 if (resultSetID < 0) { resultSetID = 0; }
-
-                //if (usedDataTables != null) {
-                //    if (usedDataTables.length > 1) {
-                //        do {
-                //            var input = parseInt(prompt("asdsad", 1));
-                //        }
-                //        while (input < 1 || input > outputsDataTables.length);
-                //        resultSetID = input - 1;
-                //    }
-                //}
-
-
-
                 url = downloadUrl;
                 url += '/outputs/resultsets/' + resultSetID.toString() + '/rows';
             }
