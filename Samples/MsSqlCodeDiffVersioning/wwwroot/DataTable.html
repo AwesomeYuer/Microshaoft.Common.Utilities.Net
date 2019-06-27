@@ -75,7 +75,7 @@
                             usedDataTables = new Array();
                             d.Outputs.ResultSets.forEach(function (item, index) {
                                 var eid = "DataOutput_" + index.toString();
-                                $("#DataOutputsPanel").append('<table id="' + eid + '" class="display"><!--' + eid + '--></table>');
+                                $("#DataOutputsPanel").append('<table id="' + eid + '" class="cell-border display"><!--' + eid + '--></table>');
                                 var e = $("#" + eid);
                                 e.DataTable({
                                     destroy: true,
@@ -235,7 +235,7 @@ sys.objects
         <br />
         Messages:<br />
         <div id="MessagesOutputsPanel">
-            <table id="outputMessages" class="display">
+            <table id="outputMessages" class="cell-border display">
                 <!-- <thead>
                     <tr>
                         <th>Name</th>
