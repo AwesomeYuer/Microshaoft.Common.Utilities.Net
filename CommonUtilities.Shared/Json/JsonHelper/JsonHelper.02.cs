@@ -233,7 +233,7 @@
             {
                 if (key.IsNullOrEmptyOrWhiteSpace())
                 {
-                    jToken = null;
+                    //jToken = null;
                     break;
                 }
                 if (jToken is JArray jArray)
