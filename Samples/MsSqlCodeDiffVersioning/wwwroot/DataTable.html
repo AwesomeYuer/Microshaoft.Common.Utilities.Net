@@ -39,19 +39,21 @@
     <script>
         var binded1 = false;
         var binded2 = false;
+        var outputsDataTables = null;
         function dynamicAjaxBind() {
-            var output1 = "#output1";
-            var output2 = "#output2";
             if (binded1) {
-                if ($.fn.DataTable.isDataTable(output1)) {
-                    $(output1).DataTable().clear().destroy();
-                    $(output1).html('');
-                }
+                outputsDataTables.forEach(function (item, index) {
+                    if ($.fn.DataTable.isDataTable(item)) {
+                        var eid = item.attr("id")
+                        $("#" + eid).DataTable().clear().destroy();
+                        $("#" + eid).html('');
+                    }
+                });
             }
             if (binded2) {
                 if ($.fn.DataTable.isDataTable(output2)) {
-                    $(output2).DataTable().clear().destroy();
-                    $(output2).html('');
+                    $("#outputMessages").DataTable().clear().destroy();
+                    $("#outputMessages").html('');
                 }
             }
             binded1 = false;
@@ -77,7 +79,6 @@
 				},
                 success: function (d, textStatus, jqXHR) {
                     if (download) {
-                        
                         var filename = "";
                         var disposition = jqXHR.getResponseHeader('Content-Disposition');
                         if (disposition && disposition.indexOf('attachment') !== -1) {
@@ -95,18 +96,25 @@
                         downloader.click();
                     }
                     else {
-                        if (d.Outputs.ResultSets[0].Columns.length > 0) {
-                            $(output1).DataTable({
-                                destroy: true,
-                                //searching: false,
-                                dom: "Bfrtip",
-                                data: d.Outputs.ResultSets[0].Rows,
-                                columns: d.Outputs.ResultSets[0].Columns
+                        if (d.Outputs.ResultSets.length > 0) {
+                            d.Outputs.ResultSets.forEach(function (item, index) {
+                                outputsDataTables = new Array();
+                                var eid = "DataOutput_" + index.toString();
+                                $("#DataOutputsPanel").before('<table id="' + eid + '" class="display">' + eid + '</table>');
+                                var e = $("#" + eid);
+                                e.DataTable({
+                                    destroy: true,
+                                    //searching: false,
+                                    dom: "Bfrtip",
+                                    data: item.Rows,
+                                    columns: item.Columns
+                                });
+                                outputsDataTables.push(e)
                             });
                             binded1 = true;
                         }
                         if (d.DataBaseStatistics.Messages.length > 0) {
-                            $(output2).DataTable({
+                            $("#outputMessages").DataTable({
                                 destroy: true,
                                 //searching: false,
                                 dom: "Bfrtip",
@@ -214,11 +222,12 @@
         <textarea id="ta" rows="5" cols="100">
 set statistics io on
 set statistics time on
-select '""' as F
+set statistics profile on
+select '"111"' as F
 from
 sys.objects
 
-select '""' as F, *
+select '"222"' as F, *
 from
 sys.objects
 
@@ -231,36 +240,28 @@ sys.objects
     </div>
     <div id="down" class="split content" style="overflow:auto">
         Data:<br />
-        <table id="output1" class="display">
-            <!-- <thead>
-            <tr>
-                <th>Name</th>
-                <th>Position</th>
-                <th>Office</th>
-                <th>Extn.</th>
-                <th>Start date</th>
-                <th>Salary</th>
-            </tr>
-        </thead> -->
-        </table>
-
+        <div id="DataOutputsPanel">
+            
+        </div>
         <br />
         <hr />
         <br />
-
         Messages:<br />
-        <table id="output2" class="display">
-            <!-- <thead>
-            <tr>
-                <th>Name</th>
-                <th>Position</th>
-                <th>Office</th>
-                <th>Extn.</th>
-                <th>Start date</th>
-                <th>Salary</th>
-            </tr>
-        </thead> -->
-        </table>
+        <div id="MessagesOutputsPanel">
+            <table id="outputMessages" class="display">
+                <!-- <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Position</th>
+                        <th>Office</th>
+                        <th>Extn.</th>
+                        <th>Start date</th>
+                        <th>Salary</th>
+                    </tr>
+                </thead> -->
+            </table>
+        </div>
+        
     </div>
     <script>
         Split(['#up', '#down'], {
