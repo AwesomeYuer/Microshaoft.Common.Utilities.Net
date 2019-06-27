@@ -45,6 +45,7 @@
                 usedDataTables.forEach(function (item, index) {
                     var eid = "#" + item;
                     if ($.fn.DataTable.isDataTable(eid)) {
+                        //destory should remove:true
                         $(eid).DataTable().clear().destroy(true);
                         $(eid).html('');
                     }
@@ -52,7 +53,8 @@
             }
             if (binded2) {
                 if ($.fn.DataTable.isDataTable("#outputMessages")) {
-                    $("#outputMessages").DataTable().clear().destroy(true);
+                    //destory should remove:false
+                    $("#outputMessages").DataTable().clear().destroy();
                     $("#outputMessages").html('');
                 }
             }
@@ -168,16 +170,17 @@
                     $("#outputMessages").DataTable({
                         destroy: true,
                         //searching: false,
+                        retrieve:true,
                         dom: "Bfrtip",
                         data: [d],
                         columns: [
                             {
-                                "title": "Message"
-                                , "data": "message"
-                            },
-                            {
                                 "title": "StatusCode"
                                 , "data": "statusCode"
+                            },
+                            {
+                                "title": "Message"
+                                , "data": "message"
                             }
                         ]
                     });
@@ -241,7 +244,7 @@
 set statistics io on
 set statistics time on
 set statistics profile on
-select '"111"' as F
+select '"111"' as F, *
 from
 sys.objects
 
