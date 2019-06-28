@@ -80,6 +80,7 @@
                                 e.DataTable({
                                     destroy: true,
                                     retrieve: true,
+                                    scrollX: true,
                                     //searching: false,
                                     dom: "Bfrtip",
                                     data: item.Rows,
@@ -93,22 +94,15 @@
                             $("#outputMessages").DataTable({
                                 destroy: true,
                                 retrieve: true,
+                                scrollX: true,
                                 //searching: false,
                                 dom: "Bfrtip",
                                 data: d.DataBaseStatistics.Messages,
                                 columns: [
-                                    //{
-                                    //    "title": "MessageID",
-                                    //    "data": "MessageID"
-                                    //},
                                     {
                                         "title": "ResultSetID"
                                         , "data": "ResultSetID"
                                     },
-                                    //{
-                                    //    "title": "Source",
-                                    //    "data": "Source"
-                                    //},
                                     {
                                         "title": "Message"
                                         , "data": "Message"
@@ -129,6 +123,7 @@
                         destroy: true,
                         //searching: false,
                         retrieve: true,
+                        scrollX: true,
                         dom: "Bfrtip",
                         data: [d],
                         columns: [
@@ -236,16 +231,6 @@ sys.objects
         Messages:<br />
         <div id="MessagesOutputsPanel">
             <table id="outputMessages" class="cell-border display">
-                <!-- <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Position</th>
-                        <th>Office</th>
-                        <th>Extn.</th>
-                        <th>Start date</th>
-                        <th>Salary</th>
-                    </tr>
-                </thead> -->
             </table>
         </div>
         
