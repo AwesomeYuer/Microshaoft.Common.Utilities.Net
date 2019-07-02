@@ -40,6 +40,16 @@
         var binded1 = false;
         var binded2 = false;
         var usedDataTables = null;
+
+        function RowColumnCellProcess(cell, type, row, meta) {
+
+            if (typeof (cell) == "object") {
+                cell = JSON.stringify(cell);
+            }
+            return cell;
+
+        }
+
         function dynamicAjaxBind() {
             var sql = document.getElementById("ta").value;
             var url = "https://local.bank-of-china.com/a.json";
@@ -71,8 +81,10 @@
                 binded2 = false;
             }
             if (download) {
-                var resultSetID = parseInt(prompt("asdsad", 1)) - 1;
-                if (resultSetID < 0) { resultSetID = 0; }
+                var resultSetID = parseInt(prompt("Result Set ID", 1)) - 1;
+                if (resultSetID < 0) {
+                    resultSetID = 0;
+                }
                 url = downloadUrl;
                 url += '/outputs/resultsets/' + resultSetID.toString() + '/rows';
             }
@@ -109,16 +121,31 @@
                                 var eid = "DataOutput_" + index.toString();
                                 $("#DataOutputsPanel").append('<table id="' + eid + '" class="cell-border display"><!--' + eid + '--></table>');
                                 var e = $("#" + eid);
+                                item.Columns.forEach(function (column, index) {
+                                    column.render = function (cell, type, row, meta) {
+                                        if (typeof (cell) == "object") {
+                                            cell = JSON.stringify(cell);
+                                            column.Title += " Json";
+                                        }
+                                        return cell;
+                                    };
+                                });
                                 e.DataTable({
                                     destroy: true,
                                     retrieve: true,
                                     scrollX: true,
-                                    fixedHeader: {
-                                        header: true,
-                                        footer: true
-                                    },
-                                    //searching: false,
-                                    dom: "Bfrtip",
+                                    order: [],
+                                    lengthMenu :  [
+                                        [ 10, 25, 50, -1 ],
+                                        [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+                                    ],
+                                    //"pageLength": 50,
+                                    //fixedHeader: {
+                                    //    header: true,
+                                    //    footer: true
+                                    //},
+                                    ////searching: false,
+                                    dom: "Blfrtip",
                                     data: item.Rows,
                                     columns: item.Columns
                                 });
@@ -131,12 +158,18 @@
                                 destroy: true,
                                 retrieve: true,
                                 scrollX: true,
-                                fixedHeader: {
-                                    header: true,
-                                    footer: true
-                                },
+                                order:[],
+                                //fixedHeader: {
+                                //    header: true,
+                                //    footer: true
+                                //},
                                 //searching: false,
-                                dom: "Bfrtip",
+                                lengthMenu :  [
+                                    [ 10, 25, 100, -1 ],
+                                    [ '10 rows', '25 rows', '100 rows', 'Show all' ]
+                                ],
+                                pageLength: -1,
+                                dom: "Blfrtip",
                                 data: d.DataBaseStatistics.Messages,
                                 columns: [
                                     {
@@ -164,10 +197,12 @@
                         //searching: false,
                         retrieve: true,
                         scrollX: true,
-                        fixedheader: {
-                            header: true,
-                            footer: true
-                        },
+                        //fixedheader: {
+                        //    header: true,
+                        //    footer: true
+                        //},
+                        order: [],
+                        pageLength: 200,
                         dom: "Bfrtip",
                         data: [d],
                         columns: [
