@@ -55,11 +55,11 @@
             var columns = dataReader
                                 .GetColumnsJArray();
             var rows = dataReader
-                            .AsRowsJTokensEnumerable
-                                (
-                                    columns
-                                    , onReadRowColumnProcessFunc
-                                );
+                                .AsRowsJTokensEnumerable
+                                    (
+                                        columns
+                                        , onReadRowColumnProcessFunc
+                                    );
             var resultSet = new JObject
                                 {
                                     {
@@ -86,9 +86,9 @@
 
         private static void ResultProcess
                             (
-                                SqlConnection sqlConnection
+                                TDbConnection connection
                                 , bool statisticsEnabled
-                                , SqlCommand sqlCommand
+                                , TDbCommand command
                                 , ref StatementCompletedEventHandler
                                             onStatementCompletedEventHandlerProcessAction
                                 , ref SqlInfoMessageEventHandler
@@ -139,15 +139,16 @@
                     ["Outputs"]
                     ["Parameters"] = jOutputParameters;
             }
+            // MSSQL 专用
             if (statisticsEnabled)
             {
-                //if (sqlConnection.StatisticsEnabled)
+                var j = new JObject();
+                var jCurrent = result["DurationInMilliseconds"];
+                if (connection is SqlConnection sqlConnection)
                 {
-                    var j = new JObject();
                     var statistics = sqlConnection.RetrieveStatistics();
                     var json = JsonHelper.Serialize(statistics);
                     var jStatistics = JObject.Parse(json);
-                    var jCurrent = result["DurationInMilliseconds"];
                     jCurrent
                         .Parent
                         .AddAfterSelf
@@ -178,34 +179,41 @@
                                             )
                                 );
                     }
-                }
-                if (onStatementCompletedEventHandlerProcessAction != null)
-                {
-                    sqlCommand
-                        .StatementCompleted -=
-                            onStatementCompletedEventHandlerProcessAction;
-                    onStatementCompletedEventHandlerProcessAction = null;
-                }
-                if (onSqlInfoMessageEventHandlerProcessAction != null)
-                {
-                    sqlConnection
-                        .InfoMessage -=
-                            onSqlInfoMessageEventHandlerProcessAction;
-                    onSqlInfoMessageEventHandlerProcessAction = null;
+                    if
+                        (
+                            onStatementCompletedEventHandlerProcessAction != null
+                            &&
+                            command is SqlCommand sqlCommand
+                        )
+                    {
+                        sqlCommand
+                            .StatementCompleted -=
+                                onStatementCompletedEventHandlerProcessAction;
+                        onStatementCompletedEventHandlerProcessAction = null;
+                    }
+                    if
+                        (
+                            onSqlInfoMessageEventHandlerProcessAction != null
+                            &&
+                            sqlConnection != null
+                        )
+                    {
+                        sqlConnection
+                            .InfoMessage -=
+                                onSqlInfoMessageEventHandlerProcessAction;
+                        onSqlInfoMessageEventHandlerProcessAction = null;
+                    }
                 }
             }
         }
 
         private void InitializeProcess
                         (
-                            DbConnection connection
+                            TDbConnection connection
                             , string storeProcedureName
                             , JToken inputsParameters
                             , int commandTimeoutInSeconds
-                            , out SqlConnection sqlConnection
-                            , out bool isSqlConnection
                             , out bool statisticsEnabled
-                            , out SqlCommand sqlCommand
                             , out StatementCompletedEventHandler
                                         onStatementCompletedEventHandlerProcessAction
                             , out SqlInfoMessageEventHandler
@@ -218,20 +226,9 @@
         {
             var dataSource = connection.DataSource;
             var dataBaseName = connection.Database;
-            sqlConnection = connection as SqlConnection;
-            isSqlConnection = (sqlConnection != null);
             statisticsEnabled = false;
-            if (isSqlConnection)
-            {
-                statisticsEnabled = sqlConnection.StatisticsEnabled;
-            }
-            sqlCommand = null;
             onStatementCompletedEventHandlerProcessAction = null;
             onSqlInfoMessageEventHandlerProcessAction = null;
-            //try
-            //{
-            //using
-            //    (
             command = new TDbCommand()
             {
                 CommandType = CommandType.StoredProcedure
@@ -239,9 +236,6 @@
                 , CommandText = storeProcedureName
                 , Connection = connection
             };
-            //)
-            //{
-
             if (commandTimeoutInSeconds > 0)
             {
                 command
@@ -293,6 +287,11 @@
                                 }
                         }
                     };
+            SqlConnection sqlConnection = connection as SqlConnection;
+            if (connection != null)
+            {
+                statisticsEnabled = sqlConnection.StatisticsEnabled;
+            }
             if (statisticsEnabled)
             {
                 if (additionalInfo.messages == null)
@@ -303,70 +302,77 @@
                 {
                     additionalInfo.recordCounts = new JArray();
                 }
-                sqlCommand = command as SqlCommand;
-                onStatementCompletedEventHandlerProcessAction =
-                    (sender, statementCompletedEventArgs) =>
-                        {
-                            additionalInfo
-                                .recordCounts
+                if (sqlConnection != null)
+                {
+                    onSqlInfoMessageEventHandlerProcessAction =
+                    (sender, sqlInfoMessageEventArgs) =>
+                    {
+                        additionalInfo
+                            .messageID++;
+                        additionalInfo
+                                .messages
                                 .Add
                                     (
-                                        statementCompletedEventArgs
-                                                            .RecordCount
+                                        new JObject()
+                                        {
+                                                    {
+                                                        "MessageID"
+                                                        , additionalInfo
+                                                                .messageID
+                                                    }
+                                                    ,
+                                                    {
+                                                        "ResultSetID"
+                                                        , additionalInfo
+                                                                .resultSetID
+                                                    }
+                                                    ,
+                                                    {
+                                                        "Source"
+                                                        , sqlInfoMessageEventArgs
+                                                                            .Source
+                                                    }
+                                                    ,
+                                                    {
+                                                        "Message"
+                                                        , sqlInfoMessageEventArgs
+                                                                            .Message
+                                                    }
+                                                    ,
+                                                    {
+                                                        "DealTime"
+                                                        , DateTime.Now
+                                                    }
+                                        }
                                     );
-                        };
-                sqlCommand
-                    .StatementCompleted +=
-                        onStatementCompletedEventHandlerProcessAction;
-                onSqlInfoMessageEventHandlerProcessAction =
-                (sender, sqlInfoMessageEventArgs) =>
-                        {
-                            additionalInfo
-                                .messageID ++;
-                            additionalInfo
-                                    .messages
+                    };
+                    sqlConnection
+                            .InfoMessage +=
+                                onSqlInfoMessageEventHandlerProcessAction;
+                }
+                if (statisticsEnabled)
+                {
+                    if (command is SqlCommand sqlCommand)
+                    {
+                        onStatementCompletedEventHandlerProcessAction =
+                            (sender, statementCompletedEventArgs) =>
+                            {
+                                additionalInfo
+                                    .recordCounts
                                     .Add
                                         (
-                                            new JObject()
-                                            {
-                                                {
-                                                    "MessageID"
-                                                    , additionalInfo
-                                                            .messageID
-                                                }
-                                                ,
-                                                {
-                                                    "ResultSetID"
-                                                    , additionalInfo
-                                                            .resultSetID
-                                                }
-                                                ,
-                                                {
-                                                    "Source"
-                                                    , sqlInfoMessageEventArgs
-                                                                        .Source
-                                                }
-                                                ,
-                                                {
-                                                    "Message"
-                                                    , sqlInfoMessageEventArgs
-                                                                        .Message
-                                                }
-                                                ,
-                                                {
-                                                    "DealTime"
-                                                    , DateTime.Now
-                                                }
-                                            }
+                                            statementCompletedEventArgs
+                                                                .RecordCount
                                         );
-                        };
-                sqlConnection
-                        .InfoMessage +=
-                            onSqlInfoMessageEventHandlerProcessAction;
+                            };
+                        sqlCommand
+                            .StatementCompleted +=
+                                onStatementCompletedEventHandlerProcessAction;
+
+                    }
+                }
             }
         }
-
-
         public JToken
             Execute
                 (
@@ -376,23 +382,21 @@
                     , Func
                         <
                             IDataReader
-                            , Type        // fieldType
-                            , string    // fieldName
-                            , int       // row index
-                            , int       // column index
+                            , Type          // fieldType
+                            , string        // fieldName
+                            , int           // row index
+                            , int           // column index
                             ,
                                 (
                                     bool NeedDefaultProcess
                                     , JProperty Field   //  JObject Field 对象
                                 )
                         > onReadRowColumnProcessFunc = null
-                    //, bool enableStatistics = false
                     , int commandTimeoutInSeconds = 90
                 )
         {
             SqlConnection sqlConnection = null;
             bool isSqlConnection = false;
-            bool statisticsEnabled;
             SqlCommand sqlCommand = null;
             StatementCompletedEventHandler
                     onStatementCompletedEventHandlerProcessAction = null;
@@ -401,7 +405,6 @@
             TDbCommand command = null;
             List<TDbParameter> dbParameters = null;
             JObject result = null;
-
             var additionalInfo = new AdditionalInfo()
             {
                 resultSetID = 0
@@ -409,7 +412,6 @@
                 , recordCounts = null
                 , messages = null
             };
-
             try
             {
                 InitializeProcess
@@ -418,10 +420,7 @@
                         , storeProcedureName
                         , inputsParameters
                         , commandTimeoutInSeconds
-                        , out sqlConnection
-                        , out isSqlConnection
-                        , out statisticsEnabled
-                        , out sqlCommand
+                        , out bool statisticsEnabled
                         , out onStatementCompletedEventHandlerProcessAction
                         , out onSqlInfoMessageEventHandlerProcessAction
                         , out command
@@ -450,9 +449,9 @@
                 dataReader.Close();
                 ResultProcess
                         (
-                            sqlConnection
+                            connection
                             , statisticsEnabled
-                            , sqlCommand
+                            , command
                             , ref onStatementCompletedEventHandlerProcessAction
                             , ref onSqlInfoMessageEventHandlerProcessAction
                             , dbParameters
@@ -464,7 +463,6 @@
             finally
             {
                 additionalInfo.Clear();
-                //additionalInfo = null;
                 if (isSqlConnection)
                 {
                     if (onStatementCompletedEventHandlerProcessAction != null)
@@ -472,45 +470,39 @@
                         sqlCommand
                             .StatementCompleted -=
                                 onStatementCompletedEventHandlerProcessAction;
-                        //onStatementCompletedEventHandlerProcessAction = null;
-                        //sqlCommand = null;
                     }
                     if (onSqlInfoMessageEventHandlerProcessAction != null)
                     {
                         sqlConnection
                             .InfoMessage -=
                                 onSqlInfoMessageEventHandlerProcessAction;
-                        //onSqlInfoMessageEventHandlerProcessAction = null;
                     }
                     if (sqlConnection.StatisticsEnabled)
                     {
                         sqlConnection.StatisticsEnabled = false;
                     }
-                    //sqlConnection = null;
                 }
                 if (connection.State != ConnectionState.Closed)
                 {
                     connection.Close();
                 }
                 command.Dispose();
-                //command = null;
-                //dbParameters = null;
             }
         }
 
         public async Task<JToken>
             ExecuteAsync
                 (
-                    DbConnection connection
+                    TDbConnection connection
                     , string storeProcedureName
                     , JToken inputsParameters = null //string.Empty
                     , Func
                         <
                             IDataReader
-                            , Type        // fieldType
-                            , string    // fieldName
-                            , int       // row index
-                            , int       // column index
+                            , Type          // fieldType
+                            , string        // fieldName
+                            , int           // row index
+                            , int           // column index
                             ,
                                 (
                                     bool NeedDefaultProcess
@@ -548,10 +540,7 @@
                         , storeProcedureName
                         , inputsParameters
                         , commandTimeoutInSeconds
-                        , out sqlConnection
-                        , out isSqlConnection
                         , out bool statisticsEnabled
-                        , out sqlCommand
                         , out onStatementCompletedEventHandlerProcessAction
                         , out onSqlInfoMessageEventHandlerProcessAction
                         , out command
@@ -588,9 +577,9 @@
                 dataReader.Close();
                 ResultProcess
                     (
-                        sqlConnection
+                        connection
                         , statisticsEnabled
-                        , sqlCommand
+                        , command
                         , ref onStatementCompletedEventHandlerProcessAction
                         , ref onSqlInfoMessageEventHandlerProcessAction
                         , dbParameters
@@ -602,7 +591,6 @@
             finally
             {
                 additionalInfo.Clear();
-                //additionalInfo = null;
                 if (isSqlConnection)
                 {
                     if (onStatementCompletedEventHandlerProcessAction != null)
@@ -610,29 +598,23 @@
                         sqlCommand
                             .StatementCompleted -=
                                 onStatementCompletedEventHandlerProcessAction;
-                        //onStatementCompletedEventHandlerProcessAction = null;
-                        //sqlCommand = null;
                     }
                     if (onSqlInfoMessageEventHandlerProcessAction != null)
                     {
                         sqlConnection
                             .InfoMessage -=
                                 onSqlInfoMessageEventHandlerProcessAction;
-                        //onSqlInfoMessageEventHandlerProcessAction = null;
                     }
                     if (sqlConnection.StatisticsEnabled)
                     {
                         sqlConnection.StatisticsEnabled = false;
                     }
-                    //sqlConnection = null;
                 }
                 if (connection.State != ConnectionState.Closed)
                 {
                     connection.Close();
                 }
                 command.Dispose();
-                //command = null;
-                //dbParameters = null;
             }
         }
     }
