@@ -125,7 +125,8 @@
                                     column.render = function (cell, type, row, meta) {
                                         if (typeof (cell) == "object") {
                                             cell = JSON.stringify(cell);
-                                            column.Title += " Json";
+                                            //column.Title += " Json";
+                                            //$(e.column(index).header()).text('My title');
                                         }
                                         return cell;
                                     };
