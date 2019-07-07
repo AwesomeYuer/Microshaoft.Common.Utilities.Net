@@ -236,11 +236,6 @@
                 , CommandText = storeProcedureName
                 , Connection = connection
             };
-            if (commandTimeoutInSeconds > 0)
-            {
-                command
-                    .CommandTimeout = commandTimeoutInSeconds;
-            }
             dbParameters = GenerateExecuteParameters
                             (
                                 connection.ConnectionString
