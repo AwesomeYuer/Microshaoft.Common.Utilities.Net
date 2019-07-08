@@ -224,8 +224,6 @@
                             , out JObject result
                         )
         {
-            var dataSource = connection.DataSource;
-            var dataBaseName = connection.Database;
             statisticsEnabled = false;
             onStatementCompletedEventHandlerProcessAction = null;
             onSqlInfoMessageEventHandlerProcessAction = null;
@@ -237,11 +235,11 @@
                 , Connection = connection
             };
             dbParameters = GenerateExecuteParameters
-                            (
-                                connection.ConnectionString
-                                , storeProcedureName
-                                , inputsParameters
-                            );
+                                (
+                                    connection.ConnectionString
+                                    , storeProcedureName
+                                    , inputsParameters
+                                );
             if (dbParameters != null)
             {
                 var parameters = dbParameters.ToArray();
@@ -303,7 +301,7 @@
                     (sender, sqlInfoMessageEventArgs) =>
                     {
                         additionalInfo
-                            .messageID++;
+                                .messageID++;
                         additionalInfo
                                 .messages
                                 .Add
@@ -437,7 +435,8 @@
                                 , result
                                 , dataReader
                             );
-                    additionalInfo.resultSetID++;
+                    additionalInfo
+                            .resultSetID++;
                 }
                 while (dataReader.NextResult());
                 dataReader.Close();
