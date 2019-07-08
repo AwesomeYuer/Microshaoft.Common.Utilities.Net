@@ -214,13 +214,13 @@
                             , JToken inputsParameters
                             , int commandTimeoutInSeconds
                             , AdditionalInfo additionalInfo
+                            , out TDbCommand command
+                            , out List<TDbParameter> dbParameters
                             , out bool statisticsEnabled
                             , out StatementCompletedEventHandler
                                         onStatementCompletedEventHandlerProcessAction
                             , out SqlInfoMessageEventHandler
                                         onSqlInfoMessageEventHandlerProcessAction
-                            , out TDbCommand command
-                            , out List<TDbParameter> dbParameters
                             , out JObject result
                         )
         {
@@ -416,13 +416,12 @@
                         , inputsParameters
                         , commandTimeoutInSeconds
                         , additionalInfo
+                        , out command
+                        , out dbParameters
                         , out bool statisticsEnabled
                         , out onStatementCompletedEventHandlerProcessAction
                         , out onSqlInfoMessageEventHandlerProcessAction
-                        , out command
-                        , out dbParameters
                         , out result
-                        
                     );
                 connection.Open();
                 var dataReader = command
@@ -537,14 +536,12 @@
                         , inputsParameters
                         , commandTimeoutInSeconds
                         , additionalInfo
+                        , out command
+                        , out dbParameters
                         , out bool statisticsEnabled
                         , out onStatementCompletedEventHandlerProcessAction
                         , out onSqlInfoMessageEventHandlerProcessAction
-                        , out command
-                        , out dbParameters
                         , out result
-
-       
                     );
                 connection.Open();
                 var dataReader =
