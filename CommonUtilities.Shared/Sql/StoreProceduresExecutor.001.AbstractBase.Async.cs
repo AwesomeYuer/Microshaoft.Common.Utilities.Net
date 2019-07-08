@@ -213,6 +213,7 @@
                             , string storeProcedureName
                             , JToken inputsParameters
                             , int commandTimeoutInSeconds
+                            , AdditionalInfo additionalInfo
                             , out bool statisticsEnabled
                             , out StatementCompletedEventHandler
                                         onStatementCompletedEventHandlerProcessAction
@@ -221,7 +222,6 @@
                             , out TDbCommand command
                             , out List<TDbParameter> dbParameters
                             , out JObject result
-                            , AdditionalInfo additionalInfo
                         )
         {
             var dataSource = connection.DataSource;
@@ -236,11 +236,6 @@
                 , CommandText = storeProcedureName
                 , Connection = connection
             };
-            if (commandTimeoutInSeconds > 0)
-            {
-                command
-                    .CommandTimeout = commandTimeoutInSeconds;
-            }
             dbParameters = GenerateExecuteParameters
                             (
                                 connection.ConnectionString
@@ -420,13 +415,14 @@
                         , storeProcedureName
                         , inputsParameters
                         , commandTimeoutInSeconds
+                        , additionalInfo
                         , out bool statisticsEnabled
                         , out onStatementCompletedEventHandlerProcessAction
                         , out onSqlInfoMessageEventHandlerProcessAction
                         , out command
                         , out dbParameters
                         , out result
-                        , additionalInfo
+                        
                     );
                 connection.Open();
                 var dataReader = command
@@ -540,13 +536,15 @@
                         , storeProcedureName
                         , inputsParameters
                         , commandTimeoutInSeconds
+                        , additionalInfo
                         , out bool statisticsEnabled
                         , out onStatementCompletedEventHandlerProcessAction
                         , out onSqlInfoMessageEventHandlerProcessAction
                         , out command
                         , out dbParameters
                         , out result
-                        , additionalInfo
+
+       
                     );
                 connection.Open();
                 var dataReader =
