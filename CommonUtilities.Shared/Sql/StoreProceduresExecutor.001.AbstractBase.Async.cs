@@ -398,7 +398,6 @@
             SqlInfoMessageEventHandler
                     onSqlInfoMessageEventHandlerProcessAction = null;
             TDbCommand command = null;
-            List<TDbParameter> dbParameters = null;
             JObject result = null;
             var additionalInfo = new AdditionalInfo()
             {
@@ -417,7 +416,7 @@
                         , commandTimeoutInSeconds
                         , additionalInfo
                         , out command
-                        , out dbParameters
+                        , out List<TDbParameter> dbParameters
                         , out bool statisticsEnabled
                         , out onStatementCompletedEventHandlerProcessAction
                         , out onSqlInfoMessageEventHandlerProcessAction
