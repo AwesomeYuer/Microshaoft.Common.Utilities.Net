@@ -214,13 +214,13 @@
                             , JToken inputsParameters
                             , int commandTimeoutInSeconds
                             , AdditionalInfo additionalInfo
+                            , out TDbCommand command
+                            , out List<TDbParameter> dbParameters
                             , out bool statisticsEnabled
                             , out StatementCompletedEventHandler
                                         onStatementCompletedEventHandlerProcessAction
                             , out SqlInfoMessageEventHandler
                                         onSqlInfoMessageEventHandlerProcessAction
-                            , out TDbCommand command
-                            , out List<TDbParameter> dbParameters
                             , out JObject result
                         )
         {
@@ -398,7 +398,6 @@
             SqlInfoMessageEventHandler
                     onSqlInfoMessageEventHandlerProcessAction = null;
             TDbCommand command = null;
-            List<TDbParameter> dbParameters = null;
             JObject result = null;
             var additionalInfo = new AdditionalInfo()
             {
@@ -416,13 +415,12 @@
                         , inputsParameters
                         , commandTimeoutInSeconds
                         , additionalInfo
+                        , out command
+                        , out List<TDbParameter> dbParameters
                         , out bool statisticsEnabled
                         , out onStatementCompletedEventHandlerProcessAction
                         , out onSqlInfoMessageEventHandlerProcessAction
-                        , out command
-                        , out dbParameters
                         , out result
-                        
                     );
                 connection.Open();
                 var dataReader = command
@@ -537,14 +535,12 @@
                         , inputsParameters
                         , commandTimeoutInSeconds
                         , additionalInfo
+                        , out command
+                        , out dbParameters
                         , out bool statisticsEnabled
                         , out onStatementCompletedEventHandlerProcessAction
                         , out onSqlInfoMessageEventHandlerProcessAction
-                        , out command
-                        , out dbParameters
                         , out result
-
-       
                     );
                 connection.Open();
                 var dataReader =

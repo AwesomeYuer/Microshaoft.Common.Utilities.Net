@@ -82,7 +82,7 @@
                                     , storeProcedureName
                                     , includeReturnValueParameter
                                 );
-            var jProperties = (JObject)inputsParameters;
+            var jProperties = (JObject) inputsParameters;
             foreach (KeyValuePair<string, JToken> jProperty in jProperties)
             {
                 if
@@ -205,15 +205,12 @@
                                 , string storeProcedureName
                             )
         {
-            //var dataSource = connection.DataSource;
-            //var dataBase = connection.Database;
-            var key = $"{connection.DataSource}-{connection.Database}-{storeProcedureName}".ToUpper();
             if
                 (
                     _dictionary
                         .TryGetValue
                             (
-                                key
+                                $"{connection.DataSource}-{connection.Database}-{storeProcedureName}"
                                 , out ExecutingInfo executingInfo
                             )
                 )
@@ -252,8 +249,7 @@
             };
             var key = $"{connection.DataSource}-{connection.Database}-{storeProcedureName}".ToUpper();
             var add = false;
-            var executingInfo = 
-                                _dictionary
+            var executingInfo = _dictionary
                                         .GetOrAdd
                                                 (
                                                     key
@@ -339,73 +335,38 @@
                                 )
 
         {
-            var dbParameters =
-                            GetDefinitionParameters
-                                (
-                                    connectionString
-                                    , storeProcedureName
-                                    , includeReturnValueParameter
-                                );
-            var result =
-                    dbParameters
+            var dbParameters = GetDefinitionParameters
+                                    (
+                                        connectionString
+                                        , storeProcedureName
+                                        , includeReturnValueParameter
+                                    );
+            return
+                dbParameters
                         .ToDictionary
                             (
-                                (xx) =>
+                                (x) =>
                                 {
                                     return
-                                        xx
-                                            .ParameterName
-                                            .TrimStart('@', '?');
+                                            x
+                                                .ParameterName
+                                                .TrimStart('@', '?');
                                 }
-                                , (xx) =>
+                                , (x) =>
                                 {
                                     return
-                                        (DbParameter)xx;
+                                        (DbParameter) x;
                                 }
                                 , StringComparer
                                         .OrdinalIgnoreCase
                             );
-            return result;
         }
         public ParameterDirection GetParameterDirection(string parameterMode)
         {
-            var r = SqlHelper
-                            .GetParameterDirection
-                                (parameterMode);
-            return r;
+            return
+                SqlHelper
+                    .GetParameterDirection
+                        (parameterMode);
         }
-        //public JToken
-        //            Execute
-        //                (
-        //                    DbConnection connection
-        //                    , string storeProcedureName
-        //                    , string p = null //string.Empty
-        //                    , Func
-        //                        <
-        //                            IDataReader
-        //                            , Type        // fieldType
-        //                            , string    // fieldName
-        //                            , int       // row index
-        //                            , int       // column index
-        //                            ,
-        //                                (
-        //                                    bool needDefaultProcess
-        //                                    , JProperty field   //  JObject Field 对象
-        //                                )
-        //                        > onReadRowColumnProcessFunc = null
-        //                    , int commandTimeout = 90
-        //                )
-        //{
-        //    var inputsParameters = JToken.Parse(p);
-        //    return
-        //        Execute
-        //            (
-        //                connection
-        //                , storeProcedureName
-        //                , inputsParameters
-        //                , onReadRowColumnProcessFunc
-        //                , commandTimeout
-        //            );
-        //}
     }
 }
