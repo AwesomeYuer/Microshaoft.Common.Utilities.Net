@@ -20,7 +20,7 @@
                                 TDbParameter : DbParameter, new()
     {
 
-        private class AdditionalInfo
+        private class ExtensionInfo
         {
             public int resultSetID = 0;
             public int messageID = 0;
@@ -95,7 +95,7 @@
                                             onSqlInfoMessageEventHandlerProcessAction
                                 , List<TDbParameter> dbParameters
                                 , JObject result
-                                , AdditionalInfo additionalInfo
+                                , ExtensionInfo extensionInfo
                             )
         {
             JObject jOutputParameters = null;
@@ -159,13 +159,13 @@
                                             , jStatistics
                                         )
                             );
-                    if (additionalInfo.messages != null)
+                    if (extensionInfo.messages != null)
                     {
                         result
                             ["DataBaseStatistics"]
-                            ["Messages"] = additionalInfo.messages;
+                            ["Messages"] = extensionInfo.messages;
                     }
-                    if (additionalInfo.recordCounts != null)
+                    if (extensionInfo.recordCounts != null)
                     {
                         jCurrent
                             .Parent
@@ -174,7 +174,7 @@
                                     new JProperty
                                             (
                                                 "RecordCounts"
-                                                , additionalInfo
+                                                , extensionInfo
                                                         .recordCounts
                                             )
                                 );
@@ -213,7 +213,7 @@
                             , string storeProcedureName
                             , JToken inputsParameters
                             , int commandTimeoutInSeconds
-                            , AdditionalInfo additionalInfo
+                            , ExtensionInfo extensionInfo
                             , out TDbCommand command
                             , out List<TDbParameter> dbParameters
                             , out bool statisticsEnabled
@@ -280,29 +280,29 @@
                                 }
                         }
                     };
-            SqlConnection sqlConnection = connection as SqlConnection;
+            var sqlConnection = connection as SqlConnection;
             if (connection != null)
             {
                 statisticsEnabled = sqlConnection.StatisticsEnabled;
             }
             if (statisticsEnabled)
             {
-                if (additionalInfo.messages == null)
+                if (extensionInfo.messages == null)
                 {
-                    additionalInfo.messages = new JArray();
+                    extensionInfo.messages = new JArray();
                 }
-                if (additionalInfo.recordCounts == null)
+                if (extensionInfo.recordCounts == null)
                 {
-                    additionalInfo.recordCounts = new JArray();
+                    extensionInfo.recordCounts = new JArray();
                 }
                 if (sqlConnection != null)
                 {
                     onSqlInfoMessageEventHandlerProcessAction =
                     (sender, sqlInfoMessageEventArgs) =>
                     {
-                        additionalInfo
+                        extensionInfo
                                 .messageID++;
-                        additionalInfo
+                        extensionInfo
                                 .messages
                                 .Add
                                     (
@@ -310,13 +310,13 @@
                                         {
                                                     {
                                                         "MessageID"
-                                                        , additionalInfo
+                                                        , extensionInfo
                                                                 .messageID
                                                     }
                                                     ,
                                                     {
                                                         "ResultSetID"
-                                                        , additionalInfo
+                                                        , extensionInfo
                                                                 .resultSetID
                                                     }
                                                     ,
@@ -350,7 +350,7 @@
                         onStatementCompletedEventHandlerProcessAction =
                             (sender, statementCompletedEventArgs) =>
                             {
-                                additionalInfo
+                                extensionInfo
                                     .recordCounts
                                     .Add
                                         (
@@ -397,7 +397,7 @@
                     onSqlInfoMessageEventHandlerProcessAction = null;
             TDbCommand command = null;
             JObject result = null;
-            var additionalInfo = new AdditionalInfo()
+            var extensionInfo = new ExtensionInfo()
             {
                 resultSetID = 0
                 , messageID = 0
@@ -412,7 +412,7 @@
                         , storeProcedureName
                         , inputsParameters
                         , commandTimeoutInSeconds
-                        , additionalInfo
+                        , extensionInfo
                         , out command
                         , out List<TDbParameter> dbParameters
                         , out bool statisticsEnabled
@@ -435,7 +435,7 @@
                                 , result
                                 , dataReader
                             );
-                    additionalInfo
+                    extensionInfo
                             .resultSetID++;
                 }
                 while (dataReader.NextResult());
@@ -449,13 +449,13 @@
                             , ref onSqlInfoMessageEventHandlerProcessAction
                             , dbParameters
                             , result
-                            , additionalInfo
+                            , extensionInfo
                         );
                 return result;
             }
             finally
             {
-                additionalInfo.Clear();
+                extensionInfo.Clear();
                 if (isSqlConnection)
                 {
                     if (onStatementCompletedEventHandlerProcessAction != null)
@@ -514,17 +514,15 @@
             SqlInfoMessageEventHandler
                     onSqlInfoMessageEventHandlerProcessAction = null;
             TDbCommand command = null;
-            List<TDbParameter> dbParameters = null;
             JObject result = null;
 
-            var additionalInfo = new AdditionalInfo()
+            var extensionInfo = new ExtensionInfo()
             {
                 resultSetID = 0
                 , messageID = 0
                 , recordCounts = null
                 , messages = null
             };
-
             try
             {
                 InitializeProcess
@@ -533,9 +531,9 @@
                         , storeProcedureName
                         , inputsParameters
                         , commandTimeoutInSeconds
-                        , additionalInfo
+                        , extensionInfo
                         , out command
-                        , out dbParameters
+                        , out List<TDbParameter> dbParameters
                         , out bool statisticsEnabled
                         , out onStatementCompletedEventHandlerProcessAction
                         , out onSqlInfoMessageEventHandlerProcessAction
@@ -558,8 +556,8 @@
                             , result
                             , dataReader
                         );
-                    additionalInfo
-                            .resultSetID ++;
+                    extensionInfo
+                            .resultSetID++;
                 }
                 while
                     (
@@ -577,13 +575,13 @@
                         , ref onSqlInfoMessageEventHandlerProcessAction
                         , dbParameters
                         , result
-                        , additionalInfo
+                        , extensionInfo
                     );
                 return result;
             }
             finally
             {
-                additionalInfo.Clear();
+                extensionInfo.Clear();
                 if (isSqlConnection)
                 {
                     if (onStatementCompletedEventHandlerProcessAction != null)
