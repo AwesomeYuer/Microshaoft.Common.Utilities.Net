@@ -247,12 +247,12 @@
             {
                 ConnectionString = connectionString
             };
-            var key = $"{connection.DataSource}-{connection.Database}-{storeProcedureName}".ToUpper();
+            //var key = $"{connection.DataSource}-{connection.Database}-{storeProcedureName}".ToUpper();
             var add = false;
             var executingInfo = _dictionary
                                         .GetOrAdd
                                                 (
-                                                    key
+                                                    $"{connection.DataSource}-{connection.Database}-{storeProcedureName}"
                                                     , (x) =>
                                                     {
                                                         var r = GetExecutingInfo();
