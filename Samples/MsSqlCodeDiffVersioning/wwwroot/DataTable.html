@@ -81,7 +81,11 @@
                 binded2 = false;
             }
             if (download) {
-                var resultSetID = parseInt(prompt("Result Set ID", 1)) - 1;
+                var r = prompt("Result Set ID", 1);
+                if (r === null) {
+                    return;
+                }
+                var resultSetID = parseInt(r) - 1;
                 if (resultSetID < 0) {
                     resultSetID = 0;
                 }

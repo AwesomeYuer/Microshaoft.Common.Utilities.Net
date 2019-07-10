@@ -115,6 +115,7 @@ namespace Microshaoft.Web
                                 {
                                     //避免在Excel中csv文本数字自动变科学计数法
                                     @value += _options.DigitsTextSuffix;
+                                    //@value = $@"=""{@value}""";
                                 }
                             }
                         }
