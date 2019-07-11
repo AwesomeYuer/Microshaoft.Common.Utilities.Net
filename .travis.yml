@@ -3,7 +3,7 @@ sudo: required
 
 dist: xenial
 mono: none
-dotnet: 2.2.204
+dotnet: 2.2.301
 install:
 - dotnet restore CommonUtilities.NET.Core.Standard.sln
 script:
