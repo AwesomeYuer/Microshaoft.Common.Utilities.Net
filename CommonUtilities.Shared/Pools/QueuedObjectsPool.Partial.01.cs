@@ -87,10 +87,8 @@
         //}
         public bool TryPutNew()
         {
-            var r = false;
-            var e = default(T);
-            e = new T();
-            r = TryPut(e);
+            T e = new T();
+            bool r = TryPut(e);
             return r;
         }
         public bool TryPut(T item)
@@ -107,7 +105,6 @@
                 }
                 else
                 {
-                    item = default(T);
                     Interlocked.Increment(ref _nonPooledObjectsReleaseCount);
                 }
             }
@@ -115,8 +112,7 @@
         }
         public bool TryGet(out T item)
         {
-            var r = false;
-            r = _pool.TryDequeue(out item);
+            bool r = _pool.TryDequeue(out item);
             if (r)
             {
                 Interlocked.Increment(ref _pooledObjectsGotCount);

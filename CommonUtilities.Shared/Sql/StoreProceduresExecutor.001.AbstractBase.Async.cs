@@ -308,34 +308,34 @@
                                     (
                                         new JObject()
                                         {
-                                                    {
-                                                        "MessageID"
-                                                        , extensionInfo
-                                                                .messageID
-                                                    }
-                                                    ,
-                                                    {
-                                                        "ResultSetID"
-                                                        , extensionInfo
-                                                                .resultSetID
-                                                    }
-                                                    ,
-                                                    {
-                                                        "Source"
-                                                        , sqlInfoMessageEventArgs
-                                                                            .Source
-                                                    }
-                                                    ,
-                                                    {
-                                                        "Message"
-                                                        , sqlInfoMessageEventArgs
-                                                                            .Message
-                                                    }
-                                                    ,
-                                                    {
-                                                        "DealTime"
-                                                        , DateTime.Now
-                                                    }
+                                            {
+                                                "MessageID"
+                                                , extensionInfo
+                                                        .messageID
+                                            }
+                                            ,
+                                            {
+                                                "ResultSetID"
+                                                , extensionInfo
+                                                        .resultSetID
+                                            }
+                                            ,
+                                            {
+                                                "Source"
+                                                , sqlInfoMessageEventArgs
+                                                                    .Source
+                                            }
+                                            ,
+                                            {
+                                                "Message"
+                                                , sqlInfoMessageEventArgs
+                                                                    .Message
+                                            }
+                                            ,
+                                            {
+                                                "DealTime"
+                                                , DateTime.Now
+                                            }
                                         }
                                     );
                     };

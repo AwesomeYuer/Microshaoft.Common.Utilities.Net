@@ -465,7 +465,7 @@ namespace Microshaoft
                     fieldValue = new JValue(target[i]);
                 }
             }
-            JProperty r = new JProperty(fieldName, fieldValue);
+            var r = new JProperty(fieldName, fieldValue);
             return r;
         }
     }
