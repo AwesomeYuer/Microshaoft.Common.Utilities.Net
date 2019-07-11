@@ -20,7 +20,6 @@ namespace Microshaoft
                         , messageFactory
                         , loggingFormatArguments
                     );
-            loggingFormatArguments = null;
         }
         public static void LogOnDemand
                                 (
@@ -60,7 +59,6 @@ namespace Microshaoft
                         , messageFactory
                         , loggingFormatArguments
                     );
-            loggingFormatArguments = null;
         }
         public static void LogOnDemand
                                 (

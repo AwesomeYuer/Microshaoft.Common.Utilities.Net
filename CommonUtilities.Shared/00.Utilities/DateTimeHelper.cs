@@ -85,57 +85,64 @@
 
         public static long TotalSecondsSinceEpoch(this DateTime target)
         {
-            if (target < TimeUtcEpoch)
-                return 0;
-            return (long)(target - TimeUtcEpoch).TotalSeconds;
+            return target < TimeUtcEpoch ? 0 : (long)(target - TimeUtcEpoch).TotalSeconds;
         }
 
         public static long TotalMillisecondsSinceEpoch(this DateTime target)
         {
-            if (target < TimeUtcEpoch)
-                return 0;
-            return (long)(target - TimeUtcEpoch).TotalMilliseconds;
+            return target < TimeUtcEpoch ? 0 : (long)(target - TimeUtcEpoch).TotalMilliseconds;
         }
 
         public static long TotalTicksSinceEpoch(this DateTime target)
         {
-            if (target < TimeUtcEpoch)
-                return 0;
-            return (target - TimeUtcEpoch).Ticks;
+            return target < TimeUtcEpoch ? 0 : (target - TimeUtcEpoch).Ticks;
         }
 
         public static long TotalSecondsSinceEpoch(this DateTimeOffset target)
         {
             if (target < TimeUtcEpoch)
+            {
                 return 0;
+            }
             return (long)(target - TimeUtcEpoch).TotalSeconds;
         }
 
         public static long TotalMillisecondsSinceEpoch(this DateTimeOffset target)
         {
             if (target < TimeUtcEpoch)
+            {
                 return 0;
+            }
             return (long)(target - TimeUtcEpoch).TotalMilliseconds;
         }
 
         public static long TotalTicksSinceEpoch(this DateTimeOffset target)
         {
             if (target < TimeUtcEpoch)
+            {
                 return 0;
+            }
+
             return (target - TimeUtcEpoch).Ticks;
         }
 
         public static DateTime Truncate(this DateTime target, TimeSpan timeSpan)
         {
             if (timeSpan == TimeSpan.Zero)
+            {
                 return target;
+            }
+
             return target.AddTicks(-(target.Ticks % timeSpan.Ticks));
         }
 
         public static DateTimeOffset Truncate(this DateTimeOffset target, TimeSpan timeSpan)
         {
             if (timeSpan == TimeSpan.Zero)
+            {
                 return target;
+            }
+
             return target.AddTicks(-(target.Ticks % timeSpan.Ticks));
         }
 
@@ -209,7 +216,11 @@
         public static DateTimeOffset GetFirstDayOfWeek(this DateTimeOffset target, DayOfWeek firstDayOfWeek)
         {
             int delta = firstDayOfWeek - target.DayOfWeek;
-            if (delta > 0) delta -= 7;
+            if (delta > 0)
+            {
+                delta -= 7;
+            }
+
             return target.AddDays(delta);
         }
 

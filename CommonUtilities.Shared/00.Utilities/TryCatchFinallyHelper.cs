@@ -16,7 +16,7 @@ namespace Microshaoft
                                         , Action<bool, Exception> onFinallyProcessAction = null
                                     )
         {
-            T r = default(T);
+            T r = default;
             //if (onTryProcessAction != null)
             {
                 if (needTry)
@@ -69,10 +69,7 @@ namespace Microshaoft
                     }
                     finally
                     {
-                        if (onFinallyProcessAction != null)
-                        {
-                            onFinallyProcessAction(caughtException, exception);
-                        }
+                        onFinallyProcessAction?.Invoke(caughtException, exception);
                     }
                 }
                 else
@@ -106,14 +103,9 @@ namespace Microshaoft
                     {
                         caughtException = true;
                         exception = e;
-
-                        if (e is AggregateException)
-                        { 
-                            var aggregateException = e as AggregateException;
-                            if (aggregateException != null)
-                            {
-                                exception = aggregateException.Flatten();
-                            }
+                        if (e is AggregateException aggregateException)
+                        {
+                            exception = aggregateException.Flatten();
                         }
                         var currentCalleeMethod = MethodBase.GetCurrentMethod();
                         var currentCalleeType = currentCalleeMethod.DeclaringType;
@@ -153,10 +145,7 @@ namespace Microshaoft
                     finally
                     {
                         //Console.WriteLine("Finally");
-                        if (onFinallyProcessAction != null)
-                        {
-                            onFinallyProcessAction(caughtException, exception, newException, caughtInnerExceptionMessage);
-                        }
+                        onFinallyProcessAction?.Invoke(caughtException, exception, newException, caughtInnerExceptionMessage);
                     }
                 }
                 else
