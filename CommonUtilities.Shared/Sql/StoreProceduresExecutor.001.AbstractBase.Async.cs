@@ -19,7 +19,6 @@
                         where
                                 TDbParameter : DbParameter, new()
     {
-
         private class ExtensionInfo
         {
             public int resultSetID = 0;
@@ -430,7 +429,8 @@
                     , commandTimeoutInSeconds
                     , extensionInfo
                 );
-                connection.Open();
+                connection
+                        .Open();
                 var dataReader = context
                                     .Command
                                     .ExecuteReader
@@ -553,7 +553,8 @@
                     , extensionInfo
                 );
                 await
-                    connection.OpenAsync();
+                    connection
+                        .OpenAsync();
                 var dataReader =
                         await
                             context
@@ -598,7 +599,9 @@
                             .Result
                         , extensionInfo
                     );
-                return context.Result;
+                return
+                    context
+                        .Result;
             }
             finally
             {
@@ -620,14 +623,18 @@
                     }
                     if (sqlConnection.StatisticsEnabled)
                     {
-                        sqlConnection.StatisticsEnabled = false;
+                        sqlConnection
+                                .StatisticsEnabled = false;
                     }
                 }
                 if (connection.State != ConnectionState.Closed)
                 {
-                    connection.Close();
+                    connection
+                            .Close();
                 }
-                context.Command.Dispose();
+                context
+                    .Command
+                    .Dispose();
             }
         }
     }
