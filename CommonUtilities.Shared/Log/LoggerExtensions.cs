@@ -266,7 +266,12 @@ namespace Microshaoft
         {
             if (target.IsEnabled(logLevel))
             {
-                var (loggingException, loggingMessage, loggingFormatArguments) = loggingPreprocess();
+                var 
+                    (
+                        loggingException
+                        , loggingMessage
+                        , loggingFormatArguments
+                    ) = loggingPreprocess();
                 target
                     .Log
                         (

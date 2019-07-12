@@ -207,34 +207,39 @@
             }
         }
 
-        private void InitializeProcess
+        private
+            (
+                TDbCommand Command
+                , List<TDbParameter> DbParameters
+                , bool StatisticsEnabled
+                , StatementCompletedEventHandler
+                        OnStatementCompletedEventHandlerProcessAction
+                , SqlInfoMessageEventHandler
+                        OnSqlInfoMessageEventHandlerProcessAction
+                , JObject Result
+            ) 
+            InitializeProcess
                         (
                             TDbConnection connection
                             , string storeProcedureName
                             , JToken inputsParameters
                             , int commandTimeoutInSeconds
                             , ExtensionInfo extensionInfo
-                            , out TDbCommand command
-                            , out List<TDbParameter> dbParameters
-                            , out bool statisticsEnabled
-                            , out StatementCompletedEventHandler
-                                        onStatementCompletedEventHandlerProcessAction
-                            , out SqlInfoMessageEventHandler
-                                        onSqlInfoMessageEventHandlerProcessAction
-                            , out JObject result
                         )
         {
-            statisticsEnabled = false;
-            onStatementCompletedEventHandlerProcessAction = null;
-            onSqlInfoMessageEventHandlerProcessAction = null;
-            command = new TDbCommand()
+            bool statisticsEnabled = false;
+            StatementCompletedEventHandler
+                onStatementCompletedEventHandlerProcessAction = null;
+            SqlInfoMessageEventHandler
+                onSqlInfoMessageEventHandlerProcessAction = null;
+            var command = new TDbCommand()
             {
                 CommandType = CommandType.StoredProcedure
                 , CommandTimeout = commandTimeoutInSeconds
                 , CommandText = storeProcedureName
                 , Connection = connection
             };
-            dbParameters = GenerateExecuteParameters
+            var dbParameters = GenerateExecuteParameters
                                 (
                                     connection.ConnectionString
                                     , storeProcedureName
@@ -247,7 +252,7 @@
                     .Parameters
                     .AddRange(parameters);
             }
-            result = new JObject
+            var result = new JObject
                     {
                         {
                             "BeginTime"
@@ -365,6 +370,15 @@
                     }
                 }
             }
+            return
+                (
+                    command
+                    , dbParameters
+                    , statisticsEnabled
+                    , onStatementCompletedEventHandlerProcessAction
+                    , onSqlInfoMessageEventHandlerProcessAction
+                    , result
+                );
         }
         public JToken
             Execute
@@ -388,15 +402,6 @@
                     , int commandTimeoutInSeconds = 90
                 )
         {
-            SqlConnection sqlConnection = null;
-            bool isSqlConnection = false;
-            SqlCommand sqlCommand = null;
-            StatementCompletedEventHandler
-                    onStatementCompletedEventHandlerProcessAction = null;
-            SqlInfoMessageEventHandler
-                    onSqlInfoMessageEventHandlerProcessAction = null;
-            TDbCommand command = null;
-            JObject result = null;
             var extensionInfo = new ExtensionInfo()
             {
                 resultSetID = 0
@@ -404,24 +409,30 @@
                 , recordCounts = null
                 , messages = null
             };
+            (
+                TDbCommand Command
+                , List<TDbParameter> DbParameters
+                , bool StatisticsEnabled
+                , StatementCompletedEventHandler
+                        OnStatementCompletedEventHandlerProcessAction
+                , SqlInfoMessageEventHandler
+                        OnSqlInfoMessageEventHandlerProcessAction
+                , JObject Result
+            )
+            context = default;
             try
             {
-                InitializeProcess
-                    (
-                        connection
-                        , storeProcedureName
-                        , inputsParameters
-                        , commandTimeoutInSeconds
-                        , extensionInfo
-                        , out command
-                        , out List<TDbParameter> dbParameters
-                        , out bool statisticsEnabled
-                        , out onStatementCompletedEventHandlerProcessAction
-                        , out onSqlInfoMessageEventHandlerProcessAction
-                        , out result
-                    );
+                context = InitializeProcess
+                (
+                    connection
+                    , storeProcedureName
+                    , inputsParameters
+                    , commandTimeoutInSeconds
+                    , extensionInfo
+                );
                 connection.Open();
-                var dataReader = command
+                var dataReader = context
+                                    .Command
                                     .ExecuteReader
                                         (
                                             CommandBehavior
@@ -432,7 +443,7 @@
                     DataReadingProcess
                             (
                                 onReadRowColumnProcessFunc
-                                , result
+                                , context.Result
                                 , dataReader
                             );
                     extensionInfo
@@ -443,32 +454,33 @@
                 ResultProcess
                         (
                             connection
-                            , statisticsEnabled
-                            , command
-                            , ref onStatementCompletedEventHandlerProcessAction
-                            , ref onSqlInfoMessageEventHandlerProcessAction
-                            , dbParameters
-                            , result
+                            , context.StatisticsEnabled
+                            , context.Command
+                            , ref context.OnStatementCompletedEventHandlerProcessAction
+                            , ref context.OnSqlInfoMessageEventHandlerProcessAction
+                            , context.DbParameters
+                            , context.Result
                             , extensionInfo
                         );
-                return result;
+                return context.Result;
             }
             finally
             {
                 extensionInfo.Clear();
-                if (isSqlConnection)
+                if (context.Command is SqlCommand sqlCommand)
                 {
-                    if (onStatementCompletedEventHandlerProcessAction != null)
+                    if (context.OnStatementCompletedEventHandlerProcessAction != null)
                     {
                         sqlCommand
                             .StatementCompleted -=
-                                onStatementCompletedEventHandlerProcessAction;
+                                context.OnStatementCompletedEventHandlerProcessAction;
                     }
-                    if (onSqlInfoMessageEventHandlerProcessAction != null)
+                    var sqlConnection = sqlCommand.Connection;
+                    if (context.OnSqlInfoMessageEventHandlerProcessAction != null)
                     {
                         sqlConnection
                             .InfoMessage -=
-                                onSqlInfoMessageEventHandlerProcessAction;
+                                context.OnSqlInfoMessageEventHandlerProcessAction;
                     }
                     if (sqlConnection.StatisticsEnabled)
                     {
@@ -479,7 +491,7 @@
                 {
                     connection.Close();
                 }
-                command.Dispose();
+                context.Command.Dispose();
             }
         }
 
@@ -506,16 +518,6 @@
                     , int commandTimeoutInSeconds = 90
                 )
         {
-            SqlConnection sqlConnection = null;
-            bool isSqlConnection = false;
-            SqlCommand sqlCommand = null;
-            StatementCompletedEventHandler
-                    onStatementCompletedEventHandlerProcessAction = null;
-            SqlInfoMessageEventHandler
-                    onSqlInfoMessageEventHandlerProcessAction = null;
-            TDbCommand command = null;
-            JObject result = null;
-
             var extensionInfo = new ExtensionInfo()
             {
                 resultSetID = 0
@@ -523,26 +525,33 @@
                 , recordCounts = null
                 , messages = null
             };
+            (
+                TDbCommand Command
+                , List<TDbParameter> DbParameters
+                , bool StatisticsEnabled
+                , StatementCompletedEventHandler
+                        OnStatementCompletedEventHandlerProcessAction
+                , SqlInfoMessageEventHandler
+                        OnSqlInfoMessageEventHandlerProcessAction
+                , JObject Result
+            )
+            context = default;
             try
             {
-                InitializeProcess
-                    (
-                        connection
-                        , storeProcedureName
-                        , inputsParameters
-                        , commandTimeoutInSeconds
-                        , extensionInfo
-                        , out command
-                        , out List<TDbParameter> dbParameters
-                        , out bool statisticsEnabled
-                        , out onStatementCompletedEventHandlerProcessAction
-                        , out onSqlInfoMessageEventHandlerProcessAction
-                        , out result
-                    );
-                connection.Open();
+                context = InitializeProcess
+                (
+                    connection
+                    , storeProcedureName
+                    , inputsParameters
+                    , commandTimeoutInSeconds
+                    , extensionInfo
+                );
+                await
+                    connection.OpenAsync();
                 var dataReader =
                         await
-                            command
+                            context
+                                .Command
                                 .ExecuteReaderAsync
                                     (
                                         CommandBehavior
@@ -553,7 +562,7 @@
                     DataReadingProcess
                         (
                             onReadRowColumnProcessFunc
-                            , result
+                            , context.Result
                             , dataReader
                         );
                     extensionInfo
@@ -567,34 +576,35 @@
                     );
                 dataReader.Close();
                 ResultProcess
-                    (
-                        connection
-                        , statisticsEnabled
-                        , command
-                        , ref onStatementCompletedEventHandlerProcessAction
-                        , ref onSqlInfoMessageEventHandlerProcessAction
-                        , dbParameters
-                        , result
-                        , extensionInfo
-                    );
-                return result;
+                        (
+                            connection
+                            , context.StatisticsEnabled
+                            , context.Command
+                            , ref context.OnStatementCompletedEventHandlerProcessAction
+                            , ref context.OnSqlInfoMessageEventHandlerProcessAction
+                            , context.DbParameters
+                            , context.Result
+                            , extensionInfo
+                        );
+                return context.Result;
             }
             finally
             {
                 extensionInfo.Clear();
-                if (isSqlConnection)
+                if (context.Command is SqlCommand sqlCommand)
                 {
-                    if (onStatementCompletedEventHandlerProcessAction != null)
+                    if (context.OnStatementCompletedEventHandlerProcessAction != null)
                     {
                         sqlCommand
                             .StatementCompleted -=
-                                onStatementCompletedEventHandlerProcessAction;
+                                context.OnStatementCompletedEventHandlerProcessAction;
                     }
-                    if (onSqlInfoMessageEventHandlerProcessAction != null)
+                    var sqlConnection = sqlCommand.Connection;
+                    if (context.OnSqlInfoMessageEventHandlerProcessAction != null)
                     {
                         sqlConnection
                             .InfoMessage -=
-                                onSqlInfoMessageEventHandlerProcessAction;
+                                context.OnSqlInfoMessageEventHandlerProcessAction;
                     }
                     if (sqlConnection.StatisticsEnabled)
                     {
@@ -605,7 +615,7 @@
                 {
                     connection.Close();
                 }
-                command.Dispose();
+                context.Command.Dispose();
             }
         }
     }
