@@ -19,7 +19,6 @@
                         where
                                 TDbParameter : DbParameter, new()
     {
-
         private class ExtensionInfo
         {
             public int resultSetID = 0;
@@ -85,18 +84,18 @@
         }
 
         private static void ResultProcess
-                            (
-                                TDbConnection connection
-                                , bool statisticsEnabled
-                                , TDbCommand command
-                                , ref StatementCompletedEventHandler
-                                            onStatementCompletedEventHandlerProcessAction
-                                , ref SqlInfoMessageEventHandler
-                                            onSqlInfoMessageEventHandlerProcessAction
-                                , List<TDbParameter> dbParameters
-                                , JObject result
-                                , ExtensionInfo extensionInfo
-                            )
+                (
+                    TDbConnection connection
+                    , TDbCommand command
+                    , List<TDbParameter> dbParameters
+                    , bool statisticsEnabled
+                    , StatementCompletedEventHandler
+                                onStatementCompletedEventHandlerProcessAction
+                    , SqlInfoMessageEventHandler
+                                onSqlInfoMessageEventHandlerProcessAction
+                    , JObject result
+                    , ExtensionInfo extensionInfo
+                )
         {
             JObject jOutputParameters = null;
             if (dbParameters != null)
@@ -430,7 +429,8 @@
                     , commandTimeoutInSeconds
                     , extensionInfo
                 );
-                connection.Open();
+                connection
+                        .Open();
                 var dataReader = context
                                     .Command
                                     .ExecuteReader
@@ -452,16 +452,22 @@
                 while (dataReader.NextResult());
                 dataReader.Close();
                 ResultProcess
-                        (
-                            connection
-                            , context.StatisticsEnabled
-                            , context.Command
-                            , ref context.OnStatementCompletedEventHandlerProcessAction
-                            , ref context.OnSqlInfoMessageEventHandlerProcessAction
-                            , context.DbParameters
-                            , context.Result
-                            , extensionInfo
-                        );
+                    (
+                        connection
+                        , context
+                            .Command
+                        , context
+                            .DbParameters
+                        , context
+                            .StatisticsEnabled
+                        , context
+                            .OnStatementCompletedEventHandlerProcessAction
+                        , context
+                            .OnSqlInfoMessageEventHandlerProcessAction
+                        , context
+                            .Result
+                        , extensionInfo
+                    );
                 return context.Result;
             }
             finally
@@ -547,7 +553,8 @@
                     , extensionInfo
                 );
                 await
-                    connection.OpenAsync();
+                    connection
+                        .OpenAsync();
                 var dataReader =
                         await
                             context
@@ -576,17 +583,25 @@
                     );
                 dataReader.Close();
                 ResultProcess
-                        (
-                            connection
-                            , context.StatisticsEnabled
-                            , context.Command
-                            , ref context.OnStatementCompletedEventHandlerProcessAction
-                            , ref context.OnSqlInfoMessageEventHandlerProcessAction
-                            , context.DbParameters
-                            , context.Result
-                            , extensionInfo
-                        );
-                return context.Result;
+                    (
+                        connection
+                        , context
+                            .Command
+                        , context
+                            .DbParameters
+                        , context
+                            .StatisticsEnabled
+                        , context
+                            .OnStatementCompletedEventHandlerProcessAction
+                        , context
+                            .OnSqlInfoMessageEventHandlerProcessAction
+                        , context
+                            .Result
+                        , extensionInfo
+                    );
+                return
+                    context
+                        .Result;
             }
             finally
             {
@@ -608,14 +623,18 @@
                     }
                     if (sqlConnection.StatisticsEnabled)
                     {
-                        sqlConnection.StatisticsEnabled = false;
+                        sqlConnection
+                                .StatisticsEnabled = false;
                     }
                 }
                 if (connection.State != ConnectionState.Closed)
                 {
-                    connection.Close();
+                    connection
+                            .Close();
                 }
-                context.Command.Dispose();
+                context
+                    .Command
+                    .Dispose();
             }
         }
     }
