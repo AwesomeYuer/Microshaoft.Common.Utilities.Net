@@ -473,31 +473,42 @@
             finally
             {
                 extensionInfo.Clear();
-                if (context.Command is SqlCommand sqlCommand)
+                if (context.OnStatementCompletedEventHandlerProcessAction != null)
                 {
-                    if (context.OnStatementCompletedEventHandlerProcessAction != null)
+                    if (context.Command is SqlCommand sqlCommand)
                     {
                         sqlCommand
                             .StatementCompleted -=
-                                context.OnStatementCompletedEventHandlerProcessAction;
+                                context
+                                    .OnStatementCompletedEventHandlerProcessAction;
+                        context
+                            .OnStatementCompletedEventHandlerProcessAction = null;
                     }
-                    var sqlConnection = sqlCommand.Connection;
-                    if (context.OnSqlInfoMessageEventHandlerProcessAction != null)
+                }
+                if (context.OnSqlInfoMessageEventHandlerProcessAction != null)
+                {
+                    if (connection is SqlConnection sqlConnection)
                     {
                         sqlConnection
                             .InfoMessage -=
-                                context.OnSqlInfoMessageEventHandlerProcessAction;
-                    }
-                    if (sqlConnection.StatisticsEnabled)
-                    {
-                        sqlConnection.StatisticsEnabled = false;
+                                context
+                                    .OnSqlInfoMessageEventHandlerProcessAction;
+                        context
+                            .OnSqlInfoMessageEventHandlerProcessAction = null;
+                        if (sqlConnection.StatisticsEnabled)
+                        {
+                            sqlConnection.StatisticsEnabled = false;
+                        }
                     }
                 }
                 if (connection.State != ConnectionState.Closed)
                 {
-                    connection.Close();
+                    connection
+                            .Close();
                 }
-                context.Command.Dispose();
+                context
+                    .Command
+                    .Dispose();
             }
         }
 
@@ -606,25 +617,32 @@
             finally
             {
                 extensionInfo.Clear();
-                if (context.Command is SqlCommand sqlCommand)
+                if (context.OnStatementCompletedEventHandlerProcessAction != null)
                 {
-                    if (context.OnStatementCompletedEventHandlerProcessAction != null)
+                    if (context.Command is SqlCommand sqlCommand)
                     {
                         sqlCommand
                             .StatementCompleted -=
-                                context.OnStatementCompletedEventHandlerProcessAction;
+                                context
+                                    .OnStatementCompletedEventHandlerProcessAction;
+                        context
+                            .OnStatementCompletedEventHandlerProcessAction = null;
                     }
-                    var sqlConnection = sqlCommand.Connection;
-                    if (context.OnSqlInfoMessageEventHandlerProcessAction != null)
+                }
+                if (context.OnSqlInfoMessageEventHandlerProcessAction != null)
+                {
+                    if (connection is SqlConnection sqlConnection)
                     {
                         sqlConnection
                             .InfoMessage -=
-                                context.OnSqlInfoMessageEventHandlerProcessAction;
-                    }
-                    if (sqlConnection.StatisticsEnabled)
-                    {
-                        sqlConnection
-                                .StatisticsEnabled = false;
+                                context
+                                    .OnSqlInfoMessageEventHandlerProcessAction;
+                        context
+                            .OnSqlInfoMessageEventHandlerProcessAction = null;
+                        if (sqlConnection.StatisticsEnabled)
+                        {
+                            sqlConnection.StatisticsEnabled = false;
+                        }
                     }
                 }
                 if (connection.State != ConnectionState.Closed)
