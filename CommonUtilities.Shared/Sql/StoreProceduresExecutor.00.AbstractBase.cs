@@ -243,7 +243,7 @@
                 };
                 return _executingInfo;
             }
-            DbConnection connection = new TDbConnection
+            var connection = new TDbConnection
             {
                 ConnectionString = connectionString
             };

@@ -449,7 +449,11 @@
                     extensionInfo
                             .resultSetID++;
                 }
-                while (dataReader.NextResult());
+                while
+                    (
+                        dataReader
+                            .NextResult()
+                    );
                 dataReader.Close();
                 ResultProcess
                     (
@@ -643,7 +647,8 @@
                             .OnSqlInfoMessageEventHandlerProcessAction = null;
                         if (sqlConnection.StatisticsEnabled)
                         {
-                            sqlConnection.StatisticsEnabled = false;
+                            sqlConnection
+                                    .StatisticsEnabled = false;
                         }
                     }
                 }
