@@ -217,7 +217,7 @@
                         OnSqlInfoMessageEventHandlerProcessAction
                 , JObject Result
             ) 
-            InitializeProcess
+            ResultPreprocess
                         (
                             TDbConnection connection
                             , string storeProcedureName
@@ -285,7 +285,7 @@
                         }
                     };
             var sqlConnection = connection as SqlConnection;
-            if (connection != null)
+            if (sqlConnection != null)
             {
                 statisticsEnabled = sqlConnection.StatisticsEnabled;
             }
@@ -421,7 +421,7 @@
             context = default;
             try
             {
-                context = InitializeProcess
+                context = ResultPreprocess
                 (
                     connection
                     , storeProcedureName
@@ -449,7 +449,11 @@
                     extensionInfo
                             .resultSetID++;
                 }
-                while (dataReader.NextResult());
+                while
+                    (
+                        dataReader
+                            .NextResult()
+                    );
                 dataReader.Close();
                 ResultProcess
                     (
@@ -468,7 +472,9 @@
                             .Result
                         , extensionInfo
                     );
-                return context.Result;
+                return
+                    context
+                        .Result;
             }
             finally
             {
@@ -555,7 +561,7 @@
             context = default;
             try
             {
-                context = InitializeProcess
+                context = ResultPreprocess
                 (
                     connection
                     , storeProcedureName
@@ -641,7 +647,8 @@
                             .OnSqlInfoMessageEventHandlerProcessAction = null;
                         if (sqlConnection.StatisticsEnabled)
                         {
-                            sqlConnection.StatisticsEnabled = false;
+                            sqlConnection
+                                    .StatisticsEnabled = false;
                         }
                     }
                 }
