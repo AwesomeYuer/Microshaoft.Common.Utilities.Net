@@ -217,7 +217,7 @@
                         OnSqlInfoMessageEventHandlerProcessAction
                 , JObject Result
             ) 
-            InitializeProcess
+            ResultPreprocess
                         (
                             TDbConnection connection
                             , string storeProcedureName
@@ -285,7 +285,7 @@
                         }
                     };
             var sqlConnection = connection as SqlConnection;
-            if (connection != null)
+            if (sqlConnection != null)
             {
                 statisticsEnabled = sqlConnection.StatisticsEnabled;
             }
@@ -421,7 +421,7 @@
             context = default;
             try
             {
-                context = InitializeProcess
+                context = ResultPreprocess
                 (
                     connection
                     , storeProcedureName
@@ -468,7 +468,9 @@
                             .Result
                         , extensionInfo
                     );
-                return context.Result;
+                return
+                    context
+                        .Result;
             }
             finally
             {
@@ -555,7 +557,7 @@
             context = default;
             try
             {
-                context = InitializeProcess
+                context = ResultPreprocess
                 (
                     connection
                     , storeProcedureName

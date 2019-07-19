@@ -19,7 +19,7 @@
     },
     "c3": {
       "dataBaseType": "mysql",
-      "ConnectionString": "server=vm-003-mysql.eastus.cloudapp.azure.com;uid=root;pwd=password;database=Test",
+      "ConnectionString": "server=localhost;uid=root;pwd=!@#123QWE;database=Test",
       "EnaBleStatistics": true
       //"CommandTimeoutInSeconds": 100
       /*
