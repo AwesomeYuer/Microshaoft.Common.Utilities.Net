@@ -36,6 +36,21 @@
             private set => _dictionary = value;
         }
 
+        private string _parametersQueryCommandText =$@"
+                    SELECT
+                        * 
+                    FROM
+                        information_schema.parameters a 
+                    WHERE
+                        a.SPECIFIC_NAME = @ProcedureName
+                    ";
+
+        public virtual string ParametersQueryCommandText
+        {
+            get => _parametersQueryCommandText;
+            //set => _parametersQueryCommandText = value;
+        }
+
         protected abstract TDbParameter
                  OnQueryDefinitionsSetInputParameterProcess
                         (
@@ -305,7 +320,7 @@
             }
             return result;
         }
-        public IEnumerable<TDbParameter>
+        public virtual IEnumerable<TDbParameter>
                                 GetDefinitionParameters
                                         (
                                             string connectionString
@@ -322,6 +337,7 @@
                                         , OnQueryDefinitionsSetInputParameterProcess
                                         , OnQueryDefinitionsSetReturnParameterProcess
                                         , OnQueryDefinitionsReadOneDbParameterProcess
+                                        , ParametersQueryCommandText
                                         , includeReturnValueParameter
                                     );
             return r;

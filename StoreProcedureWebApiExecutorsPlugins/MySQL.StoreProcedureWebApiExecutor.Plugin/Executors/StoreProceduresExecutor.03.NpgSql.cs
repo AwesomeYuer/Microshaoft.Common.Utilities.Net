@@ -5,6 +5,7 @@ namespace Microshaoft
     using Npgsql;
     using NpgsqlTypes;
     using System;
+    using System.Collections.Generic;
     using System.Data;
     public class NpgSqlStoreProceduresExecutor
                     : AbstractStoreProceduresExecutor
@@ -14,6 +15,23 @@ namespace Microshaoft
                             , NpgsqlParameter
                         >
     {
+        private string _parametersQueryCommandText = $@"
+                    SELECT
+                        * 
+                    FROM
+                        information_schema.parameters a 
+                    WHERE
+                        a.SPECIFIC_NAME = @ProcedureName
+                    order by
+                        a.SPECIFIC_NAME
+                    limit 1
+                    ";
+        public override string ParametersQueryCommandText
+        {
+            get => _parametersQueryCommandText;
+        }
+
+
         protected override NpgsqlParameter
                         OnQueryDefinitionsSetInputParameterProcess
                             (
@@ -41,7 +59,7 @@ namespace Microshaoft
                            )
         {
             var dbTypeName = (string)(reader["DATA_TYPE"]);
-            NpgsqlDbType dbType = (NpgsqlDbType)Enum.Parse(typeof(NpgsqlDbType), dbTypeName, true);
+            NpgsqlDbType dbType = (NpgsqlDbType) Enum.Parse(typeof(NpgsqlDbType), dbTypeName, true);
             parameter
                 .NpgsqlDbType = dbType;
             if ((parameter.NpgsqlDbType == NpgsqlDbType.Numeric))
@@ -95,6 +113,28 @@ namespace Microshaoft
                         (
                             jValue
                         );
+        }
+        public override IEnumerable<NpgsqlParameter> GetDefinitionParameters
+            (
+                string connectionString
+                , string storeProcedureName
+                , bool includeReturnValueParameter = false
+            )
+        {
+
+            return
+                SqlHelper
+                        .GetStoreProcedureDefinitionParameters
+                                <NpgsqlConnection, NpgsqlCommand, NpgsqlParameter>
+                                    (
+                                        connectionString
+                                        , storeProcedureName
+                                        , OnQueryDefinitionsSetInputParameterProcess
+                                        , OnQueryDefinitionsSetReturnParameterProcess
+                                        , OnQueryDefinitionsReadOneDbParameterProcess
+                                        , ParametersQueryCommandText
+                                        , includeReturnValueParameter
+                                    );
         }
     }
 }
