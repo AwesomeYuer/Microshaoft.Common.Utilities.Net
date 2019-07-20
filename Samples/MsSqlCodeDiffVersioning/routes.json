@@ -6,7 +6,7 @@
         "storeProcedureName": "sp_helptext",
         "EnableStatistics": true,
         "commandtimeoutInSeconds": 103,
-        "Scope": "sp_down" 
+        "Scope": "sp_down"
       }
 
     },
@@ -42,7 +42,7 @@
             "aaa.bbb.ddd": "Outputs.ResultSets[0].Rows"
           }
 
-          },
+        },
         "exporting": {
           "allow": true,
           "needCheckOperations": true,
@@ -87,7 +87,7 @@
             "$": "Outputs.ResultSets[0].Rows"
           }
         }
-        }
+      }
     },
     "objEcts": {
       "HttPGet": {
@@ -185,10 +185,31 @@
             "bbb": "Outputs.Parameters",
             "aaa.bbb.ccc": "Outputs.Parameters",
             "AAa.ccc": "Outputs.Parameters",
-            "aaa.bbb.ccc": "Outputs.ResultSets[0].Rows"
+            "aaa.bbb.ccc2": "Outputs.ResultSets[0].Rows"
+          }
+        }
+      }
+    },
+    "npgsql": {
+      "HttPGet": {
+        "connectionID": "c4",
+        "storeProcedureName": "getfoo1",
+        "EnableStatistics": true,
+        "commandtimeoutInSeconds": 103,
+        "defaultAccessing": {
+          "allow": true,
+          "EnableStatistics": true,
+          "commandtimeoutInSeconds": 103,
+          "Outputs111": {
+            "aaa.bbb.ddd": "Outputs.ResultSets[0].Rows",
+            "bbb": "Outputs.Parameters",
+            "aaa.bbb.ccc": "Outputs.Parameters",
+            "AAa.ccc": "Outputs.Parameters",
+            "aaa.bbb.ccc2": "Outputs.ResultSets[0].Rows"
           }
         }
       }
     }
+
   }
  }
