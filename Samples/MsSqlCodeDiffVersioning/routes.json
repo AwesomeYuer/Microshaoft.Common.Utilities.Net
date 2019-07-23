@@ -190,6 +190,26 @@
         }
       }
     },
+    "execmysql": {
+      "HttPpost": {
+        "connectionID": "c3",
+        "storeProcedureName": "zsp_executesql",
+        "EnableStatistics": true,
+        "commandtimeoutInSeconds": 103,
+        "defaultAccessing": {
+          "allow": true,
+          "EnableStatistics": true,
+          "commandtimeoutInSeconds": 103,
+          "Outputs111": {
+            "aaa.bbb.ddd": "Outputs.ResultSets[0].Rows",
+            "bbb": "Outputs.Parameters",
+            "aaa.bbb.ccc": "Outputs.Parameters",
+            "AAa.ccc": "Outputs.Parameters",
+            "aaa.bbb.ccc2": "Outputs.ResultSets[0].Rows"
+          }
+        }
+      }
+    },
     "npgsql": {
       "HttPGet": {
         "connectionID": "c4",
