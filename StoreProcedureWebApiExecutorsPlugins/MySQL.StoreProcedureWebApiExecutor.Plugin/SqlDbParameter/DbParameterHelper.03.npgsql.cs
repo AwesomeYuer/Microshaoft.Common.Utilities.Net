@@ -111,6 +111,24 @@ namespace Microshaoft
                 }
                 else if
                    (
+                        target.NpgsqlDbType == NpgsqlDbType.Integer
+                   )
+                {
+                    if
+                        (
+                            int
+                                .TryParse
+                                    (
+                                        jValueText
+                                        , out var rr
+                                    )
+                        )
+                    {
+                        r = rr;
+                    }
+                }
+                else if
+                   (
                         target.NpgsqlDbType == NpgsqlDbType.Bigint
                    )
                 {

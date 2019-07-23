@@ -15,16 +15,30 @@ namespace Microshaoft
                             , NpgsqlParameter
                         >
     {
+        // PostgreSQL can't full support information_schema.parameters 
+        /*
+         * https://www.postgresql.org/docs/12/infoschema-parameters.html
+         * character_maximum_length	cardinal_number	Always null, since this information is not applied to parameter data types in PostgreSQL
+         * character_octet_length	cardinal_number	Always null, since this information is not applied to parameter data types in PostgreSQL
+         */
         private string _parametersQueryCommandText = $@"
-                    SELECT
-                        * 
-                    FROM
-                        information_schema.parameters a 
-                    WHERE
-                        a.SPECIFIC_NAME = @ProcedureName
-                    order by
-                        a.SPECIFIC_NAME
-                    limit 1
+select
+	*
+from
+	information_schema.parameters a
+where
+	a.SPECIFIC_NAME =
+        (
+            SELECT
+                aa.SPECIFIC_NAME
+            FROM
+                information_schema.parameters aa 
+            WHERE
+                aa.SPECIFIC_NAME like @ProcedureName || '%'
+            order by
+                aa.SPECIFIC_NAME
+            limit 1
+	    )
                     ";
         public override string ParametersQueryCommandText
         {
