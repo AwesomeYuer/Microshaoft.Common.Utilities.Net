@@ -146,20 +146,14 @@ where
                 , bool includeReturnValueParameter = false
             )
         {
-
             return
-                SqlHelper
-                        .GetStoreProcedureDefinitionParameters
-                                <NpgsqlConnection, NpgsqlCommand, NpgsqlParameter>
-                                    (
-                                        connectionString
-                                        , storeProcedureName
-                                        , OnQueryDefinitionsSetInputParameterProcess
-                                        , OnQueryDefinitionsSetReturnParameterProcess
-                                        , OnQueryDefinitionsReadOneDbParameterProcess
-                                        , ParametersQueryCommandText
-                                        , includeReturnValueParameter
-                                    );
+                GetStoreProcedureDefinitionParameters
+                        (
+                            connectionString
+                            , storeProcedureName
+                            , _parametersQueryCommandText
+                            , includeReturnValueParameter
+                        );
         }
     }
 }

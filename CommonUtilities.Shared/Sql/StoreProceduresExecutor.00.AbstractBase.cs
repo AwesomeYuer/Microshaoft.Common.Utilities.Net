@@ -328,19 +328,19 @@
                                             , bool includeReturnValueParameter = false
                                         )
         {
-            var r = SqlHelper
-                        .GetStoreProcedureDefinitionParameters
-                                <TDbConnection, TDbCommand, TDbParameter>
-                                    (
-                                        connectionString
-                                        , storeProcedureName
-                                        , OnQueryDefinitionsSetInputParameterProcess
-                                        , OnQueryDefinitionsSetReturnParameterProcess
-                                        , OnQueryDefinitionsReadOneDbParameterProcess
-                                        , ParametersQueryCommandText
-                                        , includeReturnValueParameter
-                                    );
-            return r;
+            return
+                SqlHelper
+                    .GetStoreProcedureDefinitionParameters
+                            <TDbConnection, TDbCommand, TDbParameter>
+                                (
+                                    connectionString
+                                    , storeProcedureName
+                                    , OnQueryDefinitionsSetInputParameterProcess
+                                    , OnQueryDefinitionsSetReturnParameterProcess
+                                    , OnQueryDefinitionsReadOneDbParameterProcess
+                                    , ParametersQueryCommandText
+                                    , includeReturnValueParameter
+                                );
         }
         public IDictionary<string, DbParameter>
                         GetNameIndexedDefinitionParameters
@@ -383,6 +383,33 @@
                 SqlHelper
                     .GetParameterDirection
                         (parameterMode);
+        }
+
+        protected IEnumerable<TDbParameter> GetStoreProcedureDefinitionParameters
+            (
+                string connectionString
+                , string storeProcedureName
+                , string parametersQueryCommandText = null
+                , bool includeReturnValueParameter = false
+            )
+        {
+            if (parametersQueryCommandText.IsNullOrEmptyOrWhiteSpace())
+            {
+                parametersQueryCommandText = _parametersQueryCommandText;
+            }
+            return
+                SqlHelper
+                    .GetStoreProcedureDefinitionParameters
+                            <TDbConnection, TDbCommand, TDbParameter>
+                                (
+                                    connectionString
+                                    , storeProcedureName
+                                    , OnQueryDefinitionsSetInputParameterProcess
+                                    , OnQueryDefinitionsSetReturnParameterProcess
+                                    , OnQueryDefinitionsReadOneDbParameterProcess
+                                    , ParametersQueryCommandText
+                                    , includeReturnValueParameter
+                                );
         }
     }
 }
