@@ -5,7 +5,6 @@
     using System.Collections.Generic;
     using System.Data;
     using System.Data.Common;
-    using System.Data.SqlClient;
 
     public static partial class SqlHelper
     {
@@ -106,32 +105,13 @@
                 var dataBase = connection.Database;
                 string procedureSchema = string.Empty;
                 string parameterName = string.Empty;
-                //string parametersSchema = "information_schema.parameters";
-                //if (connection is SqlConnection)
-                //{
-                //    parametersSchema = MsSqlStoreProceduresParametersSchemaQuery;
-                //}
-                //var commandText = $@"
-                //    SELECT
-                //        top 1
-                //        * 
-                //    FROM
-                //        {parametersSchema} a 
-                //    WHERE
-                //        a.SPECIFIC_NAME like @ProcedureName + '%'
-                //    ";
-                //MySQL 不支持 using command
-                //using
-                //    (
                 DbCommand command = new TDbCommand()
                 {
                     CommandText = parametersQueryCommandText
                     , CommandType = CommandType.Text
                     , Connection = connection
                 };
-                    //)
                 {
-                    //command.CommandType = CommandType.StoredProcedure;
                     TDbParameter dbParameterProcedureName = new TDbParameter
                     {
                         ParameterName = "@ProcedureName"
@@ -151,7 +131,12 @@
                                     (
                                         dbParameterProcedureName
                                     );
-                    command.Parameters.Add(dbParameterProcedureName);
+                    command
+                        .Parameters
+                        .Add
+                            (
+                                dbParameterProcedureName
+                            );
                     TDbParameter dbParameterReturn = new TDbParameter
                     {
                         ParameterName = "@RETURN_VALUE"
@@ -247,5 +232,4 @@
             return pd;
         }
     }
-
 }

@@ -35,34 +35,45 @@ namespace Microshaoft
                                , string connectionString
                            )
         {
-            var dbTypeName = (string)(reader["DATA_TYPE"]);
-            DB2Type dbType = (DB2Type) Enum.Parse(typeof(DB2Type), dbTypeName, true);
-            parameter
-                .DB2Type = dbType;
-            if (parameter.DB2Type == DB2Type.Decimal)
-            {
-                var o = reader["NUMERIC_SCALE"];
-                if (o != DBNull.Value)
-                {
-                    parameter
-                        .Scale =
+            var dbTypeName = (string) reader["DATA_TYPE"];
+            if
+                (
+                    Enum
+                        .TryParse
                             (
-                                (byte)
-                                    (
-                                        (
-                                            (short)
-                                                (
-                                                    (int)o
-                                                )
-                                        )
-                                    //& 255
-                                    )
-                            );
-                }
-                o = reader["NUMERIC_PRECISION"];
-                if (o != DBNull.Value)
+                                dbTypeName
+                                , true
+                                , out DB2Type dbType
+                            )
+                )
+            {
+                parameter
+                    .DB2Type = dbType;
+                if (parameter.DB2Type == DB2Type.Decimal)
                 {
-                    parameter.Precision = ((byte)o);
+                    var o = reader["NUMERIC_SCALE"];
+                    if (o != DBNull.Value)
+                    {
+                        parameter
+                            .Scale =
+                                (
+                                    (byte)
+                                        (
+                                            (
+                                                (short)
+                                                    (
+                                                        (int)o
+                                                    )
+                                            )
+                                        //& 255
+                                        )
+                                );
+                    }
+                    o = reader["NUMERIC_PRECISION"];
+                    if (o != DBNull.Value)
+                    {
+                        parameter.Precision = ((byte)o);
+                    }
                 }
             }
             return parameter;

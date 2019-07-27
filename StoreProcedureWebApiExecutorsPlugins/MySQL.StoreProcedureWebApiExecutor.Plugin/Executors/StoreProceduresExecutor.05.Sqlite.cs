@@ -36,16 +36,16 @@ namespace Microshaoft
         {
             var originalDbTypeName = (string)(reader["DATA_TYPE"]);
             var dbTypeName = originalDbTypeName;
-
-            SqliteType dbType = SqliteType.Integer;
-            var r = Enum
+            if 
+                (
+                    Enum
                         .TryParse
                             (
                                 dbTypeName
                                 , true
-                                , out dbType
-                            );
-            if (r)
+                                , out SqliteType dbType
+                            )
+                )
             {
                 parameter
                     .SqliteType = dbType;

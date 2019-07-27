@@ -72,34 +72,45 @@ where
                                , string connectionString
                            )
         {
-            var dbTypeName = (string)(reader["DATA_TYPE"]);
-            NpgsqlDbType dbType = (NpgsqlDbType) Enum.Parse(typeof(NpgsqlDbType), dbTypeName, true);
-            parameter
-                .NpgsqlDbType = dbType;
-            if ((parameter.NpgsqlDbType == NpgsqlDbType.Numeric))
-            {
-                var o = reader["NUMERIC_SCALE"];
-                if (o != DBNull.Value)
-                {
-                    parameter
-                        .Scale =
+            var dbTypeName = (string) reader["DATA_TYPE"];
+            if
+                (
+                    Enum
+                        .TryParse
                             (
-                                (byte)
-                                    (
-                                        (
-                                            (short)
-                                                (
-                                                    (int)o
-                                                )
-                                        )
-                                    //& 255
-                                    )
-                            );
-                }
-                o = reader["NUMERIC_PRECISION"];
-                if (o != DBNull.Value)
+                                dbTypeName
+                                , true
+                                , out NpgsqlDbType dbType
+                            )
+                )
+            {
+                parameter
+                    .NpgsqlDbType = dbType;
+                if ((parameter.NpgsqlDbType == NpgsqlDbType.Numeric))
                 {
-                    parameter.Precision = ((byte)o);
+                    var o = reader["NUMERIC_SCALE"];
+                    if (o != DBNull.Value)
+                    {
+                        parameter
+                            .Scale =
+                                (
+                                    (byte)
+                                        (
+                                            (
+                                                (short)
+                                                    (
+                                                        (int)o
+                                                    )
+                                            )
+                                        //& 255
+                                        )
+                                );
+                    }
+                    o = reader["NUMERIC_PRECISION"];
+                    if (o != DBNull.Value)
+                    {
+                        parameter.Precision = ((byte)o);
+                    }
                 }
             }
             return parameter;
