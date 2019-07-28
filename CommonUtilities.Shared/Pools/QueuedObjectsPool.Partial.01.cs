@@ -55,13 +55,7 @@
                 return _maxCapacity;
             }
         }
-
-
-
-
-        private long _maxCapacity = 0;
-
-        
+        private readonly long _maxCapacity = 0;
         public QueuedObjectsPool
                     (
                         long maxCapacity
@@ -78,8 +72,6 @@
                 }
             }
         }
-        
-
         //public Func<bool> onEnablePerformanceCountersProcessFunc
         //{
         //    get;
@@ -94,7 +86,6 @@
         public bool TryPut(T item)
         {
             var r = false;
-            
             if (item != null)
             {
                 if (_pool.Count < _maxCapacity)

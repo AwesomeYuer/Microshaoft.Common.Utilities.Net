@@ -29,30 +29,40 @@ namespace Microshaoft
                 , SearchOption searchOption = SearchOption.TopDirectoryOnly
             )
         {
-            var assemblies = Directory
-                .GetFiles(path, searchPattern, searchOption)
-                //.Select
-                //    (
-                //        (x) =>
-                //        {
-                //            return
-                //            AssemblyLoadContext.GetAssemblyName(x);
-                //        }
-                //    )
-                .Select
-                    (
-                        (x) =>
-                        {
-                            return
-                                AssemblyLoadContext
-                                    .Default
-                                    .LoadFromAssemblyPath(x);
-                        }
-                    )
-                .ToList();
+            var assemblies =
+                    Directory
+                        .GetFiles
+                            (
+                                path
+                                , searchPattern
+                                , searchOption
+                            )
+                        //.Select
+                        //    (
+                        //        (x) =>
+                        //        {
+                        //            return
+                        //            AssemblyLoadContext.GetAssemblyName(x);
+                        //        }
+                        //    )
+                        .Select
+                            (
+                                (x) =>
+                                {
+                                    return
+                                        AssemblyLoadContext
+                                            .Default
+                                            .LoadFromAssemblyPath(x);
+                                }
+                            )
+                        .ToList();
 
-            configuration = configuration.WithAssemblies(assemblies, conventions);
-
+            configuration = configuration
+                                .WithAssemblies
+                                    (
+                                        assemblies
+                                        , conventions
+                                    );
             return configuration;
         }
     }
@@ -72,7 +82,8 @@ namespace Microshaoft
                                 (
                                     path
                                     , searchPattern
-                                    , SearchOption.AllDirectories
+                                    , SearchOption
+                                            .AllDirectories
                                 )
                             .Select
                                 (

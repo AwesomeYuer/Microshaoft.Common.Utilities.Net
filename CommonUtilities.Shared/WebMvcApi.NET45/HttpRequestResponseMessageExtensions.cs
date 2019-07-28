@@ -10,19 +10,14 @@
                                     , out T propertyValue
                                 )
         {
-            var r = false;
-            object propertyValueObject = null;
-            propertyValue = default(T);
-            r =
-                (
-                    target
-                    .Properties
-                    .TryGetValue
-                        (
-                            propertyKey
-                            , out propertyValueObject
-                        )
-                );
+            propertyValue = default;
+            bool r = target
+                        .Properties
+                        .TryGetValue
+                            (
+                                propertyKey
+                                , out object propertyValueObject
+                            );
             if (r)
             { 
                 propertyValue = (T) propertyValueObject;
@@ -35,27 +30,19 @@
                             , string propertyKey
                         )
         {
-            var r = false;
-            object propertyValueObject = null;
             var propertyValue = default(T);
-            r =
-                (
-                    target
+            bool r = target
                         .Properties
                         .TryGetValue
                             (
                                 propertyKey
-                                , out propertyValueObject
-                            )
-                );
+                                , out object propertyValueObject
+                            );
             if (r)
             {
-                propertyValue = (T)propertyValueObject;
+                propertyValue = (T) propertyValueObject;
             }
             return propertyValue;
         }
-
-
-       
     }
 }

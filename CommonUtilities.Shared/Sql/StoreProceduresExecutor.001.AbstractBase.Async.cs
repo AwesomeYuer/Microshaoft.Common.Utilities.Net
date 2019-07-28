@@ -31,7 +31,6 @@
                 messages = null;
             }
         }
-
         private static void DataReadingProcess
                         (
                             Func
@@ -205,7 +204,6 @@
                 }
             }
         }
-
         private
             (
                 TDbCommand Command
@@ -217,7 +215,7 @@
                         OnSqlInfoMessageEventHandlerProcessAction
                 , JObject Result
             ) 
-            ResultPreprocess
+                ResultPreprocess
                         (
                             TDbConnection connection
                             , string storeProcedureName
@@ -365,7 +363,6 @@
                         sqlCommand
                             .StatementCompleted +=
                                 onStatementCompletedEventHandlerProcessAction;
-
                     }
                 }
             }
@@ -517,7 +514,6 @@
                     .Dispose();
             }
         }
-
         public async Task<JToken>
             ExecuteAsync
                 (

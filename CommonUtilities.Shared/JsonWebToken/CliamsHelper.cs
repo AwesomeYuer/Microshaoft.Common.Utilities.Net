@@ -24,6 +24,7 @@
             if (r)
             {
                 claimValue = JToken.Parse(s);
+                r = true;
             }
             return r;
         }
@@ -98,6 +99,7 @@
                                             );
                                     }
                                 ).Value;
+                r = true;
             }
             return r;
         }
@@ -121,9 +123,9 @@
                 if (b)
                 {
                     r = ParseSecondsToLocalTime
-                        (
-                            seconds
-                        );
+                            (
+                                seconds
+                            );
                 }
             }
             return r;
