@@ -67,7 +67,7 @@
                 bool Success
                 , JToken Result
             )
-                r =
+                @return =
                     (
                         Success : false
                         , Result : null
@@ -92,9 +92,9 @@
                     storeProcedureName
                     , connection
                 );
-            r.Success = (result != null);
-            r.Result = result;
-            return r;
+            @return.Success = (result != null);
+            @return.Result = result;
+            return @return;
         }
         protected virtual void AfterExecutedProcess
                                     (

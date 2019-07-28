@@ -141,11 +141,11 @@
                                 .TryParse
                                     (
                                         jValueText
-                                        , out var rr
+                                        , out var @value
                                     )
                         )
                     {
-                        r = rr;
+                        r = @value;
                     }
                 }
                 else if
@@ -159,11 +159,11 @@
                                     .TryParse
                                         (
                                             jValueText
-                                            , out var rr
+                                            , out var @value
                                         )
                         )
                     {
-                        r = rr;
+                        r = @value;
                     }
                 }
                 else if
@@ -177,11 +177,11 @@
                                 .TryParse
                                     (
                                         jValueText
-                                        , out var rr
+                                        , out var @value
                                     )
                         )
                     {
-                        r = rr;
+                        r = @value;
                     }
                 }
                 else if
@@ -195,11 +195,11 @@
                                 .TryParse
                                     (
                                         jValueText
-                                        , out var rr
+                                        , out var @value
                                     )
                         )
                     {
-                        r = rr;
+                        r = @value;
                     }
                 }
                 else if
@@ -213,11 +213,11 @@
                                 .TryParse
                                     (
                                         jValueText
-                                        , out var rr
+                                        , out var @value
                                     )
                         )
                     {
-                        r = rr;
+                        r = @value;
                     }
                 }
                 else if
@@ -231,11 +231,11 @@
                                 .TryParse
                                     (
                                         jValueText
-                                        , out var rr
+                                        , out var @value
                                     )
                         )
                     {
-                        r = rr;
+                        r = @value;
                     }
                 }
                 else if
@@ -249,11 +249,11 @@
                                 .TryParse
                                     (
                                         jValueText
-                                        , out Guid rr
+                                        , out Guid @value
                                     )
                         )
                     {
-                        r = rr;
+                        r = @value;
                     }
                 }
                 else if
@@ -267,11 +267,11 @@
                                 .TryParse
                                     (
                                         jValueText
-                                        , out var rr
+                                        , out var @value
                                     )
                         )
                     {
-                        r = rr;
+                        r = @value;
                     }
                 }
                 else if
@@ -285,11 +285,11 @@
                                 .TryParse
                                     (
                                         jValueText
-                                        , out var rr
+                                        , out var @value
                                     )
                         )
                     {
-                        r = rr;
+                        r = @value;
                     }
                 }
                 else if
@@ -303,11 +303,11 @@
                                 .TryParse
                                     (
                                         jValueText
-                                        , out var rr
+                                        , out var @value
                                     )
                         )
                     {
-                        r = rr;
+                        r = @value;
                     }
                 }
                 else if
@@ -321,11 +321,11 @@
                                 .TryParse
                                     (
                                         jValueText
-                                        , out var rr
+                                        , out var @value
                                     )
                         )
                     {
-                        r = rr;
+                        r = @value;
                     }
                 }
             }

@@ -11,7 +11,7 @@
                                         , JToken jValue 
                                     )
         {
-            object r = null;
+            object @return = null;
             if
                 (
                     jValue == null
@@ -23,7 +23,7 @@
                     jValue.Type == JTokenType.None
                 )
             {
-                r = DBNull.Value;
+                @return = DBNull.Value;
             }
             else
             {
@@ -39,7 +39,7 @@
                         target.OracleDbType == OracleDbType.NChar
                     )
                 {
-                    r = jValueText;
+                    @return = jValueText;
                 }
                 else if
                     (
@@ -58,11 +58,11 @@
                                 .TryParse
                                     (
                                         jValueText
-                                        , out var rr
+                                        , out var @value
                                     )
                         )
                     {
-                        r = rr;
+                        @return = @value;
                     }
                 }
                 else if
@@ -76,11 +76,11 @@
                                 .TryParse
                                     (
                                         jValueText
-                                        , out var rr
+                                        , out var @value
                                     )
                         )
                     {
-                        r = rr;
+                        @return = @value;
                     }
                 }
                 else if
@@ -94,11 +94,11 @@
                                 .TryParse
                                     (
                                         jValueText
-                                        , out var rr
+                                        , out var @value
                                     )
                         )
                     {
-                        r = rr;
+                        @return = @value;
                     }
                 }
                 else if
@@ -110,11 +110,11 @@
                                 .TryParse
                                     (
                                         jValueText
-                                        , out var rr
+                                        , out var @value
                                     );
                     if (b)
                     {
-                        r = rr;
+                        @return = @value;
                     }
                 }
                 else if
@@ -128,11 +128,11 @@
                                 .TryParse
                                     (
                                         jValueText
-                                        , out var rr
+                                        , out var @value
                                     )
                         )
                     {
-                        r = rr;
+                        @return = @value;
                     }
                 }
                 else if
@@ -148,11 +148,11 @@
                                 .TryParse
                                     (
                                         jValueText
-                                        , out var rr
+                                        , out var @value
                                     )
                         )
                     {
-                        r = rr;
+                        @return = @value;
                     }
                 }
                 else if
@@ -166,11 +166,11 @@
                                 .TryParse
                                     (
                                         jValueText
-                                        , out var rr
+                                        , out var @value
                                     )
                         )
                     {
-                        r = rr;
+                        @return = @value;
                     }
                 }
                 else if
@@ -184,15 +184,15 @@
                                 .TryParse
                                     (
                                         jValueText
-                                        , out var rr
+                                        , out var @value
                                     )
                         )
                     {
-                        r = rr;
+                        @return = @value;
                     }
                 }
             }
-            return r;
+            return @return;
         }
     }
 }

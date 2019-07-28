@@ -13,7 +13,7 @@ namespace Microshaoft
                                         , JToken jValue
                                     )
         {
-            object r = null;
+            object @return = null;
             if
                 (
                     jValue == null
@@ -25,7 +25,7 @@ namespace Microshaoft
                     jValue.Type == JTokenType.None
                 )
             {
-                r = DBNull.Value;
+                @return = DBNull.Value;
             }
             else
             {
@@ -39,7 +39,7 @@ namespace Microshaoft
                     target.NpgsqlDbType == NpgsqlDbType.Char
                 )
                 {
-                    r = jValueText;
+                    @return = jValueText;
                 }
                 else if
                     (
@@ -54,11 +54,11 @@ namespace Microshaoft
                                 .TryParse
                                     (
                                         jValueText
-                                        , out var rr
+                                        , out var @value
                                     )
                         )
                     {
-                        r = rr;
+                        @return = @value;
                     }
                 }
                 else if
@@ -72,11 +72,11 @@ namespace Microshaoft
                                 .TryParse
                                     (
                                         jValueText
-                                        , out var rr
+                                        , out var @value
                                     )
                         )
                     {
-                        r = rr;
+                        @return = @value;
                     }
                 }
                 else if
@@ -92,11 +92,11 @@ namespace Microshaoft
                                 .TryParse
                                     (
                                         jValueText
-                                        , out var rr
+                                        , out var @value
                                     )
                         )
                     {
-                        r = rr;
+                        @return = @value;
                     }
                 }
                 else if
@@ -110,11 +110,11 @@ namespace Microshaoft
                                 .TryParse
                                     (
                                         jValueText
-                                        , out var rr
+                                        , out var @value
                                     )
                         )
                     {
-                        r = rr;
+                        @return = @value;
                     }
                 }
                 else if
@@ -128,11 +128,11 @@ namespace Microshaoft
                                 .TryParse
                                     (
                                         jValueText
-                                        , out var rr
+                                        , out var @value
                                     )
                         )
                     {
-                        r = rr;
+                        @return = @value;
                     }
                 }
                 else if
@@ -146,11 +146,11 @@ namespace Microshaoft
                                 .TryParse
                                     (
                                         jValueText
-                                        , out var rr
+                                        , out var @value
                                     )
                         )
                     {
-                        r = rr;
+                        @return = @value;
                     }
                 }
                 else if
@@ -162,15 +162,15 @@ namespace Microshaoft
                                .TryParse
                                    (
                                        jValueText
-                                       , out var rr
+                                       , out var @value
                                    );
                     if (b)
                     {
-                        r = rr;
+                        @return = @value;
                     }
                 }
             }
-            return r;
+            return @return;
         }
     }
 }

@@ -44,12 +44,12 @@
                                         , JToken jValue 
                                     )
         {
-            object r = null;
+            object @return = null;
             if (targetDbParameterType == typeof(SqlParameter))
             {
                 var parameter = (SqlParameter) target;
-                r = parameter
-                        .SetGetValueAsObject(jValue);
+                @return = parameter
+                            .SetGetValueAsObject(jValue);
             }
             //else if (targetDbParameterType == typeof(MySqlParameter))
             //{
@@ -66,7 +66,7 @@
             //    var parameter = (OracleParameter)target;
             //    r = parameter.SetGetValueAsObject(jValue);
             //}
-            return r;
+            return @return;
         }
     }
 }
