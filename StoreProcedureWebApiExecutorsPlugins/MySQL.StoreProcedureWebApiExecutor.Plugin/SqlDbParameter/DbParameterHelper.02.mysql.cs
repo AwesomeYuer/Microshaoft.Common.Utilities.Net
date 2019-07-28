@@ -48,13 +48,15 @@
                         target.MySqlDbType == MySqlDbType.DateTime
                     )
                 {
-                    var b = DateTime
+                    if 
+                        (
+                            DateTime
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
@@ -64,13 +66,15 @@
                         target.MySqlDbType == MySqlDbType.Bit
                     )
                 {
-                    var b = bool
+                    if
+                        (
+                            bool
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
@@ -80,13 +84,15 @@
                         target.MySqlDbType == MySqlDbType.Decimal
                     )
                 {
-                    var b = decimal
+                    if
+                        (
+                            decimal
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
@@ -96,13 +102,15 @@
                         target.MySqlDbType == MySqlDbType.Float
                     )
                 {
-                    var b = float
+                    if
+                        (
+                            float
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
@@ -112,13 +120,15 @@
                         target.MySqlDbType == MySqlDbType.Guid
                     )
                 {
-                    var b = Guid
+                    if
+                        (
+                            Guid
                                 .TryParse
                                     (
                                         jValueText
                                         , out Guid rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
@@ -128,13 +138,15 @@
                         target.MySqlDbType == MySqlDbType.UInt16
                     )
                 {
-                    var b = ushort
+                    if
+                        (
+                            ushort
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
@@ -146,13 +158,15 @@
                         target.MySqlDbType == MySqlDbType.UInt32
                     )
                 {
-                    var b = uint
+                    if
+                        (
+                            uint
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
@@ -162,13 +176,15 @@
                         target.MySqlDbType == MySqlDbType.UInt64
                     )
                 {
-                    var b = ulong
+                    if
+                        (
+                            ulong
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
@@ -178,13 +194,15 @@
                        target.MySqlDbType == MySqlDbType.Int16
                    )
                 {
-                    var b = short
+                    if
+                        (
+                            short
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
@@ -196,13 +214,15 @@
                         target.MySqlDbType == MySqlDbType.Int32
                    )
                 {
-                    var b = int
+                    if
+                        (
+                            int
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
@@ -212,13 +232,15 @@
                         target.MySqlDbType == MySqlDbType.Int64
                    )
                 {
-                    var b = long
+                    if
+                        (
+                            long
                                 .TryParse
                                     (
                                         jValueText
                                         , out long rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }

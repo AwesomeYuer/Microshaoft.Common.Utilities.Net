@@ -48,13 +48,15 @@ namespace Microshaoft
                         target.NpgsqlDbType == NpgsqlDbType.Time
                     )
                 {
-                    var b = DateTime
+                    if
+                        (
+                            DateTime
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
@@ -64,13 +66,15 @@ namespace Microshaoft
                         target.NpgsqlDbType == NpgsqlDbType.Bit
                     )
                 {
-                    var b = bool
+                    if
+                        (
+                            bool
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
@@ -82,13 +86,15 @@ namespace Microshaoft
                         target.NpgsqlDbType == NpgsqlDbType.Real
                     )
                 {
-                    var b = double
+                    if
+                        (
+                            double
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
@@ -98,13 +104,15 @@ namespace Microshaoft
                         target.NpgsqlDbType == NpgsqlDbType.Uuid
                     )
                 {
-                    var b = Guid
+                    if
+                        (
+                            Guid
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
@@ -132,13 +140,15 @@ namespace Microshaoft
                         target.NpgsqlDbType == NpgsqlDbType.Bigint
                    )
                 {
-                    var b = long
+                    if
+                        (
+                            long
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
