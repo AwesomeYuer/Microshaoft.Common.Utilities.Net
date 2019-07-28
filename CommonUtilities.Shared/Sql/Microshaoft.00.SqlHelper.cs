@@ -19,9 +19,9 @@
                             where
                                 TDbParameter : DbParameter
         {
-            TDbParameter dbParameter = (TDbParameter) target;
-            JValue r = onDbParameterToJValueProcessFunc(dbParameter);
-            return r;
+            var dbParameter = (TDbParameter) target;
+            return
+                onDbParameterToJValueProcessFunc(dbParameter);
         }
         public static TDbParameter ShallowClone<TDbParameter>
                         (
@@ -212,24 +212,24 @@
         }
         public static ParameterDirection GetParameterDirection(string parameterMode)
         {
-            ParameterDirection pd;
+            ParameterDirection @return;
             if (string.Compare(parameterMode, "IN", true) == 0)
             {
-                pd = ParameterDirection.Input;
+                @return = ParameterDirection.Input;
             }
             else if (string.Compare(parameterMode, "INOUT", true) == 0)
             {
-                pd = ParameterDirection.InputOutput;
+                @return = ParameterDirection.InputOutput;
             }
             else if (string.Compare(parameterMode, "RETURN", true) == 0)
             {
-                pd = ParameterDirection.ReturnValue;
+                @return = ParameterDirection.ReturnValue;
             }
             else
             {
-                pd = ParameterDirection.Output;
+                @return = ParameterDirection.Output;
             }
-            return pd;
+            return @return;
         }
     }
 }

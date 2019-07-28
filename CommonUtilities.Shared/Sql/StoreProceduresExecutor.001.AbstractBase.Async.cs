@@ -415,7 +415,7 @@
                         OnSqlInfoMessageEventHandlerProcessAction
                 , JObject Result
             )
-            context = default;
+                context = default;
             try
             {
                 context = ResultPreprocess

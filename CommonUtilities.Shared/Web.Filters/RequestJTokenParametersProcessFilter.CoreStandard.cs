@@ -49,7 +49,6 @@ namespace Microshaoft.Web
                                                         );
                         }
                     );
-            
             var inputsParametersConfiguration =
                     _configuration
                             .GetSection
