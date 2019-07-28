@@ -57,13 +57,15 @@
                         target.DB2Type == DB2Type.TimeStampWithTimeZone
                     )
                 {
-                    var b = DateTime
+                    if
+                        (
+                            DateTime
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
@@ -73,13 +75,15 @@
                         target.DB2Type == DB2Type.Boolean
                     )
                 {
-                    var b = bool
+                    if
+                        (
+                            bool
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
@@ -89,13 +93,15 @@
                         target.DB2Type == DB2Type.Decimal
                     )
                 {
-                    var b = decimal
+                    if
+                        (
+                            decimal
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
@@ -109,13 +115,15 @@
                         target.DB2Type == DB2Type.Real370
                     )
                 {
-                    var b = double
+                    if
+                        (
+                            double
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
@@ -129,13 +137,15 @@
                         target.DB2Type == DB2Type.DecimalFloat
                     )
                 {
-                    var b = float
+                    if
+                        (
+                            float
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
@@ -145,13 +155,15 @@
                         target.DB2Type == DB2Type.Byte
                     )
                 {
-                    var b = Guid
+                    if
+                        (
+                            Guid
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
@@ -161,13 +173,15 @@
                         target.DB2Type == DB2Type.BigInt
                     )
                 {
-                    var b = long
+                    if
+                        (
+                            long
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
@@ -177,13 +191,15 @@
                         target.DB2Type == DB2Type.Integer
                     )
                 {
-                    var b = int
+                    if
+                        (
+                            int
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
@@ -195,19 +211,19 @@
                         target.DB2Type == DB2Type.Int8
                     )
                 {
-                    var b = short
+                    if
+                        (
+                            short
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
                 }
-
-
             }
             return r;
         }

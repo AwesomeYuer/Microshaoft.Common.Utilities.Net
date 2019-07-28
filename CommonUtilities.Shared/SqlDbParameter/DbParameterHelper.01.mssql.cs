@@ -135,13 +135,15 @@
                         target.SqlDbType == SqlDbType.DateTime
                     )
                 {
-                    var b = DateTime
+                    if
+                        (
+                            DateTime
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
@@ -151,13 +153,15 @@
                         target.SqlDbType == SqlDbType.DateTimeOffset
                     )
                 {
-                    var b = DateTimeOffset
+                    if
+                        (
+                            DateTimeOffset
                                     .TryParse
                                         (
                                             jValueText
                                             , out var rr
-                                        );
-                    if (b)
+                                        )
+                        )
                     {
                         r = rr;
                     }
@@ -167,13 +171,15 @@
                         target.SqlDbType == SqlDbType.Bit
                     )
                 {
-                    var b = bool
+                    if
+                        (
+                            bool
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
@@ -183,14 +189,15 @@
                         target.SqlDbType == SqlDbType.Decimal
                     )
                 {
-
-                    var b = decimal
+                    if
+                        (
+                            decimal
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
@@ -200,13 +207,15 @@
                         target.SqlDbType == SqlDbType.Float
                     )
                 {
-                    var b = float
+                    if
+                        (
+                            float
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
@@ -216,13 +225,15 @@
                         target.SqlDbType == SqlDbType.Real
                     )
                 {
-                    var b = double
+                    if
+                        (
+                            double
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
@@ -232,13 +243,15 @@
                         target.SqlDbType == SqlDbType.UniqueIdentifier
                     )
                 {
-                    var b = Guid
+                    if
+                        (
+                            Guid
                                 .TryParse
                                     (
                                         jValueText
                                         , out Guid rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
@@ -248,13 +261,15 @@
                         target.SqlDbType == SqlDbType.BigInt
                     )
                 {
-                    var b = long
+                    if
+                        (
+                            long
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
@@ -264,13 +279,15 @@
                         target.SqlDbType == SqlDbType.Int
                     )
                 {
-                    var b = int
+                    if
+                        (
+                            int
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
@@ -280,13 +297,15 @@
                         target.SqlDbType == SqlDbType.SmallInt
                     )
                 {
-                    var b = short
+                    if
+                        (
+                            short
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
@@ -296,13 +315,15 @@
                         target.SqlDbType == SqlDbType.TinyInt
                     )
                 {
-                    var b = short
+                    if
+                        (
+                            short
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }

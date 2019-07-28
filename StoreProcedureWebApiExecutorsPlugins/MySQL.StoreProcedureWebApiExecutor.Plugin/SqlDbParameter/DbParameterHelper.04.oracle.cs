@@ -52,13 +52,15 @@
                         target.OracleDbType == OracleDbType.TimeStampTZ
                     )
                 {
-                    var b = DateTime
+                    if
+                        (
+                            DateTime
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
@@ -68,13 +70,15 @@
                         target.OracleDbType == OracleDbType.Boolean
                     )
                 {
-                    var b = bool
+                    if
+                        (
+                            bool
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
@@ -84,13 +88,15 @@
                         target.OracleDbType == OracleDbType.Decimal
                     )
                 {
-                    var b = decimal
+                    if
+                        (
+                            decimal
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
@@ -116,13 +122,15 @@
                         target.OracleDbType == OracleDbType.Raw
                     )
                 {
-                    var b = Guid
+                    if
+                        (
+                            Guid
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
@@ -134,13 +142,15 @@
                         target.OracleDbType == OracleDbType.Int64
                     )
                 {
-                    var b = long
+                    if
+                        (
+                            long
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
@@ -150,13 +160,15 @@
                         target.OracleDbType == OracleDbType.Int32
                     )
                 {
-                    var b = int
+                    if
+                        (
+                            int
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
@@ -166,19 +178,19 @@
                         target.OracleDbType == OracleDbType.Int16
                     )
                 {
-                    var b = short
+                    if
+                        (
+                            short
                                 .TryParse
                                     (
                                         jValueText
                                         , out var rr
-                                    );
-                    if (b)
+                                    )
+                        )
                     {
                         r = rr;
                     }
                 }
-
-
             }
             return r;
         }
