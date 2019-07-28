@@ -155,19 +155,19 @@ namespace Microshaoft.Web
                     bool IsValid
                     , IActionResult Result
                 )
-                 r =
-                    (
-                        IsValid: true
-                        , Result: null
-                    );
+                    r =
+                        (
+                            IsValid: true
+                            , Result: null
+                        );
                 var validatorName = validatorConfiguration.Value;
                 var parameter = context.ActionArguments["parameters"] as JToken;
                 var hasValidator = _indexedValidators
-                                            .TryGetValue
-                                                    (
-                                                        validatorName
-                                                        , out var validator
-                                                    );
+                                                .TryGetValue
+                                                        (
+                                                            validatorName
+                                                            , out var validator
+                                                        );
                 if (hasValidator)
                 {
                     r = validator

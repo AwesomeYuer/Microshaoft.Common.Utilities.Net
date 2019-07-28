@@ -215,7 +215,7 @@
                         OnSqlInfoMessageEventHandlerProcessAction
                 , JObject Result
             ) 
-            ResultPreprocess
+                ResultPreprocess
                         (
                             TDbConnection connection
                             , string storeProcedureName

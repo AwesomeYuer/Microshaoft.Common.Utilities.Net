@@ -242,8 +242,7 @@ namespace Microshaoft
                                             (
                                                 (sender, args) =>
                                                 {
-                                                    var jo = sender as JObject;
-                                                    if (jo != null)
+                                                    if (sender is JObject jo)
                                                     {
                                                         lastValue = jo[args.PropertyName] as JValue;
                                                     }
