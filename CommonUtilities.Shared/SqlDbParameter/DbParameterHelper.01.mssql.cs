@@ -12,7 +12,7 @@
                                         , JToken jValue 
                                     )
         {
-            object r = null;
+            object @return = null;
             if
                 (
                     target.SqlDbType == SqlDbType.Structured
@@ -60,15 +60,17 @@
                                         {
                                             if (j is JObject jo)
                                             {
-                                                var b = jo
+                                                if 
+                                                    (
+                                                        jo
                                                             .TryGetValue
                                                                 (
                                                                     columnName
                                                                     , StringComparison
                                                                             .OrdinalIgnoreCase
                                                                     , out var jToken
-                                                                );
-                                                if (b)
+                                                                )
+                                                    )
                                                 {
                                                     var jv = jToken
                                                                 .GetPrimtiveTypeJValueAsObject
@@ -83,7 +85,7 @@
                                     }
                                     rows.Add(row);
                                 }
-                                r = dataTable;
+                                @return = dataTable;
                             }
                         }
                     }
@@ -100,7 +102,7 @@
                     jValue.Type == JTokenType.None
                 )
             {
-                r = DBNull.Value;
+                @return = DBNull.Value;
             }
             else
             {
@@ -120,7 +122,7 @@
                         target.SqlDbType == SqlDbType.NText
                     )
                 {
-                    r = jValueText;
+                    @return = jValueText;
                 }
                 else if
                     (
@@ -145,7 +147,7 @@
                                     )
                         )
                     {
-                        r = @value;
+                        @return = @value;
                     }
                 }
                 else if
@@ -163,7 +165,7 @@
                                         )
                         )
                     {
-                        r = @value;
+                        @return = @value;
                     }
                 }
                 else if
@@ -181,7 +183,7 @@
                                     )
                         )
                     {
-                        r = @value;
+                        @return = @value;
                     }
                 }
                 else if
@@ -199,7 +201,7 @@
                                     )
                         )
                     {
-                        r = @value;
+                        @return = @value;
                     }
                 }
                 else if
@@ -217,7 +219,7 @@
                                     )
                         )
                     {
-                        r = @value;
+                        @return = @value;
                     }
                 }
                 else if
@@ -253,7 +255,7 @@
                                     )
                         )
                     {
-                        r = @value;
+                        @return = @value;
                     }
                 }
                 else if
@@ -271,7 +273,7 @@
                                     )
                         )
                     {
-                        r = @value;
+                        @return = @value;
                     }
                 }
                 else if
@@ -289,7 +291,7 @@
                                     )
                         )
                     {
-                        r = @value;
+                        @return = @value;
                     }
                 }
                 else if
@@ -307,7 +309,7 @@
                                     )
                         )
                     {
-                        r = @value;
+                        @return = @value;
                     }
                 }
                 else if
@@ -325,11 +327,11 @@
                                     )
                         )
                     {
-                        r = @value;
+                        @return = @value;
                     }
                 }
             }
-            return r;
+            return @return;
         }
     }
 }
