@@ -19,19 +19,15 @@
 
         public static TValue Get<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> target, TKey key)
         {
-            TValue @value = default(TValue);
-            target.TryGetValue(key, out @value);
+            target.TryGetValue(key, out TValue @value);
             return @value;
         }
 
         public static TValue Remove<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> target, TKey key)
         {
-            TValue @value = default(TValue);
-            target.TryRemove(key, out @value);
+            target.TryRemove(key, out TValue @value);
             return @value;
         }
-
-
         public static void ForEach<TKey, TValue>
                                 (
                                     this ConcurrentDictionary<TKey, TValue> target
@@ -40,8 +36,10 @@
         {
             foreach (KeyValuePair<TKey, TValue> kvp in target)
             {
-                bool r = processFunc(kvp.Key, kvp.Value);
-                if (r)
+                if 
+                    (
+                        processFunc(kvp.Key, kvp.Value)
+                    )
                 {
                    break;
                 }
