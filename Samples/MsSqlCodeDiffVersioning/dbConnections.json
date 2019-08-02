@@ -4,13 +4,13 @@
   "Connections": {
     "c1": {
       "dataBasetype": "mssql",
-      "connectionString": "Initial Catalog=test;Data Source=localhost;User=sa;Password=!@#123QWE",
+      "connectionString": "Initial Catalog=test;Data Source=host.docker.internal;User=sa;Password=!@#123QWE",
       "enableStatistics": true,
       "commandtimeoutInSeconds": 102
     },
     "c2": {
       "dataBaseType": "mssql",
-      "ConnectionString": "Initial Catalog=test;Data Source=localhost;User=sa;Password=!@#123QWE",
+      "ConnectionString": "Initial Catalog=test;Data Source=host.docker.internal;User=sa;Password=!@#123QWE",
       "EnaBleStatistics": true
       //"CommandTimeoutInSeconds": 100
       /*
@@ -19,7 +19,7 @@
     },
     "c3": {
       "dataBaseType": "mysql",
-      "ConnectionString": "server=localhost;uid=root;pwd=!@#123QWE;database=Test",
+      "ConnectionString": "server=host.docker.internal;uid=root;pwd=!@#123QWE;database=Test",
       "EnaBleStatistics": true
       //"CommandTimeoutInSeconds": 100
       /*
@@ -28,7 +28,7 @@
     },
     "c4": {
       "dataBaseType": "npgsql",
-      "ConnectionString": "Server=127.0.0.1;Port=5432;Database=Test;User Id=postgres;Password=!@#123QWE;",
+      "ConnectionString": "Server=host.docker.internal;Port=5432;Database=Test;User Id=postgres;Password=!@#123QWE;",
       "EnaBleStatistics": true
       //"CommandTimeoutInSeconds": 100
       /*

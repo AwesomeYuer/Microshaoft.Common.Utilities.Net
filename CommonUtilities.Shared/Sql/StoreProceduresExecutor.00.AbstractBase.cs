@@ -36,7 +36,7 @@
             private set => _dictionary = value;
         }
 
-        private string _parametersQueryCommandText =$@"
+        private string _parametersQueryCommandText = $@"
                     SELECT
                         * 
                     FROM
@@ -103,16 +103,17 @@
                 if
                     (
                         dbParameters
-                            .TryGetValue
-                                (
-                                    jProperty.Key
-                                    , out DbParameter dbParameter
-                                )
+                                .TryGetValue
+                                    (
+                                        jProperty.Key
+                                        , out DbParameter dbParameter
+                                    )
                     )
                 {
                     var direction = dbParameter
-                                        .Direction;
-                    var dbParameterValue = dbParameter.Value;
+                                            .Direction;
+                    var dbParameterValue = dbParameter
+                                                    .Value;
                     var includeValueClone = false;
                     if
                         (
@@ -127,13 +128,13 @@
                         }
                     }
                     var cloneDbParameter
-                            = dbParameter
-                                    .ShallowClone
-                                        <TDbParameter>
-                                            (
-                                                OnExecutingSetDbParameterTypeProcess
-                                                , includeValueClone
-                                            );
+                                = dbParameter
+                                        .ShallowClone
+                                            <TDbParameter>
+                                                (
+                                                    OnExecutingSetDbParameterTypeProcess
+                                                    , includeValueClone
+                                                );
                     var parameterValue =
                             OnExecutingSetDbParameterValueProcess
                                     (
@@ -191,10 +192,10 @@
                         var cloneDbParameter =
                                 dbParameter
                                     .ShallowClone
-                                        <TDbParameter>
-                                            (
-                                                OnExecutingSetDbParameterTypeProcess
-                                            );
+                                            <TDbParameter>
+                                                (
+                                                    OnExecutingSetDbParameterTypeProcess
+                                                );
                         //if (direction == ParameterDirection.InputOutput)
                         //{
                         //    cloneDbParameter.Direction = ParameterDirection.Output;
