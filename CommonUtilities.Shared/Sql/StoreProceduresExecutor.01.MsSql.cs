@@ -11,7 +11,7 @@
                             <SqlConnection, SqlCommand, SqlParameter>
     {
 
-        private string _parametersQueryCommandText =
+        private readonly string _parametersQueryCommandText =
 @"
 (
     SELECT
@@ -198,15 +198,14 @@
                         u.user_type_id = c.user_type_id
     WHERE
         o.type IN('P', 'FN', 'TF', 'IF', 'IS', 'AF', 'PC', 'FS', 'FT')
+        and
+        o.name = @ProcedureName
 )
         ";
         public override string ParametersQueryCommandText
         {
-            get => base.ParametersQueryCommandText;
-       
+            get => _parametersQueryCommandText;
         }
-
-
         private IDictionary<string, Type> _dbTypesMapper
                     = new Dictionary<string, Type>
                             (StringComparer.OrdinalIgnoreCase)
