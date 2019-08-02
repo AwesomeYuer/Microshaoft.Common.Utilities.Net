@@ -266,8 +266,4 @@
     <PackageReference Update="Microsoft.NETCore.App" Version="2.2.6" />
   </ItemGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="&#xD;&#xA;&#xD;&#xA;" />
-  </Target>
-
 </Project>

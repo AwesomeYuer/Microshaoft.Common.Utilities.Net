@@ -1040,7 +1040,7 @@
                                     , params Tuple<long, Func<DateTime, long, DateTime, T, T>>[] processAlignSecondsDateTimesFuncs
                                 )
         {
-            T r = default(T);
+            T r = default;
             foreach (var x in processAlignSecondsDateTimesFuncs)
             {
                 var alignSeconds = x.Item1;
