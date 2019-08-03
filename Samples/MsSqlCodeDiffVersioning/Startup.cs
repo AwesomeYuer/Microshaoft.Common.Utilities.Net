@@ -399,7 +399,7 @@
             }
             else
             {
-                app.UseHsts();
+                //app.UseHsts();
             }
             //app.UseHttpsRedirection();
             
@@ -521,7 +521,7 @@
                                 );
                     }
                 );
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
         }
         private static IEnumerable<string> GetExistsPaths(string configurationJsonFile, string sectionName)
         {

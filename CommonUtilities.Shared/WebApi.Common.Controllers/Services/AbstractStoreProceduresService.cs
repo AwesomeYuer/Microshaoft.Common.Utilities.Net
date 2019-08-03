@@ -255,7 +255,10 @@ namespace Microshaoft.Web
                                         CompositionHelper
                                                 .ImportManyExportsComposeParts
                                                     <IStoreProcedureExecutable>
-                                                        (x, "*StoreProcedure*plugin*.dll");
+                                                        (
+                                                            x
+                                                            , "*StoreProcedure*Plugin*.dll"
+                                                        );
                                 }
                             );
             var indexedExecutors =
@@ -351,44 +354,59 @@ namespace Microshaoft.Web
                         )
         {
             JToken result = null;
-            var statusCode = 200;
-            var message = string.Empty;
-            var has = TryGetStoreProcedureInfo
+
+            bool    success;
+            int     statusCode;
+            string  message;
+            string  connectionString;
+            string  dataBaseType;
+            string  storeProcedureName;
+            bool    enableStatistics;
+
+            (
+                success
+                , statusCode
+                , httpMethod
+                , message
+                , connectionString
+                , dataBaseType
+                , storeProcedureName
+                , commandTimeoutInSeconds
+                , enableStatistics
+            )
+            = TryGetStoreProcedureInfo
                         (
                             routeName
                             , httpMethod
                         );
             if 
                 (
-                    has.Success
+                    success
                     &&
-                    has.StatusCode == 200
+                    statusCode == 200
                 )
             {
                 
-                var (Success, Result) = Process
+                (success, result) = Process
                         (
-                            has.ConnectionString
-                            , has.DataBaseType
-                            , has.StoreProcedureName
+                              connectionString
+                            , dataBaseType
+                            , storeProcedureName
                             , parameters
                             , onReadRowColumnProcessFunc
-                            , has.EnableStatistics
-                            , has.CommandTimeoutInSeconds
+                            , enableStatistics
+                            , commandTimeoutInSeconds
                         );
-                result = Result;
-                //var success = rr.Success;
-                HttpResponseParametersProcess
-                        (
-                            ref result
-                            , ref statusCode
-                            , ref message
-                        );
-            }
-            else
-            {
-                statusCode = has.StatusCode;
-                message = has.Message;
+
+                if (success && result != null)
+                {
+                    HttpResponseParametersProcess
+                            (
+                                ref result
+                                , ref statusCode
+                                , ref message
+                            );
+                }
             }
             return
                 (
@@ -430,47 +448,59 @@ namespace Microshaoft.Web
                 )
         {
             JToken result = null;
-            var statusCode = 200;
-            var message = string.Empty;
-            var has = TryGetStoreProcedureInfo
+
+            bool success;
+            int statusCode;
+            string message;
+            string connectionString;
+            string dataBaseType;
+            string storeProcedureName;
+            bool enableStatistics;
+
+            (
+                success
+                , statusCode
+                , httpMethod
+                , message
+                , connectionString
+                , dataBaseType
+                , storeProcedureName
+                , commandTimeoutInSeconds
+                , enableStatistics
+            )
+            = TryGetStoreProcedureInfo
                         (
                             routeName
                             , httpMethod
                         );
             if
                 (
-                    has.Success
+                    success
                     &&
-                    has.StatusCode == 200
+                    statusCode == 200
                 )
             {
-                var 
-                    (
-                        Success
-                        , Result
-                    ) = await
-                            ProcessAsync
-                                (
-                                    has.ConnectionString
-                                    , has.DataBaseType
-                                    , has.StoreProcedureName
-                                    , parameters
-                                    , onReadRowColumnProcessFunc
-                                    , has.EnableStatistics
-                                    , has.CommandTimeoutInSeconds
-                                );
-                result = Result;
-                HttpResponseParametersProcess
+
+                (success, result) = await ProcessAsync
                         (
-                            ref result
-                            , ref statusCode
-                            , ref message
+                              connectionString
+                            , dataBaseType
+                            , storeProcedureName
+                            , parameters
+                            , onReadRowColumnProcessFunc
+                            , enableStatistics
+                            , commandTimeoutInSeconds
                         );
-            }
-            else
-            {
-                statusCode = has.StatusCode;
-                message = has.Message;
+
+                if (success && result != null)
+                {
+                    HttpResponseParametersProcess
+                            (
+                                ref result
+                                , ref statusCode
+                                , ref message
+                            );
+                }
             }
             return
                 (
@@ -553,49 +583,42 @@ namespace Microshaoft.Web
                                 , int commandTimeoutInSeconds = 90
                             )
         {
-            (
-                bool Success
-                , JToken Result
-            ) r =
-                (
-                    Success: false
-                    , Result: null
-                );
-            JToken result = null;
             var beginTimeStamp = Stopwatch.GetTimestamp();
             var beginTime = DateTime.Now;
             var success = _indexedExecutors
-                                .TryGetValue
-                                    (
-                                        dataBaseType
-                                        , out var executor
-                                    );
+                                        .TryGetValue
+                                            (
+                                                dataBaseType
+                                                , out var executor
+                                            );
+            JToken result = null;
             if (success)
             {
-                r = executor
-                        .Execute
-                            (
-                                connectionString
-                                , storeProcedureName
-                                , parameters
-                                , onReadRowColumnProcessFunc
-                                , enableStatistics
-                                , commandTimeoutInSeconds
-                            );
-                result = r.Result;
+                (success, result) = executor
+                                            .Execute
+                                                (
+                                                    connectionString
+                                                    , storeProcedureName
+                                                    , parameters
+                                                    , onReadRowColumnProcessFunc
+                                                    , enableStatistics
+                                                    , commandTimeoutInSeconds
+                                                );
+                if (success)
+                {
+                    ResultTimingProcess
+                        (
+                            result
+                            , beginTime
+                            , beginTimeStamp
+                        );
+                }
             }
-            if (!success)
-            {
-                return
-                        r;
-            }
-            ResultTimingProcess
+            return
                     (
-                        result
-                        , beginTime
-                        , beginTimeStamp
+                        success
+                        , result
                     );
-            return r;
         }
 
         private static void ResultTimingProcess
@@ -645,51 +668,43 @@ namespace Microshaoft.Web
                     , int commandTimeoutInSeconds = 90
                 )
         {
-            (
-                bool Success
-                , JToken Result
-            ) r =
-                (
-                    Success : false
-                    , Result : null
-                );
-            JToken result = null;
             var beginTimeStamp = Stopwatch.GetTimestamp();
             var beginTime = DateTime.Now;
             var success = _indexedExecutors
-                                    .TryGetValue
-                                        (
-                                            dataBaseType
-                                            , out var executor
-                                        );
+                                        .TryGetValue
+                                            (
+                                                dataBaseType
+                                                , out var executor
+                                            );
+            JToken result = null;
             if (success)
             {
-                r = await
-                        executor
-                            .ExecuteAsync
-                                (
-                                    connectionString
-                                    , storeProcedureName
-                                    , parameters
-                                    , onReadRowColumnProcessFunc
-                                    , enableStatistics
-                                    , commandTimeoutInSeconds
-                                );
-                result = r.Result;
+                (success, result) = await
+                                        executor
+                                            .ExecuteAsync
+                                                (
+                                                    connectionString
+                                                    , storeProcedureName
+                                                    , parameters
+                                                    , onReadRowColumnProcessFunc
+                                                    , enableStatistics
+                                                    , commandTimeoutInSeconds
+                                                );
+                if (success)
+                {
+                    ResultTimingProcess
+                        (
+                            result
+                            , beginTime
+                            , beginTimeStamp
+                        );
+                }
             }
-            if (!success)
-            {
-                return
-                        r;
-            }
-            ResultTimingProcess
-                    (
-                        result
-                        , beginTime
-                        , beginTimeStamp
-                    );
             return
-                    r;
+                    (
+                        success
+                        , result
+                    );
         }
         protected virtual
             (
