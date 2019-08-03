@@ -6,16 +6,46 @@ namespace Microshaoft.Web
     using Microsoft.Extensions.Configuration;
     using Newtonsoft.Json.Linq;
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Reflection;
+
+
     public class JTokenParametersValidateFilterAttribute
                                 :
                                     //AuthorizeAttribute
                                     Attribute
                                     , IActionFilter
     {
+        private class FullTypeNameEqualityComparer<T> : IEqualityComparer<T>
+        {
+            public bool Equals(T x, T y)
+            {
+                return
+                    (
+                        x
+                            .GetType()
+                            .FullName
+                        ==
+                        y
+                            .GetType()
+                            .FullName
+                    );
+            }
+
+            public int GetHashCode(T x)
+            {
+                return
+                    x
+                        .GetType()
+                        .FullName
+                        .GetHashCode();
+            }
+        }
+
+
         private object _locker = new object();
         private readonly IConfiguration _configuration;
         private IDictionary<string, IHttpRequestValidateable<JToken>>
@@ -49,6 +79,8 @@ namespace Microshaoft.Web
                                 .ToArray();
             return result;
         }
+
+
         protected virtual void LoadDynamicValidators
                                 (
                                    //string dynamicValidatorsPathsJsonFile = "dynamicValidatorsPaths.json"
@@ -106,14 +138,21 @@ namespace Microshaoft.Web
                                         (
                                             (x) =>
                                             {
-                                                var r = CompositionHelper
+                                                return
+                                                    CompositionHelper
                                                             .ImportManyExportsComposeParts
                                                                 <IHttpRequestValidateable<JToken>>
-                                                                    (x, "*Validator*plugin*.dll");
-                                                return r;
+                                                                    (
+                                                                        x
+                                                                        , "*Validator*Plugin*.dll"
+                                                                    );
                                             }
                                         );
             var indexedValidators = validators
+                                        .Distinct
+                                            (
+                                                new FullTypeNameEqualityComparer<IHttpRequestValidateable<JToken>>()
+                                            )
                                         .ToDictionary
                                             (
                                                 (x) =>
@@ -151,41 +190,36 @@ namespace Microshaoft.Web
                                 ($"Routes:{routeName}:{httpMethod}:{AccessingConfigurationKey}:RequestValidator");
             if (validatorConfiguration.Exists())
             {
-                (
-                    bool IsValid
-                    , IActionResult Result
-                )
-                    r =
-                        (
-                            IsValid: true
-                            , Result: null
-                        );
                 var validatorName = validatorConfiguration.Value;
-                var parameter = context.ActionArguments["parameters"] as JToken;
+                var parameter = context
+                                    .ActionArguments["parameters"] as JToken;
                 var hasValidator = _indexedValidators
                                                 .TryGetValue
                                                         (
                                                             validatorName
                                                             , out var validator
                                                         );
+                IActionResult result;
+                bool isValid;
                 if (hasValidator)
                 {
-                    r = validator
-                            .Validate
-                                (
-                                    parameter
-                                    , context
-                                );
+                    (isValid, result) = validator
+                                                .Validate
+                                                    (
+                                                        parameter
+                                                        , context
+                                                    );
                 }
                 else
                 {
-                    r.IsValid = false;
-                    r.Result = new JsonResult
+                    isValid = false;
+                    result = new JsonResult
                                     (
                                         new
                                         {
                                             statusCode = 400
-                                            , message = "can't validate"
+                                            ,
+                                            message = "can't validate"
                                         }
                                     )
                     {
@@ -193,10 +227,10 @@ namespace Microshaoft.Web
                         , ContentType = "application/json"
                     };
                 }
-                if (!r.IsValid)
+                if (!isValid)
                 {
                     context
-                        .Result = r.Result;
+                        .Result = result;
                 }
             }
         }

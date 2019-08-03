@@ -85,7 +85,7 @@ namespace Microshaoft.Web
         }
 
         private IConfiguration _configuration;
-        private object _locker = new object();
+        private readonly object _locker = new object();
 
         public async override Task WriteResponseBodyAsync
                                     (

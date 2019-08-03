@@ -9,6 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "000.Solution Items", "000.S
 		.gitignore = .gitignore
 		.travis.yml = .travis.yml
 		appveyor.yml = appveyor.yml
+		copyrundebug.sh = copyrundebug.sh
 		License.txt = License.txt
 		README.md = README.md
 		Solution.All.Projects.Common.AssemblyInfo.cs = Solution.All.Projects.Common.AssemblyInfo.cs

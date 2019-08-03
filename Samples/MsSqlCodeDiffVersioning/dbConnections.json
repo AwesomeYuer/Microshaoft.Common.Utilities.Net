@@ -28,7 +28,7 @@
     },
     "c4": {
       "dataBaseType": "npgsql",
-      "ConnectionString": "Server=127.0.0.1;Port=5432;Database=Test;User Id=postgres;Password=!@#123QWE;",
+      "ConnectionString": "Server=localhost;Port=5432;Database=Test;User Id=postgres;Password=!@#123QWE;",
       "EnaBleStatistics": true
       //"CommandTimeoutInSeconds": 100
       /*

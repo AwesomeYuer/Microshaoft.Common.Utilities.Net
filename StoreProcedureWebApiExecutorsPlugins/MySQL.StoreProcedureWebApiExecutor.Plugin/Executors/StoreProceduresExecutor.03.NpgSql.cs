@@ -109,7 +109,7 @@ where
                     o = reader["NUMERIC_PRECISION"];
                     if (o != DBNull.Value)
                     {
-                        parameter.Precision = ((byte)o);
+                        parameter.Precision = ((byte) o);
                     }
                 }
             }

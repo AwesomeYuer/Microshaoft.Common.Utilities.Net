@@ -38,21 +38,21 @@
             var targetMember = Expression.MakeMemberAccess(target, memberInfo);
             //var targetMemberConverter = Expression.Convert(targetMemberParameter, targetMember.Type);
             var body = Expression.Assign(targetMember, targetMemberParameter);
-            Expression<Action<TTarget, TMember>> lambda = null;
             //if (!isStatic)
             //{
-            lambda = Expression
-                            .Lambda
-                                <Action<TTarget, TMember>>
-                                    (
-                                        body
-                                        , target
-                                        , targetMemberParameter
-                                    );
+            Expression<Action<TTarget, TMember>>
+                lambda = Expression
+                                .Lambda
+                                    <Action<TTarget, TMember>>
+                                        (
+                                            body
+                                            , target
+                                            , targetMemberParameter
+                                        );
             //}
             //else
             //{
-                    //not support static member because bug
+            //not support static member because bug
             //    lambda = Expression.Lambda<Action<TTarget, TMember>>(body, targetParameter, targetMemberParameter);
             //}
             return lambda.Compile();

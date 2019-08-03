@@ -41,61 +41,6 @@
             get;
             set;
         }
-        public virtual (bool Success, JToken Result) Execute
-                    (
-                        string connectionString
-                        , string storeProcedureName
-                        , JToken parameters
-                        , Func
-                                <
-                                    IDataReader
-                                    , Type          // fieldType
-                                    , string        // fieldName
-                                    , int           // row index
-                                    , int           // column index
-                                    ,
-                                        (
-                                            bool NeedDefaultProcess
-                                            , JProperty Field   //  JObject Field 对象
-                                        )
-                                > onReadRowColumnProcessFunc = null
-                        , bool enableStatistics = false
-                        , int commandTimeoutInSeconds = 90
-                    )
-        {
-            (
-                bool Success
-                , JToken Result
-            )
-                @return =
-                    (
-                        Success : false
-                        , Result : null
-                    );
-            BeforeExecutingProcess
-                    (
-                        connectionString
-                        , enableStatistics
-                        , out TDbConnection connection
-                    );
-            var result = Executor
-                                .Execute
-                                    (
-                                        connection
-                                        , storeProcedureName
-                                        , parameters
-                                        , onReadRowColumnProcessFunc
-                                        , commandTimeoutInSeconds
-                                    );
-            AfterExecutedProcess
-                (
-                    storeProcedureName
-                    , connection
-                );
-            @return.Success = (result != null);
-            @return.Result = result;
-            return @return;
-        }
         protected virtual void AfterExecutedProcess
                                     (
                                         string storeProcedureName
@@ -137,13 +82,68 @@
             {
                 ConnectionString = connectionString
             };
-            //if (enableStatistics)
-            //{
-            //    connection.StatisticsEnabled = enableStatistics;
-            //}
         }
-
-        public virtual async Task<(bool Success, JToken Result)> 
+        public virtual 
+            (
+                bool Success
+                , JToken Result
+            )
+                Execute
+                    (
+                        string connectionString
+                        , string storeProcedureName
+                        , JToken parameters
+                        , Func
+                                <
+                                    IDataReader
+                                    , Type          // fieldType
+                                    , string        // fieldName
+                                    , int           // row index
+                                    , int           // column index
+                                    ,
+                                        (
+                                            bool NeedDefaultProcess
+                                            , JProperty Field   //  JObject Field 对象
+                                        )
+                                > onReadRowColumnProcessFunc = null
+                        , bool enableStatistics = false
+                        , int commandTimeoutInSeconds = 90
+                    )
+        {
+            BeforeExecutingProcess
+                    (
+                        connectionString
+                        , enableStatistics
+                        , out TDbConnection connection
+                    );
+            var result = Executor
+                                .Execute
+                                    (
+                                        connection
+                                        , storeProcedureName
+                                        , parameters
+                                        , onReadRowColumnProcessFunc
+                                        , commandTimeoutInSeconds
+                                    );
+            AfterExecutedProcess
+                (
+                    storeProcedureName
+                    , connection
+                );
+            return
+                (
+                    Success: result != null
+                    , Result: result
+                );
+        }
+        public virtual async
+            Task
+                <
+                    (
+                        bool Success
+                        , JToken Result
+                    )
+                > 
                     ExecuteAsync
                             (
                                 string connectionString
@@ -152,10 +152,10 @@
                                 , Func
                                         <
                                             IDataReader
-                                            , Type        // fieldType
-                                            , string    // fieldName
-                                            , int       // row index
-                                            , int       // column index
+                                            , Type          // fieldType
+                                            , string        // fieldName
+                                            , int           // row index
+                                            , int           // column index
                                             ,
                                                 (
                                                     bool NeedDefaultProcess
@@ -166,22 +166,14 @@
                                 , int commandTimeoutInSeconds = 90
                             )
         {
-            (
-                bool Success
-                , JToken Result
-            )
-                r =
-                    (
-                        Success : false
-                        , Result : null
-                    );
             BeforeExecutingProcess
                     (
                         connectionString
                         , enableStatistics
                         , out TDbConnection connection
                     );
-            var result = await Executor
+            var result = await
+                            Executor
                                     .ExecuteAsync
                                             (
                                                 connection
@@ -195,9 +187,11 @@
                     storeProcedureName
                     , connection
                 );
-            r.Success = (result != null);
-            r.Result = result;
-            return r;
+            return
+                (
+                    Success: result != null
+                    , Result: result
+                );
         }
     }
 }

@@ -405,31 +405,35 @@
                 , recordCounts = null
                 , messages = null
             };
-            (
-                TDbCommand Command
-                , List<TDbParameter> DbParameters
-                , bool StatisticsEnabled
-                , StatementCompletedEventHandler
-                        OnStatementCompletedEventHandlerProcessAction
-                , SqlInfoMessageEventHandler
-                        OnSqlInfoMessageEventHandlerProcessAction
-                , JObject Result
-            )
-                context = default;
+            
+            TDbCommand command = null;
+            List<TDbParameter> dbParameters;
+            bool statisticsEnabled;
+            StatementCompletedEventHandler                          
+                    onStatementCompletedEventHandlerProcessAction = null;
+            SqlInfoMessageEventHandler                              
+                    onSqlInfoMessageEventHandlerProcessAction = null;
+            JObject result;
             try
             {
-                context = ResultPreprocess
                 (
-                    connection
-                    , storeProcedureName
-                    , inputsParameters
-                    , commandTimeoutInSeconds
-                    , extensionInfo
-                );
+                    command
+                    , dbParameters
+                    , statisticsEnabled
+                    , onStatementCompletedEventHandlerProcessAction
+                    , onSqlInfoMessageEventHandlerProcessAction
+                    , result
+                ) = ResultPreprocess
+                        (
+                            connection
+                            , storeProcedureName
+                            , inputsParameters
+                            , commandTimeoutInSeconds
+                            , extensionInfo
+                        );
                 connection
                         .Open();
-                var dataReader = context
-                                    .Command
+                var dataReader = command
                                     .ExecuteReader
                                         (
                                             CommandBehavior
@@ -440,7 +444,7 @@
                     DataReadingProcess
                             (
                                 onReadRowColumnProcessFunc
-                                , context.Result
+                                , result
                                 , dataReader
                             );
                     extensionInfo
@@ -455,49 +459,36 @@
                 ResultProcess
                     (
                         connection
-                        , context
-                            .Command
-                        , context
-                            .DbParameters
-                        , context
-                            .StatisticsEnabled
-                        , context
-                            .OnStatementCompletedEventHandlerProcessAction
-                        , context
-                            .OnSqlInfoMessageEventHandlerProcessAction
-                        , context
-                            .Result
+                        , command
+                        , dbParameters
+                        , statisticsEnabled
+                        , onStatementCompletedEventHandlerProcessAction
+                        , onSqlInfoMessageEventHandlerProcessAction
+                        , result
                         , extensionInfo
                     );
                 return
-                    context
-                        .Result;
+                    result;
             }
             finally
             {
                 extensionInfo.Clear();
-                if (context.OnStatementCompletedEventHandlerProcessAction != null)
+                if (onStatementCompletedEventHandlerProcessAction != null)
                 {
-                    if (context.Command is SqlCommand sqlCommand)
+                    if (command is SqlCommand sqlCommand)
                     {
                         sqlCommand
                             .StatementCompleted -=
-                                context
-                                    .OnStatementCompletedEventHandlerProcessAction;
-                        context
-                            .OnStatementCompletedEventHandlerProcessAction = null;
+                                onStatementCompletedEventHandlerProcessAction;
                     }
                 }
-                if (context.OnSqlInfoMessageEventHandlerProcessAction != null)
+                if (onSqlInfoMessageEventHandlerProcessAction != null)
                 {
                     if (connection is SqlConnection sqlConnection)
                     {
                         sqlConnection
                             .InfoMessage -=
-                                context
-                                    .OnSqlInfoMessageEventHandlerProcessAction;
-                        context
-                            .OnSqlInfoMessageEventHandlerProcessAction = null;
+                                onSqlInfoMessageEventHandlerProcessAction;
                         if (sqlConnection.StatisticsEnabled)
                         {
                             sqlConnection.StatisticsEnabled = false;
@@ -509,9 +500,11 @@
                     connection
                             .Close();
                 }
-                context
-                    .Command
-                    .Dispose();
+                if (command != null)
+                {
+                    command
+                        .Dispose();
+                }
             }
         }
         public async Task<JToken>
@@ -540,51 +533,53 @@
             var extensionInfo = new ExtensionInfo()
             {
                 resultSetID = 0
-                , messageID = 0
-                , recordCounts = null
-                , messages = null
+               , messageID = 0
+               , recordCounts = null
+               , messages = null
             };
-            (
-                TDbCommand Command
-                , List<TDbParameter> DbParameters
-                , bool StatisticsEnabled
-                , StatementCompletedEventHandler
-                        OnStatementCompletedEventHandlerProcessAction
-                , SqlInfoMessageEventHandler
-                        OnSqlInfoMessageEventHandlerProcessAction
-                , JObject Result
-            )
-            context = default;
+
+            TDbCommand command = null;
+            List<TDbParameter> dbParameters;
+            bool statisticsEnabled;
+            StatementCompletedEventHandler
+                    onStatementCompletedEventHandlerProcessAction = null;
+            SqlInfoMessageEventHandler
+                    onSqlInfoMessageEventHandlerProcessAction = null;
+            JObject result;
             try
             {
-                context = ResultPreprocess
                 (
-                    connection
-                    , storeProcedureName
-                    , inputsParameters
-                    , commandTimeoutInSeconds
-                    , extensionInfo
-                );
-                await
-                    connection
-                        .OpenAsync();
-                var dataReader =
-                        await
-                            context
-                                .Command
-                                .ExecuteReaderAsync
-                                    (
-                                        CommandBehavior
-                                            .CloseConnection
-                                    );
+                    command
+                    , dbParameters
+                    , statisticsEnabled
+                    , onStatementCompletedEventHandlerProcessAction
+                    , onSqlInfoMessageEventHandlerProcessAction
+                    , result
+                ) = ResultPreprocess
+                        (
+                            connection
+                            , storeProcedureName
+                            , inputsParameters
+                            , commandTimeoutInSeconds
+                            , extensionInfo
+                        );
+                connection
+                        .Open();
+                var dataReader = await
+                                    command
+                                        .ExecuteReaderAsync
+                                            (
+                                                CommandBehavior
+                                                    .CloseConnection
+                                            );
                 do
                 {
                     DataReadingProcess
-                        (
-                            onReadRowColumnProcessFunc
-                            , context.Result
-                            , dataReader
-                        );
+                            (
+                                onReadRowColumnProcessFunc
+                                , result
+                                , dataReader
+                            );
                     extensionInfo
                             .resultSetID++;
                 }
@@ -598,53 +593,39 @@
                 ResultProcess
                     (
                         connection
-                        , context
-                            .Command
-                        , context
-                            .DbParameters
-                        , context
-                            .StatisticsEnabled
-                        , context
-                            .OnStatementCompletedEventHandlerProcessAction
-                        , context
-                            .OnSqlInfoMessageEventHandlerProcessAction
-                        , context
-                            .Result
+                        , command
+                        , dbParameters
+                        , statisticsEnabled
+                        , onStatementCompletedEventHandlerProcessAction
+                        , onSqlInfoMessageEventHandlerProcessAction
+                        , result
                         , extensionInfo
                     );
                 return
-                    context
-                        .Result;
+                    result;
             }
             finally
             {
                 extensionInfo.Clear();
-                if (context.OnStatementCompletedEventHandlerProcessAction != null)
+                if (onStatementCompletedEventHandlerProcessAction != null)
                 {
-                    if (context.Command is SqlCommand sqlCommand)
+                    if (command is SqlCommand sqlCommand)
                     {
                         sqlCommand
                             .StatementCompleted -=
-                                context
-                                    .OnStatementCompletedEventHandlerProcessAction;
-                        context
-                            .OnStatementCompletedEventHandlerProcessAction = null;
+                                onStatementCompletedEventHandlerProcessAction;
                     }
                 }
-                if (context.OnSqlInfoMessageEventHandlerProcessAction != null)
+                if (onSqlInfoMessageEventHandlerProcessAction != null)
                 {
                     if (connection is SqlConnection sqlConnection)
                     {
                         sqlConnection
                             .InfoMessage -=
-                                context
-                                    .OnSqlInfoMessageEventHandlerProcessAction;
-                        context
-                            .OnSqlInfoMessageEventHandlerProcessAction = null;
+                                onSqlInfoMessageEventHandlerProcessAction;
                         if (sqlConnection.StatisticsEnabled)
                         {
-                            sqlConnection
-                                    .StatisticsEnabled = false;
+                            sqlConnection.StatisticsEnabled = false;
                         }
                     }
                 }
@@ -653,9 +634,11 @@
                     connection
                             .Close();
                 }
-                context
-                    .Command
-                    .Dispose();
+                if (command != null)
+                {
+                    command
+                        .Dispose();
+                }
             }
         }
     }
