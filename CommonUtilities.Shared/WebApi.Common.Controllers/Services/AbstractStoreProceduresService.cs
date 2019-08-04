@@ -296,8 +296,12 @@ namespace Microshaoft.Web
                     (
                         () =>
                         {
-                            var r = (_indexedExecutors == null);
-                            return r;
+                            return
+                                (
+                                    _indexedExecutors
+                                    ==
+                                    null
+                                );
                         }
                         , () =>
                         {
@@ -355,13 +359,13 @@ namespace Microshaoft.Web
         {
             JToken result = null;
 
-            bool    success;
-            int     statusCode;
-            string  message;
-            string  connectionString;
-            string  dataBaseType;
-            string  storeProcedureName;
-            bool    enableStatistics;
+            bool success;
+            int statusCode;
+            string message;
+            string connectionString;
+            string dataBaseType;
+            string storeProcedureName;
+            bool enableStatistics;
 
             (
                 success
@@ -374,11 +378,11 @@ namespace Microshaoft.Web
                 , commandTimeoutInSeconds
                 , enableStatistics
             )
-            = TryGetStoreProcedureInfo
-                        (
-                            routeName
-                            , httpMethod
-                        );
+                = TryGetStoreProcedureInfo
+                            (
+                                routeName
+                                , httpMethod
+                            );
             if 
                 (
                     success
@@ -386,19 +390,23 @@ namespace Microshaoft.Web
                     statusCode == 200
                 )
             {
-                
                 (success, result) = Process
-                        (
-                              connectionString
-                            , dataBaseType
-                            , storeProcedureName
-                            , parameters
-                            , onReadRowColumnProcessFunc
-                            , enableStatistics
-                            , commandTimeoutInSeconds
-                        );
+                                        (
+                                              connectionString
+                                            , dataBaseType
+                                            , storeProcedureName
+                                            , parameters
+                                            , onReadRowColumnProcessFunc
+                                            , enableStatistics
+                                            , commandTimeoutInSeconds
+                                        );
 
-                if (success && result != null)
+                if
+                    (
+                        success
+                        &&
+                        result != null
+                    )
                 {
                     HttpResponseParametersProcess
                             (
@@ -467,8 +475,8 @@ namespace Microshaoft.Web
                 , storeProcedureName
                 , commandTimeoutInSeconds
                 , enableStatistics
-            )
-            = TryGetStoreProcedureInfo
+            ) 
+                = TryGetStoreProcedureInfo
                         (
                             routeName
                             , httpMethod
@@ -481,18 +489,24 @@ namespace Microshaoft.Web
                 )
             {
 
-                (success, result) = await ProcessAsync
-                        (
-                              connectionString
-                            , dataBaseType
-                            , storeProcedureName
-                            , parameters
-                            , onReadRowColumnProcessFunc
-                            , enableStatistics
-                            , commandTimeoutInSeconds
-                        );
+                (success, result) = await
+                                        ProcessAsync
+                                            (
+                                                  connectionString
+                                                , dataBaseType
+                                                , storeProcedureName
+                                                , parameters
+                                                , onReadRowColumnProcessFunc
+                                                , enableStatistics
+                                                , commandTimeoutInSeconds
+                                            );
 
-                if (success && result != null)
+                if 
+                    (
+                        success
+                        &&
+                        result != null
+                    )
                 {
                     HttpResponseParametersProcess
                             (
@@ -795,7 +809,8 @@ namespace Microshaoft.Web
             }
             if (!success)
             {
-                return Result();
+                return
+                    Result();
             }
             var connectionID = actionConfiguration
                                     .GetValue<string>
