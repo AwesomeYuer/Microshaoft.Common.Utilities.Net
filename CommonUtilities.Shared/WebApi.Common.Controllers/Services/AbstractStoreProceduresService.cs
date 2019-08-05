@@ -135,9 +135,11 @@ namespace Microshaoft.Web
 
     public abstract class
                 AbstractStoreProceduresService
-                                : IStoreProceduresWebApiService , IStoreProceduresService
+                                :
+                                    IStoreProceduresWebApiService
+                                    , IStoreProceduresService
     {
-        private class StoreProcedureComparer
+        private class DatabaseTypeComparer
                         : IEqualityComparer<IStoreProcedureExecutable>
         {
             public bool Equals
@@ -147,11 +149,16 @@ namespace Microshaoft.Web
                             )
             {
                 return
-                    (x.DataBaseType == y.DataBaseType);
+                    (
+                        x.DataBaseType
+                        ==
+                        y.DataBaseType
+                    );
             }
             public int GetHashCode(IStoreProcedureExecutable obj)
             {
-                return -1;
+                return
+                        -1;
             }
         }
         private static readonly object _locker = new object();
@@ -265,7 +272,7 @@ namespace Microshaoft.Web
                     executors
                         .Distinct
                             (
-                                 new StoreProcedureComparer()
+                                 new DatabaseTypeComparer()
                             )
                         .ToDictionary
                             (
@@ -277,12 +284,12 @@ namespace Microshaoft.Web
                                 ,
                                 (x) =>
                                 {
-                                    if (x is IParametersDefinitionCacheAutoRefreshable rr)
+                                    if (x is IParametersDefinitionCacheAutoRefreshable definitionCache)
                                     {
-                                        rr
+                                        definitionCache
                                             .CachedParametersDefinitionExpiredInSeconds
                                                 = CachedParametersDefinitionExpiredInSeconds;
-                                        rr
+                                        definitionCache
                                             .NeedAutoRefreshExecutedTimeForSlideExpire
                                                 = NeedAutoRefreshExecutedTimeForSlideExpire;
                                     }
@@ -342,10 +349,10 @@ namespace Microshaoft.Web
                             , Func
                                 <
                                     IDataReader
-                                    , Type        // fieldType
-                                    , string    // fieldName
-                                    , int       // row index
-                                    , int       // column index
+                                    , Type          // fieldType
+                                    , string        // fieldName
+                                    , int           // row index
+                                    , int           // column index
                                     ,
                                         (
                                             bool NeedDefaultProcess
@@ -663,7 +670,6 @@ namespace Microshaoft.Web
                     string connectionString
                     , string dataBaseType
                     , string storeProcedureName
-                    //, out JToken result
                     , JToken parameters = null
                     , Func
                         <
@@ -862,23 +868,38 @@ namespace Microshaoft.Web
                                                 ("DefaultAccessing");
             if (enableStatistics)
             {
-                if (actionConfiguration.GetSection("EnableStatistics").Exists())
+                if 
+                    (
+                        actionConfiguration
+                                    .GetSection("EnableStatistics")
+                                    .Exists()
+                    )
                 {
                     enableStatistics = actionConfiguration
-                                            .GetValue<bool>
-                                                ("EnableStatistics");
+                                                .GetValue<bool>
+                                                    ("EnableStatistics");
                 }
                 else
                 {
-                    if (accessingConfiguration.GetSection("EnableStatistics").Exists())
+                    if 
+                        (
+                            accessingConfiguration
+                                        .GetSection("EnableStatistics")
+                                        .Exists()
+                        )
                     {
                         enableStatistics = accessingConfiguration
-                                                .GetValue<bool>
-                                                    ("EnableStatistics");
+                                                        .GetValue<bool>
+                                                            ("EnableStatistics");
                     }
                 }
             }
-            if (accessingConfiguration.GetSection("CommandTimeoutInSeconds").Exists())
+            if 
+                (
+                    accessingConfiguration
+                                    .GetSection("CommandTimeoutInSeconds")
+                                    .Exists()
+                )
             {
                 commandTimeoutInSeconds = accessingConfiguration
                                                 .GetValue<int>
@@ -886,19 +907,29 @@ namespace Microshaoft.Web
             }
             else
             {
-                if (actionConfiguration.GetSection("CommandTimeoutInSeconds").Exists())
+                if
+                    (
+                        actionConfiguration
+                                    .GetSection("CommandTimeoutInSeconds")
+                                    .Exists()
+                    )
                 {
                     commandTimeoutInSeconds = actionConfiguration
-                                                    .GetValue<int>
+                                                        .GetValue<int>
                                                             ("CommandtimeoutInSeconds");
                 }
                 else
                 {
-                    if (connectionConfiguration.GetSection("CommandTimeoutInSeconds").Exists())
+                    if 
+                        (
+                            connectionConfiguration
+                                            .GetSection("CommandTimeoutInSeconds")
+                                            .Exists()
+                        )
                     {
                         commandTimeoutInSeconds = connectionConfiguration
-                                                        .GetValue<int>
-                                                            ("CommandTimeoutInSeconds");
+                                                                .GetValue<int>
+                                                                    ("CommandTimeoutInSeconds");
                     }
                 }
             }
