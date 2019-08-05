@@ -135,7 +135,9 @@ namespace Microshaoft.Web
 
     public abstract class
                 AbstractStoreProceduresService
-                                : IStoreProceduresWebApiService , IStoreProceduresService
+                                :
+                                    IStoreProceduresWebApiService
+                                    , IStoreProceduresService
     {
         private class DatabaseTypeComparer
                         : IEqualityComparer<IStoreProcedureExecutable>
@@ -282,12 +284,12 @@ namespace Microshaoft.Web
                                 ,
                                 (x) =>
                                 {
-                                    if (x is IParametersDefinitionCacheAutoRefreshable rr)
+                                    if (x is IParametersDefinitionCacheAutoRefreshable definitionCache)
                                     {
-                                        rr
+                                        definitionCache
                                             .CachedParametersDefinitionExpiredInSeconds
                                                 = CachedParametersDefinitionExpiredInSeconds;
-                                        rr
+                                        definitionCache
                                             .NeedAutoRefreshExecutedTimeForSlideExpire
                                                 = NeedAutoRefreshExecutedTimeForSlideExpire;
                                     }
@@ -347,10 +349,10 @@ namespace Microshaoft.Web
                             , Func
                                 <
                                     IDataReader
-                                    , Type        // fieldType
-                                    , string    // fieldName
-                                    , int       // row index
-                                    , int       // column index
+                                    , Type          // fieldType
+                                    , string        // fieldName
+                                    , int           // row index
+                                    , int           // column index
                                     ,
                                         (
                                             bool NeedDefaultProcess
