@@ -17,8 +17,6 @@ namespace WebApplication.ASPNetCore
     using System.Linq;
     using System.Reflection;
     using System.Runtime.InteropServices;
-
-
     public class Program
     { 
         public static void Main(string[] args)
@@ -80,79 +78,80 @@ namespace WebApplication.ASPNetCore
                 WebHost
                     .CreateDefaultBuilder(args)
                     //.UseConfiguration(configuration)
-
-                    .ConfigureLogging(builder =>
-                    {
-                        builder.SetMinimumLevel(LogLevel.Error);
-                        builder.AddConsole();
-                    })
-
+                    .ConfigureLogging
+                        (
+                            builder =>
+                            {
+                                builder.SetMinimumLevel(LogLevel.Error);
+                                builder.AddConsole();
+                            }
+                        )
                     .ConfigureAppConfiguration
-                    (
-                        (hostingContext, configurationBuilder) =>
-                        {
-                            var configuration = configurationBuilder
-                                                    .SetBasePath(executingDirectory)
-                                                    .AddJsonFile
-                                                        (
-                                                            path: "hostings.json"
-                                                            , optional: false
-                                                            , reloadOnChange: true
-                                                        )
-                                                    .AddJsonFile
-                                                        (
-                                                            path: "dbConnections.json"
-                                                            , optional: false
-                                                            , reloadOnChange: true
-                                                        )
-                                                    .AddJsonFile
-                                                        (
-                                                            path: "routes.json"
-                                                            , optional: false
-                                                            , reloadOnChange: true
-                                                        )
-                                                    .AddJsonFile
-                                                        (
-                                                            path: "dynamicCompositionPluginsPaths.json"
-                                                            , optional: false
-                                                            , reloadOnChange: true
-                                                        )
-                                                    .AddJsonFile
-                                                        (
-                                                            path: "JwtValidation.json"
-                                                            , optional: false
-                                                            , reloadOnChange: true
-                                                        )
-                                                    .Build();
-                            // register change callback
-                            ChangeToken
-                                    .OnChange<JToken>
-                                        (
-                                            () =>
-                                            {
-                                                return
-                                                    configuration.GetReloadToken();
-                                            }
-                                            , (x) =>
-                                            {
-                                                Console.WriteLine("Configuration changed");
-                                                configuration
-                                                    .AsEnumerable()
-                                                    .Select
-                                                        (
-                                                            (kvp) =>
-                                                            {
-                                                                Console.WriteLine($"Key:{kvp.Key}, Value:{kvp.Value}");
-                                                                return
-                                                                    kvp;
-                                                            }
-                                                        )
-                                                    .ToArray();
-                                            }
-                                            , new JObject()
-                                        );
-                        }
-                    )
+                        (
+                            (hostingContext, configurationBuilder) =>
+                            {
+                                var configuration = configurationBuilder
+                                                        .SetBasePath(executingDirectory)
+                                                        .AddJsonFile
+                                                            (
+                                                                path: "hostings.json"
+                                                                , optional: false
+                                                                , reloadOnChange: true
+                                                            )
+                                                        .AddJsonFile
+                                                            (
+                                                                path: "dbConnections.json"
+                                                                , optional: false
+                                                                , reloadOnChange: true
+                                                            )
+                                                        .AddJsonFile
+                                                            (
+                                                                path: "routes.json"
+                                                                , optional: false
+                                                                , reloadOnChange: true
+                                                            )
+                                                        .AddJsonFile
+                                                            (
+                                                                path: "dynamicCompositionPluginsPaths.json"
+                                                                , optional: false
+                                                                , reloadOnChange: true
+                                                            )
+                                                        .AddJsonFile
+                                                            (
+                                                                path: "JwtValidation.json"
+                                                                , optional: false
+                                                                , reloadOnChange: true
+                                                            )
+                                                        .Build();
+                                // register change callback
+                                ChangeToken
+                                        .OnChange<JToken>
+                                            (
+                                                () =>
+                                                {
+                                                    return
+                                                        configuration.GetReloadToken();
+                                                }
+                                                , (x) =>
+                                                {
+                                                    Console.WriteLine("Configuration changed");
+                                                    configuration
+                                                        .AsEnumerable()
+                                                        .Select
+                                                            (
+                                                                (kvp) =>
+                                                                {
+                                                                    Console.WriteLine($"Key:{kvp.Key}, Value:{kvp.Value}");
+                                                                    return
+                                                                        kvp;
+                                                                }
+                                                            )
+                                                        .ToArray();
+                                                }
+                                                , new JObject()
+                                            );
+                            }
+                        )
                     //.UseUrls("http://+:5000", "https://+:5001")
                     .UseStartup<Startup>();
         }
