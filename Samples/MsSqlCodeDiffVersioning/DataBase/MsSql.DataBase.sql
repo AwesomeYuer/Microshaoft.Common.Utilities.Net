@@ -1,23 +1,23 @@
 USE [Test]
 GO
-/****** Object:  UserDefinedTableType [dbo].[udt_int]    Script Date: 5/8/2019 2:06:57 PM ******/
+/****** Object:  UserDefinedTableType [dbo].[udt_int]    Script Date: 8/8/2019 1:21:52 PM ******/
 CREATE TYPE [dbo].[udt_int] AS TABLE(
 	[F1] [int] NULL
 )
 GO
-/****** Object:  UserDefinedTableType [dbo].[udt_varchar]    Script Date: 5/8/2019 2:06:57 PM ******/
+/****** Object:  UserDefinedTableType [dbo].[udt_varchar]    Script Date: 8/8/2019 1:21:52 PM ******/
 CREATE TYPE [dbo].[udt_varchar] AS TABLE(
 	[F1] [varchar](16) NULL
 )
 GO
-/****** Object:  UserDefinedTableType [dbo].[udt_vcidt]    Script Date: 5/8/2019 2:06:57 PM ******/
+/****** Object:  UserDefinedTableType [dbo].[udt_vcidt]    Script Date: 8/8/2019 1:21:52 PM ******/
 CREATE TYPE [dbo].[udt_vcidt] AS TABLE(
 	[varchar] [varchar](16) NULL,
 	[int] [int] NULL,
 	[date] [date] NULL
 )
 GO
-/****** Object:  UserDefinedFunction [dbo].[zTVF_SplitStringToTable]    Script Date: 5/8/2019 2:06:57 PM ******/
+/****** Object:  UserDefinedFunction [dbo].[zTVF_SplitStringToTable]    Script Date: 8/8/2019 1:21:52 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -104,7 +104,7 @@ BEGIN
 	return
 end
 GO
-/****** Object:  View [dbo].[zv_all_PARAMETERS]    Script Date: 5/8/2019 2:06:57 PM ******/
+/****** Object:  View [dbo].[zv_all_PARAMETERS]    Script Date: 8/8/2019 1:21:52 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -296,7 +296,7 @@ FROM
 WHERE
 	o.type IN ('P','FN','TF', 'IF', 'IS', 'AF','PC', 'FS', 'FT')  
 GO
-/****** Object:  Table [dbo].[zObjectsChangesLogsHistory]    Script Date: 5/8/2019 2:06:57 PM ******/
+/****** Object:  Table [dbo].[zObjectsChangesLogsHistory]    Script Date: 8/8/2019 1:21:52 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -320,7 +320,7 @@ CREATE TABLE [dbo].[zObjectsChangesLogsHistory](
 GO
 ALTER TABLE [dbo].[zObjectsChangesLogsHistory] ADD  CONSTRAINT [DF_zObjectsChangesLogsHistory_PostTime]  DEFAULT (getdate()) FOR [PostTime]
 GO
-/****** Object:  StoredProcedure [dbo].[usp_executesql]    Script Date: 5/8/2019 2:06:57 PM ******/
+/****** Object:  StoredProcedure [dbo].[usp_executesql]    Script Date: 8/8/2019 1:21:52 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -339,7 +339,7 @@ set rowcount @rowcount
 exec sp_executesql @sql
 end
 GO
-/****** Object:  StoredProcedure [dbo].[zsp_zObjectsChangesLogsHistory_Get]    Script Date: 5/8/2019 2:06:57 PM ******/
+/****** Object:  StoredProcedure [dbo].[zsp_zObjectsChangesLogsHistory_Get]    Script Date: 8/8/2019 1:21:52 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -360,56 +360,103 @@ CREATE procedure [dbo].[zsp_zObjectsChangesLogsHistory_Get]
 as
 /*
 
-exec [zsp_zObjectsChangesLogsHistory_Get] @SearchIdsList='4,2'
+exec [zsp_zObjectsChangesLogsHistory_Get] @SearchObjectName='U'
 
 */
 
 begin
 
 
-if (@SearchObjectName is not null)
+if (@SearchIdsList is  null)
 begin
-	select
-		Top (@Top)
-		'{a:1}' as Json_F1
-		   ,a.[ID]
-		  ,a.[DatabaseName]
-		  ,a.[EventType]
-		  ,a.[ObjectName]
-		  ,a.[ObjectType]
-		  --,a.[TSQLCommand]
-		  ,a.[LoginName]
-		  ,a.[HostName]
-		  ,a.[PostTime]
-		  ,a.[Version]
-	from
-		[dbo].[zObjectsChangesLogsHistory] a with(nolock)
-	where
-		a.ObjectName like '%' + @SearchObjectName + '%'
-		and
-		(
-			@SearchBeforeTime is null
-			or
-			a.PostTime <= @SearchBeforeTime
-		)
-		and
-		(
-			@SearchHostName is null
-			or
-			a.HostName like '%' + @SearchHostName + '%'
-		)
-		and
-		(
-			@SearchDataBaseName is null
-			or
-			a.DatabaseName like '%' + @SearchDataBaseName + '%'
-		)
+	if (@SearchObjectName is null or LTRIM(rtrim(@SearchObjectName)) = '')
+	begin
+		select
+			Top (@Top)
+			'{a:1}' as Json_F1
+			   ,a.[ID]
+			  ,a.[DatabaseName]
+			  ,a.[EventType]
+			  ,a.[ObjectName]
+			  ,a.[ObjectType]
+			  --,a.[TSQLCommand]
+			  ,a.[LoginName]
+			  ,a.[HostName]
+			  ,a.[PostTime]
+			  ,a.[Version]
+		from
+			[dbo].[zObjectsChangesLogsHistory] a with(nolock)
+		where
 
-	order by
-		a.ObjectName
-		, a.ID desc
+			(
+				@SearchBeforeTime is null
+				or
+				a.PostTime <= @SearchBeforeTime
+			)
+			and
+			(
+				@SearchHostName is null
+				or
+				a.HostName like '%' + @SearchHostName + '%'
+			)
+			and
+			(
+				@SearchDataBaseName is null
+				or
+				a.DatabaseName like '%' + @SearchDataBaseName + '%'
+			)
+
+		order by
+			a.ObjectName
+			, a.ID desc
+	end
+	else
+	begin
+	select
+			Top (@Top)
+			'{a:1}' as Json_F1
+			   ,a.[ID]
+			  ,a.[DatabaseName]
+			  ,a.[EventType]
+			  ,a.[ObjectName]
+			  ,a.[ObjectType]
+			  --,a.[TSQLCommand]
+			  ,a.[LoginName]
+			  ,a.[HostName]
+			  ,a.[PostTime]
+			  ,a.[Version]
+		from
+			[dbo].[zObjectsChangesLogsHistory] a with(nolock)
+		where
+
+			a.ObjectName like '%' + @SearchObjectName + '%'
+			and
+			(
+				@SearchBeforeTime is null
+				or
+				a.PostTime <= @SearchBeforeTime
+			)
+			and
+			(
+				@SearchHostName is null
+				or
+				a.HostName like '%' + @SearchHostName + '%'
+			)
+			and
+			(
+				@SearchDataBaseName is null
+				or
+				a.DatabaseName like '%' + @SearchDataBaseName + '%'
+			)
+
+		order by
+			a.ObjectName
+			, a.ID desc
+
+	end
+	
 end
-else if (@SearchIdsList is not null)
+else if (@SearchIdsList is not null and @SearchObjectName is null)
 begin
 
 	;with T
@@ -450,7 +497,7 @@ end
 	
 end
 GO
-/****** Object:  DdlTrigger [ztrigger_ddl]    Script Date: 5/8/2019 2:06:57 PM ******/
+/****** Object:  DdlTrigger [ztrigger_ddl]    Script Date: 8/8/2019 1:21:52 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -550,4 +597,8 @@ END
 
 GO
 ENABLE TRIGGER [ztrigger_ddl] ON DATABASE
+GO
+USE [master]
+GO
+ALTER DATABASE [Test] SET  READ_WRITE 
 GO
