@@ -21,6 +21,21 @@ namespace WebApplication.ASPNetCore
     { 
         public static void Main(string[] args)
         {
+            if (args != null)
+            {
+                if (args.Length > 0)
+                {
+                    if (args[0] == "/wait")
+                    {
+                        Console.WriteLine("Waiting ...");
+                        Console.WriteLine("Press any key to continue ...");
+                        Console.ReadLine();
+                        Console.WriteLine("Continue ...");
+                    }
+                }
+            }
+
+
             OSPlatform OSPlatform
                     = EnumerableHelper
                             .Range
@@ -74,10 +89,17 @@ namespace WebApplication.ASPNetCore
                                             .GetExecutingAssembly()
                                             .Location
                                     );
+            var hostingsConfiguration = new ConfigurationBuilder()
+                                                .AddJsonFile
+                                                    (
+                                                        "hostings.json"
+                                                        , optional: false
+                                                    )
+                                                .Build();
             return
                 WebHost
                     .CreateDefaultBuilder(args)
-                    //.UseConfiguration(configuration)
+                    .UseConfiguration(hostingsConfiguration)
                     .ConfigureLogging
                         (
                             builder =>
@@ -92,12 +114,12 @@ namespace WebApplication.ASPNetCore
                             {
                                 var configuration = configurationBuilder
                                                         .SetBasePath(executingDirectory)
-                                                        .AddJsonFile
-                                                            (
-                                                                path: "hostings.json"
-                                                                , optional: false
-                                                                , reloadOnChange: true
-                                                            )
+                                                        //.AddJsonFile
+                                                        //    (
+                                                        //        path: "hostings.json"
+                                                        //        , optional: true
+                                                        //        , reloadOnChange: true
+                                                        //    )
                                                         .AddJsonFile
                                                             (
                                                                 path: "dbConnections.json"
