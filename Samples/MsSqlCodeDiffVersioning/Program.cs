@@ -21,6 +21,21 @@ namespace WebApplication.ASPNetCore
     { 
         public static void Main(string[] args)
         {
+            if (args != null)
+            {
+                if (args.Length > 0)
+                {
+                    if (args[0] == "/wait")
+                    {
+                        Console.WriteLine("Waiting ...");
+                        Console.WriteLine("Press any key to continue ...");
+                        Console.ReadLine();
+                        Console.WriteLine("Continue ...");
+                    }
+                }
+            }
+
+
             OSPlatform OSPlatform
                     = EnumerableHelper
                             .Range
