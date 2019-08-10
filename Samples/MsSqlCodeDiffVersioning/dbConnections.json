@@ -4,13 +4,14 @@
   "Connections": {
     "c1": {
       "dataBasetype": "mssql",
-      "connectionString": "Initial Catalog=test;Data Source=gateway.hyper-v.internal\\sql2017;User=sa;Password=!@#123QWE",
+      //need sql server side configure MSSQL named instance TCP/IP port to 11433 on gateway.hyper-v.internal
+      "connectionString": "Initial Catalog=test;Data Source=gateway.hyper-v.internal\\sql2017,11433;User=sa;Password=!@#123QWE",
       "enableStatistics": true,
       "commandtimeoutInSeconds": 102
     },
     "c2": {
       "dataBaseType": "mssql",
-      "ConnectionString": "Initial Catalog=test;Data Source=gateway.hyper-v.internal\\sql2017;User=sa;Password=!@#123QWE",
+      "ConnectionString": "Initial Catalog=test;Data Source=gateway.hyper-v.internal\\sql2017,11433;User=sa;Password=!@#123QWE",
       "EnaBleStatistics": true
       //"CommandTimeoutInSeconds": 100
       /*
