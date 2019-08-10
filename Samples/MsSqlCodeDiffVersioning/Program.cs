@@ -74,10 +74,17 @@ namespace WebApplication.ASPNetCore
                                             .GetExecutingAssembly()
                                             .Location
                                     );
+            var hostingsConfiguration = new ConfigurationBuilder()
+                                                .AddJsonFile
+                                                    (
+                                                        "hostings.json"
+                                                        , optional: false
+                                                    )
+                                                .Build();
             return
                 WebHost
                     .CreateDefaultBuilder(args)
-                    //.UseConfiguration(configuration)
+                    .UseConfiguration(hostingsConfiguration)
                     .ConfigureLogging
                         (
                             builder =>
@@ -92,12 +99,12 @@ namespace WebApplication.ASPNetCore
                             {
                                 var configuration = configurationBuilder
                                                         .SetBasePath(executingDirectory)
-                                                        .AddJsonFile
-                                                            (
-                                                                path: "hostings.json"
-                                                                , optional: false
-                                                                , reloadOnChange: true
-                                                            )
+                                                        //.AddJsonFile
+                                                        //    (
+                                                        //        path: "hostings.json"
+                                                        //        , optional: true
+                                                        //        , reloadOnChange: true
+                                                        //    )
                                                         .AddJsonFile
                                                             (
                                                                 path: "dbConnections.json"
