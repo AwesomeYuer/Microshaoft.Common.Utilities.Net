@@ -407,12 +407,16 @@ namespace Microshaoft
                                     , byte[] data
                                 )
         {
-            HashAlgorithm hashAlgorithm = new SHA1CryptoServiceProvider();
-            return provider.SignHash
+            using (var hashAlgorithm = new SHA1CryptoServiceProvider())
+            {
+                return
+                    provider
+                        .SignHash
                                 (
                                     ComputeHash(hashAlgorithm, data)
                                     , "SHA1"
                                 );
+            }
         }
         public static bool RSAVerifySHA1
                                 (
@@ -421,14 +425,18 @@ namespace Microshaoft
                                     , byte[] signature
                                 )
         {
-            RSACryptoServiceProvider provider = new RSACryptoServiceProvider();
-            provider.FromXmlString(publicKeyXml);
-            return RSAVerifySHA1
-                            (
-                                provider
-                                , data
-                                , signature
-                            );
+            using (var provider = new RSACryptoServiceProvider())
+            {
+                provider
+                    .FromXmlString(publicKeyXml);
+                return
+                    RSAVerifySHA1
+                                (
+                                    provider
+                                    , data
+                                    , signature
+                                );
+            }
         }
         public static bool RSAVerifySHA1
                                 (
@@ -437,13 +445,16 @@ namespace Microshaoft
                                     , byte[] signature
                                 )
         {
-            HashAlgorithm hashAlgorithm = new SHA1CryptoServiceProvider();
-            return provider.VerifyHash
+            using (HashAlgorithm hashAlgorithm = new SHA1CryptoServiceProvider())
+            {
+                return provider
+                            .VerifyHash
                                 (
                                     ComputeHash(hashAlgorithm, data)
                                     , "SHA1"
                                     , signature
                                 );
+            }
         }
         public static byte[] RSASignMD5
                                 (
@@ -451,13 +462,17 @@ namespace Microshaoft
                                     , byte[] data
                                 )
         {
-            RSACryptoServiceProvider provider = new RSACryptoServiceProvider();
-            provider.FromXmlString(privateKeyXml);
-            return RSASignMD5
-                        (
-                            provider
-                            , data
-                        );
+            using (var provider = new RSACryptoServiceProvider())
+            {
+                provider
+                    .FromXmlString(privateKeyXml);
+                return
+                    RSASignMD5
+                            (
+                                provider
+                                , data
+                            );
+            }
         }
         public static byte[] RSASignMD5
                                 (
@@ -465,12 +480,16 @@ namespace Microshaoft
                                     , byte[] data
                                 )
         {
-            HashAlgorithm hashAlgorithm = new MD5CryptoServiceProvider();
-            return provider.SignHash
-                        (
-                            ComputeHash(hashAlgorithm, data)
-                            , "MD5"
-                        );
+            using (HashAlgorithm hashAlgorithm = new MD5CryptoServiceProvider())
+            {
+                return
+                    provider
+                        .SignHash
+                                (
+                                    ComputeHash(hashAlgorithm, data)
+                                    , "MD5"
+                                );
+            }
         }
         public static bool RSAVerifyMD5
                                 (
@@ -479,14 +498,18 @@ namespace Microshaoft
                                     , byte[] signature
                                 )
         {
-            RSACryptoServiceProvider provider = new RSACryptoServiceProvider();
-            provider.FromXmlString(publicKeyXml);
-            return RSAVerifyMD5
+            using (var provider = new RSACryptoServiceProvider())
+            {
+                provider
+                    .FromXmlString(publicKeyXml);
+                return
+                    RSAVerifyMD5
                             (
                                 provider
                                 , data
                                 , signature
                             );
+            }
         }
         public static bool RSAVerifyMD5
                                 (
@@ -495,13 +518,17 @@ namespace Microshaoft
                                     , byte[] signature
                                 )
         {
-            HashAlgorithm hashAlgorithm = new MD5CryptoServiceProvider();
-            return provider.VerifyHash
+            using (HashAlgorithm hashAlgorithm = new MD5CryptoServiceProvider())
+            {
+                return
+                    provider
+                        .VerifyHash
                                 (
                                     ComputeHash(hashAlgorithm, data)
                                     , "MD5"
                                     , signature
                                 );
+            }
         }
         public static byte[] RSAEncrypt
                                 (
@@ -510,14 +537,18 @@ namespace Microshaoft
                                     , bool DoOAEPPadding
                                 )
         {
-            RSACryptoServiceProvider provider = new RSACryptoServiceProvider();
-            provider.FromXmlString(publicKeyXml);
-            return RSAEncrypt
-                        (
-                            provider
-                            , data
-                            , DoOAEPPadding
-                        );
+            using (var provider = new RSACryptoServiceProvider())
+            {
+                provider
+                    .FromXmlString(publicKeyXml);
+                return
+                    RSAEncrypt
+                            (
+                                provider
+                                , data
+                                , DoOAEPPadding
+                            );
+            }
         }
         public static byte[] RSAEncrypt
                         (
@@ -535,14 +566,18 @@ namespace Microshaoft
                                     , bool DoOAEPPadding
                                 )
         {
-            RSACryptoServiceProvider provider = new RSACryptoServiceProvider();
-            provider.FromXmlString(privateKeyXml);
-            return RSADecrypt
-                        (
-                            provider
-                            , data
-                            , DoOAEPPadding
-                        );
+            using (var provider = new RSACryptoServiceProvider())
+            {
+                provider
+                    .FromXmlString(privateKeyXml);
+                return
+                    RSADecrypt
+                            (
+                                provider
+                                , data
+                                , DoOAEPPadding
+                            );
+            }
         }
         public static byte[] RSADecrypt
                                 (
@@ -560,13 +595,16 @@ namespace Microshaoft
                                         , bool DoOAEPadding
                                     )
         {
-            RSACryptoServiceProvider provider = publicKeyCer.PublicKey.Key as RSACryptoServiceProvider;
-            return RSAEncrypt
-                        (
-                            provider
-                            , data
-                            , DoOAEPadding
-                        );
+            using (RSACryptoServiceProvider provider = publicKeyCer.PublicKey.Key as RSACryptoServiceProvider)
+            {
+                return
+                    RSAEncrypt
+                            (
+                                provider
+                                , data
+                                , DoOAEPadding
+                            );
+            }
         }
         public static byte[] X509CertificateDecrypt
                                     (
@@ -575,13 +613,15 @@ namespace Microshaoft
                                         , bool DoOAEPadding
                                     )
         {
-            RSACryptoServiceProvider provider = privateKeyPfx.PrivateKey as RSACryptoServiceProvider;
-            return RSADecrypt
-                        (
-                            provider
-                            , data
-                            , DoOAEPadding
-                        );
+            using (var provider = privateKeyPfx.PrivateKey as RSACryptoServiceProvider)
+            {
+                return RSADecrypt
+                            (
+                                provider
+                                , data
+                                , DoOAEPadding
+                            );
+            }
         }
         public static byte[] X509CertificateSignSHA1
                                     (
@@ -589,12 +629,14 @@ namespace Microshaoft
                                         , byte[] data
                                     )
         {
-            RSACryptoServiceProvider provider = privateKeyPfx.PrivateKey as RSACryptoServiceProvider;
-            return RSASignSHA1
-                        (
-                            provider
-                            , data
-                        );
+            using (RSACryptoServiceProvider provider = privateKeyPfx.PrivateKey as RSACryptoServiceProvider)
+            {
+                return RSASignSHA1
+                            (
+                                provider
+                                , data
+                            );
+            }
         }
         public static byte[] X509CertificateSignMD5
                                     (
@@ -602,8 +644,10 @@ namespace Microshaoft
                                         , byte[] data
                                     )
         {
-            RSACryptoServiceProvider provider = privateKeyPfx.PrivateKey as RSACryptoServiceProvider;
-            return RSASignMD5(provider, data);
+            using (var provider = privateKeyPfx.PrivateKey as RSACryptoServiceProvider)
+            {
+                return RSASignMD5(provider, data);
+            }
         }
         public static bool X509CertificateVerifySHA1
                                     (
@@ -612,13 +656,15 @@ namespace Microshaoft
                                         , byte[] signature
                                     )
         {
-            RSACryptoServiceProvider provider = publicKeyCer.PublicKey.Key as RSACryptoServiceProvider;
-            return RSAVerifySHA1
-                        (
-                            provider
-                            , data
-                            , signature
-                        );
+            using (var provider = publicKeyCer.PublicKey.Key as RSACryptoServiceProvider)
+            {
+                return RSAVerifySHA1
+                            (
+                                provider
+                                , data
+                                , signature
+                            );
+            }
         }
         public static bool X509CertificateVerifyMD5
                                     (
@@ -627,13 +673,15 @@ namespace Microshaoft
                                         , byte[] signature
                                     )
         {
-            RSACryptoServiceProvider provider = publicKeyCer.PublicKey.Key as RSACryptoServiceProvider;
-            return RSAVerifyMD5
-                        (
-                            provider
-                            , data
-                            , signature
-                        );
+            using (RSACryptoServiceProvider provider = publicKeyCer.PublicKey.Key as RSACryptoServiceProvider)
+            {
+                return RSAVerifyMD5
+                            (
+                                provider
+                                , data
+                                , signature
+                            );
+            }
         }
         public static string BytesArrayToHexString(byte[] data)
         {
