@@ -141,7 +141,7 @@
             foreach (var filesGroup in filesGroups)
             {
                 var filePartsName = Path.GetFileNameWithoutExtension(filesGroup.Key);
-                filePartsName = filePartsName + mergedFileExtensionName;
+                filePartsName += mergedFileExtensionName;
                 filePartsName = Path.Combine(directory, filePartsName);
                 var orderedFilesGroup
                             = filesGroup
@@ -262,7 +262,6 @@
                 }
             }
             list.Clear();
-            list = null;
         }
     }
 }

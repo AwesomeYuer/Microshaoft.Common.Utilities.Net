@@ -10,7 +10,7 @@
                     (
                         string zippedFileName
                         , IEnumerable<string> originalFiles
-                        , Func<string, string> onCreateEntryProcessFunc//= null
+                        , Func<string, string> onCreateEntryProcessFunc //= null
                     )
         {
             using
@@ -24,7 +24,15 @@
                                                 )
                     )
             {
-                using (ZipArchive archive = new ZipArchive(fileStream, ZipArchiveMode.Create))
+                using
+                    (
+                        var archive = new ZipArchive
+                                                (
+                                                    fileStream
+                                                    , ZipArchiveMode
+                                                                .Create
+                                                )
+                    )
                 {
                     foreach (var file in originalFiles)
                     {
@@ -44,7 +52,14 @@
                             )
         {
             var r = false;
-            using (FileStream originalFileStream = File.OpenRead(originalFileFullPath))
+            using
+                (
+                    var originalFileStream = File
+                                                .OpenRead
+                                                    (
+                                                        originalFileFullPath
+                                                    )
+                )
             {
                 var originalFileExtensionName = Path.GetExtension(originalFileFullPath);
                 var originalDirectoryPath = Path.GetDirectoryName(originalFileFullPath);
@@ -56,9 +71,9 @@
                     fileName = onNamingDecompressedFileProcessFunc(fileName);
                 }
                 decompressedFileFullPath = Path.Combine(directory, fileName);
-                using (FileStream decompressedFileStream = File.Create(decompressedFileFullPath))
+                using (var decompressedFileStream = File.Create(decompressedFileFullPath))
                 {
-                    using (GZipStream decompressionStream = new GZipStream(originalFileStream, CompressionMode.Decompress))
+                    using (var decompressionStream = new GZipStream(originalFileStream, CompressionMode.Decompress))
                     {
                         decompressionStream.CopyTo(decompressedFileStream);
                         r = true;

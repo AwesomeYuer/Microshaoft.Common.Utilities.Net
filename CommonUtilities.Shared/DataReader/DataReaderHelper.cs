@@ -100,7 +100,7 @@ namespace Microshaoft
                                     );
             while (target.Read())
             {
-                TEntry entry = new TEntry();
+                var entry = new TEntry();
                 foreach (var x in members)
                 {
                     var dataColumnName = x.Name;
@@ -162,59 +162,6 @@ namespace Microshaoft
                         , columns 
                         , onReadRowColumnProcessFunc
                     );
-        }
-        [Obsolete]
-        private static IEnumerable<JToken> GetColumnsJTokensEnumerable
-                     (
-                        this IDataReader target
-                     )
-        {
-            var fieldsCount = target.FieldCount;
-            for (var i = 0; i < fieldsCount; i++)
-            {
-                var fieldType = target.GetFieldType(i);
-                var fieldName = target.GetName(i);
-                if (fieldName.IsNullOrEmptyOrWhiteSpace())
-                {
-                    fieldName = $"Unknown-{i}";
-                }
-                yield
-                    return
-                        new JObject
-                                (
-                                    new JProperty
-                                        (
-                                            "ColumnName"
-                                            , fieldName
-                                        )
-                                    ,
-                                    new JProperty
-                                        (
-                                            "Title"
-                                            , fieldName
-                                        )
-                                    ,
-                                    new JProperty
-                                        (
-                                            "title"
-                                            , fieldName
-                                        )
-                                        ,
-                                    new JProperty
-                                        (
-                                            "data"
-                                            , fieldName
-                                        )
-                                    ,
-                                    new JProperty
-                                        (
-                                            "ColumnType"
-                                            , fieldType
-                                                .GetJTokenType()
-                                                .ToString()
-                                        )
-                                );
-            }
         }
         public static JArray GetColumnsJArray
                      (
@@ -279,9 +226,7 @@ namespace Microshaoft
                                         )
                                 )
                     );
-
             }
-
             return r;
         }
         public static IEnumerable<JToken> GetRowsJTokensEnumerable
@@ -325,7 +270,6 @@ namespace Microshaoft
                             fieldName = $"Column-{fieldIndex + 1}";
                         }
                     }
-
                     JProperty field = null;
                     var needDefaultProcess = true;
                     if (onReadRowColumnProcessFunc != null)
@@ -362,7 +306,7 @@ namespace Microshaoft
                 rowIndex ++;
                 yield
                     return
-                        row;
+                            row;
             }
         }
         public static JProperty GetFieldJProperty
