@@ -129,13 +129,13 @@
                                                 , out methodCallExpression
                                             );
             var lambda = Expression
-                            .Lambda
-                                <Action<T, object[]>>
-                                    (
-                                        methodCallExpression
-                                        , instanceParameterExpression
-                                        , argumentsParameterExpression
-                                    );
+                                .Lambda
+                                    <Action<T, object[]>>
+                                        (
+                                            methodCallExpression
+                                            , instanceParameterExpression
+                                            , argumentsParameterExpression
+                                        );
             var action = lambda.Compile();
             return action;
         }
@@ -147,7 +147,7 @@
                                                 Func<MethodInfo> getMethodInfoFunc
                                             )
         {
-            Type type = typeof(TTarget);
+            _ = typeof(TTarget);
             var methodInfo = getMethodInfoFunc();
             return
                 CreateTargetMethodCallInvokerFunc
@@ -165,15 +165,13 @@
                                             )
         {
             var type = typeof(TTarget);
-            ParameterExpression instanceParameterExpression;
-            MethodCallExpression methodCallExpression;
             ParameterExpression argumentsParameterExpression
                                         = GetMethodArgumentsParameterExpression
                                                 (
                                                     type
                                                     , methodInfo
-                                                    , out instanceParameterExpression
-                                                    , out methodCallExpression
+                                                    , out ParameterExpression instanceParameterExpression
+                                                    , out MethodCallExpression methodCallExpression
                                                 );
             var lambda = Expression
                                 .Lambda<Func<TTarget, object[], TResult>>
@@ -190,7 +188,6 @@
                                             MethodInfo methodInfo
                                         )
         {
-
             var parametersTypes = methodInfo
                                         .GetParameters()
                                         .Select

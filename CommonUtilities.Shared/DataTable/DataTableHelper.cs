@@ -139,7 +139,7 @@ namespace Microshaoft
                     return;
                 }
             }
-            DataRowCollection drc = null;
+
             if
                 (
                     processRowDataColumnFunc != null
@@ -147,7 +147,7 @@ namespace Microshaoft
                     processRowFunc != null
                 )
             {
-                drc = target.Rows;
+                DataRowCollection drc = target.Rows;
                 if
                     (
                         (
@@ -183,7 +183,13 @@ namespace Microshaoft
                             }
                         }
                     }
-                    processRowFunc?.Invoke(dataColumnCollection, dataRow, i);
+                    processRowFunc?
+                                .Invoke
+                                    (
+                                        dataColumnCollection
+                                        , dataRow
+                                        , i
+                                    );
                 }
             }
         }

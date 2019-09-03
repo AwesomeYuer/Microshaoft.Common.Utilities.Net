@@ -23,7 +23,7 @@
         {
             var dataParameter = Expression.Parameter(typeof(TTarget), "data");
             var targetMemberType = typeof(TTarget);
-            var targetMemberParameter = Expression.Parameter(targetMemberType, "member");
+            _ = Expression.Parameter(targetMemberType, "member");
             var memberInfo = targetMemberType
                                     .GetMember
                                         (
