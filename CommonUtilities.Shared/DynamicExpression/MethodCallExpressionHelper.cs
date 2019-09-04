@@ -17,8 +17,14 @@ namespace System.Activities.Expressions
     {
         public const int FuncCacheCapacity = 500;
 
-        public static void PrepareForVariables(MethodBase methodInfo, ParameterExpression objectArray, Collection<ParameterExpression> variables,
-            Collection<Expression> assignVariablesExpressions, Collection<Expression> assignVariablesBackExpressions)
+        public static void PrepareForVariables
+                                (
+                                    MethodBase methodInfo
+                                    , ParameterExpression objectArray
+                                    , Collection<ParameterExpression> variables
+                                    , Collection<Expression> assignVariablesExpressions
+                                    , Collection<Expression> assignVariablesBackExpressions
+                                )
         {
             if (methodInfo != null)
             {
@@ -31,27 +37,113 @@ namespace System.Activities.Expressions
                     // If variable.Type is NOT a Nullable<T>, we include the call to Convert.ChangeType on the actual parameter.
                     if (variable.Type.IsValueType && Nullable.GetUnderlyingType(variable.Type) == null)
                     {
-                        assignVariablesExpressions.Add(Expression.Assign(variable,
-                             Expression.Convert(
-                                Expression.Call(typeof(Convert).GetMethod("ChangeType", new Type[] { typeof(object), typeof(Type) }), Expression.ArrayIndex(objectArray, Expression.Constant(i)), Expression.Constant(variable.Type, typeof(Type))),
-                                variable.Type)));
+                        assignVariablesExpressions
+                                    .Add
+                                        (
+                                            Expression
+                                                .Assign
+                                                    (
+                                                        variable
+                                                        , Expression
+                                                                .Convert
+                                                                    (
+                                                                        Expression
+                                                                                .Call
+                                                                                    (
+                                                                                        typeof(Convert)
+                                                                                                .GetMethod
+                                                                                                    (
+                                                                                                        "ChangeType"
+                                                                                                        , new Type[]
+                                                                                                            {
+                                                                                                                typeof(object)
+                                                                                                                , typeof(Type)
+                                                                                                            }
+                                                                                                    )
+                                                                                        , Expression
+                                                                                                .ArrayIndex
+                                                                                                    (
+                                                                                                        objectArray
+                                                                                                        , Expression
+                                                                                                                .Constant(i))
+                                                                                                        , Expression
+                                                                                                                .Constant
+                                                                                                                    (
+                                                                                                                        variable.Type
+                                                                                                                        , typeof(Type)
+                                                                                                                    )
+                                                                                                    )
+                                                                        , variable.Type
+                                                                    )
+                                                    )
+                                        );
                     }
                     else
                     {
-                        assignVariablesExpressions.Add(Expression.Assign(variable,
-                                Expression.Convert(Expression.ArrayIndex(objectArray, Expression.Constant(i)), variable.Type)));
+                        assignVariablesExpressions
+                                .Add
+                                    (
+                                        Expression
+                                                .Assign
+                                                    (
+                                                        variable
+                                                        , Expression
+                                                                .Convert
+                                                                    (
+                                                                        Expression
+                                                                            .ArrayIndex
+                                                                                (
+                                                                                    objectArray
+                                                                                    , Expression.Constant(i)
+                                                                                )
+                                                                        , variable.Type
+                                                                    )
+                                                    )
+                                    );
                     }
                     if (parameterType.IsByRef)
                     {
                         if (variable.Type.IsValueType)
                         {
-                            assignVariablesBackExpressions.Add(Expression.Assign(Expression.ArrayAccess(objectArray, Expression.Constant(i)),
-                                Expression.Convert(variable, typeof(object))));
+                            assignVariablesBackExpressions
+                                    .Add
+                                        (
+                                            Expression
+                                                    .Assign
+                                                        (
+                                                            Expression
+                                                                    .ArrayAccess
+                                                                            (
+                                                                                objectArray
+                                                                                , Expression
+                                                                                        .Constant(i))
+                                                                                , Expression
+                                                                                        .Convert
+                                                                                            (
+                                                                                                variable
+                                                                                                , typeof(object)
+                                                                                            )
+                                                                            )
+                                                        );
                         }
                         else
                         {
-                            assignVariablesBackExpressions.Add(Expression.Assign(Expression.ArrayAccess(objectArray, Expression.Constant(i)),
-                                variable));
+                            assignVariablesBackExpressions
+                                    .Add
+                                        (
+                                            Expression
+                                                    .Assign
+                                                        (
+                                                            Expression
+                                                                .ArrayAccess
+                                                                        (
+                                                                            objectArray
+                                                                            , Expression
+                                                                                    .Constant(i)
+                                                                        )
+                                                            , variable
+                                                        )
+                                        );
                         }
                     }
                     variables.Add(variable);
@@ -59,7 +151,12 @@ namespace System.Activities.Expressions
             }
         }
 
-        public static MethodCallExpression PrepareForCallExpression(MethodInfo methodInfo, ParameterExpression targetInstance, Collection<ParameterExpression> variables)
+        public static MethodCallExpression PrepareForCallExpression
+                                                (
+                                                    MethodInfo methodInfo
+                                                    , ParameterExpression targetInstance
+                                                    , Collection<ParameterExpression> variables
+                                                )
         {
             MethodCallExpression callExpression;
             if (!methodInfo.IsStatic)
@@ -73,8 +170,14 @@ namespace System.Activities.Expressions
             return callExpression;
         }
 
-        public static MethodCallExpression PrepareForCallExpression(MethodInfo methodInfo, ParameterExpression targetInstance,
-            Collection<ParameterExpression> variables, out ParameterExpression tempInstance, out Expression assignTempInstanceExpression)
+        public static MethodCallExpression PrepareForCallExpression
+                                                (
+                                                    MethodInfo methodInfo
+                                                    , ParameterExpression targetInstance
+                                                    , Collection<ParameterExpression> variables
+                                                    , out ParameterExpression tempInstance
+                                                    , out Expression assignTempInstanceExpression
+                                                )
         {
             MethodCallExpression callExpression;
             tempInstance = null;
@@ -100,8 +203,16 @@ namespace System.Activities.Expressions
             return callExpression;
         }
 
-        public static Expression ComposeBlockExpression(Collection<ParameterExpression> variables, Collection<Expression> assignVariables, Expression callExpression,
-            Collection<Expression> assignVariablesBack, Type returnType, bool isConstructor, bool valueTypeReference)
+        public static Expression ComposeBlockExpression
+                                        (
+                                            Collection<ParameterExpression> variables
+                                            , Collection<Expression> assignVariables
+                                            , Expression callExpression
+                                            , Collection<Expression> assignVariablesBack
+                                            , Type returnType
+                                            , bool isConstructor
+                                            , bool valueTypeReference
+                                    )
         {
             Collection<Expression> expressions = new Collection<Expression>();
             foreach (Expression expression in assignVariables)
@@ -113,7 +224,7 @@ namespace System.Activities.Expressions
             variables.Add(result);
             if (returnType != typeof(void))
             {
-                Expression resultAssign = null;
+                Expression resultAssign;
                 if (!isConstructor && returnType.IsValueType)
                 {
                     resultAssign = Expression.Assign(result,
@@ -143,7 +254,14 @@ namespace System.Activities.Expressions
             return block;
         }
 
-        public static Expression ComposeLinqExpression(MethodInfo methodInfo, ParameterExpression targetInstance, ParameterExpression objectArray, Type returnType, bool valueTypeReference)
+        public static Expression ComposeLinqExpression
+                                        (
+                                            MethodInfo methodInfo
+                                            , ParameterExpression targetInstance
+                                            , ParameterExpression objectArray
+                                            , Type returnType
+                                            , bool valueTypeReference
+                                        )
         {
             Collection<Expression> assignVariablesExpressions = new Collection<Expression>();
             Collection<Expression> assignVariablesBackExpressions = new Collection<Expression>();

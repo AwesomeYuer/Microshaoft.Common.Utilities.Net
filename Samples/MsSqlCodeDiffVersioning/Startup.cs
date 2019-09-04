@@ -66,8 +66,10 @@
                         {
                             //Debugger.Break();
                             var ja = new JArray(data);
-                            var jo = new JObject();
-                            jo["udt_vcidt"] = ja;
+                            var jo = new JObject
+                            {
+                                ["udt_vcidt"] = ja
+                            };
                             var sqlConnection = new SqlConnection("Initial Catalog=test;Data Source=localhost;User=sa;Password=!@#123QWE");
                             executor
                                 .Execute

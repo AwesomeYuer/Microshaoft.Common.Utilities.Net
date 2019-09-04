@@ -474,17 +474,16 @@ begin
 	)
 	select
 	 '{a:1}' as Json_F1
-	   ,a.[ID]
-      ,a.[DatabaseName]
-      ,a.[EventType]
-      ,a.[ObjectName]
-      ,a.[ObjectType]
-      ,a.[TSQLCommand]
-      ,a.[LoginName]
-      ,a.[HostName]
-      ,a.[PostTime]
-      ,a.[Version]
-	 
+		,a.[ID]
+		,a.[DatabaseName]
+		,a.[EventType]
+		,a.[ObjectName]
+		,a.[ObjectType]
+		,a.[TSQLCommand]
+		,a.[LoginName]
+		,a.[HostName]
+		,a.[PostTime]
+		,a.[Version]
 	from
 		[zObjectsChangesLogsHistory] a with(nolock)
 			inner join
