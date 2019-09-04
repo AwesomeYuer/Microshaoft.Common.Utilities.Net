@@ -208,11 +208,13 @@ namespace Microshaoft
                             (x) =>
                             {
                                 var rr = false;
-                                var attribute = x
-                                                .GetCustomAttributes
-                                                    (typeof(TAttribute), true)
-                                                .FirstOrDefault() as TAttribute;
-                                if (attribute != null)
+                                if 
+                                    (
+                                        x
+                                            .GetCustomAttributes
+                                                (typeof(TAttribute), true)
+                                            .FirstOrDefault() is TAttribute attribute
+                                    )
                                 {
                                     rr = true;
                                     if (onAttributeProcessFunc != null)
@@ -239,11 +241,13 @@ namespace Microshaoft
                                         (x) =>
                                         {
                                             var rr = false;
-                                            var attribute = x
-                                                            .GetCustomAttributes
-                                                                (typeof(TAttribute), true)
-                                                            .FirstOrDefault() as TAttribute;
-                                            if (attribute != null)
+                                            if 
+                                                (
+                                                    x
+                                                        .GetCustomAttributes
+                                                            (typeof(TAttribute), true)
+                                                        .FirstOrDefault() is TAttribute attribute
+                                                )
                                             {
                                                 rr = true;
                                                 if (onAttributeProcessFunc != null)
@@ -273,8 +277,7 @@ namespace Microshaoft
                                 
         {
             var members = target
-                                .GetModelMembers
-                                    ();
+                                .GetModelMembers();
             foreach (var member in members)
             {
                 var memberName = member.Name;
@@ -319,12 +322,10 @@ namespace Microshaoft
                                                 typeof(MemberAdditionalDefinitionAttribute)
                                                 , true
                                             )
-                                            .FirstOrDefault(); //as DataTableColumnIDAttribute;
+                                        .FirstOrDefault(); //as DataTableColumnIDAttribute;
                     if (attribute != null)
                     {
-                        var asAttribute =
-                                        attribute as MemberAdditionalDefinitionAttribute;
-                        if (asAttribute != null)
+                        if (attribute is MemberAdditionalDefinitionAttribute asAttribute)
                         {
                             //if (asAttribute.DataTableColumnDataType != null)
                             //{

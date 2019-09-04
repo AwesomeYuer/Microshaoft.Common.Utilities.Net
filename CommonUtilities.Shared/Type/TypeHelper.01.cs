@@ -207,7 +207,8 @@ namespace Microshaoft
 
         public static bool IsStatic(this PropertyInfo target)
         {
-            return target?.GetGetMethod(true)?.IsStatic
+            return
+                target?.GetGetMethod(true)?.IsStatic
                 ?? target?.GetSetMethod(true)?.IsStatic
                 ?? false;
         }
@@ -225,8 +226,10 @@ namespace Microshaoft
 
         public static bool IsPublic(this PropertyInfo target)
         {
-            return (target?.GetGetMethod(true)?.IsPublic ?? false)
-                || (target?.GetSetMethod(true)?.IsPublic ?? false);
+            return
+                (target?.GetGetMethod(true)?.IsPublic ?? false)
+                ||
+                (target?.GetSetMethod(true)?.IsPublic ?? false);
         }
 
         public static bool HasAnInaccessibleSetter(this PropertyInfo target)
@@ -252,10 +255,14 @@ namespace Microshaoft
 
         public static bool IsNotPublic(this ConstructorInfo target)
         {
-            return target.IsPrivate
-                   || target.IsFamilyAndAssembly
-                   || target.IsFamilyOrAssembly
-                   || target.IsFamily;
+            return
+                    target.IsPrivate
+                    ||
+                    target.IsFamilyAndAssembly
+                    ||
+                    target.IsFamilyOrAssembly
+                    ||
+                    target.IsFamily;
         }
 
         public static Assembly Assembly(this Type target)

@@ -34,8 +34,6 @@ namespace WebApplication.ASPNetCore
                     }
                 }
             }
-
-
             OSPlatform OSPlatform
                     = EnumerableHelper
                             .Range
@@ -50,7 +48,7 @@ namespace WebApplication.ASPNetCore
                                     {
                                         return
                                             RuntimeInformation
-                                                .IsOSPlatform(x);
+                                                    .IsOSPlatform(x);
                                     }
                                 );
             var s = $"{nameof(RuntimeInformation.FrameworkDescription)}:{RuntimeInformation.FrameworkDescription}";
@@ -72,30 +70,29 @@ namespace WebApplication.ASPNetCore
             Console.WriteLine("   Minor: {0}", os.Version.Minor);
             Console.WriteLine("Service Pack: '{0}'", os.ServicePack);
             CreateWebHostBuilder
-                (args)
-                    //.UseKestrel()
-                    //.UseContentRoot(Directory.GetCurrentDirectory())
-                    //.UseIISIntegration()
-                    .Build()
-                    .Run();
+                            (args)
+                                //.UseKestrel()
+                                //.UseContentRoot(Directory.GetCurrentDirectory())
+                                //.UseIISIntegration()
+                                .Build()
+                                .Run();
         }
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
-            var executingDirectory =
-                        Path
-                            .GetDirectoryName
-                                    (
-                                        Assembly
-                                            .GetExecutingAssembly()
-                                            .Location
-                                    );
+            var executingDirectory = Path
+                                        .GetDirectoryName
+                                                (
+                                                    Assembly
+                                                        .GetExecutingAssembly()
+                                                        .Location
+                                                );
             var hostingsConfiguration = new ConfigurationBuilder()
-                                                .AddJsonFile
-                                                    (
-                                                        "hostings.json"
-                                                        , optional: false
-                                                    )
-                                                .Build();
+                                                            .AddJsonFile
+                                                                (
+                                                                    "hostings.json"
+                                                                    , optional: false
+                                                                )
+                                                            .Build();
             return
                 WebHost
                     .CreateDefaultBuilder(args)
@@ -104,8 +101,10 @@ namespace WebApplication.ASPNetCore
                         (
                             builder =>
                             {
-                                builder.SetMinimumLevel(LogLevel.Error);
-                                builder.AddConsole();
+                                builder
+                                    .SetMinimumLevel(LogLevel.Error);
+                                builder
+                                    .AddConsole();
                             }
                         )
                     .ConfigureAppConfiguration
