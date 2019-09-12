@@ -163,6 +163,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "60.RequestJTokenValidatorsP
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JTokenModelParameterValidatorSamplePlugin", "JTokenModelParameterValidatorsPlugins\JTokenModelParameterValidatorSamplePlugin\JTokenModelParameterValidatorSamplePlugin.csproj", "{D7307C16-71FF-4DDA-B631-C8DFB115CD10}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".vscode", ".vscode", "{8B14F1FD-AEE7-47A2-93BD-DB3A255BFC2F}"
+	ProjectSection(SolutionItems) = preProject
+		.vscode\launch.json = .vscode\launch.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		CommonUtilities.Shared\WebApiUtilities.Shared.projitems*{1fbd68b8-839e-4c54-a00c-beac21119371}*SharedItemsImports = 13

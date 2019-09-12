@@ -48,21 +48,37 @@
             "request": "attach",
             "processId": "${command:pickProcess}"
         },
-        {
-            "name": ".NET Core SSH Attach",
-            "type": "coreclr",
-            "request": "attach",
-            "processId": "${command:pickRemoteProcess}",
-            "pipeTransport": {
-                "pipeProgram": "ssh",
-                "pipeArgs": [ "-T", "ExampleAccount@ExampleTargetComputer" ],
-                "debuggerPath": "~/vsdbg/vsdbg",
-                "pipeCwd": "${workspaceRoot}",
-                "quoteArgs": true
-            },
-            "sourceFileMap": {
-                "/home/ExampleAccount/ExampleProject": "${workspaceRoot}"
-            }
+      {
+        "name": ".NET Core SSH Attach",
+        "type": "coreclr",
+        "request": "attach",
+        "processId": "${command:pickRemoteProcess}",
+        "pipeTransport": {
+          "pipeProgram": "ssh",
+          "pipeArgs": [ "-T", "ExampleAccount@ExampleTargetComputer" ],
+          "debuggerPath": "~/vsdbg/vsdbg",
+          "pipeCwd": "${workspaceRoot}",
+          "quoteArgs": true
+        },
+        "sourceFileMap": {
+          "/home/ExampleAccount/ExampleProject": "${workspaceRoot}"
         }
+      },
+      {
+        "name": ".NET Core Docker Attach",
+        "type": "coreclr",
+        "request": "attach",
+        "processId": "${command:pickRemoteProcess}",
+        "pipeTransport": {
+          "pipeProgram": "docker",
+          "pipeArgs": [ "exec", "-i", "my_container_name" ],
+          "debuggerPath": "/root/vsdbg/vsdbg",
+          "pipeCwd": "${workspaceRoot}",
+          "quoteArgs": false
+        },
+        "sourceFileMap": {
+          "/home/ExampleAccount/ExampleProject": "${workspaceRoot}"
+        }
+      }
     ]
 }
