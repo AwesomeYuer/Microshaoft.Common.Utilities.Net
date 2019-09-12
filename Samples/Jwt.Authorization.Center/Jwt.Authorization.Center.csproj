@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.7" />
-    <PackageReference Include="Microsoft.NETCore.App" Version="2.2.6" />
+    <PackageReference Include="Microsoft.NETCore.App" Version="2.2.7" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CommonUtilities\CommonUtilities.Full\CommonUtilities.NET.Core.2.x\CommonUtilities.NET.Core.2.x.csproj" />
