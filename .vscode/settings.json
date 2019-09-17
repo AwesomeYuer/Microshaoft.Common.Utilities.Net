@@ -50,5 +50,6 @@
             "NewLineForMembersInObjectInit": true,
             "NewLineForMembersInAnonymousTypes": true,
             "NewLineForClausesInQuery": true
-    }
+    },
+    "remote.SSH.configFile": "D:\\VSCode\\data\\user-data\\ssh\\ssh_config"
 }

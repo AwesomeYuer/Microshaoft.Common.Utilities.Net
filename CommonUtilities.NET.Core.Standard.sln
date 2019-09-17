@@ -8,6 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "000.Solution Items", "000.S
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 		.travis.yml = .travis.yml
+		.github\workflows\actions.yml = .github\workflows\actions.yml
 		appveyor.yml = appveyor.yml
 		copyrundebug.sh = copyrundebug.sh
 		License.txt = License.txt
