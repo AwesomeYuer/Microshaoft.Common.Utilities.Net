@@ -11,6 +11,9 @@
     <script src="libs/jquery/jquery-3.3.1.js" type="text/javascript"></script>
     <link rel="stylesheet" href="libs/jquery-ui/jquery-ui-1.12.1.css">
     <script src="libs/jquery-ui/jquery-ui-1.12.1.js"></script>
+
+    <script src="libs/monaco-editor/min/vs/loader.js"></script>
+
     <style type="text/css">
         body {
             font-size: 12px;
@@ -66,6 +69,7 @@
         $(function () {
             $('#datepicker1').datepicker();
         });
+
         var baseUrl = "http://localhost:5000";
         //baseUrl = "http://sops-sp-03.eastus.cloudapp.azure.com:8001";
         baseUrl = "";
@@ -80,7 +84,7 @@
             }
             if (left > right) {
 
-                left += right ;
+                left += right;
                 right = left - right;
                 left -= right;
             }
@@ -98,17 +102,13 @@
                     else {
                         x2 = { Name: data[1].ObjectName, Text: data[1].TSQLCommand, TimeStamp: data[1].PostTime }
                     }
-                    
-
                     diffUsingJS(parseInt(vm.SelectedDiffViewType()),
                         x1, x2
-                        
                     );
                 }
             );
         }
-
-        function diffUsingJS(viewType, baseObject, newObject) {
+        function diffUsingJS2(viewType, baseObject, newObject) {
             "use strict";
             var byId = function (id) { return document.getElementById(id); },
                 base = difflib.stringAsLines(baseObject.Text),
@@ -149,16 +149,12 @@
                     <td width="50%">
                         <label>Master Search Result:</label>
                         <button onclick="vm.Items.removeAll();vm.Counter = 0;">clear</button>
-                        <button
-                            data-bind="text: SortByObjectNameDirection"
-                            onclick="vm.SortByObjectName()"
-                        >
+                        <button data-bind="text: SortByObjectNameDirection"
+                                onclick="vm.SortByObjectName()">
                             SortByObjectName
                         </button>
-                        <button
-                            data-bind="text: SortByAddSequenceDirection"
-                            onclick="vm.SortByAddSequence()"
-                        >
+                        <button data-bind="text: SortByAddSequenceDirection"
+                                onclick="vm.SortByAddSequence()">
                             SortByAddSequence
                         </button>
                     </td>
@@ -167,42 +163,46 @@
                     </td>
                 </tr>
                 <tr>
-                        <td>
-                            <select
-                                size="10"
+                    <td>
+                        <select size="10"
                                 style="width:100%;"
                                 data-bind="options: Items,
                                             optionsText: 'OptionText',
-                                            selectedOptions: SelectedItems"
-                            >
-                            </select>
-                        </td>
-                        <td>
-                            <select
-                                size="10"
+                                            selectedOptions: SelectedItems">
+                        </select>
+                    </td>
+                    <td>
+                        <select size="10"
                                 style="width:100%;"
                                 data-bind="options: DetailItems,
                                                 optionsText: 'OptionText',
                                                 selectedOptions: SelectedDetailItems,
-                                                optionsAfterRender: SetDetailItemOptionDisable" 
-                            >
-                            </select>
-                        </td>
-                    </tr>
+                                                optionsAfterRender: SetDetailItemOptionDisable">
+                        </select>
+                    </td>
+                </tr>
             </table>
         </div>
     </div>
     <div class="viewType">
-            Diff View Type:
-            <br />
-            <input type="radio" id="diffViewType0" value="0" data-bind="checked:SelectedDiffViewType" />
-            <label for="diffViewType0" onclick="GetObjectsTexts();">Side</label>
-            <input type="radio" id="diffViewType1" value="1" data-bind="checked:SelectedDiffViewType" />
-            <label for="diffViewType1" onclick="GetObjectsTexts();">Inline</label>
+        Diff View Type:
+        <br />
+        <input type="radio" id="diffViewType0" value="0" data-bind="checked:SelectedDiffViewType" />
+        <label for="diffViewType0" onclick="GetObjectsTexts();">Side</label>
+        <input type="radio" id="diffViewType1" value="1" data-bind="checked:SelectedDiffViewType" />
+        <label for="diffViewType1" onclick="GetObjectsTexts();">Inline</label>
     </div>
     <div id="diffoutput">
-    </div>                    
+
+        <div id="container" style="width:100%;height:600px;border:1px solid grey"></div>
+    </div>
     <script>
+        require.config({ paths: { 'vs': 'libs/monaco-editor/min/vs' } });
+        var diffEditor;
+        require(['vs/editor/editor.main'], function () {
+            diffEditor = monaco.editor.createDiffEditor(document.getElementById('container'));
+        });
+
         var viewModel = function (data) {
             var self = this;
             this.Counter = 0;
@@ -269,10 +269,10 @@
                 this.Items.sort(
                     function (x, y) {
                         var r = (
-                                    x.ObjectName == y.ObjectName ? 
-                                    (x.ID < y.ID ? -1 : 1) : 
-                                    (x.ObjectName < y.ObjectName ? -1 : 1)
-                                );
+                            x.ObjectName == y.ObjectName ?
+                                (x.ID < y.ID ? -1 : 1) :
+                                (x.ObjectName < y.ObjectName ? -1 : 1)
+                        );
                         if (self.SortByObjectNameState()) {
                             r = -1 * r;
                         }
@@ -285,6 +285,22 @@
         var vm = new viewModel([]);
         ko.applyBindings(vm);
 
+
+        function diffUsingJS(viewType, baseObject, newObject) {
+
+            var originalTxt = baseObject.Text;
+            var modifiedTxt = newObject.Text;
+
+            diffEditor.updateOptions({
+                renderSideBySide: !viewType
+            });
+
+            diffEditor.setModel({
+                original: monaco.editor.createModel(originalTxt, 'sql'),
+                modified: monaco.editor.createModel(modifiedTxt, 'sql')
+            });
+
+        }
         function Clear() {
             vm.Items.removeAll();
             vm.Counter = 0;
@@ -300,18 +316,18 @@
             $.getJSON(
                 url
                 , function (data) {
-                        $.each(data.Outputs.ResultSets[0].Rows, function (i, item) {
-                            var items = vm.Items();
-                            var found = items.find(function (x) {
-                                return x.ID == item.ID;
-                            });
-                            if (found == undefined) {
-                                item.OptionText = item.ObjectName + '(' + item.ID + ')' + ' @ ' + item.PostTime + ' @ ' + item.HostName;
-                                item.DisableInDetail = ko.observable(false);
-                                item.AddSequence = (++vm.Counter);
-                                vm.Items.push(item);
-                            }
+                    $.each(data.Outputs.ResultSets[0].Rows, function (i, item) {
+                        var items = vm.Items();
+                        var found = items.find(function (x) {
+                            return x.ID == item.ID;
+                        });
+                        if (found == undefined) {
+                            item.OptionText = item.ObjectName + '(' + item.ID + ')' + ' @ ' + item.PostTime + ' @ ' + item.HostName;
+                            item.DisableInDetail = ko.observable(false);
+                            item.AddSequence = (++vm.Counter);
+                            vm.Items.push(item);
                         }
+                    }
                     );
                 }
             );
