@@ -36,6 +36,8 @@
     <script type="text/javascript" src="libs/datatables/DataTables/1.10.18/Scroller-1.5.0/js/dataTables.scroller.js"></script>
     <script type="text/javascript" src="libs/datatables/DataTables/1.10.18/Select-1.2.6/js/dataTables.select.js"></script>
     <script src="libs/splitjs/split.js"></script>
+    <script src="libs/monaco-editor/min/vs/loader.js"></script>
+
     <script>
         var binded1 = false;
         var binded2 = false;
@@ -51,7 +53,7 @@
         }
 
         function dynamicAjaxBind() {
-            var sql = document.getElementById("ta").value;
+            var sql = editor.getValue();
             var url = "https://local.bank-of-china.com/a.json";
             url = 'http://localhost:5000/api/StoreProcedureExecutor/usp_executesql';
             url = "/api/StoreProcedureExecutor/usp_executesql";
@@ -142,9 +144,9 @@
                                     retrieve: true,
                                     scrollX: true,
                                     order: [],
-                                    lengthMenu :  [
-                                        [ 10, 25, 50, -1 ],
-                                        [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+                                    lengthMenu: [
+                                        [10, 25, 50, -1],
+                                        ['10 rows', '25 rows', '50 rows', 'Show all']
                                     ],
                                     //"pageLength": 50,
                                     //fixedHeader: {
@@ -165,15 +167,15 @@
                                 destroy: true,
                                 retrieve: true,
                                 scrollX: true,
-                                order:[],
+                                order: [],
                                 //fixedHeader: {
                                 //    header: true,
                                 //    footer: true
                                 //},
                                 //searching: false,
-                                lengthMenu :  [
-                                    [ 10, 25, 100, -1 ],
-                                    [ '10 rows', '25 rows', '100 rows', 'Show all' ]
+                                lengthMenu: [
+                                    [10, 25, 100, -1],
+                                    ['10 rows', '25 rows', '100 rows', 'Show all']
                                 ],
                                 pageLength: -1,
                                 dom: "Blfrtip",
@@ -238,9 +240,9 @@
                 //dataType: 'json',
             });
         }
-                                        //debugger;
+        //debugger;
 
-/**/</script>
+        /**/</script>
     <style>
         html,
         body {
@@ -291,33 +293,21 @@
     </style>
 </head>
 <body>
-    <a id="downloader" target="_blank">download</a>
-    <div id="up" class="split content" align="center">
+    <div align="center">
+        <a id="downloader" target="_blank">downloader</a>
         rowCount: <input type="text" id="rowcount" value="100" />
-        <br />
-        <textarea id="ta" rows="5" cols="100">
-set statistics io on
-set statistics time on
-set statistics profile on
-select '"111"' as F, *
-from
-sys.objects
-
-select '"222"' as F, *
-from
-sys.objects
-
-        </textarea>
         <button onclick="dynamicAjaxBind()" accesskey="x">E(<b><u>X</u></b>)exute</button>
-
         <input type="checkbox" name="checkbox" id="download" value="value">
         <label for="download">download</label>
+    </div>
+    <div id="up" class="split content" >
+        <!--<div id="sql-editor" style="text-align:left;width:800px;height:200px;border:1px solid grey"></div>-->
 
     </div>
     <div id="down" class="split content" style="overflow:auto">
         Data:<br />
         <div id="DataOutputsPanel">
-            
+
         </div>
         <br />
         <hr />
@@ -327,15 +317,39 @@ sys.objects
             <table id="outputMessages" class="cell-border display">
             </table>
         </div>
-        
+
     </div>
+
+    <script>
+        require.config({ paths: { 'vs': 'libs/monaco-editor/min/vs' } });
+        var editor;
+        require(['vs/editor/editor.main'], function () {
+            editor = monaco.editor.create(document.getElementById('up'), {
+                value: [
+                    'set statistics io on',
+                    'set statistics time on',
+                    'set statistics profile on',
+                    'select \'"111"\' as F, *',
+                    'from',
+                    'sys.objects',
+                    '',
+                    'select \'"222"\' as F, *',
+                    'from',
+                    'sys.objects',
+                ].join('\n'),
+                language: 'sql',
+                automaticLayout: true
+            });
+        });
+    </script>
     <script>
         Split(['#up', '#down'], {
             gutterSize: 10,
             cursor: 'pointer',
             direction: 'vertical',
-            sizes:[20, 80]
+            sizes: [20, 80]
         });
+
     </script>
 </body>
 </html>
