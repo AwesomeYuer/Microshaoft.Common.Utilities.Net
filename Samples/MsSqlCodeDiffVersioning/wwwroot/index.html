@@ -292,7 +292,8 @@
             var modifiedTxt = newObject.Text;
 
             diffEditor.updateOptions({
-                renderSideBySide: !viewType
+                renderSideBySide: !viewType,
+                readOnly: true
             });
 
             diffEditor.setModel({
