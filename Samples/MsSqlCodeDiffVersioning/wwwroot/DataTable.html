@@ -54,6 +54,13 @@
 
         function dynamicAjaxBind() {
             var sql = editor.getValue();
+            var selection = editor.getSelection();
+            if (selection) {
+                var ss = editor.getModel().getValueInRange(selection);
+                if (ss.length > 0) {
+                    sql = ss;
+                }
+            }
             var url = "https://local.bank-of-china.com/a.json";
             url = 'http://localhost:5000/api/StoreProcedureExecutor/usp_executesql';
             url = "/api/StoreProcedureExecutor/usp_executesql";
