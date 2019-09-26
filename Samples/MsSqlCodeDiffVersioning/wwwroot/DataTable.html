@@ -44,14 +44,11 @@
         var usedDataTables = null;
 
         function RowColumnCellProcess(cell, type, row, meta) {
-
             if (typeof (cell) == "object") {
                 cell = JSON.stringify(cell);
             }
             return cell;
-
         }
-
         function dynamicAjaxBind() {
             var sql = editor.getValue();
             var selection = editor.getSelection();
@@ -103,7 +100,6 @@
                 url = downloadUrl;
                 url += '/outputs/resultsets/' + resultSetID.toString() + '/rows';
             }
-
             $.ajax({
                 type: 'post',
                 url: url,
@@ -314,9 +310,10 @@
     </div>
     <div id="down" class="split content" style="overflow:auto">
         Data:<br />
-        <div id="DataOutputsPanel">
 
+        <div id="DataOutputsPanel">
         </div>
+
         <br />
         <hr />
         <br />
@@ -325,7 +322,6 @@
             <table id="outputMessages" class="cell-border display">
             </table>
         </div>
-
     </div>
 
     <script>
@@ -357,7 +353,6 @@
             direction: 'vertical',
             sizes: [20, 80]
         });
-
     </script>
 </body>
 </html>
