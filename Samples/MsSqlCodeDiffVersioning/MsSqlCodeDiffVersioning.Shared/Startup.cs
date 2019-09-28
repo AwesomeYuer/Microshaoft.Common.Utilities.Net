@@ -44,15 +44,18 @@
         public void ConfigureServices(IServiceCollection services)
         {
             services
-#if NETCOREAPP3_X                
+            
                 .AddMvc
                 (
+#if NETCOREAPP3_X    
                     (option) =>
                     {
                         option.EnableEndpointRouting = false;                    
                     
                     }
+#endif
                 )
+#if NETCOREAPP3_X
                 .AddNewtonsoftJson()
 #endif
                 .SetCompatibilityVersion
@@ -66,7 +69,7 @@
                     <JTokenParametersValidateFilterAttribute>
                         ();
 
-            #region 异步批量入库案例专用
+#region 异步批量入库案例专用
             var processor =
                 new SingleThreadAsyncDequeueProcessorSlim<JToken>();
             var executor = new MsSqlStoreProceduresExecutor();
@@ -100,7 +103,7 @@
                     (
                         processor
                     );
-            #endregion
+#endregion
 
             services
                 .AddSingleton
@@ -119,7 +122,7 @@
                         new QueuedObjectsPool<Stopwatch>(1024, true)
                     );
 
-            #region 跨域策略
+#region 跨域策略
             services
                     .Add
                         (
@@ -162,7 +165,7 @@
 
                         }
                   );
-            #endregion
+#endregion
 
             services.AddResponseCaching();
 #if !NETCOREAPP3_X
