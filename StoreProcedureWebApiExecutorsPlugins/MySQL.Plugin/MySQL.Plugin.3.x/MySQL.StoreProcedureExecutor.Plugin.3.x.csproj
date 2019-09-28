@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
@@ -12,15 +12,15 @@
     <PackageReference Include="MySql.Data" Version="8.0.17" />
     <PackageReference Include="Npgsql" Version="4.1.0" />
     <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="2.19.31" />
-    <PackageReference Include="Microsoft.NETCore.App" Version="2.2.7" />
+    <!--<PackageReference Include="Microsoft.NETCore.App" Version="2.2.7" />-->
     <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3.linux" Version="1.1.14" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\StoreProcedureWebApiExecutor\StoreProcedureWebApiExecutor.Core.2.x\Microshaoft.StoreProcedureExecutorWebApiService.Core.2.x.csproj" />
+    <ProjectReference Include="..\..\..\StoreProcedureWebApiExecutor\StoreProcedureWebApiExecutor.Core.3.x\Microshaoft.StoreProcedureExecutorWebApiService.Core.3.x.csproj" />
   </ItemGroup>
 
-  <Import Project="..\MySQL.Plugin.Shared\MySQL.StoreProcedureWebApiExecutor.Plugin.Shared.projitems" Label="Shared" />
+  <Import Project="..\MySQL.Plugin.Shared\MySQL.StoreProcedureExecutor.Plugin.Shared.projitems" Label="Shared" />
 
   
 

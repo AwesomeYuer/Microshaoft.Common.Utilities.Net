@@ -6,7 +6,7 @@
     <SharedGUID>4ee26e3a-b23b-4760-a8d7-1eb0ef7a24dd</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>MySQL.StoreProcedureWebApiExecutor.Plugin.Shared</Import_RootNamespace>
+    <Import_RootNamespace>MySQL.StoreProcedureExecutor.Plugin.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)CompositionPlugins\DB2StoreProcedureExecutor.cs" />

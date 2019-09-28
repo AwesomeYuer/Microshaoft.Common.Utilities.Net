@@ -44,11 +44,22 @@
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddMvc()
+#if NETCOREAPP3_X                
+                .AddMvc
+                (
+                    (option) =>
+                    {
+                        option.EnableEndpointRouting = false;                    
+                    
+                    }
+                )
+                .AddNewtonsoftJson()
+#endif
                 .SetCompatibilityVersion
                     (
                         CompatibilityVersion
                             .Version_2_1
+
                     );
             services
               .AddSingleton
@@ -192,7 +203,7 @@
                                     );
                         }
                     );
-
+#if !NETCOREAPP3_X
             services
                 .AddSwaggerGen
                     (
@@ -210,6 +221,7 @@
                                     );
                         }
                     );
+#endif
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -510,6 +522,7 @@
                             }
                         );
             }
+#if !NETCOREAPP3_X
             app.UseSwagger();
             app
                 .UseSwaggerUI
@@ -524,6 +537,7 @@
                                 );
                     }
                 );
+#endif
             //app.UseHttpsRedirection();
         }
         private static IEnumerable<string> GetExistsPaths(string configurationJsonFile, string sectionName)
