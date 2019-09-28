@@ -271,7 +271,7 @@ namespace Microshaoft.WebApi.Controllers
                     );
         }
 
-#if !NETCOREAPP3_X
+
         [HttpDelete]
         [HttpGet]
         [HttpHead]
@@ -279,6 +279,7 @@ namespace Microshaoft.WebApi.Controllers
         [HttpPatch]
         [HttpPost]
         [HttpPut]
+#if !NETCOREAPP3_X
         [
             Route
                 (
