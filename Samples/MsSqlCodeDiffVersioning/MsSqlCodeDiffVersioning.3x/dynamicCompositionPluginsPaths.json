@@ -1,0 +1,12 @@
+{
+  "dynamicExecutorsPaths": [
+    //"D:\\MyGitHub\\MsSqlCodeDiffVersioning\\MsSqlCodeDiffVersioning\\bin\\Debug\\netcoreapp2.1\\CompositionPlugins",
+    ".\\CompositionPlugins\\",
+    ".//CompositionPlugins//"
+  ],
+  "dynamicValidatorsPaths": [
+    //"D:\\MyGitHub\\MsSqlCodeDiffVersioning\\MsSqlCodeDiffVersioning\\bin\\Debug\\netcoreapp2.1\\CompositionPlugins",
+    ".\\CompositionPlugins\\",
+    ".//CompositionPlugins//"
+  ]
+}

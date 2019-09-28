@@ -77,7 +77,7 @@ namespace Test
     using Microshaoft;
     public class Class11
     {
-        static void Main(string[] args)
+        static void Main118(string[] args)
         {
             ServiceBusXmlMessage message = new ServiceBusXmlMessage();
             MessageSecurityHeader security = new MessageSecurityHeader();

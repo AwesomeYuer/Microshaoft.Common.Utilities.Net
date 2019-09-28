@@ -539,7 +539,7 @@ namespace ConsoleApplication1
     using System;
     class Program
     {
-        static void Main(string[] args)
+        static void Main113(string[] args)
         {
             DynamicJson dynamicJson = DynamicJson.Parse
                     (

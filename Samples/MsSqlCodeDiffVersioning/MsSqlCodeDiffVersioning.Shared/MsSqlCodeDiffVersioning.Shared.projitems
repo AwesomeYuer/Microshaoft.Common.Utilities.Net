@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>50cf6564-2c15-48ba-87ba-b83169f2a214</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>MsSqlCodeDiffVersioning.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)CompositionPlugins\" />
+    <Folder Include="$(MSBuildThisFileDirectory)MetricsRegistry\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)DataBase\MsSql.DataBase.sql" />
+    <None Include="$(MSBuildThisFileDirectory)makecert\CA.cer" />
+    <None Include="$(MSBuildThisFileDirectory)makecert\CA.pvk" />
+    <None Include="$(MSBuildThisFileDirectory)makecert\makecert.exe" />
+    <None Include="$(MSBuildThisFileDirectory)makecert\makehttpssslcert.cmd.txt" />
+    <None Include="$(MSBuildThisFileDirectory)makecert\pvk2pfx.exe" />
+    <None Include="$(MSBuildThisFileDirectory)makecert\server.cer" />
+    <None Include="$(MSBuildThisFileDirectory)makecert\server.pfx" />
+    <None Include="$(MSBuildThisFileDirectory)makecert\server.pvk" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Controllers\AntiXssJsonpController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controllers\StoreProcedureExecutorController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controllers\TrackingController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Program.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\StoreProcedureExecuteService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Startup.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="$(MSBuildThisFileDirectory)xcopyfiles3x.cmd">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)xcopyfiles2x.cmd">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+</Project>

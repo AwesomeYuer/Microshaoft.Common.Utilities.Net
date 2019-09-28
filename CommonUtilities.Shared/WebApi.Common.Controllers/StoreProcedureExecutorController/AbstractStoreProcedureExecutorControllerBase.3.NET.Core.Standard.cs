@@ -193,10 +193,11 @@ namespace Microshaoft.WebApi.Controllers
                     + "{resultJsonPathPart6?}"
                 )
         ]
+ 
         [
             Route
                 (
-                    "sync/{routeName}/"
+                    "export/{routeName}/"
                     + "{resultJsonPathPart1?}/"
                     + "{resultJsonPathPart2?}/"
                     + "{resultJsonPathPart3?}/"
@@ -208,7 +209,7 @@ namespace Microshaoft.WebApi.Controllers
         [
             Route
                 (
-                    "export/{routeName}/"
+                    "sync/{routeName}/"
                     + "{resultJsonPathPart1?}/"
                     + "{resultJsonPathPart2?}/"
                     + "{resultJsonPathPart3?}/"
@@ -270,6 +271,7 @@ namespace Microshaoft.WebApi.Controllers
                     );
         }
 
+#if !NETCOREAPP3_X
         [HttpDelete]
         [HttpGet]
         [HttpHead]
@@ -292,18 +294,6 @@ namespace Microshaoft.WebApi.Controllers
         [
             Route
                 (
-                    "async/{routeName}/"
-                    + "{resultJsonPathPart1?}/"
-                    + "{resultJsonPathPart2?}/"
-                    + "{resultJsonPathPart3?}/"
-                    + "{resultJsonPathPart4?}/"
-                    + "{resultJsonPathPart5?}/"
-                    + "{resultJsonPathPart6?}"
-                )
-        ]
-        [
-            Route
-                (
                     "export/{routeName}/"
                     + "{resultJsonPathPart1?}/"
                     + "{resultJsonPathPart2?}/"
@@ -313,6 +303,20 @@ namespace Microshaoft.WebApi.Controllers
                     + "{resultJsonPathPart6?}"
                 )
         ]
+#endif
+        [
+            Route
+                (
+                    "async/{routeName}/"
+                    + "{resultJsonPathPart1?}/"
+                    + "{resultJsonPathPart2?}/"
+                    + "{resultJsonPathPart3?}/"
+                    + "{resultJsonPathPart4?}/"
+                    + "{resultJsonPathPart5?}/"
+                    + "{resultJsonPathPart6?}"
+                )
+        ]
+       
         [OperationsAuthorizeFilter(false)]
         [RequestJTokenParametersDefaultProcessFilter]
         [OptionalProduces("text/csv", RequestPathKey = "/export/")]

@@ -7,8 +7,10 @@ namespace Microshaoft
     using System.Net.Http;
     using System.Security.Principal;
     using System.Web;
+#if !NETCOREAPP3_X
     using System.Web.Http;
     using System.Net.Http.Formatting;
+#endif
 #if NETFRAMEWORK4_X
     using System.Web.Http.Controllers;
 #endif
@@ -43,6 +45,7 @@ namespace Microshaoft
 
             return null;
         }
+#if !NETCOREAPP3_X
         public static void ClearCookie(this HttpResponseMessage target, string cookieName)
         {
             var cookie = new CookieHeaderValue(cookieName, "")
@@ -50,8 +53,9 @@ namespace Microshaoft
                 Expires = DateTimeOffset.Now.AddDays(-1),
             };
             target.Headers.AddCookies(new[] { cookie });
-
         }
+#endif
     }
+
 }
 #endif

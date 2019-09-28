@@ -109,7 +109,7 @@ namespace ConsoleApplication
         /// 应用程序的主入口点。
         /// </summary>
         //[STAThread]
-        static void Main(string[] args)
+        static void Main116(string[] args)
         {
             string input = string.Empty;
             while ((input = Console.ReadLine()) != "q")
