@@ -283,7 +283,7 @@ namespace Test
     using Microshaoft;
     class Program12
     {
-        static void Main(string[] args)
+        static void Main11111(string[] args)
         {
             var root = new JTree
             {

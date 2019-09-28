@@ -7,7 +7,7 @@ namespace Test
     using System.Diagnostics;
     class Program1111
     {
-        static void Main(string[] args)
+        static void Main115(string[] args)
         {
             var json = @"
 [

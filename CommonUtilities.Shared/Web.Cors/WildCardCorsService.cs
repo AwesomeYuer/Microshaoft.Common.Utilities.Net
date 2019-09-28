@@ -4,6 +4,7 @@ namespace Microshaoft.Web
 {
     using Microsoft.AspNetCore.Cors.Infrastructure;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using System;
     using System.Collections.Generic;
@@ -21,7 +22,7 @@ namespace Microshaoft.Web
         /// </summary>
         /// <param name="options"></param>
         [Obsolete]
-        public WildcardCorsService(IOptions<CorsOptions> options) : base(options)
+        public WildcardCorsService(IOptions<CorsOptions> options, ILoggerFactory loggerFactory) : base(options, loggerFactory)
         {
 
         }

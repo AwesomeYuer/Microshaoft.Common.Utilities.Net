@@ -323,7 +323,7 @@ namespace ConsoleApplication
 
         }
 
-        static void Main(string[] args)
+        static void Main112(string[] args)
         {
             var oLamadaExtention = new LamadaExtention<UserModelDto>();
             oLamadaExtention.Equal(x => x.UserName, "张三");

@@ -151,7 +151,7 @@ namespace TestConsoleApplication
         /// 应用程序的主入口点。
         /// </summary>
         //[STAThread]
-        static void Main(string[] args)
+        static void Main111(string[] args)
         {
             //
             // TODO: 在此处添加代码以启动应用程序

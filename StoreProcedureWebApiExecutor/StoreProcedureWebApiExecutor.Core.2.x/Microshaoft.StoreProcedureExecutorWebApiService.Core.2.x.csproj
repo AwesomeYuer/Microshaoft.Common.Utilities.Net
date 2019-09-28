@@ -1,0 +1,56 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AssemblyName>Microshaoft.StoreProcedureExecutorWebApiService.Core.2.x</AssemblyName>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DefineConstants>NETCOREAPP2_X</DefineConstants>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DefineConstants>TRACE;DEBUG;NETCOREAPP2_X</DefineConstants>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+
+  
+
+  <Import Project="..\..\CommonUtilities.Shared\StoreProcedureWebApiExecutor.Shared.projitems" Label="Shared" />
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.7" />
+    <PackageReference Include="Microsoft.NetCore.App" Version="2.2.7" />
+    <PackageReference Include="Microsoft.AspNetCore.ResponseCaching" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Composition" Version="1.0.31" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="SecurityCodeScan.VS2017" Version="3.3.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="System.Collections.Specialized" Version="4.3.0" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.6.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.6.0" />
+    <PackageReference Include="System.Data.Common" Version="4.3.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.7.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.5.0" />
+    <PackageReference Include="System.Reflection" Version="4.3.0" />
+    <PackageReference Include="System.Reflection.Emit" Version="4.6.0" />
+    <PackageReference Include="System.Security.Cryptography.Csp" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Composition.Convention">
+      <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\system.composition.convention\1.0.31\lib\netstandard1.0\System.Composition.Convention.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Composition.TypedParts">
+      <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\system.composition.typedparts\1.0.31\lib\netstandard1.0\System.Composition.TypedParts.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

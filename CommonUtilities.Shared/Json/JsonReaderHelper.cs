@@ -10,7 +10,7 @@
     using System.Globalization;
     class Program123
     {
-        static void Main(string[] args)
+        static void Main114(string[] args)
         {
             string json = @"{ 'name10': 
 'Admin',c:1111,d:[{a:'aaaa'}] ,e:[1,]}
