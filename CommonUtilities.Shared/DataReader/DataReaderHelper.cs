@@ -5,6 +5,7 @@ namespace Microshaoft
     using System.Linq;
     using System;
     using Newtonsoft.Json.Linq;
+    using System.Data.Common;
 
     public static class DataReaderHelper
     {
@@ -209,7 +210,7 @@ namespace Microshaoft
         }
         public static IEnumerable<JToken> AsRowsJTokensEnumerable
                              (
-                                 this IDataReader target
+                                 this DbDataReader target
                                  , JArray columns = null
                                  , Func
                                         <
@@ -291,7 +292,7 @@ namespace Microshaoft
 #if NETCOREAPP3_X
         public static async IAsyncEnumerable<JToken> AsRowsJTokensEnumerableAsync
                      (
-                         this IDataReader target
+                         this DbDataReader target
                          , JArray columns = null
                          , Func
                                 <
@@ -311,7 +312,7 @@ namespace Microshaoft
         {
             var fieldsCount = target.FieldCount;
             int rowIndex = 0;
-            while (target.Read())
+            while (await target.ReadAsync())
             {
                 JObject row = new JObject();
                 for (var fieldIndex = 0; fieldIndex < fieldsCount; fieldIndex++)
