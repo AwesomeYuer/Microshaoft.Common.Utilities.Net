@@ -103,15 +103,15 @@
             var columns = dataReader
                                 .GetColumnsJArray();
             var rows = dataReader
-                                .AsRowsJTokensEnumerableAsync
+                                .AsRowsJTokensEnumerable
                                     (
                                         columns
                                         , onReadRowColumnProcessFunc
                                     );
-            await foreach (var i in rows)
-            { 
+            //await foreach (var i in rows)
+            //{ 
                 
-            }
+            //}
             var resultSet = new JObject
                                 {
                                     {
