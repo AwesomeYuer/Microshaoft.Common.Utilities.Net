@@ -89,7 +89,7 @@
                 left -= right;
             }
             var ids = left + ',' + right;
-            var url = baseUrl + "/api/StoreProcedureExecutor/sync/objects/Outputs/ResultSets/0/Rows?SearchIdsList=" + ids;
+            var url = baseUrl + "/api/StoreProcedureExecutor/async/objects/Outputs/ResultSets/0/Rows?SearchIdsList=" + ids;
             $.getJSON(
                 url
                 , function (data) {

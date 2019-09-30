@@ -95,7 +95,7 @@
         "EnableStatistics": true,
         "defaultAccessing": {
           "allow": true,
-          "commandtimeoutInSeconds": 103,
+          "commandtimeoutInSeconds": 109,
           "requestvAlidator": "simpleValidator1",
           "operations": [ "a1", "a2" ],
           "InputsParameters": [

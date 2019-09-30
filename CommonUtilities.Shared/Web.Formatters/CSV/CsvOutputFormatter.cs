@@ -342,8 +342,10 @@ namespace Microshaoft.Web
                                 }
                                 var jToken = jProperty.Value;
                                 line += getValue(jToken);
+                                jToken = null;
                                 j++;
                             }
+                            jProperties = null;
                         }
                         else
                         {
@@ -376,6 +378,7 @@ namespace Microshaoft.Web
                                 .WriteLineAsync(line);
                         i++;
                     }
+                    jArray = null;
                     await
                         streamWriter
                             .FlushAsync();

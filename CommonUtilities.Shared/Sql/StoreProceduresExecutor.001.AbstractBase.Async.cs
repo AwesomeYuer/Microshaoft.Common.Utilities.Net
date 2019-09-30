@@ -81,6 +81,60 @@
                     resultSet
                 );
         }
+        private static async Task DataReadingProcessAsync
+                (
+                    Func
+                        <
+                            IDataReader
+                            , Type
+                            , string
+                            , int
+                            , int
+                            ,
+                                (
+                                    bool NeedDefaultProcess
+                                    , JProperty Field
+                                )
+                        > onReadRowColumnProcessFunc
+                    , JObject result
+                    , DbDataReader dataReader
+                )
+        {
+            var columns = dataReader
+                                .GetColumnsJArray();
+            var rows = dataReader
+                                .AsRowsJTokensEnumerableAsync
+                                    (
+                                        columns
+                                        , onReadRowColumnProcessFunc
+                                    );
+            await foreach (var i in rows)
+            { 
+                
+            }
+            var resultSet = new JObject
+                                {
+                                    {
+                                        "Columns"
+                                        , columns
+                                    }
+                                    ,
+                                    {
+                                        "Rows"
+                                        , new JArray(rows)
+                                    }
+                                };
+            (
+                (JArray)
+                    result
+                        ["Outputs"]
+                        ["ResultSets"]
+            )
+            .Add
+                (
+                    resultSet
+                );
+        }
 
         private static void ResultProcess
                 (
