@@ -1,6 +1,6 @@
-name: CI
+name: ASP.NET Core CI
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
   build:
@@ -8,10 +8,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout
+    - uses: actions/checkout@v1
     - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1.0.0
+      uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 2.2.108
-        - name: Build with dotnet
+    - name: Build with dotnet
       run: dotnet build CommonUtilities.NET.Core.Standard.3.0.sln --configuration Debug
