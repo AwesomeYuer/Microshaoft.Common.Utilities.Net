@@ -1,6 +1,6 @@
 dotnet build CommonUtilities.NET.Core.Standard.3.0.sln -c Debug
 
-mkdir -p Samples/MsSqlCodeDiffVersioning/bin/Debug/netcoreapp3.0/MsSqlCodeDiffVersioning.3x/wwwroot/
+mkdir -p Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.3x/bin/Debug/netcoreapp3.0/wwwroot/
 cp -rf Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.3x/wwwroot/* Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.3x/bin/Debug/netcoreapp3.0/wwwroot/
 
 mkdir -p Samples/MsSqlCodeDiffVersioning/bin/Debug/netcoreapp3.0/CompositionPlugins/
