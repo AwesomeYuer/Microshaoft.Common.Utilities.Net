@@ -23,4 +23,4 @@ cp StoreProcedureWebApiExecutorsPlugins/MySQL.Plugin/MySQL.Plugin.2.x/bin/Debug/
 cp StoreProcedureWebApiExecutorsPlugins/MySQL.Plugin/MySQL.Plugin.2.x/bin/Debug/netcoreapp2.2/*DB2*     Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.2x/bin/Debug/netcoreapp2.2/
 
 cd Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.2x/bin/Debug/netcoreapp2.2/
-dotnet MsSqlCodeDiffVersioning.WebApplication.dll $1
+dotnet MsSqlCodeDiffVersioning.2x.dll $1
