@@ -3,19 +3,19 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <RootNamespace>CommonUtilities.Lite.NET.Core._2.x</RootNamespace>
-    <LangVersion>7.3</LangVersion>
+    <!--<LangVersion>7.3</LangVersion>-->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DefineConstants>TRACE;DEBUG;NETCOREAPP;NETCOREAPP2_1;NETCOREAPP;NETCOREAPP2_X</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETCOREAPP;NETCOREAPP2_X;NETCOREAPP3_X</DefineConstants>
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DefineConstants>NETCOREAPP;NETCOREAPP2_1;NETCOREAPP;NETCOREAPP2_X</DefineConstants>
+    <DefineConstants>NETCOREAPP;NETCOREAPP2_X;NETCOREAPP3_X</DefineConstants>
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <Import Project="..\..\..\CommonUtilities.Shared\CommonUtilities.Lite.Shared.projitems" Label="Shared" />
