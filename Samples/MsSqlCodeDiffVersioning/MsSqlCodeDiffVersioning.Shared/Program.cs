@@ -13,6 +13,7 @@ namespace WebApplication.ASPNetCore
     using Microsoft.Extensions.Primitives;
     using Newtonsoft.Json.Linq;
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -93,6 +94,16 @@ namespace WebApplication.ASPNetCore
                                                                     , optional: false
                                                                 )
                                                             .Build();
+
+
+            //兼容 Linux/Windows wwwroot 路径配置
+            var wwwroot = GetExistsPaths
+                                (
+                                    "wwwrootpaths.json"
+                                    , "wwwroot"
+                                )
+                                .FirstOrDefault();
+
             return
                 WebHost
                     .CreateDefaultBuilder(args)
@@ -174,7 +185,73 @@ namespace WebApplication.ASPNetCore
                             }
                         )
                     //.UseUrls("http://+:5000", "https://+:5001")
+                    .UseWebRoot
+                        (
+                            wwwroot
+                        )
                     .UseStartup<Startup>();
+        }
+        private static IEnumerable<string> GetExistsPaths(string configurationJsonFile, string sectionName)
+        {
+            var configurationBuilder =
+                        new ConfigurationBuilder()
+                                .AddJsonFile(configurationJsonFile);
+            var configuration = configurationBuilder.Build();
+
+            var executingDirectory =
+                        Path
+                            .GetDirectoryName
+                                    (
+                                        Assembly
+                                            .GetExecutingAssembly()
+                                            .Location
+                                    );
+            //executingDirectory = AppContext.BaseDirectory;
+            var result =
+                    configuration
+                        .GetSection(sectionName)
+                        .AsEnumerable()
+                        .Select
+                            (
+                                (x) =>
+                                {
+                                    var r = x.Value;
+                                    if (!r.IsNullOrEmptyOrWhiteSpace())
+                                    {
+                                        if
+                                            (
+                                                r.StartsWith(".")
+                                                &&
+                                                !r.StartsWith("..")
+                                            )
+                                        {
+                                            r = r.TrimStart('.', '\\', '/');
+                                        }
+                                        r = Path
+                                                .Combine
+                                                    (
+                                                        executingDirectory
+                                                        , r
+                                                    );
+                                    }
+                                    return r;
+                                }
+                            )
+                        .Where
+                            (
+                                (x) =>
+                                {
+                                    return
+                                        (
+                                            !x
+                                                .IsNullOrEmptyOrWhiteSpace()
+                                            &&
+                                            Directory
+                                                .Exists(x)
+                                        );
+                                }
+                            );
+            return result;
         }
     }
 }

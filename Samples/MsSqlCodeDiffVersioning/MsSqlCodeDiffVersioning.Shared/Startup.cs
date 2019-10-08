@@ -499,32 +499,8 @@
                             }
                     }
                 );
-            //兼容 Linux/Windows wwwroot 路径配置
-            var wwwroot = GetExistsPaths
-                                (
-                                    "wwwrootpaths.json"
-                                    , "wwwroot"
-                                )
-                                .FirstOrDefault();
-            if (wwwroot.IsNullOrEmptyOrWhiteSpace())
-            {
-                app.UseStaticFiles();
-            }
-            else
-            {
-                app
-                    .UseStaticFiles
-                        (
-                            new StaticFileOptions()
-                            {
-                                FileProvider = new PhysicalFileProvider
-                                                        (
-                                                            wwwroot
-                                                        )
-                                , RequestPath = ""
-                            }
-                        );
-            }
+            app.UseStaticFiles();
+
 #if !NETCOREAPP3_X
             app.UseSwagger();
             app
@@ -543,65 +519,6 @@
 #endif
             //app.UseHttpsRedirection();
         }
-        private static IEnumerable<string> GetExistsPaths(string configurationJsonFile, string sectionName)
-        {
-            var configurationBuilder =
-                        new ConfigurationBuilder()
-                                .AddJsonFile(configurationJsonFile);
-            var configuration = configurationBuilder.Build();
-
-            var executingDirectory =
-                        Path
-                            .GetDirectoryName
-                                    (
-                                        Assembly
-                                            .GetExecutingAssembly()
-                                            .Location
-                                    );
-            //executingDirectory = AppContext.BaseDirectory;
-            var result =
-                    configuration
-                        .GetSection(sectionName)
-                        .AsEnumerable()
-                        .Select
-                            (
-                                (x) =>
-                                {
-                                    var r = x.Value;
-                                    if (!r.IsNullOrEmptyOrWhiteSpace())
-                                    {
-                                        if
-                                            (
-                                                r.StartsWith(".")
-                                            )
-                                        {
-                                            r = r.TrimStart('.', '\\', '/');
-                                        }
-                                        r = Path
-                                                .Combine
-                                                    (
-                                                        executingDirectory
-                                                        , r
-                                                    );
-                                    }
-                                    return r;
-                                }
-                            )
-                        .Where
-                            (
-                                (x) =>
-                                {
-                                    return
-                                        (
-                                            !x
-                                                .IsNullOrEmptyOrWhiteSpace()
-                                            &&
-                                            Directory
-                                                .Exists(x)
-                                        );
-                                }
-                            );
-            return result;
-        }
+        
     }
 }
