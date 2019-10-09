@@ -10,13 +10,11 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DefineConstants>TRACE;DEBUG;NETCOREAPP;NETCOREAPP2_X;NETCOREAPP3_X</DefineConstants>
-    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DefineConstants>NETCOREAPP;NETCOREAPP2_X;NETCOREAPP3_X</DefineConstants>
-    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <Import Project="..\..\..\CommonUtilities.Shared\CommonUtilities.Lite.Shared.projitems" Label="Shared" />
   <ItemGroup>

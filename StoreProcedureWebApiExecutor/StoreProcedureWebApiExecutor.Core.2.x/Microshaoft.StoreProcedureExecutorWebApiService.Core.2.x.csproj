@@ -7,17 +7,13 @@
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>..\bin\Release\</OutputPath>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DefineConstants>NETCOREAPP;NETCOREAPP2_X</DefineConstants>
-    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\bin\Debug\</OutputPath>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DefineConstants>TRACE;DEBUG;NETCOREAPP;NETCOREAPP2_X</DefineConstants>
-    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
 
   

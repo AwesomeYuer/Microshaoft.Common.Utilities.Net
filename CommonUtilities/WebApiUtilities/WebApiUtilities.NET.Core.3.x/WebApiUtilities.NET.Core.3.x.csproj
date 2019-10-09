@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <RootNamespace>WebApiUtilities.NET.Core._2.x</RootNamespace>
+    <OutputType>Library</OutputType>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
