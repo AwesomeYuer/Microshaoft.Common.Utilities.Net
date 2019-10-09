@@ -1,0 +1,358 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>MSSQL DataTable JS</title>
+    <link rel="stylesheet" type="text/css" href="libs/datatables/DataTables/1.10.18/DataTables-1.10.18/css/jquery.dataTables.css" />
+    <link rel="stylesheet" type="text/css" href="libs/datatables/DataTables/1.10.18/AutoFill-2.3.0/css/autoFill.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="libs/datatables/DataTables/1.10.18/Buttons-1.5.2/css/buttons.dataTables.css" />
+    <link rel="stylesheet" type="text/css" href="libs/datatables/DataTables/1.10.18/ColReorder-1.5.0/css/colReorder.dataTables.css" />
+    <link rel="stylesheet" type="text/css" href="libs/datatables/DataTables/1.10.18/FixedColumns-3.2.5/css/fixedColumns.dataTables.css" />
+    <link rel="stylesheet" type="text/css" href="libs/datatables/DataTables/1.10.18/FixedHeader-3.1.4/css/fixedHeader.dataTables.css" />
+    <link rel="stylesheet" type="text/css" href="libs/datatables/DataTables/1.10.18/KeyTable-2.4.0/css/keyTable.dataTables.css" />
+    <link rel="stylesheet" type="text/css" href="libs/datatables/DataTables/1.10.18/Responsive-2.2.2/css/responsive.dataTables.css" />
+    <link rel="stylesheet" type="text/css" href="libs/datatables/DataTables/1.10.18/RowGroup-1.0.3/css/rowGroup.dataTables.css" />
+    <link rel="stylesheet" type="text/css" href="libs/datatables/DataTables/1.10.18/RowReorder-1.2.4/css/rowReorder.dataTables.css" />
+    <link rel="stylesheet" type="text/css" href="libs/datatables/DataTables/1.10.18/Scroller-1.5.0/css/scroller.dataTables.css" />
+    <link rel="stylesheet" type="text/css" href="libs/datatables/DataTables/1.10.18/Select-1.2.6/css/select.dataTables.css" />
+    <script src="libs/jquery/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="libs/datatables/DataTables/1.10.18/JSZip-2.5.0/jszip.js"></script>
+    <script type="text/javascript" src="libs/datatables/DataTables/1.10.18/pdfmake-0.1.36/pdfmake.js"></script>
+    <script type="text/javascript" src="libs/datatables/DataTables/1.10.18/pdfmake-0.1.36/vfs_fonts.js"></script>
+    <script type="text/javascript" src="libs/datatables/DataTables/1.10.18/DataTables-1.10.18/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" src="libs/datatables/DataTables/1.10.18/AutoFill-2.3.0/js/dataTables.autoFill.js"></script>
+    <script type="text/javascript" src="libs/datatables/DataTables/1.10.18/Buttons-1.5.2/js/dataTables.buttons.js"></script>
+    <script type="text/javascript" src="libs/datatables/DataTables/1.10.18/Buttons-1.5.2/js/buttons.colVis.js"></script>
+    <script type="text/javascript" src="libs/datatables/DataTables/1.10.18/Buttons-1.5.2/js/buttons.flash.js"></script>
+    <script type="text/javascript" src="libs/datatables/DataTables/1.10.18/Buttons-1.5.2/js/buttons.html5.js"></script>
+    <script type="text/javascript" src="libs/datatables/DataTables/1.10.18/Buttons-1.5.2/js/buttons.print.js"></script>
+    <script type="text/javascript" src="libs/datatables/DataTables/1.10.18/ColReorder-1.5.0/js/dataTables.colReorder.js"></script>
+    <script type="text/javascript" src="libs/datatables/DataTables/1.10.18/FixedColumns-3.2.5/js/dataTables.fixedColumns.js"></script>
+    <script type="text/javascript" src="libs/datatables/DataTables/1.10.18/FixedHeader-3.1.4/js/dataTables.fixedHeader.js"></script>
+    <script type="text/javascript" src="libs/datatables/DataTables/1.10.18/KeyTable-2.4.0/js/dataTables.keyTable.js"></script>
+    <script type="text/javascript" src="libs/datatables/DataTables/1.10.18/Responsive-2.2.2/js/dataTables.responsive.js"></script>
+    <script type="text/javascript" src="libs/datatables/DataTables/1.10.18/RowGroup-1.0.3/js/dataTables.rowGroup.js"></script>
+    <script type="text/javascript" src="libs/datatables/DataTables/1.10.18/RowReorder-1.2.4/js/dataTables.rowReorder.js"></script>
+    <script type="text/javascript" src="libs/datatables/DataTables/1.10.18/Scroller-1.5.0/js/dataTables.scroller.js"></script>
+    <script type="text/javascript" src="libs/datatables/DataTables/1.10.18/Select-1.2.6/js/dataTables.select.js"></script>
+    <script src="libs/splitjs/split.js"></script>
+    <script src="libs/monaco-editor/min/vs/loader.js"></script>
+
+    <script>
+        var binded1 = false;
+        var binded2 = false;
+        var usedDataTables = null;
+
+        function RowColumnCellProcess(cell, type, row, meta) {
+            if (typeof (cell) == "object") {
+                cell = JSON.stringify(cell);
+            }
+            return cell;
+        }
+        function dynamicAjaxBind() {
+            var sql = editor.getValue();
+            var selection = editor.getSelection();
+            if (selection) {
+                var ss = editor.getModel().getValueInRange(selection);
+                if (ss.length > 0) {
+                    sql = ss;
+                }
+            }
+            var url = "https://local.bank-of-china.com/a.json";
+            url = 'http://localhost:5000/api/StoreProcedureExecutor/usp_executesql';
+            url = "/api/StoreProcedureExecutor/usp_executesql";
+            var downloadUrl = 'http://127.0.0.1:5000/api/StoreProcedureExecutor/export/usp_executesql'
+            downloadUrl = url;
+            var downloader = document.getElementById("downloader");
+            var rowcount = parseInt(document.getElementById("rowcount").value);
+
+            var download = (document.getElementById("download").checked == true);
+            if (!download) {
+                if (binded1) {
+                    usedDataTables.forEach(function (item, index) {
+                        var eid = "#" + item;
+                        if ($.fn.DataTable.isDataTable(eid)) {
+                            //destory should remove:true
+                            $(eid).DataTable().clear().destroy(true);
+                            $(eid).html('');
+                        }
+                    });
+                }
+                if (binded2) {
+                    if ($.fn.DataTable.isDataTable("#outputMessages")) {
+                        //destory should remove:false
+                        $("#outputMessages").DataTable().clear().destroy();
+                        $("#outputMessages").html('');
+                    }
+                }
+                binded1 = false;
+                binded2 = false;
+            }
+            if (download) {
+                var r = prompt("Result Set ID", 1);
+                if (r === null) {
+                    return;
+                }
+                var resultSetID = parseInt(r) - 1;
+                if (resultSetID < 0) {
+                    resultSetID = 0;
+                }
+                url = downloadUrl;
+                url += '/outputs/resultsets/' + resultSetID.toString() + '/rows';
+            }
+            $.ajax({
+                type: 'post',
+                url: url,
+                data: { sql: sql, rowcount: rowcount },
+                beforeSend: function (xhr) {
+                    //xhr.setRequestHeader
+                },
+                success: function (d, textStatus, jqXHR) {
+                    if (download) {
+                        var filename = "";
+                        var disposition = jqXHR.getResponseHeader('Content-Disposition');
+                        if (disposition && disposition.indexOf('attachment') !== -1) {
+                            var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                            var matches = filenameRegex.exec(disposition);
+                            if (matches != null && matches[1]) {
+                                filename = matches[1].replace(/['"]/g, '');
+                            }
+                        }
+                        var blob = new Blob([d], { type: "text/csv" });
+                        var URL = window.URL || window.webkitURL;
+                        var dUrl = URL.createObjectURL(blob);
+                        downloader.href = dUrl;
+                        downloader.download = decodeURIComponent(filename);
+                        downloader.click();
+                    }
+                    else {
+                        if (d.Outputs.ResultSets.length > 0) {
+                            usedDataTables = new Array();
+                            d.Outputs.ResultSets.forEach(function (item, index) {
+                                var eid = "DataOutput_" + index.toString();
+                                $("#DataOutputsPanel").append('<table id="' + eid + '" class="cell-border display"><!--' + eid + '--></table>');
+                                var e = $("#" + eid);
+                                item.Columns.forEach(function (column, index) {
+                                    column.render = function (cell, type, row, meta) {
+                                        if (typeof (cell) == "object") {
+                                            cell = JSON.stringify(cell);
+                                            //column.Title += " Json";
+                                            //$(e.column(index).header()).text('My title');
+                                        }
+                                        return cell;
+                                    };
+                                });
+                                e.DataTable({
+                                    destroy: true,
+                                    retrieve: true,
+                                    scrollX: true,
+                                    order: [],
+                                    lengthMenu: [
+                                        [10, 25, 50, -1],
+                                        ['10 rows', '25 rows', '50 rows', 'Show all']
+                                    ],
+                                    //"pageLength": 50,
+                                    //fixedHeader: {
+                                    //    header: true,
+                                    //    footer: true
+                                    //},
+                                    ////searching: false,
+                                    dom: "Blfrtip",
+                                    data: item.Rows,
+                                    columns: item.Columns
+                                });
+                                usedDataTables.push(eid)
+                            });
+                            binded1 = true;
+                        }
+                        if (d.DataBaseStatistics.Messages.length > 0) {
+                            $("#outputMessages").DataTable({
+                                destroy: true,
+                                retrieve: true,
+                                scrollX: true,
+                                order: [],
+                                //fixedHeader: {
+                                //    header: true,
+                                //    footer: true
+                                //},
+                                //searching: false,
+                                lengthMenu: [
+                                    [10, 25, 100, -1],
+                                    ['10 rows', '25 rows', '100 rows', 'Show all']
+                                ],
+                                pageLength: -1,
+                                dom: "Blfrtip",
+                                data: d.DataBaseStatistics.Messages,
+                                columns: [
+                                    {
+                                        "title": "MessageID"
+                                        , "data": "MessageID"
+                                    },
+                                    {
+                                        "title": "ResultSetID"
+                                        , "data": "ResultSetID"
+                                    },
+                                    {
+                                        "title": "Source"
+                                        , "data": "Source"
+                                    },
+                                    {
+                                        "title": "Message"
+                                        , "data": "Message"
+                                    },
+                                    {
+                                        "title": "DealTime"
+                                        , "data": "DealTime"
+                                    }
+                                ]
+                            });
+                            binded2 = true;
+                        }
+                    }
+                },
+                error: function (x, y, z) {
+                    d = JSON.parse(x.responseText);
+                    $("#outputMessages").DataTable({
+                        destroy: true,
+                        //searching: false,
+                        retrieve: true,
+                        scrollX: true,
+                        //fixedheader: {
+                        //    header: true,
+                        //    footer: true
+                        //},
+                        order: [],
+                        pageLength: 200,
+                        dom: "Bfrtip",
+                        data: [d],
+                        columns: [
+                            {
+                                "title": "StatusCode"
+                                , "data": "statusCode"
+                            },
+                            {
+                                "title": "Message"
+                                , "data": "message"
+                            }
+                        ]
+                    });
+                    alert(x.responseText);
+                    binded2 = true;
+                }
+                //contentType: "application/json",
+                //dataType: 'json',
+            });
+        }
+        //debugger;
+
+        /**/</script>
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            padding: 8px;
+            background-color: #F6F6F6;
+            box-sizing: border-box;
+        }
+
+        .split {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .content {
+            border: 1px solid #C0C0C0;
+            box-shadow: inset 0 1px 2px #e4e4e4;
+            background-color: #fff;
+        }
+
+        .gutter {
+            background-color: transparent;
+            background-repeat: no-repeat;
+            background-position: 50%;
+        }
+
+            .gutter.gutter-horizontal {
+                cursor: col-resize;
+                background-image: url('../grips/vertical.png');
+            }
+
+            .gutter.gutter-vertical {
+                cursor: row-resize;
+                background-image: url('../grips/horizontal.png');
+            }
+
+            .split.split-horizontal,
+            .gutter.gutter-horizontal {
+                height: 100%;
+                float: left;
+            }
+    </style>
+</head>
+<body>
+
+    <div align="center">
+        <a id="downloader" target="_blank">downloader</a>
+        rowCount: <input type="text" id="rowcount" value="100" />
+        <button onclick="dynamicAjaxBind()" accesskey="x">E(<b><u>X</u></b>)exute</button>
+        <input type="checkbox" name="checkbox" id="download" value="value">
+        <label for="download">download</label>
+    </div>
+    <div id="up" class="split content" >
+        <!--<div id="sql-editor" style="text-align:left;width:800px;height:200px;border:1px solid grey"></div>-->
+
+    </div>
+    <div id="down" class="split content" style="overflow:auto">
+        Data:<br />
+
+        <div id="DataOutputsPanel">
+        </div>
+
+        <br />
+        <hr />
+        <br />
+        Messages:<br />
+        <div id="MessagesOutputsPanel">
+            <table id="outputMessages" class="cell-border display">
+            </table>
+        </div>
+    </div>
+
+    <script>
+        require.config({ paths: { 'vs': 'libs/monaco-editor/min/vs' } });
+        var editor;
+        require(['vs/editor/editor.main'], function () {
+            editor = monaco.editor.create(document.getElementById('up'), {
+                value: [
+                    'set statistics io on',
+                    'set statistics time on',
+                    'set statistics profile on',
+                    'select \'"111"\' as F, *',
+                    'from',
+                    'sys.objects',
+                    '',
+                    'select \'"222"\' as F, *',
+                    'from',
+                    'sys.objects',
+                ].join('\n'),
+                language: 'sql',
+                automaticLayout: true
+            });
+        });
+    </script>
+    <script>
+        Split(['#up', '#down'], {
+            gutterSize: 10,
+            cursor: 'pointer',
+            direction: 'vertical',
+            sizes: [20, 80]
+        });
+    </script>
+</body>
+</html>

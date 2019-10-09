@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script>
+        function load() {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    ////this.response is what you're looking for
+                    //handler(this.response);
+                    //console.log(this.response, typeof this.response);
+                    var img = document.getElementById('img');
+                    var url = window.URL || window.webkitURL;
+                    img.src = url.createObjectURL(this.response);
+                }
+            }
+            var url = 'http://localhost:5000/api/tracker/blobs';
+            url = 'http://localhost:5000/1.jpg';
+            xhr.open('GET', url);
+            xhr.responseType = 'blob';
+            xhr.send();
+        }
+
+    </script>
+</head>
+<body>
+    <img id="img"/>
+    <button onclick="load()">load</button>
+    
+</body>
+</html>
