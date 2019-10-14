@@ -22,7 +22,7 @@ Contact:
 
 .NET Today and Tomorrow/Future
 .NET Schedule
-![Image](blob/master/dotNET.Schedule.2019.jpg)
+![Image](dotNET.Schedule.2019.jpg)
 
 ```
 //rem only for Windows/dos cmd
