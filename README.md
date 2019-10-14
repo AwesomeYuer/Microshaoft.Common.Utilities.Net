@@ -21,7 +21,7 @@ Contact:
 |	Travis-CI:			| [![Build Status](https://travis-ci.org/Microshaoft/Microshaoft.Common.Utilities.Net.4x.svg?branch=master)](https://travis-ci.org/Microshaoft/Microshaoft.Common.Utilities.Net.4x)																																						|
 
 
-.NET Today and Tomorrow/Future
+.NET Today/Now and Tomorrow/Future
 
 .NET Schedule
 
