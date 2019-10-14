@@ -22,7 +22,7 @@ Contact:
 
 
 .NET Today/Now and Tomorrow/Future
-
+https://github.com/dotnet-presentations/dotnetconf2019/blob/master/Technical/dotNETConf2019_Keynote.pptx
 .NET Schedule
 
 ![Image](dotNET.Schedule.2019.Small.jpg)
