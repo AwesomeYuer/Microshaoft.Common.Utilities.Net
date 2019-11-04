@@ -1,9 +1,47 @@
-namespace Microshaoft
+﻿namespace Microshaoft
 {
     using System;
+    using System.Collections.Generic;
     using System.Text;
     public static class StringHelper
     {
+
+        public static IEnumerable<string> SplitToCharacters(this string target)
+        {
+            //原来有一个"零宽度连接符"(Zero - width joiner / ZWJ)的概念，
+            //值为0x200D。如果发现char为该值，则说明它是一个零宽度连接符，
+            //此时后面的emoji应该与前面的emoji连接。可以使用如下代码分析"👨‍👩‍👧‍👦"这个emoji
+            /*
+             * https://www.cnblogs.com/sdflysha/archive/2019/10/28/20191026-split-string-to-character-list.html
+             */
+            var l = target.Length;
+            for (var i = 0; i < l; ++i)
+            {
+                if (char.IsHighSurrogate(target[i]))
+                {
+                    int length = 0;
+                    while (true)
+                    {
+                        length += 2;
+                        if (i + length < target.Length && target[i + length] == 0x200D)
+                        {
+                            length += 1;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    yield return target.Substring(i, length);
+                    i += length - 1;
+                }
+                else
+                {
+                    yield return target[i].ToString();
+                }
+            }
+        }
+
 
         /// <summary>
         /// Returns first non whitespace character
