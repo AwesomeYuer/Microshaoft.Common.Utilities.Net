@@ -24,7 +24,7 @@ namespace Microshaoft
 
     public static class WorkFlowHelper
     {
-        private class WorkFlowDefinition
+        private class DynamicActivityExtensionInfo
         {
             public string ID;
             public DynamicActivity DynamicActivity;
@@ -38,8 +38,8 @@ namespace Microshaoft
         /// <summary>
         /// Compiled Expressions Type Cache
         /// </summary>
-        private static ConcurrentDictionary<string, WorkFlowDefinition>
-                        _cache = new ConcurrentDictionary<string, WorkFlowDefinition>();
+        private static ConcurrentDictionary<string, DynamicActivityExtensionInfo>
+                        _cache = new ConcurrentDictionary<string, DynamicActivityExtensionInfo>();
         /// Object for lock, make one Expressions Type only be compiled once
         /// </summary>
         private static object _locker = new object();
@@ -63,6 +63,8 @@ namespace Microshaoft
                                     }
                                 );
             var dynamicActivity = definition.DynamicActivity;
+            //var newDynamicActivity = new DynamicActivity();
+            //AttachNewInstance(definition.Type, newDynamicActivity);
 
             WorkflowApplication workflowApplication = null;
             if (inputs == null)
@@ -73,7 +75,7 @@ namespace Microshaoft
             {
                 workflowApplication = new WorkflowApplication(dynamicActivity, inputs);
             }
-
+            
 
             if (onPersistProcessFunc != null)
             {
@@ -84,14 +86,14 @@ namespace Microshaoft
         }
 
         private static
-                    WorkFlowDefinition
+                    DynamicActivityExtensionInfo
                         GetOrAddDefinition
                             (
                                 string definitionID
                                 , Func<string> getDefinitionXamlProcessFunc
                             )
         {
-            WorkFlowDefinition r = null;
+            DynamicActivityExtensionInfo r = null;
             var cached = _cache
                             .TryGetValue
                                 (
@@ -135,7 +137,7 @@ namespace Microshaoft
         }
 
         private static
-                    WorkFlowDefinition
+                    DynamicActivityExtensionInfo
                         Compile
                             (
                                 string definitionID
@@ -165,7 +167,7 @@ namespace Microshaoft
                                                 CompileExpressions = true
                                             }
                                         );
-            DynamicActivity dynamicActivity = (DynamicActivity)activity;
+            DynamicActivity dynamicActivity = (DynamicActivity) activity;
             var got = TryGetCompiledResultType
                 (
                     dynamicActivity
@@ -174,10 +176,9 @@ namespace Microshaoft
             if (got)
             {
                 AttachNewInstance(compiledResultType, dynamicActivity);
-
             }
             return
-                new WorkFlowDefinition()
+                new DynamicActivityExtensionInfo()
                 {
                     ID = definitionID
                      ,
@@ -244,6 +245,9 @@ namespace Microshaoft
         }
         private static void AttachNewInstance(Type compiledResultType, DynamicActivity dynamicActivity)
         {
+            /*
+             * https://docs.microsoft.com/en-us/dotnet/framework/windows-workflow-foundation/csharp-expressions
+             */
             // Create an instance of the new compiled expression type.
             ICompiledExpressionRoot
                 compiledExpressionRoot =
@@ -263,7 +267,6 @@ namespace Microshaoft
                         dynamicActivity
                         , compiledExpressionRoot
                     );
-
         }
         public static TrackingProfile GetTrackingProfileFromJson
             (
