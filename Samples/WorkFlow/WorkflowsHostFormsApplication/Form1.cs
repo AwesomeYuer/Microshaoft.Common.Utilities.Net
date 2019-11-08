@@ -66,7 +66,7 @@ namespace WorkflowsHostFormsApplication
             wfApp.Idle = (e) =>
             {
                 Console.WriteLine($"Idle {wfApp.Id}");
-                wfApp.Unload();
+                //wfApp.Unload();
             };
 
             wfApp.Unloaded = (e) =>
@@ -77,7 +77,7 @@ namespace WorkflowsHostFormsApplication
             };
 
             wfApp.Run();
-
+            wfApp.WorkflowDefinition
             Console.WriteLine($"wfApp.Run {wfApp.Id}");
 
 
