@@ -220,8 +220,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)UAC\UacHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Cors\WildCardCorsService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Filter.ConcurrencyLimiter\ConcurrencyLimiterFilter.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Web.Filter.ConcurrencyLimiter\FIFOQueuePolicy.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Web.Filter.ConcurrencyLimiter\LIFOQueuePolicy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Web.Filter.ConcurrencyLimiter\QueuePolicy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Web.Filter.ConcurrencyLimiter\StackPolicy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Filters\IHttpRequestValidateable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Filters\RequestJTokenParametersProcessFilter.CoreStandard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Filters\OperationsAuthorizeFilter.CoreStandard.cs" />
