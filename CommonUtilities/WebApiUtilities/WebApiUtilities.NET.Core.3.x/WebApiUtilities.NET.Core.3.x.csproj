@@ -21,6 +21,7 @@
   <ItemGroup>
     <!--<PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.7" />
     <PackageReference Include="Microsoft.NETCore.App" Version="2.2.7" />-->
+    <PackageReference Include="Microsoft.AspNetCore.ConcurrencyLimiter" Version="3.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.ResponseCaching" Version="2.2.0" />
     <PackageReference Include="Microsoft.Composition" Version="1.0.31" />
     <PackageReference Include="SecurityCodeScan.VS2017" Version="3.3.0">

@@ -26,7 +26,9 @@ namespace Microshaoft.WebApi.Controllers
                 : base(service, configuration)
         {
         }
-
+#if NETCOREAPP3_X
+        [ConcurrencyLimiterFilter]
+#endif
         [BearerTokenBasedAuthorizeFilter(IsRequired = false)]
         public override ActionResult<JToken>
             ProcessActionRequest
