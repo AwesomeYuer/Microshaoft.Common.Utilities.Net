@@ -15,8 +15,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)MemberAdditionalDefinitionAttribute\MemberAdditionalDefinitionAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Cors\WildCardCorsService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Filter.ConcurrencyLimiter\ConcurrencyLimiterFilter.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Web.Filter.ConcurrencyLimiter\FIFOQueuePolicy.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Web.Filter.ConcurrencyLimiter\LIFOQueuePolicy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Web.Filter.ConcurrencyLimiter\IQueuePolicy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Web.Filter.ConcurrencyLimiter\QueuePolicy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Web.Filter.ConcurrencyLimiter\ResettableBooleanCompletionSource.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Web.Filter.ConcurrencyLimiter\StackPolicy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Filters\BearerTokenAuthorizeFilter.CoreStandard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Filters\CustomFilters.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Filters\IHttpRequestValidateable.cs" />

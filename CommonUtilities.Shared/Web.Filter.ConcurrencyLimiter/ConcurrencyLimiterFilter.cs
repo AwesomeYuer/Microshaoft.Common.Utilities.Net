@@ -1,18 +1,25 @@
-﻿#if NETCOREAPP3_X
-namespace Microshaoft.Web
+﻿/*
+ * https://github.com/aspnet/AspNetCore/tree/fece4705eec5b2a118d9bd8b68eb867d2f573f7c/src/Middleware/ConcurrencyLimiter
+ * https://www.nuget.org/packages/Microsoft.AspNetCore.ConcurrencyLimiter/
+ * above is Middleware only
+ * Filter
+ */
+
+
+#if NETCOREAPP3_X
+namespace Microshaoft.AspNetCore.ConcurrencyLimiters
 {
-    using Microshaoft.AspNetCore.ConcurrencyLimiters;
     using Microsoft.AspNetCore.ConcurrencyLimiter;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Filters;
+    using Microsoft.Extensions.Options;
     using System;
     using System.Threading.Tasks;
 
-    public enum ConcurrencyLimiterQueuePoliciesEnum
+    public enum QueueStoreTypeEnum
     {
-        FIFOQueue
-        , LIFOQueue
-
+        QueueFIFO
+        , StackLIFO
     }
 
     public class ConcurrencyLimiterFilterAttribute
@@ -21,42 +28,64 @@ namespace Microshaoft.Web
                         , IAsyncActionFilter
                        
     {
-        private readonly IQueuePolicy _queuePolicy = null;
-        public ConcurrencyLimiterFilter
-                            (
-                                ConcurrencyLimiterQueuePoliciesEnum
-                                        policy = ConcurrencyLimiterQueuePoliciesEnum.FIFOQueue
-                            )
+        private IQueuePolicy _queuePolicy = null;
+        private int _maxConcurrentRequests = 64;
+        public int MaxConcurrentRequests
         {
-            if (policy == ConcurrencyLimiterQueuePoliciesEnum.LIFOQueue)
-            {
-                _queuePolicy = new LIFOQueuePolicy
-                        (
-                            new QueuePolicyOptions()
-                            {
-                                MaxConcurrentRequests = 1
-                                , RequestQueueLimit = 1
-                            }
-                        );
-            }
-            else
-            {
-                _queuePolicy = new FIFOQueuePolicy
-                            (
-                                new QueuePolicyOptions()
-                                {
-                                    MaxConcurrentRequests = 1
-                                    , RequestQueueLimit = 1
-                                }
-                            );
-            }
+            get => _maxConcurrentRequests;
+            set => _maxConcurrentRequests = value;
+        }
+
+        private int _requestQueueLimit = 128;
+        public int RequestQueueLimit
+        {
+            get => _requestQueueLimit;
+            set => _requestQueueLimit = value;
+        }
+       
+        private QueueStoreTypeEnum _queueStoreType;
+        public QueueStoreTypeEnum QueueStoreType
+        { 
+            get => _queueStoreType;
+            set => _queueStoreType = value;
+        }
+
+        public ConcurrencyLimiterFilterAttribute()
+        {
             Initialize();
         }
         public virtual void Initialize()
         {
-            //InstanceID = Interlocked.Increment(ref InstancesSeed);
+            IOptions<QueuePolicyOptions> queuePolicyOptions
+                = Options
+                        .Create
+                            (
+                                new QueuePolicyOptions()
+                                        {
+                                            MaxConcurrentRequests = _maxConcurrentRequests
+                                            , RequestQueueLimit = _requestQueueLimit
+                                        }
+                            );
+            if (_queueStoreType == QueueStoreTypeEnum.StackLIFO)
+            {
+                _queuePolicy = new StackPolicy
+                                    (
+                                        queuePolicyOptions
+                                    );
+            }
+            else
+            {
+                _queuePolicy = new QueuePolicy
+                                    (
+                                        queuePolicyOptions
+                                    );
+            }
         }
-        public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+        public async Task OnActionExecutionAsync
+                                        (
+                                            ActionExecutingContext context
+                                            , ActionExecutionDelegate next
+                                        )
         {
             var waitInQueueTask = _queuePolicy.TryEnterAsync();
             // Make sure we only ever call GetResult once on the TryEnterAsync ValueTask b/c it resets.
@@ -70,14 +99,16 @@ namespace Microshaoft.Web
             {
                 //using (ConcurrencyLimiterEventSource.Log.QueueTimer())
                 {
-                    r = await waitInQueueTask;
+                    r = await
+                            waitInQueueTask;
                 }
             }
             if (r)
             {
                 try
                 {
-                    await next();
+                    await
+                        next();
                 }
                 finally
                 {
@@ -91,7 +122,7 @@ namespace Microshaoft.Web
                                     new
                                     {
                                         statusCode = 503
-                                        , message = "Concurrency Limited!"
+                                        , message = $"Concurrency {Enum.GetName(typeof(QueueStoreTypeEnum), _queueStoreType)} Queue Limited!"
                                     }
                                 )
                 {

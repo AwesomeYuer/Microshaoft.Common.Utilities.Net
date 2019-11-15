@@ -1,4 +1,6 @@
 ﻿#if NETCOREAPP3_X
+// Copyright (c) .NET Foundation. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 namespace Microshaoft.AspNetCore.ConcurrencyLimiters
 {
     using System;
@@ -6,50 +8,53 @@ namespace Microshaoft.AspNetCore.ConcurrencyLimiters
     using System.Threading.Tasks;
     using Microsoft.Extensions.Options;
     using Microsoft.AspNetCore.ConcurrencyLimiter;
-    public class LIFOQueuePolicy : IQueuePolicy
+    public class StackPolicy : IQueuePolicy
     {
-        private readonly List<TaskCompletionSource<bool>> _buffer;
+        private readonly List<ResettableBooleanCompletionSource> _buffer;
+        
+        private ResettableBooleanCompletionSource _cachedResettableTCS;
+        public ResettableBooleanCompletionSource CachedResettableTCS { get => _cachedResettableTCS; set => _cachedResettableTCS = value; }
+
         private readonly int _maxQueueCapacity;
         private readonly int _maxConcurrentRequests;
         private bool _hasReachedCapacity;
         private int _head;
         private int _queueLength;
 
-        private static readonly Task<bool> _trueTask = Task.FromResult(true);
-
         private readonly object _bufferLock = new Object();
+
+        private readonly static ValueTask<bool> _trueTask = new ValueTask<bool>(true);
 
         private int _freeServerSpots;
 
-        public LIFOQueuePolicy(QueuePolicyOptions options)
+        
+
+        public StackPolicy(IOptions<QueuePolicyOptions> options)
         {
-            _buffer = new List<TaskCompletionSource<bool>>();
-            _maxQueueCapacity = options.RequestQueueLimit;
-            _maxConcurrentRequests = options.MaxConcurrentRequests;
-            _freeServerSpots = options.MaxConcurrentRequests;
+            _buffer = new List<ResettableBooleanCompletionSource>();
+            _maxQueueCapacity = options.Value.RequestQueueLimit;
+            _maxConcurrentRequests = options.Value.MaxConcurrentRequests;
+            _freeServerSpots = options.Value.MaxConcurrentRequests;
         }
 
         public ValueTask<bool> TryEnterAsync()
         {
-            
             lock (_bufferLock)
             {
                 if (_freeServerSpots > 0)
                 {
                     _freeServerSpots--;
-                    return new ValueTask<bool>(_trueTask);
+                    return _trueTask;
                 }
-
                 // if queue is full, cancel oldest request
                 if (_queueLength == _maxQueueCapacity)
                 {
                     _hasReachedCapacity = true;
-                    _buffer[_head].SetResult(false);
+                    _buffer[_head].Complete(false);
                     _queueLength--;
                 }
-
-                // enqueue request with a tcs
-                var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+                var tcs = CachedResettableTCS ??= new ResettableBooleanCompletionSource(this);
+                CachedResettableTCS = null;
                 if (_hasReachedCapacity || _queueLength < _buffer.Count)
                 {
                     _buffer[_head] = tcs;
@@ -59,14 +64,13 @@ namespace Microshaoft.AspNetCore.ConcurrencyLimiters
                     _buffer.Add(tcs);
                 }
                 _queueLength++;
-
                 // increment _head for next time
                 _head++;
                 if (_head == _maxQueueCapacity)
                 {
                     _head = 0;
                 }
-                return new ValueTask<bool>( tcs.Task);
+                return tcs.GetValueTask();
             }
         }
 
@@ -83,10 +87,8 @@ namespace Microshaoft.AspNetCore.ConcurrencyLimiters
                         _freeServerSpots--;
                         throw new InvalidOperationException("OnExit must only be called once per successful call to TryEnterAsync");
                     }
-
                     return;
                 }
-
                 // step backwards and launch a new task
                 if (_head == 0)
                 {
@@ -96,14 +98,10 @@ namespace Microshaoft.AspNetCore.ConcurrencyLimiters
                 {
                     _head--;
                 }
-
-                _buffer[_head].SetResult(true);
-                _buffer[_head] = null;
+                _buffer[_head].Complete(true);
                 _queueLength--;
             }
         }
-
-        
     }
 }
 #endif

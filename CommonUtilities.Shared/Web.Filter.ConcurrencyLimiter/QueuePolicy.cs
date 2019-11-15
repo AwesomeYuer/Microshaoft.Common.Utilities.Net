@@ -1,38 +1,34 @@
 ﻿#if NETCOREAPP3_X
-
+// Copyright (c) .NET Foundation. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 namespace Microshaoft.AspNetCore.ConcurrencyLimiters
 {
     using System;
     using System.Threading;
     using System.Threading.Tasks;
-    using Microsoft.AspNetCore.ConcurrencyLimiter;
     using Microsoft.Extensions.Options;
-    public class FIFOQueuePolicy : 
-                                    IQueuePolicy, 
-                                    IDisposable
+    using Microsoft.AspNetCore.ConcurrencyLimiter;
+
+    public class QueuePolicy : IQueuePolicy, IDisposable
     {
         private readonly int _maxConcurrentRequests;
         private readonly int _requestQueueLimit;
         private readonly SemaphoreSlim _serverSemaphore;
-
         private object _totalRequestsLock = new object();
         public int TotalRequests { get; private set; }
-
-        public FIFOQueuePolicy(QueuePolicyOptions options)
+        public QueuePolicy(IOptions<QueuePolicyOptions> options)
         {
-            _maxConcurrentRequests = options.MaxConcurrentRequests;
+            _maxConcurrentRequests = options.Value.MaxConcurrentRequests;
             if (_maxConcurrentRequests <= 0)
             {
                 throw new ArgumentException(nameof(_maxConcurrentRequests), "MaxConcurrentRequests must be a positive integer.");
             }
-
-            _requestQueueLimit = options.RequestQueueLimit;
+            _requestQueueLimit = options.Value.RequestQueueLimit;
             if (_requestQueueLimit < 0)
             {
                 throw new ArgumentException(nameof(_requestQueueLimit), "The RequestQueueLimit cannot be a negative number.");
             }
-
             _serverSemaphore = new SemaphoreSlim(_maxConcurrentRequests);
         }
 
@@ -41,38 +37,29 @@ namespace Microshaoft.AspNetCore.ConcurrencyLimiters
             // a return value of 'false' indicates that the request is rejected
             // a return value of 'true' indicates that the request may proceed
             // _serverSemaphore.Release is *not* called in this method, it is called externally when requests leave the server
-
             lock (_totalRequestsLock)
             {
                 if (TotalRequests >= _requestQueueLimit + _maxConcurrentRequests)
                 {
                     return false;
                 }
-
                 TotalRequests++;
             }
-
             await _serverSemaphore.WaitAsync();
-
             return true;
         }
-
         public void OnExit()
         {
             _serverSemaphore.Release();
-
             lock (_totalRequestsLock)
             {
                 TotalRequests--;
             }
         }
-
         public void Dispose()
         {
             _serverSemaphore.Dispose();
         }
-
-        
     }
 }
 #endif
