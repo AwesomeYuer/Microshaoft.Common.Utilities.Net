@@ -23,7 +23,8 @@ namespace Microshaoft.AspNetCore.ConcurrencyLimiters
 
         private readonly object _bufferLock = new Object();
 
-        private readonly static ValueTask<bool> _trueTask = new ValueTask<bool>(true);
+        //private readonly static ValueTask<bool> _trueTask = new ValueTask<bool>(true);
+        private readonly /*static*/ ValueTask<bool> _trueTask = new ValueTask<bool>(true);
 
         private int _freeServerSpots;
 
