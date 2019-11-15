@@ -30,7 +30,14 @@ namespace Microshaoft.WebApi.Controllers
         {
         }
 #if NETCOREAPP3_X
-        [ConcurrencyLimiterFilter]
+        [
+            ConcurrencyLimiterFilter
+                (
+                    QueueStoreType = QueueStoreTypeEnum.QueueFIFO
+                    , MaxConcurrentRequests = 1
+                    , RequestQueueLimit = 1
+                )
+        ]
 #endif
         [BearerTokenBasedAuthorizeFilter(IsRequired = false)]
         public override ActionResult<JToken>
