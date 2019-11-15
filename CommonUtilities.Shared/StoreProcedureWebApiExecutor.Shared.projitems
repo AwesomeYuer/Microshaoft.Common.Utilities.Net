@@ -40,6 +40,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)Type\TypeHelper.01.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Type\TypeHelper.03.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Cors\WildCardCorsService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Web.Filter.ConcurrencyLimiter\ConcurrencyLimiterFilter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Web.Filter.ConcurrencyLimiter\IQueuePolicy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Web.Filter.ConcurrencyLimiter\QueuePolicy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Web.Filter.ConcurrencyLimiter\ResettableBooleanCompletionSource.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Web.Filter.ConcurrencyLimiter\StackPolicy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Filters\OperationsAuthorizeFilter.CoreStandard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Filters\BearerTokenAuthorizeFilter.CoreStandard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Filters\IHttpRequestValidateable.cs" />
