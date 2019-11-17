@@ -9,8 +9,8 @@
         public  override JTokenWrapper OnExecuteProcess(NativeActivityContext context)
         {
             var inputs = Inputs.Get(context);
-            var jObject = inputs.TokenAs<JObject>();
-            //jObject["ApprovalAction"] = "同意";
+            var jObject = inputs.Token;
+            jObject["ApprovalAction"] = "同意";
             return
                 inputs;
         }
