@@ -1,7 +1,7 @@
 dotnet build CommonUtilities.NET.Core.Standard.3.0.sln -c Debug
 
 mkdir -p Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.3x/bin/Debug/netcoreapp3.0/wwwroot/
-cp -rf Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.3x/wwwroot/* Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.3x/bin/Debug/netcoreapp3.0/wwwroot/
+cp -rf Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.Shared/wwwroot/* Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.3x/bin/Debug/netcoreapp3.0/wwwroot/
 
 mkdir -p Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.3x/bin/Debug/netcoreapp3.0/CompositionPlugins/
 cp StoreProcedureWebApiExecutorsPlugins/MsSQL.Plugin/MsSQL.Plugin.3.x/bin/Debug/netcoreapp3.0/*Plugin*  Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.3x/bin/Debug/netcoreapp3.0/CompositionPlugins/

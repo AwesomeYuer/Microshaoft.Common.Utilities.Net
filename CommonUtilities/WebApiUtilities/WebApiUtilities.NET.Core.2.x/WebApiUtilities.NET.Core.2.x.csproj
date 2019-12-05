@@ -18,15 +18,15 @@
   
   <Import Project="..\..\..\CommonUtilities.Shared\WebApiUtilities.Shared.projitems" Label="Shared" />
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.7" />
-    <PackageReference Include="Microsoft.NETCore.App" Version="2.2.7" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.8" />
+    <PackageReference Include="Microsoft.NETCore.App" Version="2.2.8" />
     <PackageReference Include="Microsoft.AspNetCore.ResponseCaching" Version="2.2.0" />
     <PackageReference Include="Microsoft.Composition" Version="1.0.31" />
     <PackageReference Include="SecurityCodeScan.VS2017" Version="3.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.6.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.6.0" />
   </ItemGroup>
   <ItemGroup>

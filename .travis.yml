@@ -3,8 +3,8 @@ sudo: required
 
 dist: xenial
 mono: none
-dotnet: 3.0.100
+dotnet: 3.1.100
 install:
-- dotnet restore CommonUtilities.NET.Core.Standard.3.0.sln
+- dotnet restore CommonUtilities.NET.Core.Standard.3.1.sln
 script:
-- dotnet build CommonUtilities.NET.Core.Standard.3.0.sln
+- dotnet build CommonUtilities.NET.Core.Standard.3.1.sln

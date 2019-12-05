@@ -77,7 +77,7 @@ namespace WorkflowsHostFormsApplication
             };
 
             wfApp.Run();
-            wfApp.WorkflowDefinition
+            //wfApp.WorkflowDefinition
             Console.WriteLine($"wfApp.Run {wfApp.Id}");
 
 

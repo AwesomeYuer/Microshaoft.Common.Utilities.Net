@@ -20,7 +20,7 @@ namespace Microshaoft.WorkFlows.Activities
         protected override void Execute(NativeActivityContext context)
         {
             var inputs = Inputs.Get(context);
-            JObject jObject = inputs.TokenAs<JObject>();
+            JObject jObject = (JObject) inputs;
 
             var result = OnExecuteProcess(context);
             var autoSetBookmark = AutoSetBookmark.Get(context);
