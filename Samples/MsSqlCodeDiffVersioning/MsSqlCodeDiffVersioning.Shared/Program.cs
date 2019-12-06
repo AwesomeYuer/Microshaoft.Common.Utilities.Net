@@ -122,7 +122,7 @@ namespace WebApplication.ASPNetCore
                         (
                             (hostingContext, configurationBuilder) =>
                             {
-                                var configuration = configurationBuilder
+                                var builder = configurationBuilder
                                                         .SetBasePath(executingDirectory)
                                                         //.AddJsonFile
                                                         //    (
@@ -138,12 +138,6 @@ namespace WebApplication.ASPNetCore
                                                             )
                                                         .AddJsonFile
                                                             (
-                                                                path: "routes.json"
-                                                                , optional: false
-                                                                , reloadOnChange: true
-                                                            )
-                                                        .AddJsonFile
-                                                            (
                                                                 path: "dynamicCompositionPluginsPaths.json"
                                                                 , optional: false
                                                                 , reloadOnChange: true
@@ -153,7 +147,56 @@ namespace WebApplication.ASPNetCore
                                                                 path: "JwtValidation.json"
                                                                 , optional: false
                                                                 , reloadOnChange: true
-                                                            )
+                                                            );
+                                //for Windows
+                                var directoryPath = $@"{executingDirectory}\RoutesConfig\";
+                                if (Directory.Exists(directoryPath))
+                                {
+                                    var files = Directory
+                                                    .EnumerateFiles
+                                                        (
+                                                            directoryPath
+                                                            , "*.json"
+                                                        );
+                                    foreach (var file in files)
+                                    {
+                                        if (!file.Contains(".development.", StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            builder
+                                                .AddJsonFile
+                                                     (
+                                                        path: file
+                                                        , optional: false
+                                                        , reloadOnChange: true
+                                                     );
+                                        }
+                                    }
+                                }
+                                //for Linux
+                                directoryPath = $@"{executingDirectory}/RoutesConfig/";
+                                if (Directory.Exists(directoryPath))
+                                {
+                                    var files = Directory
+                                                    .EnumerateFiles
+                                                        (
+                                                            directoryPath
+                                                            , "*.json"
+                                                        );
+                                    foreach (var file in files)
+                                    {
+                                        if (!file.Contains(".development.", StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            builder
+                                                .AddJsonFile
+                                                     (
+                                                        path: file
+                                                        , optional: false
+                                                        , reloadOnChange: true
+                                                     );
+                                        }
+                                    }
+                                }
+                                var configuration = builder
                                                         .Build();
                                 // register change callback
                                 ChangeToken

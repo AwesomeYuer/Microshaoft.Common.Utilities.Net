@@ -67,7 +67,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenModelBinder\JTokenModelBinder.NET.Framework.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenModelBinder\JTokenWebHelper.NET.Core.Standard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenModelBinder\JTokenModelBinderProvider.NET.Core.Standard.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\StoreProcedureExecutorController\AbstractStoreProcedureExecutorControllerBase.4.NET.Core.Standard.ExportCSV.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\StoreProcedureExecutorController\AbstractStoreProcedureExecutorControllerBase.4.NET.Core.Standard.BigDataExport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\SyncAsyncActionSelector.cs" />
   </ItemGroup>
   <ItemGroup>

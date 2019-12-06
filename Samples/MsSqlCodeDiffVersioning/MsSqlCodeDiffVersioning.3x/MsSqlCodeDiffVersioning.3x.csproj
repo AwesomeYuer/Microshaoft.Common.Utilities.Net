@@ -1420,7 +1420,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="routes.json">
+    <Content Update="RoutesConfig\routes2.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="RoutesConfig\routes.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Update="dbConnections.json">

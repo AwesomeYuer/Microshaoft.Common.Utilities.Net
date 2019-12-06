@@ -34,12 +34,10 @@ namespace Microshaoft.WebApi.Controllers
             CsvColumnsDelimiter = ","
             , UseSingleLineHeaderInCsv = true
             , IncludeExcelDelimiterHeader = true
+            , DigitsTextSuffix = "\t"
         };
 
-
-
-
-        private string getValue(IDataReader reader, int fieldIndex)
+        private string GetFieldValue(IDataReader reader, int fieldIndex)
         {
             var @value = string.Empty;
             //if (jToken != null)
@@ -95,7 +93,7 @@ namespace Microshaoft.WebApi.Controllers
         [
              Route
                  (
-                     "exportcsv/{routeName}/"
+                     "bigdataexport/{routeName}/"
                  )
         ]
         [OperationsAuthorizeFilter(false)]
@@ -288,7 +286,7 @@ namespace Microshaoft.WebApi.Controllers
                                         {
                                             line += _csvFormatterOptions.CsvColumnsDelimiter;
                                         }
-                                        line += getValue(reader, fieldIndex);
+                                        line += GetFieldValue(reader, fieldIndex);
                                     }
                                 }
                                 else
@@ -322,7 +320,7 @@ namespace Microshaoft.WebApi.Controllers
                                             )
                                         {
                                             var fieldIndex = reader.GetOrdinal(columnName);
-                                            line += getValue(reader, fieldIndex);
+                                            line += GetFieldValue(reader, fieldIndex);
                                         }
                                         j ++;
                                     }

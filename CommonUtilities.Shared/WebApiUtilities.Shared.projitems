@@ -34,6 +34,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Web.MiddleWares\RequestResponseGuardMiddleware.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\CommonController\AbstractActionCommonProcessingService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\CommonController\AbstractCommonControllerBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\StoreProcedureExecutorController\AbstractStoreProcedureExecutorControllerBase.4.NET.Core.Standard.BigDataExport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\SyncAsyncActionSelector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\HttpMethodsFlags.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenModelBinder\HttpRequestHelper.cs" />
