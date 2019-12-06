@@ -194,7 +194,7 @@
                 );
         }
 
-        public void ExecuteReadRows
+        public void ExecuteReaderRows
                             (
                                 string connectionString
                                 , string storeProcedureName
@@ -217,7 +217,7 @@
                         , out TDbConnection connection
                     );
             Executor
-                    .ExecuteRows
+                    .ExecuteReaderRows
                         (
                             connection
                             , storeProcedureName

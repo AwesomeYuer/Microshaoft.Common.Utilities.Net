@@ -1044,7 +1044,7 @@ namespace Microshaoft.Web
             if (success)
             {
                 executor
-                    .ExecuteReadRows
+                    .ExecuteReaderRows
                         (
                             connectionString
                             , storeProcedureName

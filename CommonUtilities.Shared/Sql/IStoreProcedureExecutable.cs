@@ -41,7 +41,7 @@ namespace Microshaoft
                 );
 
         void
-            ExecuteReadRows
+            ExecuteReaderRows
                 (
                     string connectionString
                     , string storeProcedureName

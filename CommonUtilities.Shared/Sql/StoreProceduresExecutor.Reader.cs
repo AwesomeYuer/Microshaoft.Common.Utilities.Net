@@ -19,7 +19,7 @@
                         where
                                 TDbParameter : DbParameter, new()
     {
-        public void ExecuteRows
+        public void ExecuteReaderRows
             (
                     TDbConnection connection
                     , string storeProcedureName
