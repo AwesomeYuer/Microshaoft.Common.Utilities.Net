@@ -1,93 +1,5 @@
 {
   "Routes": {
-    "sp_helptext": {
-      "HttPGet": {
-        "connectionID": "c1",
-        "storeProcedureName": "sp_helptext",
-        "EnableStatistics": true,
-        "commandtimeoutInSeconds": 103,
-        "Scope": "sp_down"
-      }
-    },
-    "usp_executesql": {
-      "HttPPost": {
-        "connectionID": "c1",
-        "storeProcedureName": "usp_executesql",
-        "DefaultAccessing": {
-          "allow": true,
-          "needCheckOperations": true,
-          "operations": [ "a1", "a2" ],
-          "isAsyncExecuting": true,
-          "EnableStatistics": true,
-          "commandtimeoutInSeconds": 103,
-          "InputsParameters": [
-            {
-              "Name": "A",
-              "Value": 1,
-              "AllowOverride": true
-            },
-            {
-              "Name": "B",
-              "Value": true,
-              "AllowOverride": true
-            },
-            {
-              "Name": "c",
-              "Value": "asdsadsad",
-              "AllowOverride": true
-            }
-          ],
-          "Outputs1111": {
-            "aaa.bbb.ddd": "Outputs.ResultSets[0].Rows"
-          }
-
-        },
-        "exporting": {
-          "allow": true,
-          "needCheckOperations": true,
-          "operations": [ "a1", "a2" ],
-          "downloadFileName": "测试下载.csv",
-          "outputColumns11111": [
-            {
-              "ColumnName": "f1",
-              "ColumnTitle": "字段1"
-            },
-            {
-              "ColumnName": "f2",
-              "ColumnTitle111": "字段2"
-            },
-            {
-              "ColumnName": "f3",
-              "ColumnTitle": "字段3"
-            }
-
-          ],
-          "isAsyncExecuting": true,
-          "EnableStatistics": true,
-          "commandtimeoutInSeconds": 103,
-          "InputsParameters": [
-            {
-              "Name": "A",
-              "Value": 1,
-              "AllowOverride": true
-            },
-            {
-              "Name": "B",
-              "Value": true,
-              "AllowOverride": true
-            },
-            {
-              "Name": "c",
-              "Value": "asdsadsad",
-              "AllowOverride": true
-            }
-          ],
-          "Outputs111111": {
-            "$": "Outputs.ResultSets[0].Rows"
-          }
-        }
-      }
-    },
     "objEcts": {
       "HttPGet": {
         "connectionID": "c1",
@@ -117,6 +29,45 @@
 
           ]
 
+        },
+        "exporting": {
+          "downloadFileName": "你好测试.csv",
+          "allow": true,
+          "commandtimeoutInSeconds": 109,
+          "requestvAlidator": "simpleValidator1",
+          "operations": [ "a1", "a2" ],
+          "InputsParameters": [
+            {
+              "Name": "A",
+              "Value": 1,
+              "AllowOverride": true
+            },
+            {
+              "Name": "B",
+              "Value": true,
+              "AllowOverride": true
+            },
+            {
+              "Name": "c",
+              "Value": "asdsadsad",
+              "AllowOverride": true
+            }
+
+          ],
+          "outputColumns": [
+            {
+              "ColumnName": "DatabaseName",
+              "ColumnTitle": "字段1"
+            },
+            {
+              "ColumnName": "f2",
+              "ColumnTitle111": "字段2"
+            },
+            {
+              "ColumnName": "f3",
+              "ColumnTitle": "字段3"
+            }
+          ]
         }
       },
       "HttpPost": {

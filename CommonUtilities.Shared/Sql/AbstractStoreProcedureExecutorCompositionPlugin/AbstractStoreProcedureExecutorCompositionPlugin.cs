@@ -193,5 +193,46 @@
                     , Result: result
                 );
         }
+
+        public void ExecuteReadRows
+                            (
+                                string connectionString
+                                , string storeProcedureName
+                                , JToken parameters = null
+                                , Action
+                                        <
+                                            int
+                                            , IDataReader
+                                            , JArray
+                                            , int
+                                        > onReadRowProcessAction = null
+                                , bool enableStatistics = false
+                                , int commandTimeoutInSeconds = 90
+                            )
+        {
+            BeforeExecutingProcess
+                    (
+                        connectionString
+                        , enableStatistics
+                        , out TDbConnection connection
+                    );
+            Executor
+                    .ExecuteRows
+                        (
+                            connection
+                            , storeProcedureName
+                            , parameters
+                            , (resultSetIndex, reader, columns, rowIndex) =>
+                            {
+                                onReadRowProcessAction(resultSetIndex, reader, columns, rowIndex);
+                            }
+                            , commandTimeoutInSeconds
+                        );
+            AfterExecutedProcess
+                (
+                    storeProcedureName
+                    , connection
+                );
+        }
     }
 }

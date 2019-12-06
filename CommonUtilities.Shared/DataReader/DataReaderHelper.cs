@@ -208,6 +208,45 @@ namespace Microshaoft
             }
             return r;
         }
+
+        public static void ReadRows
+                             (
+                                 this DbDataReader target
+                                 , JArray columns = null
+                                 , Action
+                                        <
+                                            IDataReader
+                                            , JArray        // columns
+                                            , int           // row index
+                                        >
+                                            onReadRowProcessAction = null
+                             )
+        {
+            //var fieldsCount = target.FieldCount;
+            int rowIndex = 0;
+            if (columns == null)
+            {
+                columns = target.GetColumnsJArray();
+            }
+            while (target.Read())
+            {
+                onReadRowProcessAction?
+                            .Invoke
+                                (
+                                    target
+                                    , columns
+                                    , rowIndex
+                                );
+                rowIndex++;
+            }
+        }
+
+
+
+
+
+
+
         public static IEnumerable<JToken> AsRowsJTokensEnumerable
                              (
                                  this DbDataReader target

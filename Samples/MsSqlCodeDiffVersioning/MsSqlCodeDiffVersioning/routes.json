@@ -117,6 +117,31 @@
 
           ]
 
+        },
+        "exporting": {
+          "allow": true,
+          "commandtimeoutInSeconds": 109,
+          "requestvAlidator": "simpleValidator1",
+          "operations": [ "a1", "a2" ],
+          "InputsParameters": [
+            {
+              "Name": "A",
+              "Value": 1,
+              "AllowOverride": true
+            },
+            {
+              "Name": "B",
+              "Value": true,
+              "AllowOverride": true
+            },
+            {
+              "Name": "c",
+              "Value": "asdsadsad",
+              "AllowOverride": true
+            }
+
+          ]
+
         }
       },
       "HttpPost": {

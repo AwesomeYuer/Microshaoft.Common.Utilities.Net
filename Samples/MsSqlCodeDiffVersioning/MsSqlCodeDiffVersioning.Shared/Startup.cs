@@ -12,6 +12,7 @@
     using Microsoft.AspNetCore.Mvc.Abstractions;
     using Microsoft.AspNetCore.Mvc.Controllers;
     using Microsoft.AspNetCore.Mvc.Infrastructure;
+    using Microsoft.AspNetCore.Server.Kestrel.Core;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.FileProviders;
@@ -85,13 +86,17 @@
                                 ["udt_vcidt"] = ja
                             };
                             var sqlConnection = new SqlConnection("Initial Catalog=test;Data Source=localhost;User=sa;Password=!@#123QWE");
-                            executor
-                                .Execute
-                                    (
-                                        sqlConnection
-                                        , "zsp_Test"
-                                        , jo
-                                    );
+                            //executor
+                            //    .Execute
+                            //        (
+                            //            sqlConnection
+                            //            , "zsp_Test"
+                            //            , jo
+                            //            , (reader, fieldType, fieldName, rowIndex, columnIndex) =>
+                            //            {
+                            //                return null;
+                            //            }
+                            //        );
                         }
                         , null
                         , 1000
@@ -206,6 +211,7 @@
                                     );
                         }
                     );
+
 #if !NETCOREAPP3_X
             services
                 .AddSwaggerGen
@@ -225,6 +231,10 @@
                         }
                     );
 #endif
+            services.Configure<KestrelServerOptions>(options =>
+            {
+                options.AllowSynchronousIO = true;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

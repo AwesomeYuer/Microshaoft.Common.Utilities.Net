@@ -12,6 +12,7 @@ namespace Microshaoft
         {
             get;
         }
+
         (
             bool Success
             , JToken Result
@@ -38,6 +39,25 @@ namespace Microshaoft
                     , bool enableStatistics = false
                     , int commandTimeoutInSeconds = 90
                 );
+
+        void
+            ExecuteReadRows
+                (
+                    string connectionString
+                    , string storeProcedureName
+                    , JToken parameters = null
+                    , Action
+                        <
+                            int             // resultset Index
+                            , IDataReader
+                            , JArray        // columns
+                            , int           // row index
+                        > onReadRowProcessAction = null
+                    , bool enableStatistics = false
+                    , int commandTimeoutInSeconds = 90
+                );
+
+
         Task
             <
                 (
