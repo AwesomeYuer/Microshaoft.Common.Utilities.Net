@@ -946,6 +946,117 @@ namespace Microshaoft.Web
             return
                 Result();
         }
+
+
+        public void
+                    RowsProcess
+                        (
+                            string routeName
+                            , JToken parameters = null
+                            , Action
+                                <
+                                    int             // resultSetIndex
+                                    , IDataReader
+                                    , JArray        // columns
+                                    , int           // row index
+                                > onReadRowProcessAction = null
+                            , string httpMethod = "Get"
+                            //, bool enableStatistics = false
+                            , int commandTimeoutInSeconds = 101
+                        )
+        {
+            //JToken result = null;
+
+            bool success;
+            int statusCode;
+            string message;
+            string connectionString;
+            string dataBaseType;
+            string storeProcedureName;
+            bool enableStatistics;
+
+            (
+                success
+                , statusCode
+                , httpMethod
+                , message
+                , connectionString
+                , dataBaseType
+                , storeProcedureName
+                , commandTimeoutInSeconds
+                , enableStatistics
+            )
+                = TryGetStoreProcedureInfo
+                            (
+                                routeName
+                                , httpMethod
+                            );
+
+
+            if
+               (
+                   success
+                   &&
+                   statusCode == 200
+               )
+            {
+                RowsProcess
+                    (
+                        connectionString
+                        , dataBaseType
+                        , storeProcedureName
+                        , parameters
+                        , onReadRowProcessAction
+                        , enableStatistics
+                        , commandTimeoutInSeconds
+                    );
+            }
+
+
+        }
+        public virtual void
+                    RowsProcess
+                            (
+                                string connectionString
+                                , string dataBaseType
+                                , string storeProcedureName
+                                , JToken parameters = null
+                                , Action
+                                    <
+                                        int           // resultSet Index
+                                        , IDataReader
+                                        , JArray
+                                        , int           // row index
+                                    > onReadRowProcessAction = null
+                                , bool enableStatistics = false
+                                , int commandTimeoutInSeconds = 90
+                            )
+        {
+            var beginTimeStamp = Stopwatch.GetTimestamp();
+            var beginTime = DateTime.Now;
+            var success = _indexedExecutors
+                                        .TryGetValue
+                                            (
+                                                dataBaseType
+                                                , out var executor
+                                            );
+            JToken result = null;
+            if (success)
+            {
+                executor
+                    .ExecuteReadRows
+                        (
+                            connectionString
+                            , storeProcedureName
+                            , parameters
+                            , onReadRowProcessAction
+                            , enableStatistics
+                            , commandTimeoutInSeconds
+                        );
+                
+            }
+            
+        }
     }
 }
 #endif

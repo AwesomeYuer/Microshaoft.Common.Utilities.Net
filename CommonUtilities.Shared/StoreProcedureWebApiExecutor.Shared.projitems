@@ -37,6 +37,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Sql\StoreProceduresExecutor.001.AbstractBase.Async.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\StoreProceduresExecutor.00.AbstractBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\StoreProceduresExecutor.01.MsSql.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sql\StoreProceduresExecutor.Reader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Type\TypeHelper.01.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Type\TypeHelper.03.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Cors\WildCardCorsService.cs" />
@@ -66,11 +67,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenModelBinder\JTokenModelBinder.NET.Framework.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenModelBinder\JTokenWebHelper.NET.Core.Standard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenModelBinder\JTokenModelBinderProvider.NET.Core.Standard.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\StoreProcedureExecutorController\AbstractStoreProcedureExecutorControllerBase.4.NET.Core.Standard.ExportCSV.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\SyncAsyncActionSelector.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)SingleThreadAsyncDequeueProcessor\CoreStandard\" />
-    <Folder Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\StoreProcedureExecutorController\" />
     <Folder Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\Services\" />
   </ItemGroup>
 </Project>
