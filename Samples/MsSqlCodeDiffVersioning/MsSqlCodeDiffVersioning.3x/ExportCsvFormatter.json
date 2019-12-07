@@ -1,0 +1,8 @@
+{
+  "ExportCsvFormatter": {
+    "CsvColumnsDelimiter": ",",
+    "UseSingleLineHeaderInCsv": false,
+    "IncludeExcelDelimiterHeader": true,
+    "DigitsTextSuffix" :  "\t",
+  }
+}

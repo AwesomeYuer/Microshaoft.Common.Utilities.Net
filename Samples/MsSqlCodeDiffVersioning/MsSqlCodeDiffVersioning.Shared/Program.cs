@@ -147,6 +147,12 @@ namespace WebApplication.ASPNetCore
                                                                 path: "JwtValidation.json"
                                                                 , optional: false
                                                                 , reloadOnChange: true
+                                                            )
+                                                        .AddJsonFile
+                                                            (
+                                                                path: "ExportCsvFormatter.json"
+                                                                , optional: false
+                                                                , reloadOnChange: true
                                                             );
                                 //for Windows
                                 var directoryPath = $@"{executingDirectory}\RoutesConfig\";

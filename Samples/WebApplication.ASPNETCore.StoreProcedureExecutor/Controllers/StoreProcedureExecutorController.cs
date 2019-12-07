@@ -8,6 +8,7 @@ namespace Microshaoft.WebApi.Controllers
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Infrastructure;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Options;
     using Newtonsoft.Json.Linq;
     using System;
 
@@ -22,8 +23,9 @@ namespace Microshaoft.WebApi.Controllers
                             (
                                 AbstractStoreProceduresService service
                                 , IConfiguration configuration
+                                , IOptions<CsvFormatterOptions> csvFormatterOptions
                             )
-                : base(service, configuration)
+                : base(service, configuration, csvFormatterOptions)
         {
         }
 

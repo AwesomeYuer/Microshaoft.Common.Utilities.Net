@@ -44,8 +44,14 @@
         }
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddOptions();
+            services.Configure<CsvFormatterOptions>
+                (
+                    Configuration.GetSection("ExportCsvFormatter")
+                );
+
             services
-            
+
                 .AddMvc
                 (
 #if NETCOREAPP3_X    
@@ -231,10 +237,14 @@
                         }
                     );
 #endif
-            services.Configure<KestrelServerOptions>(options =>
-            {
-                options.AllowSynchronousIO = true;
-            });
+            services.Configure<KestrelServerOptions>
+                (
+                    (options) =>
+                    {
+                        options.AllowSynchronousIO = true;
+                    }
+                );
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
