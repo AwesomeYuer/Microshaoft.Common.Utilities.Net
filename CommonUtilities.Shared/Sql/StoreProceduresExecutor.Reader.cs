@@ -6,8 +6,6 @@
     using System.Data;
     using System.Data.Common;
     using System.Data.SqlClient;
-    using System.Linq;
-    using System.Threading.Tasks;
 
     public abstract partial class
             AbstractStoreProceduresExecutor
@@ -37,12 +35,9 @@
             var extensionInfo = new ExtensionInfo()
             {
                 resultSetID = 0
-                    ,
-                messageID = 0
-                    ,
-                recordCounts = null
-                    ,
-                messages = null
+                , messageID = 0
+                , recordCounts = null
+                , messages = null
             };
 
             TDbCommand command = null;
@@ -81,12 +76,13 @@
                 do
                 {
                     JArray jColumns = null;
-                    if (jColumns == null)
-                    {
-                        jColumns = dataReader.GetColumnsJArray();
-                    }
                     if (onReadRowProcessAction != null)
                     {
+                        if (jColumns == null)
+                        {
+                            jColumns = dataReader
+                                            .GetColumnsJArray();
+                        }
                         dataReader
                                 .ReadRows
                                     (
@@ -104,14 +100,14 @@
                                     );
                     }
                     extensionInfo
-                            .resultSetID++;
+                            .resultSetID ++;
                     jColumns = null;
                 }
                 while
-                (
-                    dataReader
-                        .NextResult()
-                );
+                    (
+                        dataReader
+                            .NextResult()
+                    );
                 dataReader.Close();
             }
             finally

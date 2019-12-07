@@ -33,7 +33,7 @@ namespace Microshaoft.WebApi.Controllers
         {
             CsvColumnsDelimiter = ","
             , UseSingleLineHeaderInCsv = true
-            , IncludeExcelDelimiterHeader = true
+            , IncludeExcelDelimiterHeader = false
             , DigitsTextSuffix = "\t"
         };
 
