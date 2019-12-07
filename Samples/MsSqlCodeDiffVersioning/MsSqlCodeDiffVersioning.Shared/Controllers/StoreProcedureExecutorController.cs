@@ -6,6 +6,7 @@ namespace Microshaoft.WebApi.Controllers
     using Microsoft.AspNetCore.Cors;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Options;
     using Newtonsoft.Json.Linq;
     using System.Threading.Tasks;
 #if NETCOREAPP3_X
@@ -25,8 +26,9 @@ namespace Microshaoft.WebApi.Controllers
                             (
                                 AbstractStoreProceduresService service
                                 , IConfiguration configuration
+                                , IOptions<CsvFormatterOptions> csvFormatterOptions
                             )
-                : base(service, configuration)
+                : base(service, configuration, csvFormatterOptions)
         {
         }
 #if NETCOREAPP3_X

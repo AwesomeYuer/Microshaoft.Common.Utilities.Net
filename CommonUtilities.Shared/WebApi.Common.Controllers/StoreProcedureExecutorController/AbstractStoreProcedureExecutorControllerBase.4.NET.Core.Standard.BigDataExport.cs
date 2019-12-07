@@ -29,13 +29,14 @@ namespace Microshaoft.WebApi.Controllers
                                                             , 0xBB
                                                             , 0xBF
                                                         };
-        private readonly CsvFormatterOptions _csvFormatterOptions = new CsvFormatterOptions() 
-        {
-            CsvColumnsDelimiter = ","
-            , UseSingleLineHeaderInCsv = true
-            , IncludeExcelDelimiterHeader = false
-            , DigitsTextSuffix = "\t"
-        };
+        private readonly CsvFormatterOptions _csvFormatterOptions;
+        //= new CsvFormatterOptions() 
+        //{
+        //    CsvColumnsDelimiter = ","
+        //    , UseSingleLineHeaderInCsv = true
+        //    , IncludeExcelDelimiterHeader = false
+        //    , DigitsTextSuffix = "\t"
+        //};
 
         private string GetFieldValue(IDataReader reader, int fieldIndex)
         {
