@@ -30,6 +30,7 @@ namespace Microshaoft.WebApi.Controllers
                                                             , 0xBF
                                                         };
         private readonly CsvFormatterOptions _csvFormatterOptions;
+ 
         //= new CsvFormatterOptions() 
         //{
         //    CsvColumnsDelimiter = ","
@@ -44,7 +45,6 @@ namespace Microshaoft.WebApi.Controllers
             //if (jToken != null)
             {
                 var fieldType = reader.GetFieldType(fieldIndex);
-
                 if (fieldType == typeof(DateTime))
                 {
                     //@value = ((DateTime) jValue).ToString("yyyy-MM-ddTHH:mm:ss.fffff");
@@ -84,6 +84,8 @@ namespace Microshaoft.WebApi.Controllers
             return @value;
         }
 
+        // ===============================================================================================================
+        // Big Data Export CSV
         [HttpDelete]
         [HttpGet]
         [HttpHead]
@@ -111,7 +113,7 @@ namespace Microshaoft.WebApi.Controllers
             var request = HttpContext
                                 .Request;
             var httpMethod = $"http{request.Method}";
-            var encodingName = (string)request.Query["e"];
+            var encodingName = (string) request.Query["e"];
             Encoding e = null;
             if (!encodingName.IsNullOrEmptyOrWhiteSpace())
             {
@@ -124,7 +126,7 @@ namespace Microshaoft.WebApi.Controllers
             }
 
             var response = HttpContext
-                                   .Response;
+                                    .Response;
             var downloadFileName = $"{routeName}.csv";
             var downloadFileNameConfiguration =
                     _configuration
@@ -157,11 +159,11 @@ namespace Microshaoft.WebApi.Controllers
                 {
                     await
                         response
-                            .Body
-                            .WriteAsync
-                                (
-                                    _utf8HeaderBytes
-                                );
+                                .Body
+                                .WriteAsync
+                                    (
+                                        _utf8HeaderBytes
+                                    );
                 }
                 if (_csvFormatterOptions.IncludeExcelDelimiterHeader)
                 {
@@ -174,11 +176,11 @@ namespace Microshaoft.WebApi.Controllers
                                 );
                 }
                 var outputColumnsConfiguration =
-                    _configuration
-                            .GetSection
-                                (
-                                    $"Routes:{routeName}:{httpMethod}:Exporting:OutputColumns"
-                                );
+                            _configuration
+                                    .GetSection
+                                        (
+                                            $"Routes:{routeName}:{httpMethod}:Exporting:OutputColumns"
+                                        );
 
                 (
                     string ColumnName
@@ -187,28 +189,28 @@ namespace Microshaoft.WebApi.Controllers
                 if (outputColumnsConfiguration.Exists())
                 {
                     outputColumns = outputColumnsConfiguration
-                                        .GetChildren()
-                                        .Select
-                                            (
-                                                (x) =>
-                                                {
-                                                    var columnName = x
-                                                                        .GetValue<string>
-                                                                                ("ColumnName");
-                                                    var columnTitle = x
-                                                                        .GetValue
-                                                                                (
-                                                                                    "ColumnTitle"
-                                                                                    , columnName
-                                                                                );
-                                                    return
+                                                    .GetChildren()
+                                                    .Select
                                                         (
-                                                            ColumnName: columnName
-                                                            , ColumnTitle: columnTitle
-                                                        );
-                                                }
-                                            )
-                                        .ToArray();
+                                                            (x) =>
+                                                            {
+                                                                var columnName = x
+                                                                                    .GetValue<string>
+                                                                                            ("ColumnName");
+                                                                var columnTitle = x
+                                                                                    .GetValue
+                                                                                            (
+                                                                                                "ColumnTitle"
+                                                                                                , columnName
+                                                                                            );
+                                                                return
+                                                                    (
+                                                                        ColumnName: columnName
+                                                                        , ColumnTitle: columnTitle
+                                                                    );
+                                                            }
+                                                        )
+                                                    .ToArray();
                     if (_csvFormatterOptions.UseSingleLineHeaderInCsv)
                     {
                         var j = 0;
@@ -221,7 +223,7 @@ namespace Microshaoft.WebApi.Controllers
                                                                     if (j > 0)
                                                                     {
                                                                         x += _csvFormatterOptions
-                                                                                        .CsvColumnsDelimiter;
+                                                                                    .CsvColumnsDelimiter;
                                                                     }
                                                                     x += y.ColumnTitle;
                                                                     j++;
@@ -231,14 +233,14 @@ namespace Microshaoft.WebApi.Controllers
                                                             );
                         await
                             streamWriter
-                                .WriteLineAsync
-                                        (
-                                            columnsHeaderLine
-                                        );
+                                    .WriteLineAsync
+                                            (
+                                                columnsHeaderLine
+                                            );
                     }
                 }
                 _service
-                    .RowsProcess
+                    .ProcessReaderReadRows
                         (
                             routeName
                             , parameters
@@ -260,10 +262,10 @@ namespace Microshaoft.WebApi.Controllers
                                                                                     if (j > 0)
                                                                                     {
                                                                                         x += _csvFormatterOptions
-                                                                                                .CsvColumnsDelimiter;
+                                                                                                    .CsvColumnsDelimiter;
                                                                                     }
                                                                                     x += y["ColumnName"].ToString();
-                                                                                    j++;
+                                                                                    j ++;
                                                                                     return
                                                                                             x;
                                                                                 }
@@ -274,6 +276,8 @@ namespace Microshaoft.WebApi.Controllers
                                                             (
                                                                 columnsHeaderLine
                                                             );
+                                            //streamWriter
+                                            //        .Flush();
                                         }
                                     }
                                 }
@@ -297,27 +301,30 @@ namespace Microshaoft.WebApi.Controllers
                                     {
                                         if (j > 0)
                                         {
-                                            line += _csvFormatterOptions.CsvColumnsDelimiter;
+                                            line += _csvFormatterOptions
+                                                                .CsvColumnsDelimiter;
                                         }
                                         if
                                             (
                                                 columns
-                                                    .Any
-                                                        (
-                                                            (x) =>
-                                                            {
-                                                                return
-                                                                    string
-                                                                        .Compare
-                                                                            (
-                                                                                x["ColumnName"].ToString()
-                                                                                , columnName
-                                                                                , true
-                                                                            ) == 0;
-                                                                        
-                                                            }
-
-                                                        )
+                                                        .Any
+                                                            (
+                                                                (x) =>
+                                                                {
+                                                                    return
+                                                                        (
+                                                                            string
+                                                                                .Compare
+                                                                                    (
+                                                                                        x["ColumnName"].ToString()
+                                                                                        , columnName
+                                                                                        , true
+                                                                                    )
+                                                                            ==
+                                                                            0
+                                                                        );
+                                                                }
+                                                            )
                                             )
                                         {
                                             var fieldIndex = reader.GetOrdinal(columnName);
@@ -328,10 +335,15 @@ namespace Microshaoft.WebApi.Controllers
                                 }
                                 //await
                                 streamWriter
-                                    .WriteLineAsync(line);
+                                        //.WriteLineAsync(line);
+                                        .WriteLine(line);
+                                streamWriter
+                                        //.FlushAsync();
+                                        .Flush();
                                 //i++;
                             }
-                            , Request.Method
+                            , Request
+                                    .Method
                             //, 102
                         );
             }

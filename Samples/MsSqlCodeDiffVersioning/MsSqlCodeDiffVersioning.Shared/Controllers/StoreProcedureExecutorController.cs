@@ -28,7 +28,12 @@ namespace Microshaoft.WebApi.Controllers
                                 , IConfiguration configuration
                                 , IOptions<CsvFormatterOptions> csvFormatterOptions
                             )
-                : base(service, configuration, csvFormatterOptions)
+                : base
+                    (
+                        service
+                        , configuration
+                        , csvFormatterOptions
+                    )
         {
         }
 #if NETCOREAPP3_X
@@ -64,18 +69,18 @@ namespace Microshaoft.WebApi.Controllers
                 )
         {
             return
-                base
-                    .ProcessActionRequest
-                        (
-                            routeName
-                            , parameters
-                            , resultJsonPathPart1
-                            , resultJsonPathPart2
-                            , resultJsonPathPart3
-                            , resultJsonPathPart4
-                            , resultJsonPathPart5
-                            , resultJsonPathPart6
-                        );
+                    base
+                        .ProcessActionRequest
+                            (
+                                routeName
+                                , parameters
+                                , resultJsonPathPart1
+                                , resultJsonPathPart2
+                                , resultJsonPathPart3
+                                , resultJsonPathPart4
+                                , resultJsonPathPart5
+                                , resultJsonPathPart6
+                            );
         }
 
         [BearerTokenBasedAuthorizeFilter(IsRequired = false)]
