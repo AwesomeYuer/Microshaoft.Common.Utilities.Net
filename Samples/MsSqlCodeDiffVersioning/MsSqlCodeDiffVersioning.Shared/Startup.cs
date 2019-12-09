@@ -1,5 +1,6 @@
 ﻿namespace WebApplication.ASPNetCore
 {
+//    using Google.Protobuf.WellKnownTypes;
     using Microshaoft;
     using Microshaoft.Web;
     using Microshaoft.WebApi.Controllers;
@@ -15,8 +16,9 @@
     using Microsoft.AspNetCore.Server.Kestrel.Core;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.FileProviders;
+ //   using Microsoft.Extensions.FileProviders;
     using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
     using Microsoft.Net.Http.Headers;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
@@ -44,21 +46,26 @@
         }
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddOptions();
-            services.Configure<CsvFormatterOptions>
-                (
-                    Configuration.GetSection("ExportCsvFormatter")
-                );
+            //services.AddOptions<ExtendMvcOptions<CsvFormatterOptions>>();
+            services
+                .Configure<CsvFormatterOptions>
+                    (
+                        Configuration
+                                .GetSection
+                                    (
+                                        "ExportCsvFormatter"
+                                    )
+                    );
+            //services
+            //    .AddSingleton<IConfigureOptions<MvcOptions>, CsvConfigurableMvcOptions>();
 
             services
-
                 .AddMvc
                 (
 #if NETCOREAPP3_X    
                     (option) =>
                     {
                         option.EnableEndpointRouting = false;                    
-                    
                     }
 #endif
                 )
@@ -178,7 +185,9 @@
                   );
 #endregion
 
-            services.AddResponseCaching();
+            services
+                .AddResponseCaching();
+
 #if !NETCOREAPP3_X
             services
                 .AddSingleton<IActionSelector, SyncOrAsyncActionSelector>();
@@ -189,12 +198,16 @@
                 IncludeExcelDelimiterHeader = false,
                 UseSingleLineHeaderInCsv = true
             };
+            
             services
                 .AddMvc
                     (
                         (options) =>
                         {
                             //options.InputFormatters.Add(new CsvInputFormatter(csvFormatterOptions));
+
+                            //==================================================
+                            // ??????????????????????????????????????????
                             options
                                 .OutputFormatters
                                 .Add
@@ -204,6 +217,10 @@
                                                         csvFormatterOptions
                                                     )
                                     );
+                            // ?????????????????????????????????????????
+                            //===================================================
+                            //options
+                            //    .AddCsvOutputFormatter();
                             options
                                 .FormatterMappings
                                 .SetMediaTypeMappingForFormat
@@ -237,14 +254,14 @@
                         }
                     );
 #endif
-            services.Configure<KestrelServerOptions>
-                (
-                    (options) =>
-                    {
-                        options.AllowSynchronousIO = true;
-                    }
-                );
-            
+            services
+                .Configure<KestrelServerOptions>
+                    (
+                        (options) =>
+                        {
+                            options.AllowSynchronousIO = true;
+                        }
+                    );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -540,5 +557,100 @@
             //app.UseHttpsRedirection();
         }
         
+    }
+
+    //====================================================================================
+    public class ExtendMvcOptions<T> : MvcOptions
+                where
+                    T : class, new()
+    {
+        private T _options;
+        public T Options
+        { 
+            get => _options;
+            set => _options = value;
+        }
+
+        public ExtendMvcOptions(IOptions<T> iOptions)
+        {
+            _options = iOptions.Value;
+        }
+    }
+    public static class MvcOptionsExtensions
+    {
+        public static void AddCsvOutputFormatter(this MvcOptions target)
+        {
+
+            var extendMvcOptions =
+                                    (
+                                        (ExtendMvcOptions<CsvFormatterOptions>)
+                                            target
+                                    );
+            extendMvcOptions
+                        .OutputFormatters
+                        .Add
+                            (
+                                new CsvOutputFormatter(extendMvcOptions.Options)        
+                            );
+        }
+    }
+    public class CsvConfigurableMvcOptions
+                        : AbstractConfigurableMvcOptions<CsvFormatterOptions>
+    {
+        public CsvConfigurableMvcOptions(IOptions<CsvFormatterOptions> iOptions)
+                        : base(iOptions)
+        { 
+        
+        }
+
+        public override void OnConfigureProcess
+                (
+                    AbstractConfigurableMvcOptions<CsvFormatterOptions> sender
+                    , MvcOptions mvcOptions
+                    , CsvFormatterOptions options
+                )
+        {
+            mvcOptions
+                .OutputFormatters
+                .Add
+                    (
+                        new CsvOutputFormatter
+                        (
+                            options    
+                        )
+                    );
+        }
+    }
+
+         
+    public abstract class
+                AbstractConfigurableMvcOptions<TOptions>
+                                    : IConfigureOptions<MvcOptions>
+                                            where
+                                                TOptions : class, new()
+    {
+        public readonly TOptions Options;
+
+        public AbstractConfigurableMvcOptions(IOptions<TOptions> iOptions)
+        {
+            Options = iOptions.Value;
+        }
+
+        public void Configure(MvcOptions mvcOptions)
+        {
+            OnConfigureProcess
+                    (
+                        this
+                        , mvcOptions
+                        , Options
+                    );
+        }
+
+        public abstract void OnConfigureProcess
+                        (
+                            AbstractConfigurableMvcOptions<TOptions>  sender
+                            ,MvcOptions mvcOptions
+                            , TOptions options
+                        );
     }
 }

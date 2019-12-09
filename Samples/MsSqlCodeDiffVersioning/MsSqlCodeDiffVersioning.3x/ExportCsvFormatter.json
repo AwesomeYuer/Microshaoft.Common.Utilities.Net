@@ -3,6 +3,6 @@
     "CsvColumnsDelimiter": ",",
     "UseSingleLineHeaderInCsv": false,
     "IncludeExcelDelimiterHeader": true,
-    "DigitsTextSuffix" :  "\t",
+    "DigitsTextSuffix" :  "111111111111\t",
   }
 }
