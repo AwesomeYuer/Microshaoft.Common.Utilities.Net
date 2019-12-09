@@ -649,7 +649,7 @@
         public abstract void OnConfigureProcess
                         (
                             AbstractConfigurableMvcOptions<TOptions>  sender
-                            ,MvcOptions mvcOptions
+                            , MvcOptions mvcOptions
                             , TOptions options
                         );
     }
