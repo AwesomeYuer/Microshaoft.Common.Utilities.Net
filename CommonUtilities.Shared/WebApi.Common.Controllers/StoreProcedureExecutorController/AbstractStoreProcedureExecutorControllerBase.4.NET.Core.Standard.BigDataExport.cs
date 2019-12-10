@@ -29,80 +29,70 @@ namespace Microshaoft.WebApi.Controllers
                                                             , 0xBB
                                                             , 0xBF
                                                         };
+
         private readonly CsvFormatterOptions _csvFormatterOptions;
  
-        //= new CsvFormatterOptions() 
-        //{
-        //    CsvColumnsDelimiter = ","
-        //    , UseSingleLineHeaderInCsv = true
-        //    , IncludeExcelDelimiterHeader = false
-        //    , DigitsTextSuffix = "\t"
-        //};
-
         private string GetFieldValue(IDataReader reader, int fieldIndex)
         {
             string value;
-            ////if (jToken != null)
-            //{
-                var fieldType = reader.GetFieldType(fieldIndex);
-                if 
-                    (
-                        string
-                            .Compare
-                                (
-                                    reader
-                                        .GetDataTypeName(fieldIndex)
-                                    , "Date"
-                                    , true
-                                )
-                        ==
-                        0
-                    )
+            var fieldType = reader.GetFieldType(fieldIndex);
+            if 
+                (
+                    string
+                        .Compare
+                            (
+                                reader
+                                    .GetDataTypeName(fieldIndex)
+                                , "Date"
+                                , true
+                            )
+                    ==
+                    0
+                )
+            {
+                //@value = ((DateTime) jValue).ToString("yyyy-MM-ddTHH:mm:ss.fffff");
+                var x = reader.GetDateTime(fieldIndex);
+                @value = $@"""{x.ToString(_csvFormatterOptions.DateFormat)}""";
+            }
+            else if
+                (
+                    fieldType
+                    ==
+                    typeof(DateTime)
+                )
+            {
+                var x = reader.GetDateTime(fieldIndex);
+                @value = $@"""{x.ToString(_csvFormatterOptions.DateTimeFormat)}""";
+            }
+            else
+            {
+                @value = reader.GetValue(fieldIndex).ToString();
+                @value = @value.Replace(@"""", @"""""");
+                if (fieldType == typeof(string))
                 {
-                    //@value = ((DateTime) jValue).ToString("yyyy-MM-ddTHH:mm:ss.fffff");
-                    var x = reader.GetDateTime(fieldIndex);
-                    @value = $@"""{x.ToString(_csvFormatterOptions.DateFormat)}""";
-                }
-                else if
-                    (
-                        fieldType
-                        ==
-                        typeof(DateTime)
-                    )
-                {
-                    var x = reader.GetDateTime(fieldIndex);
-                    @value = $@"""{x.ToString(_csvFormatterOptions.DateTimeFormat)}""";
-                }
-                else
-                {
-                    @value = reader.GetValue(fieldIndex).ToString();
-                    @value = @value.Replace(@"""", @"""""");
-                    if (fieldType == typeof(string))
+                    if (!string.IsNullOrEmpty(_csvFormatterOptions.DigitsTextSuffix))
                     {
-                        if (!string.IsNullOrEmpty(_csvFormatterOptions.DigitsTextSuffix))
+                        if (_digitsRegex.IsMatch(@value))
                         {
-                            if (_digitsRegex.IsMatch(@value))
-                            {
-                                //避免在Excel中csv文本数字自动变科学计数法
-                                @value += _csvFormatterOptions.DigitsTextSuffix;
-                                //@value = $@"=""{@value}""";
-                            }
+                            //避免在Excel中csv文本数字自动变科学计数法
+                            @value += _csvFormatterOptions.DigitsTextSuffix;
+                            //@value = $@"=""{@value}""";
                         }
                     }
-                    //Check if the value contains a delimiter and place it in quotes if so
-                    if
-                        (
-                            @value.Contains(_csvFormatterOptions.CsvColumnsDelimiter)
-                            ||
-                            @value.Contains("\r")
-                            ||
-                            @value.Contains("\n")
-                        )
-                    {
-                        @value = $@"""{@value}""";
-                    }
                 }
-            //}
+                //Check if the value contains a delimiter and place it in quotes if so
+                if
+                    (
+                        @value.Contains(_csvFormatterOptions.CsvColumnsDelimiter)
+                        ||
+                        @value.Contains("\r")
+                        ||
+                        @value.Contains("\n")
+                    )
+                {
+                    @value = $@"""{@value}""";
+                }
+            }
             return @value;
         }
 

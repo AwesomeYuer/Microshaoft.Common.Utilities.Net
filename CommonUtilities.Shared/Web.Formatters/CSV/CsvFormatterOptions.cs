@@ -13,7 +13,7 @@ namespace Microshaoft.Web
 
         public string DateTimeFormat { get; set; } = "yyyy-MM-ddTHH:mm:ss.FFFFFFFzzz";
 
-        public string DateFormat { get; set; } = "yyyy-MM-dd";
+        public string DateFormat { get; set; } = "yyyy-MM-ddzzz";
 
         //避免 Excel CSV 科学计数法
         public string DigitsTextSuffix { get; set; } = "";//"\t";
