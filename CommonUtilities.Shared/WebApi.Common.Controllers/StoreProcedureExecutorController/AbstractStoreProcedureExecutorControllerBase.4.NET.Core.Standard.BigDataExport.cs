@@ -34,7 +34,7 @@ namespace Microshaoft.WebApi.Controllers
  
         private string GetFieldValue(IDataReader reader, int fieldIndex, string format = null)
         {
-            string value;
+            string @value;
             var fieldType = reader.GetFieldType(fieldIndex);
             if 
                 (
