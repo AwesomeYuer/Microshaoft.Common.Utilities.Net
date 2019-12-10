@@ -41,13 +41,35 @@ namespace Microshaoft.WebApi.Controllers
 
         private string GetFieldValue(IDataReader reader, int fieldIndex)
         {
-            var @value = string.Empty;
-            //if (jToken != null)
-            {
+            string value;
+            ////if (jToken != null)
+            //{
                 var fieldType = reader.GetFieldType(fieldIndex);
-                if (fieldType == typeof(DateTime))
+                if 
+                    (
+                        string
+                            .Compare
+                                (
+                                    reader
+                                        .GetDataTypeName(fieldIndex)
+                                    , "Date"
+                                    , true
+                                )
+                        ==
+                        0
+                    )
                 {
                     //@value = ((DateTime) jValue).ToString("yyyy-MM-ddTHH:mm:ss.fffff");
+                    var x = reader.GetDateTime(fieldIndex);
+                    @value = $@"""{x.ToString(_csvFormatterOptions.DateFormat)}""";
+                }
+                else if
+                    (
+                        fieldType
+                        ==
+                        typeof(DateTime)
+                    )
+                {
                     var x = reader.GetDateTime(fieldIndex);
                     @value = $@"""{x.ToString(_csvFormatterOptions.DateTimeFormat)}""";
                 }
@@ -80,7 +102,7 @@ namespace Microshaoft.WebApi.Controllers
                         @value = $@"""{@value}""";
                     }
                 }
-            }
+            //}
             return @value;
         }
 
@@ -122,7 +144,7 @@ namespace Microshaoft.WebApi.Controllers
             }
             else
             {
-                e = Encoding.UTF8;
+                e = _csvFormatterOptions.Encoding;
             }
 
             var response = HttpContext
@@ -185,7 +207,8 @@ namespace Microshaoft.WebApi.Controllers
                 (
                     string ColumnName
                     , string ColumnTitle
-                )[] outputColumns = null;
+                )
+                    [] outputColumns = null;
                 if (outputColumnsConfiguration.Exists())
                 {
                     outputColumns = outputColumnsConfiguration

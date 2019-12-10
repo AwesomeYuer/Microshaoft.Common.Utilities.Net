@@ -31,6 +31,7 @@
     using System.Linq;
     using System.Net;
     using System.Reflection;
+    using System.Text;
     using System.Threading.Tasks;
 
     public class Startup
@@ -192,20 +193,87 @@
             services
                 .AddSingleton<IActionSelector, SyncOrAsyncActionSelector>();
 #endif
-            var csvFormatterOptions = new CsvFormatterOptions
-            {
-                CsvColumnsDelimiter = ",",
-                IncludeExcelDelimiterHeader = false,
-                UseSingleLineHeaderInCsv = true
-            };
-            
             services
                 .AddMvc
                     (
                         (options) =>
                         {
-                            //options.InputFormatters.Add(new CsvInputFormatter(csvFormatterOptions));
+                            var csvFormatterOptions = new CsvFormatterOptions
+                            {
+                                CsvColumnsDelimiter = ",",
+                                IncludeExcelDelimiterHeader = false,
+                                UseSingleLineHeaderInCsv = true
+                            };
+                            Configuration
+                                    .ProcesSectionIfExists
+                                        (
+                                            "ExportCsvFormatter"
+                                            , (x, y) =>
+                                            {
+                                                y
+                                                    .ProcesSectionIfExists
+                                                        (
+                                                            nameof(csvFormatterOptions.CsvColumnsDelimiter)
+                                                            , (xx, yy) =>
+                                                            {
+                                                                csvFormatterOptions
+                                                                    .CsvColumnsDelimiter = yy.Value;
+                                                            }
+                                                        );
+                                                y
+                                                    .ProcesSectionIfExists
+                                                        (
+                                                            nameof(csvFormatterOptions.DateTimeFormat)
+                                                            , (xx, yy) =>
+                                                            {
+                                                                csvFormatterOptions
+                                                                    .DateTimeFormat = yy.Value;
+                                                            }
+                                                        );
+                                                y
+                                                    .ProcesSectionIfExists
+                                                        (
+                                                            nameof(csvFormatterOptions.DigitsTextSuffix)
+                                                            , (xx, yy) =>
+                                                            {
+                                                                csvFormatterOptions
+                                                                    .DigitsTextSuffix = yy.Value;
+                                                            }
+                                                        );
+                                                y
+                                                    .ProcesSectionIfExists
+                                                        (
+                                                            nameof(csvFormatterOptions.Encoding)
+                                                            , (xx, yy) =>
+                                                            {
+                                                                csvFormatterOptions
+                                                                    .Encoding = Encoding.GetEncoding(yy.Value);
+                                                            }
+                                                        );
+                                                y
+                                                    .ProcesSectionIfExists
+                                                        (
+                                                            nameof(csvFormatterOptions.IncludeExcelDelimiterHeader)
+                                                            , (xx, yy) =>
+                                                            {
+                                                                csvFormatterOptions
+                                                                    .IncludeExcelDelimiterHeader = yy.Get<bool>();
+                                                            }
+                                                        );
+                                                y
+                                                    .ProcesSectionIfExists
+                                                        (
+                                                            nameof(csvFormatterOptions.UseSingleLineHeaderInCsv)
+                                                            , (xx, yy) =>
+                                                            {
+                                                                csvFormatterOptions
+                                                                    .UseSingleLineHeaderInCsv = yy.Get<bool>();
+                                                            }
+                                                        );
+                                            }
+                                        );
 
+                            //options.InputFormatters.Add(new CsvInputFormatter(csvFormatterOptions));
                             //==================================================
                             // ??????????????????????????????????????????
                             options
@@ -214,7 +282,7 @@
                                     (
                                         new CsvOutputFormatter
                                                     (
-                                                        csvFormatterOptions
+                                                        //csvFormatterOptions
                                                     )
                                     );
                             // ?????????????????????????????????????????
@@ -559,98 +627,100 @@
         
     }
 
-    //====================================================================================
-    public class ExtendMvcOptions<T> : MvcOptions
-                where
-                    T : class, new()
-    {
-        private T _options;
-        public T Options
-        { 
-            get => _options;
-            set => _options = value;
-        }
+    ////====================================================================================
+    //public class ExtendMvcOptions<T> : MvcOptions
+    //            where
+    //                T : class, new()
+    //{
+    //    private T _options;
+    //    public T Options
+    //    { 
+    //        get => _options;
+    //        set => _options = value;
+    //    }
 
-        public ExtendMvcOptions(IOptions<T> iOptions)
-        {
-            _options = iOptions.Value;
-        }
-    }
-    public static class MvcOptionsExtensions
-    {
-        public static void AddCsvOutputFormatter(this MvcOptions target)
-        {
+    //    public ExtendMvcOptions(IOptions<T> iOptions)
+    //    {
+    //        _options = iOptions.Value;
+    //    }
+    //}
+    //public static class MvcOptionsExtensions
+    //{
+    //    public static void AddCsvOutputFormatter(this MvcOptions target)
+    //    {
 
-            var extendMvcOptions =
-                                    (
-                                        (ExtendMvcOptions<CsvFormatterOptions>)
-                                            target
-                                    );
-            extendMvcOptions
-                        .OutputFormatters
-                        .Add
-                            (
-                                new CsvOutputFormatter(extendMvcOptions.Options)        
-                            );
-        }
-    }
-    public class CsvConfigurableMvcOptions
-                        : AbstractConfigurableMvcOptions<CsvFormatterOptions>
-    {
-        public CsvConfigurableMvcOptions(IOptions<CsvFormatterOptions> iOptions)
-                        : base(iOptions)
-        { 
+    //        var extendMvcOptions =
+    //                                (
+    //                                    (ExtendMvcOptions<CsvFormatterOptions>)
+    //                                        target
+    //                                );
+    //        extendMvcOptions
+    //                    .OutputFormatters
+    //                    .Add
+    //                        (
+    //                            new CsvOutputFormatter(extendMvcOptions.Options)        
+    //                        );
+    //    }
+    //}
+    //public class CsvConfigurableMvcOptions
+    //                    : AbstractConfigurableMvcOptions<CsvFormatterOptions>
+    //{
+    //    public CsvConfigurableMvcOptions(IOptions<CsvFormatterOptions> iOptions)
+    //                    : base(iOptions)
+    //    { 
         
-        }
+    //    }
 
-        public override void OnConfigureProcess
-                (
-                    AbstractConfigurableMvcOptions<CsvFormatterOptions> sender
-                    , MvcOptions mvcOptions
-                    , CsvFormatterOptions options
-                )
-        {
-            mvcOptions
-                .OutputFormatters
-                .Add
-                    (
-                        new CsvOutputFormatter
-                        (
-                            options    
-                        )
-                    );
-        }
-    }
+    //    public override void OnConfigureProcess
+    //            (
+    //                AbstractConfigurableMvcOptions<CsvFormatterOptions> sender
+    //                , MvcOptions mvcOptions
+    //                , CsvFormatterOptions options
+    //            )
+    //    {
+    //        mvcOptions
+    //            .OutputFormatters
+    //            .Add
+    //                (
+    //                    new CsvOutputFormatter
+    //                    (
+    //                        options    
+    //                    )
+    //                );
+    //    }
+    //}
 
          
-    public abstract class
-                AbstractConfigurableMvcOptions<TOptions>
-                                    : IConfigureOptions<MvcOptions>
-                                            where
-                                                TOptions : class, new()
-    {
-        public readonly TOptions Options;
+    //public abstract class
+    //            AbstractConfigurableMvcOptions<TOptions>
+    //                                : IConfigureOptions<MvcOptions>
+    //                                        where
+    //                                            TOptions : class, new()
+    //{
+    //    public readonly TOptions Options;
 
-        public AbstractConfigurableMvcOptions(IOptions<TOptions> iOptions)
-        {
-            Options = iOptions.Value;
-        }
+    //    public AbstractConfigurableMvcOptions(IOptions<TOptions> iOptions)
+    //    {
+    //        Options = iOptions.Value;
+    //    }
 
-        public void Configure(MvcOptions mvcOptions)
-        {
-            OnConfigureProcess
-                    (
-                        this
-                        , mvcOptions
-                        , Options
-                    );
-        }
+    //    public void Configure(MvcOptions mvcOptions)
+    //    {
+    //        OnConfigureProcess
+    //                (
+    //                    this
+    //                    , mvcOptions
+    //                    , Options
+    //                );
+    //    }
 
-        public abstract void OnConfigureProcess
-                        (
-                            AbstractConfigurableMvcOptions<TOptions>  sender
-                            , MvcOptions mvcOptions
-                            , TOptions options
-                        );
-    }
+    //    public abstract void OnConfigureProcess
+    //                    (
+    //                        AbstractConfigurableMvcOptions<TOptions>  sender
+    //                        , MvcOptions mvcOptions
+    //                        , TOptions options
+    //                    );
+    //}
+
+    
 }
