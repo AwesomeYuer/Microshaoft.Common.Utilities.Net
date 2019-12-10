@@ -47,10 +47,11 @@
           "needCheckOperations": true,
           "operations": [ "a1", "a2" ],
           "downloadFileName": "测试下载.csv",
-          "outputColumns11111": [
+          "outputColumns": [
             {
               "ColumnName": "f1",
-              "ColumnTitle": "字段1"
+              "ColumnTitle": "字段1",
+              "dataformat": "yy-mm-dd"
             },
             {
               "ColumnName": "f2",

@@ -29,7 +29,7 @@ namespace Microshaoft.Web
                                                             , 0xBB
                                                             , 0xBF
                                                         };
-        private readonly CsvFormatterOptions _options;
+        //private readonly CsvFormatterOptions _defaultCsvFormatterOptions = new CsvFormatterOptions();
         public string ContentType
         {
             get;
@@ -37,8 +37,8 @@ namespace Microshaoft.Web
         }
         public CsvOutputFormatter
                         (
-                            CsvFormatterOptions
-                                    csvFormatterOptions
+                            //CsvFormatterOptions
+                            //        csvFormatterOptions
                         )
         {
             ContentType = "text/csv";
@@ -52,14 +52,14 @@ namespace Microshaoft.Web
                                 .MediaTypeHeaderValue
                                 .Parse("text/csv")
                         );
-            _options = csvFormatterOptions
-                            ??
-                                throw
-                                    new
-                                        ArgumentNullException
-                                            (
-                                                nameof(csvFormatterOptions)
-                                            );
+            //csvFormatterOptions = csvFormatterOptions
+            //                ??
+            //                    throw
+            //                        new
+            //                            ArgumentNullException
+            //                                (
+            //                                    nameof(csvFormatterOptions)
+            //                                );
         }
 
         protected override bool CanWriteType(Type type)
@@ -85,6 +85,7 @@ namespace Microshaoft.Web
         }
 
         private IConfiguration _configuration;
+        
         private readonly object _locker = new object();
 
         public async override Task WriteResponseBodyAsync
@@ -93,15 +94,29 @@ namespace Microshaoft.Web
                                                                 context
                                     )
         {
-            string getValue(JToken jToken)
+            var csvFormatterOptions = new CsvFormatterOptions();
+            string getValue(JToken jToken, string format = null)
             {
                 var @value = string.Empty;
                 if (jToken != null)
                 {
                     if (jToken.Type == JTokenType.Date)
                     {
+                        var dateTime = (DateTime) jToken;
                         //@value = ((DateTime) jValue).ToString("yyyy-MM-ddTHH:mm:ss.fffff");
-                        @value = $@"""{((DateTime) jToken).ToString(_options.DateTimeFormat)}""";
+                        if (format.IsNullOrEmptyOrWhiteSpace())
+                        {
+                            format = csvFormatterOptions.DateTimeFormat;
+                        }
+                        if (!format.IsNullOrEmptyOrWhiteSpace())
+                        {
+                            @value = $@"""{dateTime.ToString(format)}""";
+                        }
+                        else
+                        {
+                            @value = $@"""{dateTime.ToString()}""";
+                        }
+                        
                     }
                     else
                     {
@@ -109,12 +124,12 @@ namespace Microshaoft.Web
                         @value = @value.Replace(@"""", @"""""");
                         if (jToken.Type == JTokenType.String)
                         {
-                            if (!string.IsNullOrEmpty(_options.DigitsTextSuffix))
+                            if (!string.IsNullOrEmpty(csvFormatterOptions.DigitsTextSuffix))
                             {
                                 if (_digitsRegex.IsMatch(@value))
                                 {
                                     //避免在Excel中csv文本数字自动变科学计数法
-                                    @value += _options.DigitsTextSuffix;
+                                    @value += csvFormatterOptions.DigitsTextSuffix;
                                     //@value = $@"=""{@value}""";
                                 }
                             }
@@ -122,7 +137,7 @@ namespace Microshaoft.Web
                         //Check if the value contains a delimiter and place it in quotes if so
                         if
                             (
-                                @value.Contains(_options.CsvColumnsDelimiter)
+                                @value.Contains(csvFormatterOptions.CsvColumnsDelimiter)
                                 ||
                                 @value.Contains("\r")
                                 ||
@@ -163,6 +178,82 @@ namespace Microshaoft.Web
 
                         }
                     );
+            IConfiguration exportCsvFormatterConfiguration = null;
+            var exists = _configuration
+                                    .ProcesSectionIfExists
+                                        (
+                                            "ExportCsvFormatter"
+                                            , (x, y) =>
+                                            {
+                                                exportCsvFormatterConfiguration = y;
+                                            }
+                                        );
+            if (exists)
+            {
+                exportCsvFormatterConfiguration
+                                .ProcesSectionIfExists
+                                    (
+                                        nameof(csvFormatterOptions.CsvColumnsDelimiter)
+                                        , (x, y) =>
+                                        {
+                                            csvFormatterOptions.CsvColumnsDelimiter = y.Value;
+                                        }
+                                    );
+                exportCsvFormatterConfiguration
+                                .ProcesSectionIfExists
+                                    (
+                                        nameof(csvFormatterOptions.DateFormat)
+                                        , (x, y) =>
+                                        {
+                                            csvFormatterOptions.DateFormat = y.Value;
+                                        }
+                                    );
+                exportCsvFormatterConfiguration
+                                .ProcesSectionIfExists
+                                    (
+                                        nameof(csvFormatterOptions.DateTimeFormat)
+                                        , (x, y) =>
+                                        {
+                                            csvFormatterOptions.DateTimeFormat = y.Value;
+                                        }
+                                    );
+                exportCsvFormatterConfiguration
+                                .ProcesSectionIfExists
+                                    (
+                                        nameof(csvFormatterOptions.DigitsTextSuffix)
+                                        , (x, y) =>
+                                        {
+                                            csvFormatterOptions.DigitsTextSuffix = y.Value;
+                                        }
+                                    );
+                exportCsvFormatterConfiguration
+                                .ProcesSectionIfExists
+                                    (
+                                        nameof(csvFormatterOptions.Encoding)
+                                        , (x, y) =>
+                                        {
+                                            csvFormatterOptions.Encoding = Encoding.GetEncoding(y.Value);
+                                        }
+                                    );
+                exportCsvFormatterConfiguration
+                                .ProcesSectionIfExists
+                                    (
+                                        nameof(csvFormatterOptions.IncludeExcelDelimiterHeader)
+                                        , (x, y) =>
+                                        {
+                                            csvFormatterOptions.IncludeExcelDelimiterHeader = y.Get<bool>();
+                                        }
+                                    );
+                exportCsvFormatterConfiguration
+                                .ProcesSectionIfExists
+                                    (
+                                        nameof(csvFormatterOptions.UseSingleLineHeaderInCsv)
+                                        , (x, y) =>
+                                        {
+                                            csvFormatterOptions.UseSingleLineHeaderInCsv = y.Get<bool>();
+                                        }
+                                    );
+            }
             var encodingName = (string) request.Query["e"];
             Encoding e = null;
             if (!encodingName.IsNullOrEmptyOrWhiteSpace())
@@ -172,7 +263,7 @@ namespace Microshaoft.Web
             }
             else
             {
-                e = Encoding.UTF8;
+                e = csvFormatterOptions.Encoding;
             }
             var response = httpContext
                                     .Response;
@@ -214,14 +305,14 @@ namespace Microshaoft.Web
                                     _utf8HeaderBytes
                                 );
                 }
-                if (_options.IncludeExcelDelimiterHeader)
+                if (csvFormatterOptions.IncludeExcelDelimiterHeader)
                 {
                     //乱码
                     await
                         streamWriter
                             .WriteLineAsync
                                 (
-                                    $"sep ={_options.CsvColumnsDelimiter}"
+                                    $"sep ={csvFormatterOptions.CsvColumnsDelimiter}"
                                 );
                 }
                 if (context.Object is JArray jArray)
@@ -232,11 +323,13 @@ namespace Microshaoft.Web
                                         (
                                             $"Routes:{routeName}:{httpMethod}:Exporting:OutputColumns"
                                         );
-           
+
                     (
                         string ColumnName
                         , string ColumnTitle
-                    ) [] outputColumns = null;
+                        , string DataFormat
+                    )
+                        [] outputColumns = null;
                     if (outputColumnsConfiguration.Exists())
                     {
                         outputColumns =
@@ -255,15 +348,22 @@ namespace Microshaoft.Web
                                                                                     "ColumnTitle"
                                                                                     , columnName
                                                                                 );
+                                                    var dataFormat = x
+                                                                        .GetValue
+                                                                                (
+                                                                                    "DataFormat"
+                                                                                    , string.Empty
+                                                                                );
                                                     return
                                                         (
                                                             ColumnName: columnName
                                                             , ColumnTitle: columnTitle
+                                                            , DataFormat: dataFormat
                                                         );
-                                                }                                           
+                                                }
                                             )
                                         .ToArray();
-                        if (_options.UseSingleLineHeaderInCsv)
+                        if (csvFormatterOptions.UseSingleLineHeaderInCsv)
                         {
                             var j = 0;
                             var columnsHeaderLine =
@@ -275,7 +375,7 @@ namespace Microshaoft.Web
                                                         {
                                                             if (j > 0)
                                                             {
-                                                                x += _options.CsvColumnsDelimiter;
+                                                                x += csvFormatterOptions.CsvColumnsDelimiter;
                                                             }
                                                             x += y.ColumnTitle;
                                                             j++;
@@ -296,12 +396,12 @@ namespace Microshaoft.Web
                     {
                         if (i == 0)
                         {
-                            if (_options.UseSingleLineHeaderInCsv)
+                            if (csvFormatterOptions.UseSingleLineHeaderInCsv)
                             {
                                 if (outputColumns == null)
                                 {
                                     var j = 0;
-                                    var columnsHeaderLine = 
+                                    var columnsHeaderLine =
                                                     jObject
                                                         .Properties()
                                                         .Aggregate
@@ -311,7 +411,7 @@ namespace Microshaoft.Web
                                                                 {
                                                                     if (j > 0)
                                                                     {
-                                                                        x += _options
+                                                                        x += csvFormatterOptions
                                                                                 .CsvColumnsDelimiter;
                                                                     }
                                                                     x += y.Name;
@@ -338,7 +438,7 @@ namespace Microshaoft.Web
                             {
                                 if (j > 0)
                                 {
-                                    line += _options.CsvColumnsDelimiter;
+                                    line += csvFormatterOptions.CsvColumnsDelimiter;
                                 }
                                 var jToken = jProperty.Value;
                                 line += getValue(jToken);
@@ -350,13 +450,13 @@ namespace Microshaoft.Web
                         else
                         {
                             var j = 0;
-                            foreach (var (columnName, columnTitle) in outputColumns)
+                            foreach (var (columnName, columnTitle, dataFormat) in outputColumns)
                             {
                                 if (j > 0)
                                 {
-                                    line += _options.CsvColumnsDelimiter;
+                                    line += csvFormatterOptions.CsvColumnsDelimiter;
                                 }
-                                if 
+                                if
                                     (
                                         jObject
                                             .TryGetValue
@@ -368,7 +468,7 @@ namespace Microshaoft.Web
                                                 )
                                     )
                                 {
-                                    line += getValue(jToken);
+                                    line += getValue(jToken, dataFormat);
                                 }
                                 j++;
                             }

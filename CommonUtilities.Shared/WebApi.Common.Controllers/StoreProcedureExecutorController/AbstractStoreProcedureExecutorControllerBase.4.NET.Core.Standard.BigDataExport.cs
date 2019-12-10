@@ -29,56 +29,89 @@ namespace Microshaoft.WebApi.Controllers
                                                             , 0xBB
                                                             , 0xBF
                                                         };
+
         private readonly CsvFormatterOptions _csvFormatterOptions;
  
-        //= new CsvFormatterOptions() 
-        //{
-        //    CsvColumnsDelimiter = ","
-        //    , UseSingleLineHeaderInCsv = true
-        //    , IncludeExcelDelimiterHeader = false
-        //    , DigitsTextSuffix = "\t"
-        //};
-
-        private string GetFieldValue(IDataReader reader, int fieldIndex)
+        private string GetFieldValue(IDataReader reader, int fieldIndex, string format = null)
         {
-            var @value = string.Empty;
-            //if (jToken != null)
+            string value;
+            var fieldType = reader.GetFieldType(fieldIndex);
+            if 
+                (
+                    string
+                        .Compare
+                            (
+                                reader
+                                    .GetDataTypeName(fieldIndex)
+                                , "Date"
+                                , true
+                            )
+                    ==
+                    0
+                )
             {
-                var fieldType = reader.GetFieldType(fieldIndex);
-                if (fieldType == typeof(DateTime))
+                var date = reader.GetDateTime(fieldIndex);
+                if (format.IsNullOrEmptyOrWhiteSpace())
                 {
-                    //@value = ((DateTime) jValue).ToString("yyyy-MM-ddTHH:mm:ss.fffff");
-                    var x = reader.GetDateTime(fieldIndex);
-                    @value = $@"""{x.ToString(_csvFormatterOptions.DateTimeFormat)}""";
+                    format = _csvFormatterOptions.DateFormat;
+                }
+                if (!format.IsNullOrEmptyOrWhiteSpace())
+                {
+                    @value = $@"""{date.ToString(format)}""";
                 }
                 else
                 {
-                    @value = reader.GetValue(fieldIndex).ToString();
-                    @value = @value.Replace(@"""", @"""""");
-                    if (fieldType == typeof(string))
+                    @value = $@"""{date.ToString()}""";
+                }
+            }
+            else if
+                (
+                    fieldType
+                    ==
+                    typeof(DateTime)
+                )
+            {
+                var dateTime = reader.GetDateTime(fieldIndex);
+                if (format.IsNullOrEmptyOrWhiteSpace())
+                {
+                    format = _csvFormatterOptions.DateTimeFormat;
+                }
+                if (!format.IsNullOrEmptyOrWhiteSpace())
+                {
+                    @value = $@"""{dateTime.ToString(format)}""";
+                }
+                else
+                {
+                    @value = $@"""{dateTime.ToString()}""";
+                }
+            }
+            else
+            {
+                @value = reader.GetValue(fieldIndex).ToString();
+                @value = @value.Replace(@"""", @"""""");
+                if (fieldType == typeof(string))
+                {
+                    if (!string.IsNullOrEmpty(_csvFormatterOptions.DigitsTextSuffix))
                     {
-                        if (!string.IsNullOrEmpty(_csvFormatterOptions.DigitsTextSuffix))
+                        if (_digitsRegex.IsMatch(@value))
                         {
-                            if (_digitsRegex.IsMatch(@value))
-                            {
-                                //避免在Excel中csv文本数字自动变科学计数法
-                                @value += _csvFormatterOptions.DigitsTextSuffix;
-                                //@value = $@"=""{@value}""";
-                            }
+                            //避免在Excel中csv文本数字自动变科学计数法
+                            @value += _csvFormatterOptions.DigitsTextSuffix;
+                            //@value = $@"=""{@value}""";
                         }
                     }
-                    //Check if the value contains a delimiter and place it in quotes if so
-                    if
-                        (
-                            @value.Contains(_csvFormatterOptions.CsvColumnsDelimiter)
-                            ||
-                            @value.Contains("\r")
-                            ||
-                            @value.Contains("\n")
-                        )
-                    {
-                        @value = $@"""{@value}""";
-                    }
+                }
+                //Check if the value contains a delimiter and place it in quotes if so
+                if
+                    (
+                        @value.Contains(_csvFormatterOptions.CsvColumnsDelimiter)
+                        ||
+                        @value.Contains("\r")
+                        ||
+                        @value.Contains("\n")
+                    )
+                {
+                    @value = $@"""{@value}""";
                 }
             }
             return @value;
@@ -122,7 +155,7 @@ namespace Microshaoft.WebApi.Controllers
             }
             else
             {
-                e = Encoding.UTF8;
+                e = _csvFormatterOptions.Encoding;
             }
 
             var response = HttpContext
@@ -167,7 +200,7 @@ namespace Microshaoft.WebApi.Controllers
                 }
                 if (_csvFormatterOptions.IncludeExcelDelimiterHeader)
                 {
-                    //乱码
+                    //导致中文乱码
                     await
                         streamWriter
                             .WriteLineAsync
@@ -185,7 +218,9 @@ namespace Microshaoft.WebApi.Controllers
                 (
                     string ColumnName
                     , string ColumnTitle
-                )[] outputColumns = null;
+                    , string DataFormat
+                )
+                    [] outputColumns = null;
                 if (outputColumnsConfiguration.Exists())
                 {
                     outputColumns = outputColumnsConfiguration
@@ -203,10 +238,17 @@ namespace Microshaoft.WebApi.Controllers
                                                                                                 "ColumnTitle"
                                                                                                 , columnName
                                                                                             );
+                                                                var dataFormat = x
+                                                                                    .GetValue
+                                                                                            (
+                                                                                                "DataFormat"
+                                                                                                , string.Empty
+                                                                                            );
                                                                 return
                                                                     (
                                                                         ColumnName: columnName
                                                                         , ColumnTitle: columnTitle
+                                                                        , DataFormat: dataFormat
                                                                     );
                                                             }
                                                         )
@@ -297,7 +339,7 @@ namespace Microshaoft.WebApi.Controllers
                                 else
                                 {
                                     var j = 0;
-                                    foreach (var (columnName, columnTitle) in outputColumns)
+                                    foreach (var (columnName, columnTitle, dataFormat) in outputColumns)
                                     {
                                         if (j > 0)
                                         {
@@ -328,7 +370,7 @@ namespace Microshaoft.WebApi.Controllers
                                             )
                                         {
                                             var fieldIndex = reader.GetOrdinal(columnName);
-                                            line += GetFieldValue(reader, fieldIndex);
+                                            line += GetFieldValue(reader, fieldIndex, dataFormat);
                                         }
                                         j ++;
                                     }

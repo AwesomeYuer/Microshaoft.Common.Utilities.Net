@@ -31,6 +31,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\PathHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\RandomHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\SecureStringHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuration\ConfigurationExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\ConfigurationAppSettingsHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Console\ConsoleHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Console\DebugConsole.cs" />

@@ -74,7 +74,7 @@ namespace Microshaoft.Web
                                 .OutputFormatters
                                 .Add
                                     (
-                                        new CsvOutputFormatter(csvFormatterOptions)
+                                        new CsvOutputFormatter()
                                     );
                         }
                     );
