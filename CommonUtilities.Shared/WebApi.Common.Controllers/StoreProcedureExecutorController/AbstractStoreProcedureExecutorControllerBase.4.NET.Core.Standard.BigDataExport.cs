@@ -388,6 +388,8 @@ namespace Microshaoft.WebApi.Controllers
                                     .Method
                             //, 102
                         );
+                streamWriter.Close();
+                streamWriter = null;
             }
         }
     }
