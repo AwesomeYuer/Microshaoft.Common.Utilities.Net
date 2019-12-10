@@ -95,15 +95,28 @@ namespace Microshaoft.Web
                                     )
         {
             var csvFormatterOptions = new CsvFormatterOptions();
-            string getValue(JToken jToken)
+            string getValue(JToken jToken, string format = null)
             {
                 var @value = string.Empty;
                 if (jToken != null)
                 {
                     if (jToken.Type == JTokenType.Date)
                     {
+                        var dateTime = (DateTime) jToken;
                         //@value = ((DateTime) jValue).ToString("yyyy-MM-ddTHH:mm:ss.fffff");
-                        @value = $@"""{((DateTime) jToken).ToString(csvFormatterOptions.DateTimeFormat)}""";
+                        if (format.IsNullOrEmptyOrWhiteSpace())
+                        {
+                            format = csvFormatterOptions.DateTimeFormat;
+                        }
+                        if (!format.IsNullOrEmptyOrWhiteSpace())
+                        {
+                            @value = $@"""{dateTime.ToString(format)}""";
+                        }
+                        else
+                        {
+                            @value = $@"""{dateTime.ToString()}""";
+                        }
+                        
                     }
                     else
                     {
@@ -314,6 +327,7 @@ namespace Microshaoft.Web
                     (
                         string ColumnName
                         , string ColumnTitle
+                        , string DataFormat
                     )
                         [] outputColumns = null;
                     if (outputColumnsConfiguration.Exists())
@@ -334,10 +348,17 @@ namespace Microshaoft.Web
                                                                                     "ColumnTitle"
                                                                                     , columnName
                                                                                 );
+                                                    var dataFormat = x
+                                                                        .GetValue
+                                                                                (
+                                                                                    "DataFormat"
+                                                                                    , string.Empty
+                                                                                );
                                                     return
                                                         (
                                                             ColumnName: columnName
                                                             , ColumnTitle: columnTitle
+                                                            , DataFormat: dataFormat
                                                         );
                                                 }
                                             )
@@ -429,7 +450,7 @@ namespace Microshaoft.Web
                         else
                         {
                             var j = 0;
-                            foreach (var (columnName, columnTitle) in outputColumns)
+                            foreach (var (columnName, columnTitle, dataFormat) in outputColumns)
                             {
                                 if (j > 0)
                                 {
@@ -447,7 +468,7 @@ namespace Microshaoft.Web
                                                 )
                                     )
                                 {
-                                    line += getValue(jToken);
+                                    line += getValue(jToken, dataFormat);
                                 }
                                 j++;
                             }

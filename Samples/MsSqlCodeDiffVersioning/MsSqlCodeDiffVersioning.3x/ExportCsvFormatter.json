@@ -2,7 +2,8 @@
   "ExportCsvFormatter": {
     "CsvColumnsDelimiter": ",",
     "UseSingleLineHeaderInCsv": true,
-    "IncludeExcelDelimiterHeader": true,
+    //IncludeExcelDelimiterHeader = true µ¼ÖÂÖĞÎÄÂÒÂë
+    "IncludeExcelDelimiterHeader": false,
     "DigitsTextSuffix": "111111111111\t",
     "DateFormat": "yyyy-MM-ddzzz"
   }

@@ -9,7 +9,8 @@
                             (
                                 this IConfiguration target
                                 , string sectionKey = null
-                                , Action<IConfiguration, IConfigurationSection> processIfExistsAction = null
+                                , Action<IConfiguration, IConfigurationSection>
+                                        processIfExistsAction = null
                             )
         {
             var r = false;
@@ -30,11 +31,11 @@
             {
                 r = true;
                 processIfExistsAction?
-                                .Invoke
-                                    (
-                                        target
-                                        , section
-                                    );
+                                    .Invoke
+                                        (
+                                            target
+                                            , section
+                                        );
             }
             return r;
         }
