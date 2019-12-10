@@ -484,6 +484,8 @@ namespace Microshaoft.Web
                             .FlushAsync();
                 }
             }
+            streamWriter.Close();
+            streamWriter = null;
         }
     }
 }
