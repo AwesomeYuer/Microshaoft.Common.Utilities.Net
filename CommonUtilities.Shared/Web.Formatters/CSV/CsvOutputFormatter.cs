@@ -116,7 +116,6 @@ namespace Microshaoft.Web
                         {
                             @value = $@"""{dateTime.ToString()}""";
                         }
-                        
                     }
                     else
                     {
@@ -124,7 +123,12 @@ namespace Microshaoft.Web
                         @value = @value.Replace(@"""", @"""""");
                         if (jToken.Type == JTokenType.String)
                         {
-                            if (!string.IsNullOrEmpty(csvFormatterOptions.DigitsTextSuffix))
+                            if 
+                                (
+                                    !csvFormatterOptions
+                                            .DigitsTextSuffix
+                                            .IsNullOrEmptyOrWhiteSpace()
+                                )
                             {
                                 if (_digitsRegex.IsMatch(@value))
                                 {
@@ -137,7 +141,12 @@ namespace Microshaoft.Web
                         //Check if the value contains a delimiter and place it in quotes if so
                         if
                             (
-                                @value.Contains(csvFormatterOptions.CsvColumnsDelimiter)
+                                @value
+                                    .Contains
+                                            (
+                                                csvFormatterOptions
+                                                        .CsvColumnsDelimiter
+                                            )
                                 ||
                                 @value.Contains("\r")
                                 ||
@@ -278,7 +287,8 @@ namespace Microshaoft.Web
             {
                 downloadFileName = downloadFileNameConfiguration.Value;
             }
-            downloadFileName = HttpUtility.UrlEncode(downloadFileName, e);
+            downloadFileName = HttpUtility
+                                        .UrlEncode(downloadFileName, e);
             response
                     .Headers
                     .Add
@@ -375,7 +385,8 @@ namespace Microshaoft.Web
                                                         {
                                                             if (j > 0)
                                                             {
-                                                                x += csvFormatterOptions.CsvColumnsDelimiter;
+                                                                x += csvFormatterOptions
+                                                                        .CsvColumnsDelimiter;
                                                             }
                                                             x += y.ColumnTitle;
                                                             j++;
@@ -443,7 +454,7 @@ namespace Microshaoft.Web
                                 var jToken = jProperty.Value;
                                 line += getValue(jToken);
                                 jToken = null;
-                                j++;
+                                j ++;
                             }
                             jProperties = null;
                         }
@@ -476,7 +487,10 @@ namespace Microshaoft.Web
                         await
                             streamWriter
                                 .WriteLineAsync(line);
-                        i++;
+                        //await
+                        //    streamWriter
+                        //        .FlushAsync();
+                        i ++;
                     }
                     jArray = null;
                     await
@@ -484,13 +498,7 @@ namespace Microshaoft.Web
                             .FlushAsync();
                 }
                 streamWriter.Close();
-                streamWriter = null;
             }
-
-
-    
-
-
         }
     }
 }
