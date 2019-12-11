@@ -9,6 +9,8 @@ namespace Microshaoft.WebApi.Controllers
     using Newtonsoft.Json.Linq;
     using System;
     using System.Data;
+    using System.Data.SqlClient;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Text;
@@ -34,7 +36,7 @@ namespace Microshaoft.WebApi.Controllers
  
         private string GetFieldValue(IDataReader reader, int fieldIndex, string format = null)
         {
-            string @value;
+            string @value = string.Empty;
             var fieldType = reader.GetFieldType(fieldIndex);
             if 
                 (
@@ -66,6 +68,41 @@ namespace Microshaoft.WebApi.Controllers
             }
             else if
                 (
+                    string
+                        .Compare
+                            (
+                                reader
+                                    .GetDataTypeName(fieldIndex)
+                                , "Time"
+                                , true
+                            )
+                    ==
+                    0
+                )
+            {
+                TimeSpan? timeSpan = null;
+                if (reader is SqlDataReader sqlDataReader)
+                {
+                    timeSpan = sqlDataReader.GetTimeSpan(fieldIndex);
+                }
+                if (timeSpan != null)
+                {
+                    if (format.IsNullOrEmptyOrWhiteSpace())
+                    {
+                        format = _csvFormatterOptions.TimeFormat;
+                    }
+                    if (!format.IsNullOrEmptyOrWhiteSpace())
+                    {
+                        @value = $@"""{timeSpan.Value.ToString(format)}""";
+                    }
+                    else
+                    {
+                        @value = $@"""{timeSpan.Value.ToString()}""";
+                    }
+                }
+            }
+            else if
+                (
                     fieldType
                     ==
                     typeof(DateTime)
@@ -91,7 +128,12 @@ namespace Microshaoft.WebApi.Controllers
                 @value = @value.Replace(@"""", @"""""");
                 if (fieldType == typeof(string))
                 {
-                    if (!string.IsNullOrEmpty(_csvFormatterOptions.DigitsTextSuffix))
+                    if
+                        (
+                            !_csvFormatterOptions
+                                    .DigitsTextSuffix
+                                    .IsNullOrEmptyOrWhiteSpace()
+                        )
                     {
                         if (_digitsRegex.IsMatch(@value))
                         {
@@ -104,7 +146,12 @@ namespace Microshaoft.WebApi.Controllers
                 //Check if the value contains a delimiter and place it in quotes if so
                 if
                     (
-                        @value.Contains(_csvFormatterOptions.CsvColumnsDelimiter)
+                        @value
+                            .Contains
+                                    (
+                                        _csvFormatterOptions
+                                                .CsvColumnsDelimiter
+                                    )
                         ||
                         @value.Contains("\r")
                         ||
@@ -171,7 +218,8 @@ namespace Microshaoft.WebApi.Controllers
             {
                 downloadFileName = downloadFileNameConfiguration.Value;
             }
-            downloadFileName = HttpUtility.UrlEncode(downloadFileName, e);
+            downloadFileName = HttpUtility
+                                    .UrlEncode(downloadFileName, e);
             response
                     .Headers
                     .Add
@@ -286,7 +334,7 @@ namespace Microshaoft.WebApi.Controllers
                         (
                             routeName
                             , parameters
-                            , (resultSetIndex, reader, columns, rowIndex) =>
+                            , async (resultSetIndex, reader, columns, rowIndex) =>
                             {
                                 if (rowIndex == 0)
                                 {
@@ -312,12 +360,12 @@ namespace Microshaoft.WebApi.Controllers
                                                                                             x;
                                                                                 }
                                                                             );
-                                            //await
-                                            streamWriter
-                                                    .WriteLine
-                                                            (
-                                                                columnsHeaderLine
-                                                            );
+                                            await
+                                                streamWriter
+                                                        .WriteLineAsync
+                                                                (
+                                                                    columnsHeaderLine
+                                                                );
                                             //streamWriter
                                             //        .Flush();
                                         }
@@ -375,13 +423,14 @@ namespace Microshaoft.WebApi.Controllers
                                         j ++;
                                     }
                                 }
-                                //await
-                                streamWriter
-                                        //.WriteLineAsync(line);
-                                        .WriteLine(line);
-                                streamWriter
-                                        //.FlushAsync();
-                                        .Flush();
+                                await
+                                    streamWriter
+                                            .WriteLineAsync(line);
+                                            //.WriteLine(line);
+                                await
+                                    streamWriter
+                                            .FlushAsync();
+                                            //.Flush();
                                 //i++;
                             }
                             , Request
@@ -389,7 +438,6 @@ namespace Microshaoft.WebApi.Controllers
                             //, 102
                         );
                 streamWriter.Close();
-                streamWriter = null;
             }
         }
     }

@@ -15,6 +15,8 @@ namespace Microshaoft.Web
 
         public string DateFormat { get; set; } = "yyyy-MM-ddzzz";
 
+        public string TimeFormat { get; set; } = "HH:mm:ss.FFFFFFFzzz";
+
         //避免 Excel CSV 科学计数法
         public string DigitsTextSuffix { get; set; } = "";//"\t";
 

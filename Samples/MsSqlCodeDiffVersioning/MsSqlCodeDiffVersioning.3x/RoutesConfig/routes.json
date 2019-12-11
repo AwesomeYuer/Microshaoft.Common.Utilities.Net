@@ -51,15 +51,17 @@
             {
               "ColumnName": "f1",
               "ColumnTitle": "字段1",
-              "dataformat": "yy-mm-dd"
+              "dataformat": "yy-MM-dd"
             },
             {
               "ColumnName": "f2",
-              "ColumnTitle111": "字段2"
+              "ColumnTitle111": "字段2",
+              "dataformat": "yy-MM-dd HH:mm:ss"
             },
             {
               "ColumnName": "f3",
-              "ColumnTitle": "字段3"
+              "ColumnTitle": "字段3",
+              "dataformat": "g"
             }
 
           ],
