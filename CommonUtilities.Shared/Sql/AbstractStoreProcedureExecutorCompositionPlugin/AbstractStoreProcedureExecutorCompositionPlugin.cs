@@ -234,5 +234,56 @@
                     , connection
                 );
         }
+
+        public async Task ExecuteReaderRowsAsync
+                                (
+                                    string connectionString
+                                    , string storeProcedureName
+                                    , JToken parameters = null
+                                    , Func
+                                        <
+                                            int
+                                            , IDataReader
+                                            , JArray
+                                            , int
+                                            , Task
+                                        >
+                                            onReadRowProcessActionAsync = null
+                                    , bool enableStatistics = false
+                                    , int commandTimeoutInSeconds = 90
+                                )
+        {
+            BeforeExecutingProcess
+                    (
+                        connectionString
+                        , enableStatistics
+                        , out TDbConnection connection
+                    );
+            await
+                Executor
+                    .ExecuteReaderRowsAsync
+                        (
+                            connection
+                            , storeProcedureName
+                            , parameters
+                            , async (resultSetIndex, reader, columns, rowIndex) =>
+                            {
+                                await
+                                    onReadRowProcessActionAsync
+                                        (
+                                            resultSetIndex
+                                            , reader
+                                            , columns
+                                            , rowIndex
+                                        );
+                            }
+                            , commandTimeoutInSeconds
+                        );
+            AfterExecutedProcess
+                (
+                    storeProcedureName
+                    , connection
+                );
+        }
     }
 }

@@ -10,7 +10,6 @@ namespace Microshaoft.WebApi.Controllers
     using System;
     using System.Data;
     using System.Data.SqlClient;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Text;
@@ -329,114 +328,115 @@ namespace Microshaoft.WebApi.Controllers
                                             );
                     }
                 }
-                _service
-                    .ProcessReaderReadRows
-                        (
-                            routeName
-                            , parameters
-                            , async (resultSetIndex, reader, columns, rowIndex) =>
-                            {
-                                if (rowIndex == 0)
+                await
+                    _service
+                        .ProcessReaderReadRowsAsync
+                            (
+                                routeName
+                                , parameters
+                                , async (resultSetIndex, reader, columns, rowIndex) =>
                                 {
-                                    if (_csvFormatterOptions.UseSingleLineHeaderInCsv)
+                                    if (rowIndex == 0)
                                     {
-                                        if (outputColumns == null)
+                                        if (_csvFormatterOptions.UseSingleLineHeaderInCsv)
                                         {
-                                            var j = 0;
-                                            var columnsHeaderLine = columns
-                                                                        .Aggregate
-                                                                            (
-                                                                                string.Empty
-                                                                                , (x, y) =>
-                                                                                {
-                                                                                    if (j > 0)
+                                            if (outputColumns == null)
+                                            {
+                                                var j = 0;
+                                                var columnsHeaderLine = columns
+                                                                            .Aggregate
+                                                                                (
+                                                                                    string.Empty
+                                                                                    , (x, y) =>
                                                                                     {
-                                                                                        x += _csvFormatterOptions
-                                                                                                    .CsvColumnsDelimiter;
+                                                                                        if (j > 0)
+                                                                                        {
+                                                                                            x += _csvFormatterOptions
+                                                                                                        .CsvColumnsDelimiter;
+                                                                                        }
+                                                                                        x += y["ColumnName"].ToString();
+                                                                                        j ++;
+                                                                                        return
+                                                                                                x;
                                                                                     }
-                                                                                    x += y["ColumnName"].ToString();
-                                                                                    j ++;
-                                                                                    return
-                                                                                            x;
-                                                                                }
-                                                                            );
-                                            await
-                                                streamWriter
-                                                        .WriteLineAsync
+                                                                                );
+                                                await
+                                                    streamWriter
+                                                            .WriteLineAsync
+                                                                    (
+                                                                        columnsHeaderLine
+                                                                    );
+                                                //streamWriter
+                                                //        .Flush();
+                                            }
+                                        }
+                                    }
+                                    string line = string.Empty;
+                                    if (outputColumns == null)
+                                    {
+                                        var fieldsCount = reader.FieldCount;
+                                        for (var fieldIndex = 0; fieldIndex < fieldsCount; fieldIndex++)
+                                        {
+                                            if (fieldIndex > 0)
+                                            {
+                                                line += _csvFormatterOptions.CsvColumnsDelimiter;
+                                            }
+                                            line += GetFieldValue(reader, fieldIndex);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        var j = 0;
+                                        foreach (var (columnName, columnTitle, dataFormat) in outputColumns)
+                                        {
+                                            if (j > 0)
+                                            {
+                                                line += _csvFormatterOptions
+                                                                    .CsvColumnsDelimiter;
+                                            }
+                                            if
+                                                (
+                                                    columns
+                                                            .Any
                                                                 (
-                                                                    columnsHeaderLine
-                                                                );
-                                            //streamWriter
-                                            //        .Flush();
+                                                                    (x) =>
+                                                                    {
+                                                                        return
+                                                                            (
+                                                                                string
+                                                                                    .Compare
+                                                                                        (
+                                                                                            x["ColumnName"].ToString()
+                                                                                            , columnName
+                                                                                            , true
+                                                                                        )
+                                                                                ==
+                                                                                0
+                                                                            );
+                                                                    }
+                                                                )
+                                                )
+                                            {
+                                                var fieldIndex = reader.GetOrdinal(columnName);
+                                                line += GetFieldValue(reader, fieldIndex, dataFormat);
+                                            }
+                                            j ++;
                                         }
                                     }
+                                    await
+                                        streamWriter
+                                                .WriteLineAsync(line);
+                                                //.WriteLine(line);
+                                    await
+                                        streamWriter
+                                                .FlushAsync();
+                                                //.Flush();
+                                    //i++;
                                 }
-                                string line = string.Empty;
-                                if (outputColumns == null)
-                                {
-                                    var fieldsCount = reader.FieldCount;
-                                    for (var fieldIndex = 0; fieldIndex < fieldsCount; fieldIndex++)
-                                    {
-                                        if (fieldIndex > 0)
-                                        {
-                                            line += _csvFormatterOptions.CsvColumnsDelimiter;
-                                        }
-                                        line += GetFieldValue(reader, fieldIndex);
-                                    }
-                                }
-                                else
-                                {
-                                    var j = 0;
-                                    foreach (var (columnName, columnTitle, dataFormat) in outputColumns)
-                                    {
-                                        if (j > 0)
-                                        {
-                                            line += _csvFormatterOptions
-                                                                .CsvColumnsDelimiter;
-                                        }
-                                        if
-                                            (
-                                                columns
-                                                        .Any
-                                                            (
-                                                                (x) =>
-                                                                {
-                                                                    return
-                                                                        (
-                                                                            string
-                                                                                .Compare
-                                                                                    (
-                                                                                        x["ColumnName"].ToString()
-                                                                                        , columnName
-                                                                                        , true
-                                                                                    )
-                                                                            ==
-                                                                            0
-                                                                        );
-                                                                }
-                                                            )
-                                            )
-                                        {
-                                            var fieldIndex = reader.GetOrdinal(columnName);
-                                            line += GetFieldValue(reader, fieldIndex, dataFormat);
-                                        }
-                                        j ++;
-                                    }
-                                }
-                                await
-                                    streamWriter
-                                            .WriteLineAsync(line);
-                                            //.WriteLine(line);
-                                await
-                                    streamWriter
-                                            .FlushAsync();
-                                            //.Flush();
-                                //i++;
-                            }
-                            , Request
-                                    .Method
-                            //, 102
-                        );
+                                , Request
+                                        .Method
+                                //, 102
+                            );
                 streamWriter.Close();
             }
         }

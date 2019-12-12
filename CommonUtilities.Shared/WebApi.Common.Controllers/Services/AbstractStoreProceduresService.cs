@@ -948,7 +948,7 @@ namespace Microshaoft.Web
         }
 
 
-        public void
+        public virtual void
                     ProcessReaderReadRows
                         (
                             string routeName
@@ -1000,7 +1000,7 @@ namespace Microshaoft.Web
                    statusCode == 200
                )
             {
-                RowsProcess
+                ProcessReaderReadRows
                     (
                         connectionString
                         , dataBaseType
@@ -1011,11 +1011,10 @@ namespace Microshaoft.Web
                         , commandTimeoutInSeconds
                     );
             }
-
-
         }
+
         public virtual void
-                    RowsProcess
+                    ProcessReaderReadRows
                             (
                                 string connectionString
                                 , string dataBaseType
@@ -1040,7 +1039,6 @@ namespace Microshaoft.Web
                                                 dataBaseType
                                                 , out var executor
                                             );
-            JToken result = null;
             if (success)
             {
                 executor
@@ -1053,9 +1051,113 @@ namespace Microshaoft.Web
                             , enableStatistics
                             , commandTimeoutInSeconds
                         );
-                
             }
-            
+        }
+        public virtual async Task
+            ProcessReaderReadRowsAsync
+                (
+                    string routeName
+                    , JToken parameters = null
+                    , Func
+                        <
+                            int             // resultSetIndex
+                            , IDataReader
+                            , JArray        // columns
+                            , int           // row index
+                            , Task
+                        > onReadRowProcessActionAsync = null
+                    , string httpMethod = "Get"
+                    //, bool enableStatistics = false
+                    , int commandTimeoutInSeconds = 101
+                )
+        {
+            bool success;
+            int statusCode;
+            string message;
+            string connectionString;
+            string dataBaseType;
+            string storeProcedureName;
+            bool enableStatistics;
+
+            (
+                success
+                , statusCode
+                , httpMethod
+                , message
+                , connectionString
+                , dataBaseType
+                , storeProcedureName
+                , commandTimeoutInSeconds
+                , enableStatistics
+            )
+                = TryGetStoreProcedureInfo
+                            (
+                                routeName
+                                , httpMethod
+                            );
+
+
+            if
+               (
+                   success
+                   &&
+                   statusCode == 200
+               )
+            {
+                await
+                    ProcessReaderReadRowsAsync
+                        (
+                            connectionString
+                            , dataBaseType
+                            , storeProcedureName
+                            , parameters
+                            , onReadRowProcessActionAsync
+                            , enableStatistics
+                            , commandTimeoutInSeconds
+                        );
+            }
+        }
+        public virtual async Task
+                    ProcessReaderReadRowsAsync
+                            (
+                                string connectionString
+                                , string dataBaseType
+                                , string storeProcedureName
+                                , JToken parameters = null
+                                , Func
+                                    <
+                                        int           // resultSet Index
+                                        , IDataReader
+                                        , JArray
+                                        , int           // row index
+                                        , Task
+                                    > onReadRowProcessActionAsync = null
+                                , bool enableStatistics = false
+                                , int commandTimeoutInSeconds = 90
+                            )
+        {
+            var beginTimeStamp = Stopwatch.GetTimestamp();
+            var beginTime = DateTime.Now;
+            var success = _indexedExecutors
+                                        .TryGetValue
+                                            (
+                                                dataBaseType
+                                                , out var executor
+                                            );
+            if (success)
+            {
+                await
+                    executor
+                        .ExecuteReaderRowsAsync
+                            (
+                                connectionString
+                                , storeProcedureName
+                                , parameters
+                                , onReadRowProcessActionAsync
+                                , enableStatistics
+                                , commandTimeoutInSeconds
+                            );
+            }
         }
     }
 }

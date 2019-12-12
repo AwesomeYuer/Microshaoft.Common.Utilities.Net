@@ -6,6 +6,7 @@ namespace Microshaoft
     using System;
     using Newtonsoft.Json.Linq;
     using System.Data.Common;
+    using System.Threading.Tasks;
 
     public static class DataReaderHelper
     {
@@ -241,7 +242,43 @@ namespace Microshaoft
             }
         }
 
-
+        public static async Task ReadRowsAsync
+                             (
+                                 this DbDataReader target
+                                 , JArray columns = null
+                                 , Func
+                                        <
+                                            IDataReader
+                                            , JArray        // columns
+                                            , int           // row index
+                                            , Task
+                                        >
+                                            onReadRowProcessActionAsync = null
+                             )
+        {
+            int rowIndex = 0;
+            if (columns == null)
+            {
+                columns = target.GetColumnsJArray();
+            }
+            while
+                (
+                    await target.ReadAsync()
+                )
+            {
+                if (onReadRowProcessActionAsync != null)
+                {
+                    await
+                        onReadRowProcessActionAsync
+                                (
+                                    target
+                                    , columns
+                                    , rowIndex
+                                );
+                }
+                rowIndex++;
+            }
+        }
 
 
 
