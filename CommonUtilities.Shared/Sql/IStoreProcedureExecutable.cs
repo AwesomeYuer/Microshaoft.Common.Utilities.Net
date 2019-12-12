@@ -57,6 +57,23 @@ namespace Microshaoft
                     , int commandTimeoutInSeconds = 90
                 );
 
+        Task
+            ExecuteReaderRowsAsync
+                (
+                    string connectionString
+                    , string storeProcedureName
+                    , JToken parameters = null
+                    , Func
+                        <
+                            int             // resultset Index
+                            , IDataReader
+                            , JArray        // columns
+                            , int           // row index
+                            , Task
+                        > onReadRowProcessActionAsync = null
+                    , bool enableStatistics = false
+                    , int commandTimeoutInSeconds = 90
+                );
 
         Task
             <
