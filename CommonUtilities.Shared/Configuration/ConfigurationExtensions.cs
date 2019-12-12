@@ -5,15 +5,14 @@
 
     public static class ConfigurationExtensions
     {
-        public static bool ProcesSectionIfExists
+        public static bool TryGetSection
                             (
                                 this IConfiguration target
                                 , string sectionKey = null
                                 , Action<IConfiguration, IConfigurationSection>
-                                        processIfExistsAction = null
+                                        ifExistsProcessAction = null
                             )
         {
-            var r = false;
             IConfigurationSection section;
             if (sectionKey == null)
             {
@@ -27,10 +26,11 @@
                                         sectionKey
                                     );
             }
-            if (section.Exists())
+            var r = section.Exists();
+            if (r)
             {
-                r = true;
-                processIfExistsAction?
+
+                ifExistsProcessAction?
                                     .Invoke
                                         (
                                             target
