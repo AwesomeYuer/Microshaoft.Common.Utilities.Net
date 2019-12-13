@@ -227,7 +227,8 @@
                                                 await
                                                     onReadRowProcessActionAsync
                                                         (
-                                                            extensionInfo.resultSetID
+                                                            extensionInfo
+                                                                    .resultSetID
                                                             , reader
                                                             , columns
                                                             , rowIndex
@@ -236,7 +237,7 @@
                                         );
                     }
                     extensionInfo
-                            .resultSetID++;
+                            .resultSetID ++;
                     jColumns = null;
                 }
                 while
