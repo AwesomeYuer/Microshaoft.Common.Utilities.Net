@@ -187,81 +187,109 @@ namespace Microshaoft.Web
 
                         }
                     );
-            IConfiguration exportCsvFormatterConfiguration = null;
-            var exists = _configuration
-                                    .ProcesSectionIfExists
-                                        (
-                                            "ExportCsvFormatter"
-                                            , (x, y) =>
-                                            {
-                                                exportCsvFormatterConfiguration = y;
-                                            }
-                                        );
-            if (exists)
+            if 
+                (
+                    _configuration
+                                .TryGetSection
+                                    (
+                                        "ExportCsvFormatter"
+                                        , out var exportCsvFormatterConfiguration
+                                    )
+                )
             {
-                exportCsvFormatterConfiguration
-                                .ProcesSectionIfExists
+                IConfigurationSection section;
+                if
+                    (
+                        exportCsvFormatterConfiguration
+                                .TryGetSection
                                     (
                                         nameof(csvFormatterOptions.CsvColumnsDelimiter)
-                                        , (x, y) =>
-                                        {
-                                            csvFormatterOptions.CsvColumnsDelimiter = y.Value;
-                                        }
-                                    );
-                exportCsvFormatterConfiguration
-                                .ProcesSectionIfExists
+                                        , out section
+                                    )
+                    )
+                {
+                    csvFormatterOptions
+                            .CsvColumnsDelimiter = section.Value;
+                }
+                if
+                    (
+                        exportCsvFormatterConfiguration
+                                .TryGetSection
                                     (
                                         nameof(csvFormatterOptions.DateFormat)
-                                        , (x, y) =>
-                                        {
-                                            csvFormatterOptions.DateFormat = y.Value;
-                                        }
-                                    );
-                exportCsvFormatterConfiguration
-                                .ProcesSectionIfExists
+                                        , out section
+                                    )
+                    )
+                {
+                    csvFormatterOptions
+                            .DateFormat = section.Value;
+                }
+                if
+                    (
+                        exportCsvFormatterConfiguration
+                                .TryGetSection
                                     (
                                         nameof(csvFormatterOptions.DateTimeFormat)
-                                        , (x, y) =>
-                                        {
-                                            csvFormatterOptions.DateTimeFormat = y.Value;
-                                        }
-                                    );
-                exportCsvFormatterConfiguration
-                                .ProcesSectionIfExists
+                                        , out section
+                                    )
+
+                    )
+                {
+                    csvFormatterOptions
+                            .DateTimeFormat = section.Value;
+                }
+                if
+                    (
+                        exportCsvFormatterConfiguration
+                                .TryGetSection
                                     (
                                         nameof(csvFormatterOptions.DigitsTextSuffix)
-                                        , (x, y) =>
-                                        {
-                                            csvFormatterOptions.DigitsTextSuffix = y.Value;
-                                        }
-                                    );
-                exportCsvFormatterConfiguration
-                                .ProcesSectionIfExists
+                                        , out section
+                                    )
+                    )
+                { 
+                    csvFormatterOptions
+                            .DigitsTextSuffix = section.Value;
+                }
+                if
+                    (
+                        exportCsvFormatterConfiguration
+                                .TryGetSection
                                     (
                                         nameof(csvFormatterOptions.Encoding)
-                                        , (x, y) =>
-                                        {
-                                            csvFormatterOptions.Encoding = Encoding.GetEncoding(y.Value);
-                                        }
-                                    );
-                exportCsvFormatterConfiguration
-                                .ProcesSectionIfExists
+                                        , out section
+                                    )
+                    )
+                {
+                    csvFormatterOptions
+                            .Encoding = Encoding.GetEncoding(section.Value);
+                }
+                if
+                    (
+                        exportCsvFormatterConfiguration
+                                .TryGetSection
                                     (
                                         nameof(csvFormatterOptions.IncludeExcelDelimiterHeader)
-                                        , (x, y) =>
-                                        {
-                                            csvFormatterOptions.IncludeExcelDelimiterHeader = y.Get<bool>();
-                                        }
-                                    );
-                exportCsvFormatterConfiguration
-                                .ProcesSectionIfExists
+                                        , out section
+                                    )
+                    )
+                {
+                    csvFormatterOptions
+                            .IncludeExcelDelimiterHeader = section.Get<bool>();
+                }
+                if
+                    (
+                        exportCsvFormatterConfiguration
+                                .TryGetSection
                                     (
                                         nameof(csvFormatterOptions.UseSingleLineHeaderInCsv)
-                                        , (x, y) =>
-                                        {
-                                            csvFormatterOptions.UseSingleLineHeaderInCsv = y.Get<bool>();
-                                        }
-                                    );
+                                        , out section
+                                    )
+                    )
+                {
+                   csvFormatterOptions
+                            .UseSingleLineHeaderInCsv = section.Get<bool>();
+                }
             }
             var encodingName = (string) request.Query["e"];
             Encoding e = null;

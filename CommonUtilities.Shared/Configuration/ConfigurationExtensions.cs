@@ -1,20 +1,16 @@
 ﻿namespace Microshaoft
 {
     using Microsoft.Extensions.Configuration;
-    using System;
 
     public static class ConfigurationExtensions
     {
-        public static bool ProcesSectionIfExists
-                            (
-                                this IConfiguration target
-                                , string sectionKey = null
-                                , Action<IConfiguration, IConfigurationSection>
-                                        processIfExistsAction = null
-                            )
+        public static bool TryGetSection
+                    (
+                        this IConfiguration target
+                        , string sectionKey
+                        , out IConfigurationSection section
+                    )
         {
-            var r = false;
-            IConfigurationSection section;
             if (sectionKey == null)
             {
                 section = (IConfigurationSection) target;
@@ -27,15 +23,10 @@
                                         sectionKey
                                     );
             }
-            if (section.Exists())
+            var r = section.Exists();
+            if (!r)
             {
-                r = true;
-                processIfExistsAction?
-                                    .Invoke
-                                        (
-                                            target
-                                            , section
-                                        );
+                section = null;
             }
             return r;
         }
