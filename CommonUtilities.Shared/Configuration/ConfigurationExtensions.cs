@@ -13,7 +13,7 @@
         {
             if (sectionKey == null)
             {
-                section = (IConfigurationSection) target;
+                section = (IConfigurationSection)target;
             }
             else
             {
