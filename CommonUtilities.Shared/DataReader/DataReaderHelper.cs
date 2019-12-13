@@ -209,6 +209,27 @@ namespace Microshaoft
             }
             return r;
         }
+        public static void ReadRows
+                             (
+                                 this IDataReader target
+                                 , JArray columns = null
+                                 , Action
+                                        <
+                                            IDataReader
+                                            , JArray        // columns
+                                            , int           // row index
+                                        >
+                                            onReadRowProcessAction = null
+                             )
+        {
+            var dbDataReader = (DbDataReader) target;
+            ReadRows
+                (
+                    dbDataReader
+                    , columns
+                    , onReadRowProcessAction
+                );
+        }
 
         public static void ReadRows
                              (
@@ -280,10 +301,35 @@ namespace Microshaoft
             }
         }
 
-
-
-
-
+        public static IEnumerable<JToken> AsRowsJTokensEnumerable
+                             (
+                                 this IDataReader target
+                                 , JArray columns = null
+                                 , Func
+                                        <
+                                            IDataReader
+                                            , Type          // fieldType
+                                            , string        // fieldName
+                                            , int           // row index
+                                            , int           // column index
+                                            ,
+                                                (
+                                                    bool needDefaultProcess
+                                                    , JProperty field   //  JObject Field 对象
+                                                )
+                                        >
+                                            onReadRowColumnProcessFunc = null
+                             )
+        {
+            var dbDataReader = (DbDataReader) target;
+            return
+                AsRowsJTokensEnumerable
+                    (
+                        dbDataReader
+                        , columns
+                        , onReadRowColumnProcessFunc
+                    );
+        }
         public static IEnumerable<JToken> AsRowsJTokensEnumerable
                              (
                                  this DbDataReader target
@@ -366,6 +412,40 @@ namespace Microshaoft
         }
 
 #if NETCOREAPP3_X
+        public static async IAsyncEnumerable<JToken> AsRowsJTokensEnumerableAsync
+                     (
+                         this IDataReader target
+                         , JArray columns = null
+                         , Func
+                                <
+                                    IDataReader
+                                    , Type          // fieldType
+                                    , string        // fieldName
+                                    , int           // row index
+                                    , int           // column index
+                                    ,
+                                        (
+                                            bool needDefaultProcess
+                                            , JProperty field   //  JObject Field 对象
+                                        )
+                                >
+                                    onReadRowColumnProcessFunc = null
+                     )
+        {
+            var dbDataReader = (DbDataReader) target;
+            var items = AsRowsJTokensEnumerableAsync
+                            (
+                                dbDataReader
+                                , columns
+                                , onReadRowColumnProcessFunc
+                            );
+            await foreach (var item in items)
+            {
+                yield
+                    return
+                        item;
+            }
+        }
         public static async IAsyncEnumerable<JToken> AsRowsJTokensEnumerableAsync
                      (
                          this DbDataReader target
