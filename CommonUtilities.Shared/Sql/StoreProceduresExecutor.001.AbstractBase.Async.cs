@@ -108,10 +108,6 @@
                                         columns
                                         , onReadRowColumnProcessFunc
                                     );
-            //await foreach (var i in rows)
-            //{ 
-                
-            //}
             var resultSet = new JObject
                                 {
                                     {
