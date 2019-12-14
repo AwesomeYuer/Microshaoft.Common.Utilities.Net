@@ -273,6 +273,19 @@
                                         exportCsvFormatterConfiguration
                                                 .TryGetSection
                                                     (
+                                                        nameof(csvFormatterOptions.MinExclusiveLengthDigitsTextSuffix)
+                                                        , out section
+                                                    )
+                                    )
+                                {
+                                    csvFormatterOptions
+                                            .MinExclusiveLengthDigitsTextSuffix = section.Get<int>();
+                                }
+                                if
+                                    (
+                                        exportCsvFormatterConfiguration
+                                                .TryGetSection
+                                                    (
                                                         nameof(csvFormatterOptions.Encoding)
                                                         , out section
                                                     )

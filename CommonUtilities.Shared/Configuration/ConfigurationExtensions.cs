@@ -13,7 +13,7 @@
         {
             if (sectionKey == null)
             {
-                section = (IConfigurationSection)target;
+                section = (IConfigurationSection) target;
             }
             else
             {
@@ -27,6 +27,35 @@
             if (!r)
             {
                 section = null;
+            }
+            return r;
+        }
+        public static bool TryGetValue<T>
+                        (
+                            this IConfiguration target
+                            , string sectionKey
+                            , out T sectionValue
+                        )
+        {
+            var r = TryGetSection
+                        (
+                            target
+                            , sectionKey
+                            , out _
+                        );
+            if (r)
+            {
+                r = false;
+                sectionValue = target
+                                    .GetValue<T>
+                                        (
+                                            sectionKey
+                                        );
+                r = true;
+            }
+            else
+            {
+                sectionValue = default;
             }
             return r;
         }

@@ -1,4 +1,4 @@
-﻿#if NETCOREAPP2_X || NETCOREAPP3_X
+﻿#if NETCOREAPP//2_X || NETCOREAPP3_X
 namespace Microshaoft.WebApi.ModelBinders
 {
     using Microshaoft.Web;
@@ -17,30 +17,31 @@ namespace Microshaoft.WebApi.ModelBinders
         public async Task BindModelAsync(ModelBindingContext bindingContext)
         {
             var httpContext = bindingContext
-                                    .HttpContext;
+                                        .HttpContext;
             var request = httpContext
                                     .Request;
             IConfiguration configuration =
                         (IConfiguration) httpContext
-                                            .RequestServices
-                                            .GetService
-                                                (
-                                                    typeof(IConfiguration)
-                                                );
+                                                .RequestServices
+                                                .GetService
+                                                    (
+                                                        typeof(IConfiguration)
+                                                    );
             var jwtTokenName = configuration
-                                    .GetSection("TokenName")
-                                    .Value;
+                                        .GetSection("TokenName")
+                                        .Value;
             var ok = false;
             ok = request
                     .TryParseJTokenParameters
                         (
                             out JToken parameters
                             , out var secretJwtToken
-                            , () =>
+                            , async () =>
                             {
                                 return
-                                    bindingContext
-                                        .GetFormJTokenAsync();
+                                    await
+                                        bindingContext
+                                            .GetFormJTokenAsync();
                             }
                             , jwtTokenName
                         );
@@ -49,11 +50,11 @@ namespace Microshaoft.WebApi.ModelBinders
                 if
                     (
                         !httpContext
-                            .Items
-                            .ContainsKey
-                                (
-                                    _itemKeyOfRequestJTokenParameters
-                                )
+                                .Items
+                                .ContainsKey
+                                    (
+                                        _itemKeyOfRequestJTokenParameters
+                                    )
                     )
                 {
                     httpContext
@@ -76,12 +77,11 @@ namespace Microshaoft.WebApi.ModelBinders
                             );
             }
             bindingContext
-                    .Result =
-                        ModelBindingResult
-                                        .Success
-                                            (
-                                                parameters
-                                            );
+                        .Result = ModelBindingResult
+                                                .Success
+                                                    (
+                                                        parameters
+                                                    );
         }
     }
 }

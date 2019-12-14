@@ -124,40 +124,48 @@ namespace Microshaoft.WebApi.Controllers
             else
             {
                 @value = reader.GetValue(fieldIndex).ToString();
-                @value = @value.Replace(@"""", @"""""");
                 if (fieldType == typeof(string))
                 {
                     if
                         (
-                            !_csvFormatterOptions
-                                    .DigitsTextSuffix
-                                    .IsNullOrEmptyOrWhiteSpace()
-                        )
-                    {
-                        if (_digitsRegex.IsMatch(@value))
-                        {
-                            //避免在Excel中csv文本数字自动变科学计数法
-                            @value += _csvFormatterOptions.DigitsTextSuffix;
-                            //@value = $@"=""{@value}""";
-                        }
-                    }
-                }
-                //Check if the value contains a delimiter and place it in quotes if so
-                if
-                    (
-                        @value
-                            .Contains
+                            !string
+                                .IsNullOrEmpty
                                     (
                                         _csvFormatterOptions
-                                                .CsvColumnsDelimiter
+                                                    .DigitsTextSuffix
                                     )
-                        ||
-                        @value.Contains("\r")
-                        ||
-                        @value.Contains("\n")
-                    )
-                {
-                    @value = $@"""{@value}""";
+                            &&
+                            @value.Length > _csvFormatterOptions
+                                                .MinExclusiveLengthDigitsTextSuffix
+                            &&
+                            _digitsRegex.IsMatch(@value)
+                        )
+                    {
+                        //避免在Excel中csv文本数字自动变科学计数法
+                        @value += _csvFormatterOptions.DigitsTextSuffix;
+                        //@value = $@"=""{@value}""";
+                    }
+                    else
+                    {
+                        @value = @value.Replace(@"""", @"""""");
+                        //Check if the value contains a delimiter and place it in quotes if so
+                        if
+                            (
+                                @value
+                                    .Contains
+                                            (
+                                                _csvFormatterOptions
+                                                        .CsvColumnsDelimiter
+                                            )
+                                ||
+                                @value.Contains("\r")
+                                ||
+                                @value.Contains("\n")
+                            )
+                        {
+                            @value = $@"""{@value}""";
+                        }
+                    }
                 }
             }
             return @value;
@@ -203,17 +211,18 @@ namespace Microshaoft.WebApi.Controllers
             {
                 e = _csvFormatterOptions.Encoding;
             }
-
             var response = HttpContext
                                     .Response;
             var downloadFileName = $"{routeName}.csv";
-            var downloadFileNameConfiguration =
+            if 
+                (
                     _configuration
-                            .GetSection
-                                (
-                                    $"Routes:{routeName}:{httpMethod}:Exporting:DownloadFileName"
-                                );
-            if (downloadFileNameConfiguration.Exists())
+                                .TryGetSection
+                                    (
+                                        $"Routes:{routeName}:{httpMethod}:Exporting:DownloadFileName"
+                                        , out var downloadFileNameConfiguration
+                                    )
+                )
             {
                 downloadFileName = downloadFileNameConfiguration.Value;
             }
@@ -255,20 +264,21 @@ namespace Microshaoft.WebApi.Controllers
                                     $"sep ={_csvFormatterOptions.CsvColumnsDelimiter}"
                                 );
                 }
-                var outputColumnsConfiguration =
-                            _configuration
-                                    .GetSection
-                                        (
-                                            $"Routes:{routeName}:{httpMethod}:Exporting:OutputColumns"
-                                        );
-
                 (
                     string ColumnName
                     , string ColumnTitle
                     , string DataFormat
                 )
                     [] outputColumns = null;
-                if (outputColumnsConfiguration.Exists())
+                if 
+                    (
+                        _configuration
+                                    .TryGetSection
+                                        (
+                                            $"Routes:{routeName}:{httpMethod}:Exporting:OutputColumns"
+                                            , out var outputColumnsConfiguration
+                                        )
+                    )
                 {
                     outputColumns = outputColumnsConfiguration
                                                     .GetChildren()
