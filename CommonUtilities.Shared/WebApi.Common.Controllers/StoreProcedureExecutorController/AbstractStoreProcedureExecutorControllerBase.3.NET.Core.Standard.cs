@@ -1,4 +1,4 @@
-﻿#if !NETFRAMEWORK4_X && NETCOREAPP2_X
+﻿#if NETCOREAPP
 namespace Microshaoft.WebApi.Controllers
 {
     using Microshaoft;
@@ -61,10 +61,15 @@ namespace Microshaoft.WebApi.Controllers
             {
                 accessingConfigurationKey = "exporting";
             }
-            var outputsConfiguration = _configuration
-                                            .GetSection
-                                                ($"Routes:{routeName}:{httpMethod}:{accessingConfigurationKey}:Outputs");
-            if (outputsConfiguration.Exists())
+            if 
+                (
+                    _configuration
+                            .TryGetSection
+                                (
+                                    $"Routes:{routeName}:{httpMethod}:{accessingConfigurationKey}:Outputs"
+                                    , out var outputsConfiguration
+                                )
+                )
             {
                 var mappings = outputsConfiguration
                                         .GetChildren()

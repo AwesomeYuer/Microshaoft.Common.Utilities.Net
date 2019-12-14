@@ -120,40 +120,48 @@ namespace Microshaoft.Web
                     else
                     {
                         @value = jToken.ToString();
-                        @value = @value.Replace(@"""", @"""""");
                         if (jToken.Type == JTokenType.String)
                         {
-                            if 
+                            if
                                 (
-                                    !csvFormatterOptions
-                                            .DigitsTextSuffix
-                                            .IsNullOrEmptyOrWhiteSpace()
-                                )
-                            {
-                                if (_digitsRegex.IsMatch(@value))
-                                {
-                                    //避免在Excel中csv文本数字自动变科学计数法
-                                    @value += csvFormatterOptions.DigitsTextSuffix;
-                                    //@value = $@"=""{@value}""";
-                                }
-                            }
-                        }
-                        //Check if the value contains a delimiter and place it in quotes if so
-                        if
-                            (
-                                @value
-                                    .Contains
+                                    !string
+                                        .IsNullOrEmpty
                                             (
                                                 csvFormatterOptions
-                                                        .CsvColumnsDelimiter
+                                                            .DigitsTextSuffix
                                             )
-                                ||
-                                @value.Contains("\r")
-                                ||
-                                @value.Contains("\n")
-                            )
-                        {
-                            @value = $@"""{@value}""";
+                                    &&
+                                    @value.Length > csvFormatterOptions
+                                                        .MinExclusiveLengthDigitsTextSuffix
+                                    &&
+                                    _digitsRegex.IsMatch(@value)
+                                )
+                            {
+                                //避免在Excel中csv文本数字自动变科学计数法
+                                @value += csvFormatterOptions.DigitsTextSuffix;
+                                //@value = $@"=""{@value}""";
+                            }
+                            else
+                            {
+                                @value = @value.Replace(@"""", @"""""");
+                                //Check if the value contains a delimiter and place it in quotes if so
+                                if
+                                    (
+                                        @value
+                                            .Contains
+                                                    (
+                                                        csvFormatterOptions
+                                                                .CsvColumnsDelimiter
+                                                    )
+                                        ||
+                                        @value.Contains("\r")
+                                        ||
+                                        @value.Contains("\n")
+                                    )
+                                {
+                                    @value = $@"""{@value}""";
+                                }
+                            }
                         }
                     }
                 }

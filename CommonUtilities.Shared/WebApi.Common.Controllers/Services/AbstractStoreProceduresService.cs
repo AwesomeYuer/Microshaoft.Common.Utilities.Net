@@ -1,4 +1,4 @@
-﻿#if NETCOREAPP2_X
+﻿#if NETCOREAPP
 namespace Microshaoft.Web
 {
     using Microshaoft;
@@ -172,14 +172,30 @@ namespace Microshaoft.Web
         //for override from derived class
         public virtual void Initialize()
         {
-            _cachedParametersDefinitionExpiredInSeconds =
-                _configuration
-                        .GetValue<int>
-                            ("CachedParametersDefinitionExpiredInSeconds");
-            _needAutoRefreshExecutedTimeForSlideExpire =
-                _configuration
-                        .GetValue<bool>
-                            ("NeedAutoRefreshExecutedTimeForSlideExpire");
+            if
+                (
+                    _configuration
+                                .TryGetValue<int>
+                                    (
+                                        "CachedParametersDefinitionExpiredInSeconds"
+                                        , out var i
+                                    )
+                )
+            {
+                _cachedParametersDefinitionExpiredInSeconds = i;
+            }
+            if
+                (
+                    _configuration
+                                .TryGetValue<bool>
+                                    (
+                                        "NeedAutoRefreshExecutedTimeForSlideExpire"
+                                        , out var b
+                                    )
+                )
+            {
+                _needAutoRefreshExecutedTimeForSlideExpire = b;
+            }
             LoadDynamicExecutors();
         }
         protected virtual string[] GetDynamicExecutorsPathsProcess()
@@ -819,8 +835,8 @@ namespace Microshaoft.Web
                     Result();
             }
             var connectionID = actionConfiguration
-                                    .GetValue<string>
-                                        ("ConnectionID");
+                                            .GetValue<string>
+                                                    ("ConnectionID");
             success = !connectionID.IsNullOrEmptyOrWhiteSpace();
             if (!success)
             {
@@ -845,8 +861,8 @@ namespace Microshaoft.Web
                     Result();
             }
             dataBaseType = connectionConfiguration
-                                    .GetValue<string>
-                                        ("DataBaseType");
+                                        .GetValue<string>
+                                            ("DataBaseType");
             success = !dataBaseType
                             .IsNullOrEmptyOrWhiteSpace();
             if (!success)
@@ -902,8 +918,8 @@ namespace Microshaoft.Web
                 )
             {
                 commandTimeoutInSeconds = accessingConfiguration
-                                                .GetValue<int>
-                                                    ("CommandtimeoutInSeconds");
+                                                        .GetValue<int>
+                                                            ("CommandtimeoutInSeconds");
             }
             else
             {
@@ -946,7 +962,6 @@ namespace Microshaoft.Web
             return
                 Result();
         }
-
 
         public virtual void
                     ProcessReaderReadRows

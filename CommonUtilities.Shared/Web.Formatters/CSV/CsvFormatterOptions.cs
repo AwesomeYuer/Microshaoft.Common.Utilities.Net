@@ -20,6 +20,8 @@ namespace Microshaoft.Web
         //避免 Excel CSV 科学计数法
         public string DigitsTextSuffix { get; set; } = "";//"\t";
 
+        public int MinExclusiveLengthDigitsTextSuffix { get; set; } = 10;//"\t";
+
         public bool IncludeExcelDelimiterHeader { get; set; } = false;
     }
 }

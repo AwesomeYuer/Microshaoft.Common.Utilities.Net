@@ -47,7 +47,7 @@
           "needCheckOperations": true,
           "operations": [ "a1", "a2" ],
           "downloadFileName": "测试下载.csv",
-          "outputColumns": [
+          "outputColumns1111": [
             {
               "ColumnName": "f1",
               "ColumnTitle": "字段1",
