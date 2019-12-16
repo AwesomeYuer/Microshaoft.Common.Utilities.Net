@@ -48,21 +48,42 @@
           "operations": [ "a1", "a2" ],
           "downloadFileName": "测试下载.csv",
           "outputColumns": [
-            {
-              "ColumnName": "f1",
-              "ColumnTitle": "字段1",
-              "dataformat": "yy-MM-dd"
-            },
-            {
-              "ColumnName": "f2",
-              "ColumnTitle111": "字段2",
-              "dataformat": "yy-MM-dd HH:mm:ss"
-            },
-            {
-              "ColumnName": "f3",
-              "ColumnTitle": "字段3",
-              "dataformat": "g"
-            }
+            [
+              {
+                "ColumnName": "f1",
+                "ColumnTitle": "字段1",
+                "dataformat": "yy-MM-dd"
+              },
+              {
+                "ColumnName": "f2",
+                "ColumnTitle111": "字段2",
+                "dataformat": "yy-MM-dd HH:mm:ss"
+              },
+              {
+                "ColumnName": "f3",
+                "ColumnTitle": "字段3",
+                "dataformat": "g"
+              }
+
+            ],
+            [
+              {
+                "ColumnName": "f1",
+                "ColumnTitle": "字段1",
+                "dataformat": "yy-MM-dd"
+              },
+              {
+                "ColumnName": "f2",
+                "ColumnTitle111": "字段2",
+                "dataformat": "yy-MM-dd HH:mm:ss"
+              },
+              {
+                "ColumnName": "f3",
+                "ColumnTitle": "字段3",
+                "dataformat": "g"
+              }
+
+            ]
 
           ],
           "isAsyncExecuting": true,

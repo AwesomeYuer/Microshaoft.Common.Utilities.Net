@@ -269,74 +269,62 @@ namespace Microshaoft.WebApi.Controllers
                     , string ColumnTitle
                     , string DataFormat
                 )
-                    [] outputColumns = null;
+                    [][] allOutputColumns = null;
                 if 
                     (
                         _configuration
                                     .TryGetSection
                                         (
                                             $"Routes:{routeName}:{httpMethod}:Exporting:OutputColumns"
-                                            , out var outputColumnsConfiguration
+                                            , out var allOutputColumnsConfiguration
                                         )
                     )
                 {
-                    outputColumns = outputColumnsConfiguration
+                    allOutputColumns = allOutputColumnsConfiguration
                                                     .GetChildren()
                                                     .Select
                                                         (
                                                             (x) =>
                                                             {
-                                                                var columnName = x
+                                                                return
+                                                                x
+                                                                    .GetChildren()
+                                                                    .Select
+                                                                        (
+                                                                            (xx) =>
+                                                                            {
+                                                                                var columnName = xx
                                                                                     .GetValue<string>
                                                                                             ("ColumnName");
-                                                                var columnTitle = x
-                                                                                    .GetValue
-                                                                                            (
-                                                                                                "ColumnTitle"
-                                                                                                , columnName
-                                                                                            );
-                                                                var dataFormat = x
-                                                                                    .GetValue
-                                                                                            (
-                                                                                                "DataFormat"
-                                                                                                , string.Empty
-                                                                                            );
-                                                                return
-                                                                    (
-                                                                        ColumnName: columnName
-                                                                        , ColumnTitle: columnTitle
-                                                                        , DataFormat: dataFormat
-                                                                    );
+                                                                                var columnTitle = xx
+                                                                                                    .GetValue
+                                                                                                            (
+                                                                                                                "ColumnTitle"
+                                                                                                                , columnName
+                                                                                                            );
+                                                                                var dataFormat = xx
+                                                                                                    .GetValue
+                                                                                                            (
+                                                                                                                "DataFormat"
+                                                                                                                , string.Empty
+                                                                                                            );
+                                                                                return
+                                                                                    (
+                                                                                        ColumnName: columnName
+                                                                                        , ColumnTitle: columnTitle
+                                                                                        , DataFormat: dataFormat
+                                                                                    );
+
+                                                                            }
+
+                                                                        )
+                                                                    .ToArray();
+
+                                                                
                                                             }
                                                         )
                                                     .ToArray();
-                    if (_csvFormatterOptions.UseSingleLineHeaderInCsv)
-                    {
-                        var j = 0;
-                        var columnsHeaderLine = outputColumns
-                                                        .Aggregate
-                                                            (
-                                                                string.Empty
-                                                                , (x, y) =>
-                                                                {
-                                                                    if (j > 0)
-                                                                    {
-                                                                        x += _csvFormatterOptions
-                                                                                    .CsvColumnsDelimiter;
-                                                                    }
-                                                                    x += y.ColumnTitle;
-                                                                    j++;
-                                                                    return
-                                                                            x;
-                                                                }
-                                                            );
-                        await
-                            streamWriter
-                                    .WriteLineAsync
-                                            (
-                                                columnsHeaderLine
-                                            );
-                    }
+                    
                 }
                 await
                     _service
@@ -350,7 +338,12 @@ namespace Microshaoft.WebApi.Controllers
                                     {
                                         if (_csvFormatterOptions.UseSingleLineHeaderInCsv)
                                         {
-                                            if (outputColumns == null)
+                                            if 
+                                                (
+                                                    allOutputColumns == null
+                                                    ||
+                                                    resultSetIndex >= allOutputColumns.Length
+                                                )
                                             {
                                                 var j = 0;
                                                 var columnsHeaderLine = columns
@@ -365,7 +358,7 @@ namespace Microshaoft.WebApi.Controllers
                                                                                                         .CsvColumnsDelimiter;
                                                                                         }
                                                                                         x += y["ColumnName"].ToString();
-                                                                                        j ++;
+                                                                                        j++;
                                                                                         return
                                                                                                 x;
                                                                                     }
@@ -379,23 +372,59 @@ namespace Microshaoft.WebApi.Controllers
                                                 //streamWriter
                                                 //        .Flush();
                                             }
+                                            else
+                                            {
+                                                if (resultSetIndex < allOutputColumns.Length)
+                                                {
+                                                    var j = 0;
+                                                    (
+                                                        string ColumnName
+                                                        , string ColumnTitle
+                                                        , string DataFormat
+                                                    )
+                                                        [] outputColumns = allOutputColumns[resultSetIndex];
+                                                    var columnsHeaderLine = outputColumns
+                                                                                    .Aggregate
+                                                                                        (
+                                                                                            string.Empty
+                                                                                            , (x, y) =>
+                                                                                            {
+                                                                                                if (j > 0)
+                                                                                                {
+                                                                                                    x += _csvFormatterOptions
+                                                                                                                .CsvColumnsDelimiter;
+                                                                                                }
+                                                                                                x += y.ColumnTitle;
+                                                                                                j++;
+                                                                                                return
+                                                                                                        x;
+                                                                                            }
+                                                                                        );
+                                                    await
+                                                        streamWriter
+                                                                .WriteLineAsync
+                                                                        (
+                                                                            columnsHeaderLine
+                                                                        );
+
+                                                }
+                                            }
                                         }
                                     }
                                     string line = string.Empty;
-                                    if (outputColumns == null)
+                                    if 
+                                        (
+                                            allOutputColumns != null
+                                            &&
+                                            resultSetIndex < allOutputColumns.Length
+                                        )
                                     {
-                                        var fieldsCount = reader.FieldCount;
-                                        for (var fieldIndex = 0; fieldIndex < fieldsCount; fieldIndex++)
-                                        {
-                                            if (fieldIndex > 0)
-                                            {
-                                                line += _csvFormatterOptions.CsvColumnsDelimiter;
-                                            }
-                                            line += GetFieldValue(reader, fieldIndex);
-                                        }
-                                    }
-                                    else
-                                    {
+                                        (
+                                            string ColumnName
+                                            , string ColumnTitle
+                                            , string DataFormat
+                                        )
+                                            [] outputColumns = allOutputColumns[resultSetIndex];
                                         var j = 0;
                                         foreach (var (columnName, columnTitle, dataFormat) in outputColumns)
                                         {
@@ -430,8 +459,21 @@ namespace Microshaoft.WebApi.Controllers
                                                 var fieldIndex = reader.GetOrdinal(columnName);
                                                 line += GetFieldValue(reader, fieldIndex, dataFormat);
                                             }
-                                            j ++;
+                                            j++;
                                         }
+                                    }
+                                    else
+                                    {
+                                        var fieldsCount = reader.FieldCount;
+                                        for (var fieldIndex = 0; fieldIndex < fieldsCount; fieldIndex++)
+                                        {
+                                            if (fieldIndex > 0)
+                                            {
+                                                line += _csvFormatterOptions.CsvColumnsDelimiter;
+                                            }
+                                            line += GetFieldValue(reader, fieldIndex);
+                                        }
+                                        
                                     }
                                     await
                                         streamWriter
@@ -447,6 +489,9 @@ namespace Microshaoft.WebApi.Controllers
                                         .Method
                                 //, 102
                             );
+                await
+                    streamWriter
+                            .FlushAsync();
                 streamWriter.Close();
             }
         }
