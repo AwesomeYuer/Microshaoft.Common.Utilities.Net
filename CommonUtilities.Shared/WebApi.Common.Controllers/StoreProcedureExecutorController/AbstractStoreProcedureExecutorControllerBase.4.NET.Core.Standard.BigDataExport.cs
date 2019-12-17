@@ -123,7 +123,9 @@ namespace Microshaoft.WebApi.Controllers
             }
             else
             {
-                @value = reader.GetValue(fieldIndex).ToString();
+                @value = reader
+                            .GetValue(fieldIndex)
+                            .ToString();
                 if (fieldType == typeof(string))
                 {
                     if
@@ -135,14 +137,27 @@ namespace Microshaoft.WebApi.Controllers
                                                     .DigitsTextSuffix
                                     )
                             &&
-                            @value.Length > _csvFormatterOptions
-                                                .MinExclusiveLengthDigitsTextSuffix
-                            &&
                             _digitsRegex.IsMatch(@value)
                         )
                     {
                         //避免在Excel中csv文本数字自动变科学计数法
-                        @value += _csvFormatterOptions.DigitsTextSuffix;
+                        if
+                            (
+                                (
+                                    @value
+                                        .Length
+                                    >
+                                    _csvFormatterOptions
+                                        .MinExclusiveLengthDigitsTextSuffix
+                                )
+                                ||
+                                @value
+                                    .StartsWith("0")
+                            )
+                        {
+                            @value += _csvFormatterOptions
+                                                .DigitsTextSuffix;
+                        }
                         //@value = $@"=""{@value}""";
                     }
                     else
@@ -158,9 +173,11 @@ namespace Microshaoft.WebApi.Controllers
                                                         .CsvColumnsDelimiter
                                             )
                                 ||
-                                @value.Contains("\r")
+                                @value
+                                    .Contains("\r")
                                 ||
-                                @value.Contains("\n")
+                                @value
+                                    .Contains("\n")
                             )
                         {
                             @value = $@"""{@value}""";
@@ -281,50 +298,48 @@ namespace Microshaoft.WebApi.Controllers
                     )
                 {
                     allOutputColumns = allOutputColumnsConfiguration
-                                                    .GetChildren()
-                                                    .Select
-                                                        (
-                                                            (x) =>
-                                                            {
-                                                                return
-                                                                x
-                                                                    .GetChildren()
-                                                                    .Select
-                                                                        (
-                                                                            (xx) =>
-                                                                            {
-                                                                                var columnName = xx
-                                                                                    .GetValue<string>
-                                                                                            ("ColumnName");
-                                                                                var columnTitle = xx
-                                                                                                    .GetValue
-                                                                                                            (
-                                                                                                                "ColumnTitle"
-                                                                                                                , columnName
-                                                                                                            );
-                                                                                var dataFormat = xx
-                                                                                                    .GetValue
-                                                                                                            (
-                                                                                                                "DataFormat"
-                                                                                                                , string.Empty
-                                                                                                            );
-                                                                                return
-                                                                                    (
-                                                                                        ColumnName: columnName
-                                                                                        , ColumnTitle: columnTitle
-                                                                                        , DataFormat: dataFormat
-                                                                                    );
+                                            .GetChildren()
+                                            .Select
+                                                (
+                                                    (x) =>
+                                                    {
+                                                        return
+                                                        x
+                                                            .GetChildren()
+                                                            .Select
+                                                                (
+                                                                    (xx) =>
+                                                                    {
+                                                                        var columnName =
+                                                                                    xx
+                                                                                        .GetValue<string>
+                                                                                                ("ColumnName");
+                                                                        var columnTitle = xx
+                                                                                            .GetValue
+                                                                                                    (
+                                                                                                        "ColumnTitle"
+                                                                                                        , columnName
+                                                                                                    );
+                                                                        var dataFormat = xx
+                                                                                            .GetValue
+                                                                                                    (
+                                                                                                        "DataFormat"
+                                                                                                        , string.Empty
+                                                                                                    );
+                                                                        return
+                                                                            (
+                                                                                ColumnName: columnName
+                                                                                , ColumnTitle: columnTitle
+                                                                                , DataFormat: dataFormat
+                                                                            );
 
-                                                                            }
+                                                                    }
 
-                                                                        )
-                                                                    .ToArray();
-
-                                                                
-                                                            }
-                                                        )
-                                                    .ToArray();
-                    
+                                                                )
+                                                            .ToArray();
+                                                    }
+                                                )
+                                            .ToArray();
                 }
                 await
                     _service
