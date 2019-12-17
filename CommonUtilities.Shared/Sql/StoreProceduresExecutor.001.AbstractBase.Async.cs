@@ -582,7 +582,7 @@
         {
             var extensionInfo = new ExtensionInfo()
             {
-                resultSetID = 0
+                 resultSetID = 0
                , messageID = 0
                , recordCounts = null
                , messages = null
@@ -631,7 +631,7 @@
                                 , dataReader
                             );
                     extensionInfo
-                            .resultSetID++;
+                            .resultSetID ++;
                 }
                 while
                     (
