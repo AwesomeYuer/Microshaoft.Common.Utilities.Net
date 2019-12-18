@@ -33,7 +33,13 @@ namespace Microshaoft.WebApi.Controllers
 
         private readonly CsvFormatterOptions _csvFormatterOptions;
  
-        private string GetFieldValue(IDataReader reader, int fieldIndex, string format = null)
+        private string GetFieldValue
+                            (
+                                IDataReader reader
+                                , int fieldIndex
+                                , string format = null
+                                , string digitsTextSuffix = null
+                            )
         {
             string @value = string.Empty;
             var fieldType = reader.GetFieldType(fieldIndex);
@@ -130,11 +136,18 @@ namespace Microshaoft.WebApi.Controllers
                 {
                     if
                         (
+                            digitsTextSuffix == null
+                        )
+                    {
+                        digitsTextSuffix = _csvFormatterOptions
+                                                    .DigitsTextSuffix;
+                    }
+                    if
+                        (
                             !string
                                 .IsNullOrEmpty
                                     (
-                                        _csvFormatterOptions
-                                                    .DigitsTextSuffix
+                                        digitsTextSuffix
                                     )
                             &&
                             _digitsRegex.IsMatch(@value)
@@ -155,10 +168,8 @@ namespace Microshaoft.WebApi.Controllers
                                     .StartsWith("0")
                             )
                         {
-                            @value += _csvFormatterOptions
-                                                .DigitsTextSuffix;
+                            @value += digitsTextSuffix;
                         }
-                        //@value = $@"=""{@value}""";
                     }
                     else
                     {
@@ -185,7 +196,8 @@ namespace Microshaoft.WebApi.Controllers
                     }
                 }
             }
-            return @value;
+            return
+                @value;
         }
 
         // ===============================================================================================================
@@ -285,6 +297,7 @@ namespace Microshaoft.WebApi.Controllers
                     string ColumnName
                     , string ColumnTitle
                     , string DataFormat
+                    , string DigitsTextSuffix
                 )
                     [][] allOutputColumns = null;
                 if 
@@ -326,11 +339,18 @@ namespace Microshaoft.WebApi.Controllers
                                                                                                         "DataFormat"
                                                                                                         , string.Empty
                                                                                                     );
+                                                                        var digitsTextSuffix = xx
+                                                                                            .GetValue<string>
+                                                                                                    (
+                                                                                                        "DigitsTextSuffix"
+                                                                                                        , null
+                                                                                                    );
                                                                         return
                                                                             (
                                                                                 ColumnName: columnName
                                                                                 , ColumnTitle: columnTitle
                                                                                 , DataFormat: dataFormat
+                                                                                , DigitsTextSuffix: digitsTextSuffix
                                                                             );
 
                                                                     }
@@ -396,6 +416,7 @@ namespace Microshaoft.WebApi.Controllers
                                                         string ColumnName
                                                         , string ColumnTitle
                                                         , string DataFormat
+                                                        , string DigitsTextSuffix
                                                     )
                                                         [] outputColumns = allOutputColumns[resultSetIndex];
                                                     var columnsHeaderLine = outputColumns
@@ -438,10 +459,11 @@ namespace Microshaoft.WebApi.Controllers
                                             string ColumnName
                                             , string ColumnTitle
                                             , string DataFormat
+                                            , string DigitsTextSuffix
                                         )
                                             [] outputColumns = allOutputColumns[resultSetIndex];
                                         var j = 0;
-                                        foreach (var (columnName, columnTitle, dataFormat) in outputColumns)
+                                        foreach (var (columnName, columnTitle, dataFormat, digitsTextSuffix) in outputColumns)
                                         {
                                             if (j > 0)
                                             {

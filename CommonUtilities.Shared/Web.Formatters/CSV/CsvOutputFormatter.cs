@@ -95,7 +95,7 @@ namespace Microshaoft.Web
                                     )
         {
             var csvFormatterOptions = new CsvFormatterOptions();
-            string getValue(JToken jToken, string format = null)
+            string getValue(JToken jToken, string format = null, string digitsTextSuffix = null)
             {
                 var @value = string.Empty;
                 if (jToken != null)
@@ -124,22 +124,40 @@ namespace Microshaoft.Web
                         {
                             if
                                 (
+                                    digitsTextSuffix == null
+                                )
+                            {
+                                digitsTextSuffix = csvFormatterOptions
+                                                            .DigitsTextSuffix;
+                            }
+                            if
+                                (
                                     !string
                                         .IsNullOrEmpty
                                             (
-                                                csvFormatterOptions
-                                                            .DigitsTextSuffix
+                                                digitsTextSuffix
                                             )
-                                    &&
-                                    @value.Length > csvFormatterOptions
-                                                        .MinExclusiveLengthDigitsTextSuffix
                                     &&
                                     _digitsRegex.IsMatch(@value)
                                 )
                             {
-                                //避免在Excel中csv文本数字自动变科学计数法
-                                @value += csvFormatterOptions.DigitsTextSuffix;
-                                //@value = $@"=""{@value}""";
+                                if
+                                    (
+                                        (
+                                            @value
+                                                .Length
+                                            >
+                                            csvFormatterOptions
+                                                .MinExclusiveLengthDigitsTextSuffix
+                                        )
+                                        ||
+                                        @value
+                                            .StartsWith("0")
+                                    )
+                                {
+                                    @value += csvFormatterOptions
+                                                        .DigitsTextSuffix;
+                                }
                             }
                             else
                             {
@@ -165,7 +183,8 @@ namespace Microshaoft.Web
                         }
                     }
                 }
-                return @value;
+                return
+                    @value;
             }
             var httpContext = context
                                 .HttpContext;
@@ -372,6 +391,7 @@ namespace Microshaoft.Web
                         string ColumnName
                         , string ColumnTitle
                         , string DataFormat
+                        , string DigitsTextSuffix
                     )
                         [][] allOutputColumns = null;
                     if (allOutputColumnsConfiguration.Exists())
@@ -384,36 +404,43 @@ namespace Microshaoft.Web
                                             (x) =>
                                             {
                                                 return
-                                                x
-                                                    .GetChildren()
-                                                    .Select
-                                                        (
-                                                            (xx) =>
-                                                            {
-                                                                var columnName = xx
-                                                                                    .GetValue<string>
-                                                                                            ("ColumnName");
-                                                                var columnTitle = xx
-                                                                                    .GetValue
-                                                                                            (
-                                                                                                "ColumnTitle"
-                                                                                                , columnName
-                                                                                            );
-                                                                var dataFormat = xx
-                                                                                    .GetValue
-                                                                                            (
-                                                                                                "DataFormat"
-                                                                                                , string.Empty
-                                                                                            );
-                                                                return
-                                                                    (
-                                                                        ColumnName: columnName
-                                                                        , ColumnTitle: columnTitle
-                                                                        , DataFormat: dataFormat
-                                                                    );
-                                                            }
-                                                        )
-                                                    .ToArray();
+                                                    x
+                                                        .GetChildren()
+                                                        .Select
+                                                            (
+                                                                (xx) =>
+                                                                {
+                                                                    var columnName = xx
+                                                                                        .GetValue<string>
+                                                                                                ("ColumnName");
+                                                                    var columnTitle = xx
+                                                                                        .GetValue
+                                                                                                (
+                                                                                                    "ColumnTitle"
+                                                                                                    , columnName
+                                                                                                );
+                                                                    var dataFormat = xx
+                                                                                        .GetValue
+                                                                                                (
+                                                                                                    "DataFormat"
+                                                                                                    , string.Empty
+                                                                                                );
+                                                                    var digitsTextSuffix = xx
+                                                                                        .GetValue<string>
+                                                                                                (
+                                                                                                    "DigitsTextSuffix"
+                                                                                                    , null
+                                                                                                );
+                                                                    return
+                                                                        (
+                                                                            ColumnName: columnName
+                                                                            , ColumnTitle: columnTitle
+                                                                            , DataFormat: dataFormat
+                                                                            , DigitsTextSuffix: digitsTextSuffix
+                                                                        );
+                                                                }
+                                                            )
+                                                        .ToArray();
                                             }
                                         )
                                     .ToArray();
@@ -421,6 +448,7 @@ namespace Microshaoft.Web
                             string ColumnName
                             , string ColumnTitle
                             , string DataFormat
+                            , string DigitsTextSuffix
                         )
                             [] outputColumns = null;
                         var i = 0;
@@ -520,7 +548,7 @@ namespace Microshaoft.Web
                             else
                             {
                                 var j = 0;
-                                foreach (var (columnName, columnTitle, dataFormat) in outputColumns)
+                                foreach (var (columnName, columnTitle, dataFormat, digitsTextSuffix) in outputColumns)
                                 {
                                     if (j > 0)
                                     {
@@ -539,7 +567,7 @@ namespace Microshaoft.Web
                                                     )
                                         )
                                     {
-                                        line += getValue(jToken, dataFormat);
+                                        line += getValue(jToken, dataFormat, digitsTextSuffix);
                                     }
                                     j++;
                                 }
