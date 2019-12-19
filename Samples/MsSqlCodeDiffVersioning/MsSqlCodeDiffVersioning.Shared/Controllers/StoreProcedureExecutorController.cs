@@ -1,4 +1,4 @@
-﻿#if !NETFRAMEWORK4_X && !NETSTANDARD2_0
+﻿#if NETCOREAPP || NETSTANDARD2_X
 namespace Microshaoft.WebApi.Controllers
 {
     using Microshaoft.Web;
@@ -18,7 +18,6 @@ namespace Microshaoft.WebApi.Controllers
     [EnableCors("AllowAllAny")]
     //[Authorize]
     //[ValidateModelFilter]
-    [ServiceFilter(typeof(JTokenParametersValidateFilterAttribute))]
     public class StoreProcedureExecutorController
                     : AbstractStoreProceduresExecutorControllerBase
     {
@@ -46,8 +45,9 @@ namespace Microshaoft.WebApi.Controllers
                 )
         ]
 #endif
+        [JTokenParametersValidateFilter(AccessingConfigurationKey = "DefaultAccessing")]
         [BearerTokenBasedAuthorizeFilter(IsRequired = false)]
-        public override ActionResult<JToken>
+        override public ActionResult<JToken>
             ProcessActionRequest
                 (
                     [FromRoute]
@@ -84,7 +84,8 @@ namespace Microshaoft.WebApi.Controllers
         }
 
         [BearerTokenBasedAuthorizeFilter(IsRequired = false)]
-        public override async Task<ActionResult<JToken>>
+        [JTokenParametersValidateFilter(AccessingConfigurationKey = "exporting")]
+        override public async Task<ActionResult<JToken>>
             ProcessActionRequestAsync
                 (
                     [FromRoute]
@@ -120,6 +121,33 @@ namespace Microshaoft.WebApi.Controllers
                                 , resultJsonPathPart6
                             );
         }
+
+        [
+             Route
+                 (
+                     "bigdataexport/{routeName}/"
+                 )
+        ]
+        [BearerTokenBasedAuthorizeFilter(IsRequired = false)]
+        [JTokenParametersValidateFilter(AccessingConfigurationKey = "exporting")]
+        override public async Task
+                        ProcessActionRequestAsync
+                            (
+                                [FromRoute]
+                                string routeName
+                                , [ModelBinder(typeof(JTokenModelBinder))]
+                                JToken parameters = null
+                            )
+        {
+            await
+                base
+                    .ProcessActionRequestAsync
+                        (
+                            routeName
+                            , parameters
+                        );
+        }
+
     }
 }
 #endif

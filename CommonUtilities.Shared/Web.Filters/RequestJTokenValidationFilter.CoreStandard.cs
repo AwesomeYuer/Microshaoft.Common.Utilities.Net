@@ -1,4 +1,4 @@
-﻿#if NETCOREAPP2_X
+﻿#if NETCOREAPP
 namespace Microshaoft.Web
 {
     using Microsoft.AspNetCore.Mvc;
@@ -6,7 +6,6 @@ namespace Microshaoft.Web
     using Microsoft.Extensions.Configuration;
     using Newtonsoft.Json.Linq;
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -47,40 +46,43 @@ namespace Microshaoft.Web
 
 
         private object _locker = new object();
-        private readonly IConfiguration _configuration;
+        private IConfiguration _configuration;
         private IDictionary<string, IHttpRequestValidateable<JToken>>
                         _indexedValidators;
         public string AccessingConfigurationKey { get; set; } = "DefaultAccessing";
-        public JTokenParametersValidateFilterAttribute(IConfiguration configuration)
+        public JTokenParametersValidateFilterAttribute
+                        (
+                            //IConfiguration configuration
+                        )
         {
-            _configuration = configuration;
+            //_configuration = configuration;
             Initialize();
         }
         public virtual void Initialize()
         {
-            LoadDynamicValidators();
+            //LoadDynamicValidators();
         }
         protected virtual string[] GetDynamicValidatorsPathsProcess
                                     (
                                         //string dynamicLoadExecutorsPathsJsonFile = "dynamicCompostionPluginsPaths.json"
                                     )
         {
+            
             var result = _configuration
-                                .GetSection("DynamicValidatorsPaths")
-                                .AsEnumerable()
-                                .Select
-                                    (
-                                        (x) =>
-                                        {
-                                            return
-                                                x.Value;
-                                        }
-                                    )
-                                .ToArray();
-            return result;
+                                    .GetSection("DynamicValidatorsPaths")
+                                    .AsEnumerable()
+                                    .Select
+                                        (
+                                            (x) =>
+                                            {
+                                                return
+                                                    x.Value;
+                                            }
+                                        )
+                                    .ToArray();
+            return
+                result;
         }
-
-
         protected virtual void LoadDynamicValidators
                                 (
                                    //string dynamicValidatorsPathsJsonFile = "dynamicValidatorsPaths.json"
@@ -148,10 +150,12 @@ namespace Microshaoft.Web
                                                                     );
                                             }
                                         );
-            var indexedValidators = validators
+            _indexedValidators = validators
                                         .Distinct
                                             (
-                                                new FullTypeNameEqualityComparer<IHttpRequestValidateable<JToken>>()
+                                                new FullTypeNameEqualityComparer
+                                                        <IHttpRequestValidateable<JToken>>
+                                                            ()
                                             )
                                         .ToDictionary
                                             (
@@ -163,19 +167,6 @@ namespace Microshaoft.Web
                                                 , StringComparer
                                                         .OrdinalIgnoreCase
                                             );
-            _locker
-                .LockIf
-                    (
-                        () =>
-                        {
-                            var r = (_indexedValidators == null);
-                            return r;
-                        }
-                        , () =>
-                        {
-                            _indexedValidators = indexedValidators;
-                        }
-                    );
         }
         public virtual void OnActionExecuting(ActionExecutingContext context)
         {
@@ -183,12 +174,35 @@ namespace Microshaoft.Web
             var request = httpContext.Request;
             var httpMethod = $"http{request.Method}";
             var routeName = (string) context.ActionArguments["routeName"];
-
-            var validatorConfiguration =
+            _locker
+                .LockIf
+                    (
+                        () =>
+                        {
+                            return
+                                (_configuration == null);
+                        }
+                        , () =>
+                        {
+                            _configuration = (IConfiguration)
+                                                        httpContext
+                                                            .RequestServices
+                                                            .GetService
+                                                                (
+                                                                    typeof(IConfiguration)
+                                                                );
+                            LoadDynamicValidators();
+                        }
+                    );
+            if 
+                (
                     _configuration
-                            .GetSection
-                                ($"Routes:{routeName}:{httpMethod}:{AccessingConfigurationKey}:RequestValidator");
-            if (validatorConfiguration.Exists())
+                            .TryGetSection
+                                    (
+                                        ($"Routes:{routeName}:{httpMethod}:{AccessingConfigurationKey}:RequestValidator")
+                                        , out var validatorConfiguration
+                                    )
+                )
             {
                 var validatorName = validatorConfiguration.Value;
                 var parameter = context
@@ -203,12 +217,15 @@ namespace Microshaoft.Web
                 bool isValid;
                 if (hasValidator)
                 {
-                    (isValid, result) = validator
-                                                .Validate
-                                                    (
-                                                        parameter
-                                                        , context
-                                                    );
+                    (
+                        isValid
+                        , result
+                    ) = validator
+                                .Validate
+                                    (
+                                        parameter
+                                        , context
+                                    );
                 }
                 else
                 {
@@ -218,8 +235,7 @@ namespace Microshaoft.Web
                                         new
                                         {
                                             statusCode = 400
-                                            ,
-                                            message = "can't validate"
+                                            , message = "can't validate without validator plugin!"
                                         }
                                     )
                     {
