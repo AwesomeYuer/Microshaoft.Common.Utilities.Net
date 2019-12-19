@@ -22,8 +22,7 @@
         public 
                 (
                     bool IsValid
-                    ,
-                    IActionResult Result
+                    , IActionResult Result
                 )
                     Validate
                         (
