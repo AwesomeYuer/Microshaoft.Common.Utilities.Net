@@ -216,7 +216,12 @@ namespace Microshaoft.WebApi.Controllers
                  )
         ]
         [OperationsAuthorizeFilter(false)]
-        [RequestJTokenParametersProcessFilter(AccessingConfigurationKey = "DefaultAccessing")]
+        [
+            RequestJTokenParametersProcessFilter
+                    (
+                        AccessingConfigurationKey = "DefaultAccessing"
+                    )
+        ]
         public virtual async Task
                              ProcessActionRequestAsync
                                  (
