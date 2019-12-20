@@ -227,7 +227,7 @@ namespace Microshaoft.WebApi.Controllers
                 )
         ]
         [OperationsAuthorizeFilter(false)]
-        [RequestJTokenParametersDefaultProcessFilter]
+        [RequestJTokenParametersProcessFilter(AccessingConfigurationKey = "DefaultAccessing")]
         [OptionalProduces("text/csv", RequestPathKey = "/export/")]
         public virtual ActionResult<JToken>
                             ProcessActionRequest
@@ -327,7 +327,7 @@ namespace Microshaoft.WebApi.Controllers
         ]
        
         [OperationsAuthorizeFilter(false)]
-        [RequestJTokenParametersDefaultProcessFilter]
+        [RequestJTokenParametersProcessFilter(AccessingConfigurationKey = "DefaultAccessing")]
         [OptionalProduces("text/csv", RequestPathKey = "/export/")]
         public virtual async Task<ActionResult<JToken>>
                             ProcessActionRequestAsync
