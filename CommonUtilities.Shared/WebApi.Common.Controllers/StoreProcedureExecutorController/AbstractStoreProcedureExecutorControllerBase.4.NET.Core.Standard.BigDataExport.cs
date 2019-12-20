@@ -216,7 +216,12 @@ namespace Microshaoft.WebApi.Controllers
                  )
         ]
         [OperationsAuthorizeFilter(false)]
-        [RequestJTokenParametersDefaultProcessFilter]
+        [
+            RequestJTokenParametersProcessFilter
+                    (
+                        AccessingConfigurationKey = "DefaultAccessing"
+                    )
+        ]
         public virtual async Task
                              ProcessActionRequestAsync
                                  (
@@ -293,6 +298,7 @@ namespace Microshaoft.WebApi.Controllers
                                     $"sep ={_csvFormatterOptions.CsvColumnsDelimiter}"
                                 );
                 }
+
                 (
                     string ColumnName
                     , string ColumnTitle
@@ -510,7 +516,6 @@ namespace Microshaoft.WebApi.Controllers
                                             }
                                             line += GetFieldValue(reader, fieldIndex);
                                         }
-                                        
                                     }
                                     await
                                         streamWriter

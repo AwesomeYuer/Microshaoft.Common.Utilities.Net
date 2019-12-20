@@ -1,11 +1,11 @@
-﻿#if NETCOREAPP2_X
+﻿#if NETCOREAPP //|| NETSTANDARD2_X
 namespace Microshaoft.Web
 {
     using Microsoft.AspNetCore.Mvc.Filters;
     using Microsoft.Extensions.Configuration;
     using Newtonsoft.Json.Linq;
     using System;
-    public class RequestJTokenParametersDefaultProcessFilterAttribute
+    public class RequestJTokenParametersProcessFilterAttribute
                                 :
                                     //AuthorizeAttribute
                                     Attribute
@@ -16,7 +16,7 @@ namespace Microshaoft.Web
 
         public string AccessingConfigurationKey { get; set; } = "DefaultAccessing";
 
-        public RequestJTokenParametersDefaultProcessFilterAttribute()
+        public RequestJTokenParametersProcessFilterAttribute()
         {
             Initialize();
         }
@@ -49,11 +49,15 @@ namespace Microshaoft.Web
                                                         );
                         }
                     );
-            var inputsParametersConfiguration =
+            if 
+                (
                     _configuration
-                            .GetSection
-                                ($"Routes:{routeName}:{httpMethod}:{AccessingConfigurationKey}:InputsParameters");
-            if (inputsParametersConfiguration.Exists())
+                        .TryGetSection
+                            (
+                                $"Routes:{routeName}:{httpMethod}:{AccessingConfigurationKey}:InputsParameters"
+                                , out var inputsParametersConfiguration
+                            )
+                )
             {
                 var inputsParameters = inputsParametersConfiguration.GetChildren();
                 foreach (var inputParameter in inputsParameters)
