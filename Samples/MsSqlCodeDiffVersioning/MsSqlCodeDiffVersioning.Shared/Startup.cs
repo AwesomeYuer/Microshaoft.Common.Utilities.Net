@@ -16,7 +16,9 @@
     using Microsoft.AspNetCore.Server.Kestrel.Core;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
- //   using Microsoft.Extensions.FileProviders;
+    using Microsoft.AspNetCore.Mvc.ActionConstraints;
+
+    //   using Microsoft.Extensions.FileProviders;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Microsoft.Net.Http.Headers;
@@ -33,6 +35,8 @@
     using System.Reflection;
     using System.Text;
     using System.Threading.Tasks;
+    using Microsoft.Extensions.DependencyInjection.Extensions;
+    using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
     public class Startup
     {
@@ -79,12 +83,96 @@
                             .Version_2_1
 
                     );
+
+            services
+                .TryAddEnumerable
+                    (
+                        ServiceDescriptor
+                            .Singleton
+                                <
+                                    IApplicationModelProvider
+                                    , ConfigurableActionConstraintRouteApplicationModelProvider
+                                >
+                            (
+                                (x) =>
+                                {
+                                    return
+                                        new ConfigurableActionConstraintRouteApplicationModelProvider
+                                                (
+                                                    Configuration
+                                                    , (constraintedRouteAttribute1) =>
+                                                    {
+                                                        return
+                                                            new ConfigurableActionConstraint
+                                                                    (
+                                                                        constraintedRouteAttribute1
+                                                                        , (actionConstraintContext, constraintedRouteAttribute) =>
+                                                                        {
+                                                                            var r = (actionConstraintContext.Candidates.Count == 1);
+                                                                            if (!r)
+                                                                            {
+                                                                                var routeContext = actionConstraintContext.RouteContext;
+                                                                                var httpContext = routeContext
+                                                                                                        .HttpContext;
+                                                                                var request = httpContext
+                                                                                                    .Request;
+                                                                                var type = typeof(AbstractStoreProceduresExecutorControllerBase);
+                                                                                var currentCandidateAction = actionConstraintContext.CurrentCandidate.Action;
+
+                                                                                var isAsyncExecuting = ((ControllerActionDescriptor)currentCandidateAction)
+                                                                                            .MethodInfo
+                                                                                            .IsAsync();
+
+
+                                                                                var routeName = routeContext
+                                                                                                    .RouteData
+                                                                                                    .Values["routeName"]
+                                                                                                    .ToString();
+                                                                                var httpMethod = $"Http{request.Method}";
+                                                                                var isAsyncInConfiguration = false;
+
+                                                                                var accessingConfigurationKey = "DefaultAccessing";
+                                                                                if (request.Path.ToString().Contains("/export/", StringComparison.OrdinalIgnoreCase))
+                                                                                {
+                                                                                    accessingConfigurationKey = "exporting";
+                                                                                }
+
+                                                                                if
+                                                                                    (
+                                                                                        constraintedRouteAttribute
+                                                                                            .Configuration
+                                                                                            .TryGetSection
+                                                                                                (
+                                                                                                    $"Routes:{routeName}:{httpMethod}:{accessingConfigurationKey}:isAsyncExecuting"
+                                                                                                    , out var isAsyncConfiguration
+                                                                                                )
+                                                                                    )
+                                                                                {
+                                                                                    isAsyncInConfiguration = isAsyncConfiguration.Get<bool>();
+                                                                                }
+                                                                                r = (isAsyncInConfiguration == isAsyncExecuting);
+                                                                            }
+                                                                            return r;
+                                                                        }
+                                                                    );
+
+
+                                                    }
+
+
+                                                    
+                                                );
+                                
+                                }
+                            )
+                    );
+
             //services
             //  .AddSingleton
             //        <JTokenParametersValidateFilterAttribute>
             //            ();
 
-#region 异步批量入库案例专用
+            #region 异步批量入库案例专用
             var processor =
                 new SingleThreadAsyncDequeueProcessorSlim<JToken>();
             var executor = new MsSqlStoreProceduresExecutor();
@@ -193,6 +281,14 @@
             services
                 .AddSingleton<IActionSelector, SyncOrAsyncActionSelector>();
 #endif
+
+#if NETCOREAPP3_X
+            //services
+            //    .AddSingleton<IActionConstraint, ConfigurableActionConstraint>();
+#endif
+
+
+
             services
                 .AddMvc
                     (
@@ -637,7 +733,74 @@
                                     };
                         }
                     );
-#endregion
+            #endregion
+#endif
+#if NETCOREAPP3_X
+            //#region SyncAsyncActionSelector 拦截处理
+            //app
+            //    .UseCustomActionConstraint<SyncOrAsyncActionSelectorConstraint>
+            //        (
+            //            (actionSelector) =>
+            //            {
+            //                actionSelector
+            //                    .OnSelectSyncOrAsyncActionCandidate =
+            //                        (actionConstraintContext, candidatesPair, _) =>
+            //                        {
+            //                            var routeContext = actionConstraintContext.RouteContext;
+            //                            ActionDescriptor candidate = null;
+            //                            var type = typeof(AbstractStoreProceduresExecutorControllerBase);
+            //                            var asyncCandidate = candidatesPair.AsyncCandidate;
+            //                            var syncCandidate = candidatesPair.SyncCandidate;
+            //                            var r = type
+            //                                        .IsAssignableFrom
+            //                                            (
+            //                                                ((ControllerActionDescriptor)asyncCandidate)
+            //                                                    .ControllerTypeInfo
+            //                                                    .UnderlyingSystemType
+            //                                            );
+            //                            if (r)
+            //                            {
+            //                                r = type
+            //                                        .IsAssignableFrom
+            //                                            (
+            //                                                ((ControllerActionDescriptor)syncCandidate)
+            //                                                    .ControllerTypeInfo
+            //                                                    .UnderlyingSystemType
+            //                                            );
+            //                            }
+            //                            if (r)
+            //                            {
+            //                                var httpContext = routeContext
+            //                                                    .HttpContext;
+            //                                var request = httpContext
+            //                                                    .Request;
+            //                                var routeName = routeContext
+            //                                                    .RouteData
+            //                                                    .Values["routeName"]
+            //                                                    .ToString();
+            //                                var httpMethod = $"Http{request.Method}";
+            //                                var isAsyncExecuting = false;
+
+            //                                var accessingConfigurationKey = "DefaultAccessing";
+            //                                if (request.Path.ToString().Contains("/export/", StringComparison.OrdinalIgnoreCase))
+            //                                {
+            //                                    accessingConfigurationKey = "exporting";
+            //                                }
+            //                                var isAsyncExecutingConfiguration =
+            //                                            configuration
+            //                                                .GetSection($"Routes:{routeName}:{httpMethod}:{accessingConfigurationKey}:isAsyncExecuting");
+
+            //                                if (isAsyncExecutingConfiguration.Exists())
+            //                                {
+            //                                    isAsyncExecuting = isAsyncExecutingConfiguration.Get<bool>();
+            //                                }
+            //                                candidate = (isAsyncExecuting ? asyncCandidate : syncCandidate);
+            //                            }
+            //                            return candidate;
+            //                        };
+            //            }
+            //        );
+            //#endregion
 #endif
             app.UseMvc();
             Console.WriteLine(Directory.GetCurrentDirectory());

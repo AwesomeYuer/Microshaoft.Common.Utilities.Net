@@ -14,7 +14,8 @@ namespace Microshaoft.WebApi.Controllers
     using System.Linq;
     using System.Threading.Tasks;
 
-    [Route("api/[controller]")]
+    //[Route("api/[controller]")]
+    [ConstraintedRoute("api/[controller]")]
     [ApiController]
     public abstract partial class 
                 AbstractStoreProceduresExecutorControllerBase
@@ -292,7 +293,7 @@ namespace Microshaoft.WebApi.Controllers
         [HttpPatch]
         [HttpPost]
         [HttpPut]
-#if !NETCOREAPP3_X
+//#if !NETCOREAPP3_X
         [
             Route
                 (
@@ -317,7 +318,7 @@ namespace Microshaoft.WebApi.Controllers
                     + "{resultJsonPathPart6?}"
                 )
         ]
-#endif
+        //#endif
         [
             Route
                 (
