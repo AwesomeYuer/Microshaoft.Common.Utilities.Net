@@ -59,6 +59,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Web.MiddleWares\AbstractCommonMiddlewareBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.MiddleWares\ExceptionGuardMiddleware.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.MiddleWares\RequestResponseGuardMiddleware.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\Constraint\ConfigurableActionConstraint.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\Constraint\ConfigurableActionConstraintRouteApplicationModelProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\Constraint\ConstraintedRouteAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenModelBinder\HttpRequestHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\StoreProcedureExecutorController\AbstractStoreProcedureExecutorControllerBase.1.NET.All.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\StoreProcedureExecutorController\AbstractStoreProcedureExecutorControllerBase.3.NET.Core.Standard.cs" />
@@ -73,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)SingleThreadAsyncDequeueProcessor\CoreStandard\" />
+    <Folder Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\CommonController\" />
     <Folder Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\Services\" />
   </ItemGroup>
 </Project>

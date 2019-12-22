@@ -6,6 +6,7 @@
         "storeProcedureName": "zsp_zObjectsChangesLogsHistory_Get",
         "EnableStatistics": true,
         "defaultAccessing": {
+          "isAsyncExecuting": true,
           "allow": true,
           "commandtimeoutInSeconds": 109,
           "requestvAlidator": "simpleValidator1",

@@ -13,7 +13,7 @@ namespace Microshaoft.WebApi.Controllers
     using Microshaoft.AspNetCore.ConcurrencyLimiters;
 #endif
 
-    [Route("api/[controller]")]
+    //[Route("api/[controller]")]
     //[ApiController]
     [EnableCors("AllowAllAny")]
     //[Authorize]

@@ -17,7 +17,7 @@
           "allow": true,
           "needCheckOperations": true,
           "operations": [ "a1", "a2" ],
-          "isAsyncExecuting": true,
+          "isAsyncExecuting": false,
           "EnableStatistics": true,
           "commandtimeoutInSeconds": 103,
           "InputsParameters": [
