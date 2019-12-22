@@ -7,7 +7,8 @@ namespace Microshaoft
     using System;
     using System.Linq;
 
-    public class ConfigurableActionConstraintRouteApplicationModelProvider : IApplicationModelProvider
+    public class ConfigurableActionConstraintRouteApplicationModelProvider
+                        : IApplicationModelProvider
     {
         private readonly IConfiguration _configuration;
         private readonly
@@ -27,13 +28,22 @@ namespace Microshaoft
                                 , IActionConstraint
                             >
                              onActionConstraintFactoryProcessFunc = null
+                        , int order = -1000
                     )
         {
             _configuration = configuration;
             _onActionConstraintFactoryProcessFunc = onActionConstraintFactoryProcessFunc;
+            _order = order;
         }
 
-        public int Order { get { return -1000 + 10; } }
+        private int _order = -1000;
+        public int Order
+        { 
+            get
+            {
+                return _order;
+            }
+        }
 
         public void OnProvidersExecuted(ApplicationModelProviderContext context)
         {
