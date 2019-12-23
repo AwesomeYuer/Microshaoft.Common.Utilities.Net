@@ -15,7 +15,7 @@ namespace Microshaoft.WebApi.Controllers
     using System.Threading.Tasks;
 
     //[Route("api/[controller]")]
-    [ConstraintedRoute("api/[controller]")]
+    [ConstrainedRoute("api/[controller]")]
     [ApiController]
     public abstract partial class 
                 AbstractStoreProceduresExecutorControllerBase

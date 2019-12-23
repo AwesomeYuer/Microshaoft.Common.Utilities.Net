@@ -1,6 +1,6 @@
 ﻿namespace WebApplication.ASPNetCore
 {
-//    using Google.Protobuf.WellKnownTypes;
+    //    using Google.Protobuf.WellKnownTypes;
     using Microshaoft;
     using Microshaoft.Web;
     using Microshaoft.WebApi.Controllers;
@@ -9,18 +9,14 @@
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Http.Features;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.Abstractions;
+    using Microsoft.AspNetCore.Mvc.ApplicationModels;
     using Microsoft.AspNetCore.Mvc.Controllers;
-    using Microsoft.AspNetCore.Mvc.Infrastructure;
     using Microsoft.AspNetCore.Server.Kestrel.Core;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.AspNetCore.Mvc.ActionConstraints;
-
+    using Microsoft.Extensions.DependencyInjection.Extensions;
     //   using Microsoft.Extensions.FileProviders;
     using Microsoft.Extensions.Logging;
-    using Microsoft.Extensions.Options;
     using Microsoft.Net.Http.Headers;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
@@ -30,13 +26,9 @@
     using System.Data.SqlClient;
     using System.Diagnostics;
     using System.IO;
-    using System.Linq;
     using System.Net;
-    using System.Reflection;
     using System.Text;
     using System.Threading.Tasks;
-    using Microsoft.Extensions.DependencyInjection.Extensions;
-    using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
     public class Startup
     {
@@ -67,7 +59,7 @@
             services
                 .AddMvc
                 (
-#if NETCOREAPP3_X    
+#if NETCOREAPP3_X  
                     (option) =>
                     {
                         option.EnableEndpointRouting = false;                    
@@ -77,13 +69,17 @@
 #if NETCOREAPP3_X
                 .AddNewtonsoftJson()
 #endif
-                .SetCompatibilityVersion
-                    (
-                        CompatibilityVersion
-                            .Version_2_1
+                //.SetCompatibilityVersion
+                //    (
+                //        CompatibilityVersion
+                //            .Version_2_1
 
-                    );
+                //    )
+                    ;
 
+
+            // for both NETCOREAPP2_X and NETCOREAPP3_X
+            // for Sync or Async Action Selector
             services
                 .TryAddEnumerable
                     (
@@ -91,22 +87,22 @@
                             .Singleton
                                 <
                                     IApplicationModelProvider
-                                    , ConfigurableActionConstraintRouteApplicationModelProvider
+                                    , ConfigurableActionConstrainedRouteApplicationModelProvider<ConstrainedRouteAttribute>
                                 >
                             (
                                 (x) =>
                                 {
                                     return
-                                        new ConfigurableActionConstraintRouteApplicationModelProvider
+                                        new ConfigurableActionConstrainedRouteApplicationModelProvider<ConstrainedRouteAttribute>
                                                 (
                                                     Configuration
-                                                    , (constraintedRouteAttribute1) =>
+                                                    , (attribute) =>
                                                     {
                                                         return
-                                                            new ConfigurableActionConstraint
+                                                            new ConfigurableActionConstraint<ConstrainedRouteAttribute>
                                                                     (
-                                                                        constraintedRouteAttribute1
-                                                                        , (actionConstraintContext, constraintedRouteAttribute) =>
+                                                                        attribute
+                                                                        , (actionConstraintContext, constrainedRouteAttribute) =>
                                                                         {
                                                                             var r = (actionConstraintContext.Candidates.Count == 1);
                                                                             if (!r)
@@ -117,19 +113,19 @@
                                                                                 var request = httpContext
                                                                                                     .Request;
                                                                                 var type = typeof(AbstractStoreProceduresExecutorControllerBase);
-                                                                                var currentCandidateAction = actionConstraintContext.CurrentCandidate.Action;
+                                                                                var currentCandidateAction = actionConstraintContext
+                                                                                                                        .CurrentCandidate
+                                                                                                                        .Action;
 
-                                                                                var isAsyncExecuting = ((ControllerActionDescriptor)currentCandidateAction)
-                                                                                            .MethodInfo
-                                                                                            .IsAsync();
-
-
+                                                                                var isAsyncExecuting = ((ControllerActionDescriptor) currentCandidateAction)
+                                                                                                                    .MethodInfo
+                                                                                                                    .IsAsync();
                                                                                 var routeName = routeContext
-                                                                                                    .RouteData
-                                                                                                    .Values["routeName"]
-                                                                                                    .ToString();
+                                                                                                        .RouteData
+                                                                                                        .Values["routeName"]
+                                                                                                        .ToString();
                                                                                 var httpMethod = $"Http{request.Method}";
-                                                                                var isAsyncInConfiguration = false;
+                                                                                var isAsyncExecutingInConfiguration = false;
 
                                                                                 var accessingConfigurationKey = "DefaultAccessing";
                                                                                 if (request.Path.ToString().Contains("/export/", StringComparison.OrdinalIgnoreCase))
@@ -139,30 +135,24 @@
 
                                                                                 if
                                                                                     (
-                                                                                        constraintedRouteAttribute
-                                                                                            .Configuration
-                                                                                            .TryGetSection
-                                                                                                (
-                                                                                                    $"Routes:{routeName}:{httpMethod}:{accessingConfigurationKey}:isAsyncExecuting"
-                                                                                                    , out var isAsyncConfiguration
-                                                                                                )
+                                                                                        constrainedRouteAttribute
+                                                                                                .Configuration
+                                                                                                .TryGetSection
+                                                                                                    (
+                                                                                                        $"Routes:{routeName}:{httpMethod}:{accessingConfigurationKey}:isAsyncExecuting"
+                                                                                                        , out var isAsyncExecutingConfiguration
+                                                                                                    )
                                                                                     )
                                                                                 {
-                                                                                    isAsyncInConfiguration = isAsyncConfiguration.Get<bool>();
+                                                                                    isAsyncExecutingInConfiguration = isAsyncExecutingConfiguration.Get<bool>();
                                                                                 }
-                                                                                r = (isAsyncInConfiguration == isAsyncExecuting);
+                                                                                r = (isAsyncExecutingInConfiguration == isAsyncExecuting);
                                                                             }
                                                                             return r;
                                                                         }
                                                                     );
-
-
                                                     }
-
-
-                                                    
                                                 );
-                                
                                 }
                             )
                     );
@@ -277,17 +267,11 @@
             services
                 .AddResponseCaching();
 
-#if !NETCOREAPP3_X
-            services
-                .AddSingleton<IActionSelector, SyncOrAsyncActionSelector>();
-#endif
-
-#if NETCOREAPP3_X
+#if NETCOREAPP2_X
+            //for NETCOREAPP2_X only
             //services
-            //    .AddSingleton<IActionConstraint, ConfigurableActionConstraint>();
+            //    .AddSingleton<IActionSelector, SyncOrAsyncActionSelector>();
 #endif
-
-
 
             services
                 .AddMvc
@@ -447,7 +431,7 @@
                         }
                     );
 
-#if !NETCOREAPP3_X
+#if NETCOREAPP2_X
             services
                 .AddSwaggerGen
                     (
@@ -671,82 +655,15 @@
 
 #if !NETCOREAPP3_X
 #region SyncAsyncActionSelector 拦截处理
-            app
-                .UseCustomActionSelector<SyncOrAsyncActionSelector>
-                    (
-                        (actionSelector) =>
-                        {
-                            actionSelector
-                                .OnSelectSyncOrAsyncActionCandidate =
-                                    (routeContext, candidatesPair, _) =>
-                                    {
-                                        ActionDescriptor candidate = null;
-                                        var type = typeof(AbstractStoreProceduresExecutorControllerBase);
-                                        var asyncCandidate = candidatesPair.AsyncCandidate;
-                                        var syncCandidate = candidatesPair.SyncCandidate;
-                                        var r = type
-                                                    .IsAssignableFrom
-                                                        (
-                                                            ((ControllerActionDescriptor) asyncCandidate)
-                                                                .ControllerTypeInfo
-                                                                .UnderlyingSystemType
-                                                        );
-                                        if (r)
-                                        {
-                                            r = type
-                                                    .IsAssignableFrom
-                                                        (
-                                                            ((ControllerActionDescriptor) syncCandidate)
-                                                                .ControllerTypeInfo
-                                                                .UnderlyingSystemType
-                                                        );
-                                        }
-                                        if (r)
-                                        {
-                                            var httpContext = routeContext
-                                                                .HttpContext;
-                                            var request = httpContext
-                                                                .Request;
-                                            var routeName = routeContext
-                                                                .RouteData
-                                                                .Values["routeName"]
-                                                                .ToString();
-                                            var httpMethod = $"Http{request.Method}";
-                                            var isAsyncExecuting = false;
-
-                                            var accessingConfigurationKey = "DefaultAccessing";
-                                            if (request.Path.ToString().Contains("/export/", StringComparison.OrdinalIgnoreCase))
-                                            {
-                                                accessingConfigurationKey = "exporting";
-                                            }
-                                            var isAsyncExecutingConfiguration =
-                                                        configuration
-                                                            .GetSection($"Routes:{routeName}:{httpMethod}:{accessingConfigurationKey}:isAsyncExecuting");
-
-                                            if (isAsyncExecutingConfiguration.Exists())
-                                            {
-                                                isAsyncExecuting = isAsyncExecutingConfiguration.Get<bool>();
-                                            }
-                                            candidate = (isAsyncExecuting ? asyncCandidate : syncCandidate);
-                                        }
-                                        return candidate;
-                                    };
-                        }
-                    );
-            #endregion
-#endif
-#if NETCOREAPP3_X
-            //#region SyncAsyncActionSelector 拦截处理
             //app
-            //    .UseCustomActionConstraint<SyncOrAsyncActionSelectorConstraint>
+            //    .UseCustomActionSelector<SyncOrAsyncActionSelector>
             //        (
             //            (actionSelector) =>
             //            {
             //                actionSelector
             //                    .OnSelectSyncOrAsyncActionCandidate =
-            //                        (actionConstraintContext, candidatesPair, _) =>
+            //                        (routeContext, candidatesPair, _) =>
             //                        {
-            //                            var routeContext = actionConstraintContext.RouteContext;
             //                            ActionDescriptor candidate = null;
             //                            var type = typeof(AbstractStoreProceduresExecutorControllerBase);
             //                            var asyncCandidate = candidatesPair.AsyncCandidate;
@@ -754,7 +671,7 @@
             //                            var r = type
             //                                        .IsAssignableFrom
             //                                            (
-            //                                                ((ControllerActionDescriptor)asyncCandidate)
+            //                                                ((ControllerActionDescriptor) asyncCandidate)
             //                                                    .ControllerTypeInfo
             //                                                    .UnderlyingSystemType
             //                                            );
@@ -763,7 +680,7 @@
             //                                r = type
             //                                        .IsAssignableFrom
             //                                            (
-            //                                                ((ControllerActionDescriptor)syncCandidate)
+            //                                                ((ControllerActionDescriptor) syncCandidate)
             //                                                    .ControllerTypeInfo
             //                                                    .UnderlyingSystemType
             //                                            );
@@ -800,7 +717,7 @@
             //                        };
             //            }
             //        );
-            //#endregion
+            #endregion
 #endif
             app.UseMvc();
             Console.WriteLine(Directory.GetCurrentDirectory());

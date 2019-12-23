@@ -1,0 +1,116 @@
+{
+  "Routes": {
+    "sp_helptext": {
+      "HttPGet": {
+        "connectionID": "c1",
+        "storeProcedureName": "sp_helptext",
+        "EnableStatistics": true,
+        "commandtimeoutInSeconds": 103,
+        "Scope": "sp_down"
+      }
+    },
+    "usp_executesql": {
+      "HttPPost": {
+        "connectionID": "c1",
+        "storeProcedureName": "usp_executesql",
+        "DefaultAccessing": {
+          "allow": true,
+          "needCheckOperations": true,
+          "operations": [ "a1", "a2" ],
+          "isAsyncExecuting": false,
+          "EnableStatistics": true,
+          "commandtimeoutInSeconds": 103,
+          "InputsParameters": [
+            {
+              "Name": "A",
+              "Value": 1,
+              "AllowOverride": true
+            },
+            {
+              "Name": "B",
+              "Value": true,
+              "AllowOverride": true
+            },
+            {
+              "Name": "c",
+              "Value": "asdsadsad",
+              "AllowOverride": true
+            }
+          ],
+          "Outputs1111": {
+            "aaa.bbb.ddd": "Outputs.ResultSets[0].Rows"
+          }
+
+        },
+        "exporting": {
+          "allow": true,
+          "needCheckOperations": true,
+          "operations": [ "a1", "a2" ],
+          "downloadFileName": "测试下载.csv",
+          "outputColumns": [
+            [
+              {
+                "ColumnName": "f1",
+                "ColumnTitle": "字段1",
+                "dataformat": "yy-MM-dd"
+              },
+              {
+                "ColumnName": "f2",
+                "ColumnTitle111": "字段2",
+                "dataformat": "yy-MM-dd HH:mm:ss"
+              },
+              {
+                "ColumnName": "f3",
+                "ColumnTitle": "字段3",
+                "dataformat": "g"
+              }
+
+            ],
+            [
+              {
+                "ColumnName": "f1",
+                "ColumnTitle": "字段1",
+                "dataformat": "yy-MM-dd"
+              },
+              {
+                "ColumnName": "f2",
+                "ColumnTitle111": "字段2",
+                "dataformat": "yy-MM-dd HH:mm:ss"
+              },
+              {
+                "ColumnName": "f3",
+                "ColumnTitle": "字段3",
+                "dataformat": "g"
+              }
+
+            ]
+
+          ],
+          "isAsyncExecuting": true,
+          "EnableStatistics": true,
+          "commandtimeoutInSeconds": 103,
+          "InputsParameters": [
+            {
+              "Name": "A",
+              "Value": 1,
+              "AllowOverride": true
+            },
+            {
+              "Name": "B",
+              "Value": true,
+              "AllowOverride": true
+            },
+            {
+              "Name": "c",
+              "Value": "asdsadsad",
+              "AllowOverride": true
+            }
+          ],
+          "Outputs111111": {
+            "$": "Outputs.ResultSets[0].Rows"
+          }
+        }
+      }
+    }
+  }
+ }
