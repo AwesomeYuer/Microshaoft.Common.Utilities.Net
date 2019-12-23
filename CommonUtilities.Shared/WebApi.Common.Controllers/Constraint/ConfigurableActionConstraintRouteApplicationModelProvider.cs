@@ -7,24 +7,29 @@ namespace Microshaoft
     using System;
     using System.Linq;
 
-    public class ConfigurableActionConstraintRouteApplicationModelProvider
-                        : IApplicationModelProvider
+    public class ConfigurableActionConstrainedRouteApplicationModelProvider<TRouteAttribute>
+                                : IApplicationModelProvider
+                                    where
+                                        TRouteAttribute
+                                            :
+                                                IConfigurable
+                                                , IConstrained<TRouteAttribute>
     {
         private readonly IConfiguration _configuration;
         private readonly
                      Func
                              <
-                                ConstraintedRouteAttribute
+                                TRouteAttribute
                                 , IActionConstraint
                             >
                              _onActionConstraintFactoryProcessFunc = null;
 
-        public ConfigurableActionConstraintRouteApplicationModelProvider
+        public ConfigurableActionConstrainedRouteApplicationModelProvider
                     (
                         IConfiguration configuration
                         , Func
                             <
-                                ConstraintedRouteAttribute
+                                TRouteAttribute
                                 , IActionConstraint
                             >
                              onActionConstraintFactoryProcessFunc = null
@@ -32,7 +37,8 @@ namespace Microshaoft
                     )
         {
             _configuration = configuration;
-            _onActionConstraintFactoryProcessFunc = onActionConstraintFactoryProcessFunc;
+            _onActionConstraintFactoryProcessFunc
+                        = onActionConstraintFactoryProcessFunc;
             _order = order;
         }
 
@@ -47,23 +53,28 @@ namespace Microshaoft
 
         public void OnProvidersExecuted(ApplicationModelProviderContext context)
         {
-            var items = context
-                            .Result
-                            .Controllers
-                            .SelectMany
-                                (
-                                    (controllerModel) =>
-                                    {
-                                        return
-                                            controllerModel
-                                                    .Attributes
-                                                    .OfType<ConstraintedRouteAttribute>();
-                                    }
-                                );
-            foreach (var item in items)
+            var attributes = context
+                                .Result
+                                .Controllers
+                                .SelectMany
+                                    (
+                                        (controllerModel) =>
+                                        {
+                                            return
+                                                controllerModel
+                                                        .Attributes
+                                                        .OfType
+                                                            <TRouteAttribute>();
+                                        }
+                                    );
+            foreach (var attribute in attributes)
             {
-                item.Configuration = _configuration;
-                item.OnActionConstraintFactoryProcessFunc = _onActionConstraintFactoryProcessFunc;
+                attribute
+                    .Configuration
+                        = _configuration;
+                attribute
+                    .OnActionConstraintFactoryProcessFunc
+                        = _onActionConstraintFactoryProcessFunc;
             }
         }
 

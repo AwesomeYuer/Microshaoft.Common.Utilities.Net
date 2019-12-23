@@ -1,29 +1,32 @@
 ﻿#if NETCOREAPP
 namespace Microshaoft
 {
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.ActionConstraints;
-    using Microsoft.Extensions.Configuration;
     using System;
 
-    public class ConfigurableActionConstraint
-                                : IActionConstraint
+    public class ConfigurableActionConstraint<TRouteAttribute>
+                                : 
+                                    IActionConstraint
                                     , IActionConstraintMetadata
                                     , IServiceProvider
+                    where
+                        TRouteAttribute : RouteAttribute
     {
-        private readonly ConstraintedRouteAttribute _constraintedRouteAttribute;
+        private readonly TRouteAttribute _routeAttribute;
         public ConfigurableActionConstraint
                     (
-                        ConstraintedRouteAttribute
-                               constraintedRouteAttribute
+                        TRouteAttribute
+                               routeAttribute
                         , Func
                                 <
                                     ActionConstraintContext
-                                    , ConstraintedRouteAttribute
+                                    , TRouteAttribute
                                     , bool
                                 > onAcceptCandidateActionProcessFunc
                     )
         {
-            _constraintedRouteAttribute = constraintedRouteAttribute;
+            _routeAttribute = routeAttribute;
             _onAcceptCandidateActionProcessFunc = onAcceptCandidateActionProcessFunc;
         }
 
@@ -31,7 +34,7 @@ namespace Microshaoft
                             Func
                                 <
                                     ActionConstraintContext
-                                    , ConstraintedRouteAttribute
+                                    , TRouteAttribute
                                     , bool
                                 >
                                     _onAcceptCandidateActionProcessFunc = null;
@@ -57,7 +60,7 @@ namespace Microshaoft
                 _onAcceptCandidateActionProcessFunc
                             (
                                 context
-                                , _constraintedRouteAttribute
+                                , _routeAttribute
                             );
         }
     }
