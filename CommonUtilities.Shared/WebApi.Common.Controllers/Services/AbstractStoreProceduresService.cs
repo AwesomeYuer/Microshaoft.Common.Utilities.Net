@@ -27,16 +27,17 @@ namespace Microshaoft.Web
                            , JToken parameters = null
                            , Func
                                <
-                                   IDataReader
-                                   , Type        // fieldType
-                                   , string    // fieldName
-                                   , int       // row index
-                                   , int       // column index
-                                   ,
-                                       (
-                                           bool NeedDefaultProcess
-                                           , JProperty Field   //  JObject Field 对象
-                                       )
+                                    int             // resultSet index
+                                    , IDataReader
+                                    , int           // row index
+                                    , int           // column index
+                                    , Type          // fieldType
+                                    , string        // fieldName
+                                    ,
+                                        (
+                                            bool NeedDefaultProcess
+                                            , JProperty Field   //  JObject Field 对象
+                                        )
                                > onReadRowColumnProcessFunc = null
                            , bool enableStatistics = false
                            , int commandTimeoutInSeconds = 90
@@ -56,16 +57,17 @@ namespace Microshaoft.Web
                            , JToken parameters = null
                            , Func
                                <
-                                   IDataReader
-                                   , Type        // fieldType
-                                   , string    // fieldName
-                                   , int       // row index
-                                   , int       // column index
-                                   ,
-                                       (
-                                           bool NeedDefaultProcess
-                                           , JProperty Field   //  JObject Field 对象
-                                       )
+                                    int             // resultSet index
+                                    , IDataReader
+                                    , int           // row index         
+                                    , int           // column index
+                                    , Type          // fieldType
+                                    , string        // fieldName
+                                    ,
+                                        (
+                                            bool NeedDefaultProcess
+                                            , JProperty Field   //  JObject Field 对象
+                                        )
                                > onReadRowColumnProcessFunc = null
                            , bool enableStatistics = false
                            , int commandTimeoutInSeconds = 90
@@ -85,11 +87,12 @@ namespace Microshaoft.Web
                     , JToken parameters = null
                     , Func
                             <
-                                IDataReader
+                                int             // resultSet index
+                                , IDataReader
+                                , int           // row index        
+                                , int           // column index
                                 , Type          // fieldType
                                 , string        // fieldName
-                                , int           // row index
-                                , int           // column index
                                 , 
                                     (
                                         bool NeedDefaultProcess
@@ -115,11 +118,12 @@ namespace Microshaoft.Web
                         , JToken parameters = null
                         , Func
                                 <
-                                    IDataReader
-                                    , Type          // fieldType
-                                    , string        // fieldName
+                                    int             // resultSet index
+                                    , IDataReader
                                     , int           // row index
                                     , int           // column index
+                                    , Type          // fieldType
+                                    , string        // fieldName
                                     , 
                                         (
                                             bool NeedDefaultProcess
@@ -130,7 +134,6 @@ namespace Microshaoft.Web
                         //, bool enableStatistics = false
                         , int commandTimeoutInSeconds = 101
                     );
-
     }
 
     public abstract class
@@ -213,7 +216,8 @@ namespace Microshaoft.Web
                                 }
                             )
                         .ToArray();
-            return result;
+            return
+                result;
         }
 
         protected virtual void LoadDynamicExecutors
@@ -344,41 +348,54 @@ namespace Microshaoft.Web
             get => _needAutoRefreshExecutedTimeForSlideExpire;
             private set => _needAutoRefreshExecutedTimeForSlideExpire = value;
         }
-        public IDictionary<string, IStoreProcedureExecutable> IndexedExecutors
+
+        private
+            IDictionary
+                    <
+                        string
+                        , IStoreProcedureExecutable
+                    >
+                        _indexedExecutors;
+        public
+            IDictionary
+                    <
+                        string
+                        , IStoreProcedureExecutable
+                    >
+                        IndexedExecutors
         {
             get => _indexedExecutors;
             set => _indexedExecutors = value;
         }
 
-        private IDictionary<string, IStoreProcedureExecutable>
-                                _indexedExecutors;
         public
             (
                 int StatusCode
                 , string Message
                 , JToken Result
             )
-                    Process
-                        (
-                            string routeName
-                            , JToken parameters = null
-                            , Func
-                                <
-                                    IDataReader
-                                    , Type          // fieldType
-                                    , string        // fieldName
-                                    , int           // row index
-                                    , int           // column index
-                                    ,
-                                        (
-                                            bool NeedDefaultProcess
-                                            , JProperty Field   //  JObject Field 对象
-                                        )
-                                > onReadRowColumnProcessFunc = null
-                            , string httpMethod = "Get"
-                            //, bool enableStatistics = false
-                            , int commandTimeoutInSeconds = 101
-                        )
+                Process
+                    (
+                        string routeName
+                        , JToken parameters = null
+                        , Func
+                            <
+                                int             // resultSet index
+                                , IDataReader
+                                , int           // row index
+                                , int           // column index
+                                , Type          // fieldType
+                                , string        // fieldName
+                                ,
+                                    (
+                                        bool NeedDefaultProcess
+                                        , JProperty Field   //  JObject Field 对象
+                                    )
+                            > onReadRowColumnProcessFunc = null
+                        , string httpMethod = "Get"
+                        //, bool enableStatistics = false
+                        , int commandTimeoutInSeconds = 101
+                    )
         {
             JToken result = null;
 
@@ -462,11 +479,12 @@ namespace Microshaoft.Web
                     , JToken parameters = null
                     , Func
                         <
-                            IDataReader
+                            int             // resultSet index
+                            , IDataReader
+                            , int           // row index    
+                            , int           // column index
                             , Type          // fieldType
                             , string        // fieldName
-                            , int           // row index
-                            , int           // column index
                             ,
                                 (
                                     bool NeedDefaultProcess
@@ -605,11 +623,12 @@ namespace Microshaoft.Web
                                 , JToken parameters = null
                                 , Func
                                     <
-                                        IDataReader
-                                        , Type          // fieldType
-                                        , string        // fieldName
+                                        int             // resultSet index
+                                        , IDataReader
                                         , int           // row index
                                         , int           // column index
+                                        , Type          // fieldType
+                                        , string        // fieldName
                                         ,
                                             (
                                                 bool NeedDefaultProcess
@@ -689,11 +708,12 @@ namespace Microshaoft.Web
                     , JToken parameters = null
                     , Func
                         <
-                            IDataReader
-                            , Type          // fieldType
-                            , string        // fieldName
+                            int             // resultSet index
+                            , IDataReader
                             , int           // row index
                             , int           // column index
+                            , Type          // fieldType
+                            , string        // fieldName
                             ,
                                 (
                                     bool NeedDefaultProcess
@@ -971,8 +991,8 @@ namespace Microshaoft.Web
                             , Action
                                 <
                                     int             // resultSetIndex
-                                    , IDataReader
                                     , JArray        // columns
+                                    , IDataReader
                                     , int           // row index
                                 > onReadRowProcessAction = null
                             , string httpMethod = "Get"
@@ -1038,8 +1058,8 @@ namespace Microshaoft.Web
                                 , Action
                                     <
                                         int           // resultSet Index
-                                        , IDataReader
                                         , JArray
+                                        , IDataReader
                                         , int           // row index
                                     > onReadRowProcessAction = null
                                 , bool enableStatistics = false
@@ -1076,8 +1096,8 @@ namespace Microshaoft.Web
                     , Func
                         <
                             int             // resultSetIndex
+                            , JArray        // columns    
                             , IDataReader
-                            , JArray        // columns
                             , int           // row index
                             , Task
                         > onReadRowProcessActionAsync = null
@@ -1142,8 +1162,8 @@ namespace Microshaoft.Web
                                 , Func
                                     <
                                         int           // resultSet Index
-                                        , IDataReader
                                         , JArray
+                                        , IDataReader
                                         , int           // row index
                                         , Task
                                     > onReadRowProcessActionAsync = null

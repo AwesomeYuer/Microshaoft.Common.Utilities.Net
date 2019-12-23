@@ -17,7 +17,6 @@ namespace Microshaoft.WebApi.Controllers
     //[ApiController]
     [EnableCors("AllowAllAny")]
     //[Authorize]
-    //[ValidateModelFilter]
     public class StoreProcedureExecutorController
                     : AbstractStoreProceduresExecutorControllerBase
     {
@@ -147,7 +146,6 @@ namespace Microshaoft.WebApi.Controllers
                             , parameters
                         );
         }
-
     }
 }
 #endif

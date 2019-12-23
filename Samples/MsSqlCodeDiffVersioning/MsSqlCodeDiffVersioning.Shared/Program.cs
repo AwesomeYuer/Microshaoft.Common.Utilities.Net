@@ -1,9 +1,4 @@
-﻿//rem only for Windows/dos cmd
-//rem xcopy ..\..\StoreProcedureWebApiExecutorsPlugins\MsSQL.StoreProcedureWebApiExecutor.Plugin\bin\Debug\netcoreapp2.2\*plugin* $(TargetDir)CompositionPlugins\ /Y
-//rem xcopy ..\..\StoreProcedureWebApiExecutorsPlugins\MySQL.StoreProcedureWebApiExecutor.Plugin\bin\Debug\netcoreapp2.2\*plugin* $(TargetDir)CompositionPlugins\ /Y
-//rem xcopy ..\..\JTokenModelParameterValidatorsPlugins\JTokenModelParameterValidatorSamplePlugin\bin\Debug\netcoreapp2.2\*plugin* $(TargetDir)CompositionPlugins\ /Y
-
-namespace WebApplication.ASPNetCore
+﻿namespace WebApplication.ASPNetCore
 {
     using Microshaoft;
     using Microsoft.AspNetCore;
@@ -94,8 +89,6 @@ namespace WebApplication.ASPNetCore
                                                                     , optional: false
                                                                 )
                                                             .Build();
-
-
             //兼容 Linux/Windows wwwroot 路径配置
             var wwwroot = GetExistsPaths
                                 (

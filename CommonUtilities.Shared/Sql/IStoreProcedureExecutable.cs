@@ -24,11 +24,12 @@ namespace Microshaoft
                     , JToken parameters = null
                     , Func
                         <
-                            IDataReader
-                            , Type          // fieldType
-                            , string        // fieldName
+                            int             // resultSet index
+                            , IDataReader
                             , int           // row index
                             , int           // column index
+                            , Type          // fieldType
+                            , string        // fieldName
                             ,
                                 (
                                     bool NeedDefaultProcess
@@ -49,8 +50,8 @@ namespace Microshaoft
                     , Action
                         <
                             int             // resultset Index
-                            , IDataReader
                             , JArray        // columns
+                            , IDataReader
                             , int           // row index
                         > onReadRowProcessAction = null
                     , bool enableStatistics = false
@@ -66,8 +67,8 @@ namespace Microshaoft
                     , Func
                         <
                             int             // resultset Index
-                            , IDataReader
                             , JArray        // columns
+                            , IDataReader
                             , int           // row index
                             , Task
                         > onReadRowProcessActionAsync = null
@@ -89,11 +90,12 @@ namespace Microshaoft
                         , JToken parameters = null
                         , Func
                             <
-                                IDataReader
-                                , Type          // fieldType
-                                , string        // fieldName
+                                int             // resultSet index
+                                , IDataReader
                                 , int           // row index
                                 , int           // column index
+                                , Type          // fieldType
+                                , string        // fieldName
                                 ,
                                     (
                                         bool NeedDefaultProcess

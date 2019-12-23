@@ -33,13 +33,15 @@
         }
         private static void DataReadingProcess
                         (
-                            Func
+                            int resultSetID
+                            , Func
                                 <
-                                    IDataReader
-                                    , Type
-                                    , string
-                                    , int
-                                    , int
+                                    int             // resultSet index
+                                    , IDataReader
+                                    , int           // row index
+                                    , int           // column index
+                                    , Type          // fieldType
+                                    , string        // fieldName
                                     ,
                                         (
                                             bool NeedDefaultProcess
@@ -56,7 +58,19 @@
                                 .AsRowsJTokensEnumerable
                                     (
                                         columns
-                                        , onReadRowColumnProcessFunc
+                                        , (reader, rowIndex, columnIndex, fieldType, fieldName) =>
+                                        {
+                                            return
+                                                onReadRowColumnProcessFunc
+                                                    (
+                                                        resultSetID
+                                                        , reader
+                                                        , rowIndex
+                                                        , columnIndex
+                                                        , fieldType
+                                                        , fieldName
+                                                    );
+                                        }
                                     );
             var resultSet = new JObject
                                 {
@@ -83,13 +97,15 @@
         }
         private static async Task DataReadingProcessAsync
                 (
-                    Func
+                    int resultSetID
+                    , Func
                         <
-                            IDataReader
-                            , Type
-                            , string
-                            , int
-                            , int
+                            int             // resultSet index
+                            , IDataReader
+                            , int           // row index
+                            , int           // column index
+                            , Type          // fieldType
+                            , string        // fieldName
                             ,
                                 (
                                     bool NeedDefaultProcess
@@ -106,7 +122,19 @@
                                 .AsRowsJTokensEnumerable
                                     (
                                         columns
-                                        , onReadRowColumnProcessFunc
+                                        , (reader, rowIndex, columnIndex, fieldType, fieldName) =>
+                                        {
+                                            return
+                                                onReadRowColumnProcessFunc
+                                                    (
+                                                        resultSetID
+                                                        , reader
+                                                        , rowIndex
+                                                        , columnIndex
+                                                        , fieldType
+                                                        , fieldName
+                                                    );
+                                        }
                                     );
             var resultSet = new JObject
                                 {
@@ -434,11 +462,12 @@
                     , JToken inputsParameters = null //string.Empty
                     , Func
                         <
-                            IDataReader
-                            , Type          // fieldType
-                            , string        // fieldName
+                            int             // resultSet index
+                            , IDataReader
                             , int           // row index
                             , int           // column index
+                            , Type          // fieldType
+                            , string        // fieldName
                             ,
                                 (
                                     bool NeedDefaultProcess
@@ -493,7 +522,9 @@
                 {
                     DataReadingProcess
                             (
-                                onReadRowColumnProcessFunc
+                                extensionInfo
+                                        .resultSetID
+                                , onReadRowColumnProcessFunc
                                 , result
                                 , dataReader
                             );
@@ -565,11 +596,12 @@
                     , JToken inputsParameters = null //string.Empty
                     , Func
                         <
-                            IDataReader
-                            , Type          // fieldType
-                            , string        // fieldName
+                            int             // resultSet index
+                            , IDataReader
                             , int           // row index
                             , int           // column index
+                            , Type          // fieldType
+                            , string        // fieldName
                             ,
                                 (
                                     bool NeedDefaultProcess
@@ -626,7 +658,9 @@
                 {
                     DataReadingProcess
                             (
-                                onReadRowColumnProcessFunc
+                                extensionInfo
+                                        .resultSetID
+                                , onReadRowColumnProcessFunc
                                 , result
                                 , dataReader
                             );

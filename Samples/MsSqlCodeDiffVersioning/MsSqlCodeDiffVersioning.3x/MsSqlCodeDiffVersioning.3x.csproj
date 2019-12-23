@@ -19,7 +19,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>NETCOREAPP;NETCOREAPP2_X;NETCOREAPP3_X</DefineConstants>
+    <DefineConstants>NETCOREAPP;NETCOREAPP3_X</DefineConstants>
   </PropertyGroup>
 
 

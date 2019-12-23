@@ -373,7 +373,7 @@ namespace Microshaoft.WebApi.Controllers
                             (
                                 routeName
                                 , parameters
-                                , async (resultSetIndex, reader, columns, rowIndex) =>
+                                , async (resultSetIndex, columns, reader, rowIndex) =>
                                 {
                                     if (rowIndex == 0)
                                     {

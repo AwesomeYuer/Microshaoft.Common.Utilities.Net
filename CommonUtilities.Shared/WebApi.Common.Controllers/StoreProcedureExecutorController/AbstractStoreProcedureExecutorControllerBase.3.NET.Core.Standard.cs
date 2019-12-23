@@ -102,11 +102,12 @@ namespace Microshaoft.WebApi.Controllers
                     )
                         OnReadRowColumnProcessFunc
                                         (
-                                            IDataReader dataReader
-                                            , Type fieldType
-                                            , string fieldName
+                                            int resultSetIndex
+                                            , IDataReader dataReader
                                             , int rowIndex
                                             , int columnIndex
+                                            , Type fieldType
+                                            , string fieldName
                                         )
         {
             JProperty field = null;
