@@ -57,10 +57,10 @@ namespace Microshaoft.Web
                            , Func
                                <
                                    IDataReader
-                                   , Type        // fieldType
-                                   , string    // fieldName
-                                   , int       // row index
-                                   , int       // column index
+                                   , Type       // fieldType
+                                   , string     // fieldName
+                                   , int        // row index
+                                   , int        // column index
                                    ,
                                        (
                                            bool NeedDefaultProcess
@@ -130,7 +130,6 @@ namespace Microshaoft.Web
                         //, bool enableStatistics = false
                         , int commandTimeoutInSeconds = 101
                     );
-
     }
 
     public abstract class
@@ -213,7 +212,8 @@ namespace Microshaoft.Web
                                 }
                             )
                         .ToArray();
-            return result;
+            return
+                result;
         }
 
         protected virtual void LoadDynamicExecutors
@@ -344,41 +344,54 @@ namespace Microshaoft.Web
             get => _needAutoRefreshExecutedTimeForSlideExpire;
             private set => _needAutoRefreshExecutedTimeForSlideExpire = value;
         }
-        public IDictionary<string, IStoreProcedureExecutable> IndexedExecutors
+
+        private
+            IDictionary
+                    <
+                        string
+                        , IStoreProcedureExecutable
+                    >
+                        _indexedExecutors;
+        public
+            IDictionary
+                    <
+                        string
+                        , IStoreProcedureExecutable
+                    >
+                        IndexedExecutors
         {
             get => _indexedExecutors;
             set => _indexedExecutors = value;
         }
 
-        private IDictionary<string, IStoreProcedureExecutable>
-                                _indexedExecutors;
         public
             (
                 int StatusCode
                 , string Message
                 , JToken Result
             )
-                    Process
-                        (
-                            string routeName
-                            , JToken parameters = null
-                            , Func
-                                <
-                                    IDataReader
-                                    , Type          // fieldType
-                                    , string        // fieldName
-                                    , int           // row index
-                                    , int           // column index
-                                    ,
-                                        (
-                                            bool NeedDefaultProcess
-                                            , JProperty Field   //  JObject Field 对象
-                                        )
-                                > onReadRowColumnProcessFunc = null
-                            , string httpMethod = "Get"
-                            //, bool enableStatistics = false
-                            , int commandTimeoutInSeconds = 101
-                        )
+                Process
+                    (
+                        string routeName
+                        , JToken parameters = null
+                        , Func
+                            <
+                                
+                                IDataReader
+                                , Type          // fieldType
+                                , string        // fieldName
+                                , int           // row index
+                                , int           // column index
+                                ,
+                                    (
+                                        bool NeedDefaultProcess
+                                        , JProperty Field   //  JObject Field 对象
+                                    )
+                            > onReadRowColumnProcessFunc = null
+                        , string httpMethod = "Get"
+                        //, bool enableStatistics = false
+                        , int commandTimeoutInSeconds = 101
+                    )
         {
             JToken result = null;
 

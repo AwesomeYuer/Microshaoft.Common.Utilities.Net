@@ -1,6 +1,5 @@
 ﻿namespace WebApplication.ASPNetCore
 {
-    //    using Google.Protobuf.WellKnownTypes;
     using Microshaoft;
     using Microshaoft.Web;
     using Microshaoft.WebApi.Controllers;
@@ -15,7 +14,6 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
-    //   using Microsoft.Extensions.FileProviders;
     using Microsoft.Extensions.Logging;
     using Microsoft.Net.Http.Headers;
     using Newtonsoft.Json;
@@ -43,7 +41,6 @@
         }
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddOptions<ExtendMvcOptions<CsvFormatterOptions>>();
             services
                 .Configure<CsvFormatterOptions>
                     (
@@ -53,9 +50,6 @@
                                         "ExportCsvFormatter"
                                     )
                     );
-            //services
-            //    .AddSingleton<IConfigureOptions<MvcOptions>, CsvConfigurableMvcOptions>();
-
             services
                 .AddMvc
                 (
@@ -73,10 +67,8 @@
                 //    (
                 //        CompatibilityVersion
                 //            .Version_2_1
-
                 //    )
-                    ;
-
+                ;
 
             // for both NETCOREAPP2_X and NETCOREAPP3_X
             // for Sync or Async Action Selector
@@ -256,10 +248,8 @@
                                                 .AllowAnyHeader()
                                                 .AllowAnyMethod()
                                                 .WithExposedHeaders("*");
-                                                
                                         }
                                     );
-
                         }
                   );
 #endregion
@@ -402,21 +392,12 @@
                                 }
                             }
                             //options.InputFormatters.Add(new CsvInputFormatter(csvFormatterOptions));
-                            //==================================================
-                            // ??????????????????????????????????????????
                             options
                                 .OutputFormatters
                                 .Add
                                     (
-                                        new CsvOutputFormatter
-                                                    (
-                                                        //csvFormatterOptions
-                                                    )
+                                        new CsvOutputFormatter()
                                     );
-                            // ?????????????????????????????????????????
-                            //===================================================
-                            //options
-                            //    .AddCsvOutputFormatter();
                             options
                                 .FormatterMappings
                                 .SetMediaTypeMappingForFormat
@@ -490,16 +471,16 @@
                                             if (r)
                                             {
                                                 httpContext
-                                                    .Items
-                                                    .TryAdd
-                                                        (
-                                                            timingKey
-                                                            ,
-                                                                (
-                                                                    BeginTime : DateTime.Now 
-                                                                    , BeginTimestamp : Stopwatch.GetTimestamp()
-                                                                )
-                                                        );
+                                                        .Items
+                                                        .TryAdd
+                                                            (
+                                                                timingKey
+                                                                ,
+                                                                    (
+                                                                        BeginTime : DateTime.Now 
+                                                                        , BeginTimestamp : Stopwatch.GetTimestamp()
+                                                                    )
+                                                            );
                                             }
                                             return r;
                                         };
@@ -653,70 +634,70 @@
             }
             //app.UseHttpsRedirection();
 
-#if !NETCOREAPP3_X
-#region SyncAsyncActionSelector 拦截处理
-            //app
-            //    .UseCustomActionSelector<SyncOrAsyncActionSelector>
-            //        (
-            //            (actionSelector) =>
-            //            {
-            //                actionSelector
-            //                    .OnSelectSyncOrAsyncActionCandidate =
-            //                        (routeContext, candidatesPair, _) =>
-            //                        {
-            //                            ActionDescriptor candidate = null;
-            //                            var type = typeof(AbstractStoreProceduresExecutorControllerBase);
-            //                            var asyncCandidate = candidatesPair.AsyncCandidate;
-            //                            var syncCandidate = candidatesPair.SyncCandidate;
-            //                            var r = type
-            //                                        .IsAssignableFrom
-            //                                            (
-            //                                                ((ControllerActionDescriptor) asyncCandidate)
-            //                                                    .ControllerTypeInfo
-            //                                                    .UnderlyingSystemType
-            //                                            );
-            //                            if (r)
-            //                            {
-            //                                r = type
-            //                                        .IsAssignableFrom
-            //                                            (
-            //                                                ((ControllerActionDescriptor) syncCandidate)
-            //                                                    .ControllerTypeInfo
-            //                                                    .UnderlyingSystemType
-            //                                            );
-            //                            }
-            //                            if (r)
-            //                            {
-            //                                var httpContext = routeContext
-            //                                                    .HttpContext;
-            //                                var request = httpContext
-            //                                                    .Request;
-            //                                var routeName = routeContext
-            //                                                    .RouteData
-            //                                                    .Values["routeName"]
-            //                                                    .ToString();
-            //                                var httpMethod = $"Http{request.Method}";
-            //                                var isAsyncExecuting = false;
+#if NETCOREAPPX_X
+            #region SyncAsyncActionSelector 拦截处理
+            app
+                .UseCustomActionSelector<SyncOrAsyncActionSelector>
+                    (
+                        (actionSelector) =>
+                        {
+                            actionSelector
+                                .OnSelectSyncOrAsyncActionCandidate =
+                                    (routeContext, candidatesPair, _) =>
+                                    {
+                                        ActionDescriptor candidate = null;
+                                        var type = typeof(AbstractStoreProceduresExecutorControllerBase);
+                                        var asyncCandidate = candidatesPair.AsyncCandidate;
+                                        var syncCandidate = candidatesPair.SyncCandidate;
+                                        var r = type
+                                                    .IsAssignableFrom
+                                                        (
+                                                            ((ControllerActionDescriptor) asyncCandidate)
+                                                                .ControllerTypeInfo
+                                                                .UnderlyingSystemType
+                                                        );
+                                        if (r)
+                                        {
+                                            r = type
+                                                    .IsAssignableFrom
+                                                        (
+                                                            ((ControllerActionDescriptor) syncCandidate)
+                                                                .ControllerTypeInfo
+                                                                .UnderlyingSystemType
+                                                        );
+                                        }
+                                        if (r)
+                                        {
+                                            var httpContext = routeContext
+                                                                .HttpContext;
+                                            var request = httpContext
+                                                                .Request;
+                                            var routeName = routeContext
+                                                                .RouteData
+                                                                .Values["routeName"]
+                                                                .ToString();
+                                            var httpMethod = $"Http{request.Method}";
+                                            var isAsyncExecuting = false;
 
-            //                                var accessingConfigurationKey = "DefaultAccessing";
-            //                                if (request.Path.ToString().Contains("/export/", StringComparison.OrdinalIgnoreCase))
-            //                                {
-            //                                    accessingConfigurationKey = "exporting";
-            //                                }
-            //                                var isAsyncExecutingConfiguration =
-            //                                            configuration
-            //                                                .GetSection($"Routes:{routeName}:{httpMethod}:{accessingConfigurationKey}:isAsyncExecuting");
+                                            var accessingConfigurationKey = "DefaultAccessing";
+                                            if (request.Path.ToString().Contains("/export/", StringComparison.OrdinalIgnoreCase))
+                                            {
+                                                accessingConfigurationKey = "exporting";
+                                            }
+                                            var isAsyncExecutingConfiguration =
+                                                        configuration
+                                                            .GetSection($"Routes:{routeName}:{httpMethod}:{accessingConfigurationKey}:isAsyncExecuting");
 
-            //                                if (isAsyncExecutingConfiguration.Exists())
-            //                                {
-            //                                    isAsyncExecuting = isAsyncExecutingConfiguration.Get<bool>();
-            //                                }
-            //                                candidate = (isAsyncExecuting ? asyncCandidate : syncCandidate);
-            //                            }
-            //                            return candidate;
-            //                        };
-            //            }
-            //        );
+                                            if (isAsyncExecutingConfiguration.Exists())
+                                            {
+                                                isAsyncExecuting = isAsyncExecutingConfiguration.Get<bool>();
+                                            }
+                                            candidate = (isAsyncExecuting ? asyncCandidate : syncCandidate);
+                                        }
+                                        return candidate;
+                                    };
+                        }
+                    );
             #endregion
 #endif
             app.UseMvc();
@@ -734,7 +715,7 @@
                 );
             app.UseStaticFiles();
 
-#if !NETCOREAPP3_X
+#if NETCOREAPP2_X
             app.UseSwagger();
             app
                 .UseSwaggerUI
@@ -751,104 +732,6 @@
                 );
 #endif
             //app.UseHttpsRedirection();
-        }
-        
+        }   
     }
-
-    ////====================================================================================
-    //public class ExtendMvcOptions<T> : MvcOptions
-    //            where
-    //                T : class, new()
-    //{
-    //    private T _options;
-    //    public T Options
-    //    { 
-    //        get => _options;
-    //        set => _options = value;
-    //    }
-
-    //    public ExtendMvcOptions(IOptions<T> iOptions)
-    //    {
-    //        _options = iOptions.Value;
-    //    }
-    //}
-    //public static class MvcOptionsExtensions
-    //{
-    //    public static void AddCsvOutputFormatter(this MvcOptions target)
-    //    {
-
-    //        var extendMvcOptions =
-    //                                (
-    //                                    (ExtendMvcOptions<CsvFormatterOptions>)
-    //                                        target
-    //                                );
-    //        extendMvcOptions
-    //                    .OutputFormatters
-    //                    .Add
-    //                        (
-    //                            new CsvOutputFormatter(extendMvcOptions.Options)        
-    //                        );
-    //    }
-    //}
-    //public class CsvConfigurableMvcOptions
-    //                    : AbstractConfigurableMvcOptions<CsvFormatterOptions>
-    //{
-    //    public CsvConfigurableMvcOptions(IOptions<CsvFormatterOptions> iOptions)
-    //                    : base(iOptions)
-    //    { 
-        
-    //    }
-
-    //    public override void OnConfigureProcess
-    //            (
-    //                AbstractConfigurableMvcOptions<CsvFormatterOptions> sender
-    //                , MvcOptions mvcOptions
-    //                , CsvFormatterOptions options
-    //            )
-    //    {
-    //        mvcOptions
-    //            .OutputFormatters
-    //            .Add
-    //                (
-    //                    new CsvOutputFormatter
-    //                    (
-    //                        options    
-    //                    )
-    //                );
-    //    }
-    //}
-
-         
-    //public abstract class
-    //            AbstractConfigurableMvcOptions<TOptions>
-    //                                : IConfigureOptions<MvcOptions>
-    //                                        where
-    //                                            TOptions : class, new()
-    //{
-    //    public readonly TOptions Options;
-
-    //    public AbstractConfigurableMvcOptions(IOptions<TOptions> iOptions)
-    //    {
-    //        Options = iOptions.Value;
-    //    }
-
-    //    public void Configure(MvcOptions mvcOptions)
-    //    {
-    //        OnConfigureProcess
-    //                (
-    //                    this
-    //                    , mvcOptions
-    //                    , Options
-    //                );
-    //    }
-
-    //    public abstract void OnConfigureProcess
-    //                    (
-    //                        AbstractConfigurableMvcOptions<TOptions>  sender
-    //                        , MvcOptions mvcOptions
-    //                        , TOptions options
-    //                    );
-    //}
-
-    
 }
