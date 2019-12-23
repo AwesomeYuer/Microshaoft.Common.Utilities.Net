@@ -26,8 +26,8 @@
                     , Action
                             <
                                 int             // resultSetID
+                                , JArray
                                 , IDataReader
-                                , JArray           
                                 , int           // row index
                             > onReadRowProcessAction = null
                     , int commandTimeoutInSeconds = 90
@@ -93,8 +93,8 @@
                                             onReadRowProcessAction
                                                 (
                                                     extensionInfo.resultSetID
-                                                    , reader
                                                     , columns
+                                                    , reader
                                                     , rowIndex
                                                 );
                                         }

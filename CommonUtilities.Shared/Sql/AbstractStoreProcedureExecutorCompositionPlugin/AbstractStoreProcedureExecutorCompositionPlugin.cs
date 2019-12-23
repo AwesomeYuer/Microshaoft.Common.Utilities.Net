@@ -95,11 +95,12 @@
                         , JToken parameters
                         , Func
                                 <
-                                    IDataReader
-                                    , Type          // fieldType
-                                    , string        // fieldName
+                                    int             // resultSet index
+                                    , IDataReader
                                     , int           // row index
                                     , int           // column index
+                                    , Type          // fieldType
+                                    , string        // fieldName
                                     ,
                                         (
                                             bool NeedDefaultProcess
@@ -151,11 +152,12 @@
                                 , JToken parameters
                                 , Func
                                         <
-                                            IDataReader
-                                            , Type          // fieldType
-                                            , string        // fieldName
+                                            int             // resultSet index
+                                            , IDataReader
                                             , int           // row index
                                             , int           // column index
+                                            , Type          // fieldType
+                                            , string        // fieldName
                                             ,
                                                 (
                                                     bool NeedDefaultProcess
@@ -202,8 +204,8 @@
                                 , Action
                                         <
                                             int
-                                            , IDataReader
                                             , JArray
+                                            , IDataReader
                                             , int
                                         > onReadRowProcessAction = null
                                 , bool enableStatistics = false
@@ -243,8 +245,8 @@
                                     , Func
                                         <
                                             int
-                                            , IDataReader
                                             , JArray
+                                            , IDataReader
                                             , int
                                             , Task
                                         >
@@ -266,7 +268,7 @@
                             connection
                             , storeProcedureName
                             , parameters
-                            , async (resultSetIndex, reader, columns, rowIndex) =>
+                            , async (resultSetIndex, columns, reader, rowIndex) =>
                             {
                                 await
                                     onReadRowProcessActionAsync

@@ -259,7 +259,7 @@ namespace Microshaoft
                                     , columns
                                     , rowIndex
                                 );
-                rowIndex++;
+                rowIndex ++;
             }
         }
 
@@ -307,11 +307,12 @@ namespace Microshaoft
                                  , JArray columns = null
                                  , Func
                                         <
+                                            //int             // resultSet index
                                             IDataReader
-                                            , Type          // fieldType
-                                            , string        // fieldName
                                             , int           // row index
                                             , int           // column index
+                                            , Type          // fieldType
+                                            , string        // fieldName
                                             ,
                                                 (
                                                     bool needDefaultProcess
@@ -336,11 +337,12 @@ namespace Microshaoft
                                  , JArray columns = null
                                  , Func
                                         <
+                                            //int             // resultSet index
                                             IDataReader
-                                            , Type          // fieldType
-                                            , string        // fieldName
                                             , int           // row index
                                             , int           // column index
+                                            , Type          // fieldType
+                                            , string        // fieldName
                                             ,
                                                 (
                                                     bool needDefaultProcess
@@ -378,10 +380,10 @@ namespace Microshaoft
                         var r = onReadRowColumnProcessFunc
                                     (
                                         target
-                                        , fieldType
-                                        , fieldName
                                         , rowIndex
                                         , fieldIndex
+                                        , fieldType
+                                        , fieldName
                                     );
                         needDefaultProcess = r.needDefaultProcess;
                         if (r.field != null)

@@ -138,7 +138,7 @@ namespace Microshaoft.WebApi.Controllers
                             (
                                 routeName
                                 , jObject
-                                , (reader, fieldType, fieldName, rowIndex, columnIndex) =>
+                                , (resultSetIndex, reader, rowIndex, columnIndex, fieldType, fieldName) =>
                                 {
                                     JProperty field = null;
                                     if (fieldType == typeof(string))
