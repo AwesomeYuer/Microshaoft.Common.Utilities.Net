@@ -10,7 +10,7 @@ namespace Microshaoft
         public static async Task<T> TryProcessCatchFinallyAsync<T>
                                     (
                                         bool needTry
-                                        , Func<Task<T>> onTryProcessFunc
+                                        , Func<Task<T>> onTryProcessFuncAsync
                                         , bool reThrowException = false
                                         , Func<Exception, bool> onCaughtExceptionProcessFunc = null
                                         , Action<bool, Exception> onFinallyProcessAction = null
@@ -25,7 +25,8 @@ namespace Microshaoft
                     var caughtException = false;
                     try
                     {
-                        r = await onTryProcessFunc();
+                        r = await
+                                onTryProcessFuncAsync();
                         return r;
                     }
                     catch (Exception e)
@@ -69,12 +70,19 @@ namespace Microshaoft
                     }
                     finally
                     {
-                        onFinallyProcessAction?.Invoke(caughtException, exception);
+                        onFinallyProcessAction?
+                                .Invoke
+                                    (
+                                        caughtException
+                                        , exception
+                                    );
                     }
                 }
                 else
                 {
-                    return await onTryProcessFunc();
+                    return
+                        await
+                            onTryProcessFuncAsync();
                 }
             }
         }
@@ -83,8 +91,22 @@ namespace Microshaoft
                                         bool needTry
                                         , Action onTryProcessAction
                                         , bool reThrowException = false
-                                        , Func<Exception, Exception, string, bool> onCaughtExceptionProcessFunc = null
-                                        , Action<bool, Exception, Exception, string> onFinallyProcessAction = null
+                                        , Func
+                                            <
+                                                Exception
+                                                , Exception
+                                                , string
+                                                , bool
+                                            >
+                                                onCaughtExceptionProcessFunc = null
+                                        , Action
+                                            <
+                                                bool
+                                                , Exception
+                                                , Exception
+                                                , string
+                                            >
+                                                onFinallyProcessAction = null
                                     )
         {
             if (onTryProcessAction != null)
@@ -145,7 +167,14 @@ namespace Microshaoft
                     finally
                     {
                         //Console.WriteLine("Finally");
-                        onFinallyProcessAction?.Invoke(caughtException, exception, newException, caughtInnerExceptionMessage);
+                        onFinallyProcessAction?
+                                .Invoke
+                                    (
+                                        caughtException
+                                        , exception
+                                        , newException
+                                        , caughtInnerExceptionMessage
+                                    );
                     }
                 }
                 else

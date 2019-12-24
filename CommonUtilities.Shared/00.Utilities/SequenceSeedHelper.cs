@@ -6,7 +6,8 @@
         private static long _seed = 0;
         public static long NewID()
         {
-            long r = Interlocked.Increment(ref _seed);
+            long r = Interlocked
+                            .Increment(ref _seed);
             return r;
         }
     }

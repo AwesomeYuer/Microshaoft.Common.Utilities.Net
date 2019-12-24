@@ -166,10 +166,12 @@ namespace Microshaoft
             if (oldHead != newHead)
             {
                 //EventHandler<KeyedPriorityQueueHeadChangedEventArgs<V>> fec = FirstElementChanged;
-                if (_onKeyedPriorityQueueHeadChangedProcessAction != null)
-                {
-                    _onKeyedPriorityQueueHeadChangedProcessAction(oldHead, newHead);
-                }
+                _onKeyedPriorityQueueHeadChangedProcessAction?
+                            .Invoke
+                                (
+                                    oldHead
+                                    , newHead
+                                );
             }
         }
         private TValue Search(TPriority priority, int i, Predicate<TValue> match)

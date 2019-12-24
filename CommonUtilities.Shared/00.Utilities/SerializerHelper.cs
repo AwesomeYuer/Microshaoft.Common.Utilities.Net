@@ -163,7 +163,6 @@ namespace Microshaoft
 
 
 #if NETFRAMEWORK4_X
-        
         public static T FormatterSoapToObject<T>
                                     (
                                         string soap
