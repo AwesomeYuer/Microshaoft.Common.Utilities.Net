@@ -9,12 +9,12 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DefineConstants>NETCOREAPP;NETCOREAPP;NETCOREAPP2_X;NETCOREAPP3_X</DefineConstants>
+    <DefineConstants>NETCOREAPP;NETCOREAPP;NETCOREAPP3_X</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DefineConstants>TRACE;DEBUG;NETCOREAPP;NETCOREAPP2_X;NETCOREAPP3_X</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETCOREAPP;NETCOREAPP3_X</DefineConstants>
   </PropertyGroup>
 
   
