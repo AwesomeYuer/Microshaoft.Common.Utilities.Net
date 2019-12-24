@@ -1,4 +1,4 @@
-﻿#if NETCOREAPP2_X
+﻿#if NETCOREAPP
 namespace Microshaoft.Sockets
 {
     using System;

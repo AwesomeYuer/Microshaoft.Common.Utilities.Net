@@ -37,7 +37,7 @@ namespace Microshaoft
 
         public T GetValue<T>()
         {
-            return (T)Value;
+            return (T) Value;
         }
         public int Count()
         {
@@ -60,7 +60,16 @@ namespace Microshaoft
             if (IsArray)
             {
                 var type = GetJsonType(o);
-                xml.Add(new XElement("item", CreateTypeAttr(type), CreateJsonNode(o)));
+                xml
+                    .Add
+                        (
+                            new XElement
+                                (
+                                    "item"
+                                    , CreateTypeAttr(type)
+                                    , CreateJsonNode(o)
+                                )
+                        );
             }
             else
             {
@@ -72,11 +81,10 @@ namespace Microshaoft
             get
             {
                 var x = xml.Element(key);
-                var value = default(dynamic);
-                var r = XElementToDynamicJson(x, out value);
+                var r = XElementToDynamicJson(x, out dynamic @value);
                 if (r == null)
                 {
-                    _value = value;
+                    _value = @value;
                     r = this;
                     _isValue = true;
                 }
@@ -90,11 +98,10 @@ namespace Microshaoft
                 var x = xml
                             .Elements()
                             .ElementAt(index);
-                var value = default(dynamic);
-                var r = XElementToDynamicJson(x, out value);
+                var r = XElementToDynamicJson(x, out dynamic @value);
                 if (r == null)
                 {
-                    _value = value;
+                    _value = @value;
                     r = this;
                     _isValue = true;
                 }
@@ -104,13 +111,13 @@ namespace Microshaoft
         private DynamicJson XElementToDynamicJson
                                 (
                                     XElement x
-                                    , out dynamic value
+                                    , out dynamic @value
                                 )
         {
-            DynamicJson r = null;
-            if (TryGet(x, out value))
+            DynamicJson r;
+            if (TryGet(x, out @value))
             {
-                r = value as DynamicJson;
+                r = @value as DynamicJson;
             }
             else
             {

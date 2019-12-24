@@ -47,10 +47,10 @@
                                 Console.SetOut(writer);
                             };
 
-                            Action help = () =>
+                            void help()
                             {
-                                TextWriter temp = Console.Out;
-                                temp.Flush();
+                                var textWriter = Console.Out;
+                                textWriter.Flush();
                                 Console.SetOut(consoleOut);
                                 Console.WriteLine("Help:");
 
@@ -104,8 +104,8 @@
                                                 , "now"
                                             );
                                 consoleOut.Flush();
-                                Console.SetOut(temp);
-                            };
+                                Console.SetOut(textWriter);
+                            }
                             Console.WriteLine("======================");
                             while ("q" != (input = Console.ReadLine()))
                             {

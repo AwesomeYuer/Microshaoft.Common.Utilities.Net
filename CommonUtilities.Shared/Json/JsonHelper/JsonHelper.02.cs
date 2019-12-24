@@ -37,7 +37,6 @@
                                         , string SourceJPath
                                     )[]
                                         mappings
-                                
                             )
         {
             return
@@ -83,7 +82,8 @@
                                     (x) =>
                                     {
                                         return
-                                            x.TargetJPath;
+                                            x
+                                                .TargetJPath;
                                     }
                                 );
             }
@@ -174,12 +174,15 @@
 
         public static IEnumerable<JValue> GetAllJValuesFromJArray(this JArray target)
         {
-            for (var i = 0; i < target.Count; i++)
+            int count = target.Count;
+            for (var i = 0; i < count; i++)
             {
                 var c = GetAllJValues(target[i]);
                 foreach (var result in c)
                 {
-                    yield return result;
+                    yield
+                        return
+                            result;
                 }
             }
         }
@@ -189,7 +192,9 @@
             var c = GetAllJValues(target.Value);
             foreach (var result in c)
             {
-                yield return result;
+                yield
+                    return
+                        result;
             }
         }
 
@@ -201,7 +206,9 @@
                 var cc = GetAllJValues(jToken);
                 foreach (var result in cc)
                 {
-                    yield return result;
+                    yield
+                        return
+                            result;
                 }
             }
         }

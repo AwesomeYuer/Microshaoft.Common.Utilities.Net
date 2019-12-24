@@ -1,4 +1,4 @@
-#if NETFRAMEWORK4_X
+#if NETFRAMEWORK
 // WebApi.MVC.CountPerformanceActionFilter.cs
 namespace Microshaoft.Web
 {

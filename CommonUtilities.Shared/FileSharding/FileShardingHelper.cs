@@ -71,7 +71,9 @@
                             fileStream.Write(buffer, 0, buffer.Length);
                             fileStream.Close();
                             //list.Add(zippedPartFileName);
-                            yield return destPartFileName;
+                            yield
+                                return
+                                    destPartFileName;
                         }
                     }
                 }
@@ -94,7 +96,9 @@
                             , destPartFileName
                         );
 
-                yield return destPartFileName;
+                yield
+                    return
+                        destPartFileName;
             }
         }
         public static IEnumerable<string> MergeShardedFilesParts
@@ -109,7 +113,8 @@
                                     (
                                         directory
                                         , searchPattern
-                                    ).Distinct();
+                                    )
+                                .Distinct();
             var filesGroups = files
                                     .GroupBy
                                         (
@@ -171,14 +176,17 @@
                                             );
                 foreach (var mergedZipFile in mergedZipFiles)
                 {
-                    yield return mergedZipFile;
+                    yield
+                        return
+                            mergedZipFile;
                 }
             }
         }
         private static IEnumerable<string> MergePartialFilesGroupProcess
                                     (
                                         string mergedFileName
-                                        , IOrderedEnumerable<string> orderedPartialFilesGroup
+                                        , IOrderedEnumerable<string>
+                                                orderedPartialFilesGroup
                                         , int parts
                                     )
         {
@@ -186,7 +194,7 @@
             int i = 0;
             foreach (var file in orderedPartialFilesGroup)
             {
-                i++;
+                i ++;
                 var fileName = Path.GetFileName(file);
                 var fileNameSegments = fileName.Split('.');
                 var ii = fileNameSegments.Length - 2;
@@ -245,7 +253,9 @@
                     if (i == parts)
                     {
                         //ExtractFileProcess(zippedFileName);
-                        yield return mergedFileName;
+                        yield
+                            return
+                                mergedFileName;
                         foreach (var x in list)
                         {
                             File.Delete(x);

@@ -1,4 +1,4 @@
-#if NETFRAMEWORK4_X
+#if NETFRAMEWORK
 // WebAPI.JsonpMediaTypeFormatter.cs
 namespace Microshaoft.WebApi
 {

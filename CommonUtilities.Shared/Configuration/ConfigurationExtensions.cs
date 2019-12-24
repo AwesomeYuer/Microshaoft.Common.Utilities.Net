@@ -1,7 +1,6 @@
 ﻿namespace Microshaoft
 {
     using Microsoft.Extensions.Configuration;
-
     public static class ConfigurationExtensions
     {
         public static bool TryGetSection

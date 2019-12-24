@@ -1,6 +1,5 @@
 ﻿namespace Microshaoft
 {
-    using System;
     using System.Threading;
 
     public class FixedTokenBucket : TokenBucket

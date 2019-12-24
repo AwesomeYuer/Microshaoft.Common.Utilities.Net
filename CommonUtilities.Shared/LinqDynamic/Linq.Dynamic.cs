@@ -1,5 +1,5 @@
 ﻿//Copyright (C) Microsoft Corporation.  All rights reserved.
-#if !NETSTANDARD2_X
+//#if !NETSTANDARD2_X
 namespace Microshaoft.Linq.Dynamic
 {
     using System;
@@ -279,7 +279,7 @@ namespace Microshaoft.Linq.Dynamic
         {
             AssemblyName name = new AssemblyName("DynamicClasses");
             AssemblyBuilder assembly = 
-#if NETFRAMEWORK4_X
+#if NETFRAMEWORK
 
                                         AppDomain
                                             .CurrentDomain
@@ -2326,4 +2326,4 @@ namespace Microshaoft.Linq.Dynamic
         public const string IdentifierExpected = "Identifier expected";
     }
 }
-#endif
+//#endif

@@ -14,11 +14,11 @@
                             new ConcurrentDictionary<string, XmlSerializer>();
         public static XmlSerializer GetXmlSerializer(Type type)
         {
-            XmlSerializer serializer = null;
-            if (!XmlSerializersCache.Data.TryGetValue(type.FullName, out serializer))
+            XmlSerializer serializer;
+            if (!Data.TryGetValue(type.FullName, out serializer))
             {
                 serializer = new XmlSerializer(type);
-                XmlSerializersCache.Data.TryAdd(type.FullName, serializer);
+                Data.TryAdd(type.FullName, serializer);
             }
             return serializer; // serializer;
         }
@@ -43,11 +43,12 @@
                                 );
             foreach (var type in types)
             {
-                _data.TryAdd
-                    (
-                        type.FullName
-                        , new XmlSerializer(type)
-                    );
+                _data
+                    .TryAdd
+                        (
+                            type.FullName
+                            , new XmlSerializer(type)
+                        );
             }
         }
     }

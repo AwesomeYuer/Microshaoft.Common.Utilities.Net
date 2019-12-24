@@ -61,11 +61,11 @@
                                                     );
                                 foreach (var xx in result)
                                 {
-                                    ThrottlerEntry throttlerEntry = null;
-                                    _data.TryRemove
+                                    _data
+                                        .TryRemove
                                             (
                                                 xx.Key
-                                                , out throttlerEntry
+                                                , out _
                                             );
                                 }
                                 return false;

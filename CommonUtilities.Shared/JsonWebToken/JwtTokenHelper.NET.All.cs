@@ -1,4 +1,4 @@
-﻿#if NETCOREAPP2_X
+﻿#if !XAMARIN
 namespace Microshaoft
 {
     using Microsoft.IdentityModel.Tokens;

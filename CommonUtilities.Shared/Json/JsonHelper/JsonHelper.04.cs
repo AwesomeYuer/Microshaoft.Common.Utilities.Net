@@ -1,5 +1,4 @@
-﻿#if NETCOREAPP2_X
-namespace Microshaoft
+﻿namespace Microshaoft
 {
     using Newtonsoft.Json;
     using System.Buffers;
@@ -55,4 +54,3 @@ namespace Microshaoft
         }
     }
 }
-#endif

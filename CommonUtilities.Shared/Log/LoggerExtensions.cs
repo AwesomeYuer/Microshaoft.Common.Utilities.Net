@@ -1,4 +1,4 @@
-﻿#if !NETFRAMEWORK4_X
+﻿#if !NETFRAMEWORK
 namespace Microshaoft
 {
     using Microsoft.Extensions.Logging;
