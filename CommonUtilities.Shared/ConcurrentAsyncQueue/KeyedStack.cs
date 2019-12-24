@@ -5,8 +5,8 @@
     public class KeyedStack<T> //:　ConcurrentStack<T> 
     {
 
-        private ConcurrentDictionary<T, T> _dictionary = new ConcurrentDictionary<T, T>();
-        private ConcurrentStack<T> _stack = new ConcurrentStack<T>();
+        private readonly ConcurrentDictionary<T, T> _dictionary = new ConcurrentDictionary<T, T>();
+        private readonly ConcurrentStack<T> _stack = new ConcurrentStack<T>();
 
         public int Count
         {
@@ -19,7 +19,7 @@
         public bool TryPush(T item)
         {
             var r = false;
-            if (_dictionary.TryAdd(item, default(T)))
+            if (_dictionary.TryAdd(item, default))
             {
                 _stack.Push(item);
                 r = true;
@@ -32,8 +32,13 @@
             if (_stack.TryPop(out item))
             {
                 //T removed = default(T);
-                r = _dictionary.TryRemove(item, out T removed);
-                removed = default(T);
+                r = _dictionary
+                        .TryRemove
+                            (
+                                item
+                                , out _
+                            );
+                //removed = default(T);
             }
             return r;
         }

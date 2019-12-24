@@ -56,7 +56,6 @@
         {
             byte[] buffer = new byte[64 * 1024];
             MemoryStream ms = new MemoryStream();
-            int r = 0;
             int l = 0;
             long position = -1;
             if (stream.CanSeek)
@@ -66,7 +65,7 @@
             }
             while (true)
             {
-                r = stream.Read(buffer, 0, buffer.Length);
+                int r = stream.Read(buffer, 0, buffer.Length);
                 if (r > 0)
                 {
                     l += r;

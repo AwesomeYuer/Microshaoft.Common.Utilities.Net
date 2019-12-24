@@ -324,7 +324,7 @@ namespace System.Activities.Expressions
             return true;
         }
 #if NETFRAMEWORK4_X
-                public static Func<object, object[], object> GetFunc(CodeActivityMetadata metadata, MethodInfo methodInfo, bool valueTypeReference = false)
+        public static Func<object, object[], object> GetFunc(CodeActivityMetadata metadata, MethodInfo methodInfo, bool valueTypeReference = false)
         {
             try
             {

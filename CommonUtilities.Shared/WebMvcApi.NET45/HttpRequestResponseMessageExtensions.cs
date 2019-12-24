@@ -1,7 +1,7 @@
 ﻿namespace Microshaoft.Web
 {
     using System.Net.Http;
-    public static class HttpRequestMessageExtensions
+    public static class HttpRequestMessageHelper
     {
         public static bool TryGetPropertyValue<T>
                                 (

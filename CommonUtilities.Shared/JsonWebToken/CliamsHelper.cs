@@ -98,7 +98,8 @@
                                                 claimType
                                             );
                                     }
-                                ).Value;
+                                )
+                            .Value;
                 r = true;
             }
             return r;

@@ -1,6 +1,4 @@
-﻿//#if NETFRAMEWORK4_X
-
-namespace Microshaoft
+﻿namespace Microshaoft
 {
     using Newtonsoft.Json.Linq;
     using System;
@@ -21,8 +19,8 @@ namespace Microshaoft
             //var property = target[propertyName];
             //if (property != null)
             //{
-            //if (property is JValue)
-            //{
+            //  if (property is JValue)
+            //  {
             int changed = 0;
             target
                 .PropertyChanged +=
@@ -53,11 +51,8 @@ namespace Microshaoft
                             }
                         );
             r = true;
+                //}
             //}
-
-            //}
-
-
             return r;
         }
         private static void Travel
@@ -80,7 +75,8 @@ namespace Microshaoft
                             , propertyName
                             , currentJObject
                         );
-            var jProperties = currentJObject.Properties();
+            var jProperties = currentJObject
+                                        .Properties();
             foreach (var jProperty in jProperties)
             {
                 var path = ancestorPath;
@@ -214,21 +210,56 @@ namespace Microshaoft
 
             //target.Annotation<Action<string>>().
             // HashSet --> Dictionary
-            target.AddAnnotation(new Dictionary<string, JObject>());
-            target.PropertyChanged += (
-                (sender, args) =>
-                {
-                    if (!target.Annotation<Dictionary<string, JObject>>().ContainsKey(args.PropertyName))
-                    {
-                        JObject jDelegate = new JObject
-                        (
-                            new JProperty("methodName", onPropertyChangedProcessAction.Method.Name)
-                            , new JProperty("isFlag", onPropertyChangedProcessAction == null ? true : false)
-                        );
-                        target.Annotation<Dictionary<string, JObject>>().Add(args.PropertyName, jDelegate);
-                    }
-                }
-            );
+            target
+                .AddAnnotation
+                    (
+                        new Dictionary<string, JObject>()
+                    );
+            target
+                .PropertyChanged +=
+                    (
+                        (sender, args) =>
+                        {
+                            if (!target.Annotation<Dictionary<string, JObject>>().ContainsKey(args.PropertyName))
+                            {
+                                JObject jDelegate = new JObject
+                                (
+                                    new JProperty
+                                            (
+                                                "methodName"
+                                                , onPropertyChangedProcessAction
+                                                        .Method
+                                                        .Name
+                                            )
+                                    , new JProperty
+                                            (
+                                                "isFlag"
+                                                ,
+                                                    (
+                                                        onPropertyChangedProcessAction
+                                                        ==
+                                                        null
+                                                        ?
+                                                        true
+                                                        :
+                                                        false
+                                                    )
+                                            )
+                                );
+                                target
+                                    .Annotation
+                                        <
+                                            Dictionary<string, JObject>
+                                        >()
+                                    .Add
+                                        (
+                                            args
+                                                .PropertyName
+                                            , jDelegate
+                                        );
+                            }
+                        }
+                    );
 
             Travel
                 (
@@ -423,4 +454,3 @@ namespace TestConsoleApp6
         }
     }
 }
-//#endif

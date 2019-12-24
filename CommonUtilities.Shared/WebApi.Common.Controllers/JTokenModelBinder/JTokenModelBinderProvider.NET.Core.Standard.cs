@@ -1,4 +1,4 @@
-﻿#if NETCOREAPP//2_X || NETCOREAPP3_X
+﻿#if NETCOREAPP
 namespace Microshaoft.WebApi.ModelBinders
 {
     using Microshaoft.Web;

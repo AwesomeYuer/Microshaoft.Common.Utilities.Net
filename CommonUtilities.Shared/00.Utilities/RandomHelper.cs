@@ -1,6 +1,4 @@
-﻿
-
-namespace Microshaoft
+﻿namespace Microshaoft
 {
     using System;
     using System.Collections.Generic;

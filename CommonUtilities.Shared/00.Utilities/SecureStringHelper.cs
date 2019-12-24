@@ -6,7 +6,6 @@
     using System.Security;
     public static class SecureStringHelper
     {
-
         public static string ExtractToString(this SecureString secureString)
         {
             return
@@ -38,7 +37,9 @@
             IntPtr bstr = IntPtr.Zero;
 
             if (target == null || target.Length == 0)
+            {
                 return string.Empty;
+            }
 
             try
             {
@@ -50,14 +51,17 @@
                 if (bstr != IntPtr.Zero)
                     Marshal.ZeroFreeBSTR(bstr);
             }
-            return plainString;
+            return
+                plainString;
         }
         public static unsafe SecureString CreateSecureString(this string plainString)
         {
             SecureString secureString;
 
             if (plainString == null || plainString.Length == 0)
+            {
                 return new SecureString();
+            }
 
             fixed (char* pch = plainString)
             {

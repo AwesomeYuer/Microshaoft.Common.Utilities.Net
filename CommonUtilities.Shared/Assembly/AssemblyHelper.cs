@@ -8,7 +8,13 @@
     {
         public static IEnumerable<Type> GetAssembliesTypes
                                             (
-                                                Func<Type, Assembly, bool> predicateFunc
+                                                Func
+                                                    <
+                                                        Type
+                                                        , Assembly
+                                                        , bool
+                                                    >
+                                                    predicateFunc
                                             )
         {
             return
@@ -20,21 +26,21 @@
                                 (x) =>
                                 {
                                     return
-                                        x.GetLoadableTypes()
+                                        x
+                                            .GetLoadableTypes()
                                             .Select
-                                            (
-                                                (xx) =>
-                                                {
-                                                    return
-                                                        //Tuple.Create<Type, Assembly>(xx, x);
-                                                        new
-                                                        {
-                                                            CurrentAssembly = x
-                                                            ,
-                                                            CurrentType = xx
-                                                        };
-                                                }
-                                            );
+                                                (
+                                                    (xx) =>
+                                                    {
+                                                        return
+                                                            //Tuple.Create<Type, Assembly>(xx, x);
+                                                            new
+                                                            {
+                                                                CurrentAssembly = x
+                                                                , CurrentType = xx
+                                                            };
+                                                    }
+                                                );
                                 }
                             )
                             .Where
@@ -53,7 +59,8 @@
                             (
                                 (x) =>
                                 {
-                                    return x.CurrentType;
+                                    return
+                                        x.CurrentType;
                                 }
                             );
         }
@@ -69,13 +76,17 @@
             }
             catch (ReflectionTypeLoadException e)
             {
-                return e.Types.Where
-                                (
-                                    (x) =>
-                                    {
-                                        return x != null;
-                                    }
-                                );
+                return
+                    e
+                        .Types
+                        .Where
+                            (
+                                (x) =>
+                                {
+                                    return
+                                        x != null;
+                                }
+                            );
             }
         }
     }

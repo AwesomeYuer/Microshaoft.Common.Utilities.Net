@@ -6,14 +6,12 @@
     using System.Linq;
     using System.Linq.Expressions;
 
-
     public static partial class DynamicExpressionTreeHelper
     {
         public static Expression ToObject(this Expression expression)
         {
             return expression.Type == typeof(object) ? expression : Expression.Convert(expression, typeof(object));
         }
-
 
         public static Expression<Func<TTarget, bool>> CreateMemberEqualsToExpression<TTarget>
             (

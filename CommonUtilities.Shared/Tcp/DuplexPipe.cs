@@ -1,4 +1,4 @@
-﻿#if !NETFRAMEWORK4_X && !XAMARIN
+﻿#if !NETFRAMEWORK && !XAMARIN
 namespace Microshaoft //System.IO.Pipelines
 {
     using System.IO.Pipelines;

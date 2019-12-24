@@ -1,4 +1,4 @@
-#if NETFRAMEWORK4_X
+#if NETFRAMEWORK
 namespace Microshaoft.Win32
 {
     using System;

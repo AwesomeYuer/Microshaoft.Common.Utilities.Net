@@ -6,8 +6,12 @@ namespace Microshaoft
     using System.Linq;
     public static partial class DataTableListHelper
     {
-#if NETFRAMEWORK4_X
-        public static DataRow[] FullTextSearch(this DataTable target, string[] keyWords)
+#if !NETCOREAPP2_X || NETFRAMEWORK
+        public static DataRow[] FullTextSearch
+                                    (
+                                        this DataTable target
+                                        , string[] keyWords
+                                    )
         {
             return
                 target

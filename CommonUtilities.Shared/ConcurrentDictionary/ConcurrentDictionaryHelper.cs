@@ -13,7 +13,16 @@
 
         public static TValue Update<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> target, TKey key, TValue @value)
         {
-            TValue result = target.AddOrUpdate(key, @value, (k, v) => { return @value; });
+            TValue result = target
+                                .AddOrUpdate
+                                    (
+                                        key
+                                        , @value
+                                        , (k, v) =>
+                                        {
+                                            return @value;
+                                        }
+                                    );
             return result;
         }
 

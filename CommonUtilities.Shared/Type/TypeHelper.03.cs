@@ -657,12 +657,11 @@ namespace Microshaoft
         public static ReadOnlyCollection<T> OfType<T>(object[] objects) where T : class
         {
             int max = objects.Length;
-            List<T> list = new List<T>(max);
+            var list = new List<T>(max);
             int idx = 0;
             for (int i = 0; i < max; i++)
             {
-                T attr = objects[i] as T;
-                if (attr != null)
+                if (objects[i] is T attr)
                 {
                     list.Add(attr);
                     idx++;
@@ -670,7 +669,9 @@ namespace Microshaoft
             }
             list.Capacity = idx;
             return
-                new ReadOnlyCollection<T>(list);
+                new
+                    ReadOnlyCollection<T>
+                        (list);
         }
     }
 }

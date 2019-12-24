@@ -3,15 +3,16 @@
     using System;
     public class Crc32
     {
-        uint[] table;
+        readonly uint[] table;
 
         public uint ComputeChecksum(byte[] bytes)
         {
             uint crc = 0xffffffff;
-            for (int i = 0; i < bytes.Length; ++i)
+            var l = bytes.Length;
+            for (int i = 0; i < l; ++ i)
             {
-                byte index = (byte)(((crc) & 0xff) ^ bytes[i]);
-                crc = (uint)((crc >> 8) ^ table[index]);
+                byte index = (byte) (((crc) & 0xff) ^ bytes[i]);
+                crc = (uint) ((crc >> 8) ^ table[index]);
             }
             return ~crc;
         }

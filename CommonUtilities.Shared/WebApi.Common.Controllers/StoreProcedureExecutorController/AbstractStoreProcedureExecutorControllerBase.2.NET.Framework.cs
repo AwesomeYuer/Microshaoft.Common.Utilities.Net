@@ -1,4 +1,4 @@
-﻿#if NETFRAMEWORK4_X111111
+﻿#if NETFRAMEWORK
 namespace Microshaoft.WebApi.Controllers
 {
     using Microshaoft;

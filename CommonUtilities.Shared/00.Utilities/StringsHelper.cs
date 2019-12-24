@@ -23,7 +23,12 @@
                     while (true)
                     {
                         length += 2;
-                        if (i + length < target.Length && target[i + length] == 0x200D)
+                        if 
+                            (
+                                i + length < target.Length
+                                &&
+                                target[i + length] == 0x200D
+                            )
                         {
                             length += 1;
                         }
@@ -32,12 +37,22 @@
                             break;
                         }
                     }
-                    yield return target.Substring(i, length);
+                    yield
+                        return
+                            target
+                                .Substring
+                                    (
+                                        i
+                                        , length
+                                    );
                     i += length - 1;
                 }
                 else
                 {
-                    yield return target[i].ToString();
+                    yield
+                        return
+                            target[i]
+                                .ToString();
                 }
             }
         }

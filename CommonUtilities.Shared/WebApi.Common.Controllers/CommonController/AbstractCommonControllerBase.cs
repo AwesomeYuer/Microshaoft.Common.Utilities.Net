@@ -1,4 +1,4 @@
-﻿#if !NETFRAMEWORK4_X && NETCOREAPP2_X
+﻿#if NETCOREAPP
 namespace Microshaoft.WebApi.Controllers
 {
     using Microshaoft.Web;

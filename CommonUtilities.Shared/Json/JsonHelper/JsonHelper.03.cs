@@ -19,7 +19,7 @@ namespace Microshaoft
                 throw new InvalidDataException($"Unexpected JSON Token Type '{target?.Type}'. Expected a JSON Object.");
             }
 
-            return (JObject)target;
+            return (JObject) target;
         }
 
         public static T GetOptionalProperty<T>
@@ -27,7 +27,7 @@ namespace Microshaoft
                         this JObject target
                         , string property
                         , JTokenType expectedType = JTokenType.None
-                        , T defaultValue = default(T)
+                        , T defaultValue = default
                     )
         {
             var prop = target[property];
@@ -37,7 +37,13 @@ namespace Microshaoft
                 return defaultValue;
             }
 
-            return prop.GetValue<T>(property, expectedType);
+            return
+                prop
+                    .GetValue<T>
+                        (
+                            property
+                            , expectedType
+                        );
         }
 
         public static T GetRequiredProperty<T>
@@ -54,7 +60,13 @@ namespace Microshaoft
                 throw new InvalidDataException($"Missing required property '{property}'.");
             }
 
-            return prop.GetValue<T>(property, expectedType);
+            return
+                prop
+                    .GetValue<T>
+                        (
+                            property
+                            , expectedType
+                        );
         }
 
         public static T GetValue<T>(this JToken target, string property, JTokenType expectedType)
@@ -65,11 +77,5 @@ namespace Microshaoft
             }
             return target.Value<T>();
         }
-
-
-
-        
-
-        
     }
 }

@@ -33,8 +33,7 @@
 
         public bool ShouldThrottle(long n = 1)
         {
-            TimeSpan waitTime;
-            return ShouldThrottle(n, out waitTime);
+            return ShouldThrottle(n, out _);
         }
 
         public bool ShouldThrottle(long n, out TimeSpan waitTime)

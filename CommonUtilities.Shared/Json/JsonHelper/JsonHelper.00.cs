@@ -199,7 +199,12 @@
             {
                 try
                 {
-                    r = (TryParseJson(target, out JToken jToken) == JTokenType.Object);
+                    r = 
+                        (
+                            TryParseJson(target, out JToken jToken)
+                            ==
+                            JTokenType.Object
+                        );
                     if (r)
                     {
                         jObject = jToken as JObject;
@@ -222,7 +227,12 @@
             {
                 try
                 {
-                    r = (TryParseJson(target, out _) == JTokenType.Object);
+                    r = 
+                        (
+                            TryParseJson(target, out _)
+                            ==
+                            JTokenType.Object
+                        );
                 }
                 catch
                 {
@@ -236,7 +246,6 @@
                                     (
                                         this JToken target
                                         , Type underlyingType
-                                        //, object nullValue = DBNull.Value
                                     )
         {
             object r = null;
@@ -321,7 +330,7 @@
         }
         public static JTokenType GetJTokenType(this Type target)
         {
-            JTokenType r = JTokenType.None;
+            JTokenType r;
             if
                 (
                     typeof(bool) == target
