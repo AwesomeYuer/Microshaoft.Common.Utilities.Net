@@ -485,14 +485,19 @@ namespace Microshaoft
                                                 , ValidationEventHandler validationEventHandlerAction = null
                                             )
         {
-            XmlSchemaSet xmlSchemaSet = GetXmlSchemaSet(targetNamespace, xsd);
-            XmlReaderSettings xmlReaderValidationSettings = new XmlReaderSettings();
-            xmlReaderValidationSettings.ValidationType = validationType;
-            xmlReaderValidationSettings.ValidationFlags = xmlSchemaValidationFlags;
-            xmlReaderValidationSettings.Schemas.Add(xmlSchemaSet);
+            var xmlSchemaSet = GetXmlSchemaSet(targetNamespace, xsd);
+            var xmlReaderValidationSettings = new XmlReaderSettings
+            {
+                ValidationType = validationType,
+                ValidationFlags = xmlSchemaValidationFlags
+            };
+            xmlReaderValidationSettings
+                    .Schemas
+                    .Add(xmlSchemaSet);
             if (validationEventHandlerAction != null)
             {
-                xmlReaderValidationSettings.ValidationEventHandler += validationEventHandlerAction;
+                xmlReaderValidationSettings
+                        .ValidationEventHandler += validationEventHandlerAction;
             }
             return xmlReaderValidationSettings;
         }

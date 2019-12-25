@@ -16,19 +16,44 @@
         {
             if (bucketTokenCapacity <= 0)
             {
-                throw new ArgumentOutOfRangeException("bucketTokenCapacity", "bucket token capacity can not be negative");
+                throw
+                    new
+                        ArgumentOutOfRangeException
+                                (
+                                    nameof(bucketTokenCapacity)
+                                    , "bucket token capacity can not be negative"
+                                );
             }
             if (refillInterval < 0)
             {
-                throw new ArgumentOutOfRangeException("refillInterval", "Refill interval cannot be negative");
+                throw
+                    new
+                        ArgumentOutOfRangeException
+                                (
+                                    nameof(refillInterval)
+                                    , "Refill interval cannot be negative"
+                                );
             }
             if (refillIntervalInMilliSeconds <= 0)
             {
-                throw new ArgumentOutOfRangeException("refillIntervalInMilliSeconds", "Refill interval in milliseconds cannot be negative");
+                throw
+                    new
+                        ArgumentOutOfRangeException
+                                (
+                                    nameof(refillIntervalInMilliSeconds)
+                                    , "Refill interval in milliseconds cannot be negative"
+                                );
             }
 
             _bucketTokensCapacity = bucketTokenCapacity;
-            _ticksRefillInterval = TimeSpan.FromMilliseconds(refillInterval * refillIntervalInMilliSeconds).Ticks;
+            _ticksRefillInterval = TimeSpan
+                                        .FromMilliseconds
+                                                (
+                                                    refillInterval
+                                                    *
+                                                    refillIntervalInMilliSeconds
+                                                )
+                                        .Ticks;
         }
 
         public bool ShouldThrottle(long n = 1)
@@ -40,7 +65,13 @@
         {
             if (n <= 0)
             {
-                throw new ArgumentOutOfRangeException("n", "Should be positive integer");
+                throw
+                    new
+                        ArgumentOutOfRangeException
+                                (
+                                    nameof(n)
+                                    , "Should be positive integer"
+                                );
             }
 
             //lock (_syncRoot)
@@ -82,7 +113,6 @@
         {
             get 
             {
-                //throw new NotImplementedException(); 
                 return
                     (_bucketTokensCapacity - _currentAvailableTokensCount);
             }

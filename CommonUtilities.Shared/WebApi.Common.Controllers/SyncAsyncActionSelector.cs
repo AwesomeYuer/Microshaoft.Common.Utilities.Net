@@ -1,4 +1,4 @@
-﻿#if NETCOREAPP2_X && !NETCOREAPP3_X
+﻿#if NETCOREAPP2_X
 namespace Microshaoft
 {
     using Microsoft.AspNetCore.Builder;

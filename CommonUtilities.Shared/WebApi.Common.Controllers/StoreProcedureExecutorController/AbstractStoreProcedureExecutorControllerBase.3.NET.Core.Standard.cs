@@ -72,19 +72,20 @@ namespace Microshaoft.WebApi.Controllers
                                 )
                 )
             {
-                var mappings = outputsConfiguration
-                                        .GetChildren()
-                                        .Select
-                                            (
-                                                (x) =>
-                                                {
-                                                    return
-                                                        (
-                                                            TargetJPath : x.Key
-                                                            , SourceJPath : x.Get<string>()
-                                                        );
-                                                }
-                                            );
+                var mappings =
+                        outputsConfiguration
+                                    .GetChildren()
+                                    .Select
+                                        (
+                                            (x) =>
+                                            {
+                                                return
+                                                    (
+                                                        TargetJPath : x.Key
+                                                        , SourceJPath : x.Get<string>()
+                                                    );
+                                            }
+                                        );
                 result = result
                             .MapToNew
                                 (
@@ -133,10 +134,10 @@ namespace Microshaoft.WebApi.Controllers
                                 //try
                                 //{
                                 field = new JProperty
-                                        (
-                                            fieldName
-                                            , jToken
-                                        );
+                                            (
+                                                fieldName
+                                                , jToken
+                                            );
                                 needDefaultProcess = false;
                                 //}
                                 //catch

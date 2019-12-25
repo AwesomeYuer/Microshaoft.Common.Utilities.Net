@@ -38,14 +38,19 @@ namespace Microshaoft.Web
 
         private ExceptionGuardMiddleware
                     (
-                        RequestDelegate next
+                        RequestDelegate
+                                next
                         , Action
-                            <ExceptionGuardMiddleware<TInjector>>
+                            <
+                                ExceptionGuardMiddleware
+                                    <TInjector>
+                            >
                                 onInitializeCallbackProcesses = null
                     )
         {
             _next = next;
-            onInitializeCallbackProcesses?.Invoke(this);
+            onInitializeCallbackProcesses?
+                                    .Invoke(this);
         }
 
         public ExceptionGuardMiddleware
@@ -106,7 +111,9 @@ namespace Microshaoft.Web
                                 statusCode = r.ResponseStatusCode
                                 , message = errorMessage
                             };
-                var json = JsonConvert.SerializeObject(jsonResult);
+                var json = JsonConvert
+                                    .SerializeObject
+                                            (jsonResult);
                 await
                     response
                         .WriteAsync(json);
@@ -133,7 +140,8 @@ namespace Microshaoft.Web
     {
         public static IApplicationBuilder UseExceptionGuard<TInjector>
             (
-                this IApplicationBuilder target
+                this IApplicationBuilder
+                        target
                 , Action
                     <ExceptionGuardMiddleware<TInjector>>
                         onInitializeCallbackProcesses = null
@@ -143,7 +151,11 @@ namespace Microshaoft.Web
                 target
                     .UseMiddleware
                         (
-                            typeof(ExceptionGuardMiddleware<TInjector>)
+                            typeof
+                                (
+                                    ExceptionGuardMiddleware
+                                                        <TInjector>
+                                )
                             , onInitializeCallbackProcesses
                         );
         }

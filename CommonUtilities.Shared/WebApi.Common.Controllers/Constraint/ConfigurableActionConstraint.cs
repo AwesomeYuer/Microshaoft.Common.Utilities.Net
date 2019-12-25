@@ -11,34 +11,36 @@ namespace Microshaoft
                                     , IActionConstraintMetadata
                                     , IServiceProvider
                     where
-                        TRouteAttribute : RouteAttribute
+                        TRouteAttribute
+                                : RouteAttribute
     {
         private readonly TRouteAttribute _routeAttribute;
         public ConfigurableActionConstraint
                     (
                         TRouteAttribute
-                               routeAttribute
+                            routeAttribute
                         , Func
                                 <
                                     ActionConstraintContext
                                     , TRouteAttribute
                                     , bool
-                                > onAcceptCandidateActionProcessFunc
+                                >
+                            onAcceptCandidateActionProcessFunc
                     )
         {
             _routeAttribute = routeAttribute;
-            _onAcceptCandidateActionProcessFunc = onAcceptCandidateActionProcessFunc;
+            _onAcceptCandidateActionProcessFunc
+                        = onAcceptCandidateActionProcessFunc;
         }
 
         private readonly
-                            Func
-                                <
-                                    ActionConstraintContext
-                                    , TRouteAttribute
-                                    , bool
-                                >
-                                    _onAcceptCandidateActionProcessFunc = null;
-
+                        Func
+                            <
+                                ActionConstraintContext
+                                , TRouteAttribute
+                                , bool
+                            >
+                                _onAcceptCandidateActionProcessFunc = null;
         public int Order
         {
             get

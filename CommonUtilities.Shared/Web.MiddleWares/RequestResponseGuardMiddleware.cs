@@ -25,12 +25,22 @@ namespace Microshaoft.Web
                                     .Invoke(this);
         }
 
-        public Func<TInjector, HttpContext, string, bool> OnFilterProcessFunc;
-        public Func<TInjector, HttpContext, string, Task<bool>> OnInvokingProcessAsync;
-        public Action<TInjector, HttpContext, string> OnResponseStartingProcess;
+        public
+            Func<TInjector, HttpContext, string, bool>
+                                        OnFilterProcessFunc;
+        public
+            Func<TInjector, HttpContext, string, Task<bool>>
+                                        OnInvokingProcessAsync;
+        public
+            Action<TInjector, HttpContext, string>
+                                        OnResponseStartingProcess;
         
-        public Action<TInjector, HttpContext, string> OnAfterInvokedNextProcess;
-        public Action<TInjector, HttpContext, string> OnResponseCompletedProcess;
+        public
+            Action<TInjector, HttpContext, string>
+                                        OnAfterInvokedNextProcess;
+        public
+            Action<TInjector, HttpContext, string>
+                                        OnResponseCompletedProcess;
 
         //必须是如下方法(竟然不用接口约束产生编译期错误),否则运行时错误
         public async Task Invoke(HttpContext context)
@@ -102,7 +112,8 @@ namespace Microshaoft.Web
             }
             if (needNext)
             {
-                await _next(context);
+                await
+                    _next(context);
                 OnAfterInvokedNextProcess?
                                         .Invoke
                                             (
@@ -117,7 +128,8 @@ namespace Microshaoft.Web
     {
         public static IApplicationBuilder UseRequestResponseGuard<TInjector>
                 (
-                    this IApplicationBuilder target
+                    this IApplicationBuilder
+                            target
                     , Action
                         <RequestResponseGuardMiddleware<TInjector>>
                             onInitializeCallbackProcesses = null
