@@ -220,7 +220,8 @@
 
         public static bool IsJObject(this string target, bool validate = false)
         {
-            char c = StringHelper.FirstNonWhitespaceCharacter(target);
+            char c = StringHelper
+                            .FirstNonWhitespaceCharacter(target);
             //IL_0018: Unknown result type (might be due to invalid IL or missing references)
             var r = (c == '{');
             if (r && validate)

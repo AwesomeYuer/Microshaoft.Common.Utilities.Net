@@ -61,21 +61,29 @@
                                                     )
                 )
             {
-                var originalFileExtensionName = Path.GetExtension(originalFileFullPath);
-                var originalDirectoryPath = Path.GetDirectoryName(originalFileFullPath);
+                var originalFileExtensionName =
+                            Path.GetExtension(originalFileFullPath);
+                var originalDirectoryPath =
+                            Path.GetDirectoryName(originalFileFullPath);
                 decompressedFileFullPath = PathFileHelper.GetNewPath(originalDirectoryPath, targetDirectoryPath, originalFileFullPath);
-                string fileName = Path.GetFileName(decompressedFileFullPath);
-                string directory = Path.GetDirectoryName(decompressedFileFullPath);
+                var fileName = 
+                            Path.GetFileName(decompressedFileFullPath);
+                var directory =
+                            Path.GetDirectoryName(decompressedFileFullPath);
                 if (onNamingDecompressedFileProcessFunc != null)
                 {
-                    fileName = onNamingDecompressedFileProcessFunc(fileName);
+                    fileName =
+                        onNamingDecompressedFileProcessFunc
+                                                        (fileName);
                 }
-                decompressedFileFullPath = Path.Combine(directory, fileName);
+                decompressedFileFullPath =
+                            Path.Combine(directory, fileName);
                 using (var decompressedFileStream = File.Create(decompressedFileFullPath))
                 {
                     using (var decompressionStream = new GZipStream(originalFileStream, CompressionMode.Decompress))
                     {
-                        decompressionStream.CopyTo(decompressedFileStream);
+                        decompressionStream
+                                .CopyTo(decompressedFileStream);
                         r = true;
                     }
                 }

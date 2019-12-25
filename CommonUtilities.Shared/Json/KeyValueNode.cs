@@ -188,16 +188,15 @@ namespace Microshaoft
             jValue = null;
             if
                 (
-                    NodeJToken is JProperty
+                    NodeJToken is JProperty jProperty
                 )
             {
-                var jProperty = ((JProperty)NodeJToken);
                 if
                     (
                         jProperty.Value is JValue
                     )
                 {
-                    jValue = (JValue)jProperty.Value;
+                    jValue = (JValue) jProperty.Value;
                     r = true;
                 }
             }
@@ -215,16 +214,25 @@ namespace Microshaoft
         {
             get
             {
-                JValue r = null;
-                if (TryGetJValue(NodeJToken, out r))
+                if
+                    (
+                        TryGetJValue
+                            (
+                                NodeJToken
+                                , out JValue @value
+                            )
+                    )
                 {
-                    return r;
+                    return @value;
                 }
                 throw new NotImplementedException();
             }
             set
             {
-                if (!TrySetValue(value))
+                if 
+                    (
+                        !TrySetValue(value)
+                    )
                 {
                     throw new NotImplementedException();
                 }
@@ -351,11 +359,10 @@ namespace Microshaoft
 
         public override string ToString()
         {
-            string r = string.Empty;
-            JValue jValue = null;
+            string r;
             if
                 (
-                    TryGetJValue(NodeJToken, out jValue)
+                    TryGetJValue(NodeJToken, out JValue jValue)
                 )
             {
                 r = jValue.Value.ToString();
@@ -380,7 +387,7 @@ namespace Microshaoft
                             = new ObjectValueNode
                                         (
                                             jToken
-                                            , ((JValue)jToken).Value
+                                            , ((JValue) jToken).Value
                                             , parentJsonNode
                                         );
                 if (parentJsonNode is KeyArrayValueNode)

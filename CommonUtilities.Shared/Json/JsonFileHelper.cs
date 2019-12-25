@@ -19,8 +19,12 @@ namespace Microshaoft
                             , string fileExtensionName = ".JsonX"
                     )
         {
-            var timeStamp = DateTimeHelper.GetAlignSecondsDateTime(DateTime.Now, alignSeconds).ToString("yyyy-MM-dd_HH-mm-ss");
-            var directory = Path.GetDirectoryName(baseFileName);
+            var timeStamp = DateTime
+                                .Now
+                                .GetAlignSecondsDateTime(alignSeconds)
+                                .ToString("yyyy-MM-dd_HH-mm-ss");
+            var directory = Path
+                            .GetDirectoryName(baseFileName);
             if (!Directory.Exists(directory))
             {
                 Directory.CreateDirectory(directory);
@@ -28,9 +32,30 @@ namespace Microshaoft
             var count = data.Count();
             beginSplitter = string.Format(beginSplitter, count);
             endSplitter = string.Format(endSplitter, count);
-            var fileName = string.Format("{1}{0}{2}{3}", ".", baseFileName, timeStamp, fileExtensionName);
+            var fileName = string
+                                .Format
+                                    (
+                                        "{1}{0}{2}{3}"
+                                        , "."
+                                        , baseFileName
+                                        , timeStamp
+                                        , fileExtensionName
+                                    );
             fileName = Path.Combine(directory, fileName);
-            using (var fileStream = File.Open(fileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
+            using
+                (
+                    var fileStream = File
+                                        .Open
+                                            (
+                                                fileName
+                                                , FileMode
+                                                        .OpenOrCreate
+                                                , FileAccess
+                                                        .Write
+                                                , FileShare
+                                                        .None
+                                            )
+                )
             {
                 using (var streamWriter = new StreamWriter(fileStream))
                 {
@@ -56,7 +81,20 @@ namespace Microshaoft
                     )
         {
             int i = 0;
-            using (var fileStream = File.Open(fileName, FileMode.OpenOrCreate, FileAccess.Read, FileShare.None))
+            using
+                (
+                    var fileStream = File
+                                        .Open
+                                            (
+                                                fileName
+                                                , FileMode
+                                                        .OpenOrCreate
+                                                , FileAccess
+                                                        .Read
+                                                , FileShare
+                                                        .None
+                                            )
+                )
             {
                 using (var streamReader = new StreamReader(fileStream))
                 {
@@ -73,7 +111,7 @@ namespace Microshaoft
                         {
                             if (OnReadedOneJArrayProcessFunc != null)
                             {
-                                i++;
+                                i ++;
                                 var json = sb.ToString().Trim();
                                 sb.Clear();
                                 var r = JsonConvert.DeserializeObject<T[]>(json);

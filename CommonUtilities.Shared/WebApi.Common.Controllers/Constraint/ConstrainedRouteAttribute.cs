@@ -14,10 +14,11 @@ namespace Microshaoft
     public interface IConstrained<TRouteAttribute>
     {
         Func
-                    <
-                        TRouteAttribute
-                        , IActionConstraint
-                    > OnActionConstraintFactoryProcessFunc
+            <
+                TRouteAttribute
+                , IActionConstraint
+            >
+            OnActionConstraintFactoryProcessFunc
         {
             get;
             set;
@@ -38,12 +39,13 @@ namespace Microshaoft
             set;
         }
 
-        public Func
-                    <
-                        ConstrainedRouteAttribute
-                        , IActionConstraint
-                    > 
-                        OnActionConstraintFactoryProcessFunc 
+        public
+            Func
+                <
+                    ConstrainedRouteAttribute
+                    , IActionConstraint
+                > 
+                    OnActionConstraintFactoryProcessFunc 
         { 
             get;
             set;

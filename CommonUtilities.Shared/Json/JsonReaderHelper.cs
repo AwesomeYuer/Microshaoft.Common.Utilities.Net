@@ -131,7 +131,16 @@ namespace Microshaoft
         public static void ReadAllPaths
                     (
                         string json
-                        , Func<bool, string, object, Type, JsonReader, bool> onReadPathOnceProcessFunc
+                        , Func
+                            <
+                                bool
+                                , string
+                                , object
+                                , Type
+                                , JsonReader
+                                , bool
+                            >
+                                onReadPathOnceProcessFunc
                     )
         {
             using (JsonReader reader = new JsonTextReader(new StringReader(json)))
@@ -293,10 +302,10 @@ namespace Microshaoft
             }
             if (i > 0)
             {
-                yield return list;
+                yield
+                    return
+                        list;
                 list.Clear();
-                i = 0;
-                list = null;
             }
         }
 

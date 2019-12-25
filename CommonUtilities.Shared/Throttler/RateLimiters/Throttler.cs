@@ -7,11 +7,7 @@
 
         public Throttler(IThrottleStrategy strategy)
         {
-            if (strategy == null)
-            {
-                throw new ArgumentNullException("strategy");
-            }
-            Strategy = strategy;
+            Strategy = strategy ?? throw new ArgumentNullException("strategy");
         }
 
         public bool CanConsume()
