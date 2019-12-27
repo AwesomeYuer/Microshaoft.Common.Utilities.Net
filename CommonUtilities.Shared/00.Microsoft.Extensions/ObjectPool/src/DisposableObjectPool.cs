@@ -4,7 +4,7 @@
 namespace Microshaoft.Extensions.ObjectPool
 {
     using System;
-    using System.Runtime.CompilerServices;
+    //using System.Runtime.CompilerServices;
     using System.Threading;
     internal sealed class DisposableObjectPool<T> : DefaultObjectPool<T>, IDisposable where T : class
     {

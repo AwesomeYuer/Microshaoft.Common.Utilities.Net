@@ -6,8 +6,7 @@ namespace Microshaoft.Extensions.Internal
     using System;
     using System.Text;
     using System.Collections.Generic;
-
-    public class TypeNameHelper
+    public static class TypeNameHelper
     {
         private const char DefaultNestedTypeDelimiter = '+';
 
@@ -45,7 +44,7 @@ namespace Microshaoft.Extensions.Internal
         /// <param name="includeGenericParameters"><c>true</c> to include generic parameters.</param>
         /// <param name="nestedTypeDelimiter">Character to use as a delimiter in nested type names</param>
         /// <returns>The pretty printed type name.</returns>
-        public static string GetTypeDisplayName(Type type, bool fullName = true, bool includeGenericParameterNames = false, bool includeGenericParameters = true, char nestedTypeDelimiter = DefaultNestedTypeDelimiter)
+        public static string GetTypeDisplayName(this Type type, bool fullName = true, bool includeGenericParameterNames = false, bool includeGenericParameters = true, char nestedTypeDelimiter = DefaultNestedTypeDelimiter)
         {
             var builder = new StringBuilder();
             ProcessType(builder, type, new DisplayNameOptions(fullName, includeGenericParameterNames, includeGenericParameters, nestedTypeDelimiter));

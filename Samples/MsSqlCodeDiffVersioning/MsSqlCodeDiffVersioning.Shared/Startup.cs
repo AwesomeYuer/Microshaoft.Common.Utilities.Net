@@ -42,6 +42,9 @@
         }
         public void ConfigureServices(IServiceCollection services)
         {
+            ConfigurationHelper
+                            .Load(Configuration);
+            
             services
                 .Configure<CsvFormatterOptions>
                     (

@@ -370,14 +370,14 @@ namespace Microshaoft.WebApi.Controllers
             )
                 result = await
                             _service
-                                .ProcessAsync
-                                    (
-                                        routeName
-                                        , parameters
-                                        , OnReadRowColumnProcessFunc
-                                        , Request.Method
-                                        //, 102
-                                    );
+                                    .ProcessAsync
+                                        (
+                                            routeName
+                                            , parameters
+                                            , OnReadRowColumnProcessFunc
+                                            , Request.Method
+                                            //, 102
+                                        );
             return
                 ResultProcess
                     (
