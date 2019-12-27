@@ -10,11 +10,26 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)0.Temp\Temp.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ActivatorUtilities\ActivatorUtilities.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ActivatorUtilities\ActivatorUtilitiesConstructorAttribute.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ActivatorUtilities\ObjectFactory.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\HashCodeCombiner\HashCodeCombiner.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\NonCapturingTimer\NonCapturingTimer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\00.Shared\ActivatorUtilities\ActivatorUtilities.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\00.Shared\ActivatorUtilities\ActivatorUtilitiesConstructorAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\00.Shared\ActivatorUtilities\ObjectFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\00.Shared\CommandLineUtils\CommandLine\AnsiConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\00.Shared\CommandLineUtils\CommandLine\CommandArgument.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\00.Shared\CommandLineUtils\CommandLine\CommandLineApplication.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\00.Shared\CommandLineUtils\CommandLine\CommandOption.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\00.Shared\CommandLineUtils\CommandLine\CommandOptionType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\00.Shared\CommandLineUtils\CommandLine\CommandParsingException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\00.Shared\CommandLineUtils\Utilities\ArgumentEscaper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\00.Shared\CommandLineUtils\Utilities\DotNetMuxer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\00.Shared\EmptyDisposable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\00.Shared\HashCodeCombiner\HashCodeCombiner.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\00.Shared\HostFactoryResolver\HostFactoryResolver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\00.Shared\NonCapturingTimer\NonCapturingTimer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\00.Shared\ParameterDefaultValue\ParameterDefaultValue.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\00.Shared\ProviderAliasUtilities\ProviderAliasUtilities.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\00.Shared\ReferenceAssemblyInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\00.Shared\TypeNameHelper\TypeNameHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\00.Shared\ValueStopwatch\ValueStopwatch.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ObjectPool\src\DefaultObjectPool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ObjectPool\src\DefaultObjectPoolProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ObjectPool\src\DefaultPooledObjectPolicy.cs" />
@@ -27,9 +42,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ObjectPool\src\ObjectPoolProviderExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ObjectPool\src\PooledObjectPolicy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ObjectPool\src\StringBuilderPooledObjectPolicy.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ParameterDefaultValue\ParameterDefaultValue.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\TypeNameHelper\TypeNameHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\ValueStopwatch\ValueStopwatch.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.NET35\ConcurrentQueue.Net35.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.NET35\HttpClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.NET35\Parallel.NET35.cs" />
@@ -70,6 +82,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ConcurrentDictionary\ConcurrentDictionaryHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\ConfigurationAppSettingsHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\ConfigurationExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuration\ConfigurationHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Console\ConsoleHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Console\DebugConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Console\WindowsBackgroundInteractiveConsole.cs" />
@@ -199,6 +212,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Zip\ZipFileHelper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\00.Shared\CommandLineUtils\Microsoft.Extensions.CommandLineUtils.Sources.projitems" />
     <None Include="$(MSBuildThisFileDirectory)DataAccess\Pager.StoreProcedure.Sample.sql" />
   </ItemGroup>
   <ItemGroup>

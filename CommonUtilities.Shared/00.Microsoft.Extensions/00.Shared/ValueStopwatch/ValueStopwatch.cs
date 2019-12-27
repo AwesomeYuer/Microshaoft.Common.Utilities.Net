@@ -1,12 +1,11 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System;
+using System.Diagnostics;
 
-
-namespace Microshaoft.Extensions.Internal 
+namespace Microshaoft.Extensions.Internal
 {
-    using System;
-    using System.Diagnostics;
     public struct ValueStopwatch
     {
         private static readonly double TimestampToTicks = TimeSpan.TicksPerSecond / (double)Stopwatch.Frequency;

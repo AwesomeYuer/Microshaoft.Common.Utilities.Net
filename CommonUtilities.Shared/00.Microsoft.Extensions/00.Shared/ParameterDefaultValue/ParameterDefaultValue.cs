@@ -3,13 +3,14 @@
 
 namespace Microshaoft.Extensions.Internal
 {
+
     using System;
     using System.Reflection;
-    public class ParameterDefaultValue
+    public static class ParameterDefaultValue
     {
         private static readonly Type _nullable = typeof(Nullable<>);
 
-        public static bool TryGetDefaultValue(ParameterInfo parameter, out object defaultValue)
+        public static bool TryGetDefaultValue(this ParameterInfo parameter, out object defaultValue)
         {
             bool hasDefaultValue;
             var tryToGetDefaultValue = true;

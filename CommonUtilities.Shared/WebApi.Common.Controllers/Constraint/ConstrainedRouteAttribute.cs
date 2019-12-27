@@ -8,7 +8,11 @@ namespace Microshaoft
 
     public interface IConfigurable
     {
-        IConfiguration Configuration { get; set; }
+        IConfiguration Configuration
+        {
+            get;
+            //set;
+        }
     }
 
     public interface IConstrained<TRouteAttribute>
@@ -35,8 +39,13 @@ namespace Microshaoft
 
         public IConfiguration Configuration
         {
-            get;
-            set;
+            get
+            {
+                return
+                    ConfigurationHelper
+                                .Configuration;
+            }
+            //set;
         }
 
         public

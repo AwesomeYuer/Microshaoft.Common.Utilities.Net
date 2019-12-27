@@ -69,9 +69,9 @@ namespace Microshaoft
                                     );
             foreach (var attribute in attributes)
             {
-                attribute
-                    .Configuration
-                        = _configuration;
+                //attribute
+                //    .Configuration
+                //        = _configuration;
                 attribute
                     .OnActionConstraintFactoryProcessFunc
                         = _onActionConstraintFactoryProcessFunc;

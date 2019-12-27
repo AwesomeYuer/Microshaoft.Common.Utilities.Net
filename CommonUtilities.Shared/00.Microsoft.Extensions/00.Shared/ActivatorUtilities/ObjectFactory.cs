@@ -1,7 +1,6 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using System;
 
 #if ActivatorUtilities_In_DependencyInjection
 namespace Microshaoft.Extensions.DependencyInjection
@@ -9,7 +8,7 @@ namespace Microshaoft.Extensions.DependencyInjection
 namespace Microshaoft.Extensions.Internal
 #endif
 {
-
+    using System;
     /// <summary>
     /// The result of <see cref="ActivatorUtilities.CreateFactory(Type, Type[])"/>.
     /// </summary>
@@ -19,7 +18,7 @@ namespace Microshaoft.Extensions.Internal
 #if ActivatorUtilities_In_DependencyInjection
     public
 #else
-    internal
+    public
 #endif
     delegate object ObjectFactory(IServiceProvider serviceProvider, object[] arguments);
 }

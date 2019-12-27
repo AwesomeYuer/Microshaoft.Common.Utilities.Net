@@ -534,7 +534,8 @@ namespace Microshaoft.WebApi.Controllers
                 await
                     streamWriter
                             .FlushAsync();
-                streamWriter.Close();
+                streamWriter
+                            .Close();
             }
         }
     }
