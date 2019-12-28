@@ -180,13 +180,16 @@
     <Compile Include="$(MSBuildThisFileDirectory)SqlDbParameter\DbParameterHelper.00.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SqlDbParameter\DbParameterHelper.01.mssql.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\AbstractStoreProcedureExecutorCompositionPlugin\AbstractStoreProcedureExecutorCompositionPlugin.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sql\AbstractStoreProcedureExecutorCompositionPlugin\AbstractStoreProcedureExecutorCompositionPlugin.NETCoreApp3x.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\IStoreProcedureExecutable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sql\IStoreProcedureExecutable.NETCoreApp3x.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\Microshaoft.00.SqlHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\Microsoft.SqlHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\StoreProceduresExecutor.001.AbstractBase.Async.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\StoreProceduresExecutor.01.MsSql.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\StoreProceduresExecutor.00.AbstractBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\StoreProceduresExecutor.Reader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sql\StoreProceduresExecutor.Reader.NETCoreApp3x.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System.Buffers.ArrayPool\ArrayPool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Tcp\BufferExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Tcp\DuplexPipe.cs" />

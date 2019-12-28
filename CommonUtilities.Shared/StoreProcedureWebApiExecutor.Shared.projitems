@@ -35,12 +35,15 @@
     <Compile Include="$(MSBuildThisFileDirectory)SqlDbParameter\DbParameterHelper.00.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SqlDbParameter\DbParameterHelper.01.mssql.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\AbstractStoreProcedureExecutorCompositionPlugin\AbstractStoreProcedureExecutorCompositionPlugin.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sql\AbstractStoreProcedureExecutorCompositionPlugin\AbstractStoreProcedureExecutorCompositionPlugin.NETCoreApp3x.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\IStoreProcedureExecutable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sql\IStoreProcedureExecutable.NETCoreApp3x.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\Microshaoft.00.SqlHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\StoreProceduresExecutor.001.AbstractBase.Async.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\StoreProceduresExecutor.00.AbstractBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\StoreProceduresExecutor.01.MsSql.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\StoreProceduresExecutor.Reader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sql\StoreProceduresExecutor.Reader.NETCoreApp3x.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Type\TypeHelper.01.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Type\TypeHelper.03.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Cors\WildCardCorsService.cs" />
@@ -65,6 +68,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\Constraint\ConfigurableActionConstraintRouteApplicationModelProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\Constraint\ConstrainedRouteAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenModelBinder\HttpRequestHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\Services\AbstractStoreProceduresService.NETCoreApp3x.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\StoreProcedureExecutorController\AbstractStoreProcedureExecutorControllerBase.1.NET.All.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\StoreProcedureExecutorController\AbstractStoreProcedureExecutorControllerBase.3.NET.Core.Standard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\StoreProcedureExecutorController\AbstractStoreProcedureExecutorControllerBase.2.NET.Framework.cs" />
@@ -79,6 +83,5 @@
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)SingleThreadAsyncDequeueProcessor\CoreStandard\" />
     <Folder Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\CommonController\" />
-    <Folder Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\Services\" />
   </ItemGroup>
 </Project>

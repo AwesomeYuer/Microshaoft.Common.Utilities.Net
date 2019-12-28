@@ -9,121 +9,183 @@ namespace Microshaoft
 
     public static partial class DataReaderHelper
     {
-        public static async IAsyncEnumerable<JToken> AsRowsJTokensEnumerableAsync
-                     (
-                         this IDataReader target
-                         , JArray columns = null
-                         , Func
+        public static async
+                        IAsyncEnumerable
                                 <
-                                    IDataReader
-                                    , Type          // fieldType
-                                    , string        // fieldName
-                                    , int           // row index
-                                    , int           // column index
-                                    ,
-                                        (
-                                            bool needDefaultProcess
-                                            , JProperty field   //  JObject Field 对象
-                                        )
+                                    (
+                                        int         // rowIndex
+                                        , JArray    // columns
+                                        , IDataRecord
+                                    )
                                 >
-                                    onReadRowColumnProcessFunc = null
-                     )
+                                    AsOneResultIAsyncEnumerable
+            (
+                    this DbDataReader target
+            )
         {
-            var dbDataReader = (DbDataReader) target;
-            var items = AsRowsJTokensEnumerableAsync
-                            (
-                                dbDataReader
-                                , columns
-                                , onReadRowColumnProcessFunc
-                            );
-            await foreach (var item in items)
+            var entries = target
+                                .AsOneResultIAsyncEnumerable<IDataRecord>
+                                    (
+                                        (rowIndex, columns, dataRecord) =>
+                                        {
+                                            return dataRecord;
+                                        }
+                                    );
+            await foreach (var entry in entries)
             {
                 yield
                     return
-                        item;
+                        (
+                            entry.Item1
+                            , entry.Item2
+                            , entry.Item3
+                        );
             }
         }
-        public static async IAsyncEnumerable<JToken> AsRowsJTokensEnumerableAsync
-                     (
-                         this DbDataReader target
-                         , JArray columns = null
-                         , Func
+        public static async
+                        IAsyncEnumerable
                                 <
-                                    IDataReader
-                                    , Type          // fieldType
-                                    , string        // fieldName
-                                    , int           // row index
-                                    , int           // column index
-                                    ,
-                                        (
-                                            bool needDefaultProcess
-                                            , JProperty field   //  JObject Field 对象
-                                        )
+                                    (
+                                          int       //resultSetIndex
+                                        , int       // rowIndex
+                                        , JArray    // columns
+                                        , IDataRecord
+                                    )
                                 >
-                                    onReadRowColumnProcessFunc = null
-                     )
+                                    AsMultipleResultsIAsyncEnumerable
+            (
+                    this DbDataReader target
+            )
         {
-            var fieldsCount = target.FieldCount;
-            int rowIndex = 0;
-            while (await target.ReadAsync())
+            var entries = target
+                                .AsMultipleResultsIAsyncEnumerable<IDataRecord>
+                                    (
+                                        (resultSetIndex, rowIndex, columns, dataRecord) =>
+                                        {
+                                            return dataRecord;
+                                        }
+                                    );
+            await foreach (var entry in entries)
             {
-                JObject row = new JObject();
-                for (var fieldIndex = 0; fieldIndex < fieldsCount; fieldIndex++)
+                yield
+                    return
+                        (
+                            entry.Item1
+                            , entry.Item2
+                            , entry.Item3
+                            , entry.Item4
+                        );
+            }
+        }
+
+        public static async
+                        IAsyncEnumerable
+                                <
+                                    (
+                                        int         // rowIndex
+                                        , JArray    // columns
+                                        , TEntry
+                                    )
+                                >
+                                    AsOneResultIAsyncEnumerable<TEntry>
+            (
+                    this DbDataReader target
+                    , Func
+                        <
+                            int
+                            , JArray
+                            , IDataRecord
+                            , TEntry
+                        >
+                            onEntryFactoryProcessFunc = null
+            )
+        {
+            var rowIndex = 0;
+            while 
+                (
+                    await
+                        target
+                            .ReadAsync()
+                )
+            {
+                TEntry entry = default;
+                var jColumns = target
+                                    .GetColumnsJArray();
+                if (onEntryFactoryProcessFunc != null)
                 {
-                    var fieldType = target.GetFieldType(fieldIndex);
-                    var fieldName = string.Empty;
-                    if (columns != null)
-                    {
-                        fieldName = columns[fieldIndex]["ColumnName"].Value<string>();
-                    }
-                    else
-                    {
-                        target.GetName(fieldIndex);
-                        if (fieldName.IsNullOrEmptyOrWhiteSpace())
-                        {
-                            fieldName = $"Column-{fieldIndex + 1}";
-                        }
-                    }
-                    JProperty field = null;
-                    var needDefaultProcess = true;
-                    if (onReadRowColumnProcessFunc != null)
-                    {
-                        var r = onReadRowColumnProcessFunc
-                                    (
-                                        target
-                                        , fieldType
-                                        , fieldName
-                                        , rowIndex
-                                        , fieldIndex
-                                    );
-                        needDefaultProcess = r.needDefaultProcess;
-                        if (r.field != null)
-                        {
-                            field = r.field;
-                        }
-                    }
-                    if (needDefaultProcess)
-                    {
-                        field = GetFieldJProperty
-                                    (
-                                        target
-                                        , fieldIndex
-                                        , fieldType
-                                        , fieldName
-                                    );
-                    }
-                    if (field != null)
-                    {
-                        row.Add(field);
-                    }
+                    entry = onEntryFactoryProcessFunc(rowIndex, jColumns, target);
                 }
-                rowIndex ++;
                 yield
                     return
-                            row;
+                       (rowIndex, jColumns, entry);
+                rowIndex ++;
             }
         }
-       
+        public static async IAsyncEnumerable
+                            <
+                                (
+                                    int             // resultSetIndex
+                                    , int           // rowIndex
+                                    , JArray        // columns
+                                    , TEntry
+                                )
+                            >
+                                AsMultipleResultsIAsyncEnumerable<TEntry>
+            (
+                    this DbDataReader target
+                    , Func
+                            <
+                                int
+                                , int
+                                , JArray
+                                , IDataRecord
+                                , TEntry
+                            >
+                                onEntryFactoryProcessFunc = null
+            )
+        {
+            int resultSetIndex = 0;
+            do
+            {
+                var rows = target
+                                .AsOneResultIAsyncEnumerable //<TEntry>
+                                    (
+                                        (rowIndex, columns, dataRecord) =>
+                                        {
+                                            TEntry r = default;
+                                            if (onEntryFactoryProcessFunc != null)
+                                            {
+                                                r = onEntryFactoryProcessFunc
+                                                                (
+                                                                    resultSetIndex
+                                                                    , rowIndex
+                                                                    , columns
+                                                                    , dataRecord
+                                                                );
+                                            }
+                                            return r;
+                                        }
+                                    );
+                await foreach (var row in rows)
+                {
+                    yield
+                        return
+                            (
+                                resultSetIndex
+                                , row.Item1
+                                , row.Item2
+                                , row.Item3
+                            );
+                }
+                resultSetIndex ++;
+            }
+            while
+                (
+                    await
+                        target
+                            .NextResultAsync()
+                );
+        }
     }
 }
 #endif

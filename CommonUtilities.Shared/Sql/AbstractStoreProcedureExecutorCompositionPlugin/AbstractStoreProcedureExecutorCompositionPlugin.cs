@@ -7,7 +7,7 @@
     using System.Data.Common;
     using System.Threading.Tasks;
 
-    public abstract class
+    public abstract partial class
             AbstractStoreProcedureExecutorCompositionPlugin
                         <TDbConnection, TDbCommand, TDbParameter>
                             : IStoreProcedureExecutable

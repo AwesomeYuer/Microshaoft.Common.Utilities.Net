@@ -1,0 +1,73 @@
+﻿#if NETCOREAPP3_X
+namespace Microshaoft.CompositionPlugins
+{
+    using Microshaoft;
+    using Newtonsoft.Json.Linq;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Data.Common;
+
+    public abstract partial class
+            AbstractStoreProcedureExecutorCompositionPlugin
+                        <TDbConnection, TDbCommand, TDbParameter>
+                            : IStoreProcedureExecutable
+                                , IParametersDefinitionCacheAutoRefreshable
+                            where
+                                    TDbConnection : DbConnection, new()
+                            where
+                                    TDbCommand : DbCommand, new()
+                            where
+                                    TDbParameter : DbParameter, new()
+    {
+        public async virtual IAsyncEnumerable
+                        <
+                            (
+                                int             // resultSetIndex
+                                , int           // rowIndex
+                                , JArray        // columns
+                                , IDataRecord
+                            )
+                        >
+                ExecuteReaderAsAsyncEnumerable
+                        (
+                            string connectionString
+                            , string storeProcedureName
+                            , JToken parameters = null
+                            , bool enableStatistics = false
+                            , int commandTimeoutInSeconds = 90
+                        )
+        {
+            BeforeExecutingProcess
+                    (
+                        connectionString
+                        , enableStatistics
+                        , out TDbConnection connection
+                    );
+            var entries = Executor
+                                .ExecuteReaderAsAsyncEnumerable
+                                    (
+                                        connection
+                                        , storeProcedureName
+                                        , parameters
+                                        , commandTimeoutInSeconds
+                                    );
+            await foreach (var entry in entries)
+            {
+                yield
+                    return
+                        (
+                            entry.Item1
+                            , entry.Item2
+                            , entry.Item3
+                            , entry.Item4
+                        );
+            }
+            AfterExecutedProcess
+                (
+                    storeProcedureName
+                    , connection
+                );
+        }
+    }
+}
+#endif
