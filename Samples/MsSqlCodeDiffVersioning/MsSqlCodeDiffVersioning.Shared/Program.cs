@@ -30,6 +30,9 @@
                     }
                 }
             }
+            Console.WriteLine($"{nameof(Environment.Version)}: {Environment.Version}");
+            Console.WriteLine($"{nameof(RuntimeInformation.FrameworkDescription)}: {RuntimeInformation.FrameworkDescription}");
+
             OSPlatform OSPlatform
                     = EnumerableHelper
                             .Range
@@ -56,7 +59,9 @@
             s += $"{nameof(RuntimeInformation.ProcessArchitecture)}:{RuntimeInformation.ProcessArchitecture.ToString()}";
             s += "\n";
             s += $"{nameof(OSPlatform)}:{OSPlatform}";
+            
             Console.WriteLine(s);
+            
             var os = Environment.OSVersion;
             Console.WriteLine("Current OS Information:\n");
             Console.WriteLine("Platform: {0:G}", os.Platform);
@@ -65,6 +70,7 @@
             Console.WriteLine("   Major: {0}", os.Version.Major);
             Console.WriteLine("   Minor: {0}", os.Version.Minor);
             Console.WriteLine("Service Pack: '{0}'", os.ServicePack);
+
             CreateWebHostBuilder
                             (args)
                                 //.UseKestrel()
