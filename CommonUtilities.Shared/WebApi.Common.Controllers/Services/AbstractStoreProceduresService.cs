@@ -136,7 +136,7 @@ namespace Microshaoft.Web
                     );
     }
 
-    public abstract class
+    public abstract partial class
                 AbstractStoreProceduresService
                                 :
                                     IStoreProceduresWebApiService
@@ -1066,8 +1066,8 @@ namespace Microshaoft.Web
                                 , int commandTimeoutInSeconds = 90
                             )
         {
-            var beginTimeStamp = Stopwatch.GetTimestamp();
-            var beginTime = DateTime.Now;
+            //var beginTimeStamp = Stopwatch.GetTimestamp();
+            //var beginTime = DateTime.Now;
             var success = _indexedExecutors
                                         .TryGetValue
                                             (
@@ -1171,8 +1171,8 @@ namespace Microshaoft.Web
                                 , int commandTimeoutInSeconds = 90
                             )
         {
-            var beginTimeStamp = Stopwatch.GetTimestamp();
-            var beginTime = DateTime.Now;
+            //var beginTimeStamp = Stopwatch.GetTimestamp();
+            //var beginTime = DateTime.Now;
             var success = _indexedExecutors
                                         .TryGetValue
                                             (

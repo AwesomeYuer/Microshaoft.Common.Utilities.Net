@@ -6,7 +6,7 @@ namespace Microshaoft
     using System.Data;
     using System.Threading.Tasks;
 
-    public interface IStoreProcedureExecutable
+    public partial interface IStoreProcedureExecutable
     {
         string DataBaseType
         {
