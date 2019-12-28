@@ -86,17 +86,29 @@ namespace Microshaoft
                                         //        return dataRecord;
                                         //    }
                                         //);
-                await foreach (var entry in entries)
+                await
+                    foreach //(var entry in entries)
+                            (
+                                var 
+                                    (
+                                        resultSetIndex
+                                        , rowIndex
+                                        , columns
+                                        , dataRecord
+                                    )
+                                in
+                                entries
+                            )
                 {
                     extensionInfo
-                            .resultSetID = entry.Item1;
+                            .resultSetID = resultSetIndex;
                     yield
                         return
                             (
-                                entry.Item1
-                                , entry.Item2
-                                , entry.Item3
-                                , entry.Item4
+                                resultSetIndex
+                                , rowIndex
+                                , columns
+                                , dataRecord
                             );
                 }
                 await 
@@ -130,8 +142,9 @@ namespace Microshaoft
                 }
                 if (connection.State != ConnectionState.Closed)
                 {
-                    connection
-                            .Close();
+                    await
+                        connection
+                                .CloseAsync();
                 }
                 if (command != null)
                 {

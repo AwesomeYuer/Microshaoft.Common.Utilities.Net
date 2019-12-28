@@ -51,15 +51,26 @@ namespace Microshaoft.CompositionPlugins
                                         , parameters
                                         , commandTimeoutInSeconds
                                     );
-            await foreach (var entry in entries)
+            await
+                foreach
+                        (
+                            var (
+                                    resultSetIndex
+                                    , rowIndex
+                                    , columns
+                                    , dataRecord
+                                )
+                            in
+                            entries
+                        )
             {
                 yield
                     return
                         (
-                            entry.Item1
-                            , entry.Item2
-                            , entry.Item3
-                            , entry.Item4
+                            resultSetIndex
+                            , rowIndex
+                            , columns
+                            , dataRecord
                         );
             }
             AfterExecutedProcess
