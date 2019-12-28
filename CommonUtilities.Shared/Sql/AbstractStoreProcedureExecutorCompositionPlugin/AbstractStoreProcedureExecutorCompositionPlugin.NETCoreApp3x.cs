@@ -54,7 +54,8 @@ namespace Microshaoft.CompositionPlugins
             await
                 foreach
                         (
-                            var (
+                            var
+                                (
                                     resultSetIndex
                                     , rowIndex
                                     , columns
