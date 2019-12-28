@@ -403,24 +403,31 @@ namespace Microshaoft.WebApi.Controllers
                                             , Request
                                                     .Method
                                         );
-                await foreach (var entry in entries)
+                await
+                    foreach
+                        (
+                            var
+                                (
+                                    resultSetIndex
+                                    , rowIndex
+                                    , columns
+                                    , dataRecord
+                                )
+                            in
+                            entries
+                        )
                 {
                     await
                         dataRecordProcessAsync
                                 (
-                                    entry.Item1     // resultSetIndex
-                                    , entry.Item2   // rowIndex
-                                    , entry.Item3   // columns
-                                    , entry.Item4
+                                     resultSetIndex
+                                    , rowIndex
+                                    , columns
+                                    , dataRecord
                                     , allOutputColumns
                                     , streamWriter
                                 );
-                    
-
-
                 }
-
-
 #endif
                 await
                     streamWriter
@@ -509,7 +516,7 @@ namespace Microshaoft.WebApi.Controllers
                                                                                         .CsvColumnsDelimiter;
                                                                         }
                                                                         x += y.ColumnTitle;
-                                                                        j++;
+                                                                        j ++;
                                                                         return
                                                                                 x;
                                                                     }
@@ -598,8 +605,6 @@ namespace Microshaoft.WebApi.Controllers
                         .FlushAsync();
             //.Flush();
             //i++;
-
-
         }
     }
 }

@@ -31,14 +31,14 @@ namespace Microshaoft
                                             return dataRecord;
                                         }
                                     );
-            await foreach (var entry in entries)
+            await foreach (var (rowIndex, columns, dataRecord) in entries)
             {
                 yield
                     return
                         (
-                            entry.Item1
-                            , entry.Item2
-                            , entry.Item3
+                            rowIndex
+                            , columns
+                            , dataRecord
                         );
             }
         }
@@ -65,15 +65,26 @@ namespace Microshaoft
                                             return dataRecord;
                                         }
                                     );
-            await foreach (var entry in entries)
+            await foreach
+                        (
+                            var
+                                (
+                                    resultSetIndex
+                                    , rowIndex
+                                    , columns
+                                    , dataRecord
+                                )
+                            in
+                            entries
+                        )
             {
                 yield
                     return
                         (
-                            entry.Item1
-                            , entry.Item2
-                            , entry.Item3
-                            , entry.Item4
+                            resultSetIndex
+                            , rowIndex
+                            , columns
+                            , dataRecord
                         );
             }
         }
@@ -101,6 +112,7 @@ namespace Microshaoft
             )
         {
             var rowIndex = 0;
+            JArray jColumns = null; 
             while 
                 (
                     await
@@ -109,8 +121,11 @@ namespace Microshaoft
                 )
             {
                 TEntry entry = default;
-                var jColumns = target
+                if (jColumns == null)
+                {
+                    jColumns = target
                                     .GetColumnsJArray();
+                }
                 if (onEntryFactoryProcessFunc != null)
                 {
                     entry = onEntryFactoryProcessFunc(rowIndex, jColumns, target);
@@ -147,7 +162,7 @@ namespace Microshaoft
             int resultSetIndex = 0;
             do
             {
-                var rows = target
+                var entries = target
                                 .AsOneResultIAsyncEnumerable //<TEntry>
                                     (
                                         (rowIndex, columns, dataRecord) =>
@@ -166,15 +181,26 @@ namespace Microshaoft
                                             return r;
                                         }
                                     );
-                await foreach (var row in rows)
+                await
+                    foreach
+                        (
+                            var
+                                (
+                                    rowIndex
+                                    , columns
+                                    , dataRecord
+                                )
+                            in
+                            entries
+                        )
                 {
                     yield
                         return
                             (
                                 resultSetIndex
-                                , row.Item1
-                                , row.Item2
-                                , row.Item3
+                                , rowIndex
+                                , columns
+                                , dataRecord
                             );
                 }
                 resultSetIndex ++;
