@@ -17,6 +17,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\TryCatchFinallyHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\ConfigurationExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\ConfigurationHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataReader\DataReaderHelper.NETCoreApp3x.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataReader\DataReaderHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DynamicExpression\ExpressionTreeHelper.DynamicMemberAccessor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)JsonWebToken\CliamsHelper.cs" />
