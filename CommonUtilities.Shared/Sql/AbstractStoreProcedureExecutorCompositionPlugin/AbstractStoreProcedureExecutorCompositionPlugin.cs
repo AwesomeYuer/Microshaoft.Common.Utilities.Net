@@ -118,7 +118,7 @@
                         , out TDbConnection connection
                     );
             var result = Executor
-                                .Execute
+                                .ExecuteJsonResults
                                     (
                                         connection
                                         , storeProcedureName
@@ -176,7 +176,7 @@
                     );
             var result = await
                             Executor
-                                    .ExecuteAsync
+                                    .ExecuteJsonResultsAsync
                                             (
                                                 connection
                                                 , storeProcedureName
@@ -219,7 +219,7 @@
                         , out TDbConnection connection
                     );
             Executor
-                    .ExecuteReaderRows
+                    .ExecuteReaderProcess
                         (
                             connection
                             , storeProcedureName
@@ -263,7 +263,7 @@
                     );
             await
                 Executor
-                    .ExecuteReaderRowsAsync
+                    .ExecuteReaderProcessAsync
                         (
                             connection
                             , storeProcedureName

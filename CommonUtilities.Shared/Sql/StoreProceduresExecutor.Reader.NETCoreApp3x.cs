@@ -1,4 +1,4 @@
-﻿#if NETCOREAPP3_X
+﻿#if NETCOREAPP3_X || NETSTANDARD2_X
 namespace Microshaoft
 {
     using Newtonsoft.Json.Linq;
@@ -28,7 +28,7 @@ namespace Microshaoft
                         )
                     >
 
-            ExecuteReaderAsAsyncEnumerable
+            ExecuteResultsAsAsyncEnumerable
             (
                     TDbConnection connection
                     , string storeProcedureName

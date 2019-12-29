@@ -97,7 +97,7 @@
                                     , storeProcedureName
                                     , includeReturnValueParameter
                                 );
-            var jProperties = (JObject) inputsParameters;
+            var jProperties = (inputsParameters == null ? (new JObject()) : ((JObject)inputsParameters));
             foreach (KeyValuePair<string, JToken> jProperty in jProperties)
             {
                 if
