@@ -60,8 +60,12 @@
                                         columns
                                         , (reader, rowIndex, columnIndex, fieldType, fieldName) =>
                                         {
-                                            return
-                                                onReadRowColumnProcessFunc
+                                            var needDefaultProcess = true;
+                                            JProperty jProperty = null;
+                                            var r = (needDefaultProcess, jProperty);
+                                            if (onReadRowColumnProcessFunc != null)
+                                            {
+                                                r = onReadRowColumnProcessFunc
                                                     (
                                                         resultSetID
                                                         , reader
@@ -70,6 +74,9 @@
                                                         , fieldType
                                                         , fieldName
                                                     );
+                                            }
+                                            return
+                                                r;
                                         }
                                     );
             var resultSet = new JObject
@@ -292,7 +299,7 @@
                 , SqlInfoMessageEventHandler
                         OnSqlInfoMessageEventHandlerProcessAction
                 , JObject Result
-            ) 
+            )
                 ResultPreprocess
                         (
                             TDbConnection connection
@@ -310,9 +317,12 @@
             var command = new TDbCommand()
             {
                 CommandType = CommandType.StoredProcedure
-                , CommandTimeout = commandTimeoutInSeconds
-                , CommandText = storeProcedureName
-                , Connection = connection
+                ,
+                CommandTimeout = commandTimeoutInSeconds
+                ,
+                CommandText = storeProcedureName
+                ,
+                Connection = connection
             };
             var dbParameters = GenerateExecuteParameters
                                 (
@@ -480,17 +490,20 @@
             var extensionInfo = new ExtensionInfo()
             {
                 resultSetID = 0
-                , messageID = 0
-                , recordCounts = null
-                , messages = null
+                ,
+                messageID = 0
+                ,
+                recordCounts = null
+                ,
+                messages = null
             };
-            
+
             TDbCommand command = null;
             List<TDbParameter> dbParameters;
             bool statisticsEnabled;
-            StatementCompletedEventHandler                          
+            StatementCompletedEventHandler
                     onStatementCompletedEventHandlerProcessAction = null;
-            SqlInfoMessageEventHandler                              
+            SqlInfoMessageEventHandler
                     onSqlInfoMessageEventHandlerProcessAction = null;
             JObject result;
             try
@@ -614,10 +627,13 @@
         {
             var extensionInfo = new ExtensionInfo()
             {
-                 resultSetID = 0
-               , messageID = 0
-               , recordCounts = null
-               , messages = null
+                resultSetID = 0
+               ,
+                messageID = 0
+               ,
+                recordCounts = null
+               ,
+                messages = null
             };
 
             TDbCommand command = null;
@@ -665,7 +681,7 @@
                                 , dataReader
                             );
                     extensionInfo
-                            .resultSetID ++;
+                            .resultSetID++;
                 }
                 while
                     (

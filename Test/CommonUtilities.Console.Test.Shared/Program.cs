@@ -27,15 +27,15 @@ namespace Test
 ";
 
 
-            Console.WriteLine
-                        (
-                            JsonHelper
-                                .MergeJsonTemplate
-                                    (
-                                        json
-                                        , json2
-                                    )
-                        );
+            //Console.WriteLine
+            //            (
+            //                JsonHelper
+            //                    .MergeJsonTemplate
+            //                        (
+            //                            json
+            //                            , json2
+            //                        )
+            //            );
 
             //JsonReader reader = new JsonTextReader(new StringReader(json));
             //reader.ReadAllMultipleContents();
