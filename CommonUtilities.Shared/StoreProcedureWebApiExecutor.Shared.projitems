@@ -6,7 +6,7 @@
     <SharedGUID>7878df3a-8418-4aca-b415-300b81afd792</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>CommonUtilities.Shared</Import_RootNamespace>
+    <Import_RootNamespace>StoreProcedureWebApiExecutor.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\DateTimeHelper.cs" />
@@ -17,8 +17,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\TryCatchFinallyHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\ConfigurationExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\ConfigurationHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DataReader\DataReaderHelper.NETCoreApp3x.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DataReader\DataReaderHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataReader\DataReaderHelper.01.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataReader\DataReaderHelper.02.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataReader\DataReaderHelper.03.NETCoreApp3x.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DynamicExpression\ExpressionTreeHelper.DynamicMemberAccessor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)JsonWebToken\CliamsHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JsonHelper\JsonHelper.00.cs" />

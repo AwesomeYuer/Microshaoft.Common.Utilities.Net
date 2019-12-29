@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>b70375e3-81e4-4024-af69-ab016b9ace17</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Microshaoft.StoreProcedureExecutors.MySql.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)SqlDbParameter\MySql\DbParameterHelper.02.mysql.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SqlDbParameter\MySql\DbParameterHelper.03.npgsql.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SqlDbParameter\MySql\DbParameterHelper.04.oracle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SqlDbParameter\MySql\DbParameterHelper.05.db2.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sql\MySql\StoreProceduresExecutor.02.MySql.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sql\MySql\StoreProceduresExecutor.03.NpgSql.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sql\MySql\StoreProceduresExecutor.04.Oracle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sql\MySql\StoreProceduresExecutor.05.Sqlite.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sql\MySql\StoreProceduresExecutor.06.DB2.cs" />
+  </ItemGroup>
+</Project>

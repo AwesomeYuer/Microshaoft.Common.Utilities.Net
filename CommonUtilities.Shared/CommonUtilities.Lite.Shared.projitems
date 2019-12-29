@@ -91,8 +91,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)CRC\CRC32.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CRC\CrcHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataAccess\SqlCommandHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DataReader\DataReaderHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DataReader\DataReaderHelper.NETCoreApp3x.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataReader\DataReaderHelper.01.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataReader\DataReaderHelper.02.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataReader\DataReaderHelper.03.NETCoreApp3x.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataTable\DataTableHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataTable\DataTableListHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DynamicExpression\ExpressionTreeHelper.cs" />

@@ -18,7 +18,7 @@
                         where
                                 TDbParameter : DbParameter, new()
     {
-        public void ExecuteReaderRows
+        public void ExecuteReaderProcess
             (
                     TDbConnection connection
                     , string storeProcedureName
@@ -149,7 +149,7 @@
             }
         }
 
-        public async Task ExecuteReaderRowsAsync
+        public async Task ExecuteReaderProcessAsync
                 (
                         TDbConnection connection
                         , string storeProcedureName

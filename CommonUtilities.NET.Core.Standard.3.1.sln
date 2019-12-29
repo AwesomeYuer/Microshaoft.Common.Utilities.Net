@@ -220,10 +220,25 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MsSQL.StoreProcedureExecuto
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MsSqlCodeDiffVersioning", "Samples\MsSqlCodeDiffVersioning\MsSqlCodeDiffVersioning\MsSqlCodeDiffVersioning.csproj", "{52B4D9A9-59ED-42B4-9737-500C930F607B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "18.Microshaoft.StoreProcedureExecutors.NETStandard", "18.Microshaoft.StoreProcedureExecutors.NETStandard", "{369AD0FA-FC67-47ED-81E5-65BB99CCC369}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microshaoft.StoreProcedureExecutors.NETStandard", "CommonUtilities\Microshaoft.StoreProcedureExecutors.NETStandard\Microshaoft.StoreProcedureExecutors.NETStandard.csproj", "{F73DE6C3-E88C-4973-AD19-232E8C7AB45E}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Microshaoft.StoreProcedureExecutors.Shared", "CommonUtilities.Shared\Microshaoft.StoreProcedureExecutors.Shared.shproj", "{378A4DC6-0E35-49BA-B142-9A9B01D6CE65}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00.Common", "00.Common", "{580A7322-DAF5-4D11-B80A-2975FB8A7BD0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "10.MySql", "10.MySql", "{95AF4262-4E0D-4E2F-8BAF-DE5B5F5EFEAF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microshaoft.StoreProcedureExecutors.MySql.NETStandard", "CommonUtilities\Microshaoft.StoreProcedureExecutors.MySql.NETStandard\Microshaoft.StoreProcedureExecutors.MySql.NETStandard.csproj", "{6E1B70C9-8422-4CAA-8FD2-812CAD8FE432}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Microshaoft.StoreProcedureExecutors.MySql.Shared", "CommonUtilities.Shared\Microshaoft.StoreProcedureExecutors.MySql.Shared.shproj", "{B70375E3-81E4-4024-AF69-AB016B9ACE17}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		StoreProcedureWebApiExecutorsPlugins\MsSQL.Plugin\MsSQL.Plugin.Shared\MsSQL.StoreProcedureExecutor.Plugin.Shared.projitems*{0579c429-5e45-494c-b0f0-2b46dc1c8a77}*SharedItemsImports = 13
 		CommonUtilities.Shared\WebApiUtilities.Shared.projitems*{1fbd68b8-839e-4c54-a00c-beac21119371}*SharedItemsImports = 13
+		CommonUtilities.Shared\Microshaoft.StoreProcedureExecutors.Shared.projitems*{378a4dc6-0e35-49ba-b142-9a9b01d6ce65}*SharedItemsImports = 13
 		Samples\SocketAsyncArgs.TCP.Echo.Server\ServerConsoleApp\ServerSharedProject\ServerSharedProject.projitems*{3f6feee0-0473-441f-a073-889503ec7710}*SharedItemsImports = 13
 		StoreProcedureWebApiExecutorsPlugins\MySQL.Plugin\MySQL.Plugin.Shared\MySQL.StoreProcedureExecutor.Plugin.Shared.projitems*{4ee26e3a-b23b-4760-a8d7-1eb0ef7a24dd}*SharedItemsImports = 13
 		Samples\MsSqlCodeDiffVersioning\MsSqlCodeDiffVersioning.Shared\MsSqlCodeDiffVersioning.Shared.projitems*{50cf6564-2c15-48ba-87ba-b83169f2a214}*SharedItemsImports = 13
@@ -232,6 +247,7 @@ Global
 		JTokenModelParameterValidatorsPlugins\SamplePlugin\SamplePlugin.Shared\JTokenModelParameterValidatorSamplePlugin.Shared.projitems*{a85efe1e-6a82-40fb-92ac-08acbc50dc52}*SharedItemsImports = 13
 		Test\CommonUtilities.Console.Test.Shared\CommonUtilities.Console.Test.Shared.projitems*{ae1c2a2e-c269-4996-a539-38d57e293c02}*SharedItemsImports = 13
 		CommonUtilities.Shared\EasyPerformanceCountersHelper.Shared.projitems*{b1913205-1d01-4a59-b0ca-b5c7460fb644}*SharedItemsImports = 13
+		CommonUtilities.Shared\Microshaoft.StoreProcedureExecutors.MySql.Shared.projitems*{b70375e3-81e4-4024-af69-ab016b9ace17}*SharedItemsImports = 13
 		CommonUtilities.Shared\StoreProcedureWebApiExecutor.Shared.projitems*{cba7fa05-6d20-45cf-b752-645af269b0da}*SharedItemsImports = 13
 		Samples\SocketAsyncArgs.TCP.Echo.Server\ClientConsoleApp\ClientSharedProject\ClientSharedProject.projitems*{e2a49f80-5e62-414d-bf57-8e1802b144a8}*SharedItemsImports = 13
 		CommonUtilities.Shared\ConcurrentAsyncQueue.Shared.projitems*{f27798f3-0529-4852-9e9c-819699a772cb}*SharedItemsImports = 13
@@ -696,6 +712,38 @@ Global
 		{52B4D9A9-59ED-42B4-9737-500C930F607B}.Release|x64.Build.0 = Release|Any CPU
 		{52B4D9A9-59ED-42B4-9737-500C930F607B}.Release|x86.ActiveCfg = Release|Any CPU
 		{52B4D9A9-59ED-42B4-9737-500C930F607B}.Release|x86.Build.0 = Release|Any CPU
+		{F73DE6C3-E88C-4973-AD19-232E8C7AB45E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F73DE6C3-E88C-4973-AD19-232E8C7AB45E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F73DE6C3-E88C-4973-AD19-232E8C7AB45E}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{F73DE6C3-E88C-4973-AD19-232E8C7AB45E}.Debug|ARM.Build.0 = Debug|Any CPU
+		{F73DE6C3-E88C-4973-AD19-232E8C7AB45E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F73DE6C3-E88C-4973-AD19-232E8C7AB45E}.Debug|x64.Build.0 = Debug|Any CPU
+		{F73DE6C3-E88C-4973-AD19-232E8C7AB45E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F73DE6C3-E88C-4973-AD19-232E8C7AB45E}.Debug|x86.Build.0 = Debug|Any CPU
+		{F73DE6C3-E88C-4973-AD19-232E8C7AB45E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F73DE6C3-E88C-4973-AD19-232E8C7AB45E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F73DE6C3-E88C-4973-AD19-232E8C7AB45E}.Release|ARM.ActiveCfg = Release|Any CPU
+		{F73DE6C3-E88C-4973-AD19-232E8C7AB45E}.Release|ARM.Build.0 = Release|Any CPU
+		{F73DE6C3-E88C-4973-AD19-232E8C7AB45E}.Release|x64.ActiveCfg = Release|Any CPU
+		{F73DE6C3-E88C-4973-AD19-232E8C7AB45E}.Release|x64.Build.0 = Release|Any CPU
+		{F73DE6C3-E88C-4973-AD19-232E8C7AB45E}.Release|x86.ActiveCfg = Release|Any CPU
+		{F73DE6C3-E88C-4973-AD19-232E8C7AB45E}.Release|x86.Build.0 = Release|Any CPU
+		{6E1B70C9-8422-4CAA-8FD2-812CAD8FE432}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E1B70C9-8422-4CAA-8FD2-812CAD8FE432}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E1B70C9-8422-4CAA-8FD2-812CAD8FE432}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{6E1B70C9-8422-4CAA-8FD2-812CAD8FE432}.Debug|ARM.Build.0 = Debug|Any CPU
+		{6E1B70C9-8422-4CAA-8FD2-812CAD8FE432}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6E1B70C9-8422-4CAA-8FD2-812CAD8FE432}.Debug|x64.Build.0 = Debug|Any CPU
+		{6E1B70C9-8422-4CAA-8FD2-812CAD8FE432}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6E1B70C9-8422-4CAA-8FD2-812CAD8FE432}.Debug|x86.Build.0 = Debug|Any CPU
+		{6E1B70C9-8422-4CAA-8FD2-812CAD8FE432}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E1B70C9-8422-4CAA-8FD2-812CAD8FE432}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E1B70C9-8422-4CAA-8FD2-812CAD8FE432}.Release|ARM.ActiveCfg = Release|Any CPU
+		{6E1B70C9-8422-4CAA-8FD2-812CAD8FE432}.Release|ARM.Build.0 = Release|Any CPU
+		{6E1B70C9-8422-4CAA-8FD2-812CAD8FE432}.Release|x64.ActiveCfg = Release|Any CPU
+		{6E1B70C9-8422-4CAA-8FD2-812CAD8FE432}.Release|x64.Build.0 = Release|Any CPU
+		{6E1B70C9-8422-4CAA-8FD2-812CAD8FE432}.Release|x86.ActiveCfg = Release|Any CPU
+		{6E1B70C9-8422-4CAA-8FD2-812CAD8FE432}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -794,6 +842,13 @@ Global
 		{7676FEE7-0B0E-4ACC-9F92-12E2B7644B15} = {F37B0AF1-585C-4A75-AADE-F59A3B068BBF}
 		{89626984-AB93-4A39-9716-4FB38A82B83A} = {0FEC2084-9EDE-4C31-BDE8-0446FB9EF18A}
 		{52B4D9A9-59ED-42B4-9737-500C930F607B} = {1A9D67DF-CF99-4EFB-A81C-99133DFB23EA}
+		{369AD0FA-FC67-47ED-81E5-65BB99CCC369} = {B87E2CCA-338B-475A-B22D-E19E70E36224}
+		{F73DE6C3-E88C-4973-AD19-232E8C7AB45E} = {580A7322-DAF5-4D11-B80A-2975FB8A7BD0}
+		{378A4DC6-0E35-49BA-B142-9A9B01D6CE65} = {580A7322-DAF5-4D11-B80A-2975FB8A7BD0}
+		{580A7322-DAF5-4D11-B80A-2975FB8A7BD0} = {369AD0FA-FC67-47ED-81E5-65BB99CCC369}
+		{95AF4262-4E0D-4E2F-8BAF-DE5B5F5EFEAF} = {369AD0FA-FC67-47ED-81E5-65BB99CCC369}
+		{6E1B70C9-8422-4CAA-8FD2-812CAD8FE432} = {95AF4262-4E0D-4E2F-8BAF-DE5B5F5EFEAF}
+		{B70375E3-81E4-4024-AF69-AB016B9ACE17} = {95AF4262-4E0D-4E2F-8BAF-DE5B5F5EFEAF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ABDE4EA1-B6A3-41C1-AC23-2CA7A04C03AB}

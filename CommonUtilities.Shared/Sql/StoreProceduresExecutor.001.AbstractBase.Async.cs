@@ -465,7 +465,7 @@
                 );
         }
         public JToken
-            Execute
+            ExecuteJsonResults
                 (
                     TDbConnection connection
                     , string storeProcedureName
@@ -602,7 +602,7 @@
             }
         }
         public async Task<JToken>
-            ExecuteAsync
+            ExecuteJsonResultsAsync
                 (
                     TDbConnection connection
                     , string storeProcedureName

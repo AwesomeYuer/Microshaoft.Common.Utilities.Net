@@ -44,7 +44,7 @@ namespace Microshaoft.CompositionPlugins
                         , out TDbConnection connection
                     );
             var entries = Executor
-                                .ExecuteReaderAsAsyncEnumerable
+                                .ExecuteResultsAsAsyncEnumerable
                                     (
                                         connection
                                         , storeProcedureName
