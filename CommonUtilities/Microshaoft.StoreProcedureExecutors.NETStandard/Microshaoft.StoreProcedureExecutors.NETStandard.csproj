@@ -1,7 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>Microshaoft.SPE.NETStandard</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -18,6 +19,11 @@
     <PackageReference Include="Microsoft.Data.SqlClient" Version="1.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CommonUtilities.Lite\CommonUtilities.Lite.NET.Standard.2.x\CommonUtilities.Lite.NET.Standard.2.x.csproj" />
+    <ProjectReference Include="..\Microshaoft.Json.NETStandard\Microshaoft.Json.NETStandard.csproj" />
   </ItemGroup>
   
 </Project>

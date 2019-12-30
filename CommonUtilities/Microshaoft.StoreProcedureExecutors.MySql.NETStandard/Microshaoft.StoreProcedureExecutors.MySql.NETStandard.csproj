@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>Microshaoft.SPE.MySql.NETStandard</AssemblyName>
   </PropertyGroup>
 
 

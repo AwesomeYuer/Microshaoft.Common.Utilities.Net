@@ -88,7 +88,7 @@
                 bool Success
                 , JToken Result
             )
-                Execute
+                ExecuteJsonResults
                     (
                         string connectionString
                         , string storeProcedureName
@@ -145,7 +145,7 @@
                         , JToken Result
                     )
                 > 
-                    ExecuteAsync
+                    ExecuteJsonResultsAsync
                             (
                                 string connectionString
                                 , string storeProcedureName
@@ -196,7 +196,7 @@
                 );
         }
 
-        public void ExecuteReaderRows
+        public void ExecuteReaderProcess
                             (
                                 string connectionString
                                 , string storeProcedureName
@@ -237,7 +237,7 @@
                 );
         }
 
-        public async Task ExecuteReaderRowsAsync
+        public async Task ExecuteReaderProcessAsync
                                 (
                                     string connectionString
                                     , string storeProcedureName

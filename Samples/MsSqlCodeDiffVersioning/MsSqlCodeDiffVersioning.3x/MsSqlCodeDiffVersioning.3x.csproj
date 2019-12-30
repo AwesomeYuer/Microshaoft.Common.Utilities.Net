@@ -1,7 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
-  
-  
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>2cf2bf85-4b45-4fa4-a64c-169d9e832d95</UserSecretsId>
@@ -11,9 +8,6 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
   </PropertyGroup>
-
-  
-  
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>TRACE;NETCOREAPP;NETCOREAPP2_X;NETCOREAPP3_X</DefineConstants>
   </PropertyGroup>
@@ -1454,10 +1448,14 @@
 
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\StoreProcedureWebApiExecutor\StoreProcedureWebApiExecutor.Core.3.x\Microshaoft.StoreProcedureExecutorWebApiService.Core.3.x.csproj" />
+    <ProjectReference Include="..\..\..\CommonUtilities\WebApiUtilities\WebApiUtilities.NET.Core.3.x\WebApiUtilities.NET.Core.3.x.csproj" />
   </ItemGroup>
 
   <Import Project="..\MsSqlCodeDiffVersioning.Shared\MsSqlCodeDiffVersioning.Shared.projitems" Label="Shared" />
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="rem only for Windows/dos cmd&#xD;&#xA;            &#xD;&#xA;xcopy ..\..\..\StoreProcedureWebApiExecutorsPlugins\MsSQL.Plugin\MsSQL.Plugin.3.x\bin\Debug\netcoreapp3.1\Microshaoft*.dll $(TargetDir)CompositionPlugins\ /Y&#xD;&#xA;xcopy ..\..\..\StoreProcedureWebApiExecutorsPlugins\MySQL.Plugin\MySQL.Plugin.3.x\bin\Debug\netcoreapp3.1\Microshaoft*.dll $(TargetDir)CompositionPlugins\ /Y&#xD;&#xA;xcopy ..\..\..\JTokenModelParameterValidatorsPlugins\SamplePlugin\SamplePlugin.3.x\bin\Debug\netcoreapp3.1\Microshaoft*.dll $(TargetDir)CompositionPlugins\ /Y&#xD;&#xA;xcopy ..\..\..\StoreProcedureWebApiExecutorsPlugins\MsSQL.Plugin\MsSQL.Plugin.3.x\bin\Debug\netcoreapp3.1\Microshaoft*.pdb $(TargetDir)CompositionPlugins\ /Y&#xD;&#xA;xcopy ..\..\..\StoreProcedureWebApiExecutorsPlugins\MySQL.Plugin\MySQL.Plugin.3.x\bin\Debug\netcoreapp3.1\Microshaoft*.pdb $(TargetDir)CompositionPlugins\ /Y&#xD;&#xA;xcopy ..\..\..\JTokenModelParameterValidatorsPlugins\SamplePlugin\SamplePlugin.3.x\bin\Debug\netcoreapp3.1\Microshaoft*.pdb $(TargetDir)CompositionPlugins\ /Y&#xD;&#xA;xcopy ..\..\..\StoreProcedureWebApiExecutorsPlugins\MsSQL.Plugin\MsSQL.Plugin.3.x\bin\Debug\netcoreapp3.1\Microshaoft*.deps.json $(TargetDir)CompositionPlugins\ /Y&#xD;&#xA;xcopy ..\..\..\StoreProcedureWebApiExecutorsPlugins\MySQL.Plugin\MySQL.Plugin.3.x\bin\Debug\netcoreapp3.1\Microshaoft*.deps.json $(TargetDir)CompositionPlugins\ /Y&#xD;&#xA;xcopy ..\..\..\JTokenModelParameterValidatorsPlugins\SamplePlugin\SamplePlugin.3.x\bin\Debug\netcoreapp3.1\Microshaoft*.deps.json $(TargetDir)CompositionPlugins\ /Y&#xD;&#xA;&#xD;&#xA;xcopy ..\..\..\StoreProcedureWebApiExecutorsPlugins\MySQL.Plugin\MySQL.Plugin.3.x\bin\Debug\netcoreapp3.1\*mysql.data* $(TargetDir)CompositionPlugins\ /Y&#xD;&#xA;xcopy ..\..\..\StoreProcedureWebApiExecutorsPlugins\MySQL.Plugin\MySQL.Plugin.3.x\bin\Debug\netcoreapp3.1\*npgsql* $(TargetDir)CompositionPlugins\ /Y&#xD;&#xA;xcopy ..\..\..\StoreProcedureWebApiExecutorsPlugins\MySQL.Plugin\MySQL.Plugin.3.x\bin\Debug\netcoreapp3.1\*sqlite* $(TargetDir)CompositionPlugins\ /Y&#xD;&#xA;xcopy ..\..\..\StoreProcedureWebApiExecutorsPlugins\MySQL.Plugin\MySQL.Plugin.3.x\bin\Debug\netcoreapp3.1\*oracle* $(TargetDir)CompositionPlugins\ /Y&#xD;&#xA;xcopy ..\..\..\StoreProcedureWebApiExecutorsPlugins\MySQL.Plugin\MySQL.Plugin.3.x\bin\Debug\netcoreapp3.1\*db2* $(TargetDir)CompositionPlugins\ /Y&#xD;&#xA;&#xD;&#xA;xcopy ..\..\..\StoreProcedureWebApiExecutorsPlugins\MySQL.Plugin\MySQL.Plugin.3.x\bin\Debug\netcoreapp3.1\*mysql.data* $(TargetDir) /Y&#xD;&#xA;xcopy ..\..\..\StoreProcedureWebApiExecutorsPlugins\MySQL.Plugin\MySQL.Plugin.3.x\bin\Debug\netcoreapp3.1\*npgsql* $(TargetDir) /Y&#xD;&#xA;xcopy ..\..\..\StoreProcedureWebApiExecutorsPlugins\MySQL.Plugin\MySQL.Plugin.3.x\bin\Debug\netcoreapp3.1\*sqlite* $(TargetDir) /Y&#xD;&#xA;xcopy ..\..\..\StoreProcedureWebApiExecutorsPlugins\MySQL.Plugin\MySQL.Plugin.3.x\bin\Debug\netcoreapp3.1\*oracle* $(TargetDir) /Y&#xD;&#xA;xcopy ..\..\..\StoreProcedureWebApiExecutorsPlugins\MySQL.Plugin\MySQL.Plugin.3.x\bin\Debug\netcoreapp3.1\*db2* $(TargetDir) /Y&#xD;&#xA;" />
+  </Target>
 
   <!--<ItemGroup>
     <PackageReference Update="Microsoft.NETCore.App" Version="2.2.7" />

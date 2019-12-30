@@ -24,6 +24,8 @@
     <PackageReference Include="Microsoft.AspNetCore.ConcurrencyLimiter" Version="3.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.ResponseCaching" Version="2.2.0" />
     <PackageReference Include="Microsoft.Composition" Version="1.0.31" />
+    <!--<PackageReference Include="System.Net.Http" Version="4.3.4" />-->
+    <PackageReference Include="System.Threading.Channels" Version="4.7.0" />
     <PackageReference Include="SecurityCodeScan.VS2017" Version="3.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
@@ -32,6 +34,8 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.6.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CommonUtilities.Lite\CommonUtilities.Lite.NET.Core.3.x\CommonUtilities.Lite.NET.Core.3.x.csproj" />
+    <ProjectReference Include="..\..\CommonUtilities.Lite\CommonUtilities.Lite.NET.Standard.2.x\CommonUtilities.Lite.NET.Standard.2.x.csproj" />
+    <ProjectReference Include="..\..\Microshaoft.Json.NETStandard\Microshaoft.Json.NETStandard.csproj" />
+    <ProjectReference Include="..\..\Microshaoft.StoreProcedureExecutors.NETStandard\Microshaoft.StoreProcedureExecutors.NETStandard.csproj" />
   </ItemGroup>
 </Project>

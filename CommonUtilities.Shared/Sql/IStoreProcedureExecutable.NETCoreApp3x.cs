@@ -1,4 +1,4 @@
-﻿#if NETCOREAPP3_X
+﻿#if !NETCOREAPP2_X
 namespace Microshaoft
 {
     using Newtonsoft.Json.Linq;

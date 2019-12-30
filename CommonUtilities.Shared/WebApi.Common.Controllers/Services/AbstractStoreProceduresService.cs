@@ -1,4 +1,4 @@
-﻿#if NETCOREAPP
+﻿#if NETCOREAPP 
 namespace Microshaoft.Web
 {
     using Microshaoft;
@@ -284,7 +284,7 @@ namespace Microshaoft.Web
                                                     <IStoreProcedureExecutable>
                                                         (
                                                             x
-                                                            , "*StoreProcedure*Plugin*.dll"
+                                                            , "*SPE*Plugin*.dll"
                                                         );
                                 }
                             );
@@ -651,7 +651,7 @@ namespace Microshaoft.Web
             if (success)
             {
                 (success, result) = executor
-                                            .Execute
+                                            .ExecuteJsonResults
                                                 (
                                                     connectionString
                                                     , storeProcedureName
@@ -737,7 +737,7 @@ namespace Microshaoft.Web
             {
                 (success, result) = await
                                         executor
-                                            .ExecuteAsync
+                                            .ExecuteJsonResultsAsync
                                                 (
                                                     connectionString
                                                     , storeProcedureName
@@ -1077,7 +1077,7 @@ namespace Microshaoft.Web
             if (success)
             {
                 executor
-                    .ExecuteReaderRows
+                    .ExecuteReaderProcess
                         (
                             connectionString
                             , storeProcedureName
@@ -1183,7 +1183,7 @@ namespace Microshaoft.Web
             {
                 await
                     executor
-                        .ExecuteReaderRowsAsync
+                        .ExecuteReaderProcessAsync
                             (
                                 connectionString
                                 , storeProcedureName

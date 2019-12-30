@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <AssemblyName>Microshaoft.MySQL.SPE.Plugin.3.x</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\StoreProcedureWebApiExecutor\StoreProcedureWebApiExecutor.Core.3.x\Microshaoft.StoreProcedureExecutorWebApiService.Core.3.x.csproj" />
+    <ProjectReference Include="..\..\..\CommonUtilities\Microshaoft.StoreProcedureExecutors.MySql.NETStandard\Microshaoft.StoreProcedureExecutors.MySql.NETStandard.csproj" />
   </ItemGroup>
 
   <Import Project="..\MySQL.Plugin.Shared\MySQL.StoreProcedureExecutor.Plugin.Shared.projitems" Label="Shared" />

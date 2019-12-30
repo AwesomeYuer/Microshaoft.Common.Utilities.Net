@@ -18,9 +18,8 @@
   </PropertyGroup>
   <Import Project="..\..\..\CommonUtilities.Shared\CommonUtilities.Lite.Shared.projitems" Label="Shared" />
   <ItemGroup>
-    <PackageReference Include="IBM.Data.DB2.Core" Version="1.3.0.100" />
-    <PackageReference Include="Microsoft.AspNetCore.Connections.Abstractions" Version="3.1.0" />
-    <PackageReference Include="Microsoft.Composition" Version="1.0.31" />
+    <!--<PackageReference Include="Microsoft.AspNetCore.Connections.Abstractions" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Composition" Version="1.0.31" />-->
     <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />

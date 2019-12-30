@@ -1,5 +1,4 @@
-﻿
-namespace Microshaoft
+﻿namespace Microshaoft
 {
     using System;
     using System.IO;
@@ -9,7 +8,6 @@ namespace Microshaoft
     using System.Runtime.Serialization;
     using System.Runtime.Serialization.Json;
     using System.Runtime.Serialization.Formatters.Binary;
-    using System.Diagnostics;
 #if NETFRAMEWORK4_X
     using System.Runtime.Serialization.Formatters.Soap;
 #endif

@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>378a4dc6-0e35-49ba-b242-9a9b01d6ce65</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Microshaoft.Json.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)JsonWebToken\CliamsHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)JsonWebToken\JwtTokenHelper.NET.All.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)JsonWebToken\JwtTokenHelper.NET.Framework.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\DynamicJson\DynamicJson.00.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\DynamicJson\DynamicJson.01.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonFileHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonHelper\JsonHelper.00.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonHelper\JsonHelper.01.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonHelper\JsonHelper.02.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonHelper\JsonHelper.03.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonHelper\JsonHelper.04.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonHelper\JsonHelper.05.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonReaderHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\JTokenWrapper\JTokenWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\KeyValueNode.cs" />
+  </ItemGroup>
+</Project>

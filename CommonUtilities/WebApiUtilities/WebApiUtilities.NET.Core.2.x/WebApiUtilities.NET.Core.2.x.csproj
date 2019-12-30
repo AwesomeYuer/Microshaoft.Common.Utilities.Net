@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <RootNamespace>WebApiUtilities.NET.Core._2.x</RootNamespace>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
@@ -18,8 +18,8 @@
   
   <Import Project="..\..\..\CommonUtilities.Shared\WebApiUtilities.Shared.projitems" Label="Shared" />
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.8" />
-    <PackageReference Include="Microsoft.NETCore.App" Version="2.2.8" />
+    <!--<PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.8" />
+    <PackageReference Include="Microsoft.NETCore.App" Version="2.2.8" />-->
     <PackageReference Include="Microsoft.AspNetCore.ResponseCaching" Version="2.2.0" />
     <PackageReference Include="Microsoft.Composition" Version="1.0.31" />
     <PackageReference Include="SecurityCodeScan.VS2017" Version="3.3.0">
@@ -31,5 +31,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CommonUtilities.Lite\CommonUtilities.Lite.NET.Core.2.x\CommonUtilities.Lite.NET.Core.2.x.csproj" />
+    <ProjectReference Include="..\..\Microshaoft.StoreProcedureExecutors.NETStandard\Microshaoft.StoreProcedureExecutors.NETStandard.csproj" />
   </ItemGroup>
 </Project>

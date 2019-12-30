@@ -90,12 +90,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)CRC\CRC16.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CRC\CRC32.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CRC\CrcHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DataAccess\SqlCommandHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DataReader\DataReaderHelper.01.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DataReader\DataReaderHelper.02.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DataReader\DataReaderHelper.03.NETCoreApp3x.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DataTable\DataTableHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DataTable\DataTableListHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DynamicExpression\ExpressionTreeHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DynamicExpression\ExpressionTreeHelper.DynamicCallMethodExpressionTreeInvokerHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DynamicExpression\ExpressionTreeHelper.DynamicMemberAccessor.cs" />
@@ -111,16 +105,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)FasterUtilities\Status.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileSharding\FileShardingHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpClientHelper\HttpClientHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Json\DynamicJson\DynamicJson.00.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Json\DynamicJson\DynamicJson.01.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonFileHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonHelper\JsonHelper.00.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonHelper\JsonHelper.01.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonHelper\JsonHelper.02.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonHelper\JsonHelper.03.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonHelper\JsonHelper.04.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonReaderHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Json\JTokenWrapper\JTokenWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KeyWordFilter\CharExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KeyWordFilter\FastFilter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KeyWordFilter\HashFilter.cs" />
@@ -134,7 +118,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Mapper\TinyMapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MEF.Composition\MEF.Contracts.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MEF.Composition\MEFHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)MEF.Composition\MEFHelper.NET.Core.Standard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MemberAdditionalDefinitionAttribute\MemberAdditionalDefinitionAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\FloatRange.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\GlobalSuppressions.cs" />
@@ -175,29 +158,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Socket\SocketAsyncDataHandler.TCP.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Socket\SocketAsyncDataHandler.UDP.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Socket\SocketAsyncEventArgsPool.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Socket\SocketAwaitableEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Socket\SocketHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Span\ValueStringBuilder.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SqlDbParameter\DbParameterHelper.00.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SqlDbParameter\DbParameterHelper.01.mssql.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Sql\AbstractStoreProcedureExecutorCompositionPlugin\AbstractStoreProcedureExecutorCompositionPlugin.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Sql\AbstractStoreProcedureExecutorCompositionPlugin\AbstractStoreProcedureExecutorCompositionPlugin.NETCoreApp3x.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Sql\IStoreProcedureExecutable.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Sql\IStoreProcedureExecutable.NETCoreApp3x.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Sql\Microshaoft.00.SqlHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Sql\Microsoft.SqlHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Sql\StoreProceduresExecutor.001.AbstractBase.Async.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Sql\StoreProceduresExecutor.01.MsSql.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Sql\StoreProceduresExecutor.00.AbstractBase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Sql\StoreProceduresExecutor.Reader.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Sql\StoreProceduresExecutor.Reader.NETCoreApp3x.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System.Buffers.ArrayPool\ArrayPool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Tcp\BufferExtensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Tcp\DuplexPipe.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Tcp\SocketAwaitable.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Tcp\SocketReceiver.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Tcp\SocketSender.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Tcp\TcpConnection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Throttler\RateGate\RateGate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Throttler\RateLimiters\FixedTokenBucket.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Throttler\RateLimiters\IThrottleStrategy.cs" />
@@ -218,7 +182,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\00.Shared\CommandLineUtils\Microsoft.Extensions.CommandLineUtils.Sources.projitems" />
-    <None Include="$(MSBuildThisFileDirectory)DataAccess\Pager.StoreProcedure.Sample.sql" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)NuGet.Versioning\Resources.resx" />

@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <AssemblyName>Microshaoft.MsSQL.SPE.Plugin.3.x</AssemblyName>
   </PropertyGroup>
 
 
@@ -12,8 +13,10 @@
     <!--<PackageReference Include="Microsoft.NETCore.App" Version="2.2.7" />-->
   </ItemGroup>
 
+
+
   <ItemGroup>
-    <ProjectReference Include="..\..\..\StoreProcedureWebApiExecutor\StoreProcedureWebApiExecutor.Core.3.x\Microshaoft.StoreProcedureExecutorWebApiService.Core.3.x.csproj" />
+    <ProjectReference Include="..\..\..\CommonUtilities\Microshaoft.StoreProcedureExecutors.NETStandard\Microshaoft.StoreProcedureExecutors.NETStandard.csproj" />
   </ItemGroup>
 
   <Import Project="..\MsSQL.Plugin.Shared\MsSQL.StoreProcedureExecutor.Plugin.Shared.projitems" Label="Shared" />

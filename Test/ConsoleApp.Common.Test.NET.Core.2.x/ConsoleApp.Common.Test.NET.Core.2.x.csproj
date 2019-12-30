@@ -9,11 +9,11 @@
   <Import Project="..\CommonUtilities.Console.Test.Shared\CommonUtilities.Console.Test.Shared.projitems" Label="Shared" />
 
   <ItemGroup>
-    <ProjectReference Include="..\..\CommonUtilities\CommonUtilities.Lite\CommonUtilities.Lite.NET.Core.2.x\CommonUtilities.Lite.NET.Core.2.x.csproj" />
+    <PackageReference Include="Microsoft.NETCore.App" Version="2.2.8" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NETCore.App" Version="2.2.8" />
+    <ProjectReference Include="..\..\CommonUtilities\CommonUtilities.Full\CommonUtilities.NET.Core.2.x\CommonUtilities.NET.Core.2.x.csproj" />
   </ItemGroup>
 
 </Project>

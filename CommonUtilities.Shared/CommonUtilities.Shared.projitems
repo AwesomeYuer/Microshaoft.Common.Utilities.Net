@@ -322,13 +322,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)0.Temp\Temp.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="$(MSBuildThisFileDirectory)DataAccess\Pager.StoreProcedure.Sample.sql" />
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)SingleThreadAsyncDequeueProcessor\Framework\" />
     <Folder Include="$(MSBuildThisFileDirectory)SingleThreadAsyncDequeueProcessor\CoreStandard\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\00.Shared\CommandLineUtils\Microsoft.Extensions.CommandLineUtils.Sources.projitems" />
+    <None Include="$(MSBuildThisFileDirectory)DataAccess\Pager.StoreProcedure.Sample.sql" />
   </ItemGroup>
 </Project>

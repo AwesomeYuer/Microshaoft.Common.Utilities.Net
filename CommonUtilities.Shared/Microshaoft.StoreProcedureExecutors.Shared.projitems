@@ -9,20 +9,25 @@
     <Import_RootNamespace>Microshaoft.StoreProcedureExecutors.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\DateTimeHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\LockHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\StringsHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataAccess\SqlCommandHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataReader\DataReaderHelper.01.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataReader\DataReaderHelper.03.NETCoreApp3x.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonHelper\JsonHelper.00.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonReaderHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataTable\DataTableHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataTable\DataTableListHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SqlDbParameter\DbParameterHelper.00.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SqlDbParameter\DbParameterHelper.01.mssql.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sql\AbstractStoreProcedureExecutorCompositionPlugin\AbstractStoreProcedureExecutorCompositionPlugin.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sql\AbstractStoreProcedureExecutorCompositionPlugin\AbstractStoreProcedureExecutorCompositionPlugin.NETCoreApp3x.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sql\IStoreProcedureExecutable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sql\IStoreProcedureExecutable.NETCoreApp3x.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\Microshaoft.00.SqlHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\StoreProceduresExecutor.00.AbstractBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\StoreProceduresExecutor.001.AbstractBase.Async.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\StoreProceduresExecutor.01.MsSql.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\StoreProceduresExecutor.Reader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sql\StoreProceduresExecutor.Reader.NETCoreApp3x.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)DataAccess\Pager.StoreProcedure.Sample.sql" />
   </ItemGroup>
 </Project>
