@@ -9,10 +9,15 @@
     <Import_RootNamespace>WebApiUtilities.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)JsonWebToken\CliamsHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)JsonWebToken\JwtTokenHelper.NET.All.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)JsonWebToken\JwtTokenHelper.NET.Framework.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)MemberAdditionalDefinitionAttribute\MemberAdditionalDefinitionAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MEF.Composition\MEF.Contracts.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MEF.Composition\MEFHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MEF.Composition\MEFHelper.NET.Core.Standard.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socket\SocketAwaitableEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tcp\DuplexPipe.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tcp\SocketAwaitable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tcp\SocketReceiver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tcp\SocketSender.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tcp\TcpConnection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Cors\WildCardCorsService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Filter.ConcurrencyLimiter\ConcurrencyLimiterFilter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Filter.ConcurrencyLimiter\IQueuePolicy.cs" />
@@ -80,9 +85,5 @@
     <Compile Include="$(MSBuildThisFileDirectory)WebMvcApi.NET45\WebMvcApiPerformanceCounterFilter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebMvcApi.NET45\WebMvcApiPerformanceCountersHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebMvcApi.NET45\WebMvcApiRoutePrefixGroupingHelper.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)00.Utilities\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Json\" />
   </ItemGroup>
 </Project>

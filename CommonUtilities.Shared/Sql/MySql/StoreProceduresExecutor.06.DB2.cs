@@ -35,7 +35,7 @@ namespace Microshaoft
                                , string connectionString
                            )
         {
-            var dbTypeName = (string) reader["DATA_TYPE"];
+            var dbTypeName = (string)reader["DATA_TYPE"];
             if
                 (
                     Enum

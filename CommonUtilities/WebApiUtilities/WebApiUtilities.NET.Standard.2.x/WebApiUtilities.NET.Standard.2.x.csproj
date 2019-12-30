@@ -14,5 +14,11 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DefineConstants>NETSTANDARD;NETSTANDARD2_X</DefineConstants>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\CommonUtilities.Full\CommonUtilities.NET.Standard.2.x\CommonUtilities.NET.Standard.2.x.csproj" />
+    <ProjectReference Include="..\..\Microshaoft.Json.NETStandard\Microshaoft.Json.NETStandard.csproj" />
+    <ProjectReference Include="..\..\Microshaoft.StoreProcedureExecutors.NETStandard\Microshaoft.StoreProcedureExecutors.NETStandard.csproj" />
+  </ItemGroup>
   
 </Project>

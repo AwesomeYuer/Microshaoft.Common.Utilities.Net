@@ -1,4 +1,4 @@
-﻿#if !NETFRAMEWORK4_6_X
+﻿//#if !NETFRAMEWORK4_6_X
 namespace Microshaoft
 {
     using Newtonsoft.Json.Linq;
@@ -17,7 +17,7 @@ namespace Microshaoft
             bool Success
             , JToken Result
         )
-            Execute
+            ExecuteJsonResults
                 (
                     string connectionString
                     , string storeProcedureName
@@ -42,7 +42,7 @@ namespace Microshaoft
                 );
 
         void
-            ExecuteReaderRows
+            ExecuteReaderProcess
                 (
                     string connectionString
                     , string storeProcedureName
@@ -59,7 +59,7 @@ namespace Microshaoft
                 );
 
         Task
-            ExecuteReaderRowsAsync
+            ExecuteReaderProcessAsync
                 (
                     string connectionString
                     , string storeProcedureName
@@ -83,7 +83,7 @@ namespace Microshaoft
                     , JToken Result
                 )
             >
-                ExecuteAsync
+                ExecuteJsonResultsAsync
                     (
                         string connectionString
                         , string storeProcedureName
@@ -120,4 +120,4 @@ namespace Microshaoft
         }
     }
 }
-#endif
+//#endif

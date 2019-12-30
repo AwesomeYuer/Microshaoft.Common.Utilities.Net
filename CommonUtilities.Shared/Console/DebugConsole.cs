@@ -56,7 +56,7 @@
         // Exceptions:
         //   T:System.IO.IOException:
         //     An I/O error occurred.
-        [CLSCompliant(false)]
+        //[CLSCompliant(false)]
         public static void WriteIf(Func<bool> onPredicateProcessFunc, ulong value)
         {
             if (!onPredicateProcessFunc())
@@ -403,7 +403,7 @@
             }
             Console.Write(format, arg0, arg1, arg2);
         }
-        [CLSCompliant(false)]
+        //[CLSCompliant(false)]
         public static void Write(Func<bool> onPredicateProcessFunc, string format, object arg0, object arg1, object arg2, object arg3)
         {
             if (!onPredicateProcessFunc())
@@ -499,7 +499,7 @@
         // Exceptions:
         //   T:System.IO.IOException:
         //     An I/O error occurred.
-        [CLSCompliant(false)]
+        //[CLSCompliant(false)]
         public static void WriteLineIf(Func<bool> onPredicateProcessFunc, uint value)
         {
             if (!onPredicateProcessFunc())
@@ -540,7 +540,7 @@
         // Exceptions:
         //   T:System.IO.IOException:
         //     An I/O error occurred.
-        [CLSCompliant(false)]
+        //[CLSCompliant(false)]
         public static void WriteLineIf(Func<bool> onPredicateProcessFunc, ulong value)
         {
             if (!onPredicateProcessFunc())
@@ -832,7 +832,7 @@
             Console.WriteLine(format, arg0, arg1, arg2);
         }
 
-        [CLSCompliant(false)]
+        //[CLSCompliant(false)]
         public static void WriteLineIf(Func<bool> onPredicateProcessFunc, string format, object arg0, object arg1, object arg2, object arg3)
         {
             if (!onPredicateProcessFunc())

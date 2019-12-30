@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <AssemblyName>Microshaoft.MsSQL.SPE.Plugin.2.x</AssemblyName>
   </PropertyGroup>
 
   

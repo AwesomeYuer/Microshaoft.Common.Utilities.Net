@@ -19,9 +19,5 @@
     <Compile Include="$(MSBuildThisFileDirectory)Executors\StoreProceduresExecutor.04.Oracle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Executors\StoreProceduresExecutor.05.Sqlite.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Executors\StoreProceduresExecutor.06.DB2.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SqlDbParameter\DbParameterHelper.02.mysql.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SqlDbParameter\DbParameterHelper.03.npgsql.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SqlDbParameter\DbParameterHelper.04.oracle.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SqlDbParameter\DbParameterHelper.05.db2.cs" />
   </ItemGroup>
 </Project>
