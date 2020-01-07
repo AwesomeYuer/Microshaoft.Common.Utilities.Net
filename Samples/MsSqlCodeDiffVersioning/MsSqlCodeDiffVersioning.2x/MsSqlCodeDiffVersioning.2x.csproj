@@ -1,6 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
-  
   
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
@@ -12,8 +10,6 @@
     <DockerfileContext>..\..</DockerfileContext>
   </PropertyGroup>
 
-  
-  
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>TRACE;DEBUG;NETCOREAPP;NETCOREAPP2_X</DefineConstants>
   </PropertyGroup>
@@ -57,7 +53,7 @@
     <PackageReference Include="MySql.Data" Version="8.0.18" />
     <PackageReference Include="Npgsql" Version="4.1.2" />
     <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="2.19.60" />
-    <PackageReference Include="SecurityCodeScan.VS2017" Version="3.3.0">
+    <PackageReference Include="SecurityCodeScan.VS2017" Version="3.4.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
