@@ -4,6 +4,8 @@
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Hosting;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Primitives;
     using Newtonsoft.Json.Linq;
@@ -79,7 +81,13 @@
                                 .Build()
                                 .Run();
         }
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args)
+        public static
+#if NETCOREAPP3_X
+                IHostBuilder
+#elif NETCOREAPP2_X
+                IWebHostBuilder
+#endif
+                        CreateWebHostBuilder(string[] args)
         {
             var executingDirectory = Path
                                         .GetDirectoryName
@@ -104,16 +112,34 @@
                                 .FirstOrDefault();
 
             return
+#if NETCOREAPP2_X
                 WebHost
+#elif NETCOREAPP3_X
+                Host
+#endif
                     .CreateDefaultBuilder(args)
+
+#if NETCOREAPP2_X
                     .UseConfiguration(hostingsConfiguration)
+#elif NETCOREAPP3_X
+                    .ConfigureWebHostDefaults
+                        (
+                            (webHostBuilder) =>
+                            {
+                                webHostBuilder
+                                        .UseStartup<Startup>();
+                                webHostBuilder
+                                        .UseWebRoot(wwwroot);
+                            }
+                        )
+#endif
                     .ConfigureLogging
                         (
-                            builder =>
+                            (hostBuilderContext, loggingBuilder) =>
                             {
-                                builder
-                                    .SetMinimumLevel(LogLevel.Error);
-                                builder
+                                loggingBuilder
+                                        .SetMinimumLevel(LogLevel.Error);
+                                loggingBuilder
                                     .AddConsole();
                             }
                         )
@@ -232,12 +258,15 @@
                                             );
                             }
                         )
+#if NETCOREAPP2_X
                     //.UseUrls("http://+:5000", "https://+:5001")
                     .UseWebRoot
                         (
                             wwwroot
                         )
-                    .UseStartup<Startup>();
+                    .UseStartup<Startup>()
+#endif
+                    ;
         }
         private static IEnumerable<string> GetExistsPaths(string configurationJsonFile, string sectionName)
         {
