@@ -463,11 +463,12 @@
                         (
                             (middleware) =>
                             {
+                                var middlewareTypeName = middleware.GetType().Name;
                                 middleware
                                     .OnFilterProcessFunc
                                         = (stopwatchesPool, httpContext, @event) =>
                                         {
-                                            Console.WriteLine($"event: {@event}");
+                                            Console.WriteLine($"event: {@event} @ {middlewareTypeName}");
                                             var httpRequestFeature = httpContext.Features.Get<IHttpRequestFeature>();
                                             var url = httpRequestFeature.RawTarget;
                                             httpRequestFeature = null;
@@ -492,7 +493,7 @@
                                     .OnInvokingProcessAsync
                                         = async (stopwatchesPool, httpContext, @event) =>
                                         {
-                                            Console.WriteLine($"event: {@event}");
+                                            Console.WriteLine($"event: {@event} @ {middlewareTypeName}");
                                             var httpRequestFeature = httpContext
                                                                             .Features
                                                                             .Get<IHttpRequestFeature>();
@@ -507,7 +508,7 @@
                                             {
                                                 var response = httpContext.Response;
                                                 var errorStatusCode = 500;
-                                                var errorMessage = $"error in Middleware: [{middleware.GetType().Name}]";
+                                                var errorMessage = $"error in Middleware: [{middlewareTypeName}]";
                                                 response.StatusCode = errorStatusCode;
                                                 var jsonResult =
                                                         new
@@ -535,7 +536,7 @@
                                     .OnResponseStartingProcess
                                         = (stopwatchesPool, httpContext, @event) =>
                                         {
-                                            Console.WriteLine($"event: {@event}");
+                                            Console.WriteLine($"event: {@event} @ {middlewareTypeName}");
                                             var r = httpContext
                                                         .Items
                                                         .Remove
@@ -567,7 +568,7 @@
                                                     .Headers["X-Request-Response-Timing-In-Milliseconds"]
                                                                 = valueTuple
                                                                         .Item2
-                                                                        .GetNowElapsedTime()
+                                                                        .GetElapsedTimeToNow()
                                                                         .TotalMilliseconds
                                                                         .ToString();
                                             }
@@ -576,13 +577,13 @@
                                     .OnAfterInvokedNextProcess
                                         = (stopwatchesPool, httpContext, @event) =>
                                         {
-                                            Console.WriteLine($"event: {@event}");
+                                            Console.WriteLine($"event: {@event} @ {middlewareTypeName}");
                                         };
                                 middleware
                                     .OnResponseCompletedProcess
                                         = (stopwatchesPool, httpContext, @event) =>
                                         {
-                                            Console.WriteLine($"event: {@event}");
+                                            Console.WriteLine($"event: {@event} @ {middlewareTypeName}");
                                         };
                             }
                         );
@@ -594,6 +595,7 @@
                         (
                             (middleware) =>
                             {
+                                var middlewareTypeName = middleware.GetType().Name;
                                 middleware
                                     .OnCaughtExceptionProcessFunc
                                         = (httpContext, injector, exception) =>
@@ -626,6 +628,7 @@
                                                                 log;
                                                         }
                                                     );
+                                            Console.WriteLine($"event: exception @ {middlewareTypeName}");
                                             return r;
                                         };
                             }

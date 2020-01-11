@@ -21,7 +21,7 @@
         {
             return Math.Round(target.TotalMilliseconds / 1000, 7, MidpointRounding.ToEven);
         }
-        public static TimeSpan GetNowElapsedTime(this long target)
+        public static TimeSpan GetElapsedTimeToNow(this long target)
         {
             var endTimestamp = Stopwatch.GetTimestamp();
             return
@@ -30,7 +30,7 @@
         public static TimeSpan GetElapsedTime(this long target, long endTimestamp)
         {
             var timestampDelta = endTimestamp - target;
-            var ticks = (long)(_timestampToTicks * timestampDelta);
+            var ticks = (long) (_timestampToTicks * timestampDelta);
             return new TimeSpan(ticks);
         }
     }

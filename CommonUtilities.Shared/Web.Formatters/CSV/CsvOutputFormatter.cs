@@ -23,7 +23,7 @@ namespace Microshaoft.Web
     {
 
         private readonly Regex _digitsRegex = new Regex(@"^\d+$");
-        private readonly byte[] _utf8HeaderBytes = new byte[]
+        private readonly byte[] _utf8BomBytes = new byte[]
                                                         {
                                                             0xEF
                                                             , 0xBB
@@ -366,7 +366,7 @@ namespace Microshaoft.Web
                             .Body
                             .WriteAsync
                                 (
-                                    _utf8HeaderBytes
+                                    _utf8BomBytes
                                 );
                 }
                 if (csvFormatterOptions.IncludeExcelDelimiterHeader)
