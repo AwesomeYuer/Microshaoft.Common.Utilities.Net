@@ -688,7 +688,7 @@ namespace Microshaoft.Web
             result["EndTime"] = DateTime.Now;
             result["DurationInMilliseconds"]
                 = beginTimeStamp
-                        .GetNowElapsedTime()
+                        .GetElapsedTimeToNow()
                         .TotalMilliseconds;
         }
 
