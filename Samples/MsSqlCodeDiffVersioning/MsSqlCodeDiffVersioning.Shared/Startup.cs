@@ -174,17 +174,26 @@
                                 ["udt_vcidt"] = ja
                             };
                             var sqlConnection = new SqlConnection("Initial Catalog=test;Data Source=localhost;User=sa;Password=!@#123QWE");
-                            //executor
-                            //    .Execute
-                            //        (
-                            //            sqlConnection
-                            //            , "zsp_Test"
-                            //            , jo
-                            //            , (reader, fieldType, fieldName, rowIndex, columnIndex) =>
-                            //            {
-                            //                return null;
-                            //            }
-                            //        );
+                            executor
+                                .ExecuteJsonResults
+                                    (
+                                        sqlConnection
+                                        , "zsp_Test"
+                                        , jo
+                                        ,
+                                            (
+                                                resultSetIndex
+                                                , reader
+                                                , rowIndex
+                                                , columnIndex
+                                                , fieldType
+                                                , fieldName
+                                            )
+                                        =>
+                                        {
+                                            return (true, null);
+                                        }
+                                    );
                         }
                         , null
                         , 1000

@@ -11,15 +11,16 @@ namespace Microshaoft
             var type = typeof(T);
             return GenerateEmptyDataTable(type, needDefinitionAttributeProcess);
         }
+
         public static DataTable GenerateEmptyDataTable
                 (
-                    Type type
+                    this Type target
                     , bool needDefinitionAttributeProcess = false
                 )
         {
             MemberAdditionalDefinitionAttribute attribute = null;
             var members = TypeHelper
-                                .GetModelMembers(type)
+                                .GetModelMembers(target)
                                 .OrderBy
                                     (
                                         (x) =>
@@ -147,12 +148,13 @@ namespace Microshaoft
                     processRowFunc != null
                 )
             {
-                DataRowCollection drc = target.Rows;
+                var dataRowCollection = target.Rows;
                 if
                     (
                         (
                             processRowDataColumnFunc != null
-                            || processRowFunc != null
+                            ||
+                            processRowFunc != null
                         )
                         && dataColumnCollection == null
                     )
@@ -161,14 +163,14 @@ namespace Microshaoft
                 }
                 i = 0;
                 var j = 0;
-                foreach (DataRow dataRow in drc)
+                foreach (DataRow dataRow in dataRowCollection)
                 {
                     i++;
                     foreach (DataColumn dc in dataColumnCollection)
                     {
                         if (processRowDataColumnFunc != null)
                         {
-                            j++;
+                            j ++;
                             r = processRowDataColumnFunc
                                     (
                                         dc

@@ -173,6 +173,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Type\TypeHelper.01.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Type\TypeHelper.02.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Type\TypeHelper.03.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ValueTuple\ValueTupleHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorkFlow\CommonJsonIoActivities\AbstractDynamicJsonIoActivity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorkFlow\CommonJsonIoActivities\AbstractJTokenIoActivity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorkFlow\WorkFlowHelper.cs" />

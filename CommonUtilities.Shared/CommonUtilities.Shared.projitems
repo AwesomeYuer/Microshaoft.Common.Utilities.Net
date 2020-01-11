@@ -240,6 +240,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Type\TypeHelper.01.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Type\TypeHelper.03.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UAC\UacHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ValueTuple\ValueTupleHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Cors\WildCardCorsService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Filter.ConcurrencyLimiter\ConcurrencyLimiterFilter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Filter.ConcurrencyLimiter\IQueuePolicy.cs" />
