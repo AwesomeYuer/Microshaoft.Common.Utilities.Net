@@ -15,6 +15,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
+    using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using Microsoft.Net.Http.Headers;
     using Newtonsoft.Json;
@@ -44,7 +45,7 @@
         {
             ConfigurationHelper
                             .Load(Configuration);
-            
+
             services
                 .Configure<CsvFormatterOptions>
                     (
@@ -60,7 +61,7 @@
 #if NETCOREAPP3_X  
                     (option) =>
                     {
-                        option.EnableEndpointRouting = false;                    
+                        option.EnableEndpointRouting = false;
                     }
 #endif
                 )
@@ -113,7 +114,7 @@
                                                                                                                         .CurrentCandidate
                                                                                                                         .Action;
 
-                                                                                var isAsyncExecuting = ((ControllerActionDescriptor) currentCandidateAction)
+                                                                                var isAsyncExecuting = ((ControllerActionDescriptor)currentCandidateAction)
                                                                                                                     .MethodInfo
                                                                                                                     .IsAsync();
                                                                                 var routeName = routeContext
@@ -190,9 +191,9 @@
                                                 , fieldName
                                             )
                                         =>
-                                        {
-                                            return (true, null);
-                                        }
+                                            {
+                                                return (true, null);
+                                            }
                                     );
                         }
                         , null
@@ -205,7 +206,7 @@
                     (
                         processor
                     );
-#endregion
+            #endregion
 
             services
                 .AddSingleton
@@ -228,7 +229,7 @@
                         (
                                Configuration
                         );
-            
+
 
             var loggerFactory = LoggerFactory
                                         .Create
@@ -291,7 +292,7 @@
                                     );
                         }
                   );
-#endregion
+            #endregion
 
             services
                 .AddResponseCaching();
@@ -481,22 +482,23 @@
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+
         public void Configure
                         (
                             IApplicationBuilder app
-                            , IHostingEnvironment env
+                            , IWebHostEnvironment env
                             , IConfiguration configuration
                             , ILoggerFactory loggerFactory
-                            //, ILogger logger
+                        //, ILogger logger
                         )
         {
-          
+
             string timingKey = "beginTimestamp";
-            
+            timingKey = string.Empty;
             app
                 .UseRequestResponseGuard
                     <
-                        
+
                             QueuedObjectsPool<Stopwatch>
                             , IConfiguration
                             , ILoggerFactory
@@ -511,6 +513,11 @@
                                     .OnFilterProcessFunc
                                         = (httpContext, @event, stopwatchesPool, xConfiguration, xLoggerFactory, xLogger) =>
                                         {
+                                            if (timingKey.IsNullOrEmptyOrWhiteSpace())
+                                            {
+                                                return false;
+                                            }
+
                                             xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
                                             var httpRequestFeature = httpContext.Features.Get<IHttpRequestFeature>();
                                             var url = httpRequestFeature.RawTarget;
@@ -525,8 +532,8 @@
                                                                 timingKey
                                                                 ,
                                                                     (
-                                                                        BeginTime : DateTime.Now 
-                                                                        , BeginTimestamp : Stopwatch.GetTimestamp()
+                                                                        BeginTime: DateTime.Now
+                                                                        , BeginTimestamp: Stopwatch.GetTimestamp()
                                                                     )
                                                             );
                                             }
@@ -557,7 +564,8 @@
                                                         new
                                                         {
                                                             StatusCode = errorStatusCode
-                                                            , Message = errorMessage
+                                                            ,
+                                                            Message = errorMessage
                                                         };
                                                 var json = JsonConvert.SerializeObject(jsonResult);
                                                 await
@@ -589,14 +597,8 @@
                                                             );
                                             if (r)
                                             {
-                                                var valueTuple = 
-                                                            (
-                                                                (ValueTuple<DateTime, long>)
-                                                                //(DateTime BeginTime, long BeginTimestamp)
-                                                                    removed
-                                                            );
+                                                (DateTime beginTime, long beginTimeStamp) = (ValueTuple<DateTime, long>)removed;
                                                 removed = null;
-                                                var beginTime = valueTuple.Item1;
                                                 httpContext
                                                     .Response
                                                     .Headers["X-Request-Receive-BeginTime"]
@@ -605,12 +607,10 @@
                                                     .Response
                                                     .Headers["X-Response-Send-BeginTime"]
                                                                 = DateTime.Now.ToString(_dateTimeFormat);
-                                                //var duration = valueTuple.Item2.GetNowElapsedTime();
                                                 httpContext
                                                     .Response
                                                     .Headers["X-Request-Response-Timing-In-Milliseconds"]
-                                                                = valueTuple
-                                                                        .Item2
+                                                                = beginTimeStamp
                                                                         .GetElapsedTimeToNow()
                                                                         .TotalMilliseconds
                                                                         .ToString();
@@ -642,10 +642,10 @@
                                 var middlewareTypeName = middleware.GetType().Name;
                                 middleware
                                     .OnCaughtExceptionProcessFunc
-                                        = (httpContext, xConfiguration, xLoggerFactory, xLogger, injector, exception) =>
+                                        = (exception, httpContext, xConfiguration, xLoggerFactory, xLogger, injector) =>
                                         {
                                             xLogger.LogError($"event: exception @ {middlewareTypeName}");
-                                            var r = 
+                                            var r =
                                                     (
                                                         false
                                                         , true
@@ -669,12 +669,12 @@
                                                                         , "yxy ++++++" + exception.Message
                                                                         , null
                                                                     );
-                                                             return
-                                                                log;
+                                                            return
+                                                               log;
                                                         }
                                                     );
                                             //Console.WriteLine($"event: exception @ {middlewareTypeName}");
-                                            
+
                                             return r;
                                         };
                             }
@@ -785,6 +785,6 @@
                 );
 #endif
             //app.UseHttpsRedirection();
-        }   
+        }
     }
 }

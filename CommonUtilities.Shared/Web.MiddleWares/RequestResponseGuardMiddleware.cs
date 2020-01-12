@@ -7,7 +7,7 @@ namespace Microshaoft.Web
     using System;
     using System.Threading.Tasks;
     public class RequestResponseGuardMiddleware<TInjector1, TInjector2, TInjector3, TInjector4>
-            //竟然没有接口?
+    //竟然没有接口?
     {
         private readonly RequestDelegate _next;
         private readonly TInjector1 _injector1;
@@ -47,9 +47,9 @@ namespace Microshaoft.Web
             Func<HttpContext, string, TInjector1, TInjector2, TInjector3, TInjector4, Task<bool>>
                                         OnInvokingProcessAsync;
         public
-            Action< HttpContext, string, TInjector1, TInjector2, TInjector3, TInjector4>
+            Action<HttpContext, string, TInjector1, TInjector2, TInjector3, TInjector4>
                                         OnResponseStartingProcess;
-        
+
         public
             Action<HttpContext, string, TInjector1, TInjector2, TInjector3, TInjector4>
                                         OnAfterInvokedNextProcess;
@@ -134,7 +134,7 @@ namespace Microshaoft.Web
                                                 , _injector3
                                                 , _injector4
                                             ).Result;
-                    } 
+                    }
                 }
             }
             if (needNext)
