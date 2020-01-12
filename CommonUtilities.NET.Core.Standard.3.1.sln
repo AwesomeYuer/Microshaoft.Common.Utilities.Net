@@ -230,6 +230,10 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Microshaoft.Json.Shared", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microshaoft.Json.NETStandard", "CommonUtilities\Microshaoft.Json.NETStandard\Microshaoft.Json.NETStandard.csproj", "{9219AF8E-BC0A-46D4-B8B3-A12070F5233F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "002.JsonStoreProcedureExecutor", "002.JsonStoreProcedureExecutor", "{8AFFAAF1-3B18-4A65-8CF2-E329F23BB02C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp", "Samples\StoreProcedureExecutor.ConsoleApp\ConsoleApp.csproj", "{0148A76F-F8C0-459A-81FC-0B8042103A5C}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		StoreProcedureWebApiExecutorsPlugins\MsSQL.Plugin\MsSQL.Plugin.Shared\MsSQL.StoreProcedureExecutor.Plugin.Shared.projitems*{0579c429-5e45-494c-b0f0-2b46dc1c8a77}*SharedItemsImports = 13
@@ -677,6 +681,22 @@ Global
 		{9219AF8E-BC0A-46D4-B8B3-A12070F5233F}.Release|x64.Build.0 = Release|Any CPU
 		{9219AF8E-BC0A-46D4-B8B3-A12070F5233F}.Release|x86.ActiveCfg = Release|Any CPU
 		{9219AF8E-BC0A-46D4-B8B3-A12070F5233F}.Release|x86.Build.0 = Release|Any CPU
+		{0148A76F-F8C0-459A-81FC-0B8042103A5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0148A76F-F8C0-459A-81FC-0B8042103A5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0148A76F-F8C0-459A-81FC-0B8042103A5C}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{0148A76F-F8C0-459A-81FC-0B8042103A5C}.Debug|ARM.Build.0 = Debug|Any CPU
+		{0148A76F-F8C0-459A-81FC-0B8042103A5C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0148A76F-F8C0-459A-81FC-0B8042103A5C}.Debug|x64.Build.0 = Debug|Any CPU
+		{0148A76F-F8C0-459A-81FC-0B8042103A5C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0148A76F-F8C0-459A-81FC-0B8042103A5C}.Debug|x86.Build.0 = Debug|Any CPU
+		{0148A76F-F8C0-459A-81FC-0B8042103A5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0148A76F-F8C0-459A-81FC-0B8042103A5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0148A76F-F8C0-459A-81FC-0B8042103A5C}.Release|ARM.ActiveCfg = Release|Any CPU
+		{0148A76F-F8C0-459A-81FC-0B8042103A5C}.Release|ARM.Build.0 = Release|Any CPU
+		{0148A76F-F8C0-459A-81FC-0B8042103A5C}.Release|x64.ActiveCfg = Release|Any CPU
+		{0148A76F-F8C0-459A-81FC-0B8042103A5C}.Release|x64.Build.0 = Release|Any CPU
+		{0148A76F-F8C0-459A-81FC-0B8042103A5C}.Release|x86.ActiveCfg = Release|Any CPU
+		{0148A76F-F8C0-459A-81FC-0B8042103A5C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -781,6 +801,8 @@ Global
 		{9B3A1AF4-D88B-4D05-8093-B63C9AA80DCE} = {B87E2CCA-338B-475A-B22D-E19E70E36224}
 		{378A4DC6-0E35-49BA-B242-9A9B01D6CE65} = {9B3A1AF4-D88B-4D05-8093-B63C9AA80DCE}
 		{9219AF8E-BC0A-46D4-B8B3-A12070F5233F} = {9B3A1AF4-D88B-4D05-8093-B63C9AA80DCE}
+		{8AFFAAF1-3B18-4A65-8CF2-E329F23BB02C} = {4D0D143C-B43C-41F0-89AF-EDA121770B37}
+		{0148A76F-F8C0-459A-81FC-0B8042103A5C} = {8AFFAAF1-3B18-4A65-8CF2-E329F23BB02C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ABDE4EA1-B6A3-41C1-AC23-2CA7A04C03AB}

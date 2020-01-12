@@ -15,7 +15,7 @@
                 )
         {
             return
-                GenerateEmptyDataTableByValueTupleType
+                GenerateEmptyDataTable
                         (
                             target.GetType()
                             , dataColumnsNames
@@ -29,7 +29,7 @@
             )
         {
             return
-                GenerateEmptyDataTableByValueTupleType
+                GenerateEmptyDataTable
                         (
                             target.GetType()
                             , dataColumnsNames
@@ -43,7 +43,7 @@
                 )
         {
             return
-                GenerateEmptyDataTableByValueTupleType
+                GenerateEmptyDataTable
                         (
                             target.GetType()
                             , dataColumnsNames
@@ -57,7 +57,7 @@
                 )
         {
             return
-                GenerateEmptyDataTableByValueTupleType
+                GenerateEmptyDataTable
                         (
                             target.GetType()
                             , dataColumnsNames
@@ -71,7 +71,7 @@
                 )
         {
             return
-                GenerateEmptyDataTableByValueTupleType
+                GenerateEmptyDataTable
                         (
                             target.GetType()
                             , dataColumnsNames
@@ -85,7 +85,7 @@
                 )
         {
             return
-                GenerateEmptyDataTableByValueTupleType
+                GenerateEmptyDataTable
                         (
                             target.GetType()
                             , dataColumnsNames
@@ -99,14 +99,14 @@
                 )
         {
             return
-                GenerateEmptyDataTableByValueTupleType
+                GenerateEmptyDataTable
                         (
                             target.GetType()
                             , dataColumnsNames
                         );
         }
 
-        public static DataTable GenerateEmptyDataTableByValueTupleType
+        public static DataTable GenerateEmptyDataTable
                 (
                     this Type valueTupleType
                     , params string[] dataColumnsNames
@@ -228,6 +228,231 @@
             }
             return runtimeFields;
         }
+
+        public static DataRow Add
+                        <
+                              T1
+                            //, T2
+                            //, T3
+                            //, T4
+                            //, T5
+                            //, T6
+                            //, T7
+                        >
+                    (
+                        this DataRowCollection target
+                        , ValueTuple
+                                    <
+                                          T1
+                                        //, T2
+                                        //, T3
+                                        //, T4
+                                        //, T5
+                                        //, T6
+                                        //, T7
+                                    >
+                                        rowData
+                    )
+        {
+            return
+                target
+                    .Add
+                        (
+                              rowData.Item1
+                            //, rowData.Item2
+                            //, rowData.Item3
+                            //, rowData.Item4
+                            //, rowData.Item5
+                            //, rowData.Item6
+                        );
+        }
+        public static DataRow Add
+                                <
+                                      T1
+                                    , T2
+                                    //, T3
+                                    //, T4
+                                    //, T5
+                                    //, T6
+                                    //, T7
+                                >
+                            (
+                                this DataRowCollection target
+                                , ValueTuple
+                                            <
+                                                  T1
+                                                , T2
+                                                //, T3
+                                                //, T4
+                                                //, T5
+                                                //, T6
+                                                //, T7
+                                            >
+                                                rowData
+                            )
+        {
+            return
+                target
+                    .Add
+                        (
+                              rowData.Item1
+                            , rowData.Item2
+                            //, rowData.Item3
+                            //, rowData.Item4
+                            //, rowData.Item5
+                            //, rowData.Item6
+                        );
+        }
+
+        public static DataRow Add
+                        <
+                              T1
+                            , T2
+                            , T3
+                            //, T4
+                            //, T5
+                            //, T6
+                            //, T7
+                        >
+                    (
+                        this DataRowCollection target
+                        , ValueTuple
+                                    <
+                                          T1
+                                        , T2
+                                        , T3
+                                        //, T4
+                                        //, T5
+                                        //, T6
+                                        //, T7
+                                    >
+                                        rowData
+                    )
+        {
+            return
+                target
+                    .Add
+                        (
+                              rowData.Item1
+                            , rowData.Item2
+                            , rowData.Item3
+                            //, rowData.Item4
+                            //, rowData.Item5
+                            //, rowData.Item6
+                        );
+        }
+
+        public static DataRow Add
+                <
+                      T1
+                    , T2
+                    , T3
+                    , T4
+                    //, T5
+                    //, T6
+                    //, T7
+                >
+            (
+                this DataRowCollection target
+                , ValueTuple
+                            <
+                                  T1
+                                , T2
+                                , T3
+                                , T4
+                                //, T5
+                                //, T6
+                                //, T7
+                            >
+                                rowData
+            )
+        {
+            return
+                target
+                    .Add
+                        (
+                              rowData.Item1
+                            , rowData.Item2
+                            , rowData.Item3
+                            , rowData.Item4
+                            //, rowData.Item5
+                            //, rowData.Item6
+                        );
+        }
+        public static DataRow Add
+                <
+                      T1
+                    , T2
+                    , T3
+                    , T4
+                    , T5
+                    //, T6
+                    //, T7
+                >
+            (
+                this DataRowCollection target
+                , ValueTuple
+                            <
+                                  T1
+                                , T2
+                                , T3
+                                , T4
+                                , T5
+                                //, T6
+                                //, T7
+                            >
+                                rowData
+            )
+        {
+            return
+                target
+                    .Add
+                        (
+                              rowData.Item1
+                            , rowData.Item2
+                            , rowData.Item3
+                            , rowData.Item4
+                            , rowData.Item5
+                            //, rowData.Item6
+                        );
+        }
+        public static DataRow Add
+                <
+                      T1
+                    , T2
+                    , T3
+                    , T4
+                    , T5
+                    , T6
+                    //, T7
+                >
+            (
+                this DataRowCollection target
+                , ValueTuple
+                            <
+                                  T1
+                                , T2
+                                , T3
+                                , T4
+                                , T5
+                                , T6
+                                //, T7
+                            >
+                                rowData
+            )
+        {
+            return
+                target
+                    .Add
+                        (
+                              rowData.Item1
+                            , rowData.Item2
+                            , rowData.Item3
+                            , rowData.Item4
+                            , rowData.Item5
+                            , rowData.Item6
+                        );
+        }
     }
 }
 
@@ -248,9 +473,14 @@ namespace ConsoleApp57
 
            (string F1, int F2, DateTime F3)
             x = ("asdsad", 100, DateTime.Now);
+
+            var vt1 = (name: "asdsa", age: 13, Birthday: DateTime.Now);
+            var vt2 = (name1: "asdsa", age1: 13, Birthday1: DateTime.Now);
             DataTable dataTable = x.GenerateEmptyDataTable(nameof(x.F1), nameof(x.F2), "F222");
             //var dataTable = 
             dataTable.Rows.Add(x.F1, x.F2, x.F3);
+            dataTable.Rows.Add(vt1);
+            dataTable.Rows.Add(vt2);
             //var F11 = "asdasd";
             //var F22 = 100;
             //var F33 = DateTime.Now;
