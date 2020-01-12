@@ -13,7 +13,7 @@ Contact:
   
   Microshaoft@qq.com
 
-|	DevOps Platform 	|	CI/CD Status	|
+|	DevOps Platform 	|	CI/CD Status (Build Only)	|
 | ----:	| ----	|
 |	Azure Pipelines:	| [![Build Status](https://microshaoft.visualstudio.com/Microshaoft.Common.Utilities.Net.4x-GitHub/_apis/build/status/Microshaoft.Common.Utilities.Net.4x-GitHub-ASP.NET%20Core-CI?branchName=master)](https://microshaoft.visualstudio.com/Microshaoft.Common.Utilities.Net.4x-GitHub/_build/latest?definitionId=3?branchName=master)	|
 |	GitHub Actions:		| [![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FMicroshaoft%2FMicroshaoft.Common.Utilities.Net.4x%2Fbadge%3Fref%3Dmaster&style=flat)](https://actions-badge.atrox.dev/Microshaoft/Microshaoft.Common.Utilities.Net.4x/goto?ref=master)												|
