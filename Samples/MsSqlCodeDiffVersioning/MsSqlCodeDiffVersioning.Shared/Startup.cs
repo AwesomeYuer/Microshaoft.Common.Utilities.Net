@@ -217,14 +217,40 @@
 
             services
                 .AddSingleton
-                    //<
-                    //     QueuedObjectsPool<Stopwatch>
-                    //>
+                    <
+                       QueuedObjectsPool<Stopwatch>
+                    >
                     (
-                        new QueuedObjectsPool<Stopwatch>(1024, true)
+                            new QueuedObjectsPool<Stopwatch>(1024, true)
                     );
+            services
+                    .AddSingleton
+                        (
+                               Configuration
+                        );
+            
 
-#region 跨域策略
+            var loggerFactory = LoggerFactory
+                                        .Create
+                                            (
+                                                builder =>
+                                                {
+                                                    builder
+                                                    //    .AddFilter("Microsoft", LogLevel.Warning)
+                                                    //    .AddFilter("System", LogLevel.Warning)
+                                                    //    .AddFilter("LoggingConsoleApp.Program", LogLevel.Debug)
+                                                        .AddConsole()
+                                                    //    .AddEventLog()
+                                                        ;
+                                                }
+                                            );
+            services.AddSingleton(loggerFactory);
+
+            ILogger logger = loggerFactory.CreateLogger("Microshaoft.Logger");
+            services.AddSingleton(logger);
+            services.AddSingleton<string?>("Inject String");
+
+            #region 跨域策略
             services
                     .Add
                         (
@@ -461,23 +487,31 @@
                             , IHostingEnvironment env
                             , IConfiguration configuration
                             , ILoggerFactory loggerFactory
+                            //, ILogger logger
                         )
         {
-            var logger = loggerFactory.CreateLogger("Microshaoft.Logger");
+          
             string timingKey = "beginTimestamp";
             
             app
                 .UseRequestResponseGuard
-                    <QueuedObjectsPool<Stopwatch>>
+                    <
+                        
+                            QueuedObjectsPool<Stopwatch>
+                            , IConfiguration
+                            , ILoggerFactory
+                            , ILogger
+
+                    >
                         (
                             (middleware) =>
                             {
                                 var middlewareTypeName = middleware.GetType().Name;
                                 middleware
                                     .OnFilterProcessFunc
-                                        = (stopwatchesPool, httpContext, @event) =>
+                                        = (httpContext, @event, stopwatchesPool, xConfiguration, xLoggerFactory, xLogger) =>
                                         {
-                                            Console.WriteLine($"event: {@event} @ {middlewareTypeName}");
+                                            xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
                                             var httpRequestFeature = httpContext.Features.Get<IHttpRequestFeature>();
                                             var url = httpRequestFeature.RawTarget;
                                             httpRequestFeature = null;
@@ -500,9 +534,9 @@
                                         };
                                 middleware
                                     .OnInvokingProcessAsync
-                                        = async (stopwatchesPool, httpContext, @event) =>
+                                        = async (httpContext, @event, stopwatchesPool, xConfiguration, xLoggerFactory, xLogger) =>
                                         {
-                                            Console.WriteLine($"event: {@event} @ {middlewareTypeName}");
+                                            xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
                                             var httpRequestFeature = httpContext
                                                                             .Features
                                                                             .Get<IHttpRequestFeature>();
@@ -543,9 +577,9 @@
                                         };
                                 middleware
                                     .OnResponseStartingProcess
-                                        = (stopwatchesPool, httpContext, @event) =>
+                                        = (httpContext, @event, stopwatchesPool, xConfiguration, xLoggerFactory, xLogger) =>
                                         {
-                                            Console.WriteLine($"event: {@event} @ {middlewareTypeName}");
+                                            xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
                                             var r = httpContext
                                                         .Items
                                                         .Remove
@@ -584,15 +618,16 @@
                                         };
                                 middleware
                                     .OnAfterInvokedNextProcess
-                                        = (stopwatchesPool, httpContext, @event) =>
+                                        = (httpContext, @event, stopwatchesPool, xConfiguration, xLoggerFactory, xLogger) =>
                                         {
-                                            Console.WriteLine($"event: {@event} @ {middlewareTypeName}");
+                                            //Console.WriteLine($"event: {@event} @ {middlewareTypeName}");
+                                            xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
                                         };
                                 middleware
                                     .OnResponseCompletedProcess
-                                        = (stopwatchesPool, httpContext, @event) =>
+                                        = (httpContext, @event, stopwatchesPool, xConfiguration, xLoggerFactory, xLogger) =>
                                         {
-                                            Console.WriteLine($"event: {@event} @ {middlewareTypeName}");
+                                            xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
                                         };
                             }
                         );
@@ -600,15 +635,16 @@
             if (env.IsDevelopment())
             {
                 app
-                    .UseExceptionGuard<IConfiguration>
+                    .UseExceptionGuard<string?>
                         (
                             (middleware) =>
                             {
                                 var middlewareTypeName = middleware.GetType().Name;
                                 middleware
                                     .OnCaughtExceptionProcessFunc
-                                        = (httpContext, injector, exception) =>
+                                        = (httpContext, xConfiguration, xLoggerFactory, xLogger, injector, exception) =>
                                         {
+                                            xLogger.LogError($"event: exception @ {middlewareTypeName}");
                                             var r = 
                                                     (
                                                         false
@@ -616,7 +652,7 @@
                                                         , HttpStatusCode
                                                                 .InternalServerError
                                                     );
-                                            logger
+                                            xLogger
                                                 .LogOnDemand
                                                     (
                                                         LogLevel.Error
@@ -637,7 +673,8 @@
                                                                 log;
                                                         }
                                                     );
-                                            Console.WriteLine($"event: exception @ {middlewareTypeName}");
+                                            //Console.WriteLine($"event: exception @ {middlewareTypeName}");
+                                            
                                             return r;
                                         };
                             }

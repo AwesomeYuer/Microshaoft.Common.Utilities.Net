@@ -3,6 +3,8 @@ namespace Microshaoft.Web
 {
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
     using System;
     using System.Net;
@@ -16,6 +18,9 @@ namespace Microshaoft.Web
         public Func
                     <
                         HttpContext
+                        , IConfiguration
+                        , ILoggerFactory
+                        , ILogger
                         , TInjector
                         , Exception
                         , 
@@ -30,6 +35,9 @@ namespace Microshaoft.Web
             Action
                 <
                     HttpContext
+                    , IConfiguration
+                    , ILoggerFactory
+                    , ILogger
                     , TInjector
                     , bool
                     , Exception
@@ -53,16 +61,28 @@ namespace Microshaoft.Web
                                     .Invoke(this);
         }
 
+        public readonly IConfiguration Configuration;
+        public readonly ILoggerFactory LoggerFactory;
+        public readonly ILogger Logger;
+
         public ExceptionGuardMiddleware
             (
                 RequestDelegate next
+                , IConfiguration configuration
+                , ILoggerFactory loggerFactory
+                , ILogger logger
                 , TInjector injector
                 , Action
-                    <ExceptionGuardMiddleware<TInjector>>
-                        onInitializeCallbackProcesses = null
+                    <
+                        ExceptionGuardMiddleware<TInjector>
+                    >
+                        onInitializeCallbackProcesses = default
             ) : this(next, onInitializeCallbackProcesses)
         {
             _injector = injector;
+            Configuration = configuration;
+            LoggerFactory = loggerFactory;
+            Logger = logger;
         }
         
         //必须是如下方法(竟然不用接口约束产生编译期错误),否则运行时错误
@@ -94,6 +114,9 @@ namespace Microshaoft.Web
                     r = OnCaughtExceptionProcessFunc
                                 (
                                     context
+                                    , Configuration
+                                    , LoggerFactory
+                                    , Logger
                                     , _injector
                                     , exception
                                 );
@@ -128,6 +151,9 @@ namespace Microshaoft.Web
                                     .Invoke
                                         (
                                             context
+                                            , Configuration
+                                            , LoggerFactory
+                                            , Logger
                                             , _injector
                                             , caughtException
                                             , exception
@@ -144,7 +170,7 @@ namespace Microshaoft.Web
                         target
                 , Action
                     <ExceptionGuardMiddleware<TInjector>>
-                        onInitializeCallbackProcesses = null
+                        onInitializeCallbackProcesses = default
             )
         {
             return

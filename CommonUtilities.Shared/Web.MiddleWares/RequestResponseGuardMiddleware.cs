@@ -3,43 +3,58 @@ namespace Microshaoft.Web
 {
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.Extensions.Logging;
     using System;
     using System.Threading.Tasks;
-    public class RequestResponseGuardMiddleware<TInjector>
+    public class RequestResponseGuardMiddleware<TInjector1, TInjector2, TInjector3, TInjector4>
             //竟然没有接口?
     {
         private readonly RequestDelegate _next;
-        private readonly TInjector _injector;
+        private readonly TInjector1 _injector1;
+        private readonly TInjector2 _injector2;
+        private readonly TInjector3 _injector3;
+        private readonly TInjector4 _injector4;
+
+
+        //private readonly ILogger _logger;
+
         public RequestResponseGuardMiddleware
                 (
                     RequestDelegate next
-                    , TInjector injector
+                    , TInjector1 injector1 = default
+                    , TInjector2 injector2 = default
+                    , TInjector3 injector3 = default
+                    , TInjector4 injector4 = default
                     , Action
-                        <RequestResponseGuardMiddleware<TInjector>>
-                            onInitializeCallbackProcesses = null
+                        <RequestResponseGuardMiddleware<TInjector1, TInjector2, TInjector3, TInjector4>>
+                            onInitializeCallbackProcesses = default
                 )
         {
             _next = next;
-            _injector = injector;
+            //_logger = logger;
+            _injector1 = injector1;
+            _injector2 = injector2;
+            _injector3 = injector3;
+            _injector4 = injector4;
             onInitializeCallbackProcesses?
                                     .Invoke(this);
         }
 
         public
-            Func<TInjector, HttpContext, string, bool>
+            Func<HttpContext, string, TInjector1, TInjector2, TInjector3, TInjector4, bool>
                                         OnFilterProcessFunc;
         public
-            Func<TInjector, HttpContext, string, Task<bool>>
+            Func<HttpContext, string, TInjector1, TInjector2, TInjector3, TInjector4, Task<bool>>
                                         OnInvokingProcessAsync;
         public
-            Action<TInjector, HttpContext, string>
+            Action< HttpContext, string, TInjector1, TInjector2, TInjector3, TInjector4>
                                         OnResponseStartingProcess;
         
         public
-            Action<TInjector, HttpContext, string>
+            Action<HttpContext, string, TInjector1, TInjector2, TInjector3, TInjector4>
                                         OnAfterInvokedNextProcess;
         public
-            Action<TInjector, HttpContext, string>
+            Action<HttpContext, string, TInjector1, TInjector2, TInjector3, TInjector4>
                                         OnResponseCompletedProcess;
 
         //必须是如下方法(竟然不用接口约束产生编译期错误),否则运行时错误
@@ -51,9 +66,12 @@ namespace Microshaoft.Web
             {
                 filtered = OnFilterProcessFunc
                                     (
-                                        _injector
-                                        , context
+                                        context
                                         , nameof(OnFilterProcessFunc)
+                                        , _injector1
+                                        , _injector2
+                                        , _injector3
+                                        , _injector4
                                     );
                 if (filtered)
                 {
@@ -68,9 +86,12 @@ namespace Microshaoft.Web
                                         OnResponseStartingProcess?
                                                 .Invoke
                                                     (
-                                                        _injector
-                                                        , context
+                                                        context
                                                         , nameof(OnResponseStartingProcess)
+                                                        , _injector1
+                                                        , _injector2
+                                                        , _injector3
+                                                        , _injector4
                                                     );
                                         return
                                                 Task
@@ -89,9 +110,12 @@ namespace Microshaoft.Web
                                         OnResponseCompletedProcess?
                                                 .Invoke
                                                     (
-                                                        _injector
-                                                        , context
+                                                        context
                                                         , nameof(OnResponseCompletedProcess)
+                                                        , _injector1
+                                                        , _injector2
+                                                        , _injector3
+                                                        , _injector4
                                                     );
                                         return
                                             Task
@@ -103,9 +127,12 @@ namespace Microshaoft.Web
                     {
                         needNext = OnInvokingProcessAsync
                                             (
-                                                _injector
-                                                , context
+                                                context
                                                 , nameof(OnInvokingProcessAsync)
+                                                , _injector1
+                                                , _injector2
+                                                , _injector3
+                                                , _injector4
                                             ).Result;
                     } 
                 }
@@ -117,29 +144,33 @@ namespace Microshaoft.Web
                 OnAfterInvokedNextProcess?
                                         .Invoke
                                             (
-                                                _injector
-                                                , context
+                                                context
                                                 , nameof(OnAfterInvokedNextProcess)
+                                                , _injector1
+                                                , _injector2
+                                                , _injector3
+                                                , _injector4
                                             );
             }
         }
     }
     public static partial class RequestResponseGuardMiddlewareApplicationBuilderExtensions
     {
-        public static IApplicationBuilder UseRequestResponseGuard<TInjector>
+        public static IApplicationBuilder UseRequestResponseGuard<TInjector1, TInjector2, TInjector3, TInjector4>
                 (
                     this IApplicationBuilder
                             target
+
                     , Action
-                        <RequestResponseGuardMiddleware<TInjector>>
-                            onInitializeCallbackProcesses = null
+                        <RequestResponseGuardMiddleware<TInjector1, TInjector2, TInjector3, TInjector4>>
+                            onInitializeCallbackProcesses = default
                 )
         {
             return
                 target
                     .UseMiddleware
                         (
-                            typeof(RequestResponseGuardMiddleware<TInjector>)
+                            typeof(RequestResponseGuardMiddleware<TInjector1, TInjector2, TInjector3, TInjector4>)
                             , onInitializeCallbackProcesses
                         );
         }
