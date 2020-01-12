@@ -1,5 +1,4 @@
 ﻿build:
-    project: [
-                CommonUtilities.NET.Core.Standard.3.1.sln ,
-                StoreProceduresJsonExecutors.NET.Standard.2.x.sln
-            ]
+    project:
+        - CommonUtilities.NET.Core.Standard.3.1.sln
+        - StoreProceduresJsonExecutors.NET.Standard.2.x.sln
