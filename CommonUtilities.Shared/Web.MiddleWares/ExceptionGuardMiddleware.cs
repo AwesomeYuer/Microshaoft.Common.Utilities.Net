@@ -10,20 +10,20 @@ namespace Microshaoft.Web
     using System.Net;
     using System.Threading.Tasks;
     public class ExceptionGuardMiddleware<TInjector>
-            //竟然没有接口?
+    //竟然没有接口?
     {
         private readonly RequestDelegate _next;
         private readonly TInjector _injector;
-        
+
         public Func
                     <
-                        HttpContext
+                        Exception
+                        , HttpContext
                         , IConfiguration
                         , ILoggerFactory
                         , ILogger
                         , TInjector
-                        , Exception
-                        , 
+                        ,
                             (
                                 bool ReThrow
                                 , bool Detail
@@ -34,13 +34,13 @@ namespace Microshaoft.Web
         public
             Action
                 <
-                    HttpContext
+                    bool
+                    , Exception
+                    , HttpContext
                     , IConfiguration
                     , ILoggerFactory
                     , ILogger
                     , TInjector
-                    , bool
-                    , Exception
                 >
                     OnFinallyProcessAction;
 
@@ -84,7 +84,7 @@ namespace Microshaoft.Web
             LoggerFactory = loggerFactory;
             Logger = logger;
         }
-        
+
         //必须是如下方法(竟然不用接口约束产生编译期错误),否则运行时错误
         public async Task Invoke(HttpContext context)
         {
@@ -95,7 +95,7 @@ namespace Microshaoft.Web
                 , bool ResponseDetails
                 , HttpStatusCode ResponseStatusCode
             )
-                r = 
+                r =
                     (
                         false
                         , false
@@ -113,16 +113,17 @@ namespace Microshaoft.Web
                 {
                     r = OnCaughtExceptionProcessFunc
                                 (
-                                    context
+                                    exception
+                                    , context
                                     , Configuration
                                     , LoggerFactory
                                     , Logger
                                     , _injector
-                                    , exception
+
                                 );
                 }
                 var response = context.Response;
-                response.StatusCode = (int) r.ResponseStatusCode;
+                response.StatusCode = (int)r.ResponseStatusCode;
                 var errorMessage = "Internal Server Error";
                 if (r.ResponseDetails)
                 {
@@ -132,7 +133,8 @@ namespace Microshaoft.Web
                             new
                             {
                                 statusCode = r.ResponseStatusCode
-                                , message = errorMessage
+                                ,
+                                message = errorMessage
                             };
                 var json = JsonConvert
                                     .SerializeObject
@@ -150,13 +152,13 @@ namespace Microshaoft.Web
                 OnFinallyProcessAction?
                                     .Invoke
                                         (
-                                            context
+                                            caughtException
+                                            , exception
+                                            , context
                                             , Configuration
                                             , LoggerFactory
                                             , Logger
                                             , _injector
-                                            , caughtException
-                                            , exception
                                         );
             }
         }

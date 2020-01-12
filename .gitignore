@@ -211,3 +211,4 @@ GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
 /Samples/MsSqlCodeDiffVersioning/makecert
+/packages/Microsoft.Diagnostics.Tracing.TraceEvent.2.0.34

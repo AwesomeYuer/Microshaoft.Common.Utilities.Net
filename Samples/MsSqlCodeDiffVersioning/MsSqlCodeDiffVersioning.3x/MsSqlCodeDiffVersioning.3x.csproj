@@ -9,18 +9,12 @@
     <DockerfileContext>..\..</DockerfileContext>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>TRACE;NETCOREAPP;NETCOREAPP2_X;NETCOREAPP3_X</DefineConstants>
+    <DefineConstants>TRACE;NETCOREAPP;NETCOREAPP3_X</DefineConstants>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>NETCOREAPP;NETCOREAPP3_X</DefineConstants>
-  </PropertyGroup>
-
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DefineConstants>TRACE;NETCOREAPP2_X;NETCOREAPP3_X</DefineConstants>
+    <DefineConstants>NETCOREAPP;NETCOREAPP3_X</DefineConstants>
   </PropertyGroup>
-
 
   <ItemGroup>
     <Content Include="wwwroot00\1.bmp" />

@@ -149,15 +149,8 @@
         private static void ValueTupleDataTableTest()
         {
             Console.WriteLine("ValueTuple DataTable Test:");
-            (string F1, int F2, DateTime F3) x;
-            SqlConnection sqlConnection;
-            x = ("asdsad", 100, DateTime.Now);
-            DataTable dataTable = null;
-            dataTable = x.GenerateEmptyDataTable(nameof(x.F1), nameof(x.F2), "F222");
-            //var dataTable = 
-            //DataTable 
-            dataTable.Rows.Add(x.F1, x.F2, x.F3);
-            sqlConnection = new SqlConnection
+            
+            SqlConnection sqlConnection = new SqlConnection
                 (
                     "Initial Catalog=test;Data Source=gateway.hyper-v.internal\\sql2019,11433;User=sa;Password=!@#123QWE"
                 );
@@ -165,16 +158,41 @@
             sqlCommand.CommandText = "usp_testudt";
             sqlCommand.CommandType = CommandType.StoredProcedure;
             var sqlParameter = new SqlParameter("a", SqlDbType.Structured);
-            sqlParameter.Value = dataTable;
             sqlCommand.Connection = sqlConnection;
             sqlCommand.Parameters.Add(sqlParameter);
-            sqlConnection.Open();
-            var r = sqlCommand.ExecuteReader(CommandBehavior.CloseConnection);
-            while (r.Read())
-            {
-                Console.WriteLine(r.FieldCount);
 
+            DataTable dataTable;
+            IDataReader dataReader;
+            (string F1, int F2, DateTime F3) x = ("asdsad", 100, DateTime.Now);
+            dataTable = x.GenerateEmptyDataTable(nameof(x.F1), "FF2");
+            dataTable.Rows.Add(x.F1, x.F2, x.F3);
+            sqlParameter.Value = dataTable;
+            sqlConnection.Open();
+            dataReader = sqlCommand.ExecuteReader(CommandBehavior.CloseConnection);
+            while (dataReader.Read())
+            {
+                Console.WriteLine(dataReader.FieldCount);
             }
+            dataReader.Close();
+            //=================================================================
+
+            (string F1, int F2, DateTime F3) = ("asdsad", 100, DateTime.Now);
+            dataTable = typeof(ValueTuple<string, int, DateTime>)
+                                    .GenerateEmptyDataTable
+                                        (nameof(F1), "FFF2");
+            dataTable.Rows.Add(F1, F2, F3);
+
+            sqlParameter.Value = dataTable;
+            sqlConnection.Open();
+            dataReader = sqlCommand.ExecuteReader(CommandBehavior.CloseConnection);
+            while (dataReader.Read())
+            {
+                Console.WriteLine(dataReader.FieldCount);
+            }
+            dataReader.Close();
+
+
+
             sqlConnection.Close();
         }
     }

@@ -15,6 +15,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
+
     using Microsoft.Extensions.Logging;
     using Microsoft.Net.Http.Headers;
     using Newtonsoft.Json;
@@ -28,6 +29,12 @@
     using System.Net;
     using System.Text;
     using System.Threading.Tasks;
+#if NETCOREAPP2_X
+    using Microsoft.AspNetCore.Hosting;
+#else
+    using Microsoft.Extensions.Hosting;
+#endif
+
 
     public class Startup
     {
@@ -44,7 +51,7 @@
         {
             ConfigurationHelper
                             .Load(Configuration);
-            
+
             services
                 .Configure<CsvFormatterOptions>
                     (
@@ -57,10 +64,10 @@
             services
                 .AddMvc
                 (
-#if NETCOREAPP3_X  
+#if NETCOREAPP3_X
                     (option) =>
                     {
-                        option.EnableEndpointRouting = false;                    
+                        option.EnableEndpointRouting = false;
                     }
 #endif
                 )
@@ -113,7 +120,7 @@
                                                                                                                         .CurrentCandidate
                                                                                                                         .Action;
 
-                                                                                var isAsyncExecuting = ((ControllerActionDescriptor) currentCandidateAction)
+                                                                                var isAsyncExecuting = ((ControllerActionDescriptor)currentCandidateAction)
                                                                                                                     .MethodInfo
                                                                                                                     .IsAsync();
                                                                                 var routeName = routeContext
@@ -158,7 +165,7 @@
             //        <JTokenParametersValidateFilterAttribute>
             //            ();
 
-            #region 异步批量入库案例专用
+#region 异步批量入库案例专用
             var processor =
                 new SingleThreadAsyncDequeueProcessorSlim<JToken>();
             var executor = new MsSqlStoreProceduresExecutor();
@@ -190,9 +197,9 @@
                                                 , fieldName
                                             )
                                         =>
-                                        {
-                                            return (true, null);
-                                        }
+                                            {
+                                                return (true, null);
+                                            }
                                     );
                         }
                         , null
@@ -228,8 +235,8 @@
                         (
                                Configuration
                         );
-            
 
+#if NETCOREAPP3_X
             var loggerFactory = LoggerFactory
                                         .Create
                                             (
@@ -244,13 +251,29 @@
                                                         ;
                                                 }
                                             );
-            services.AddSingleton(loggerFactory);
-
+#else
+            services
+                .AddLogging
+                (
+                    builder =>
+                    {
+                        builder
+                            .AddConsole()
+                            //.AddFilter(level => level >= LogLevel.Information)
+                            ;
+                    }
+            );
+            var loggerFactory = services
+                                    .BuildServiceProvider()
+                                    .GetService<ILoggerFactory>();
+#endif
+            
             ILogger logger = loggerFactory.CreateLogger("Microshaoft.Logger");
+            services.AddSingleton(loggerFactory);
             services.AddSingleton(logger);
-            services.AddSingleton<string?>("Inject String");
+            services.AddSingleton<string>("Inject String");
 
-            #region 跨域策略
+#region 跨域策略
             services
                     .Add
                         (
@@ -481,22 +504,29 @@
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+
         public void Configure
                         (
                             IApplicationBuilder app
-                            , IHostingEnvironment env
+                            ,
+#if NETCOREAPP2_X
+                            IHostingEnvironment
+#else
+                            IWebHostEnvironment
+#endif
+                                env
                             , IConfiguration configuration
                             , ILoggerFactory loggerFactory
-                            //, ILogger logger
+                        //, ILogger logger
                         )
         {
-          
+
             string timingKey = "beginTimestamp";
-            
+            timingKey = string.Empty;
             app
                 .UseRequestResponseGuard
                     <
-                        
+
                             QueuedObjectsPool<Stopwatch>
                             , IConfiguration
                             , ILoggerFactory
@@ -511,6 +541,11 @@
                                     .OnFilterProcessFunc
                                         = (httpContext, @event, stopwatchesPool, xConfiguration, xLoggerFactory, xLogger) =>
                                         {
+                                            if (timingKey.IsNullOrEmptyOrWhiteSpace())
+                                            {
+                                                return false;
+                                            }
+
                                             xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
                                             var httpRequestFeature = httpContext.Features.Get<IHttpRequestFeature>();
                                             var url = httpRequestFeature.RawTarget;
@@ -525,8 +560,8 @@
                                                                 timingKey
                                                                 ,
                                                                     (
-                                                                        BeginTime : DateTime.Now 
-                                                                        , BeginTimestamp : Stopwatch.GetTimestamp()
+                                                                        BeginTime: DateTime.Now
+                                                                        , BeginTimestamp: Stopwatch.GetTimestamp()
                                                                     )
                                                             );
                                             }
@@ -557,7 +592,8 @@
                                                         new
                                                         {
                                                             StatusCode = errorStatusCode
-                                                            , Message = errorMessage
+                                                            ,
+                                                            Message = errorMessage
                                                         };
                                                 var json = JsonConvert.SerializeObject(jsonResult);
                                                 await
@@ -589,14 +625,8 @@
                                                             );
                                             if (r)
                                             {
-                                                var valueTuple = 
-                                                            (
-                                                                (ValueTuple<DateTime, long>)
-                                                                //(DateTime BeginTime, long BeginTimestamp)
-                                                                    removed
-                                                            );
+                                                (DateTime beginTime, long beginTimeStamp) = (ValueTuple<DateTime, long>)removed;
                                                 removed = null;
-                                                var beginTime = valueTuple.Item1;
                                                 httpContext
                                                     .Response
                                                     .Headers["X-Request-Receive-BeginTime"]
@@ -605,12 +635,10 @@
                                                     .Response
                                                     .Headers["X-Response-Send-BeginTime"]
                                                                 = DateTime.Now.ToString(_dateTimeFormat);
-                                                //var duration = valueTuple.Item2.GetNowElapsedTime();
                                                 httpContext
                                                     .Response
                                                     .Headers["X-Request-Response-Timing-In-Milliseconds"]
-                                                                = valueTuple
-                                                                        .Item2
+                                                                = beginTimeStamp
                                                                         .GetElapsedTimeToNow()
                                                                         .TotalMilliseconds
                                                                         .ToString();
@@ -635,17 +663,17 @@
             if (env.IsDevelopment())
             {
                 app
-                    .UseExceptionGuard<string?>
+                    .UseExceptionGuard<string>
                         (
                             (middleware) =>
                             {
                                 var middlewareTypeName = middleware.GetType().Name;
                                 middleware
                                     .OnCaughtExceptionProcessFunc
-                                        = (httpContext, xConfiguration, xLoggerFactory, xLogger, injector, exception) =>
+                                        = (exception, httpContext, xConfiguration, xLoggerFactory, xLogger, injector) =>
                                         {
                                             xLogger.LogError($"event: exception @ {middlewareTypeName}");
-                                            var r = 
+                                            var r =
                                                     (
                                                         false
                                                         , true
@@ -669,12 +697,12 @@
                                                                         , "yxy ++++++" + exception.Message
                                                                         , null
                                                                     );
-                                                             return
-                                                                log;
+                                                            return
+                                                               log;
                                                         }
                                                     );
                                             //Console.WriteLine($"event: exception @ {middlewareTypeName}");
-                                            
+
                                             return r;
                                         };
                             }
@@ -688,7 +716,7 @@
             //app.UseHttpsRedirection();
 
 #if NETCOREAPPX_X
-            #region SyncAsyncActionSelector 拦截处理
+#region SyncAsyncActionSelector 拦截处理
             app
                 .UseCustomActionSelector<SyncOrAsyncActionSelector>
                     (
@@ -751,7 +779,7 @@
                                     };
                         }
                     );
-            #endregion
+#endregion
 #endif
             app.UseMvc();
             Console.WriteLine(Directory.GetCurrentDirectory());
@@ -785,6 +813,6 @@
                 );
 #endif
             //app.UseHttpsRedirection();
-        }   
+        }
     }
 }
