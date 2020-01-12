@@ -15,7 +15,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
-    using Microsoft.Extensions.Hosting;
+
     using Microsoft.Extensions.Logging;
     using Microsoft.Net.Http.Headers;
     using Newtonsoft.Json;
@@ -29,6 +29,12 @@
     using System.Net;
     using System.Text;
     using System.Threading.Tasks;
+#if NETCOREAPP2_X
+    using Microsoft.AspNetCore.Hosting;
+#else
+    using Microsoft.Extensions.Hosting;
+#endif
+
 
     public class Startup
     {
@@ -58,7 +64,7 @@
             services
                 .AddMvc
                 (
-#if NETCOREAPP3_X  
+#if NETCOREAPP3_X
                     (option) =>
                     {
                         option.EnableEndpointRouting = false;
@@ -159,7 +165,7 @@
             //        <JTokenParametersValidateFilterAttribute>
             //            ();
 
-            #region 异步批量入库案例专用
+#region 异步批量入库案例专用
             var processor =
                 new SingleThreadAsyncDequeueProcessorSlim<JToken>();
             var executor = new MsSqlStoreProceduresExecutor();
@@ -206,7 +212,7 @@
                     (
                         processor
                     );
-            #endregion
+#endregion
 
             services
                 .AddSingleton
@@ -230,7 +236,7 @@
                                Configuration
                         );
 
-
+#if NETCOREAPP3_X
             var loggerFactory = LoggerFactory
                                         .Create
                                             (
@@ -245,13 +251,29 @@
                                                         ;
                                                 }
                                             );
-            services.AddSingleton(loggerFactory);
-
+#else
+            services
+                .AddLogging
+                (
+                    builder =>
+                    {
+                        builder
+                            .AddConsole()
+                            //.AddFilter(level => level >= LogLevel.Information)
+                            ;
+                    }
+            );
+            var loggerFactory = services
+                                    .BuildServiceProvider()
+                                    .GetService<ILoggerFactory>();
+#endif
+            
             ILogger logger = loggerFactory.CreateLogger("Microshaoft.Logger");
+            services.AddSingleton(loggerFactory);
             services.AddSingleton(logger);
-            services.AddSingleton<string?>("Inject String");
+            services.AddSingleton<string>("Inject String");
 
-            #region 跨域策略
+#region 跨域策略
             services
                     .Add
                         (
@@ -292,7 +314,7 @@
                                     );
                         }
                   );
-            #endregion
+#endregion
 
             services
                 .AddResponseCaching();
@@ -486,7 +508,13 @@
         public void Configure
                         (
                             IApplicationBuilder app
-                            , IWebHostEnvironment env
+                            ,
+#if NETCOREAPP2_X
+                            IHostingEnvironment
+#else
+                            IWebHostEnvironment
+#endif
+                                env
                             , IConfiguration configuration
                             , ILoggerFactory loggerFactory
                         //, ILogger logger
@@ -635,7 +663,7 @@
             if (env.IsDevelopment())
             {
                 app
-                    .UseExceptionGuard<string?>
+                    .UseExceptionGuard<string>
                         (
                             (middleware) =>
                             {
@@ -688,7 +716,7 @@
             //app.UseHttpsRedirection();
 
 #if NETCOREAPPX_X
-            #region SyncAsyncActionSelector 拦截处理
+#region SyncAsyncActionSelector 拦截处理
             app
                 .UseCustomActionSelector<SyncOrAsyncActionSelector>
                     (
@@ -751,7 +779,7 @@
                                     };
                         }
                     );
-            #endregion
+#endregion
 #endif
             app.UseMvc();
             Console.WriteLine(Directory.GetCurrentDirectory());
