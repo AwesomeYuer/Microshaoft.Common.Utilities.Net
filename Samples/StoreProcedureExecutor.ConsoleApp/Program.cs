@@ -7,6 +7,7 @@
     using Microshaoft;
     using MySql.Data.MySqlClient;
     using Newtonsoft.Json.Linq;
+    using System.Linq;
     public static class Program
     {
         async static Task Main(string[] args)
@@ -163,7 +164,10 @@
 
             DataTable dataTable;
             IDataReader dataReader;
+
             (string F1, int F2, DateTime F3) x = ("asdsad", 100, DateTime.Now);
+
+
             dataTable = x.GenerateEmptyDataTable(nameof(x.F1), "FF2");
             dataTable.Rows.Add(x.F1, x.F2, x.F3);
             sqlParameter.Value = dataTable;
@@ -175,11 +179,12 @@
             }
             dataReader.Close();
             //=================================================================
+            (string F1, int F2, DateTime F3, (string F4, int F5, DateTime F6)) = ("asdsad", 100, DateTime.Now, ("asdsad", 100, DateTime.Now));
 
-            (string F1, int F2, DateTime F3) = ("asdsad", 100, DateTime.Now);
-            dataTable = typeof(ValueTuple<string, int, DateTime>)
-                                    .GenerateEmptyDataTable
-                                        (nameof(F1), "FFF2");
+            var xxxxx = typeof((string, int, DateTime, (string, int, DateTime)))
+                                    .GenerateDataColumns("_X", nameof(F1),"asdsa","asdsa", "asdsa")
+                                    .ToArray()
+                                    ;
             dataTable.Rows.Add(F1, F2, F3);
 
             sqlParameter.Value = dataTable;

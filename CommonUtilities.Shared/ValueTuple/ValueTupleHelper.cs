@@ -1,4 +1,5 @@
-﻿namespace Microshaoft
+﻿#if NETCOREAPP3_X || NETSTANDARY2_X
+namespace Microshaoft
 {
     using System;
     using System.Collections.Generic;
@@ -102,6 +103,150 @@
                 GenerateEmptyDataTable
                         (
                             target.GetType()
+                            , dataColumnsNames
+                        );
+        }
+
+        private static IEnumerable<DataColumn> GenerateDataColumns
+                (
+                    Type valueTupleType
+                    , string prefixPath
+                    , string duplicateNameSuffix = null
+                    , bool checkIsValueTupleType = true
+                    , HashSet<string> distinctedNames = null
+                    , params string[] dataColumnsNames
+                )
+        {
+            if 
+                (
+                    checkIsValueTupleType
+                    &&
+                    !valueTupleType.IsValueTupleType()
+                )
+            {
+                throw
+                    new Exception($"Type: {valueTupleType.Name} is not ValueTuple Type");
+            }
+            var fields = valueTupleType.GetFields();
+            var i = 0;
+            var l = 0;
+            if (distinctedNames == null)
+            {
+                distinctedNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            }
+            if (dataColumnsNames != null)
+            {
+                l = dataColumnsNames.Length;
+            }
+            foreach (var field in fields)
+            {
+                var isDrilled = false;
+                var dataColumnName = field.Name;
+                //dataColumnName = valueTupleType.GetRuntimeField($"Item{i+1}").Name;
+                var dataColumnType = field.FieldType;
+                if (dataColumnType.IsNullableType())
+                {
+                    dataColumnType = dataColumnType
+                                            .GetNullableUnderlyingType();
+                }
+                if (dataColumnType.IsValueTupleType())
+                {
+                    var entries = GenerateDataColumns
+                                (
+                                    dataColumnType
+                                    , $@"{prefixPath}\{field.Name}"
+                                    , duplicateNameSuffix
+                                    , false
+                                    , distinctedNames
+                                    ,
+                                        (
+                                            (i < l)
+                                            ?
+                                            dataColumnsNames[i..]
+                                            :
+                                            null
+                                        )
+                                    );
+                    foreach (var entry in entries)
+                    {
+                        yield
+                            return
+                                entry;
+                    }
+                    isDrilled = true;
+                }
+                else
+                {
+                    if (i < l)
+                    {
+                        dataColumnName = dataColumnsNames[i];
+                        while
+                            (
+                                distinctedNames
+                                            .Contains
+                                                (
+                                                    dataColumnName
+                                                    , StringComparer
+                                                            .OrdinalIgnoreCase
+                                                )
+                            )
+                        {
+                            dataColumnName = $"{dataColumnName}{duplicateNameSuffix}";
+                        }
+                        distinctedNames
+                                    .Add
+                                        (
+                                            dataColumnName
+                                        );
+                    }
+                }
+                if (!isDrilled)
+                {
+                    yield
+                        return
+                            new DataColumn
+                            {
+                                ColumnName = dataColumnName
+                                , DataType = dataColumnType
+                            };
+                    i++;
+                }
+                
+            }
+            distinctedNames = null;
+        }
+        public static IEnumerable<DataColumn> GenerateDataColumns
+                (
+                    this Type valueTupleType
+                    , params string[] dataColumnsNames
+                )
+        {
+            return
+                GenerateDataColumns
+                        (
+                            valueTupleType
+                            , default
+                            , default
+                            , true
+                            , null
+                            , dataColumnsNames
+                        );
+        }
+        public static IEnumerable<DataColumn> GenerateDataColumns
+        (
+            this Type valueTupleType
+            , string duplicateNameSuffix = null
+            , params string[] dataColumnsNames
+        )
+        {
+            return
+                GenerateDataColumns
+                        (
+                            valueTupleType
+                            , duplicateNameSuffix
+                            , null
+                            , true
+                            , null
                             , dataColumnsNames
                         );
         }
@@ -519,3 +664,4 @@ namespace ConsoleApp57
 
     }
 }
+#endif
