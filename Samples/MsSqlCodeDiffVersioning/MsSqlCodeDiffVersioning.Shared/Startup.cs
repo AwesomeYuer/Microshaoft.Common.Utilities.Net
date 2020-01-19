@@ -29,6 +29,7 @@
     using System.Net;
     using System.Text;
     using System.Threading.Tasks;
+    using System.Collections.Concurrent;
 #if NETCOREAPP2_X
     using Microsoft.AspNetCore.Hosting;
 #else
@@ -168,7 +169,12 @@
 #region 异步批量入库案例专用
             var processor =
                 new SingleThreadAsyncDequeueProcessorSlim<JToken>();
-            var executor = new MsSqlStoreProceduresExecutor();
+            ConcurrentDictionary<string, ExecutingInfo>
+                        executingCachingStore
+                                = new ConcurrentDictionary<string, ExecutingInfo>();
+            services
+                    .AddSingleton(executingCachingStore);
+            var executor = new MsSqlStoreProceduresExecutor(executingCachingStore);
             processor
                 .StartRunDequeueThreadProcess
                     (
@@ -271,6 +277,9 @@
             ILogger logger = loggerFactory.CreateLogger("Microshaoft.Logger");
             services.AddSingleton(loggerFactory);
             services.AddSingleton(logger);
+
+
+
             services.AddSingleton<string>("Inject String");
 
 #region 跨域策略

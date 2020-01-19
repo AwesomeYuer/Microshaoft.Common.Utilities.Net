@@ -3,6 +3,7 @@
     using Microshaoft;
     using System.Composition;
     using IBM.Data.DB2.Core;
+    using System.Collections.Concurrent;
 
     [Export(typeof(IStoreProcedureExecutable))]
     public class DB2StoreProcedureExecutorCompositionPlugin
@@ -11,12 +12,20 @@
     {
         public AbstractStoreProceduresExecutor
                     <DB2Connection, DB2Command, DB2Parameter>
-                        _executor = new DB2StoreProceduresExecutor();
+                        _executor;
+
+        public override void InitializeOnDemand
+                                (
+                                    ConcurrentDictionary<string, ExecutingInfo>
+                                        executingCachingStore
+                                )
+        {
+            _executor = new DB2StoreProceduresExecutor(executingCachingStore);
+        }
 
         public override AbstractStoreProceduresExecutor<DB2Connection, DB2Command, DB2Parameter> Executor
         {
             get => _executor;
-            set => _executor = value;
         }
 
         public override string DataBaseType

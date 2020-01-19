@@ -2,6 +2,7 @@
 {
     using Newtonsoft.Json.Linq;
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Data;
     using System.Data.SqlClient;
@@ -10,6 +11,19 @@
                     : AbstractStoreProceduresExecutor
                             <SqlConnection, SqlCommand, SqlParameter>
     {
+
+        public MsSqlStoreProceduresExecutor
+                        (
+                            ConcurrentDictionary<string, ExecutingInfo>
+                                paramerersDefinitionCachingStore
+                        )
+                            : base
+                                (
+                                    paramerersDefinitionCachingStore
+                                )
+        {
+            
+        }
 
         private readonly string _parametersQueryCommandText =
 @"
@@ -245,6 +259,9 @@
             , { "xml"                   , typeof(string)            }
             , { "sysname"               , typeof(string)            }
         };
+
+
+
         protected override SqlParameter
                         OnQueryDefinitionsSetInputParameterProcess
                             (

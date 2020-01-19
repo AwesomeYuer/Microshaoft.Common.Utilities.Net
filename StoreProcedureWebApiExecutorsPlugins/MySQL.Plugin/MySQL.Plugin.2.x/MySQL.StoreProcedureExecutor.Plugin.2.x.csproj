@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\StoreProcedureWebApiExecutor\StoreProcedureWebApiExecutor.Core.2.x\Microshaoft.StoreProcedureExecutorWebApiService.Core.2.x.csproj" />
+    <ProjectReference Include="..\..\..\CommonUtilities\Microshaoft.StoreProcedureExecutors.MySql.NETStandard\Microshaoft.StoreProcedureExecutors.MySql.NETStandard.csproj" />
   </ItemGroup>
 
   <Import Project="..\MySQL.Plugin.Shared\MySQL.StoreProcedureExecutor.Plugin.Shared.projitems" Label="Shared" />

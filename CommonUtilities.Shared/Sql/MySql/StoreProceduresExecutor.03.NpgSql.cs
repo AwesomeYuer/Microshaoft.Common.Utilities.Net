@@ -5,6 +5,7 @@ namespace Microshaoft
     using Npgsql;
     using NpgsqlTypes;
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Data;
     public class NpgSqlStoreProceduresExecutor
@@ -15,6 +16,21 @@ namespace Microshaoft
                             , NpgsqlParameter
                         >
     {
+
+
+        public NpgSqlStoreProceduresExecutor
+                (
+                    ConcurrentDictionary<string, ExecutingInfo>
+                        paramerersDefinitionCachingStore
+                )
+                    : base
+                        (
+                            paramerersDefinitionCachingStore
+                        )
+        {
+
+        }
+
         // PostgreSQL can't full support information_schema.parameters 
         /*
          * https://www.postgresql.org/docs/12/infoschema-parameters.html

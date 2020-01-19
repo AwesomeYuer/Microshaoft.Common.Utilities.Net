@@ -5,6 +5,7 @@ namespace Microshaoft.Web
     using Microsoft.Extensions.Configuration;
     using Newtonsoft.Json.Linq;
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Data;
     using System.Diagnostics;
@@ -167,9 +168,18 @@ namespace Microshaoft.Web
         private static readonly object _locker = new object();
         protected readonly IConfiguration _configuration;
 
-        public AbstractStoreProceduresService(IConfiguration configuration)
+        public readonly ConcurrentDictionary<string, ExecutingInfo>
+                            _dbParametersDefinitionCachingStore;
+        public AbstractStoreProceduresService
+                    (
+                        IConfiguration configuration
+                        , ConcurrentDictionary<string, ExecutingInfo>
+                                    dbParametersDefinitionCachingStore
+                    )
         {
             _configuration = configuration;
+            _dbParametersDefinitionCachingStore
+                = dbParametersDefinitionCachingStore;
             Initialize();
         }
         //for override from derived class
@@ -313,6 +323,8 @@ namespace Microshaoft.Web
                                             .NeedAutoRefreshExecutedTimeForSlideExpire
                                                 = NeedAutoRefreshExecutedTimeForSlideExpire;
                                     }
+                                    x
+                                        .InitializeOnDemand(_dbParametersDefinitionCachingStore);
                                     return x;
                                 }
                                 , StringComparer
@@ -1181,6 +1193,7 @@ namespace Microshaoft.Web
                                             );
             if (success)
             {
+                
                 await
                     executor
                         .ExecuteReaderProcessAsync

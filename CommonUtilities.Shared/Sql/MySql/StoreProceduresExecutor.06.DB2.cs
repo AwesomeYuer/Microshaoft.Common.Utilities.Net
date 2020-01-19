@@ -5,10 +5,26 @@ namespace Microshaoft
     using System;
     using System.Data;
     using IBM.Data.DB2.Core;
+    using System.Collections.Concurrent;
+
     public class DB2StoreProceduresExecutor
                     : AbstractStoreProceduresExecutor
                         <DB2Connection, DB2Command, DB2Parameter>
     {
+        public DB2StoreProceduresExecutor
+                (
+                    ConcurrentDictionary<string, ExecutingInfo>
+                        paramerersDefinitionCachingStore
+                )
+                    : base
+                        (
+                            paramerersDefinitionCachingStore
+                        )
+        {
+
+        }
+
+
         protected override DB2Parameter
                         OnQueryDefinitionsSetInputParameterProcess
                             (
@@ -35,7 +51,7 @@ namespace Microshaoft
                                , string connectionString
                            )
         {
-            var dbTypeName = (string)reader["DATA_TYPE"];
+            var dbTypeName = (string) reader["DATA_TYPE"];
             if
                 (
                     Enum

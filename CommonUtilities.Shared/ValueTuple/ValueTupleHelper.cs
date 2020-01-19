@@ -1,4 +1,4 @@
-﻿#if NETCOREAPP3_X || NETSTANDARY2_X
+﻿#if NETCOREAPP3_X || NETSTANDARD2_X
 namespace Microshaoft
 {
     using System;
@@ -132,7 +132,11 @@ namespace Microshaoft
             var l = 0;
             if (distinctedNames == null)
             {
-                distinctedNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                distinctedNames = new HashSet<string>
+                                        (
+                                            StringComparer
+                                                    .OrdinalIgnoreCase
+                                        );
             }
             if (dataColumnsNames != null)
             {
@@ -142,7 +146,6 @@ namespace Microshaoft
             {
                 var isDrilled = false;
                 var dataColumnName = field.Name;
-                //dataColumnName = valueTupleType.GetRuntimeField($"Item{i+1}").Name;
                 var dataColumnType = field.FieldType;
                 if (dataColumnType.IsNullableType())
                 {
@@ -191,13 +194,21 @@ namespace Microshaoft
                                                 )
                             )
                         {
-                            dataColumnName = $"{dataColumnName}{duplicateNameSuffix}";
+                            if (duplicateNameSuffix.IsNullOrEmptyOrWhiteSpace())
+                            {
+                                dataColumnName = $"{prefixPath}{dataColumnName}";
+                            }
+                            else
+                            {
+                                dataColumnName = $"{dataColumnName}{duplicateNameSuffix}";
+                            }
+
                         }
                         distinctedNames
-                                    .Add
-                                        (
-                                            dataColumnName
-                                        );
+                                .Add
+                                    (
+                                        dataColumnName
+                                    );
                     }
                 }
                 if (!isDrilled)
@@ -215,7 +226,7 @@ namespace Microshaoft
             }
             distinctedNames = null;
         }
-        public static IEnumerable<DataColumn> GenerateDataColumns
+        private static IEnumerable<DataColumn> GenerateDataColumns
                 (
                     this Type valueTupleType
                     , params string[] dataColumnsNames
@@ -228,28 +239,28 @@ namespace Microshaoft
                             , default
                             , default
                             , true
-                            , null
+                            , default
                             , dataColumnsNames
                         );
         }
-        public static IEnumerable<DataColumn> GenerateDataColumns
-        (
-            this Type valueTupleType
-            , string duplicateNameSuffix = null
-            , params string[] dataColumnsNames
-        )
-        {
-            return
-                GenerateDataColumns
-                        (
-                            valueTupleType
-                            , duplicateNameSuffix
-                            , null
-                            , true
-                            , null
-                            , dataColumnsNames
-                        );
-        }
+        //public static IEnumerable<DataColumn> GenerateDataColumns
+        //(
+        //    this Type valueTupleType
+        //    , string duplicateNameSuffix = null
+        //    , params string[] dataColumnsNames
+        //)
+        //{
+        //    return
+        //        GenerateDataColumns
+        //                (
+        //                    valueTupleType
+        //                    , null
+        //                    , duplicateNameSuffix
+        //                    , true
+        //                    , null
+        //                    , dataColumnsNames
+        //                );
+        //}
 
         public static DataTable GenerateEmptyDataTable
                 (
@@ -263,42 +274,12 @@ namespace Microshaoft
                     new Exception($"Type: {valueTupleType.Name} is not ValueTuple Type");
             }
             DataTable dataTable = null;
-            var fields = valueTupleType.GetFields();
-            DataColumnCollection dataColumnsCollection = null;
-            if (dataColumnsNames != null)
+            var dataColumns = valueTupleType.GenerateDataColumns(dataColumnsNames);
+            var a = dataColumns.ToArray();
+            if (a.Length > 0)
             {
-                var l = dataColumnsNames.Length;
-                var i = 0;
-                foreach (var field in fields)
-                {
-                    if (dataTable == null)
-                    {
-                        dataTable = new DataTable();
-                        if (dataColumnsCollection == null)
-                        {
-                            dataColumnsCollection = dataTable.Columns;
-                        }
-                    }
-                    var dataColumnName = field.Name;
-                    //dataColumnName = valueTupleType.GetRuntimeField($"Item{i+1}").Name;
-                    if (i < l)
-                    {
-                        dataColumnName = dataColumnsNames[i];
-                    }
-                    var dataColumnType = field.FieldType;
-                    if (dataColumnType.IsNullableType())
-                    {
-                        dataColumnType = dataColumnType
-                                                .GetNullableUnderlyingType();
-                    }
-                    dataColumnsCollection
-                                        .Add
-                                            (
-                                                dataColumnName
-                                                , dataColumnType
-                                            );
-                    i ++;
-                }
+                dataTable = new DataTable();
+                dataTable.Columns.AddRange(a);
             }
             return dataTable;
         }

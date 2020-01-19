@@ -3,11 +3,24 @@
     using MySql.Data.MySqlClient;
     using Newtonsoft.Json.Linq;
     using System;
+    using System.Collections.Concurrent;
     using System.Data;
     public class MySqlStoreProceduresExecutor
                     : AbstractStoreProceduresExecutor
                             <MySqlConnection, MySqlCommand, MySqlParameter>
     {
+        public MySqlStoreProceduresExecutor
+        (
+            ConcurrentDictionary<string, ExecutingInfo>
+                paramerersDefinitionCachingStore
+        )
+            : base
+                (
+                    paramerersDefinitionCachingStore
+                )
+        {
+
+        }
         protected override MySqlParameter
                         OnQueryDefinitionsSetInputParameterProcess
                             (

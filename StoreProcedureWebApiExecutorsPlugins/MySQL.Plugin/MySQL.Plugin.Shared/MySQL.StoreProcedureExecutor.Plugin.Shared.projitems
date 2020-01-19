@@ -14,10 +14,5 @@
     <Compile Include="$(MSBuildThisFileDirectory)CompositionPlugins\NpgSQLStoreProcedureExecutor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CompositionPlugins\OracleStoreProcedureExecutor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CompositionPlugins\SqliteStoreProcedureExecutor.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Executors\StoreProceduresExecutor.02.MySql.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Executors\StoreProceduresExecutor.03.NpgSql.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Executors\StoreProceduresExecutor.04.Oracle.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Executors\StoreProceduresExecutor.05.Sqlite.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Executors\StoreProceduresExecutor.06.DB2.cs" />
   </ItemGroup>
 </Project>

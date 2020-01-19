@@ -3,11 +3,15 @@ namespace Microshaoft
 {
     using Newtonsoft.Json.Linq;
     using System;
+    using System.Collections.Concurrent;
     using System.Data;
     using System.Threading.Tasks;
 
     public partial interface IStoreProcedureExecutable
     {
+
+        void InitializeOnDemand(ConcurrentDictionary<string, ExecutingInfo> store);
+
         string DataBaseType
         {
             get;

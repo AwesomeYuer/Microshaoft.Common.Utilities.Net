@@ -3,6 +3,7 @@
     using Microshaoft;
     using Newtonsoft.Json.Linq;
     using System;
+    using System.Collections.Concurrent;
     using System.Data;
     using System.Data.Common;
     using System.Threading.Tasks;
@@ -19,12 +20,21 @@
                             where
                                     TDbParameter : DbParameter, new()
     {
+
+
+        public abstract void InitializeOnDemand
+                        (
+                            ConcurrentDictionary<string, ExecutingInfo>
+                                    store
+                        );
+        
+
+
         public abstract
                     AbstractStoreProceduresExecutor
                         <TDbConnection, TDbCommand, TDbParameter>
                             Executor
         {
-            set;
             get;
         }
         public abstract string DataBaseType

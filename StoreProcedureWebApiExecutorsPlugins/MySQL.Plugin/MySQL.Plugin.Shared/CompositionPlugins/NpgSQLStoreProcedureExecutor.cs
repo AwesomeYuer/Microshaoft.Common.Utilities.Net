@@ -2,6 +2,7 @@
 {
     using Microshaoft;
     using Npgsql;
+    using System.Collections.Concurrent;
     using System.Composition;
 
     [Export(typeof(IStoreProcedureExecutable))]
@@ -11,12 +12,19 @@
     {
         public AbstractStoreProceduresExecutor
                     <NpgsqlConnection, NpgsqlCommand, NpgsqlParameter>
-                        _executor = new NpgSqlStoreProceduresExecutor();
+                        _executor;
 
+        public override void InitializeOnDemand
+                                    (
+                                        ConcurrentDictionary<string, ExecutingInfo>
+                                            executingCachingStore
+                                    )
+        {
+            _executor = new NpgSqlStoreProceduresExecutor(executingCachingStore);
+        }
         public override AbstractStoreProceduresExecutor<NpgsqlConnection, NpgsqlCommand, NpgsqlParameter> Executor
         {
             get => _executor;
-            set => _executor = value;
         }
 
         public override string DataBaseType

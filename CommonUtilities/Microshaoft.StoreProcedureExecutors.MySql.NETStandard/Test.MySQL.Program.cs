@@ -1,6 +1,7 @@
 ﻿namespace MySqlConsoleApp
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Data.SqlClient;
     using System.Threading.Tasks;
     using Microshaoft;
@@ -33,8 +34,9 @@
 
             var jTokenParameters = JToken.Parse(json);
             var spName = "usp_executesql";
-
-            var x = new MsSqlStoreProceduresExecutor();
+            ConcurrentDictionary<string, ExecutingInfo> store = new ConcurrentDictionary<string, ExecutingInfo>();
+            
+            var x = new MsSqlStoreProceduresExecutor(store);
 
             SqlConnection sqlConnection = new SqlConnection
                 (

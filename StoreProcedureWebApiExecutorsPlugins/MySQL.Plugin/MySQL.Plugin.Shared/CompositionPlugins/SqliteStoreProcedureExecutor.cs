@@ -2,6 +2,7 @@
 {
     using Microshaoft;
     using Microsoft.Data.Sqlite;
+    using System.Collections.Concurrent;
     using System.Composition;
 
     [Export(typeof(IStoreProcedureExecutable))]
@@ -11,12 +12,20 @@
     {
         public AbstractStoreProceduresExecutor
                     <SqliteConnection, SqliteCommand, SqliteParameter>
-                        _executor = new SqliteStoreProceduresExecutor();
+                        _executor;
+
+        public override void InitializeOnDemand
+                                (
+                                    ConcurrentDictionary<string, ExecutingInfo>
+                                        executingCachingStore
+                                )
+        {
+            _executor = new SqliteStoreProceduresExecutor(executingCachingStore);
+        }
 
         public override AbstractStoreProceduresExecutor<SqliteConnection, SqliteCommand, SqliteParameter> Executor
         {
             get => _executor;
-            set => _executor = value;
         }
 
         public override string DataBaseType

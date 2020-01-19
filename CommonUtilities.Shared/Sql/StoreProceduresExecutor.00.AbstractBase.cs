@@ -25,6 +25,23 @@
                         where
                                 TDbParameter : DbParameter, new()
     {
+
+        public AbstractStoreProceduresExecutor
+                (
+                    ConcurrentDictionary<string, ExecutingInfo>
+                            paramerersDefinitionCachingStore
+                )
+        {
+            _paramerersDefinitionCachingStore = paramerersDefinitionCachingStore;
+            Initialize();
+        }
+        public virtual void Initialize()
+        { 
+        
+        
+        }
+
+
         public int CachedParametersDefinitionExpiredInSeconds
         {
             get;
@@ -32,8 +49,8 @@
         }
         public ConcurrentDictionary<string, ExecutingInfo> Cache
         {
-            get => _dictionary;
-            private set => _dictionary = value;
+            get => _paramerersDefinitionCachingStore;
+            //private set => _paramerersDefinitionCachingStore = value;
         }
 
         private string _parametersQueryCommandText = $@"
@@ -207,14 +224,14 @@
             return result;
         }
 
-        private
+        private readonly
             ConcurrentDictionary<string, ExecutingInfo>
-                _dictionary
-                    = new ConcurrentDictionary<string, ExecutingInfo>
-                            (
-                                StringComparer
-                                        .OrdinalIgnoreCase
-                            );
+                _paramerersDefinitionCachingStore;
+                    //= new ConcurrentDictionary<string, ExecutingInfo>
+                    //        (
+                    //            StringComparer
+                    //                    .OrdinalIgnoreCase
+                    //        );
         public void RefreshCachedExecuted
                             (
                                 DbConnection connection
@@ -223,7 +240,7 @@
         {
             if
                 (
-                    _dictionary
+                    _paramerersDefinitionCachingStore
                         .TryGetValue
                             (
                                 $"{connection.DataSource}-{connection.Database}-{storeProcedureName}"
@@ -264,7 +281,7 @@
                 ConnectionString = connectionString
             };
             var add = false;
-            var executingInfo = _dictionary
+            var executingInfo = _paramerersDefinitionCachingStore
                                         .GetOrAdd
                                                 (
                                                     $"{connection.DataSource}-{connection.Database}-{storeProcedureName}"

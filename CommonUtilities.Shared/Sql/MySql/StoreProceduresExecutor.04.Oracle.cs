@@ -4,10 +4,25 @@ namespace Microshaoft
     using Newtonsoft.Json.Linq;
     using Oracle.ManagedDataAccess.Client;
     using System;
+    using System.Collections.Concurrent;
     using System.Data;
     public class OracleStoreProceduresExecutor
                     : AbstractStoreProceduresExecutor<OracleConnection, OracleCommand, OracleParameter>
     {
+        public OracleStoreProceduresExecutor
+                    (
+                        ConcurrentDictionary<string, ExecutingInfo>
+                            paramerersDefinitionCachingStore
+                    )
+                        : base
+                            (
+                                paramerersDefinitionCachingStore
+                            )
+        {
+
+        }
+
+
         protected override OracleParameter
                         OnQueryDefinitionsSetInputParameterProcess
                             (

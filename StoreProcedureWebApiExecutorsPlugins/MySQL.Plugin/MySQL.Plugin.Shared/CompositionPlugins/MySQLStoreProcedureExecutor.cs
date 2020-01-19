@@ -2,6 +2,7 @@
 {
     using Microshaoft;
     using MySql.Data.MySqlClient;
+    using System.Collections.Concurrent;
     using System.Composition;
 
     [Export(typeof(IStoreProcedureExecutable))]
@@ -11,14 +12,21 @@
     {
         public AbstractStoreProceduresExecutor
                     <MySqlConnection, MySqlCommand, MySqlParameter>
-                        _executor = new MySqlStoreProceduresExecutor();
+                        _executor;
+
+        public override void InitializeOnDemand
+                                    (
+                                        ConcurrentDictionary<string, ExecutingInfo>
+                                            executingCachingStore
+                                    )
+        {
+            _executor = new MySqlStoreProceduresExecutor(executingCachingStore);
+        }
 
         public override AbstractStoreProceduresExecutor<MySqlConnection, MySqlCommand, MySqlParameter> Executor
         {
             get => _executor;
-            set => _executor = value;
         }
-
         public override string DataBaseType
         {
             get => "mysql";

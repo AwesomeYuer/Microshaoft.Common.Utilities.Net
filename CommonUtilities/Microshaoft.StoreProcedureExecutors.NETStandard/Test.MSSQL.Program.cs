@@ -1,6 +1,7 @@
 ﻿namespace MsSqlConsoleApp
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Data.SqlClient;
     using System.Threading.Tasks;
     using Microshaoft;
@@ -8,6 +9,10 @@
     using Newtonsoft.Json.Linq;
     class Program
     {
+        static ConcurrentDictionary<string, ExecutingInfo> _cache
+                = new ConcurrentDictionary<string, ExecutingInfo>(); 
+
+
         async static Task Main(string[] args)
         {
             var json =
@@ -34,7 +39,7 @@
             var jTokenParameters = JToken.Parse(json);
             var spName = "usp_executesql";
 
-            var x = new MsSqlStoreProceduresExecutor();
+            var x = new MsSqlStoreProceduresExecutor(_cache);
 
             SqlConnection sqlConnection = new SqlConnection
                 (

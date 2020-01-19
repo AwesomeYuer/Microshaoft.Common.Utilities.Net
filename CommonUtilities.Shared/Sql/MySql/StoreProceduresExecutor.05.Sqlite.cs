@@ -4,10 +4,25 @@ namespace Microshaoft
     using Microsoft.Data.Sqlite;
     using Newtonsoft.Json.Linq;
     using System;
+    using System.Collections.Concurrent;
     using System.Data;
     public class SqliteStoreProceduresExecutor
                     : AbstractStoreProceduresExecutor<SqliteConnection, SqliteCommand, SqliteParameter>
     {
+        public SqliteStoreProceduresExecutor
+            (
+                ConcurrentDictionary<string, ExecutingInfo>
+                    paramerersDefinitionCachingStore
+            )
+                : base
+                    (
+                        paramerersDefinitionCachingStore
+                    )
+        {
+
+        }
+
+
         protected override SqliteParameter
                         OnQueryDefinitionsSetInputParameterProcess
                             (

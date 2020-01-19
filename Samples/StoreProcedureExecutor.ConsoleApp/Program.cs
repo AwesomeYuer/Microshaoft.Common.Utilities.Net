@@ -8,6 +8,8 @@
     using MySql.Data.MySqlClient;
     using Newtonsoft.Json.Linq;
     using System.Linq;
+    using System.Collections.Concurrent;
+
     public static class Program
     {
         async static Task Main(string[] args)
@@ -52,8 +54,11 @@
             var jTokenParameters = JToken.Parse(json);
             var spName = "usp_executesql";
             spName = "usp_testudt";
+            ConcurrentDictionary<string, ExecutingInfo>
+                        executingCachingStore
+                                = new ConcurrentDictionary<string, ExecutingInfo>();
 
-            var x = new MsSqlStoreProceduresExecutor();
+            var x = new MsSqlStoreProceduresExecutor(executingCachingStore);
 
             SqlConnection sqlConnection = new SqlConnection
                 (
@@ -110,8 +115,8 @@
             Console.ReadLine();
 
             Console.WriteLine("use MySQL ...");
-
-            var xx = new MySqlStoreProceduresExecutor();
+            ConcurrentDictionary<string, ExecutingInfo> store = new ConcurrentDictionary<string, ExecutingInfo>();
+            var xx = new MySqlStoreProceduresExecutor(store);
             var mySqlConnection = new MySqlConnection()
             {
                 ConnectionString = "server=gateway.hyper-v.internal;uid=root;pwd=!@#123QWE;database=Test"
@@ -181,11 +186,10 @@
             //=================================================================
             (string F1, int F2, DateTime F3, (string F4, int F5, DateTime F6)) = ("asdsad", 100, DateTime.Now, ("asdsad", 100, DateTime.Now));
 
-            var xxxxx = typeof((string, int, DateTime, (string, int, DateTime)))
-                                    .GenerateDataColumns("_X", nameof(F1),"asdsa","asdsa", "asdsa")
-                                    .ToArray()
+            var dataTable2 = typeof((string, int, DateTime, (string, int, DateTime)))
+                                    .GenerateEmptyDataTable("_X", nameof(F1),"asdsa", "asdsa")
                                     ;
-            dataTable.Rows.Add(F1, F2, F3);
+            dataTable2.Rows.Add(F1, F2, F3);
 
             sqlParameter.Value = dataTable;
             sqlConnection.Open();

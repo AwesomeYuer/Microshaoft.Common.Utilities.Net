@@ -1,6 +1,7 @@
 ﻿namespace Microshaoft.CompositionPlugins
 {
     using Microshaoft;
+    using System.Collections.Concurrent;
     using System.Composition;
     using System.Data.SqlClient;
 
@@ -13,12 +14,34 @@
     {
         public AbstractStoreProceduresExecutor
                     <SqlConnection, SqlCommand, SqlParameter>
-                        _executor = new MsSqlStoreProceduresExecutor();
+                        _executor;
+        private object _locker = new object(); 
+        public override void InitializeOnDemand
+                                (
+                                    ConcurrentDictionary<string, ExecutingInfo>
+                                        executingCachingStore
+                                )
+        {
+            _locker
+                .LockIf
+                    (
+                        () =>
+                        {
+                            return
+                                (_executor == null);
+                        }
+                        , () =>
+                        {
+                            _executor = new MsSqlStoreProceduresExecutor(executingCachingStore);
+                        }
+                    );
+        }
+
 
         public override AbstractStoreProceduresExecutor<SqlConnection, SqlCommand, SqlParameter> Executor
         {
             get => _executor;
-            set => _executor = value;
+            //private set => _executor = value;
         }
 
         public override string DataBaseType
@@ -44,5 +67,7 @@
                 connection.StatisticsEnabled = enableStatistics;
             }
         }
+
+
     }
 }
