@@ -6,9 +6,7 @@ xcopy ..\..\..\JTokenModelParameterValidatorsPlugins\SamplePlugin\SamplePlugin.3
 xcopy ..\..\..\StoreProcedureWebApiExecutorsPlugins\MsSQL.Plugin\MsSQL.Plugin.3.x\bin\Debug\netstandard2.1\Microshaoft*.pdb $(TargetDir)CompositionPlugins\ /Y
 xcopy ..\..\..\StoreProcedureWebApiExecutorsPlugins\MySQL.Plugin\MySQL.Plugin.3.x\bin\Debug\netstandard2.1\Microshaoft*.pdb $(TargetDir)CompositionPlugins\ /Y
 xcopy ..\..\..\JTokenModelParameterValidatorsPlugins\SamplePlugin\SamplePlugin.3.x\bin\Debug\netcoreapp3.1\Microshaoft*.pdb $(TargetDir)CompositionPlugins\ /Y
-xcopy ..\..\..\StoreProcedureWebApiExecutorsPlugins\MsSQL.Plugin\MsSQL.Plugin.3.x\bin\Debug\netstandard2.1\Microshaoft*.deps.json $(TargetDir)CompositionPlugins\ /Y
-xcopy ..\..\..\StoreProcedureWebApiExecutorsPlugins\MySQL.Plugin\MySQL.Plugin.3.x\bin\Debug\netstandard2.1\Microshaoft*.deps.json $(TargetDir)CompositionPlugins\ /Y
-xcopy ..\..\..\JTokenModelParameterValidatorsPlugins\SamplePlugin\SamplePlugin.3.x\bin\Debug\netcoreapp3.1\Microshaoft*.deps.json $(TargetDir)CompositionPlugins\ /Y
+
 
 xcopy ..\..\..\StoreProcedureWebApiExecutorsPlugins\MySQL.Plugin\MySQL.Plugin.3.x\bin\Debug\netstandard2.1\*mysql.data* $(TargetDir)CompositionPlugins\ /Y
 xcopy ..\..\..\StoreProcedureWebApiExecutorsPlugins\MySQL.Plugin\MySQL.Plugin.3.x\bin\Debug\netstandard2.1\*npgsql* $(TargetDir)CompositionPlugins\ /Y

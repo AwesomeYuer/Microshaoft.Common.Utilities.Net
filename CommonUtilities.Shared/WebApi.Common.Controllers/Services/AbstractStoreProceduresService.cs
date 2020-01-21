@@ -323,12 +323,10 @@ namespace Microshaoft.Web
                                             .NeedAutoRefreshExecutedTimeForSlideExpire
                                                 = NeedAutoRefreshExecutedTimeForSlideExpire;
                                     }
-                                    x
-                                        .InitializeOnDemand(_dbParametersDefinitionCachingStore);
+                                    x.InitializeOnDemand(_dbParametersDefinitionCachingStore);
                                     return x;
                                 }
-                                , StringComparer
-                                        .OrdinalIgnoreCase
+                             
                             );
             _locker
                 .LockIf
@@ -747,6 +745,13 @@ namespace Microshaoft.Web
             JToken result = null;
             if (success)
             {
+
+                                    executor
+                                        .InitializeOnDemand
+                                                (
+                                                    _dbParametersDefinitionCachingStore
+                                                );
+
                 (success, result) = await
                                         executor
                                             .ExecuteJsonResultsAsync

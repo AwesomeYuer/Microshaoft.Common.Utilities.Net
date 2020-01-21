@@ -13,14 +13,26 @@
         public AbstractStoreProceduresExecutor
                     <NpgsqlConnection, NpgsqlCommand, NpgsqlParameter>
                         _executor;
-
+        private object _locker = new object();
         public override void InitializeOnDemand
                                     (
                                         ConcurrentDictionary<string, ExecutingInfo>
                                             executingCachingStore
                                     )
         {
-            _executor = new NpgSqlStoreProceduresExecutor(executingCachingStore);
+            _locker
+               .LockIf
+                   (
+                       () =>
+                       {
+                           return
+                               (_executor == null);
+                       }
+                       , () =>
+                       {
+                           _executor = new NpgSqlStoreProceduresExecutor(executingCachingStore);
+                       }
+                   );
         }
         public override AbstractStoreProceduresExecutor<NpgsqlConnection, NpgsqlCommand, NpgsqlParameter> Executor
         {

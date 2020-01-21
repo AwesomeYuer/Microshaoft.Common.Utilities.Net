@@ -140,14 +140,6 @@ namespace Microshaoft
                         }
                     }
                 }
-                if (_needAutoRefreshExecutedTimeForSlideExpire)
-                {
-                    RefreshCachedExecuted
-                                    (
-                                        connection
-                                        , storeProcedureName
-                                    );
-                }
                 if (connection.State != ConnectionState.Closed)
                 {
                     await

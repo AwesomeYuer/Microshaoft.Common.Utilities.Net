@@ -74,11 +74,11 @@ namespace Microshaoft.CompositionPlugins
                             , dataRecord
                         );
             }
-            //AfterExecutedProcess
-            //    (
-            //        storeProcedureName
-            //        , connection
-            //    );
+            AfterExecutedProcess
+                (
+                    storeProcedureName
+                    , connection
+                );
         }
     }
 }

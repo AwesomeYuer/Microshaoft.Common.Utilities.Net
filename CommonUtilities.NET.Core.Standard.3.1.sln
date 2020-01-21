@@ -185,7 +185,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00.Shared", "00.Shared", "{
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "MySQL.StoreProcedureExecutor.Plugin.Shared", "StoreProcedureWebApiExecutorsPlugins\MySQL.Plugin\MySQL.Plugin.Shared\MySQL.StoreProcedureExecutor.Plugin.Shared.shproj", "{4EE26E3A-B23B-4760-A8D7-1EB0EF7A24DD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MySQL.StoreProcedureExecutor.Plugin.NETStandard.2.x", "StoreProcedureWebApiExecutorsPlugins\MySQL.Plugin\MySQL.Plugin.3.x\MySQL.StoreProcedureExecutor.Plugin.NETStandard.2.x.csproj", "{29F88299-73E8-4031-B35B-84DB6A677F5D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MySQL.StoreProcedureExecutor.Plugin.NETCore.3.x", "StoreProcedureWebApiExecutorsPlugins\MySQL.Plugin\MySQL.Plugin.3.x\MySQL.StoreProcedureExecutor.Plugin.NETCore.3.x.csproj", "{29F88299-73E8-4031-B35B-84DB6A677F5D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00.SamplePlugin", "00.SamplePlugin", "{87B46E57-4325-4C68-BA10-696C62C1036C}"
 EndProject
@@ -211,7 +211,7 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Microshaoft.StoreProcedureE
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00.Common", "00.Common", "{580A7322-DAF5-4D11-B80A-2975FB8A7BD0}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "10.MySql", "10.MySql", "{95AF4262-4E0D-4E2F-8BAF-DE5B5F5EFEAF}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "10.MySql.can't be load by composition", "10.MySql.can't be load by composition", "{95AF4262-4E0D-4E2F-8BAF-DE5B5F5EFEAF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microshaoft.StoreProcedureExecutors.MySql.NETStandard", "CommonUtilities\Microshaoft.StoreProcedureExecutors.MySql.NETStandard\Microshaoft.StoreProcedureExecutors.MySql.NETStandard.csproj", "{6E1B70C9-8422-4CAA-8FD2-812CAD8FE432}"
 EndProject

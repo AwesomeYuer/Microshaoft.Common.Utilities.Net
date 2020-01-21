@@ -13,14 +13,26 @@
         public AbstractStoreProceduresExecutor
                     <MySqlConnection, MySqlCommand, MySqlParameter>
                         _executor;
-
+        private object _locker = new object();
         public override void InitializeOnDemand
                                     (
                                         ConcurrentDictionary<string, ExecutingInfo>
                                             executingCachingStore
                                     )
         {
-            _executor = new MySqlStoreProceduresExecutor(executingCachingStore);
+            _locker
+                .LockIf
+                    (
+                        () =>
+                        {
+                            return
+                                (_executor == null);
+                        }
+                        , () =>
+                        {
+                            _executor = new MySqlStoreProceduresExecutor(executingCachingStore);
+                        }
+                    );
         }
 
         public override AbstractStoreProceduresExecutor<MySqlConnection, MySqlCommand, MySqlParameter> Executor

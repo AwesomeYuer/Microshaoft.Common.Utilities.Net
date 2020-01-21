@@ -51,22 +51,22 @@
             get;
             set;
         }
-        //protected virtual void AfterExecutedProcess
-        //                            (
-        //                                string storeProcedureName
-        //                                , TDbConnection connection
-        //                            )
-        //{
-        //    if (NeedAutoRefreshExecutedTimeForSlideExpire)
-        //    {
-        //        Executor
-        //            .RefreshCachedExecuted
-        //                (
-        //                    connection
-        //                    , storeProcedureName
-        //                );
-        //    }
-        //}
+        protected virtual void AfterExecutedProcess
+                                    (
+                                        string storeProcedureName
+                                        , TDbConnection connection
+                                    )
+        {
+            if (NeedAutoRefreshExecutedTimeForSlideExpire)
+            {
+                Executor
+                    .RefreshCachedExecuted
+                        (
+                            connection
+                            , storeProcedureName
+                        );
+            }
+        }
         protected virtual void BeforeExecutingProcess
                         (
                             string connectionString
@@ -74,6 +74,8 @@
                             , out TDbConnection connection
                         )
         {
+
+
             if
                 (
                     CachedParametersDefinitionExpiredInSeconds > 0
@@ -87,9 +89,6 @@
                 Executor
                         .CachedParametersDefinitionExpiredInSeconds
                             = CachedParametersDefinitionExpiredInSeconds;
-                Executor
-                        .NeedAutoRefreshExecutedTimeForSlideExpire
-                            = NeedAutoRefreshExecutedTimeForSlideExpire;
             }
             connection = new TDbConnection
             {
@@ -139,11 +138,11 @@
                                         , onReadRowColumnProcessFunc
                                         , commandTimeoutInSeconds
                                     );
-            //AfterExecutedProcess
-            //    (
-            //        storeProcedureName
-            //        , connection
-            //    );
+            AfterExecutedProcess
+                (
+                    storeProcedureName
+                    , connection
+                );
             return
                 (
                     Success: result != null
@@ -197,11 +196,11 @@
                                                 , onReadRowColumnProcessFunc
                                                 , commandTimeoutInSeconds
                                             );
-            //AfterExecutedProcess
-            //    (
-            //        storeProcedureName
-            //        , connection
-            //    );
+            AfterExecutedProcess
+                (
+                    storeProcedureName
+                    , connection
+                );
             return
                 (
                     Success: result != null
@@ -243,11 +242,11 @@
                             }
                             , commandTimeoutInSeconds
                         );
-            //AfterExecutedProcess
-            //    (
-            //        storeProcedureName
-            //        , connection
-            //    );
+            AfterExecutedProcess
+                (
+                    storeProcedureName
+                    , connection
+                );
         }
 
         public async Task ExecuteReaderProcessAsync
@@ -294,11 +293,11 @@
                             }
                             , commandTimeoutInSeconds
                         );
-            //AfterExecutedProcess
-            //    (
-            //        storeProcedureName
-            //        , connection
-            //    );
+            AfterExecutedProcess
+                (
+                    storeProcedureName
+                    , connection
+                );
         }
     }
 }

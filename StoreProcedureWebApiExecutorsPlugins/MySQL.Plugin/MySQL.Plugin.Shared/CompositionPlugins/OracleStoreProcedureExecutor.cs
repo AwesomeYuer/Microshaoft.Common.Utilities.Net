@@ -13,10 +13,22 @@
         public AbstractStoreProceduresExecutor
                     <OracleConnection, OracleCommand, OracleParameter>
                         _executor;
-
-        public override void InitializeOnDemand(ConcurrentDictionary<string, ExecutingInfo> store)
+        private object _locker = new object();
+        public override void InitializeOnDemand(ConcurrentDictionary<string, ExecutingInfo> executingCachingStore)
         {
-            _executor = new OracleStoreProceduresExecutor(store);
+            _locker
+                .LockIf
+                    (
+                        () =>
+                        {
+                            return
+                                (_executor == null);
+                        }
+                        , () =>
+                        {
+                            _executor = new OracleStoreProceduresExecutor(executingCachingStore);
+                        }
+                    );
         }
 
         public override AbstractStoreProceduresExecutor<OracleConnection, OracleCommand, OracleParameter> Executor

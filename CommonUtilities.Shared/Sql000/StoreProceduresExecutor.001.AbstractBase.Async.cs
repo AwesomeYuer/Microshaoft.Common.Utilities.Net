@@ -11,7 +11,7 @@
 
     public abstract partial class
             AbstractStoreProceduresExecutor
-                    <TDbConnection, TDbCommand, TDbParameter> : IParametersDefinitionCacheAutoRefreshable
+                    <TDbConnection, TDbCommand, TDbParameter>
                         where
                                 TDbConnection : DbConnection, new()
                         where
@@ -19,20 +19,6 @@
                         where
                                 TDbParameter : DbParameter, new()
     {
-        private bool _needAutoRefreshExecutedTimeForSlideExpire = false;
-        public bool NeedAutoRefreshExecutedTimeForSlideExpire
-        { 
-            get
-            {
-                return
-                    _needAutoRefreshExecutedTimeForSlideExpire;
-            }
-            set
-            {
-                _needAutoRefreshExecutedTimeForSlideExpire = value;
-            }
-        }
-
         private class ExtensionInfo
         {
             public int resultSetID = 0;
@@ -603,10 +589,6 @@
                         }
                     }
                 }
-                if (_needAutoRefreshExecutedTimeForSlideExpire)
-                {
-                    RefreshCachedExecuted(connection, storeProcedureName);
-                }
                 if (connection.State != ConnectionState.Closed)
                 {
                     connection
@@ -747,12 +729,6 @@
                         }
                     }
                 }
-
-                if (_needAutoRefreshExecutedTimeForSlideExpire)
-                {
-                    RefreshCachedExecuted(connection, storeProcedureName);
-                }
-
                 if (connection.State != ConnectionState.Closed)
                 {
                     connection

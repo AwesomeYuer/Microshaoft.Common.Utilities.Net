@@ -13,14 +13,26 @@
         public AbstractStoreProceduresExecutor
                     <DB2Connection, DB2Command, DB2Parameter>
                         _executor;
-
+        private object _locker = new object(); 
         public override void InitializeOnDemand
                                 (
                                     ConcurrentDictionary<string, ExecutingInfo>
                                         executingCachingStore
                                 )
         {
-            _executor = new DB2StoreProceduresExecutor(executingCachingStore);
+            _locker
+                .LockIf
+                    (
+                        () =>
+                        {
+                            return
+                                (_executor == null);
+                        }
+                        , () =>
+                        {
+                            _executor = new DB2StoreProceduresExecutor(executingCachingStore);
+                        }
+                    );
         }
 
         public override AbstractStoreProceduresExecutor<DB2Connection, DB2Command, DB2Parameter> Executor
