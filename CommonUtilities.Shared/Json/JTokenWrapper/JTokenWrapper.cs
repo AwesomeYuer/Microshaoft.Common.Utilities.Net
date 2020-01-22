@@ -51,9 +51,9 @@
 
         public static explicit operator JArray(JTokenWrapper target)
         {
-            if (target.Token is JArray j)
+            if (target.Token is JArray jA)
             {
-                return j;
+                return jA;
             }
             throw new Exception($"target is not a JArray");
         }

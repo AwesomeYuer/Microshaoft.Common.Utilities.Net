@@ -22,6 +22,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Json\JsonHelper\JsonHelper.04.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JsonHelper\JsonHelper.05.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JsonReaderHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonValuePathIndexer\JsonValuePathIndexer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JTokenWrapper\JTokenWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\KeyValueNode.cs" />
   </ItemGroup>

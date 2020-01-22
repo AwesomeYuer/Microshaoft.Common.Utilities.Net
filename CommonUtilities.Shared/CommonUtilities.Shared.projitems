@@ -119,6 +119,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Json\JsonReaderHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)JsonWebToken\JwtTokenHelper.NET.Framework.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)JsonWebToken\JwtTokenHelper.NET.All.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonValuePathIndexer\JsonValuePathIndexer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JTokenWrapper\JTokenWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\KeyValueNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KeyWordFilter\CharExtensions.cs" />
