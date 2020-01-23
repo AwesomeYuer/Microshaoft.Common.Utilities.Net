@@ -7,15 +7,11 @@
     <AssemblyName>Microshaoft.MsSQL.SPE.Plugin.NET.Standard.2.x</AssemblyName>
   </PropertyGroup>
 
-
-
-  <!--<ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Microsoft.Composition" Version="1.0.31" />
-    --><!--<PackageReference Include="Microsoft.NETCore.App" Version="2.2.7" />--><!--
-  </ItemGroup>-->
-
-
-
+  </ItemGroup>
+  
+  
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Microshaoft.StoreProceduresExecutors.NET\Microshaoft.StoreProceduresExecutors.NET.Standard.2.x\Microshaoft.StoreProceduresExecutors.NET.Standard.2.x.csproj" />
   </ItemGroup>
