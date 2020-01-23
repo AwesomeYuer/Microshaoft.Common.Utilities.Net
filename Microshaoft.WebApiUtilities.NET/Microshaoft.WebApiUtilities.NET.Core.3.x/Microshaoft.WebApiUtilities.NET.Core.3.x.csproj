@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>Microshaoft.WebApiUtilities.NET.Core._3.x</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DefineConstants>NETCOREAPP;NETCOREAPP3_X</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DefineConstants>TRACE;DEBUG;NETCOREAPP;NETCOREAPP3_X</DefineConstants>
+  </PropertyGroup>
+
+  <Import Project="..\..\SharedSources\WebApiUtilities.Shared.projitems" Label="Shared" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\CommonUtilities\CommonUtilities.Lite.Standard.2.x\CommonUtilities.Lite.Standard.2.x.csproj" />
+    <ProjectReference Include="..\..\Microshaoft.Json.NET\Microshaoft.Json.NET.Core.3.x\Microshaoft.Json.NET.Standard.2.x\Microshaoft.Json.NET.Standard.2.x.csproj" />
+    <ProjectReference Include="..\..\Microshaoft.StoreProceduresExecutors.NET\Microshaoft.StoreProceduresExecutors.NET.Standard.2.x\Microshaoft.StoreProceduresExecutors.NET.Standard.2.x.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.ConcurrencyLimiter" Version="3.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.ResponseCaching" Version="2.2.0" />
+  </ItemGroup>
+</Project>

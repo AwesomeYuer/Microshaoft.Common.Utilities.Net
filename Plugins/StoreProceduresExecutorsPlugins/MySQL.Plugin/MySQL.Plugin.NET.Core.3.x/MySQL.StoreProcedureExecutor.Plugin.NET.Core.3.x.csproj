@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <!--<TargetFramework>netstandard2.1</TargetFramework>-->
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <!--<UseNETCoreGenerator>true</UseNETCoreGenerator>-->
+    <AssemblyName>Microshaoft.MySQL.SPE.Plugin.NET.Core.3.x</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="IBM.Data.DB2.Core" Version="1.3.0.100" />
+    <PackageReference Include="Microsoft.Composition" Version="1.0.31" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="3.1.1" />
+    <PackageReference Include="MySql.Data" Version="8.0.19" />
+    <PackageReference Include="Npgsql" Version="4.1.2" />
+    <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="2.19.60" />
+    <!--<PackageReference Include="Microsoft.NETCore.App" Version="2.2.7" />-->
+    <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3.linux" Version="1.1.14" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\CommonUtilities\CommonUtilities.Lite.Standard.2.x\CommonUtilities.Lite.Standard.2.x.csproj" />
+    <ProjectReference Include="..\..\..\..\Microshaoft.StoreProceduresExecutors.NET\Microshaoft.StoreProceduresExecutors.NET.Standard.2.x\Microshaoft.StoreProceduresExecutors.NET.Standard.2.x.csproj" />
+  </ItemGroup>
+
+  <Import Project="..\MySQL.Plugin.Shared\MySQL.StoreProcedureExecutor.Plugin.Shared.projitems" Label="Shared" />
+
+  
+
+ 
+
+</Project>

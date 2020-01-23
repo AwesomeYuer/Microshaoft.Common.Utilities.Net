@@ -4,14 +4,14 @@
     using System;
     using System.Net;
     using System.Text;
-#if NETCOREAPP2_X
+#if NETCOREAPP3_X
     using System.Runtime.InteropServices;
 #endif
     public class Program
     {
         public static void Main(string[] args)
         {
-#if NETCOREAPP2_X
+#if NETCOREAPP3_X
             Console.WriteLine(RuntimeInformation.OSArchitecture.ToString());
             Console.WriteLine(RuntimeInformation.OSDescription);
             Console.WriteLine(RuntimeInformation.FrameworkDescription);
@@ -31,7 +31,7 @@
                                 {
                                     var offset = 4;
                                     var l = y.Length - z;
-#if NETCOREAPP2_X
+#if NETCOREAPP3_X
                                     var buffer = new ReadOnlySpan<byte>(y, offset, l);
 #else
                                     var buffer = new byte[l];
@@ -58,7 +58,7 @@
                                                     , "\r\n"
                                                     , s
                                                     , DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")
-#if NETCOREAPP2_X
+#if NETCOREAPP3_X
                                                     , RuntimeInformation.OSDescription
 #else
                                                     , ""

@@ -1144,6 +1144,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\AntiXssJsonpController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\StoreProcedureExecutorController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controllers\ExecutingCachingStoreController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\TrackingController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Program.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\StoreProcedureExecuteService.cs" />
@@ -1151,10 +1152,6 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="$(MSBuildThisFileDirectory)xcopyfiles3x.cmd">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="$(MSBuildThisFileDirectory)xcopyfiles2x.cmd">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

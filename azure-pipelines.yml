@@ -9,31 +9,20 @@ pool:
 
 steps:
 - task: DotNetCoreInstaller@0
-  displayName: 'Use .NET Core sdk 3.1.100'
+  displayName: 'Use .NET Core sdk 3.1.101'
   inputs:
-    version: 3.1.100
+    version: 3.1.101
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet restore'
   inputs:
     command: restore
-    projects: CommonUtilities.NET.Core.Standard.3.1.sln
+    projects: Microshaoft.Common.Utilities.Net.sln
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet build'
   inputs:
-    projects: CommonUtilities.NET.Core.Standard.3.1.sln
-
-- task: DotNetCoreCLI@2
-  displayName: 'dotnet restore'
-  inputs:
-    command: restore
-    projects: StoreProceduresJsonExecutors.NET.Standard.2.x.sln
-
-- task: DotNetCoreCLI@2
-  displayName: 'dotnet build'
-  inputs:
-    projects: StoreProceduresJsonExecutors.NET.Standard.2.x.sln
+    projects: Microshaoft.Common.Utilities.Net.sln
 
 - task: DotNetCoreCLI@2
   displayName: Test

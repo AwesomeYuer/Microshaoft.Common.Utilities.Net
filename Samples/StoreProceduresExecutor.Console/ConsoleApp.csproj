@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <ApplicationIcon />
+    <StartupObject />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\CommonUtilities\CommonUtilities.Lite.Standard.2.x\CommonUtilities.Lite.Standard.2.x.csproj" />
+    <ProjectReference Include="..\..\Microshaoft.StoreProceduresExecutors.NET\Microshaoft.StoreProceduresExecutors.NET.Standard.2.x\Microshaoft.StoreProceduresExecutors.NET.Standard.2.x.csproj" />
+    <ProjectReference Include="..\..\Plugins\StoreProceduresExecutorsPlugins\MySQL.Plugin\MySQL.Plugin.NET.Core.3.x\MySQL.StoreProcedureExecutor.Plugin.NET.Core.3.x.csproj" />
+  </ItemGroup>
+
+  <!--<PropertyGroup>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+  </PropertyGroup>-->
+
+
+</Project>

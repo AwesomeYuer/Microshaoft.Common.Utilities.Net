@@ -2,22 +2,27 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;NETCOREAPP2_X;NETCOREAPP2_0</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETCOREAPP3_X</DefineConstants>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG;NETCOREAPP3_X</DefineConstants>
+  </PropertyGroup>
+
 
   <Import Project="..\ClientSharedProject\ClientSharedProject.projitems" Label="Shared" />
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\CommonUtilities\CommonUtilities.Lite\CommonUtilities.Lite.NET.Core.2.x\CommonUtilities.Lite.NET.Core.2.x.csproj" />
+    <PackageReference Include="Microsoft.NETCore.App" Version="2.2.8" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NETCore.App" Version="2.2.8" />
+    <ProjectReference Include="..\..\..\..\CommonUtilities\CommonUtilities.Lite.Standard.2.x\CommonUtilities.Lite.Standard.2.x.csproj" />
   </ItemGroup>
 
 </Project>
