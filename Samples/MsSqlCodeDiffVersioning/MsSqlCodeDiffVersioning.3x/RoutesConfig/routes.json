@@ -37,7 +37,7 @@
               "AllowOverride": true
             }
           ],
-          "Outputs": {
+          "Outputs1111": {
             "aaa.bbb.ddd": "Outputs.ResultSets[0].Rows",
             "aaa.bbb.eee": "Outputs.Parameters.HttpResponseMessage"
           }
