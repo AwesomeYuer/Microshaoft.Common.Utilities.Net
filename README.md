@@ -15,7 +15,7 @@ Contact:
 
 |	DevOps Platform 	|	CI/CD Status (Build Only)	|
 | ----:	| ----	|
-|	Azure Pipelines:	| [![Build Status](https://microshaoft.visualstudio.com/Microshaoft.Common.Utilities.Net-GitHub/_apis/build/status/Microshaoft.Common.Utilities.Net-GitHub-ASP.NET%20Core-CI?branchName=master)](https://microshaoft.visualstudio.com/Microshaoft.Common.Utilities.Net-GitHub/_build/latest?definitionId=6?branchName=master)	|
+|	Azure Pipelines:	| [![Build Status](https://microshaoft.visualstudio.com/Microshaoft.Common.Utilities.Net-GitHub/_apis/build/status/Microshaoft.Microshaoft.Common.Utilities.Net)](https://microshaoft.visualstudio.com/Microshaoft.Common.Utilities.Net-GitHub/_build)	|
 |	GitHub Actions:		| [![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FMicroshaoft%2FMicroshaoft.Common.Utilities.Net%2Fbadge&style=flat)](https://actions-badge.atrox.dev/Microshaoft/Microshaoft.Common.Utilities.Net/goto)												|
 |	AppVeyor:			| [![Build status](https://ci.appveyor.com/api/projects/status/d777cn66p6f75yen?svg=true)](https://ci.appveyor.com/project/Microshaoft/microshaoft-common-utilities-net)																																	                            |
 |	Travis-CI:			| [![Build Status](https://travis-ci.org/Microshaoft/Microshaoft.Common.Utilities.Net.svg?branch=master)](https://travis-ci.org/Microshaoft/Microshaoft.Common.Utilities.Net)																																						|
