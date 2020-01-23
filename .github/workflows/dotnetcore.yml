@@ -1,0 +1,19 @@
+name: .NET Core
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.101
+    - name: Build with dotnet build Debug
+      run: dotnet build Microshaoft.Common.Utilities.Net.sln -c Debug
+    - name: Build with dotnet build Release
+      run: dotnet build Microshaoft.Common.Utilities.Net.sln -c Release
