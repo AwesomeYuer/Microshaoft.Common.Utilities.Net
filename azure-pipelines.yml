@@ -1,4 +1,4 @@
-﻿trigger:
+trigger:
 - *
 
 pool:
@@ -20,9 +20,14 @@ steps:
     projects: Microshaoft.Common.Utilities.Net.sln
 
 - task: DotNetCoreCLI@2
+  displayName: 'dotnet build Debug'
+  inputs:
+    projects: Microshaoft.Common.Utilities.Net.sln -c Debug
+
+- task: DotNetCoreCLI@2
   displayName: 'dotnet build'
   inputs:
-    projects: Microshaoft.Common.Utilities.Net.sln
+    projects: Microshaoft.Common.Utilities.Net.sln -c Release
 
 - task: DotNetCoreCLI@2
   displayName: Test
