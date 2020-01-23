@@ -304,7 +304,7 @@ namespace Microshaoft
                         , 2
                         , (x) =>
                         {
-                            if (InitializeNextOnePeriodDataProcessAction())
+                            if (InitializeNextOnePeriodDataProcessFunc())
                             {
                                 onAfterDataInitializedProcessAction?.Invoke(this);
                             }
@@ -339,7 +339,7 @@ namespace Microshaoft
         {
             return GetNewID(DateTime.Now);
         }
-        private bool InitializeNextOnePeriodDataProcessAction()
+        private bool InitializeNextOnePeriodDataProcessFunc()
         {
             var r = false;
             var now = DateTime.Now;
