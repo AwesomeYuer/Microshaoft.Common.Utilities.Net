@@ -96,13 +96,13 @@
                                                         .GetExecutingAssembly()
                                                         .Location
                                                 );
-            var hostingsConfiguration = new ConfigurationBuilder()
-                                                            .AddJsonFile
-                                                                (
-                                                                    "hostings.json"
-                                                                    , optional: false
-                                                                )
-                                                            .Build();
+            //var hostingsConfiguration = new ConfigurationBuilder()
+            //                                                .AddJsonFile
+            //                                                    (
+            //                                                        "hostings.json"
+            //                                                        , optional: false
+            //                                                    )
+            //                                                .Build();
             //兼容 Linux/Windows wwwroot 路径配置
             var wwwroot = GetExistsPaths
                                 (
@@ -149,12 +149,12 @@
                             {
                                 var builder = configurationBuilder
                                                         .SetBasePath(executingDirectory)
-                                                        //.AddJsonFile
-                                                        //    (
-                                                        //        path: "hostings.json"
-                                                        //        , optional: true
-                                                        //        , reloadOnChange: true
-                                                        //    )
+                                                        .AddJsonFile
+                                                            (
+                                                                path: "hostings.json"
+                                                                , optional: true
+                                                                , reloadOnChange: true
+                                                            )
                                                         .AddJsonFile
                                                             (
                                                                 path: "dbConnections.json"

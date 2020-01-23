@@ -50,6 +50,7 @@
             return cell;
         }
         function dynamicAjaxBind() {
+            $('#load').fadeIn();
             var sql = editor.getValue();
             var selection = editor.getSelection();
             if (selection) {
@@ -210,6 +211,7 @@
                             binded2 = true;
                         }
                     }
+                    $('#load').fadeOut();
                 },
                 error: function (x, y, z) {
                     d = JSON.parse(x.responseText);
@@ -237,6 +239,7 @@
                             }
                         ]
                     });
+                    $('#load').fadeOut();
                     alert(x.responseText);
                     binded2 = true;
                 }
@@ -295,9 +298,29 @@
                 float: left;
             }
     </style>
+    <style type="text/css">
+        #load {
+            position: fixed;
+            top: 0px;
+            right: 0px;
+            bottom: 0px;
+            filter: alpha(opacity=60);
+            background-color: #777;
+            z-index: 1002;
+            left: 0px;
+            display: none;
+            opacity: 0.5;
+            -moz-opacity: 0.5;
+            padding-top: 100px;
+            color: #000000
+        }
+    </style>
 </head>
 <body>
-
+    <div id="load" align="center">
+        <!--<img src="images/loading.gif" width="28" height="28" align="absmiddle" />-->
+        加载中...
+    </div>
     <div align="center">
         <a id="downloader" target="_blank">downloader</a>
         rowCount: <input type="text" id="rowcount" value="100" />
@@ -305,7 +328,7 @@
         <input type="checkbox" name="checkbox" id="download" value="value">
         <label for="download">download</label>
     </div>
-    <div id="up" class="split content" >
+    <div id="up" class="split content">
         <!--<div id="sql-editor" style="text-align:left;width:800px;height:200px;border:1px solid grey"></div>-->
 
     </div>
@@ -353,6 +376,9 @@
             cursor: 'pointer',
             direction: 'vertical',
             sizes: [20, 80]
+        });
+        $(document).ready(function () {
+            $('#load').hide();
         });
     </script>
 </body>
