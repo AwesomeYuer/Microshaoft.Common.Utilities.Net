@@ -24,7 +24,7 @@
   
   <ItemGroup>
     <ProjectReference Include="..\..\CommonUtilities\CommonUtilities.Lite.Standard.2.x\CommonUtilities.Lite.Standard.2.x.csproj" />
-    <ProjectReference Include="..\..\Microshaoft.Json.NET\Microshaoft.Json.NET.Core.3.x\Microshaoft.Json.NET.Standard.2.x\Microshaoft.Json.NET.Standard.2.x.csproj" />
+    <ProjectReference Include="..\..\Microshaoft.Json.NET\Microshaoft.Json.NET.Standard.2.x\Microshaoft.Json.NET.Standard.2.x.csproj" />
   </ItemGroup>
 
   <Import Project="..\..\SharedSources\Microshaoft.StoreProcedureExecutors.Shared.projitems" Label="Shared" />
