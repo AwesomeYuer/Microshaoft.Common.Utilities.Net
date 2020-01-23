@@ -1,7 +1,9 @@
 {
   "wwwroot": [
     "..\\..\\..\\..\\MsSqlCodeDiffVersioning.Shared\\wwwroot", //Windows
-    "./wwwroot" //Linux
+    "../../../../MsSqlCodeDiffVersioning.Shared/wwwroot", //Linux
+
+    //"..//MsSqlCodeDiffVersioning.Shared//wwwroot" //Linux
 
     //"D:\\MyGitHub\\Microshaoft.Common.Utilities.Net.4x\\Samples\\MsSqlCodeDiffVersioning\\wwwroot"
   ]

@@ -6,14 +6,14 @@ namespace Client
     using System.Net;
     using System.Net.Sockets;
     using System.Text;
-#if NETCOREAPP2_X
+#if NETCOREAPP3_X
     using System.Runtime.InteropServices;
 #endif
     class Class1
     {
         static void Main(string[] args)
         {
-#if NETCOREAPP2_X
+#if NETCOREAPP3_X
             Console.WriteLine(RuntimeInformation.OSArchitecture.ToString());
             Console.WriteLine(RuntimeInformation.OSDescription);
             Console.WriteLine(RuntimeInformation.FrameworkDescription);
@@ -76,7 +76,7 @@ namespace Client
                         {
                             var offset = 4;
                             var l = y.Length - z;
-#if NETCOREAPP2_X
+#if NETCOREAPP3_X
                             var buffer = new ReadOnlySpan<byte>(y, offset, l);
 #else
                             var buffer = new byte[l];
