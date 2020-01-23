@@ -1,4 +1,3 @@
-
 namespace Microshaoft
 {
     using System;
@@ -103,13 +102,13 @@ namespace Microshaoft
                             , " : "
                             , "\r\n"
 
-                            , "PeriodID"
+                            , nameof(PeriodID)
                             , PeriodID
 
-                            , "PeriodModID"
+                            , nameof(PeriodModID)
                             , PeriodModID
 
-                            , "PeriodSeedsBucket"
+                            , nameof(PeriodSeedsBucket)
                             ,
                                 (
                                     PeriodSeedsBucket != null
@@ -117,7 +116,7 @@ namespace Microshaoft
                                     -1 : PeriodSeedsBucket.Length
                                 )
 
-                            , "SecondID"
+                            , nameof(SecondID)
                             , SecondID
 
                             , "CurrentSeedInCurrentBucket"
@@ -130,26 +129,26 @@ namespace Microshaoft
                                 )
 
 
-                            , "IdentityTime"
+                            , nameof(IdentityTime)
                             , IdentityTime
 
-                            , "PeriodAlignedTime"
+                            , nameof(PeriodAlignedTime)
                             , PeriodAlignedTime
 
-                            , "InitializedTime"
+                            , nameof(InitializedTime)
                             , InitializedTime
 
-                            , "BasedTime"
+                            , nameof(BasedDateTime)
                             , BasedDateTime
 
 
-                            , "PeriodInSeconds"
+                            , nameof(PeriodInSeconds)
                             , PeriodInSeconds
 
-                            , "PeriodsMaxCount"
+                            , nameof(PeriodsMaxCount)
                             , PeriodsMaxCount
 
-                            , "InitializePeriodsCount"
+                            , nameof(InitializePeriodsCount)
                             , InitializePeriodsCount
 
 
@@ -178,7 +177,7 @@ namespace Microshaoft
                     , int lowestDecimalDigitsCount = 4
                 )
         {
-            ulong r = (ulong)SecondID;
+            ulong r = (ulong) SecondID;
             if (r >= 0)
             {
                 //r = 1;
@@ -215,7 +214,6 @@ namespace Microshaoft
             }
             return r;
         }
-
 
         public TimeBasedIdentity PartialClone()
         {
@@ -298,11 +296,8 @@ namespace Microshaoft
                 //periodModID++;
                 //periodModID = periodModID % _periodsMaxCount;
             }
-            if (onAfterDataInitializedProcessAction != null)
-            {
-                onAfterDataInitializedProcessAction(this);
-            }
-            int timerIntervalInSeconds = (int)_periodInSeconds / checkTimes;
+            onAfterDataInitializedProcessAction?.Invoke(this);
+            int timerIntervalInSeconds = (int) _periodInSeconds / checkTimes;
             new EasyTimer
                     (
                         timerIntervalInSeconds
@@ -311,10 +306,7 @@ namespace Microshaoft
                         {
                             if (InitializeNextOnePeriodDataProcessAction())
                             {
-                                if (onAfterDataInitializedProcessAction != null)
-                                {
-                                    onAfterDataInitializedProcessAction(this);
-                                }
+                                onAfterDataInitializedProcessAction?.Invoke(this);
                             }
                         }
                     ).Start();
