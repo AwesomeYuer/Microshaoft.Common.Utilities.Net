@@ -14,12 +14,7 @@
     <DefineConstants>TRACE;DEBUG;NETCOREAPP3_X</DefineConstants>
   </PropertyGroup>
 
-
   <Import Project="..\ClientSharedProject\ClientSharedProject.projitems" Label="Shared" />
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NETCore.App" Version="2.2.8" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\CommonUtilities\CommonUtilities.Lite.Standard.2.x\CommonUtilities.Lite.Standard.2.x.csproj" />
