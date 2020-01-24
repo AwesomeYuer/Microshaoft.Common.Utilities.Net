@@ -13,12 +13,16 @@ namespace Microshaoft.Web
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("发生了异常：{0}", context.Exception.Message);
             Console.ForegroundColor = ConsoleColor.Gray;
-            context.Result = new JsonResult
+            context
+                .Result = new JsonResult
                                     (
                                         new
                                         {
                                             statusCode = 500
-                                            , message = context.Exception.Message
+                                            , resultCode = -500
+                                            , message = context
+                                                            .Exception
+                                                            .ToString()
                                         }
                                     )
                                 {

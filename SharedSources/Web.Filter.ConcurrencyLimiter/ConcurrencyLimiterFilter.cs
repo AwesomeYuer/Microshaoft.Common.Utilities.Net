@@ -122,6 +122,7 @@ namespace Microshaoft.AspNetCore.ConcurrencyLimiters
                                     new
                                     {
                                         statusCode = 503
+                                        , resultCode = -503
                                         , message = $"Concurrency {Enum.GetName(typeof(QueueStoreTypeEnum), _queueStoreType)} Queue Limited!"
                                     }
                                 )

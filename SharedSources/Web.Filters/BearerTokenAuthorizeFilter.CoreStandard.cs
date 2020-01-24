@@ -59,6 +59,7 @@ namespace Microshaoft.Web
                                         new
                                         {
                                             statusCode = errorStatusCode
+                                            , resultCode = -1 * errorStatusCode
                                             , message = errorMessage
                                         }
                                     )

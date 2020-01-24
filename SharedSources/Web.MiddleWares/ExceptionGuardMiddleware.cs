@@ -123,7 +123,7 @@ namespace Microshaoft.Web
                                 );
                 }
                 var response = context.Response;
-                response.StatusCode = (int)r.ResponseStatusCode;
+                response.StatusCode = (int) r.ResponseStatusCode;
                 var errorMessage = "Internal Server Error";
                 if (r.ResponseDetails)
                 {
@@ -131,11 +131,11 @@ namespace Microshaoft.Web
                 }
                 var jsonResult =
                             new
-                            {
-                                statusCode = r.ResponseStatusCode
-                                ,
-                                message = errorMessage
-                            };
+                                {
+                                    statusCode = r.ResponseStatusCode
+                                    , resultCode = -1 * ((int) r.ResponseStatusCode)
+                                    , message = errorMessage
+                                };
                 var json = JsonConvert
                                     .SerializeObject
                                             (jsonResult);

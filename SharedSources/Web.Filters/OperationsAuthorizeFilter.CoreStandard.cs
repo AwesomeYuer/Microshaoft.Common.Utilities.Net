@@ -45,6 +45,7 @@ namespace Microshaoft.Web
                         new
                         {
                             statusCode
+                            , resultCode = -1 * statusCode
                             , message = forbiddenMessage
                         }
                     )
