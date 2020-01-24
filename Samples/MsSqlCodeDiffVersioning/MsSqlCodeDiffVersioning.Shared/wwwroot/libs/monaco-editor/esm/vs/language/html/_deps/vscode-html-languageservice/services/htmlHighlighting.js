@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import { createScanner } from '../parser/htmlScanner.js';
-import { DocumentHighlightKind } from '../../vscode-languageserver-types/main.js';
+import { DocumentHighlightKind } from './../_deps/vscode-languageserver-types/main.js';
 import { TokenType } from '../htmlLanguageTypes.js';
 export function findDocumentHighlights(document, position, htmlDocument) {
     var offset = document.offsetAt(position);
@@ -41,4 +41,3 @@ function getTagNameRange(tokenType, document, startOffset) {
     }
     return null;
 }
-//# sourceMappingURL=htmlHighlighting.js.map

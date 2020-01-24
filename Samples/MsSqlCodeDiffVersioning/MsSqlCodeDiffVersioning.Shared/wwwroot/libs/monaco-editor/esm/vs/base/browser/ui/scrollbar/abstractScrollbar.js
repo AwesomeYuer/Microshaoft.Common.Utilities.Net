@@ -71,6 +71,7 @@ var AbstractScrollbar = /** @class */ (function (_super) {
             this.slider.setHeight(height);
         }
         this.slider.setLayerHinting(true);
+        this.slider.setContain('strict');
         this.domNode.domNode.appendChild(this.slider.domNode);
         this.onmousedown(this.slider.domNode, function (e) {
             if (e.leftButton) {

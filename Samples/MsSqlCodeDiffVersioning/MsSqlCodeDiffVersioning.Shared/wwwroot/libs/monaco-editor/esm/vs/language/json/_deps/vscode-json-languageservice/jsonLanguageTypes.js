@@ -1,27 +1,6 @@
-import { Range, TextEdit, Color, ColorInformation, ColorPresentation, FoldingRange, FoldingRangeKind, MarkupKind } from '../vscode-languageserver-types/main.js';
-export { Range, TextEdit, Color, ColorInformation, ColorPresentation, FoldingRange, FoldingRangeKind };
-// #region Proposed types, remove once added to vscode-languageserver-types
-/**
- * Enum of known selection range kinds
- */
-export var SelectionRangeKind;
-(function (SelectionRangeKind) {
-    /**
-     * Empty Kind.
-     */
-    SelectionRangeKind["Empty"] = "";
-    /**
-     * The statment kind, its value is `statement`, possible extensions can be
-     * `statement.if` etc
-     */
-    SelectionRangeKind["Statement"] = "statement";
-    /**
-     * The declaration kind, its value is `declaration`, possible extensions can be
-     * `declaration.function`, `declaration.class` etc.
-     */
-    SelectionRangeKind["Declaration"] = "declaration";
-})(SelectionRangeKind || (SelectionRangeKind = {}));
-// #endregion
+import { MarkupKind } from './../vscode-languageserver-types/main.js';
+export { TextDocument } from './../vscode-languageserver-textdocument/lib/esm/main.js';
+export * from './../vscode-languageserver-types/main.js';
 /**
  * Error codes used by diagnostics
  */
@@ -52,7 +31,8 @@ export var ClientCapabilities;
         textDocument: {
             completion: {
                 completionItem: {
-                    documentationFormat: [MarkupKind.Markdown, MarkupKind.PlainText]
+                    documentationFormat: [MarkupKind.Markdown, MarkupKind.PlainText],
+                    commitCharactersSupport: true
                 }
             }
         }

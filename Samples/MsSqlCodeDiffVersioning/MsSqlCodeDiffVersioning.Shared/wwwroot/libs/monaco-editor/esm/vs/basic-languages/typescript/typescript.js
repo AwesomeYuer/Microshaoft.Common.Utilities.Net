@@ -76,7 +76,7 @@ export var language = {
     operators: [
         '<=', '>=', '==', '!=', '===', '!==', '=>', '+', '-', '**',
         '*', '/', '%', '++', '--', '<<', '</', '>>', '>>>', '&',
-        '|', '^', '!', '~', '&&', '||', '?', ':', '=', '+=', '-=',
+        '|', '^', '!', '~', '&&', '||', '??', '?', ':', '=', '+=', '-=',
         '*=', '**=', '/=', '%=', '<<=', '>>=', '>>>=', '&=', '|=',
         '^=', '@',
     ],
@@ -109,7 +109,7 @@ export var language = {
             // whitespace
             { include: '@whitespace' },
             // regular expression: ensure it is terminated before beginning (otherwise it is an opeator)
-            [/\/(?=([^\\\/]|\\.)+\/([gimsuy]*)(\s*)(\.|;|\/|,|\)|\]|\}|$))/, { token: 'regexp', bracket: '@open', next: '@regexp' }],
+            [/\/(?=([^\\\/]|\\.)+\/([gimsuy]*)(\s*)(\.|;|,|\)|\]|\}|$))/, { token: 'regexp', bracket: '@open', next: '@regexp' }],
             // delimiters and operators
             [/[()\[\]]/, '@brackets'],
             [/[<>](?!@symbols)/, '@brackets'],
@@ -123,10 +123,10 @@ export var language = {
             // numbers
             [/(@digits)[eE]([\-+]?(@digits))?/, 'number.float'],
             [/(@digits)\.(@digits)([eE][\-+]?(@digits))?/, 'number.float'],
-            [/0[xX](@hexdigits)/, 'number.hex'],
-            [/0[oO]?(@octaldigits)/, 'number.octal'],
-            [/0[bB](@binarydigits)/, 'number.binary'],
-            [/(@digits)/, 'number'],
+            [/0[xX](@hexdigits)n?/, 'number.hex'],
+            [/0[oO]?(@octaldigits)n?/, 'number.octal'],
+            [/0[bB](@binarydigits)n?/, 'number.binary'],
+            [/(@digits)n?/, 'number'],
             // delimiter: after number because of .\d floats
             [/[;,.]/, 'delimiter'],
             // strings
