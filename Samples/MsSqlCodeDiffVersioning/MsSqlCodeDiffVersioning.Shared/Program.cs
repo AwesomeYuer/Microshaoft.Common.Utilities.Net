@@ -1,11 +1,9 @@
 ﻿namespace WebApplication.ASPNetCore
 {
     using Microshaoft;
-    using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Hosting;
-    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Primitives;
     using Newtonsoft.Json.Linq;
@@ -15,8 +13,9 @@
     using System.Linq;
     using System.Reflection;
     using System.Runtime.InteropServices;
+
     public class Program
-    { 
+    {
         public static void Main(string[] args)
         {
             if (args != null)
@@ -96,14 +95,7 @@
                                                         .GetExecutingAssembly()
                                                         .Location
                                                 );
-            //var hostingsConfiguration = new ConfigurationBuilder()
-            //                                                .AddJsonFile
-            //                                                    (
-            //                                                        "hostings.json"
-            //                                                        , optional: false
-            //                                                    )
-            //                                                .Build();
-            //兼容 Linux/Windows wwwroot 路径配置
+            ////兼容 Linux/Windows wwwroot 路径配置
             var wwwroot = GetExistsPaths
                                 (
                                     "wwwrootpaths.json"
@@ -147,88 +139,113 @@
                         (
                             (hostingContext, configurationBuilder) =>
                             {
-                                var builder = configurationBuilder
-                                                        .SetBasePath(executingDirectory)
-                                                        .AddJsonFile
+                                configurationBuilder
+                                        .SetBasePath(executingDirectory)
+                                        .AddJsonFile
+                                            (
+                                                path: "dbConnections.json"
+                                                , optional: false
+                                                , reloadOnChange: true
+                                            )
+                                        .AddJsonFile
+                                            (
+                                                path: "dynamicCompositionPluginsPaths.json"
+                                                , optional: false
+                                                , reloadOnChange: true
+                                            )
+                                        .AddJsonFile
+                                            (
+                                                path: "JwtValidation.json"
+                                                , optional: false
+                                                , reloadOnChange: true
+                                            )
+                                        .AddJsonFile
+                                            (
+                                                path: "ExportCsvFormatter.json"
+                                                , optional: false
+                                                , reloadOnChange: true
+                                            );
+                                if
+                                    (
+                                        !args
+                                            .Any
+                                                (
+                                                    (x) =>
+                                                    {
+                                                        return
+                                                            (x == "--urls");
+                                                    }
+                                                )
+                                    )
+                                {
+                                    configurationBuilder
+                                                .AddJsonFile
+                                                    (
+                                                        path: "hostings.json"
+                                                        , optional: true
+                                                        , reloadOnChange: true
+                                                    );
+                                }
+                                var files = EnumerableHelper
+                                                        .Range
                                                             (
-                                                                path: "hostings.json"
-                                                                , optional: true
-                                                                , reloadOnChange: true
+                                                                $@"{executingDirectory}\RoutesConfig\"      // for Windows
+                                                                , $@"{executingDirectory}/RoutesConfig/"    // for Linux
                                                             )
-                                                        .AddJsonFile
+                                                        .Where
                                                             (
-                                                                path: "dbConnections.json"
-                                                                , optional: false
-                                                                , reloadOnChange: true
+                                                                (directory) =>
+                                                                {
+                                                                    return
+                                                                        Directory
+                                                                            .Exists(directory);
+                                                                }
                                                             )
-                                                        .AddJsonFile
+                                                        .SelectMany
                                                             (
-                                                                path: "dynamicCompositionPluginsPaths.json"
-                                                                , optional: false
-                                                                , reloadOnChange: true
+                                                                (directory) =>
+                                                                {
+                                                                    return
+                                                                        Directory
+                                                                            .EnumerateFiles
+                                                                                (
+                                                                                    directory
+                                                                                    , "*.json"
+                                                                                );
+                                                                }
                                                             )
-                                                        .AddJsonFile
+                                                        .Where
                                                             (
-                                                                path: "JwtValidation.json"
-                                                                , optional: false
-                                                                , reloadOnChange: true
+                                                                (file) =>
+                                                                {
+                                                                    return
+                                                                        !file
+                                                                            .Contains
+                                                                                (
+                                                                                    ".development."
+                                                                                    , StringComparison
+                                                                                            .OrdinalIgnoreCase
+                                                                                );
+                                                                }
                                                             )
-                                                        .AddJsonFile
+                                                        .Distinct
                                                             (
-                                                                path: "ExportCsvFormatter.json"
-                                                                , optional: false
-                                                                , reloadOnChange: true
+                                                                new PathFileNameComparer()
                                                             );
-                                //for Windows
-                                var directoryPath = $@"{executingDirectory}\RoutesConfig\";
-                                if (Directory.Exists(directoryPath))
+
+                                foreach (var file in files)
                                 {
-                                    var files = Directory
-                                                    .EnumerateFiles
-                                                        (
-                                                            directoryPath
-                                                            , "*.json"
-                                                        );
-                                    foreach (var file in files)
-                                    {
-                                        if (!file.Contains(".development.", StringComparison.OrdinalIgnoreCase))
-                                        {
-                                            builder
+                                    configurationBuilder
                                                 .AddJsonFile
-                                                     (
-                                                        path: file
-                                                        , optional: false
-                                                        , reloadOnChange: true
-                                                     );
-                                        }
-                                    }
-                                }
-                                //for Linux
-                                directoryPath = $@"{executingDirectory}/RoutesConfig/";
-                                if (Directory.Exists(directoryPath))
-                                {
-                                    var files = Directory
-                                                    .EnumerateFiles
                                                         (
-                                                            directoryPath
-                                                            , "*.json"
+                                                            path: file
+                                                            , optional: false
+                                                            , reloadOnChange: true
                                                         );
-                                    foreach (var file in files)
-                                    {
-                                        if (!file.Contains(".development.", StringComparison.OrdinalIgnoreCase))
-                                        {
-                                            builder
-                                                .AddJsonFile
-                                                     (
-                                                        path: file
-                                                        , optional: false
-                                                        , reloadOnChange: true
-                                                     );
-                                        }
-                                    }
                                 }
-                                var configuration = builder
-                                                        .Build();
+
+                                var configuration = configurationBuilder
+                                                                        .Build();
                                 // register change callback
                                 ChangeToken
                                         .OnChange<JToken>
@@ -236,7 +253,8 @@
                                                 () =>
                                                 {
                                                     return
-                                                        configuration.GetReloadToken();
+                                                        configuration
+                                                                .GetReloadToken();
                                                 }
                                                 , (x) =>
                                                 {
@@ -268,66 +286,65 @@
 #endif
                     ;
         }
-        private static IEnumerable<string> GetExistsPaths(string configurationJsonFile, string sectionName)
+        public static IEnumerable<string> GetExistsPaths(string configurationJsonFile, string sectionName)
         {
-            var configurationBuilder =
-                        new ConfigurationBuilder()
-                                .AddJsonFile(configurationJsonFile);
+            var configurationBuilder = new ConfigurationBuilder();
+            configurationBuilder
+                        .AddJsonFile
+                                (
+                                    configurationJsonFile
+                                );
             var configuration = configurationBuilder.Build();
-
-            var executingDirectory =
-                        Path
-                            .GetDirectoryName
+            var executingDirectory = Path
+                                        .GetDirectoryName
+                                                (
+                                                    Assembly
+                                                        .GetExecutingAssembly()
+                                                        .Location
+                                                );
+            var result = configuration
+                                .GetSection(sectionName)
+                                .AsEnumerable()
+                                .Select
                                     (
-                                        Assembly
-                                            .GetExecutingAssembly()
-                                            .Location
-                                    );
-            //executingDirectory = AppContext.BaseDirectory;
-            var result =
-                    configuration
-                        .GetSection(sectionName)
-                        .AsEnumerable()
-                        .Select
-                            (
-                                (x) =>
-                                {
-                                    var r = x.Value;
-                                    if (!r.IsNullOrEmptyOrWhiteSpace())
-                                    {
-                                        if
-                                            (
-                                                r.StartsWith(".")
-                                                &&
-                                                !r.StartsWith("..")
-                                            )
+                                        (x) =>
                                         {
-                                            r = r.TrimStart('.', '\\', '/');
-                                        }
-                                        r = Path
-                                                .Combine
+                                            var r = x.Value;
+                                            if (!r.IsNullOrEmptyOrWhiteSpace())
+                                            {
+                                                if
                                                     (
-                                                        executingDirectory
-                                                        , r
-                                                    );
-                                    }
-                                    return r;
-                                }
-                            )
-                        .Where
-                            (
-                                (x) =>
-                                {
-                                    return
-                                        (
-                                            !x
-                                                .IsNullOrEmptyOrWhiteSpace()
-                                            &&
-                                            Directory
-                                                .Exists(x)
-                                        );
-                                }
-                            );
+                                                        r.StartsWith(".")
+                                                        &&
+                                                        !r.StartsWith("..")
+                                                    )
+                                                {
+                                                    r = r.TrimStart('.', '\\', '/');
+                                                }
+                                                r = Path
+                                                        .Combine
+                                                            (
+                                                                executingDirectory
+                                                                , r
+                                                            );
+                                            }
+                                            return r;
+                                        }
+                                    )
+                                .Where
+                                    (
+                                        (x) =>
+                                        {
+                                            return
+                                                (
+                                                    !x
+                                                        .IsNullOrEmptyOrWhiteSpace()
+                                                    &&
+                                                    Directory
+                                                        .Exists(x)
+                                                );
+                                        }
+                                    );
             return result;
         }
     }
