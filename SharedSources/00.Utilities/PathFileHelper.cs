@@ -102,10 +102,55 @@
 }
 namespace Microshaoft
 {
-    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
     using System.Runtime.InteropServices;
+    public class PathFileNameComparer : IEqualityComparer<string>
+    {
+        private bool _ignoreCase;
+        public PathFileNameComparer(bool ignoreCase = true)
+        {
+            _ignoreCase = ignoreCase;
+        }
+
+        public bool Equals([AllowNull] string x, [AllowNull] string y)
+        {
+            return
+                (
+                    string
+                        .Compare
+                            (
+                                x
+                                    .Replace('\\', '\t')
+                                    .Replace('/', '\t')
+                                , y
+                                    .Replace('\\', '\t')
+                                    .Replace('/', '\t')
+                                , _ignoreCase
+                            )
+                    ==
+                    0
+                );
+        }
+
+        public int GetHashCode([DisallowNull] string target)
+        {
+            var s = target
+                        .Replace('\\', '\t')
+                        .Replace('/', '\t');
+            if (_ignoreCase)
+            {
+                s = s.ToLower();
+            }
+            return
+                s.GetHashCode();
+        }
+    }
+
+
+
     public static class PathFileHelper
     {
         [DllImport("kernel32.dll")]

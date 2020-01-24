@@ -634,7 +634,7 @@
                                                             );
                                             if (r)
                                             {
-                                                (DateTime beginTime, long beginTimeStamp) = (ValueTuple<DateTime, long>)removed;
+                                                (DateTime beginTime, long beginTimeStamp) = (ValueTuple<DateTime, long>) removed;
                                                 removed = null;
                                                 httpContext
                                                     .Response
@@ -669,7 +669,7 @@
                             }
                         );
             app.UseCors();
-            if (env.IsDevelopment())
+            //if (env.IsDevelopment())
             {
                 app
                     .UseExceptionGuard<string>
@@ -718,7 +718,7 @@
                         );
                 //app.UseDeveloperExceptionPage();
             }
-            else
+            //else
             {
                 //app.UseHsts();
             }

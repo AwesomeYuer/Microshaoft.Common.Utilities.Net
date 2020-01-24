@@ -18,7 +18,7 @@
     },
     "WebApplication1": {
       "commandName": "Project",
-      "commandLineArgs": "/wait",
+      "commandLineArgs": "/wait 10 --urls http://*:8100",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
