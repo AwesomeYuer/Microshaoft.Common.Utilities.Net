@@ -50,7 +50,7 @@
             return cell;
         }
         function dynamicAjaxBind() {
-            $('#load').fadeIn();
+            $('#loading').fadeIn();
             var sql = editor.getValue();
             var selection = editor.getSelection();
             if (selection) {
@@ -211,7 +211,7 @@
                             binded2 = true;
                         }
                     }
-                    $('#load').fadeOut();
+                    $('#loading').fadeOut();
                 },
                 error: function (x, y, z) {
                     d = JSON.parse(x.responseText);
@@ -239,7 +239,7 @@
                             }
                         ]
                     });
-                    $('#load').fadeOut();
+                    $('#loading').fadeOut();
                     alert(x.responseText);
                     binded2 = true;
                 }
@@ -299,7 +299,7 @@
             }
     </style>
     <style type="text/css">
-        #load {
+        #loading {
             position: fixed;
             top: 0px;
             right: 0px;
@@ -317,9 +317,9 @@
     </style>
 </head>
 <body>
-    <div id="load" align="center">
+    <div id="loading" align="center">
         <!--<img src="images/loading.gif" width="28" height="28" align="absmiddle" />-->
-        加载中...
+        Loading ...
     </div>
     <div align="center">
         <a id="downloader" target="_blank">downloader</a>
