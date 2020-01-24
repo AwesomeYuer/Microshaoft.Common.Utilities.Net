@@ -50,6 +50,7 @@ define(["require", "exports", "./lib/typescriptServices", "./lib/lib"], function
             else if (fileName in this._extraLibs) {
                 return String(this._extraLibs[fileName].version);
             }
+            return '';
         };
         TypeScriptWorker.prototype.getScriptSnapshot = function (fileName) {
             var text;
@@ -94,7 +95,7 @@ define(["require", "exports", "./lib/typescriptServices", "./lib/lib"], function
         };
         TypeScriptWorker.prototype.getDefaultLibFileName = function (options) {
             // TODO@joh support lib.es7.d.ts
-            return options.target <= ts.ScriptTarget.ES5 ? DEFAULT_LIB.NAME : ES6_LIB.NAME;
+            return (options.target || ts.ScriptTarget.ES5) <= ts.ScriptTarget.ES5 ? DEFAULT_LIB.NAME : ES6_LIB.NAME;
         };
         TypeScriptWorker.prototype.isDefaultLibFileName = function (fileName) {
             return fileName === this.getDefaultLibFileName(this._compilerOptions);
@@ -118,6 +119,11 @@ define(["require", "exports", "./lib/typescriptServices", "./lib/lib"], function
         };
         TypeScriptWorker.prototype.getSemanticDiagnostics = function (fileName) {
             var diagnostics = this._languageService.getSemanticDiagnostics(fileName);
+            TypeScriptWorker.clearFiles(diagnostics);
+            return Promise.resolve(diagnostics);
+        };
+        TypeScriptWorker.prototype.getSuggestionDiagnostics = function (fileName) {
+            var diagnostics = this._languageService.getSuggestionDiagnostics(fileName);
             TypeScriptWorker.clearFiles(diagnostics);
             return Promise.resolve(diagnostics);
         };
@@ -159,8 +165,18 @@ define(["require", "exports", "./lib/typescriptServices", "./lib/lib"], function
         TypeScriptWorker.prototype.getFormattingEditsAfterKeystroke = function (fileName, postion, ch, options) {
             return Promise.resolve(this._languageService.getFormattingEditsAfterKeystroke(fileName, postion, ch, options));
         };
+        TypeScriptWorker.prototype.findRenameLocations = function (fileName, positon, findInStrings, findInComments, providePrefixAndSuffixTextForRename) {
+            return Promise.resolve(this._languageService.findRenameLocations(fileName, positon, findInStrings, findInComments, providePrefixAndSuffixTextForRename));
+        };
+        TypeScriptWorker.prototype.getRenameInfo = function (fileName, positon, options) {
+            return Promise.resolve(this._languageService.getRenameInfo(fileName, positon, options));
+        };
         TypeScriptWorker.prototype.getEmitOutput = function (fileName) {
             return Promise.resolve(this._languageService.getEmitOutput(fileName));
+        };
+        TypeScriptWorker.prototype.getCodeFixesAtPosition = function (fileName, start, end, errorCodes, formatOptions) {
+            var preferences = {};
+            return Promise.resolve(this._languageService.getCodeFixesAtPosition(fileName, start, end, errorCodes, formatOptions, preferences));
         };
         TypeScriptWorker.prototype.updateExtraLibs = function (extraLibs) {
             this._extraLibs = extraLibs;

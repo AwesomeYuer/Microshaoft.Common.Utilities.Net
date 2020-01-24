@@ -17,8 +17,10 @@ var __extends = (this && this.__extends) || (function () {
 })();
 import './contextview.css';
 import * as DOM from '../../dom.js';
+import * as platform from '../../../common/platform.js';
 import { toDisposable, Disposable, DisposableStore } from '../../../common/lifecycle.js';
 import { Range } from '../../../common/range.js';
+import { BrowserFeatures } from '../../canIUse.js';
 /**
  * Lays out a one dimensional view next to an anchor in a viewport.
  *
@@ -108,7 +110,7 @@ var ContextView = /** @class */ (function (_super) {
         if (!this.isVisible()) {
             return;
         }
-        if (this.delegate.canRelayout === false) {
+        if (this.delegate.canRelayout === false && !(platform.isIOS && BrowserFeatures.pointerEvents)) {
             this.hide();
             return;
         }
@@ -174,9 +176,10 @@ var ContextView = /** @class */ (function (_super) {
         this.view.style.width = 'initial';
     };
     ContextView.prototype.hide = function (data) {
+        var _a;
         var delegate = this.delegate;
         this.delegate = null;
-        if (delegate && delegate.onHide) {
+        if ((_a = delegate) === null || _a === void 0 ? void 0 : _a.onHide) {
             delegate.onHide(data);
         }
         this.toDisposeOnClean.dispose();

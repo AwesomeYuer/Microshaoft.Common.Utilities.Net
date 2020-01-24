@@ -74,7 +74,7 @@ var InputBox = /** @class */ (function (_super) {
         _this.element = dom.append(container, $('.monaco-inputbox.idle'));
         var tagName = _this.options.flexibleHeight ? 'textarea' : 'input';
         var wrapper = dom.append(_this.element, $('.wrapper'));
-        _this.input = dom.append(wrapper, $(tagName + '.input'));
+        _this.input = dom.append(wrapper, $(tagName + '.input.empty'));
         _this.input.setAttribute('autocorrect', 'off');
         _this.input.setAttribute('autocapitalize', 'off');
         _this.input.setAttribute('spellcheck', 'false');
@@ -83,7 +83,7 @@ var InputBox = /** @class */ (function (_super) {
         if (_this.options.flexibleHeight) {
             _this.maxHeight = typeof _this.options.flexibleMaxHeight === 'number' ? _this.options.flexibleMaxHeight : Number.POSITIVE_INFINITY;
             _this.mirror = dom.append(wrapper, $('div.mirror'));
-            _this.mirror.innerHTML = '&nbsp;';
+            _this.mirror.innerHTML = '&#160;';
             _this.scrollableElement = new ScrollableElement(_this.element, { vertical: 1 /* Auto */ });
             if (_this.options.flexibleWidth) {
                 _this.input.setAttribute('wrap', 'off');
@@ -95,8 +95,9 @@ var InputBox = /** @class */ (function (_super) {
             // from ScrollableElement to DOM
             _this._register(_this.scrollableElement.onScroll(function (e) { return _this.input.scrollTop = e.scrollTop; }));
             var onSelectionChange = Event.filter(domEvent(document, 'selectionchange'), function () {
+                var _a;
                 var selection = document.getSelection();
-                return !!selection && selection.anchorNode === wrapper;
+                return ((_a = selection) === null || _a === void 0 ? void 0 : _a.anchorNode) === wrapper;
             });
             // from DOM to ScrollableElement
             _this._register(onSelectionChange(_this.updateScrollDimensions, _this));
@@ -122,12 +123,8 @@ var InputBox = /** @class */ (function (_super) {
                 _this.input.focus();
             });
         }
-        setTimeout(function () {
-            if (!_this.input) {
-                return;
-            }
-            _this.updateMirror();
-        }, 0);
+        _this.ignoreGesture(_this.input);
+        setTimeout(function () { return _this.updateMirror(); }, 0);
         // Support actions
         if (_this.options.actions) {
             _this.actionbar = _this._register(new ActionBar(_this.element));
@@ -143,20 +140,17 @@ var InputBox = /** @class */ (function (_super) {
         this._showMessage();
     };
     InputBox.prototype.setPlaceHolder = function (placeHolder) {
-        if (this.input) {
-            this.input.setAttribute('placeholder', placeHolder);
-            this.input.title = placeHolder;
-        }
+        this.placeholder = placeHolder;
+        this.input.setAttribute('placeholder', placeHolder);
+        this.input.title = placeHolder;
     };
     InputBox.prototype.setAriaLabel = function (label) {
         this.ariaLabel = label;
-        if (this.input) {
-            if (label) {
-                this.input.setAttribute('aria-label', this.ariaLabel);
-            }
-            else {
-                this.input.removeAttribute('aria-label');
-            }
+        if (label) {
+            this.input.setAttribute('aria-label', this.ariaLabel);
+        }
+        else {
+            this.input.removeAttribute('aria-label');
         }
     };
     Object.defineProperty(InputBox.prototype, "inputElement", {
@@ -206,6 +200,7 @@ var InputBox = /** @class */ (function (_super) {
         this.input.removeAttribute('disabled');
     };
     InputBox.prototype.disable = function () {
+        this.blur();
         this.input.disabled = true;
         this._hideMessage();
     };
@@ -250,7 +245,7 @@ var InputBox = /** @class */ (function (_super) {
         configurable: true
     });
     InputBox.prototype.updateScrollDimensions = function () {
-        if (typeof this.cachedContentHeight !== 'number' || typeof this.cachedHeight !== 'number') {
+        if (typeof this.cachedContentHeight !== 'number' || typeof this.cachedHeight !== 'number' || !this.scrollableElement) {
             return;
         }
         var scrollHeight = this.cachedContentHeight;
@@ -267,7 +262,7 @@ var InputBox = /** @class */ (function (_super) {
         dom.removeClass(this.element, 'error');
         dom.addClass(this.element, this.classForType(message.type));
         var styles = this.stylesForType(this.message.type);
-        this.element.style.border = styles.border ? "1px solid " + styles.border : null;
+        this.element.style.border = styles.border ? "1px solid " + styles.border : '';
         // ARIA Support
         var alertText;
         if (message.type === 3 /* ERROR */) {
@@ -347,9 +342,9 @@ var InputBox = /** @class */ (function (_super) {
                     : renderText(_this.message.content, renderOptions));
                 dom.addClass(spanElement, _this.classForType(_this.message.type));
                 var styles = _this.stylesForType(_this.message.type);
-                spanElement.style.backgroundColor = styles.background ? styles.background.toString() : null;
+                spanElement.style.backgroundColor = styles.background ? styles.background.toString() : '';
                 spanElement.style.color = styles.foreground ? styles.foreground.toString() : null;
-                spanElement.style.border = styles.border ? "1px solid " + styles.border : null;
+                spanElement.style.border = styles.border ? "1px solid " + styles.border : '';
                 dom.append(div, spanElement);
                 return null;
             },
@@ -373,6 +368,7 @@ var InputBox = /** @class */ (function (_super) {
         this._onDidChange.fire(this.value);
         this.validate();
         this.updateMirror();
+        dom.toggleClass(this.input, 'empty', !this.value);
         if (this.state === 'open' && this.contextViewProvider) {
             this.contextViewProvider.layout();
         }
@@ -381,7 +377,7 @@ var InputBox = /** @class */ (function (_super) {
         if (!this.mirror) {
             return;
         }
-        var value = this.value || this.placeholder;
+        var value = this.value;
         var lastCharCode = value.charCodeAt(value.length - 1);
         var suffix = lastCharCode === 10 ? ' ' : '';
         var mirrorTextContent = value + suffix;
@@ -389,7 +385,7 @@ var InputBox = /** @class */ (function (_super) {
             this.mirror.textContent = value + suffix;
         }
         else {
-            this.mirror.innerHTML = '&nbsp;';
+            this.mirror.innerHTML = '&#160;';
         }
         this.layout();
     };
@@ -409,18 +405,16 @@ var InputBox = /** @class */ (function (_super) {
         this.applyStyles();
     };
     InputBox.prototype.applyStyles = function () {
-        if (this.element) {
-            var background = this.inputBackground ? this.inputBackground.toString() : null;
-            var foreground = this.inputForeground ? this.inputForeground.toString() : null;
-            var border = this.inputBorder ? this.inputBorder.toString() : null;
-            this.element.style.backgroundColor = background;
-            this.element.style.color = foreground;
-            this.input.style.backgroundColor = background;
-            this.input.style.color = foreground;
-            this.element.style.borderWidth = border ? '1px' : null;
-            this.element.style.borderStyle = border ? 'solid' : null;
-            this.element.style.borderColor = border;
-        }
+        var background = this.inputBackground ? this.inputBackground.toString() : '';
+        var foreground = this.inputForeground ? this.inputForeground.toString() : '';
+        var border = this.inputBorder ? this.inputBorder.toString() : '';
+        this.element.style.backgroundColor = background;
+        this.element.style.color = foreground;
+        this.input.style.backgroundColor = background;
+        this.input.style.color = foreground;
+        this.element.style.borderWidth = border ? '1px' : '';
+        this.element.style.borderStyle = border ? 'solid' : '';
+        this.element.style.borderColor = border;
     };
     InputBox.prototype.layout = function () {
         if (!this.mirror) {
@@ -434,15 +428,23 @@ var InputBox = /** @class */ (function (_super) {
             this._onDidHeightChange.fire(this.cachedContentHeight);
         }
     };
+    InputBox.prototype.insertAtCursor = function (text) {
+        var inputElement = this.inputElement;
+        var start = inputElement.selectionStart;
+        var end = inputElement.selectionEnd;
+        var content = inputElement.value;
+        if (start !== null && end !== null) {
+            this.value = content.substr(0, start) + text + content.substr(end);
+            inputElement.setSelectionRange(start + 1, start + 1);
+            this.layout();
+        }
+    };
     InputBox.prototype.dispose = function () {
         this._hideMessage();
-        this.element = null; // StrictNullOverride: nulling out ok in dispose
-        this.input = null; // StrictNullOverride: nulling out ok in dispose
-        this.contextViewProvider = undefined;
         this.message = null;
-        this.validation = undefined;
-        this.state = null; // StrictNullOverride: nulling out ok in dispose
-        this.actionbar = undefined;
+        if (this.actionbar) {
+            this.actionbar.dispose();
+        }
         _super.prototype.dispose.call(this);
     };
     return InputBox;

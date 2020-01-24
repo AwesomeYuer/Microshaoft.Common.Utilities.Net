@@ -80,6 +80,7 @@ var StandardWheelEvent = /** @class */ (function () {
         this.deltaY = deltaY;
         this.deltaX = deltaX;
         if (e) {
+            // Old (deprecated) wheel events
             var e1 = e;
             var e2 = e;
             // vertical delta scroll
@@ -89,8 +90,17 @@ var StandardWheelEvent = /** @class */ (function () {
             else if (typeof e2.VERTICAL_AXIS !== 'undefined' && e2.axis === e2.VERTICAL_AXIS) {
                 this.deltaY = -e2.detail / 3;
             }
-            else {
-                this.deltaY = -e.deltaY / 40;
+            else if (e.type === 'wheel') {
+                // Modern wheel event
+                // https://developer.mozilla.org/en-US/docs/Web/API/WheelEvent
+                var ev = e;
+                if (ev.deltaMode === ev.DOM_DELTA_LINE) {
+                    // the deltas are expressed in lines
+                    this.deltaY = -e.deltaY;
+                }
+                else {
+                    this.deltaY = -e.deltaY / 40;
+                }
             }
             // horizontal delta scroll
             if (typeof e1.wheelDeltaX !== 'undefined') {
@@ -104,8 +114,17 @@ var StandardWheelEvent = /** @class */ (function () {
             else if (typeof e2.HORIZONTAL_AXIS !== 'undefined' && e2.axis === e2.HORIZONTAL_AXIS) {
                 this.deltaX = -e.detail / 3;
             }
-            else {
-                this.deltaX = -e.deltaX / 40;
+            else if (e.type === 'wheel') {
+                // Modern wheel event
+                // https://developer.mozilla.org/en-US/docs/Web/API/WheelEvent
+                var ev = e;
+                if (ev.deltaMode === ev.DOM_DELTA_LINE) {
+                    // the deltas are expressed in lines
+                    this.deltaX = -e.deltaX;
+                }
+                else {
+                    this.deltaX = -e.deltaX / 40;
+                }
             }
             // Assume a vertical scroll if nothing else worked
             if (this.deltaY === 0 && this.deltaX === 0 && e.wheelDelta) {
