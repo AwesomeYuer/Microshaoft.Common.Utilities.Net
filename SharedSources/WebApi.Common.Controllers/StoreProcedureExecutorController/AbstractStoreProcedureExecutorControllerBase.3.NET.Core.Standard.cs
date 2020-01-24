@@ -446,16 +446,16 @@ namespace Microshaoft.WebApi.Controllers
                                     );
                 result
                     .Result = result
-                                    .Result
-                                    .GetDescendantByPathKeys
-                                            (
-                                                resultJsonPathPart1
-                                                , resultJsonPathPart2
-                                                , resultJsonPathPart3
-                                                , resultJsonPathPart4
-                                                , resultJsonPathPart5
-                                                , resultJsonPathPart6
-                                            );
+                                .Result
+                                .GetDescendantByPathKeys
+                                        (
+                                            resultJsonPathPart1
+                                            , resultJsonPathPart2
+                                            , resultJsonPathPart3
+                                            , resultJsonPathPart4
+                                            , resultJsonPathPart5
+                                            , resultJsonPathPart6
+                                        );
                 if (result.Result == null)
                 {
                     return
@@ -465,6 +465,7 @@ namespace Microshaoft.WebApi.Controllers
                                        new
                                        {
                                            statusCode = 404
+                                           , resultCode = -404
                                            , message = "data path not found"
                                        }
                                    )
@@ -482,8 +483,12 @@ namespace Microshaoft.WebApi.Controllers
                             (
                                 new
                                 {
-                                    statusCode = result.StatusCode
-                                    , message = result.Message
+                                    statusCode = result
+                                                    .StatusCode
+                                    , resultCode = -1 * result
+                                                            .StatusCode
+                                    , message = result
+                                                    .Message
                                 }
                             )
                     {

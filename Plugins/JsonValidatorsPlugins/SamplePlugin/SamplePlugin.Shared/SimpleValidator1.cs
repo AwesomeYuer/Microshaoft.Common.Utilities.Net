@@ -26,9 +26,10 @@
                 )
                     Validate
                         (
-                            JToken parameters
-                            ,
-                            ActionExecutingContext actionExecutingContext
+                            JToken
+                                    parameters
+                            , ActionExecutingContext
+                                    actionExecutingContext
                         )
         {
             var httpContext = actionExecutingContext.HttpContext;
@@ -54,6 +55,7 @@
                                     new
                                     {
                                         statusCode = 400
+                                        , resultCode = -400
                                         , message = "invalidate, must remove ccc"
                                     }
                                 )

@@ -19,6 +19,7 @@
           "operations": [ "a1", "a2" ],
           "isAsyncExecuting": false,
           "EnableStatistics": true,
+          "requestvAlidator": "simpleValidator1",
           "commandtimeoutInSeconds": 103,
           "InputsParameters": [
             {

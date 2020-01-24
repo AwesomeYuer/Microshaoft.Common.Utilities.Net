@@ -235,6 +235,7 @@ namespace Microshaoft.Web
                                         new
                                         {
                                             statusCode = 400
+                                            , resultCode = -400
                                             , message = "can't validate without validator plugin!"
                                         }
                                     )
@@ -246,7 +247,8 @@ namespace Microshaoft.Web
                 if (!isValid)
                 {
                     context
-                        .Result = result;
+                        .Result
+                            = result;
                 }
             }
         }
