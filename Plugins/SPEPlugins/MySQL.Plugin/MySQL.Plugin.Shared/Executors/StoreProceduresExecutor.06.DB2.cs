@@ -81,7 +81,7 @@ namespace Microshaoft
                                                         (int)o
                                                     )
                                             )
-                                        //& 255
+                                            //& 255
                                         )
                                 );
                     }

@@ -16,8 +16,6 @@ namespace Microshaoft
                             , NpgsqlParameter
                         >
     {
-
-
         public NpgSqlStoreProceduresExecutor
                 (
                     ConcurrentDictionary<string, ExecutingInfo>

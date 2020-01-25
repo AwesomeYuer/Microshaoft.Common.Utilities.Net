@@ -1,13 +1,12 @@
 ﻿namespace Test
 {
+    using Microshaoft;
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using Microshaoft;
-    using Newtonsoft.Json.Linq;
-    using System.Globalization;
     class Program123
     {
         static void Main114(string[] args)
@@ -121,10 +120,10 @@ namespace Microshaoft
 {
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
-    using System.Collections.Generic;
     using System;
-    using System.IO;
+    using System.Collections.Generic;
     using System.Globalization;
+    using System.IO;
 
     public static class JsonReaderHelper
     {

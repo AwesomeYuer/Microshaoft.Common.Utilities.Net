@@ -22,7 +22,6 @@ namespace Microshaoft
 
         }
 
-
         protected override SqliteParameter
                         OnQueryDefinitionsSetInputParameterProcess
                             (

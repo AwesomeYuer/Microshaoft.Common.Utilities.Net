@@ -67,7 +67,5 @@
                 connection.StatisticsEnabled = enableStatistics;
             }
         }
-
-
     }
 }
