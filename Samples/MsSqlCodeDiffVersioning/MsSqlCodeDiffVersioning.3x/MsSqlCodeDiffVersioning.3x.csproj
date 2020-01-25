@@ -16,20 +16,6 @@
     <DefineConstants>NETCOREAPP;NETCOREAPP3_X</DefineConstants>
   </PropertyGroup>
 
-  <!--<ItemGroup>
-    <Content Remove="wwwroot\libs\jquery-ui\jquery-ui-1.12.1.css" />
-    <Content Remove="wwwroot\libs\jquery-ui\jquery-ui-1.12.1.js" />
-  </ItemGroup>-->
-
-  <!--<ItemGroup>
-    <EmbeddedResource Include="wwwroot\libs\jquery-ui\jquery-ui-1.12.1.js">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Include="wwwroot\libs\jquery-ui\jquery-ui-1.12.1.css">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
-  </ItemGroup>-->
-
   <ItemGroup>
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml.user" />
   </ItemGroup>
@@ -88,15 +74,5 @@
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(OS)' == 'Windows_NT'">
     <Exec Command="rem only for Windows/dos cmd&#xD;&#xA;            &#xD;&#xA;xcopy ..\..\..\Plugins\SPEPlugins\MsSQL.Plugin\MsSQL.Plugin.NET.Standard.2.x\bin\Debug\netstandard2.1\Microshaoft*.dll $(TargetDir)Plugins\ /Y&#xD;&#xA;xcopy ..\..\..\Plugins\SPEPlugins\MySQL.Plugin\MySQL.Plugin.NET.Core.3.x\bin\Debug\netcoreapp3.1\Microshaoft*.dll $(TargetDir)Plugins\ /Y&#xD;&#xA;xcopy ..\..\..\Plugins\JsonValidatorsPlugins\SamplePlugin\SamplePlugin.NET.Core.3.x\bin\Debug\netcoreapp3.1\Microshaoft*.dll $(TargetDir)Plugins\ /Y&#xD;&#xA;&#xD;&#xA;xcopy ..\..\..\Plugins\SPEPlugins\MsSQL.Plugin\MsSQL.Plugin.NET.Standard.2.x\bin\Debug\netstandard2.1\Microshaoft*.pdb $(TargetDir)Plugins\ /Y&#xD;&#xA;xcopy ..\..\..\Plugins\SPEPlugins\MySQL.Plugin\MySQL.Plugin.NET.Core.3.x\bin\Debug\netcoreapp3.1\Microshaoft*.pdb $(TargetDir)Plugins\ /Y&#xD;&#xA;xcopy ..\..\..\Plugins\JsonValidatorsPlugins\SamplePlugin\SamplePlugin.NET.Core.3.x\bin\Debug\netcoreapp3.1\Microshaoft*.pdb $(TargetDir)Plugins\ /Y&#xD;&#xA;&#xD;&#xA;xcopy ..\..\..\Plugins\SPEPlugins\MySQL.Plugin\MySQL.Plugin.NET.Core.3.x\bin\Debug\netcoreapp3.1\*mysql.data* $(TargetDir)Plugins\ /Y&#xD;&#xA;xcopy ..\..\..\Plugins\SPEPlugins\MySQL.Plugin\MySQL.Plugin.NET.Core.3.x\bin\Debug\netcoreapp3.1\*npgsql* $(TargetDir)Plugins\ /Y&#xD;&#xA;xcopy ..\..\..\Plugins\SPEPlugins\MySQL.Plugin\MySQL.Plugin.NET.Core.3.x\bin\Debug\netcoreapp3.1\*sqlite* $(TargetDir)Plugins\ /Y&#xD;&#xA;xcopy ..\..\..\Plugins\SPEPlugins\MySQL.Plugin\MySQL.Plugin.NET.Core.3.x\bin\Debug\netcoreapp3.1\*oracle* $(TargetDir)Plugins\ /Y&#xD;&#xA;xcopy ..\..\..\Plugins\SPEPlugins\MySQL.Plugin\MySQL.Plugin.NET.Core.3.x\bin\Debug\netcoreapp3.1\*db2* $(TargetDir)Plugins\ /Y&#xD;&#xA;&#xD;&#xA;xcopy ..\..\..\Plugins\SPEPlugins\MySQL.Plugin\MySQL.Plugin.NET.Core.3.x\bin\Debug\netcoreapp3.1\*mysql.data* $(TargetDir) /Y&#xD;&#xA;xcopy ..\..\..\Plugins\SPEPlugins\MySQL.Plugin\MySQL.Plugin.NET.Core.3.x\bin\Debug\netcoreapp3.1\*npgsql* $(TargetDir) /Y&#xD;&#xA;xcopy ..\..\..\Plugins\SPEPlugins\MySQL.Plugin\MySQL.Plugin.NET.Core.3.x\bin\Debug\netcoreapp3.1\*sqlite* $(TargetDir) /Y&#xD;&#xA;xcopy ..\..\..\Plugins\SPEPlugins\MySQL.Plugin\MySQL.Plugin.NET.Core.3.x\bin\Debug\netcoreapp3.1\*oracle* $(TargetDir) /Y&#xD;&#xA;xcopy ..\..\..\Plugins\SPEPlugins\MySQL.Plugin\MySQL.Plugin.NET.Core.3.x\bin\Debug\netcoreapp3.1\*db2* $(TargetDir) /Y&#xD;&#xA;" />
   </Target>
-
-  
-  
-  <!--<ItemGroup>
-    <PackageReference Update="Microsoft.NETCore.App" Version="2.2.7" />
-  </ItemGroup>-->
-
-  <!--<ItemGroup>
-    <PackageReference Update="Microsoft.NETCore.App" Version="2.2.6" />
-  </ItemGroup>-->
 
 </Project>
