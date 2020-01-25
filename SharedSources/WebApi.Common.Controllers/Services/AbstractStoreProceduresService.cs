@@ -832,48 +832,49 @@ namespace Microshaoft.Web
                         , enableStatistics
                     );
             }
-            var routeConfiguration = _configuration
-                                            .GetSection($"Routes:{routeName}");
-            if (!routeConfiguration.Exists())
-            {
-                success = false;
-                statusCode = 404;
-                message = $"{routeName} not found";
-            }
+            success = _configuration
+                            .TryGetSection
+                                    (
+                                        $"Routes:{routeName}"
+                                        , out var routeConfiguration
+                                    );
             if (!success)
             {
+                statusCode = 404;
+                message = $"{routeName} not found";
                 return
                     Result();
             }
             if
                 (
                     !httpMethod
-                        .StartsWith
-                            (
-                                "http"
-                                , StringComparison
-                                    .OrdinalIgnoreCase
-                            )
+                            .StartsWith
+                                (
+                                    "http"
+                                    , StringComparison
+                                        .OrdinalIgnoreCase
+                                )
                 )
             {
                 httpMethod = "http" + httpMethod;
             }
-            var actionConfiguration = routeConfiguration
-                                            .GetSection($"{httpMethod}");
-            if (!actionConfiguration.Exists())
-            {
-                success = false;
-                statusCode = 403;
-                message = $"{httpMethod} verb forbidden";
-            }
+            success = routeConfiguration
+                                    .TryGetSection
+                                            (
+                                                $"{httpMethod}"
+                                                , out var actionConfiguration
+                                            );
             if (!success)
             {
+                //success = false;
+                statusCode = 403;
+                message = $"{httpMethod} verb forbidden";
                 return
                     Result();
             }
-            var connectionID = actionConfiguration
-                                            .GetValue<string>
-                                                    ("ConnectionID");
+            actionConfiguration
+                        .TryGetValue<string>
+                                ("ConnectionID", out var connectionID);
             success = !connectionID.IsNullOrEmptyOrWhiteSpace();
             if (!success)
             {
@@ -882,13 +883,12 @@ namespace Microshaoft.Web
                 return
                     Result();
             }
-            var connectionConfiguration =
-                                _configuration
-                                        .GetSection
-                                            ($"Connections:{connectionID}");
-            connectionString = connectionConfiguration
-                                        .GetValue<string>
-                                            ("ConnectionString");
+            _configuration
+                            .TryGetSection
+                                    ($"Connections:{connectionID}", out var connectionConfiguration);
+            connectionConfiguration
+                            .TryGetValue<string>
+                                    ("ConnectionString", out connectionString);
             success = !connectionString.IsNullOrEmptyOrWhiteSpace();
             if (!success)
             {
@@ -897,9 +897,9 @@ namespace Microshaoft.Web
                 return
                     Result();
             }
-            dataBaseType = connectionConfiguration
-                                        .GetValue<string>
-                                            ("DataBaseType");
+            connectionConfiguration
+                            .TryGetValue<string>
+                                ("DataBaseType", out dataBaseType);
             success = !dataBaseType
                             .IsNullOrEmptyOrWhiteSpace();
             if (!success)
@@ -910,79 +910,67 @@ namespace Microshaoft.Web
                     Result();
             }
             
-            storeProcedureName = actionConfiguration
-                                        .GetValue<string>
-                                            ("StoreProcedureName");
-            enableStatistics = connectionConfiguration
-                                        .GetValue<bool>
-                                            ("EnableStatistics");
-            var accessingConfiguration = actionConfiguration
-                                            .GetSection
-                                                ("DefaultAccessing");
+            actionConfiguration
+                        .TryGetValue<string>
+                            ("StoreProcedureName", out storeProcedureName);
+            connectionConfiguration
+                        .TryGetValue<bool>
+                            ("EnableStatistics", out enableStatistics);
+            actionConfiguration
+                        .TryGetSection
+                            ("DefaultAccessing", out var accessingConfiguration);
             if (enableStatistics)
             {
+                bool b;
                 if 
                     (
                         actionConfiguration
-                                    .GetSection("EnableStatistics")
-                                    .Exists()
+                                    .TryGetValue<bool>("EnableStatistics", out b)
+                                    
                     )
                 {
-                    enableStatistics = actionConfiguration
-                                                .GetValue<bool>
-                                                    ("EnableStatistics");
+                    enableStatistics = b;
                 }
                 else
                 {
                     if 
                         (
                             accessingConfiguration
-                                        .GetSection("EnableStatistics")
-                                        .Exists()
+                                        .TryGetValue<bool>("EnableStatistics", out b)
                         )
                     {
-                        enableStatistics = accessingConfiguration
-                                                        .GetValue<bool>
-                                                            ("EnableStatistics");
+                        enableStatistics = b;
                     }
                 }
             }
+            int i = 0;
             if 
                 (
                     accessingConfiguration
-                                    .GetSection("CommandTimeoutInSeconds")
-                                    .Exists()
+                                    .TryGetValue<int>("CommandTimeoutInSeconds", out i)
                 )
             {
-                commandTimeoutInSeconds = accessingConfiguration
-                                                        .GetValue<int>
-                                                            ("CommandtimeoutInSeconds");
+                commandTimeoutInSeconds = i;
             }
             else
             {
                 if
                     (
                         actionConfiguration
-                                    .GetSection("CommandTimeoutInSeconds")
-                                    .Exists()
+                                   .TryGetValue<int>("CommandTimeoutInSeconds", out i)
                     )
                 {
-                    commandTimeoutInSeconds = actionConfiguration
-                                                        .GetValue<int>
-                                                            ("CommandtimeoutInSeconds");
+                    commandTimeoutInSeconds = i;
                 }
                 else
                 {
                     if 
                         (
                             connectionConfiguration
-                                            .GetSection("CommandTimeoutInSeconds")
-                                            .Exists()
+                                            .TryGetValue<int>("CommandTimeoutInSeconds", out i)
                         )
                     {
-                        commandTimeoutInSeconds = connectionConfiguration
-                                                                .GetValue<int>
-                                                                    ("CommandTimeoutInSeconds");
+                        commandTimeoutInSeconds = i;
                     }
                 }
             }

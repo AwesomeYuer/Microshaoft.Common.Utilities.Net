@@ -11,7 +11,6 @@ namespace Microshaoft.Web
     using System.Linq;
     using System.Reflection;
 
-
     public class JTokenParametersValidateFilterAttribute
                                 :
                                     //AuthorizeAttribute
