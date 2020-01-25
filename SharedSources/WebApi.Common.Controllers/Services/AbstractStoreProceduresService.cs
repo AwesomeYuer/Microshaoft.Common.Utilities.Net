@@ -188,7 +188,7 @@ namespace Microshaoft.Web
             if
                 (
                     _configuration
-                                .TryGetValue<int>
+                                .TryGet<int>
                                     (
                                         "CachedParametersDefinitionExpiredInSeconds"
                                         , out var i
@@ -200,7 +200,7 @@ namespace Microshaoft.Web
             if
                 (
                     _configuration
-                                .TryGetValue<bool>
+                                .TryGet<bool>
                                     (
                                         "NeedAutoRefreshExecutedTimeForSlideExpire"
                                         , out var b
@@ -746,11 +746,11 @@ namespace Microshaoft.Web
             if (success)
             {
 
-                                    executor
-                                        .InitializeOnDemand
-                                                (
-                                                    _dbParametersDefinitionCachingStore
-                                                );
+                executor
+                    .InitializeOnDemand
+                            (
+                                _dbParametersDefinitionCachingStore
+                            );
 
                 (success, result) = await
                                         executor
@@ -873,7 +873,7 @@ namespace Microshaoft.Web
                     Result();
             }
             actionConfiguration
-                        .TryGetValue<string>
+                        .TryGet<string>
                                 ("ConnectionID", out var connectionID);
             success = !connectionID.IsNullOrEmptyOrWhiteSpace();
             if (!success)
@@ -887,7 +887,7 @@ namespace Microshaoft.Web
                             .TryGetSection
                                     ($"Connections:{connectionID}", out var connectionConfiguration);
             connectionConfiguration
-                            .TryGetValue<string>
+                            .TryGet<string>
                                     ("ConnectionString", out connectionString);
             success = !connectionString.IsNullOrEmptyOrWhiteSpace();
             if (!success)
@@ -898,7 +898,7 @@ namespace Microshaoft.Web
                     Result();
             }
             connectionConfiguration
-                            .TryGetValue<string>
+                            .TryGet<string>
                                 ("DataBaseType", out dataBaseType);
             success = !dataBaseType
                             .IsNullOrEmptyOrWhiteSpace();
@@ -911,10 +911,10 @@ namespace Microshaoft.Web
             }
             
             actionConfiguration
-                        .TryGetValue<string>
+                        .TryGet<string>
                             ("StoreProcedureName", out storeProcedureName);
             connectionConfiguration
-                        .TryGetValue<bool>
+                        .TryGet<bool>
                             ("EnableStatistics", out enableStatistics);
             actionConfiguration
                         .TryGetSection
@@ -925,7 +925,7 @@ namespace Microshaoft.Web
                 if 
                     (
                         actionConfiguration
-                                    .TryGetValue<bool>("EnableStatistics", out b)
+                                    .TryGet<bool>("EnableStatistics", out b)
                                     
                     )
                 {
@@ -936,7 +936,7 @@ namespace Microshaoft.Web
                     if 
                         (
                             accessingConfiguration
-                                        .TryGetValue<bool>("EnableStatistics", out b)
+                                        .TryGet<bool>("EnableStatistics", out b)
                         )
                     {
                         enableStatistics = b;
@@ -947,7 +947,7 @@ namespace Microshaoft.Web
             if 
                 (
                     accessingConfiguration
-                                    .TryGetValue<int>("CommandTimeoutInSeconds", out i)
+                                    .TryGet<int>("CommandTimeoutInSeconds", out i)
                 )
             {
                 commandTimeoutInSeconds = i;
@@ -957,7 +957,7 @@ namespace Microshaoft.Web
                 if
                     (
                         actionConfiguration
-                                   .TryGetValue<int>("CommandTimeoutInSeconds", out i)
+                                   .TryGet<int>("CommandTimeoutInSeconds", out i)
                     )
                 {
                     commandTimeoutInSeconds = i;
@@ -967,7 +967,7 @@ namespace Microshaoft.Web
                     if 
                         (
                             connectionConfiguration
-                                            .TryGetValue<int>("CommandTimeoutInSeconds", out i)
+                                            .TryGet<int>("CommandTimeoutInSeconds", out i)
                         )
                     {
                         commandTimeoutInSeconds = i;

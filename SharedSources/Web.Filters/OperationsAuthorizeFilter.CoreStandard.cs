@@ -69,38 +69,57 @@ namespace Microshaoft.Web
                         , () =>
                         {
                             _configuration = (IConfiguration)
-                                                httpContext
-                                                    .RequestServices
-                                                    .GetService
-                                                        (
-                                                            typeof(IConfiguration)
-                                                        );
+                                                        httpContext
+                                                            .RequestServices
+                                                            .GetService
+                                                                (
+                                                                    typeof(IConfiguration)
+                                                                );
                         }
                     );
             var routeName = (string) context.ActionArguments["routeName"];
             var httpMethod = $"http{request.Method}";
             var allow = _allowDefault;
-            var masterConfiguration = _configuration
-                                            .GetSection
-                                                ($"Routes:{routeName}:{httpMethod}:{AccessingConfigurationKey}");
-            if (masterConfiguration.Exists())
+            var success = _configuration
+                                    .TryGetSection
+                                        (
+                                            $"Routes:{routeName}:{httpMethod}:{AccessingConfigurationKey}"
+                                            , out var masterConfiguration
+                                        );
+            if (success)
             {
-                var configuration = masterConfiguration
-                                            .GetSection($"allow");
-                if (configuration.Exists())
+                success = masterConfiguration
+                                        .TryGetSection
+                                                (
+                                                    $"allow"
+                                                    , out var configuration
+                                                );
+                if (success)
                 {
                     allow = configuration.Get<bool>();
                 }
                 if (allow)
                 {
-                    configuration = masterConfiguration
-                                            .GetSection($"needcheckoperations");
-                    var needCheckOperations = configuration.Get<bool>();
+                    var needCheckOperations = false;
+                    success = masterConfiguration
+                                            .TryGetSection
+                                                    (
+                                                        $"needcheckoperations"
+                                                        , out configuration
+                                                    );
+                    if (success)
+                    {
+                        needCheckOperations = configuration.Get<bool>();
+                    }
                     if (needCheckOperations)
                     {
-                        configuration = masterConfiguration
-                                                .GetSection($"operations");
-                        if (configuration.Exists())
+                        success = masterConfiguration
+                                                .TryGetSection
+                                                    (
+                                                        $"operations"
+                                                        , out configuration
+                                                    );
+                        if (success)
                         {
                             var operations = configuration
                                                     .Get<string[]>();
