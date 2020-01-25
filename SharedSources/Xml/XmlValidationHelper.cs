@@ -261,17 +261,15 @@ namespace Microshaoft
         {
             var exceptions = 0;
             var r = true;
-            xDocument.Validate
+            xDocument
+                    .Validate
                         (
                             xmlSchemaSet
                             , (x, y) =>
                             {
                                 r = false;
-                                exceptions++;
-                                if (validationEventHandlerAction != null)
-                                {
-                                    validationEventHandlerAction(x, y);
-                                }
+                                exceptions ++;
+                                validationEventHandlerAction?.Invoke(x, y);
                             }
                             , true
                         );
@@ -314,10 +312,7 @@ namespace Microshaoft
                     {
                         r = false;
                         exceptions++;
-                        if (validationEventHandlerAction != null)
-                        {
-                            validationEventHandlerAction(x, y);
-                        }
+                        validationEventHandlerAction?.Invoke(x, y);
                     }
                 );
             errors = exceptions;
@@ -363,7 +358,9 @@ namespace Microshaoft
                 {
                     if (validationEventHandlerAction != null)
                     {
-                        xmlReaderValidationSettings.ValidationEventHandler += validationEventHandlerAction;
+                        xmlReaderValidationSettings
+                                    .ValidationEventHandler
+                                                += validationEventHandlerAction;
                     }
                     bool readed = false;
                     var func = new Func<bool>
@@ -377,7 +374,7 @@ namespace Microshaoft
                                         catch (XmlSchemaValidationException xsve)
                                         {
                                             r = false;
-                                            exceptions++;
+                                            exceptions ++;
                                             if (onCaughtXmlSchemaValidationExceptionProcessFunc != null)
                                             {
                                                 reThrow = onCaughtXmlSchemaValidationExceptionProcessFunc(xsve);

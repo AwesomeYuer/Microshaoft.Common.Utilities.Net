@@ -29,7 +29,7 @@
             }
             return r;
         }
-        public static bool TryGetValue<T>
+        public static bool TryGet<T>
                         (
                             this IConfiguration target
                             , string sectionKey
@@ -40,16 +40,13 @@
                         (
                             target
                             , sectionKey
-                            , out _
+                            , out var configuration
                         );
             if (r)
             {
                 r = false;
-                sectionValue = target
-                                    .GetValue<T>
-                                        (
-                                            sectionKey
-                                        );
+                sectionValue = configuration
+                                        .Get<T>();
                 r = true;
             }
             else
@@ -58,5 +55,6 @@
             }
             return r;
         }
+
     }
 }

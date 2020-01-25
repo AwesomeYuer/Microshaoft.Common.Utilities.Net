@@ -1,6 +1,5 @@
 namespace Microshaoft
 {
-    using System;
     using System.Xml;
     using System.Xml.Schema;
     using System.Xml.Serialization;
@@ -11,7 +10,7 @@ namespace Microshaoft
         }
         public CDATA(string xml)
         {
-            this._outerXml = xml;
+            _outerXml = xml;
         }
         private string _outerXml;
         public string OuterXml
@@ -48,32 +47,44 @@ namespace Microshaoft
             string endTag = "]]>";
             char[] trims = new char[] { '\r', '\n', '\t', ' ' };
             s = s.Trim(trims);
-            if (s.StartsWith(startTag) && s.EndsWith(endTag))
+            if 
+                (
+                    s
+                        .StartsWith(startTag)
+                    &&
+                    s
+                        .EndsWith(endTag)
+                )
             {
-                s = s.Substring(startTag.Length, s.LastIndexOf(endTag) - startTag.Length);
+                s = s
+                        .Substring
+                                (
+                                    startTag.Length
+                                    , s.LastIndexOf(endTag)
+                                        - startTag.Length
+                                );
             }
-            this._innerSourceXml = s;
-            this._innerXml = s.Trim(trims);
+            _innerSourceXml = s;
+            _innerXml = s.Trim(trims);
         }
         void IXmlSerializable.WriteXml(XmlWriter writer)
         {
-            writer.WriteCData(this._outerXml);
+            writer.WriteCData(_outerXml);
         }
     }
-
 }
 
 
 
 namespace Test
 {
+    using Microshaoft;
     using System;
     using System.IO;
     using System.Text;
     using System.Xml;
     using System.Xml.Serialization;
     using Test.Share;
-    using Microshaoft;
     public class Class11
     {
         static void Main118(string[] args)
@@ -145,11 +156,10 @@ namespace Test
 }
 namespace Test.Share
 {
+    using Microshaoft;
     using System;
     using System.Xml;
-    using System.Xml.Schema;
     using System.Xml.Serialization;
-    using Microshaoft;
     [XmlRoot("ServiceBusXmlMessage")]
     [Serializable]
     public class ServiceBusXmlMessage
