@@ -1,4 +1,4 @@
-/*! Split.js - v1.5.10 */
+/*! Split.js - v1.5.11 */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -671,7 +671,8 @@
                     i === 0,
                     i === ids.length - 1,
                     gutterAlign
-                )
+                ),
+                i
             );
 
             // After the first iteration, and we have a pair object, append it to the
@@ -721,8 +722,8 @@
                     a.size = trimmed[i - 1];
                     b.size = newSize;
 
-                    setElementSize(a.element, a.size, pair[aGutterSize]);
-                    setElementSize(b.element, b.size, pair[bGutterSize]);
+                    setElementSize(a.element, a.size, pair[aGutterSize], a.i);
+                    setElementSize(b.element, b.size, pair[bGutterSize], b.i);
                 }
             });
         }
