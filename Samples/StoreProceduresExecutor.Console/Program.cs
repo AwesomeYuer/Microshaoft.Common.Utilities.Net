@@ -131,7 +131,8 @@
 
             await foreach
                     (
-                        var (
+                        var
+                            (
                                 resultSetIndex
                                 , rowIndex
                                 , columns

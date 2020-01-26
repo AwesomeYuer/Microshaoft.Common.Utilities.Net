@@ -663,7 +663,8 @@ var Split = function (idsOption, options) {
                 i === 0,
                 i === ids.length - 1,
                 gutterAlign
-            )
+            ),
+            i
         );
 
         // After the first iteration, and we have a pair object, append it to the
@@ -713,8 +714,8 @@ var Split = function (idsOption, options) {
                 a.size = trimmed[i - 1];
                 b.size = newSize;
 
-                setElementSize(a.element, a.size, pair[aGutterSize]);
-                setElementSize(b.element, b.size, pair[bGutterSize]);
+                setElementSize(a.element, a.size, pair[aGutterSize], a.i);
+                setElementSize(b.element, b.size, pair[bGutterSize], b.i);
             }
         });
     }
