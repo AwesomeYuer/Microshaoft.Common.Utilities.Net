@@ -1,4 +1,5 @@
-﻿namespace Microshaoft.Web
+﻿#if NETCOREAPP
+namespace Microshaoft.Web
 {
     using Microsoft.AspNetCore.Diagnostics;
     using Microsoft.AspNetCore.Hosting;
@@ -76,3 +77,4 @@
         }
     }
 }
+#endif
