@@ -28,6 +28,7 @@
     <PackageReference Include="System.Reflection" Version="4.3.0" />
     <PackageReference Include="System.Reflection.TypeExtensions" Version="4.7.0" />
     <PackageReference Include="System.Security.Cryptography.Csp" Version="4.3.0" />
+    <PackageReference Include="System.Text.Json" Version="4.7.0" />
   </ItemGroup>
 
 </Project>

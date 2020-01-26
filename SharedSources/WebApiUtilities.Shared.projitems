@@ -36,6 +36,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Web.Formatters\CSV\OptionalProducesAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.MiddleWares\AbstractCommonMiddlewareBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.MiddleWares\ExceptionGuardMiddleware.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Web.MiddleWares\ExceptionOnDemandHandlerMiddleware.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.MiddleWares\RequestResponseGuardMiddleware.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\CommonController\AbstractActionCommonProcessingService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\CommonController\AbstractCommonControllerBase.cs" />

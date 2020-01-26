@@ -20,9 +20,7 @@
                             where
                                     TDbParameter : DbParameter, new()
     {
-
-
-        public abstract void InitializeOnDemand
+        public abstract void InitializeInvokingCachingStore
                         (
                             ConcurrentDictionary<string, ExecutingInfo>
                                     store

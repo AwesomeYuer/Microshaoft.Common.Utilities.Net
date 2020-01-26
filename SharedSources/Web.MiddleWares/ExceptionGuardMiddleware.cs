@@ -5,32 +5,22 @@ namespace Microshaoft.Web
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
-    using Newtonsoft.Json;
+    //using Newtonsoft.Json;
     using System;
     using System.Net;
     using System.Threading.Tasks;
+    using System.Text.Json;
     public class ExceptionGuardMiddleware<TInjector>
     //竟然没有接口?
     {
         private readonly RequestDelegate _next;
         private readonly TInjector _injector;
 
-        public Func
-                    <
-                        Exception
-                        , HttpContext
-                        , IConfiguration
-                        , ILoggerFactory
-                        , ILogger
-                        , TInjector
-                        ,
-                            (
-                                bool ReThrow
-                                , bool Detail
-                                , HttpStatusCode StatusCode
-                            )
-                    >
-                        OnCaughtExceptionProcessFunc;
+        private const string defaultErrorResponseContentType = "application/json";
+        private const string defaultErrorMessage = nameof(HttpStatusCode.InternalServerError);
+        private readonly JsonSerializerOptions defaultJsonSerializerOptions = new JsonSerializerOptions { WriteIndented = true };
+        public Func<HttpContext, IConfiguration, Exception, ILoggerFactory, ILogger, TInjector,(bool, bool, HttpStatusCode, int, string)> OnCaughtExceptionProcessFunc;
+
         public
             Action
                 <
@@ -90,17 +80,14 @@ namespace Microshaoft.Web
         {
             var caughtException = false;
             Exception exception = null;
-            (
-                bool ReThrow
-                , bool ResponseDetails
-                , HttpStatusCode ResponseStatusCode
-            )
-                r =
-                    (
-                        false
-                        , false
-                        , HttpStatusCode.OK
-                    );
+            
+            bool reThrow = false;
+            bool errorDetails = false;
+            HttpStatusCode errorStatusCode = HttpStatusCode.InternalServerError;
+            int errorResultCode = -1 * (int)errorStatusCode;
+            var errorMessage = defaultErrorMessage;
+
+
             try
             {
                 await _next(context);
@@ -111,11 +98,19 @@ namespace Microshaoft.Web
                 caughtException = true;
                 if (OnCaughtExceptionProcessFunc != null)
                 {
-                    r = OnCaughtExceptionProcessFunc
+                    (
+                        reThrow
+                        , errorDetails
+                        , errorStatusCode
+                        , errorResultCode
+                        , errorMessage
+                    )
+                    = OnCaughtExceptionProcessFunc
                                 (
-                                    exception
-                                    , context
+                                    
+                                    context
                                     , Configuration
+                                    , exception
                                     , LoggerFactory
                                     , Logger
                                     , _injector
@@ -123,26 +118,27 @@ namespace Microshaoft.Web
                                 );
                 }
                 var response = context.Response;
-                response.StatusCode = (int) r.ResponseStatusCode;
-                var errorMessage = "Internal Server Error";
-                if (r.ResponseDetails)
+                response.StatusCode = (int) errorStatusCode;
+                response.ContentType = defaultErrorResponseContentType;
+                if (errorDetails && errorMessage.IsNullOrEmptyOrWhiteSpace())
                 {
                     errorMessage = exception.ToString();
                 }
                 var jsonResult =
                             new
-                                {
-                                    statusCode = r.ResponseStatusCode
-                                    , resultCode = -1 * ((int) r.ResponseStatusCode)
-                                    , message = errorMessage
-                                };
-                var json = JsonConvert
-                                    .SerializeObject
-                                            (jsonResult);
+                            {
+                                statusCode = errorStatusCode
+                                , resultCode = errorResultCode
+                                , message = errorMessage
+                            };
                 await
-                    response
-                        .WriteAsync(json);
-                if (r.ReThrow)
+                        JsonSerializer
+                            .SerializeAsync
+                                    (response.Body, jsonResult, defaultJsonSerializerOptions);
+                //await
+                //    response
+                //        .WriteAsync(json);
+                if (reThrow)
                 {
                     throw;
                 }

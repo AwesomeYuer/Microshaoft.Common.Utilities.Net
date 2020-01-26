@@ -14,7 +14,7 @@
                     <OracleConnection, OracleCommand, OracleParameter>
                         _executor;
         private object _locker = new object();
-        public override void InitializeOnDemand(ConcurrentDictionary<string, ExecutingInfo> executingCachingStore)
+        public override void InitializeInvokingCachingStore(ConcurrentDictionary<string, ExecutingInfo> executingCachingStore)
         {
             _locker
                 .LockIf
