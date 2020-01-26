@@ -21,23 +21,23 @@ namespace Microshaoft
         public static T GetOptionalProperty<T>
                     (
                         this JObject target
-                        , string property
+                        , string propertyName
                         , JTokenType expectedType = JTokenType.None
                         , T defaultValue = default
                     )
         {
-            var prop = target[property];
+            var property = target[propertyName];
 
-            if (prop == null)
+            if (property == null)
             {
                 return defaultValue;
             }
 
             return
-                prop
+                property
                     .GetValue<T>
                         (
-                            property
+                            propertyName
                             , expectedType
                         );
         }
@@ -45,31 +45,41 @@ namespace Microshaoft
         public static T GetRequiredProperty<T>
                         (
                             this JObject target
-                            , string property
+                            , string propertyName
                             , JTokenType expectedType = JTokenType.None
                         )
         {
-            var prop = target[property];
+            var prop = target[propertyName];
 
             if (prop == null)
             {
-                throw new InvalidDataException($"Missing required property '{property}'.");
+                throw new InvalidDataException($"Missing required property '{propertyName}'.");
             }
 
             return
                 prop
                     .GetValue<T>
                         (
-                            property
+                            propertyName
                             , expectedType
                         );
         }
 
-        public static T GetValue<T>(this JToken target, string property, JTokenType expectedType)
+        public static T GetValue<T>
+                                (
+                                    this JToken target
+                                    , string propertyName
+                                    , JTokenType expectedType
+                                )
         {
-            if (expectedType != JTokenType.None && target.Type != expectedType)
+            if 
+                (
+                    expectedType != JTokenType.None
+                    &&
+                    target.Type != expectedType
+                )
             {
-                throw new InvalidDataException($"Expected '{property}' to be of type {expectedType}.");
+                throw new InvalidDataException($"Expected '{propertyName}' to be of type {expectedType}.");
             }
             return target.Value<T>();
         }

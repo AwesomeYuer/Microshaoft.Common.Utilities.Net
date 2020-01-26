@@ -1,10 +1,9 @@
 namespace Microshaoft
 {
+    using Newtonsoft.Json.Linq;
+    using System;
     using System.Collections.Generic;
     using System.Data;
-    using System.Linq;
-    using System;
-    using Newtonsoft.Json.Linq;
     using System.Data.Common;
     using System.Threading.Tasks;
 

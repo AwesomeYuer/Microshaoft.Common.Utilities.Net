@@ -71,17 +71,17 @@ namespace Microshaoft
             {
                 hashAlgorithm = new MD5CryptoServiceProvider();
             }
-            using (MemoryStream stream = new MemoryStream())
-            {
-                buffer = data.EncryptorSharedEncryptedOnceIV;
-                stream.Write(buffer, 0, buffer.Length);
-                buffer = data.EncryptorSharedEncryptedOnceKey;
-                stream.Write(buffer, 0, buffer.Length);
-                buffer = data.EncryptedData;
-                stream.Position = 0;
-                buffer = hashAlgorithm.ComputeHash(stream);
-                stream.Close();
-            }
+            using MemoryStream stream = new MemoryStream();
+
+            buffer = data.EncryptorSharedEncryptedOnceIV;
+            stream.Write(buffer, 0, buffer.Length);
+            buffer = data.EncryptorSharedEncryptedOnceKey;
+            stream.Write(buffer, 0, buffer.Length);
+            buffer = data.EncryptedData;
+            stream.Position = 0;
+            buffer = hashAlgorithm.ComputeHash(stream);
+            stream.Close();
+            
             //X509Certificate2 encryptorPublicKeyCer = new X509Certificate2(data.EncryptorPublicKeyCerRawData);
             //RSACryptoServiceProvider encryptorPublicKeyCerProvider = encryptorPublicKeyCer.PublicKey.Key as RSACryptoServiceProvider;
             if (encryptorPublicKeyCerProvider.VerifyHash
@@ -97,17 +97,15 @@ namespace Microshaoft
                 )
             {
                 //decryptorPrivateKeyPfxProvider = decryptorPrivateKeyPfx.PrivateKey as RSACryptoServiceProvider;
-                using (TripleDESCryptoServiceProvider des = new TripleDESCryptoServiceProvider())
-                {
-                    buffer = data.EncryptorSharedEncryptedOnceIV;
-                    buffer = decryptorPrivateKeyPfxProvider.Decrypt(buffer, data.DoOAEPadding);
-                    des.IV = buffer;
-                    buffer = data.EncryptorSharedEncryptedOnceKey;
-                    buffer = decryptorPrivateKeyPfxProvider.Decrypt(buffer, data.DoOAEPadding);
-                    des.Key = buffer;
-                    buffer = data.EncryptedData;
-                    buffer = des.CreateDecryptor().TransformFinalBlock(buffer, 0, buffer.Length);
-                }
+                using TripleDESCryptoServiceProvider des = new TripleDESCryptoServiceProvider();
+                buffer = data.EncryptorSharedEncryptedOnceIV;
+                buffer = decryptorPrivateKeyPfxProvider.Decrypt(buffer, data.DoOAEPadding);
+                des.IV = buffer;
+                buffer = data.EncryptorSharedEncryptedOnceKey;
+                buffer = decryptorPrivateKeyPfxProvider.Decrypt(buffer, data.DoOAEPadding);
+                des.Key = buffer;
+                buffer = data.EncryptedData;
+                buffer = des.CreateDecryptor().TransformFinalBlock(buffer, 0, buffer.Length);
             }
             else
             {
@@ -244,14 +242,14 @@ namespace Microshaoft
                                     )
         {
             Secret secret = new Secret();
-            using (TripleDESCryptoServiceProvider provider = new TripleDESCryptoServiceProvider())
-            {
-                provider.GenerateIV();
-                secret.EncryptorSharedEncryptedOnceIV = provider.IV;
-                provider.GenerateKey();
-                secret.EncryptorSharedEncryptedOnceKey = provider.Key;
-                secret.EncryptedData = provider.CreateEncryptor().TransformFinalBlock(data, 0, data.Length);
-            }
+            using TripleDESCryptoServiceProvider provider = new TripleDESCryptoServiceProvider();
+            
+            provider.GenerateIV();
+            secret.EncryptorSharedEncryptedOnceIV = provider.IV;
+            provider.GenerateKey();
+            secret.EncryptorSharedEncryptedOnceKey = provider.Key;
+            secret.EncryptedData = provider.CreateEncryptor().TransformFinalBlock(data, 0, data.Length);
+            
             secret.EncryptorSharedEncryptedOnceIV = decryptorPublicKeyCerProvider.Encrypt(secret.EncryptorSharedEncryptedOnceIV, DoOAEPadding);
             secret.EncryptorSharedEncryptedOnceKey = decryptorPublicKeyCerProvider.Encrypt(secret.EncryptorSharedEncryptedOnceKey, DoOAEPadding);
             HashAlgorithm hashAlgorithm;
@@ -264,7 +262,7 @@ namespace Microshaoft
             {
                 hashAlgorithm = new MD5CryptoServiceProvider();
             }
-            MemoryStream stream = new MemoryStream();
+            using MemoryStream stream = new MemoryStream();
             byte[] buffer = secret.EncryptorSharedEncryptedOnceIV;
             stream.Write(buffer, 0, buffer.Length);
             buffer = secret.EncryptorSharedEncryptedOnceKey;
@@ -294,13 +292,13 @@ namespace Microshaoft
 
         public static string GenerateTripleDESHexStringKey()
         {
-            TripleDESCryptoServiceProvider des = new TripleDESCryptoServiceProvider();
+            using TripleDESCryptoServiceProvider des = new TripleDESCryptoServiceProvider();
             des.GenerateKey();
             return BytesArrayToHexString(des.Key);
         }
         public static string GenerateTripleDESHexStringIV()
         {
-            TripleDESCryptoServiceProvider des = new TripleDESCryptoServiceProvider();
+            using TripleDESCryptoServiceProvider des = new TripleDESCryptoServiceProvider();
             des.GenerateIV();
             return BytesArrayToHexString(des.IV);
         }

@@ -64,8 +64,7 @@ namespace Microshaoft
                     var row = dataTable.NewRow();
                     foreach (DataColumn dataColumn in dataColumns)
                     {
-                        MemberAccessor accessor = null;
-                        if (accessors.TryGetValue(dataColumn.ColumnName, out accessor))
+                        if (accessors.TryGetValue(dataColumn.ColumnName, out MemberAccessor accessor))
                         {
                             object v = accessor
                                             .Getter(entry);
