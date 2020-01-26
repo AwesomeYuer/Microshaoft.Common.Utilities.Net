@@ -9,8 +9,7 @@ namespace Microshaoft
 
     public partial interface IStoreProcedureExecutable
     {
-
-        void InitializeOnDemand(ConcurrentDictionary<string, ExecutingInfo> store);
+        void InitializeInvokingCachingStore(ConcurrentDictionary<string, ExecutingInfo> cachingStore);
 
         string DataBaseType
         {

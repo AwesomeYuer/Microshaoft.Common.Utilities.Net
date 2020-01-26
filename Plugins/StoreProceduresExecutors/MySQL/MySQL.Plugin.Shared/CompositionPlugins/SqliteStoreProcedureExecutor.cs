@@ -14,7 +14,7 @@
                     <SqliteConnection, SqliteCommand, SqliteParameter>
                         _executor;
         private object _locker = new object();
-        public override void InitializeOnDemand
+        public override void InitializeInvokingCachingStore
                                 (
                                     ConcurrentDictionary<string, ExecutingInfo>
                                         executingCachingStore

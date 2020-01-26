@@ -1,12 +1,13 @@
 ﻿
 namespace Microshaoft
 {
-    using Newtonsoft.Json;
+    //using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Text;
+    using SysTxtJson = System.Text.Json;
     public static class JsonFileHelper
     {
         public static string WriteOneJArray<T>
@@ -19,6 +20,7 @@ namespace Microshaoft
                             , string fileExtensionName = ".JsonX"
                     )
         {
+           
             var timeStamp = DateTime
                                 .Now
                                 .GetAlignSecondsDateTime(alignSeconds)
@@ -59,7 +61,7 @@ namespace Microshaoft
             {
                 using (var streamWriter = new StreamWriter(fileStream))
                 {
-                    var json = JsonConvert.SerializeObject(data);
+                    var json = SysTxtJson.JsonSerializer.Serialize(data);
                     //var r = JsonConvert.DeserializeObject<T[]>(json);
                     streamWriter.BaseStream.Seek(0, SeekOrigin.End);
                     streamWriter.WriteLine(beginSplitter);
@@ -114,7 +116,7 @@ namespace Microshaoft
                                 i ++;
                                 var json = sb.ToString().Trim();
                                 sb.Clear();
-                                var r = JsonConvert.DeserializeObject<T[]>(json);
+                                var r = SysTxtJson.JsonSerializer.Deserialize<T[]>(json);
                                 //Console.WriteLine("JArray: {0}", r.Count());
                                 OnReadedOneJArrayProcessFunc(i, r);
                             }

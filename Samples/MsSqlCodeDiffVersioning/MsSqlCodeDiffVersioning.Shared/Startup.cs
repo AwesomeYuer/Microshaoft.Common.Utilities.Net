@@ -6,34 +6,31 @@
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Cors.Infrastructure;
     using Microsoft.AspNetCore.Hosting;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Http.Features;
-    using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.ApplicationModels;
     using Microsoft.AspNetCore.Mvc.Controllers;
+    using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
     using Microsoft.AspNetCore.Server.Kestrel.Core;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
-
     using Microsoft.Extensions.Logging;
     using Microsoft.Net.Http.Headers;
-    using Newtonsoft.Json;
+    //using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
-    using Swashbuckle.AspNetCore.Swagger;
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Data.SqlClient;
     using System.Diagnostics;
     using System.IO;
     using System.Net;
     using System.Text;
+    using System.Text.Json;
     using System.Threading.Tasks;
-    using System.Collections.Concurrent;
 #if NETCOREAPP2_X
     using Microsoft.AspNetCore.Hosting;
 #else
-    using Microsoft.Extensions.Hosting;
 #endif
 
 
@@ -597,18 +594,18 @@
                                                 var errorStatusCode = 500;
                                                 var errorMessage = $"error in Middleware: [{middlewareTypeName}]";
                                                 response.StatusCode = errorStatusCode;
-                                                var jsonResult =
-                                                        new
-                                                        {
-                                                            StatusCode = errorStatusCode
-                                                            ,
-                                                            Message = errorMessage
-                                                        };
-                                                var json = JsonConvert.SerializeObject(jsonResult);
-                                                await
-                                                    response
-                                                        .WriteAsync
-                                                                (json);
+                                                var jsonResult = new
+                                                {
+                                                    statusCode = errorStatusCode
+                                                    , resultCode = -1 * errorStatusCode
+                                                    , message = errorMessage
+                                                };
+                                                await JsonSerializer
+                                                                .SerializeAsync
+                                                                        (
+                                                                            response.Body
+                                                                            , jsonResult
+                                                                        );
                                                 result = false;
                                             }
                                             else
@@ -669,53 +666,95 @@
                             }
                         );
             app.UseCors();
+            app
+                .UseExceptionGuard<string>
+                    (
+                        (middleware) =>
+                        {
+                            var middlewareTypeName = middleware.GetType().Name;
+                            middleware
+                                .OnCaughtExceptionProcessFunc
+                                    = (xHttpContext, xConfiguration, xException, xLoggerFactory, xLogger, xTInjector) =>
+                                    {
+                                        xLogger.LogError($"event: exception @ {middlewareTypeName}");
+                                        var reThrow = true;
+                                        var errorDetails = true;
+                                        var errorStatusCode = HttpStatusCode.InternalServerError;
+                                        var errorResultCode = -1 * (int) errorStatusCode;
+                                        var errorMessage = nameof(HttpStatusCode.InternalServerError);
+
+                                        if (errorDetails)
+                                        {
+                                            errorMessage = xException.ToString();
+                                        }
+
+                                        xLogger
+                                            .LogOnDemand
+                                                (
+                                                    LogLevel.Error
+                                                    , () =>
+                                                    {
+                                                        (
+                                                            Exception LoggingException
+                                                            , string LoggingMessage
+                                                            , object[] LoggingArguments
+                                                        )
+                                                            log =
+                                                                (
+                                                                    xException
+                                                                    , $"LogOnDemand:{xException.ToString()}"
+                                                                    , null
+                                                                );
+                                                        return
+                                                           log;
+                                                    }
+                                                );
+                                        //Console.WriteLine($"event: exception @ {middlewareTypeName}");
+
+                                        return
+                                            (
+                                                reThrow
+                                                , errorDetails
+                                                , errorStatusCode
+                                                , errorResultCode
+                                                , errorMessage
+                                            );
+                                    };
+                        }
+                    );
+
             //if (env.IsDevelopment())
             {
-                app
-                    .UseExceptionGuard<string>
-                        (
-                            (middleware) =>
-                            {
-                                var middlewareTypeName = middleware.GetType().Name;
-                                middleware
-                                    .OnCaughtExceptionProcessFunc
-                                        = (exception, httpContext, xConfiguration, xLoggerFactory, xLogger, injector) =>
-                                        {
-                                            xLogger.LogError($"event: exception @ {middlewareTypeName}");
-                                            var r =
-                                                    (
-                                                        false
-                                                        , true
-                                                        , HttpStatusCode
-                                                                .InternalServerError
-                                                    );
-                                            xLogger
-                                                .LogOnDemand
-                                                    (
-                                                        LogLevel.Error
-                                                        , () =>
-                                                        {
-                                                            (
-                                                                Exception LoggingException
-                                                                , string LoggingMessage
-                                                                , object[] LoggingArguments
-                                                            )
-                                                                log =
-                                                                    (
-                                                                        exception
-                                                                        , "yxy ++++++" + exception.Message
-                                                                        , null
-                                                                    );
-                                                            return
-                                                               log;
-                                                        }
-                                                    );
-                                            //Console.WriteLine($"event: exception @ {middlewareTypeName}");
-
-                                            return r;
-                                        };
-                            }
-                        );
+                //app.UseExceptionHandler
+                //        (
+                //            new ExceptionHandlerOptions()
+                //            { 
+                //                ExceptionHandler = new ExceptionOnDemandHandlerMiddleware
+                //                                        (
+                //                                            env
+                //                                            , configuration
+                //                                        )
+                //                { 
+                //                     OnCaughtExceptionHandleProcess =
+                //                     (xHttpContext, xConfiguration, xCaughtException) =>
+                //                     {
+                //                         var errorMessage = nameof(HttpStatusCode.InternalServerError);
+                //                         var errorDetails = true;
+                //                         if (errorDetails)
+                //                         {
+                //                             errorMessage = xCaughtException.ToString();
+                //                         }
+                //                         return
+                //                             (
+                //                                errorDetails
+                //                                , HttpStatusCode.InternalServerError
+                //                                , -1 * (int) HttpStatusCode.InternalServerError
+                //                                , errorMessage
+                //                             );
+                //                     }
+                //                }.Invoke
+                //            }
+                //        );
                 //app.UseDeveloperExceptionPage();
             }
             //else
