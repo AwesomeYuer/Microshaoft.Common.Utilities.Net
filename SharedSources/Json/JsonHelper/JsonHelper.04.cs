@@ -7,27 +7,29 @@
     {
         public static JsonTextReader CreateJsonTextReader(this TextReader target)
         {
-            var reader = new JsonTextReader(target);
-            reader.ArrayPool = JsonArrayPool<char>.Shared;
+            return
+                new JsonTextReader(target)
+                    {
+                        ArrayPool = JsonArrayPool<char>.Shared,
+                        // Don't close the input, leave closing to the caller
+                        CloseInput = false
+                    };
 
-            // Don't close the input, leave closing to the caller
-            reader.CloseInput = false;
-
-            return reader;
         }
 
         public static JsonTextWriter CreateJsonTextWriter(this TextWriter target)
         {
-            var writer = new JsonTextWriter(target);
-            writer.ArrayPool = JsonArrayPool<char>.Shared;
-            // Don't close the output, leave closing to the caller
-            writer.CloseOutput = false;
+            return
+                new JsonTextWriter(target)
+                    {
+                        ArrayPool = JsonArrayPool<char>.Shared,
+                        // Don't close the output, leave closing to the caller
+                        CloseOutput = false,
 
-            // SignalR will always write a complete JSON response
-            // This setting will prevent an error during writing be hidden by another error writing on dispose
-            writer.AutoCompleteOnClose = false;
-
-            return writer;
+                        // SignalR will always write a complete JSON response
+                        // This setting will prevent an error during writing be hidden by another error writing on dispose
+                        AutoCompleteOnClose = false
+                    };
         }
 
 

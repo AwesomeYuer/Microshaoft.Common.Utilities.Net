@@ -21,7 +21,7 @@ namespace Microshaoft
             for (int i = 0; i < stackTrace.FrameCount; i++)
             {
                 StackFrame sf = stackTrace.GetFrame(i);
-                MemberInfo mi = sf.GetMethod();
+                _ = sf.GetMethod();
                 sb.Append(StackFrameToString(sf));
             }
             sb.Append(Environment.NewLine);

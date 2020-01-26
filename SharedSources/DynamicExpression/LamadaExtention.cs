@@ -7,8 +7,8 @@
     public class LamadaExtention<TModel>
                                 where TModel : new()
     {
-        private List<Expression> _expressions = null;
-        private ParameterExpression _parameterExpression = null;
+        private readonly List<Expression> _expressions = null;
+        private readonly ParameterExpression _parameterExpression = null;
 
         public LamadaExtention()
         {
