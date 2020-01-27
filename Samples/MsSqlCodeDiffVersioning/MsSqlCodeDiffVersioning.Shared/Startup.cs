@@ -10,6 +10,7 @@
     using Microsoft.AspNetCore.Mvc.ApplicationModels;
     using Microsoft.AspNetCore.Mvc.Controllers;
     using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
+    using Microsoft.AspNetCore.ResponseCaching;
     using Microsoft.AspNetCore.Server.Kestrel.Core;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -56,50 +57,54 @@
             ConfigurationHelper
                             .Load(Configuration);
 
-            services.AddSwaggerGen(c =>
-            {
-                c
-                    .SwaggerDoc
-                        (
-                            swaggerVersion
-                            , new OpenApiInfo
-                                {
-                                    Version = swaggerVersion
-                                    , Title = swaggerTitle
-                                    , Description = swaggerDescription
-                                    , TermsOfService =
-                                            new Uri
-                                                ("https://github.com/Microshaoft/Microshaoft.Common.Utilities.Net/blob/master/README.md")
-                                    , Contact = new OpenApiContact
+            #region SwaggerGen
+            services
+                .AddSwaggerGen
+                    (
+                        (c) =>
+                        {
+                            c
+                                .SwaggerDoc
+                                    (
+                                        swaggerVersion
+                                        , new OpenApiInfo
+                                                {
+                                                    Version = swaggerVersion
+                                                    , Title = swaggerTitle
+                                                    , Description = swaggerDescription
+                                                    , TermsOfService = new Uri("https://github.com/Microshaoft/Microshaoft.Common.Utilities.Net/blob/master/README.md")
+                                                    , Contact = new OpenApiContact
+                                                                    {
+                                                                        Name = "Microshaoft"
+                                                                        , Email = "Microshaoft@gmail.com"
+                                                                        , Url = new Uri("https://github.com/Microshaoft")
+                                                                        ,
+                                                                    }
+                                                    , License = new OpenApiLicense
+                                                                    {
+                                                                        Name = "Use under License"
+                                                                        , Url = new Uri("https://github.com/Microshaoft/Microshaoft.Common.Utilities.Net/blob/master/License.txt")
+                                                                        ,
+                                                                    }
+                                                }
+                                    );
+                                    // Set the comments path for the Swagger JSON and UI.
+                                    //var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                                    //var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                                    //c.IncludeXmlComments(xmlPath);
+                                    c
+                                .ResolveConflictingActions
+                                    (
+                                        (xApiDescriptions) =>
                                         {
-                                            Name = "Microshaoft"
-                                            , Email = "Microshaoft@gmail.com"
-                                            , Url = new Uri("https://github.com/Microshaoft")
-                                            ,
+                                            return
+                                                xApiDescriptions
+                                                            .First();
                                         }
-                                    , License = new OpenApiLicense
-                                        {
-                                            Name = "Use under License"
-                                            , Url = new Uri("https://github.com/Microshaoft/Microshaoft.Common.Utilities.Net/blob/master/License.txt")
-                                            ,
-                                        }
-                                }
-                        );
-                // Set the comments path for the Swagger JSON and UI.
-                //var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                //var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                //c.IncludeXmlComments(xmlPath);
-                c
-                    .ResolveConflictingActions
-                        (
-                            (xApiDescriptions) =>
-                            {
-                                return
-                                    xApiDescriptions
-                                                .First();
-                            }
-                        );
-            });
+                                    );
+                        }
+                    ); 
+            #endregion
 
             services
                 .Configure<CsvFormatterOptions>
@@ -110,13 +115,15 @@
                                         "ExportCsvFormatter"
                                     )
                     );
+
             services
                 .AddMvc
                 (
 #if NETCOREAPP3_X
                     (option) =>
                     {
-                        option.EnableEndpointRouting = false;
+                        option
+                            .EnableEndpointRouting = false;
                     }
 #endif
                 )
@@ -130,6 +137,7 @@
                 //    )
                 ;
 
+            #region ConfigurableActionConstrainedRouteApplicationModelProvider
             // for both NETCOREAPP2_X and NETCOREAPP3_X
             // for Sync or Async Action Selector
             services
@@ -217,14 +225,15 @@
                                                 );
                                 }
                             )
-                    );
+                    ); 
+            #endregion
 
             //services
             //  .AddSingleton
             //        <JTokenParametersValidateFilterAttribute>
             //            ();
 
-#region 异步批量入库案例专用
+            #region 异步批量入库案例专用
             var processor =
                 new SingleThreadAsyncDequeueProcessorSlim<JToken>();
             ConcurrentDictionary<string, ExecutingInfo>
@@ -276,7 +285,7 @@
                     (
                         processor
                     );
-#endregion
+            #endregion
 
             services
                 .AddSingleton
@@ -336,11 +345,9 @@
             services.AddSingleton(loggerFactory);
             services.AddSingleton(logger);
 
-
-
             services.AddSingleton<string>("Inject String");
 
-#region 跨域策略
+            #region 跨域策略
             services
                     .Add
                         (
@@ -381,7 +388,7 @@
                                     );
                         }
                   );
-#endregion
+            #endregion
 
             services
                 .AddResponseCaching();
@@ -392,154 +399,157 @@
             //    .AddSingleton<IActionSelector, SyncOrAsyncActionSelector>();
 #endif
 
+            #region Output CsvFormatterOptions
             services
-                .AddMvc
-                    (
-                        (options) =>
-                        {
-                            var csvFormatterOptions = new CsvFormatterOptions
+                    .AddMvc
+                        (
+                            (options) =>
                             {
-                                CsvColumnsDelimiter = ",",
-                                IncludeExcelDelimiterHeader = false,
-                                UseSingleLineHeaderInCsv = true
-                            };
-                            if
-                                (
-                                    Configuration
-                                                .TryGetSection
-                                                    (
-                                                        "ExportCsvFormatter"
-                                                        , out var exportCsvFormatterConfiguration
-                                                    )
-                                )
-                            {
-                                IConfigurationSection section;
+                                var csvFormatterOptions = new CsvFormatterOptions
+                                {
+                                    CsvColumnsDelimiter = ",",
+                                    IncludeExcelDelimiterHeader = false,
+                                    UseSingleLineHeaderInCsv = true
+                                };
                                 if
                                     (
-                                        exportCsvFormatterConfiguration
-                                                .TryGetSection
-                                                    (
-                                                        nameof(csvFormatterOptions.CsvColumnsDelimiter)
-                                                        , out section
-                                                    )
+                                        Configuration
+                                                    .TryGetSection
+                                                        (
+                                                            "ExportCsvFormatter"
+                                                            , out var exportCsvFormatterConfiguration
+                                                        )
                                     )
                                 {
-                                    csvFormatterOptions
-                                            .CsvColumnsDelimiter = section.Value;
-                                }
-                                if
-                                    (
-                                        exportCsvFormatterConfiguration
-                                                .TryGetSection
-                                                    (
-                                                        nameof(csvFormatterOptions.DateFormat)
-                                                        , out section
-                                                    )
-                                    )
-                                {
-                                    csvFormatterOptions
-                                            .DateFormat = section.Value;
-                                }
-                                if
-                                    (
-                                        exportCsvFormatterConfiguration
-                                                .TryGetSection
-                                                    (
-                                                        nameof(csvFormatterOptions.DateTimeFormat)
-                                                        , out section
-                                                    )
+                                    IConfigurationSection section;
+                                    if
+                                        (
+                                            exportCsvFormatterConfiguration
+                                                    .TryGetSection
+                                                        (
+                                                            nameof(csvFormatterOptions.CsvColumnsDelimiter)
+                                                            , out section
+                                                        )
+                                        )
+                                    {
+                                        csvFormatterOptions
+                                                .CsvColumnsDelimiter = section.Value;
+                                    }
+                                    if
+                                        (
+                                            exportCsvFormatterConfiguration
+                                                    .TryGetSection
+                                                        (
+                                                            nameof(csvFormatterOptions.DateFormat)
+                                                            , out section
+                                                        )
+                                        )
+                                    {
+                                        csvFormatterOptions
+                                                .DateFormat = section.Value;
+                                    }
+                                    if
+                                        (
+                                            exportCsvFormatterConfiguration
+                                                    .TryGetSection
+                                                        (
+                                                            nameof(csvFormatterOptions.DateTimeFormat)
+                                                            , out section
+                                                        )
 
-                                    )
-                                {
-                                    csvFormatterOptions
-                                            .DateTimeFormat = section.Value;
+                                        )
+                                    {
+                                        csvFormatterOptions
+                                                .DateTimeFormat = section.Value;
+                                    }
+                                    if
+                                        (
+                                            exportCsvFormatterConfiguration
+                                                    .TryGetSection
+                                                        (
+                                                            nameof(csvFormatterOptions.DigitsTextSuffix)
+                                                            , out section
+                                                        )
+                                        )
+                                    {
+                                        csvFormatterOptions
+                                                .DigitsTextSuffix = section.Value;
+                                    }
+                                    if
+                                        (
+                                            exportCsvFormatterConfiguration
+                                                    .TryGetSection
+                                                        (
+                                                            nameof(csvFormatterOptions.MinExclusiveLengthDigitsTextSuffix)
+                                                            , out section
+                                                        )
+                                        )
+                                    {
+                                        csvFormatterOptions
+                                                .MinExclusiveLengthDigitsTextSuffix = section.Get<int>();
+                                    }
+                                    if
+                                        (
+                                            exportCsvFormatterConfiguration
+                                                    .TryGetSection
+                                                        (
+                                                            nameof(csvFormatterOptions.Encoding)
+                                                            , out section
+                                                        )
+                                        )
+                                    {
+                                        csvFormatterOptions
+                                                .Encoding = Encoding.GetEncoding(section.Value);
+                                    }
+                                    if
+                                        (
+                                            exportCsvFormatterConfiguration
+                                                    .TryGetSection
+                                                        (
+                                                            nameof(csvFormatterOptions.IncludeExcelDelimiterHeader)
+                                                            , out section
+                                                        )
+                                        )
+                                    {
+                                        csvFormatterOptions
+                                                .IncludeExcelDelimiterHeader = section.Get<bool>();
+                                    }
+                                    if
+                                        (
+                                            exportCsvFormatterConfiguration
+                                                    .TryGetSection
+                                                        (
+                                                            nameof(csvFormatterOptions.UseSingleLineHeaderInCsv)
+                                                            , out section
+                                                        )
+                                        )
+                                    {
+                                        csvFormatterOptions
+                                                 .UseSingleLineHeaderInCsv = section.Get<bool>();
+                                    }
                                 }
-                                if
-                                    (
-                                        exportCsvFormatterConfiguration
-                                                .TryGetSection
-                                                    (
-                                                        nameof(csvFormatterOptions.DigitsTextSuffix)
-                                                        , out section
-                                                    )
-                                    )
-                                {
-                                    csvFormatterOptions
-                                            .DigitsTextSuffix = section.Value;
-                                }
-                                if
-                                    (
-                                        exportCsvFormatterConfiguration
-                                                .TryGetSection
-                                                    (
-                                                        nameof(csvFormatterOptions.MinExclusiveLengthDigitsTextSuffix)
-                                                        , out section
-                                                    )
-                                    )
-                                {
-                                    csvFormatterOptions
-                                            .MinExclusiveLengthDigitsTextSuffix = section.Get<int>();
-                                }
-                                if
-                                    (
-                                        exportCsvFormatterConfiguration
-                                                .TryGetSection
-                                                    (
-                                                        nameof(csvFormatterOptions.Encoding)
-                                                        , out section
-                                                    )
-                                    )
-                                {
-                                    csvFormatterOptions
-                                            .Encoding = Encoding.GetEncoding(section.Value);
-                                }
-                                if
-                                    (
-                                        exportCsvFormatterConfiguration
-                                                .TryGetSection
-                                                    (
-                                                        nameof(csvFormatterOptions.IncludeExcelDelimiterHeader)
-                                                        , out section
-                                                    )
-                                    )
-                                {
-                                    csvFormatterOptions
-                                            .IncludeExcelDelimiterHeader = section.Get<bool>();
-                                }
-                                if
-                                    (
-                                        exportCsvFormatterConfiguration
-                                                .TryGetSection
-                                                    (
-                                                        nameof(csvFormatterOptions.UseSingleLineHeaderInCsv)
-                                                        , out section
-                                                    )
-                                    )
-                                {
-                                    csvFormatterOptions
-                                             .UseSingleLineHeaderInCsv = section.Get<bool>();
-                                }
+                                        //options.InputFormatters.Add(new CsvInputFormatter(csvFormatterOptions));
+                                        options
+                                    .OutputFormatters
+                                    .Add
+                                        (
+                                            new CsvOutputFormatter()
+                                        );
+                                options
+                                    .FormatterMappings
+                                    .SetMediaTypeMappingForFormat
+                                        (
+                                            "csv"
+                                            , MediaTypeHeaderValue
+                                                    .Parse
+                                                        (
+                                                            "text/csv"
+                                                        )
+                                        );
                             }
-                            //options.InputFormatters.Add(new CsvInputFormatter(csvFormatterOptions));
-                            options
-                                .OutputFormatters
-                                .Add
-                                    (
-                                        new CsvOutputFormatter()
-                                    );
-                            options
-                                .FormatterMappings
-                                .SetMediaTypeMappingForFormat
-                                    (
-                                        "csv"
-                                        , MediaTypeHeaderValue
-                                                .Parse
-                                                    (
-                                                        "text/csv"
-                                                    )
-                                    );
-                        }
-                    );
+                        ); 
+            #endregion
+
             services
                 .Configure<KestrelServerOptions>
                     (
@@ -568,6 +578,7 @@
                         )
         {
 
+            #region RequestResponseGuard
             string timingKey = "beginTimestamp";
             timingKey = string.Empty;
             app
@@ -606,8 +617,8 @@
                                                                 timingKey
                                                                 ,
                                                                     (
-                                                                        BeginTime : DateTime.Now
-                                                                        , BeginTimestamp : Stopwatch.GetTimestamp()
+                                                                        BeginTime: DateTime.Now
+                                                                        , BeginTimestamp: Stopwatch.GetTimestamp()
                                                                     )
                                                             );
                                             }
@@ -647,8 +658,10 @@
                                                     var jsonResult = new
                                                     {
                                                         statusCode = errorStatusCode
-                                                        , resultCode = -1 * errorStatusCode
-                                                        , message = errorMessage
+                                                        ,
+                                                        resultCode = -1 * errorStatusCode
+                                                        ,
+                                                        message = errorMessage
                                                     };
                                                     await
                                                         JsonSerializer
@@ -670,7 +683,7 @@
                                             };
                                 middleware
                                     .OnResponseStartingProcess
-                                        = 
+                                        =
                                             (
                                                 httpContext
                                                 , @event
@@ -695,7 +708,7 @@
                                                         DateTime beginTime
                                                         , long beginTimeStamp
                                                     )
-                                                        = (ValueTuple<DateTime, long>) removed;
+                                                        = (ValueTuple<DateTime, long>)removed;
                                                     removed = null;
                                                     httpContext
                                                         .Response
@@ -716,7 +729,7 @@
                                             };
                                 middleware
                                     .OnAfterInvokedNextProcess
-                                        = 
+                                        =
                                             (
                                                 httpContext
                                                 , @event
@@ -747,18 +760,22 @@
                                                     .LogInformation($"event: {@event} @ {middlewareTypeName}");
                                             };
                             }
-                        );
+                        ); 
+            #endregion
+
             app.UseCors();
+
+            #region ExceptionGuard
             app
                 .UseExceptionGuard<string>
                     (
                         (middleware) =>
                         {
-                            //onInitializeCallbackProcesses
-                            var middlewareTypeName = middleware.GetType().Name;
+                                    //onInitializeCallbackProcesses
+                                    var middlewareTypeName = middleware.GetType().Name;
                             middleware
                                 .OnCaughtExceptionProcessFunc
-                                    = 
+                                    =
                                     (
                                         xHttpContext
                                         , xConfiguration
@@ -775,7 +792,7 @@
                                         var errorDetails = true;
                                         var errorStatusCode = HttpStatusCode
                                                                         .InternalServerError;
-                                        var errorResultCode = -1 * (int) errorStatusCode;
+                                        var errorResultCode = -1 * (int)errorStatusCode;
                                         var errorMessage = nameof(HttpStatusCode.InternalServerError);
 
                                         if (errorDetails)
@@ -804,9 +821,9 @@
                                                                log;
                                                     }
                                                 );
-                                        //Console.WriteLine($"event: exception @ {middlewareTypeName}");
+                                                //Console.WriteLine($"event: exception @ {middlewareTypeName}");
 
-                                        return
+                                                return
                                             (
                                                 reThrow
                                                 , errorDetails
@@ -816,42 +833,45 @@
                                             );
                                     };
                         }
-                    );
+                    ); 
+            #endregion
 
             if (1 == 0)
             {
+                #region ExceptionHandler
                 app.UseExceptionHandler
-                        (
-                            new ExceptionHandlerOptions()
-                            {
-                                ExceptionHandler = new ExceptionOnDemandHandlerMiddleware
-                                                        (
-                                                            env
-                                                            , configuration
-                                                        )
+                            (
+                                new ExceptionHandlerOptions()
                                 {
-                                    OnCaughtExceptionHandleProcess =
-                                     (xHttpContext, xConfiguration, xCaughtException) =>
-                                     {
-                                         var errorMessage = nameof(HttpStatusCode.InternalServerError);
-                                         var errorDetails = true;
-                                         if (errorDetails)
+                                    ExceptionHandler = new ExceptionOnDemandHandlerMiddleware
+                                                            (
+                                                                env
+                                                                , configuration
+                                                            )
+                                    {
+                                        OnCaughtExceptionHandleProcess =
+                                         (xHttpContext, xConfiguration, xCaughtException) =>
                                          {
-                                             errorMessage = xCaughtException.ToString();
+                                             var errorMessage = nameof(HttpStatusCode.InternalServerError);
+                                             var errorDetails = true;
+                                             if (errorDetails)
+                                             {
+                                                 errorMessage = xCaughtException.ToString();
+                                             }
+                                             return
+                                                 (
+                                                    errorDetails
+                                                    , HttpStatusCode
+                                                                .InternalServerError
+                                                    , -1 * (int)HttpStatusCode
+                                                                        .InternalServerError
+                                                    , errorMessage
+                                                 );
                                          }
-                                         return
-                                             (
-                                                errorDetails
-                                                , HttpStatusCode
-                                                            .InternalServerError
-                                                , -1 * (int) HttpStatusCode
-                                                                    .InternalServerError
-                                                , errorMessage
-                                             );
-                                     }
-                                }.Invoke
-                            }
-                        );
+                                    }.Invoke
+                                }
+                            ); 
+                #endregion
                 //app.UseDeveloperExceptionPage();
             }
             //else
@@ -861,7 +881,7 @@
             //app.UseHttpsRedirection();
 
 #if NETCOREAPPX_X
-#region SyncAsyncActionSelector 拦截处理
+            #region SyncAsyncActionSelector 拦截处理
             app
                 .UseCustomActionSelector<SyncOrAsyncActionSelector>
                     (
@@ -929,6 +949,7 @@
             app.UseMvc();
             Console.WriteLine(Directory.GetCurrentDirectory());
 
+            #region StaticFiles
             app
                 .UseDefaultFiles
                     (
@@ -936,13 +957,14 @@
                         {
                             DefaultFileNames =
                                 {
-                                    "index.html"
+                                            "index.html"
                                 }
                         }
                     );
-            app.UseStaticFiles();
+            app.UseStaticFiles(); 
+            #endregion
 
-
+            #region Swagger
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app
                 .UseSwagger();
@@ -960,7 +982,9 @@
                                         , swaggerTitle
                                     );
                         }
-                    );
+                    ); 
+            #endregion
+
             //app.UseEndpoints(endpoints =>
             //    {
             //        endpoints.MapControllers();
