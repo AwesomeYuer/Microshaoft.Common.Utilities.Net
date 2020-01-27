@@ -35,11 +35,13 @@
     using Microsoft.AspNetCore.Hosting;
 #else
 #endif
-
-
     public class Startup
     {
-        private const string _dateTimeFormat = "yyyy-MM-dd HH:mm:ss.fffff";
+        private const string defaultDateTimeFormat = "yyyy-MM-dd HH:mm:ss.fffff";
+        private const string swaggerVersion = "v3.1.101";
+        private const string swaggerTitle = "Microshaoft Store Procedures Executors API";
+        private const string swaggerDescription = "Powered By Microshaoft.Common.Utilities.Net";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -48,6 +50,7 @@
         {
             get;
         }
+
         public void ConfigureServices(IServiceCollection services)
         {
             ConfigurationHelper
@@ -55,25 +58,33 @@
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo
-                {
-                    Version = "v1",
-                    Title = "Microshaoft Store Procedures Executors API",
-                    Description = "Microshaoft Store Procedures Executors API",
-                    TermsOfService = new Uri("https://github.com/Microshaoft/Microshaoft.Common.Utilities.Net/blob/master/README.md"),
-                    Contact = new OpenApiContact
-                    {
-                        Name = "Microshaoft",
-                        Email = "Microshaoft@gmail.com",
-                        Url = new Uri("https://github.com/Microshaoft"),
-                    },
-                    License = new OpenApiLicense
-                    {
-                        Name = "Use under License",
-                        Url = new Uri("https://github.com/Microshaoft/Microshaoft.Common.Utilities.Net/blob/master/License.txt"),
-                    }
-                });
-
+                c
+                    .SwaggerDoc
+                        (
+                            swaggerVersion
+                            , new OpenApiInfo
+                                {
+                                    Version = swaggerVersion
+                                    , Title = swaggerTitle
+                                    , Description = swaggerDescription
+                                    , TermsOfService =
+                                            new Uri
+                                                ("https://github.com/Microshaoft/Microshaoft.Common.Utilities.Net/blob/master/README.md")
+                                    , Contact = new OpenApiContact
+                                        {
+                                            Name = "Microshaoft"
+                                            , Email = "Microshaoft@gmail.com"
+                                            , Url = new Uri("https://github.com/Microshaoft")
+                                            ,
+                                        }
+                                    , License = new OpenApiLicense
+                                        {
+                                            Name = "Use under License"
+                                            , Url = new Uri("https://github.com/Microshaoft/Microshaoft.Common.Utilities.Net/blob/master/License.txt")
+                                            ,
+                                        }
+                                }
+                        );
                 // Set the comments path for the Swagger JSON and UI.
                 //var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 //var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
@@ -529,26 +540,6 @@
                                     );
                         }
                     );
-
-#if NETCOREAPP2_X
-            services
-                .AddSwaggerGen
-                    (
-                        c =>
-                        {
-                            c
-                                .SwaggerDoc
-                                    (
-                                        "v1"
-                                        , new Info
-                                        {
-                                            Title = "My API"
-                                            , Version = "v1"
-                                        }
-                                    );
-                        }
-                    );
-#endif
             services
                 .Configure<KestrelServerOptions>
                     (
@@ -709,11 +700,11 @@
                                                     httpContext
                                                         .Response
                                                         .Headers["X-Request-Receive-BeginTime"]
-                                                                    = beginTime.ToString(_dateTimeFormat);
+                                                                    = beginTime.ToString(defaultDateTimeFormat);
                                                     httpContext
                                                         .Response
                                                         .Headers["X-Response-Send-BeginTime"]
-                                                                    = DateTime.Now.ToString(_dateTimeFormat);
+                                                                    = DateTime.Now.ToString(defaultDateTimeFormat);
                                                     httpContext
                                                         .Response
                                                         .Headers["X-Request-Response-Timing-In-Milliseconds"]
@@ -965,8 +956,8 @@
                             c
                                 .SwaggerEndpoint
                                     (
-                                        "/swagger/v1/swagger.json"
-                                        , "My API V1"
+                                        $"/swagger/{swaggerVersion}/swagger.json"
+                                        , swaggerTitle
                                     );
                         }
                     );
