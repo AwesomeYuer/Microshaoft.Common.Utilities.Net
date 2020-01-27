@@ -23,6 +23,7 @@
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
+    using System.Data;
     using System.Data.SqlClient;
     using System.Diagnostics;
     using System.IO;
@@ -225,7 +226,7 @@
                                                 );
                                 }
                             )
-                    ); 
+                    );
             #endregion
 
             //services
@@ -233,33 +234,37 @@
             //        <JTokenParametersValidateFilterAttribute>
             //            ();
 
+            ConcurrentDictionary<string, ExecutingInfo> executingCachingStore
+                    = new ConcurrentDictionary<string, ExecutingInfo>();
+            services
+                    .AddSingleton(executingCachingStore);
+
+
             #region 异步批量入库案例专用
             var processor =
                 new SingleThreadAsyncDequeueProcessorSlim<JToken>();
-            ConcurrentDictionary<string, ExecutingInfo>
-                        executingCachingStore
-                                = new ConcurrentDictionary<string, ExecutingInfo>();
-            services
-                    .AddSingleton(executingCachingStore);
+
             var executor = new MsSqlStoreProceduresExecutor(executingCachingStore);
+            var jArray = new JArray();
             processor
                 .StartRunDequeueThreadProcess
                     (
-                        (i, data) =>
+                        (dequeued, batch, i, element) =>
+                        {
+                            jArray
+                                .Add(element);
+                        }
+                        ,
+                        (dequeued, batch, i) =>
                         {
                             //Debugger.Break();
-                            var ja = new JArray(data);
-                            var jo = new JObject
-                            {
-                                ["udt_vcidt"] = ja
-                            };
                             var sqlConnection = new SqlConnection("Initial Catalog=test;Data Source=localhost;User=sa;Password=!@#123QWE");
                             executor
                                 .ExecuteJsonResults
                                     (
                                         sqlConnection
                                         , "zsp_Test"
-                                        , jo
+                                        , jArray
                                         ,
                                             (
                                                 resultSetIndex
@@ -269,16 +274,19 @@
                                                 , fieldType
                                                 , fieldName
                                             )
-                                        =>
+                                                =>
                                             {
                                                 return (true, null);
                                             }
                                     );
+                            jArray.Clear();
                         }
-                        , null
                         , 1000
                         , 10 * 1000
                     );
+
+
+
             services
                 .AddSingleton
                     //<SingleThreadAsyncDequeueProcessorSlim<JToken>>
@@ -823,7 +831,7 @@
                                                 );
                                                 //Console.WriteLine($"event: exception @ {middlewareTypeName}");
 
-                                                return
+                                        return
                                             (
                                                 reThrow
                                                 , errorDetails

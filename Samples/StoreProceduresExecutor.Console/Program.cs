@@ -1,14 +1,14 @@
 ﻿namespace ConsoleApp
 {
-    using System;
-    using System.Data;
-    using System.Data.SqlClient;
-    using System.Threading.Tasks;
     using Microshaoft;
     using MySql.Data.MySqlClient;
     using Newtonsoft.Json.Linq;
-    using System.Linq;
+    using System;
     using System.Collections.Concurrent;
+    using System.Data;
+    using System.Data.SqlClient;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public static class Program
     {
@@ -16,6 +16,12 @@
         {
 
             ValueTupleDataTableTest();
+
+            Console.WriteLine("press any key to continue ...");
+
+            Console.ReadLine();
+            SingleThreadAsyncDequeueProcessorSlimTest();
+
 
             Console.WriteLine("press any key to continue ...");
 
@@ -131,8 +137,7 @@
 
             await foreach
                     (
-                        var
-                            (
+                        var (
                                 resultSetIndex
                                 , rowIndex
                                 , columns
@@ -151,6 +156,47 @@
             }
 
             Console.WriteLine("Hello World!");
+        }
+
+        private static void SingleThreadAsyncDequeueProcessorSlimTest()
+        {
+            Console.WriteLine("SingleThreadAsyncDequeueProcessorSlim DataTable Test:");
+            var processor = new SingleThreadAsyncDequeueProcessorSlim<(int, string, DateTime)>();
+            var dataTable = typeof((int, string, DateTime)).GenerateEmptyDataTable("F1", "F2", "F3");
+            processor
+                .StartRunDequeueThreadProcess
+                    (
+                        (dequeued, batch, indexInBatch, element) =>
+                        {
+                            (int id, string text, DateTime time) = element;
+                            dataTable.Rows.Add(id, text, time);
+                        }
+                        , (dequeued, batch, indexInBatch) =>
+                        {
+                            Console.WriteLine($"{nameof(dequeued)}:{dequeued};{nameof(batch)}:{batch};{nameof(indexInBatch)}:{indexInBatch};{nameof(dataTable.Rows.Count)}:{dataTable.Rows.Count}");
+                            var dataRows = dataTable.AsEnumerable();
+                            var dataColumns = dataTable.Columns;
+                            foreach (var dataRow in dataRows)
+                            {
+                                foreach (DataColumn dataColumn in dataColumns)
+                                {
+                                    var columnName = dataColumn.ColumnName;
+                                    //Console.Write($"{columnName}:{dataRow[columnName]}\t");
+                                }
+                                //Console.Write("\n");
+                            }
+                            dataTable.Clear();
+                        }
+                        , 200
+                        , 1000
+                        , 1100
+                    );
+            for (var i = 0; i < 1000; i++)
+            {
+                processor.Enqueue((i, $"No.{i} Element", DateTime.Now));
+                Thread.Sleep(10);
+            }
+            
         }
 
         private static void ValueTupleDataTableTest()

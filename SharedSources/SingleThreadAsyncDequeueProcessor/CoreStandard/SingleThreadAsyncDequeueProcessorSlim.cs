@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Concurrent;
-    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Threading;
     public class SingleThreadAsyncDequeueProcessorSlim<TQueueElement>
@@ -62,6 +61,14 @@
                 return _dequeued;
             }
         }
+        private long _dequeuedBatches = 0;
+        public long DequeuedBatches
+        {
+            get
+            {
+                return _dequeuedBatches;
+            }
+        }
         public bool Enqueue(TQueueElement element)
         {
             var r = false;
@@ -90,8 +97,21 @@
         }
         public void StartRunDequeueThreadProcess
              (
-                 Action<long, List<TQueueElement>> onBatchDequeuesProcessAction
-                , Func<long, TQueueElement, bool> onOnceDequeueProcessFunc = null
+                Action
+                        <
+                            long            // Dequeued
+                            , long          // Dequeued Batch
+                            , int           // ID in one Batch
+                            , TQueueElement
+                        >
+                            onOnceDequeueProcessAction
+                , Action
+                        <
+                            long            // Dequeued
+                            , long          // Dequeued Batch
+                            , int           // ID in one Batch
+                        >
+                            onBatchDequeuesProcessAction
                 , int sleepInMilliseconds = 1000
                 , int waitOneBatchTimeOutInMilliseconds = 1000
                 , int waitOneBatchMaxDequeuedTimes = 100
@@ -108,8 +128,8 @@
                         {
                             DequeueProcess
                                 (
-                                    onBatchDequeuesProcessAction
-                                    , onOnceDequeueProcessFunc
+                                    onOnceDequeueProcessAction
+                                    , onBatchDequeuesProcessAction
                                     , sleepInMilliseconds
                                     , waitOneBatchTimeOutInMilliseconds
                                     , waitOneBatchMaxDequeuedTimes
@@ -121,23 +141,29 @@
         private bool _isStartedDequeueProcess = false;
         private void DequeueProcess
             (
-                
-                Action<long, List<TQueueElement>> onBatchDequeuesProcessAction = null
-                , Func<long, TQueueElement, bool> onOnceDequeueProcessFunc = null
+               Action
+                        <
+                            long            // Dequeued
+                            , long          // Dequeued Batch
+                            , int           // ID in one Batch
+                            , TQueueElement
+                        >
+                            onOnceDequeueProcessAction
+                , Action
+                        <
+                            long            // Dequeued
+                            , long          // Dequeued Batch
+                            , int           // ID in one Batch
+                        >
+                            onBatchDequeuesProcessAction
                 , int sleepInMilliseconds = 100
                 , int waitOneBatchTimeOutInMilliseconds = 1000
                 , int waitOneBatchMaxDequeuedTimes = 100
             )
         {
-            List<TQueueElement> list = null;
             int i = 0;
-            Stopwatch stopwatch = null;
-            if (onBatchDequeuesProcessAction != null)
-            {
-                list = new List<TQueueElement>();
-                stopwatch = new Stopwatch();
-                stopwatch.Start();
-            }
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
             while (true)
             {
                 TryCatchFinallyProcessHelper
@@ -148,7 +174,7 @@
                             {
                                 if (!_queue.IsEmpty)
                                 {
-                                    if 
+                                    if
                                         (
                                             _queue
                                                 .TryDequeue
@@ -158,21 +184,16 @@
                                         )
                                     {
                                         Interlocked.Increment(ref _dequeued);
-                                        i++;
-                                        var needAddToList = true;
+                                        i ++;
                                         item.DequeueTime = DateTime.Now;
-                                        if (onOnceDequeueProcessFunc != null)
-                                        {
-                                            needAddToList = onOnceDequeueProcessFunc(i, item.QueueElement);
-                                            item.DequeueProcessedTime = DateTime.Now;
-                                        }
-                                        if (onBatchDequeuesProcessAction != null)
-                                        {
-                                            if (needAddToList)
-                                            {
-                                                list.Add(item.QueueElement);
-                                            }
-                                        }
+                                        onOnceDequeueProcessAction
+                                                (
+                                                    _dequeued
+                                                    , _dequeuedBatches
+                                                    , i
+                                                    , item.QueueElement
+                                                );
+                                        item.DequeueProcessedTime = DateTime.Now;
                                     }
                                 }
                                 else
@@ -186,9 +207,12 @@
                                 {
                                     if
                                         (
-                                            i >= waitOneBatchMaxDequeuedTimes
+                                            i >=
+                                                waitOneBatchMaxDequeuedTimes
                                             ||
-                                            stopwatch.ElapsedMilliseconds > waitOneBatchTimeOutInMilliseconds
+                                            stopwatch
+                                                .ElapsedMilliseconds >
+                                                        waitOneBatchTimeOutInMilliseconds
                                         )
                                     {
                                         if (i > 0)
@@ -199,10 +223,12 @@
                                             }
                                             try
                                             {
+                                                Interlocked.Increment(ref _dequeuedBatches);
                                                 onBatchDequeuesProcessAction
                                                     (
-                                                        i
-                                                        , list
+                                                            _dequeued
+                                                            , _dequeuedBatches
+                                                            , i
                                                     );
                                             }
                                             finally
@@ -210,7 +236,6 @@
                                                 if (stopwatch != null)
                                                 {
                                                     i = 0;
-                                                    list.Clear();
                                                     stopwatch.Restart();
                                                 }
                                             }
