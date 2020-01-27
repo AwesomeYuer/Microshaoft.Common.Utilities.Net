@@ -19,12 +19,29 @@ namespace Microshaoft.Web
         private const string defaultErrorResponseContentType = "application/json";
         private const string defaultErrorMessage = nameof(HttpStatusCode.InternalServerError);
         private readonly JsonSerializerOptions defaultJsonSerializerOptions = new JsonSerializerOptions { WriteIndented = true };
-        public Func<HttpContext, IConfiguration, Exception, ILoggerFactory, ILogger, TInjector,(bool, bool, HttpStatusCode, int, string)> OnCaughtExceptionProcessFunc;
+        public Func
+                    <
+                        HttpContext
+                        , IConfiguration
+                        , Exception
+                        , ILoggerFactory
+                        , ILogger
+                        , TInjector
+                        ,
+                            (
+                                bool                // reThrow
+                                , bool              // error Details
+                                , HttpStatusCode
+                                , int               // error Result Code
+                                , string            // error Message
+                            )
+                    >
+                        OnCaughtExceptionProcessFunc;
 
         public
             Action
                 <
-                    bool
+                    bool                    // caught Exeption
                     , Exception
                     , HttpContext
                     , IConfiguration
@@ -84,9 +101,8 @@ namespace Microshaoft.Web
             bool reThrow = false;
             bool errorDetails = false;
             HttpStatusCode errorStatusCode = HttpStatusCode.InternalServerError;
-            int errorResultCode = -1 * (int)errorStatusCode;
+            int errorResultCode = -1 * (int) errorStatusCode;
             var errorMessage = defaultErrorMessage;
-
 
             try
             {
@@ -114,7 +130,6 @@ namespace Microshaoft.Web
                                     , LoggerFactory
                                     , Logger
                                     , _injector
-
                                 );
                 }
                 var response = context.Response;
