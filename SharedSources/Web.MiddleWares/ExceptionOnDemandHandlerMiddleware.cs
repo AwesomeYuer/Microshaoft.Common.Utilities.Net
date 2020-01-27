@@ -29,7 +29,20 @@ namespace Microshaoft.Web
             _configuration = configuration;
         }
 
-        public Func<HttpContext, IConfiguration, Exception, (bool, HttpStatusCode, int, string)> OnCaughtExceptionHandleProcess;
+        public Func
+                    <
+                        HttpContext
+                        , IConfiguration
+                        , Exception
+                        ,
+                            (
+                                bool                // error Details
+                                , HttpStatusCode
+                                , int               // error Result Code
+                                , string            // error Message
+                            )
+                    >
+                        OnCaughtExceptionHandleProcess;
 
         public async Task Invoke(HttpContext context)
         {
