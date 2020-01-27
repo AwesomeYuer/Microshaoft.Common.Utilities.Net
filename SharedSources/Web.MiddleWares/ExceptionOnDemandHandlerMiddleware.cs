@@ -50,7 +50,6 @@ namespace Microshaoft.Web
             {
                 return;
             }
-            response.ContentType = "application/json";
             var errorDetails = false;
             var errorStatusCode = HttpStatusCode.InternalServerError;
             var errorResultCode = -1 * (int) errorStatusCode;
