@@ -15,8 +15,6 @@ namespace Microshaoft.Web
         private const string defaultErrorResponseContentType = "application/json";
         private readonly IWebHostEnvironment _env;
         private readonly IConfiguration _configuration;
-
-
         private readonly JsonSerializerOptions defaultJsonSerializerOptions = new JsonSerializerOptions { WriteIndented = true };
 
         public ExceptionOnDemandHandlerMiddleware
