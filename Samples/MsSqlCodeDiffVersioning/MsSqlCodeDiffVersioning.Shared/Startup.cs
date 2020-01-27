@@ -16,6 +16,7 @@
     using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.Extensions.Logging;
     using Microsoft.Net.Http.Headers;
+    using Microsoft.OpenApi.Models;
     //using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
     using System;
@@ -24,7 +25,9 @@
     using System.Data.SqlClient;
     using System.Diagnostics;
     using System.IO;
+    using System.Linq;
     using System.Net;
+    using System.Reflection;
     using System.Text;
     using System.Text.Json;
     using System.Threading.Tasks;
@@ -49,6 +52,43 @@
         {
             ConfigurationHelper
                             .Load(Configuration);
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "Microshaoft Store Procedures Executors API",
+                    Description = "Microshaoft Store Procedures Executors API",
+                    TermsOfService = new Uri("https://github.com/Microshaoft/Microshaoft.Common.Utilities.Net/blob/master/README.md"),
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Microshaoft",
+                        Email = "Microshaoft@gmail.com",
+                        Url = new Uri("https://github.com/Microshaoft"),
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "Use under License",
+                        Url = new Uri("https://github.com/Microshaoft/Microshaoft.Common.Utilities.Net/blob/master/License.txt"),
+                    }
+                });
+
+                // Set the comments path for the Swagger JSON and UI.
+                //var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                //var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                //c.IncludeXmlComments(xmlPath);
+                c
+                    .ResolveConflictingActions
+                        (
+                            (xApiDescriptions) =>
+                            {
+                                return
+                                    xApiDescriptions
+                                                .First();
+                            }
+                        );
+            });
 
             services
                 .Configure<CsvFormatterOptions>
@@ -911,22 +951,30 @@
                     );
             app.UseStaticFiles();
 
-#if NETCOREAPP2_X
-            app.UseSwagger();
+
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app
+                .UseSwagger();
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
             app
                 .UseSwaggerUI
-                (
-                    c =>
-                    {
-                        c
-                            .SwaggerEndpoint
-                                (
-                                    "/swagger/v1/swagger.json"
-                                    , "My API V1"
-                                );
-                    }
-                );
-#endif
+                    (
+                        (c) =>
+                        {
+                            c
+                                .SwaggerEndpoint
+                                    (
+                                        "/swagger/v1/swagger.json"
+                                        , "My API V1"
+                                    );
+                        }
+                    );
+            //app.UseEndpoints(endpoints =>
+            //    {
+            //        endpoints.MapControllers();
+            //    });
+
             //app.UseHttpsRedirection();
         }
     }
