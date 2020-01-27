@@ -740,7 +740,7 @@
                                     {
                                         xLogger
                                             .LogError($"event: exception @ {middlewareTypeName}");
-                                        var reThrow = true;
+                                        var reThrow = false;
                                         var errorDetails = true;
                                         var errorStatusCode = HttpStatusCode
                                                                         .InternalServerError;
