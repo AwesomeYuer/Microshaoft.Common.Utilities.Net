@@ -88,19 +88,22 @@
                             .Singleton
                                 <
                                     IApplicationModelProvider
-                                    , ConfigurableActionConstrainedRouteApplicationModelProvider<ConstrainedRouteAttribute>
+                                    , ConfigurableActionConstrainedRouteApplicationModelProvider
+                                                                            <ConstrainedRouteAttribute>
                                 >
                             (
                                 (x) =>
                                 {
                                     return
-                                        new ConfigurableActionConstrainedRouteApplicationModelProvider<ConstrainedRouteAttribute>
+                                        new ConfigurableActionConstrainedRouteApplicationModelProvider
+                                                                                <ConstrainedRouteAttribute>
                                                 (
                                                     Configuration
                                                     , (attribute) =>
                                                     {
                                                         return
-                                                            new ConfigurableActionConstraint<ConstrainedRouteAttribute>
+                                                            new ConfigurableActionConstraint
+                                                                        <ConstrainedRouteAttribute>
                                                                     (
                                                                         attribute
                                                                         , (actionConstraintContext, constrainedRouteAttribute) =>
@@ -137,17 +140,24 @@
                                                                                 if
                                                                                     (
                                                                                         constrainedRouteAttribute
-                                                                                                .Configuration
-                                                                                                .TryGetSection
-                                                                                                    (
-                                                                                                        $"Routes:{routeName}:{httpMethod}:{accessingConfigurationKey}:isAsyncExecuting"
-                                                                                                        , out var isAsyncExecutingConfiguration
-                                                                                                    )
+                                                                                                        .Configuration
+                                                                                                        .TryGetSection
+                                                                                                            (
+                                                                                                                $"Routes:{routeName}:{httpMethod}:{accessingConfigurationKey}:isAsyncExecuting"
+                                                                                                                , out var isAsyncExecutingConfiguration
+                                                                                                            )
                                                                                     )
                                                                                 {
-                                                                                    isAsyncExecutingInConfiguration = isAsyncExecutingConfiguration.Get<bool>();
+                                                                                    isAsyncExecutingInConfiguration =
+                                                                                        isAsyncExecutingConfiguration
+                                                                                                                .Get<bool>();
                                                                                 }
-                                                                                r = (isAsyncExecutingInConfiguration == isAsyncExecuting);
+                                                                                r =
+                                                                                    (
+                                                                                        isAsyncExecutingInConfiguration
+                                                                                        ==
+                                                                                        isAsyncExecuting
+                                                                                    );
                                                                             }
                                                                             return r;
                                                                         }
@@ -532,16 +542,15 @@
             app
                 .UseRequestResponseGuard
                     <
-
-                            QueuedObjectsPool<Stopwatch>
-                            , IConfiguration
-                            , ILoggerFactory
-                            , ILogger
-
+                        QueuedObjectsPool<Stopwatch>
+                        , IConfiguration
+                        , ILoggerFactory
+                        , ILogger
                     >
                         (
                             (middleware) =>
                             {
+                                //onInitializeCallbackProcesses
                                 var middlewareTypeName = middleware.GetType().Name;
                                 middleware
                                     .OnFilterProcessFunc
@@ -566,8 +575,8 @@
                                                                 timingKey
                                                                 ,
                                                                     (
-                                                                        BeginTime: DateTime.Now
-                                                                        , BeginTimestamp: Stopwatch.GetTimestamp()
+                                                                        BeginTime : DateTime.Now
+                                                                        , BeginTimestamp : Stopwatch.GetTimestamp()
                                                                     )
                                                             );
                                             }
@@ -575,94 +584,137 @@
                                         };
                                 middleware
                                     .OnInvokingProcessAsync
-                                        = async (httpContext, @event, stopwatchesPool, xConfiguration, xLoggerFactory, xLogger) =>
-                                        {
-                                            xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
-                                            var httpRequestFeature = httpContext
-                                                                            .Features
-                                                                            .Get<IHttpRequestFeature>();
-                                            var url = httpRequestFeature.RawTarget;
-                                            httpRequestFeature = null;
-                                            var result = false;
-                                            if
-                                                (
-                                                    //request.ContentType == "image/jpeg"
-                                                    url.EndsWith("error.js")
-                                                )
+                                        =
+                                            async
+                                            (
+                                                httpContext
+                                                , @event
+                                                , stopwatchesPool
+                                                , xConfiguration
+                                                , xLoggerFactory
+                                                , xLogger
+                                            )
+                                                =>
                                             {
-                                                var response = httpContext.Response;
-                                                var errorStatusCode = 500;
-                                                var errorMessage = $"error in Middleware: [{middlewareTypeName}]";
-                                                response.StatusCode = errorStatusCode;
-                                                var jsonResult = new
+                                                xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
+                                                var httpRequestFeature = httpContext
+                                                                                .Features
+                                                                                .Get<IHttpRequestFeature>();
+                                                var url = httpRequestFeature.RawTarget;
+                                                httpRequestFeature = null;
+                                                var result = false;
+                                                if
+                                                    (
+                                                        //request.ContentType == "image/jpeg"
+                                                        url.EndsWith("error.js")
+                                                    )
                                                 {
-                                                    statusCode = errorStatusCode
-                                                    , resultCode = -1 * errorStatusCode
-                                                    , message = errorMessage
-                                                };
-                                                await JsonSerializer
+                                                    var response = httpContext.Response;
+                                                    var errorStatusCode = 500;
+                                                    var errorMessage = $"error in Middleware: [{middlewareTypeName}]";
+                                                    response.StatusCode = errorStatusCode;
+                                                    var jsonResult = new
+                                                    {
+                                                        statusCode = errorStatusCode
+                                                        , resultCode = -1 * errorStatusCode
+                                                        , message = errorMessage
+                                                    };
+                                                    await
+                                                        JsonSerializer
                                                                 .SerializeAsync
                                                                         (
                                                                             response.Body
                                                                             , jsonResult
                                                                         );
-                                                result = false;
-                                            }
-                                            else
-                                            {
-                                                result = true;
-                                            }
-                                            return
-                                                await
-                                                    Task
-                                                        .FromResult(result);
-                                        };
+                                                    result = false;
+                                                }
+                                                else
+                                                {
+                                                    result = true;
+                                                }
+                                                return
+                                                    await
+                                                        Task
+                                                            .FromResult(result);
+                                            };
                                 middleware
                                     .OnResponseStartingProcess
-                                        = (httpContext, @event, stopwatchesPool, xConfiguration, xLoggerFactory, xLogger) =>
-                                        {
-                                            xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
-                                            var r = httpContext
-                                                        .Items
-                                                        .Remove
-                                                            (
-                                                                timingKey
-                                                                , out var removed
-                                                            );
-                                            if (r)
+                                        = 
+                                            (
+                                                httpContext
+                                                , @event
+                                                , stopwatchesPool
+                                                , xConfiguration
+                                                , xLoggerFactory
+                                                , xLogger
+                                            )
+                                                =>
                                             {
-                                                (DateTime beginTime, long beginTimeStamp) = (ValueTuple<DateTime, long>) removed;
-                                                removed = null;
-                                                httpContext
-                                                    .Response
-                                                    .Headers["X-Request-Receive-BeginTime"]
-                                                                = beginTime.ToString(_dateTimeFormat);
-                                                httpContext
-                                                    .Response
-                                                    .Headers["X-Response-Send-BeginTime"]
-                                                                = DateTime.Now.ToString(_dateTimeFormat);
-                                                httpContext
-                                                    .Response
-                                                    .Headers["X-Request-Response-Timing-In-Milliseconds"]
-                                                                = beginTimeStamp
-                                                                        .GetElapsedTimeToNow()
-                                                                        .TotalMilliseconds
-                                                                        .ToString();
-                                            }
-                                        };
+                                                xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
+                                                var r = httpContext
+                                                                .Items
+                                                                .Remove
+                                                                    (
+                                                                        timingKey
+                                                                        , out var removed
+                                                                    );
+                                                if (r)
+                                                {
+                                                    (
+                                                        DateTime beginTime
+                                                        , long beginTimeStamp
+                                                    )
+                                                        = (ValueTuple<DateTime, long>) removed;
+                                                    removed = null;
+                                                    httpContext
+                                                        .Response
+                                                        .Headers["X-Request-Receive-BeginTime"]
+                                                                    = beginTime.ToString(_dateTimeFormat);
+                                                    httpContext
+                                                        .Response
+                                                        .Headers["X-Response-Send-BeginTime"]
+                                                                    = DateTime.Now.ToString(_dateTimeFormat);
+                                                    httpContext
+                                                        .Response
+                                                        .Headers["X-Request-Response-Timing-In-Milliseconds"]
+                                                                    = beginTimeStamp
+                                                                            .GetElapsedTimeToNow()
+                                                                            .TotalMilliseconds
+                                                                            .ToString();
+                                                }
+                                            };
                                 middleware
                                     .OnAfterInvokedNextProcess
-                                        = (httpContext, @event, stopwatchesPool, xConfiguration, xLoggerFactory, xLogger) =>
-                                        {
-                                            //Console.WriteLine($"event: {@event} @ {middlewareTypeName}");
-                                            xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
-                                        };
+                                        = 
+                                            (
+                                                httpContext
+                                                , @event
+                                                , stopwatchesPool
+                                                , xConfiguration
+                                                , xLoggerFactory
+                                                , xLogger
+                                            )
+                                                =>
+                                            {
+                                                //Console.WriteLine($"event: {@event} @ {middlewareTypeName}");
+                                                xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
+                                            };
                                 middleware
                                     .OnResponseCompletedProcess
-                                        = (httpContext, @event, stopwatchesPool, xConfiguration, xLoggerFactory, xLogger) =>
-                                        {
-                                            xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
-                                        };
+                                        =
+                                            (
+                                                httpContext
+                                                , @event
+                                                , stopwatchesPool
+                                                , xConfiguration
+                                                , xLoggerFactory
+                                                , xLogger
+                                            )
+                                                =>
+                                            {
+                                                xLogger
+                                                    .LogInformation($"event: {@event} @ {middlewareTypeName}");
+                                            };
                             }
                         );
             app.UseCors();
@@ -671,15 +723,27 @@
                     (
                         (middleware) =>
                         {
+                            //onInitializeCallbackProcesses
                             var middlewareTypeName = middleware.GetType().Name;
                             middleware
                                 .OnCaughtExceptionProcessFunc
-                                    = (xHttpContext, xConfiguration, xException, xLoggerFactory, xLogger, xTInjector) =>
+                                    = 
+                                    (
+                                        xHttpContext
+                                        , xConfiguration
+                                        , xException
+                                        , xLoggerFactory
+                                        , xLogger
+                                        , xTInjector
+                                    )
+                                        =>
                                     {
-                                        xLogger.LogError($"event: exception @ {middlewareTypeName}");
-                                        var reThrow = true;
+                                        xLogger
+                                            .LogError($"event: exception @ {middlewareTypeName}");
+                                        var reThrow = false;
                                         var errorDetails = true;
-                                        var errorStatusCode = HttpStatusCode.InternalServerError;
+                                        var errorStatusCode = HttpStatusCode
+                                                                        .InternalServerError;
                                         var errorResultCode = -1 * (int) errorStatusCode;
                                         var errorMessage = nameof(HttpStatusCode.InternalServerError);
 
@@ -702,11 +766,11 @@
                                                             log =
                                                                 (
                                                                     xException
-                                                                    , $"LogOnDemand:{xException.ToString()}"
+                                                                    , $"LogOnDemand : {xException.ToString()}"
                                                                     , null
                                                                 );
                                                         return
-                                                           log;
+                                                               log;
                                                     }
                                                 );
                                         //Console.WriteLine($"event: exception @ {middlewareTypeName}");
@@ -723,38 +787,40 @@
                         }
                     );
 
-            //if (env.IsDevelopment())
+            if (1 == 0)
             {
-                //app.UseExceptionHandler
-                //        (
-                //            new ExceptionHandlerOptions()
-                //            { 
-                //                ExceptionHandler = new ExceptionOnDemandHandlerMiddleware
-                //                                        (
-                //                                            env
-                //                                            , configuration
-                //                                        )
-                //                { 
-                //                     OnCaughtExceptionHandleProcess =
-                //                     (xHttpContext, xConfiguration, xCaughtException) =>
-                //                     {
-                //                         var errorMessage = nameof(HttpStatusCode.InternalServerError);
-                //                         var errorDetails = true;
-                //                         if (errorDetails)
-                //                         {
-                //                             errorMessage = xCaughtException.ToString();
-                //                         }
-                //                         return
-                //                             (
-                //                                errorDetails
-                //                                , HttpStatusCode.InternalServerError
-                //                                , -1 * (int) HttpStatusCode.InternalServerError
-                //                                , errorMessage
-                //                             );
-                //                     }
-                //                }.Invoke
-                //            }
-                //        );
+                app.UseExceptionHandler
+                        (
+                            new ExceptionHandlerOptions()
+                            {
+                                ExceptionHandler = new ExceptionOnDemandHandlerMiddleware
+                                                        (
+                                                            env
+                                                            , configuration
+                                                        )
+                                {
+                                    OnCaughtExceptionHandleProcess =
+                                     (xHttpContext, xConfiguration, xCaughtException) =>
+                                     {
+                                         var errorMessage = nameof(HttpStatusCode.InternalServerError);
+                                         var errorDetails = true;
+                                         if (errorDetails)
+                                         {
+                                             errorMessage = xCaughtException.ToString();
+                                         }
+                                         return
+                                             (
+                                                errorDetails
+                                                , HttpStatusCode
+                                                            .InternalServerError
+                                                , -1 * (int) HttpStatusCode
+                                                                    .InternalServerError
+                                                , errorMessage
+                                             );
+                                     }
+                                }.Invoke
+                            }
+                        );
                 //app.UseDeveloperExceptionPage();
             }
             //else
@@ -832,16 +898,17 @@
             app.UseMvc();
             Console.WriteLine(Directory.GetCurrentDirectory());
 
-            app.UseDefaultFiles
-                (
-                    new DefaultFilesOptions()
-                    {
-                        DefaultFileNames =
-                            {
-                                "index.html"
-                            }
-                    }
-                );
+            app
+                .UseDefaultFiles
+                    (
+                        new DefaultFilesOptions()
+                        {
+                            DefaultFileNames =
+                                {
+                                    "index.html"
+                                }
+                        }
+                    );
             app.UseStaticFiles();
 
 #if NETCOREAPP2_X

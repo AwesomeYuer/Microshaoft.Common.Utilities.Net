@@ -9,7 +9,7 @@ namespace Microshaoft.Web
     using System.Net;
     using System.Text.Json;
     using System.Threading.Tasks;
-    public sealed class ExceptionOnDemandHandlerMiddleware
+    public /*sealed */ class ExceptionOnDemandHandlerMiddleware
     {
         private const string defaultErrorMessage = nameof(HttpStatusCode.InternalServerError);
         private const string defaultErrorResponseContentType = "application/json";
@@ -44,47 +44,49 @@ namespace Microshaoft.Web
 
         public async Task Invoke(HttpContext context)
         {
-            var response = context.Response;
-            var exception = context.Features.Get<IExceptionHandlerFeature>()?.Error;
-            if (exception == null)
+            var response = context
+                                .Response;
+            var exception = context
+                                .Features
+                                .Get<IExceptionHandlerFeature>()?
+                                .Error;
+            if (exception != null)
             {
-                return;
+                var errorDetails = false;
+                var errorStatusCode = HttpStatusCode.InternalServerError;
+                var errorResultCode = -1 * (int)errorStatusCode;
+                var errorMessage = defaultErrorMessage;
+                if (OnCaughtExceptionHandleProcess != null)
+                {
+                    (
+                        errorDetails
+                        , errorStatusCode
+                        , errorResultCode
+                        , errorMessage
+                    )
+                    =
+                    OnCaughtExceptionHandleProcess(context, _configuration, exception);
+                }
+                response.StatusCode = (int)errorStatusCode;
+                response.ContentType = defaultErrorResponseContentType;
+                if (errorDetails && errorMessage.IsNullOrEmptyOrWhiteSpace())
+                {
+                    errorMessage = exception.ToString();
+                }
+                var jsonResult = new
+                {
+                    statusCode = errorStatusCode
+                    , resultCode = errorResultCode
+                    , message = errorMessage
+                };
+                await JsonSerializer
+                                .SerializeAsync
+                                        (
+                                            response.Body
+                                            , jsonResult
+                                            , defaultJsonSerializerOptions
+                                        );
             }
-            response.ContentType = "application/json";
-            var errorDetails = false;
-            var errorStatusCode = HttpStatusCode.InternalServerError;
-            var errorResultCode = -1 * (int) errorStatusCode;
-            var errorMessage = defaultErrorMessage;
-            if (OnCaughtExceptionHandleProcess != null)
-            {
-                (
-                    errorDetails
-                    , errorStatusCode
-                    , errorResultCode
-                    , errorMessage
-                )
-                =
-                OnCaughtExceptionHandleProcess(context, _configuration , exception);
-            }
-            response.StatusCode = (int) errorStatusCode;
-            response.ContentType = defaultErrorResponseContentType;
-            if (errorDetails && errorMessage.IsNullOrEmptyOrWhiteSpace())
-            {
-                errorMessage = exception.ToString();
-            }
-            var jsonResult = new
-            {
-                statusCode = errorStatusCode
-                , resultCode = errorResultCode
-                , message = errorMessage
-            };
-            await JsonSerializer
-                            .SerializeAsync
-                                    (
-                                        response.Body
-                                        , jsonResult
-                                        , defaultJsonSerializerOptions
-                                    );
         }
     }
 }
