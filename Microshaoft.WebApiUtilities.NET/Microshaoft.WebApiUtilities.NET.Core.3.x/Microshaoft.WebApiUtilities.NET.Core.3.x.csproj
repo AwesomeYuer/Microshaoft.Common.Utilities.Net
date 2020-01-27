@@ -13,6 +13,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DefineConstants>TRACE;DEBUG;NETCOREAPP;NETCOREAPP3_X</DefineConstants>
+    <DocumentationFile></DocumentationFile>
   </PropertyGroup>
 
   <Import Project="..\..\SharedSources\WebApiUtilities.Shared.projitems" Label="Shared" />

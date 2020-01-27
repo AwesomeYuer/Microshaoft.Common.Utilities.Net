@@ -34,6 +34,20 @@ namespace Microshaoft.WebApi.Controllers
                     )
         {
         }
+
+
+        /// <summary>
+        /// ProcessActionRequest
+        /// </summary>
+        /// <param name="routeName">routeName</param>
+        /// <param name="parameters">Json Request Parameters</param>
+        /// <param name="resultJsonPathPart1"></param>
+        /// <param name="resultJsonPathPart2"></param>
+        /// <param name="resultJsonPathPart3"></param>
+        /// <param name="resultJsonPathPart4"></param>
+        /// <param name="resultJsonPathPart5"></param>
+        /// <param name="resultJsonPathPart6"></param>
+        /// <returns>Json</returns>
 #if NETCOREAPP3_X
         [
             ConcurrencyLimiterFilter
@@ -82,6 +96,20 @@ namespace Microshaoft.WebApi.Controllers
                             );
         }
 
+
+
+        /// <summary>
+        /// ProcessActionRequestAsync 
+        /// </summary>
+        /// <param name="routeName">routeName</param>
+        /// <param name="parameters">Json Request Parameters</param>
+        /// <param name="resultJsonPathPart1"></param>
+        /// <param name="resultJsonPathPart2"></param>
+        /// <param name="resultJsonPathPart3"></param>
+        /// <param name="resultJsonPathPart4"></param>
+        /// <param name="resultJsonPathPart5"></param>
+        /// <param name="resultJsonPathPart6"></param>
+        /// <returns>Json</returns>
         [BearerTokenBasedAuthorizeFilter(IsRequired = false)]
         [JTokenParametersValidateFilter(AccessingConfigurationKey = "exporting")]
         override public async Task<ActionResult<JToken>>
@@ -121,6 +149,19 @@ namespace Microshaoft.WebApi.Controllers
                             );
         }
 
+
+        /// <summary>
+        /// ProcessActionRequestAsync  Export
+        /// </summary>
+        /// <param name="routeName">routeName</param>
+        /// <param name="parameters">Json Request Parameters</param>
+        /// <param name="resultJsonPathPart1"></param>
+        /// <param name="resultJsonPathPart2"></param>
+        /// <param name="resultJsonPathPart3"></param>
+        /// <param name="resultJsonPathPart4"></param>
+        /// <param name="resultJsonPathPart5"></param>
+        /// <param name="resultJsonPathPart6"></param>
+        /// <returns>Json</returns>
         [
              Route
                  (
