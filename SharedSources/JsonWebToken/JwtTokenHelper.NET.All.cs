@@ -139,7 +139,7 @@ namespace Microshaoft
             try
             {
                 var tokenHandler = new JwtSecurityTokenHandler();
-                var jwtSecurityToken = ((JwtSecurityToken)tokenHandler.ReadToken(secretToken));
+                var jwtSecurityToken = ((JwtSecurityToken) tokenHandler.ReadToken(secretToken));
                 
                 var tokenValidationParameters = new TokenValidationParameters()
                 {
