@@ -231,11 +231,11 @@
                                                 Interlocked
                                                         .Increment(ref _dequeuedBatches);
                                                 onBatchDequeuesProcessAction
-                                                    (
-                                                            _dequeued
-                                                            , _dequeuedBatches
-                                                            , i
-                                                    );
+                                                                    (
+                                                                            _dequeued
+                                                                            , _dequeuedBatches
+                                                                            , i
+                                                                    );
                                             }
                                             finally
                                             {
