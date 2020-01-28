@@ -18,6 +18,8 @@
     using Microsoft.Extensions.Logging;
     using Microsoft.Net.Http.Headers;
     using Microsoft.OpenApi.Models;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.WebUtilities;
     //using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
     using System;
@@ -33,12 +35,15 @@
     using System.Text;
     using System.Text.Json;
     using System.Threading.Tasks;
+    using System.Web;
+    using System.Threading;
 #if NETCOREAPP2_X
     using Microsoft.AspNetCore.Hosting;
 #else
 #endif
     public class Startup
     {
+        
         private const string defaultDateTimeFormat = "yyyy-MM-dd HH:mm:ss.fffff";
         private const string swaggerVersion = "v3.1.101";
         private const string swaggerTitle = "Microshaoft Store Procedures Executors API";
@@ -93,7 +98,7 @@
                                     //var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                                     //var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                                     //c.IncludeXmlComments(xmlPath);
-                                    c
+                            c
                                 .ResolveConflictingActions
                                     (
                                         (xApiDescriptions) =>
@@ -249,10 +254,10 @@
             processor
                 .StartRunDequeueThreadProcess
                     (
-                        (dequeued, batch, i, element) =>
+                        (dequeued, batch, i, queueElement) =>
                         {
                             jArray
-                                .Add(element);
+                                .Add(queueElement.Element);
                         }
                         ,
                         (dequeued, batch, i) =>
@@ -294,6 +299,9 @@
                         processor
                     );
             #endregion
+
+
+            
 
             services
                 .AddSingleton
@@ -582,13 +590,194 @@
                                 env
                             , IConfiguration configuration
                             , ILoggerFactory loggerFactory
+
+                            , ConcurrentDictionary<string, ExecutingInfo> executingCachingStore
                         //, ILogger logger
                         )
         {
 
             #region RequestResponseGuard
             string timingKey = "beginTimestamp";
-            timingKey = string.Empty;
+            //timingKey = string.Empty;
+           
+            var asyncRequestResponseLoggingProcessor =
+                new SingleThreadAsyncDequeueProcessorSlim
+                        <
+                            (
+                                string url
+                                ,
+                                    (
+                                        string requestHeaders
+                                        , string requestBody
+                                        , string requestMethod
+                                    ) Request
+                                ,
+                                    (
+                                        string responseHeaders
+                                        , string responseBody
+                                        , int responseStatusCode
+                                    ) Response
+                            )
+                        >();
+            var dataTable = asyncRequestResponseLoggingProcessor
+                                        .QueueElementType
+                                        .GenerateEmptyDataTable
+                                            (
+                                               "ID"
+                                                , "EnqueueTimestamp"
+                                                , "EnqueueTime"
+                                                , "DequeueTime"
+                                                , "DequeueTimestamp"
+                                                , "DequeueProcessedTime"
+                                                , "DequeueProcessedTimestamp"
+
+                                                , "url"
+                                                , "requestHeaders"
+                                                , "requestBody"
+                                                , "requestMethod"
+
+                                                , "responseHeaders"
+                                                , "responseBody"
+                                                , "responseStatusCode"
+
+                                            );
+
+            
+            var executor = new MsSqlStoreProceduresExecutor(executingCachingStore)
+            { 
+                CachedParametersDefinitionExpiredInSeconds = 10
+            };
+            // there are only one Thread that's DequeueThread write it, so it's security
+            var jArray = new JArray();
+            Console.WriteLine($"Startup: {nameof(Thread.CurrentThread.ManagedThreadId)}:{Thread.CurrentThread.ManagedThreadId}");
+            asyncRequestResponseLoggingProcessor
+                .StartRunDequeueThreadProcess
+                    (
+                        (dequeued, batch, indexInBatch, queueElement) =>
+                        {
+                            var element = queueElement.Element;
+                            Console.WriteLine($"Dequeue Once: {nameof(Thread.CurrentThread.ManagedThreadId)}:{Thread.CurrentThread.ManagedThreadId}");
+                            jArray
+                                .Add
+                                    (
+                                        new JObject
+                                        {
+                                              { "ID", queueElement.ID                                 }
+                                            , { "EnqueueTimestamp", queueElement.Timing.EnqueueTimestamp            }
+                                            , { "EnqueueTime", queueElement.Timing.EnqueueTime                 }
+                                            , { "DequeueTime", queueElement.Timing.DequeueTime                 }
+                                            , { "DequeueTimestamp", queueElement.Timing.DequeueTimestamp            }
+                                            , { "DequeueProcessedTime", queueElement.Timing.DequeueProcessedTime        }
+                                            , { "DequeueProcessedTimestamp", queueElement.Timing.DequeueProcessedTimestamp   }
+                                            , { "url", element.url                                     }
+                                            , { "requestHeaders", element.Request.requestHeaders                  }
+                                            , { "requestBody", HttpUtility.UrlDecode(element.Request.requestBody)                     }
+                                            , { "requestMethod", element.Request.requestMethod                   }
+                                            , { "responseHeaders", element.Response.responseHeaders                }
+                                            , { "responseBody", HttpUtility.UrlDecode(element.Response.responseBody)                   }
+                                            , { "responseStatusCode", element.Response.responseStatusCode                   }
+                                        }
+                                    );
+
+                            #region use DataTable
+                            //dataTable
+                            //        .Rows
+                            //        .Add
+                            //            (
+                            //                queueElement.ID
+
+                            //                , queueElement.Timing.EnqueueTimestamp
+                            //                , queueElement.Timing.EnqueueTime
+                            //                , queueElement.Timing.DequeueTime
+                            //                , queueElement.Timing.DequeueTimestamp
+                            //                , queueElement.Timing.DequeueProcessedTime
+                            //                , queueElement.Timing.DequeueProcessedTimestamp
+
+                            //                , element.url
+                            //                , element.Request.requestHeaders
+                            //                , element.Request.requestBody
+                            //                , element.Request.requestMethod
+                            //                , element.Response.responseHeaders
+                            //                , element.Response.responseBody
+
+                            //            ); 
+                            #endregion
+
+                        }
+                        , (dequeued, batch, indexInBatch) =>
+                        {
+                            Console.WriteLine($"Dequeue Batch: {nameof(Thread.CurrentThread.ManagedThreadId)}:{Thread.CurrentThread.ManagedThreadId}");
+                            try
+                            {
+                                #region use DataTable
+                                //var dataRows = dataTable.AsEnumerable();
+                                //var enqueueTimestamp = dataRows
+                                //                            .Min
+                                //                                (
+                                //                                    (x) =>
+                                //                                    {
+                                //                                        return
+                                //                                            x.Field<long>("EnqueueTimestamp");
+                                //                                    }
+                                //                                );
+                                //var dequeueTimestamp = dataRows
+                                //                            .Max
+                                //                                (
+                                //                                    (x) =>
+                                //                                    {
+                                //                                        return
+                                //                                            x.Field<long>("DequeueTimestamp");
+                                //                                    }
+                                //                                );
+                                //var durationInQueue = enqueueTimestamp.GetElapsedTime(dequeueTimestamp).TotalMilliseconds;
+                                //Console.WriteLine($"{nameof(durationInQueue)}:{durationInQueue};{nameof(dequeued)}:{dequeued};{nameof(batch)}:{batch};{nameof(indexInBatch)}:{indexInBatch};{nameof(dataTable.Rows.Count)}:{dataTable.Rows.Count}");
+                                //var dataColumns = dataTable.Columns;
+                                //foreach (var dataRow in dataRows)
+                                //{
+                                //    foreach (DataColumn dataColumn in dataColumns)
+                                //    {
+                                //        var columnName = dataColumn.ColumnName;
+                                //        //Console.Write($"{columnName}:{dataRow[columnName]}\t");
+                                //    }
+                                //    //Console.Write("\n");
+                                //}
+                                #endregion
+
+                                // sql Connection should be here avoid cross threads
+                                var sqlConnection  = new SqlConnection("Initial Catalog=test;Data Source=gateway.hyper-v.internal\\sql2019,11433;User=sa;Password=!@#123QWE");
+                                
+                                try
+                                {
+                                    executor
+                                        .ExecuteJsonResults
+                                            (
+                                                sqlConnection
+                                                , "zsp_Logging"
+                                                , new JObject
+                                                    {
+                                                        { "data", jArray}
+                                                    }
+                                            );
+                                }
+                                finally
+                                {
+                                    if (sqlConnection.State != ConnectionState.Closed)
+                                    {
+                                        sqlConnection.Close();
+                                    }
+                                }
+                            }
+                            finally
+                            {
+                                //dataTable.Clear();
+                                jArray.Clear();
+                            }
+                        }
+                        , 200
+                        , 5000
+                        , 10
+                    );
+
             app
                 .UseRequestResponseGuard
                     <
@@ -609,6 +798,24 @@
                                             if (timingKey.IsNullOrEmptyOrWhiteSpace())
                                             {
                                                 return false;
+                                            }
+                                            httpContext.Request.EnableBuffering();
+
+                                            var request = httpContext.Request;
+                                            var requestBody = string.Empty;
+                                            var requestBodyStream = request.Body;
+                                            if (requestBodyStream.CanRead && requestBodyStream.CanSeek)
+                                            {
+                                                requestBodyStream.Position = 0;
+                                                requestBody = new StreamReader(requestBodyStream).ReadToEnd();
+                                                requestBodyStream.Position = 0;
+                                                httpContext
+                                                        .Items
+                                                        .TryAdd
+                                                            (
+                                                                nameof(requestBody)
+                                                                , requestBody
+                                                            );
                                             }
 
                                             xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
@@ -692,7 +899,8 @@
                                 middleware
                                     .OnResponseStartingProcess
                                         =
-                                            (
+                                           // don't support async 
+                                           (
                                                 httpContext
                                                 , @event
                                                 , stopwatchesPool
@@ -716,7 +924,7 @@
                                                         DateTime beginTime
                                                         , long beginTimeStamp
                                                     )
-                                                        = (ValueTuple<DateTime, long>)removed;
+                                                        = (ValueTuple<DateTime, long>) removed;
                                                     removed = null;
                                                     httpContext
                                                         .Response
@@ -734,6 +942,65 @@
                                                                             .TotalMilliseconds
                                                                             .ToString();
                                                 }
+                                                //return;
+                                                var httpRequestFeature = httpContext
+                                                                                 .Features
+                                                                                 .Get<IHttpRequestFeature>();
+                                                var url = httpRequestFeature.RawTarget;
+                                                var request = httpContext.Request;
+                                                var requestBody = string.Empty;
+                                                if
+                                                    (
+                                                        httpContext
+                                                                .Items
+                                                                .Remove
+                                                                    (
+                                                                        nameof(requestBody)
+                                                                        , out var removedRequestBody
+                                                                    )
+                                                    )
+                                                {
+                                                    requestBody = (string) removedRequestBody;
+                                                }
+                                                else
+                                                {
+                                                    if (request.Body.CanRead && request.Body.CanSeek)
+                                                    {
+                                                        request.Body.Position = 0;
+                                                        requestBody = new StreamReader(request.Body).ReadToEnd();
+                                                    }
+                                                }
+                                                var requestHeaders = Newtonsoft.Json.JsonConvert.SerializeObject(request.Headers);
+                                                var requestPath = request.Path;
+                                                var response = httpContext.Response;
+                                                var responseBody = string.Empty;
+                                                if (response.Body.CanRead && response.Body.CanSeek)
+                                                {
+                                                    response.Body.Position = 0;
+                                                    responseBody = new StreamReader(response.Body).ReadToEnd();
+                                                    Console.WriteLine(responseBody.Length);
+                                                }
+                                                var responseHeaders = Newtonsoft.Json.JsonConvert.SerializeObject(response.Headers);
+
+                                                asyncRequestResponseLoggingProcessor
+                                                    .Enqueue
+                                                        (
+                                                            (
+                                                                url
+                                                                , 
+                                                                    (
+                                                                        requestHeaders
+                                                                        , requestBody
+                                                                        , request.Method
+                                                                    )
+                                                                ,
+                                                                    (
+                                                                        responseHeaders
+                                                                        , responseBody
+                                                                        , response.StatusCode
+                                                                    )
+                                                            )
+                                                        );
                                             };
                                 middleware
                                     .OnAfterInvokedNextProcess
@@ -751,10 +1018,12 @@
                                                 //Console.WriteLine($"event: {@event} @ {middlewareTypeName}");
                                                 xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
                                             };
+                                
                                 middleware
                                     .OnResponseCompletedProcess
                                         =
-                                            (
+                                           // don't support async
+                                           (
                                                 httpContext
                                                 , @event
                                                 , stopwatchesPool
@@ -764,6 +1033,25 @@
                                             )
                                                 =>
                                             {
+                                                //throw new Exception();
+                                                if
+                                                    (
+                                                        httpContext
+                                                                .Items
+                                                                .Remove
+                                                                    (
+                                                                        AbstractStoreProceduresExecutorControllerBase
+                                                                            .requestJTokenParametersItemKey
+                                                                        , out var removed
+                                                                    )
+                                                    )
+                                                {
+                                                    if (removed is JToken parameters)
+                                                    {
+                                                        parameters = null;
+                                                    }
+                                                    removed = null;
+                                                }
                                                 xLogger
                                                     .LogInformation($"event: {@event} @ {middlewareTypeName}");
                                             };

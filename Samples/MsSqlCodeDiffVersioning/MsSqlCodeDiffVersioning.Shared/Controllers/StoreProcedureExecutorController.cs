@@ -11,6 +11,8 @@ namespace Microshaoft.WebApi.Controllers
     using System.Threading.Tasks;
 #if NETCOREAPP3_X
     using Microshaoft.AspNetCore.ConcurrencyLimiters;
+    using Microsoft.CodeAnalysis.Operations;
+    using System;
 #endif
 
     //[Route("api/[controller]")]
@@ -20,6 +22,9 @@ namespace Microshaoft.WebApi.Controllers
     public class StoreProcedureExecutorController
                     : AbstractStoreProceduresExecutorControllerBase
     {
+
+        
+
         public StoreProcedureExecutorController
                             (
                                 AbstractStoreProceduresService service
@@ -81,6 +86,11 @@ namespace Microshaoft.WebApi.Controllers
                         string resultJsonPathPart6 = null
                 )
         {
+            base
+                .AddParametersToHttpContextItems
+                        (
+                            parameters
+                        );
             return
                     base
                         .ProcessActionRequest
@@ -95,6 +105,7 @@ namespace Microshaoft.WebApi.Controllers
                                 , resultJsonPathPart6
                             );
         }
+
 
 
 
@@ -133,6 +144,11 @@ namespace Microshaoft.WebApi.Controllers
                         string resultJsonPathPart6 = null
                 )
         {
+            base
+                .AddParametersToHttpContextItems
+                        (
+                            parameters
+                        );
             return
                 await
                     base
@@ -179,6 +195,11 @@ namespace Microshaoft.WebApi.Controllers
                                 JToken parameters = null
                             )
         {
+            base
+                .AddParametersToHttpContextItems
+                        (
+                            parameters
+                        );
             await
                 base
                     .ProcessActionRequestAsync
@@ -187,6 +208,10 @@ namespace Microshaoft.WebApi.Controllers
                             , parameters
                         );
         }
+
+
+
+
     }
 }
 #endif

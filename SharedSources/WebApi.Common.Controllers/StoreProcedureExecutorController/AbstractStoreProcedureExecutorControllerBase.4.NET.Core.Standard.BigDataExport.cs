@@ -22,7 +22,7 @@ namespace Microshaoft.WebApi.Controllers
                     :
                         ControllerBase
     {
-
+        public const string requestJTokenParametersItemKey = nameof(requestJTokenParametersItemKey);
         private readonly Regex _digitsRegex = new Regex(@"^\d+$");
         private readonly byte[] _utf8BomBytes = new byte[]
                                                         {

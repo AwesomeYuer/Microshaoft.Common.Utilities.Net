@@ -500,6 +500,42 @@ namespace Microshaoft.WebApi.Controllers
                 result
                     .Result;
         }
+        public virtual void AddParametersToHttpContextItems
+            (
+                JToken parameters
+                , string key = requestJTokenParametersItemKey
+                
+            )
+        {
+            var httpContext = ControllerContext.HttpContext;
+            if
+                (
+                    httpContext
+                        .Items
+                        .TryGetValue
+                            (
+                                key
+                                , out var @value
+                            )
+                )
+            {
+                if (!Object.ReferenceEquals(@value, parameters))
+                {
+                    httpContext
+                        .Items[key]
+                            = parameters;
+                }
+            }
+            else
+            {
+                httpContext
+                    .Items
+                    .Add(key, parameters);
+            }
+        }
+
+
+
     }
 }
 #endif

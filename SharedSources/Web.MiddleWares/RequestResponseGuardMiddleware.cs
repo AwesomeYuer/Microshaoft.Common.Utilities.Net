@@ -4,7 +4,9 @@ namespace Microshaoft.Web
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
+    //using Microsoft.Extensions.Logging;
     using System;
+    using System.IO;
     using System.Threading.Tasks;
     public class RequestResponseGuardMiddleware<TInjector1, TInjector2, TInjector3, TInjector4>
     //竟然没有接口?
@@ -28,6 +30,14 @@ namespace Microshaoft.Web
                     , Action
                         <RequestResponseGuardMiddleware<TInjector1, TInjector2, TInjector3, TInjector4>>
                             onInitializeCallbackProcesses = default
+                    , Func
+                        <
+                            RequestResponseGuardMiddleware<TInjector1, TInjector2, TInjector3, TInjector4>
+                            , HttpContext
+                            , Exception
+                            , bool
+                        >
+                            onCaughtExceptionProcessFunc = default
                 )
         {
             _next = next;
@@ -38,6 +48,7 @@ namespace Microshaoft.Web
             _injector4 = injector4;
             onInitializeCallbackProcesses?
                                     .Invoke(this);
+            OnCaughtExceptionProcessFunc = onCaughtExceptionProcessFunc;
         }
 
         public
@@ -57,9 +68,24 @@ namespace Microshaoft.Web
             Action<HttpContext, string, TInjector1, TInjector2, TInjector3, TInjector4>
                                         OnResponseCompletedProcess;
 
+        //public
+        //    Action<HttpContext, string, TInjector1, TInjector2, TInjector3, TInjector4>
+        //                        OnResponseBodyStreamProcess;
+
+        public readonly
+            Func
+                <
+                    RequestResponseGuardMiddleware<TInjector1, TInjector2, TInjector3, TInjector4>
+                    , HttpContext
+                    , Exception
+                    , bool
+                >
+                OnCaughtExceptionProcessFunc;
+
         //必须是如下方法(竟然不用接口约束产生编译期错误),否则运行时错误
         public async Task Invoke(HttpContext context)
         {
+            //throw new Exception();
             var filtered = true;
             bool needNext = true;
             if (OnFilterProcessFunc != null)
@@ -83,16 +109,32 @@ namespace Microshaoft.Web
                                 (
                                     () =>
                                     {
-                                        OnResponseStartingProcess?
-                                                .Invoke
-                                                    (
-                                                        context
-                                                        , nameof(OnResponseStartingProcess)
-                                                        , _injector1
-                                                        , _injector2
-                                                        , _injector3
-                                                        , _injector4
-                                                    );
+
+                                        try
+                                        {
+                                            OnResponseStartingProcess?
+                                                                .Invoke
+                                                                    (
+                                                                        context
+                                                                        , nameof(OnResponseStartingProcess)
+                                                                        , _injector1
+                                                                        , _injector2
+                                                                        , _injector3
+                                                                        , _injector4
+                                                                    );
+                                        }
+                                        catch (Exception e)
+                                        {
+                                            var reThrow = false;
+                                            if (OnCaughtExceptionProcessFunc != null)
+                                            {
+                                                reThrow = OnCaughtExceptionProcessFunc(this, context, e);
+                                            }
+                                            if (reThrow)
+                                            {
+                                                throw;
+                                            }
+                                        }
                                         return
                                                 Task
                                                     .CompletedTask;
@@ -107,50 +149,118 @@ namespace Microshaoft.Web
                                 (
                                     () =>
                                     {
-                                        OnResponseCompletedProcess?
-                                                .Invoke
-                                                    (
-                                                        context
-                                                        , nameof(OnResponseCompletedProcess)
-                                                        , _injector1
-                                                        , _injector2
-                                                        , _injector3
-                                                        , _injector4
-                                                    );
+                                        try
+                                        {
+                                            OnResponseCompletedProcess?
+                                                                    .Invoke
+                                                                        (
+                                                                            context
+                                                                            , nameof(OnResponseCompletedProcess)
+                                                                            , _injector1
+                                                                            , _injector2
+                                                                            , _injector3
+                                                                            , _injector4
+                                                                        );
+                                        }
+                                        catch (Exception e)
+                                        {
+                                            var reThrow = false;
+                                            if (OnCaughtExceptionProcessFunc != null)
+                                            {
+                                                reThrow = OnCaughtExceptionProcessFunc(this, context, e);
+                                            }
+                                            if (reThrow)
+                                            {
+                                                throw;
+                                            }
+                                        }
                                         return
-                                            Task
-                                                .CompletedTask;
+                                                Task
+                                                    .CompletedTask;
+                                                                                
                                     }
                                 );
                     }
                     if (OnInvokingProcessAsync != null)
                     {
-                        needNext = OnInvokingProcessAsync
-                                            (
-                                                context
-                                                , nameof(OnInvokingProcessAsync)
-                                                , _injector1
-                                                , _injector2
-                                                , _injector3
-                                                , _injector4
-                                            ).Result;
+                        try
+                        {
+                            needNext = OnInvokingProcessAsync
+                                                                (
+                                                                    context
+                                                                    , nameof(OnInvokingProcessAsync)
+                                                                    , _injector1
+                                                                    , _injector2
+                                                                    , _injector3
+                                                                    , _injector4
+                                                                )
+                                                                .Result;
+                        }
+                        catch (Exception e)
+                        {
+                            var reThrow = false;
+                            if (OnCaughtExceptionProcessFunc != null)
+                            {
+                                reThrow = OnCaughtExceptionProcessFunc(this, context, e);
+                            }
+                            if (reThrow)
+                            {
+                                throw;
+                            }
+                        }
                     }
                 }
             }
             if (needNext)
             {
-                await
-                    _next(context);
-                OnAfterInvokedNextProcess?
-                                        .Invoke
-                                            (
-                                                context
-                                                , nameof(OnAfterInvokedNextProcess)
-                                                , _injector1
-                                                , _injector2
-                                                , _injector3
-                                                , _injector4
-                                            );
+                var response = context.Response;
+                var originalResponseBodyStream = response.Body;
+                try
+                {
+                    try
+                    {
+                        using (var processingStream = new MemoryStream())
+                        {
+                            response
+                                    .Body = processingStream;
+                            await
+                                _next(context);
+                            processingStream
+                                        .Position = 0;
+                            await
+                                processingStream
+                                        .CopyToAsync(originalResponseBodyStream);
+                        }
+                    }
+                    finally
+                    {
+                        context.Response.Body = originalResponseBodyStream;
+                    }
+                    //await
+                    //    _next(context);
+                    OnAfterInvokedNextProcess?
+                                            .Invoke
+                                                (
+                                                    context
+                                                    , nameof(OnAfterInvokedNextProcess)
+                                                    , _injector1
+                                                    , _injector2
+                                                    , _injector3
+                                                    , _injector4
+                                                );
+                }
+                catch (Exception e)
+                {
+                    var reThrow = false;
+                    if (OnCaughtExceptionProcessFunc != null)
+                    {
+                        reThrow = OnCaughtExceptionProcessFunc(this, context, e);
+                    }
+                    if (reThrow)
+                    {
+                        throw;
+                    }
+                }
             }
         }
     }
