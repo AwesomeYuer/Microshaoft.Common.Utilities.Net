@@ -1151,6 +1151,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="$(MSBuildThisFileDirectory)curlPerfTestPress1K.cmd">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="$(MSBuildThisFileDirectory)xcopyfiles3x.cmd">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

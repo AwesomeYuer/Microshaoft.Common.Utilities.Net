@@ -43,6 +43,7 @@
 #endif
     public class Startup
     {
+        
         private const string defaultDateTimeFormat = "yyyy-MM-dd HH:mm:ss.fffff";
         private const string swaggerVersion = "v3.1.101";
         private const string swaggerTitle = "Microshaoft Store Procedures Executors API";
