@@ -4,8 +4,19 @@
     using System.Collections.Concurrent;
     using System.Diagnostics;
     using System.Threading;
-    public class SingleThreadAsyncDequeueProcessorSlim<TQueueElement>
+    public class SingleThreadAsyncDequeueProcessorSlim<TElement>
     {
+        public readonly Type ElementType;
+        public readonly Type QueueElementType;
+
+        public SingleThreadAsyncDequeueProcessorSlim()
+        {
+            ElementType = typeof(TElement);
+            QueueElementType = _queue
+                                    .GetType()
+                                    .GetGenericArguments()[0];
+        }
+
         public int QueueLength
         {
             get
@@ -18,26 +29,38 @@
                         <
                             (
                                 long ID
-                                , DateTime? EnqueueTime
-                                , TQueueElement QueueElement
-                                , DateTime? DequeueTime
-                                , DateTime? DequeueProcessedTime
+                                ,
+                                    (
+                                        long?           EnqueueTimestamp
+                                        , DateTime?     EnqueueTime
+                                        , DateTime?     DequeueTime
+                                        , long?         DequeueTimestamp
+                                        , DateTime?     DequeueProcessedTime
+                                        , long?         DequeueProcessedTimestamp
+                                    ) Timing
+                                , TElement Element
                             )
                         >
                             _queue
                                     = new ConcurrentQueue
-                                                <
-                                                    (
-                                                        long ID
-                                                        , DateTime? EnqueueTime
-                                                        , TQueueElement QueueElement
-                                                        , DateTime? DequeueTime
-                                                        , DateTime? DequeueProcessedTime
-                                                    )
-                                                >();
+                                            <
+                                                (
+                                                    long ID
+                                                    ,
+                                                        (
+                                                            long? EnqueueTimestamp
+                                                            , DateTime? EnqueueTime
+                                                            , DateTime? DequeueTime
+                                                            , long? DequeueTimestamp
+                                                            , DateTime? DequeueProcessedTime
+                                                            , long? DequeueProcessedTimestamp
+                                                        ) Timing
+                                                    , TElement Element
+                                                )
+                                            >();
         public delegate bool CaughtExceptionEventHandler
                                     (
-                                        SingleThreadAsyncDequeueProcessorSlim<TQueueElement> sender
+                                        SingleThreadAsyncDequeueProcessorSlim<TElement> sender
                                         , Exception exception
                                         , Exception newException
                                         , string innerExceptionMessage
@@ -69,29 +92,26 @@
                 return _dequeuedBatches;
             }
         }
-        public bool Enqueue(TQueueElement element)
+        public bool Enqueue(TElement element)
         {
             var r = false;
-
-            (
-                long ID
-                , DateTime? EnqueueTime
-                , TQueueElement QueueElement
-                , DateTime? DequeueTime
-                , DateTime? DequeueProcessedTime
-            )
-                item =
-                    (
-                        Interlocked.Increment(ref _enqueued)
-                        , DateTime.Now
-                        , element
-                        , null
-                        , null
-                    );
             _queue
                 .Enqueue
                     (
-                        item
+                        (
+                            Interlocked
+                                    .Increment(ref _enqueued)
+                            , 
+                                (
+                                    Stopwatch.GetTimestamp()
+                                    , DateTime.Now
+                                    , null
+                                    , null
+                                    , null
+                                    , null
+                                )
+                            , element
+                        )
                     );
             return r;
         }
@@ -102,7 +122,20 @@
                             long            // Dequeued
                             , long          // Dequeued Batch
                             , int           // ID in one Batch
-                            , TQueueElement
+                            ,
+                                (
+                                    long ID
+                                    ,
+                                        (
+                                            long? EnqueueTimestamp
+                                            , DateTime? EnqueueTime
+                                            , DateTime? DequeueTime
+                                            , long? DequeueTimestamp
+                                            , DateTime? DequeueProcessedTime
+                                            , long? DequeueProcessedTimestamp
+                                        ) Timing
+                                    , TElement Element
+                                )
                         >
                             onOnceDequeueProcessAction
                 , Action
@@ -146,7 +179,20 @@
                             long            // Dequeued
                             , long          // Dequeued Batch
                             , int           // ID in one Batch
-                            , TQueueElement
+                            ,
+                                (
+                                    long ID
+                                    ,
+                                        (
+                                            long? EnqueueTimestamp
+                                            , DateTime? EnqueueTime
+                                            , DateTime? DequeueTime
+                                            , long? DequeueTimestamp
+                                            , DateTime? DequeueProcessedTime
+                                            , long? DequeueProcessedTimestamp
+                                        ) Timing
+                                    , TElement Element
+                                )
                         >
                             onOnceDequeueProcessAction
                 , Action
@@ -179,24 +225,32 @@
                                             _queue
                                                 .TryDequeue
                                                     (
-                                                        out var item
+                                                        out var queueElement
                                                     )
                                         )
                                     {
                                         Interlocked
                                                 .Increment(ref _dequeued);
                                         i ++;
-                                        item
+                                        queueElement
+                                            .Timing
                                             .DequeueTime = DateTime.Now;
+                                        queueElement
+                                            .Timing
+                                            .DequeueTimestamp = Stopwatch.GetTimestamp();
                                         onOnceDequeueProcessAction
                                                         (
                                                             _dequeued
                                                             , _dequeuedBatches
                                                             , i
-                                                            , item.QueueElement
+                                                            , queueElement      //.QueueElement
                                                         );
-                                        item
+                                        queueElement
+                                            .Timing
                                             .DequeueProcessedTime = DateTime.Now;
+                                        queueElement
+                                            .Timing
+                                            .DequeueProcessedTimestamp = Stopwatch.GetTimestamp();
                                     }
                                 }
                                 else
@@ -232,9 +286,9 @@
                                                         .Increment(ref _dequeuedBatches);
                                                 onBatchDequeuesProcessAction
                                                                     (
-                                                                            _dequeued
-                                                                            , _dequeuedBatches
-                                                                            , i
+                                                                        _dequeued
+                                                                        , _dequeuedBatches
+                                                                        , i
                                                                     );
                                             }
                                             finally

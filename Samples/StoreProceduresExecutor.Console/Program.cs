@@ -7,6 +7,7 @@
     using System.Collections.Concurrent;
     using System.Data;
     using System.Data.SqlClient;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -161,37 +162,119 @@
         private static void SingleThreadAsyncDequeueProcessorSlimTest()
         {
             Console.WriteLine("SingleThreadAsyncDequeueProcessorSlim DataTable Test:");
-            var processor = new SingleThreadAsyncDequeueProcessorSlim<(int, string, DateTime)>();
-            var dataTable = typeof((int, string, DateTime)).GenerateEmptyDataTable("F1", "F2", "F3");
+            var processor = new SingleThreadAsyncDequeueProcessorSlim<(int id, string text, DateTime time)>();
+            var dataTable = typeof((int, string, DateTime, long, long))
+                                        .GenerateEmptyDataTable
+                                                ("F1", "F2", "F3", "EnqueueTimestamp", "DequeueTimestamp");
+
+            var jArray = new JArray();
             processor
                 .StartRunDequeueThreadProcess
                     (
-                        (dequeued, batch, indexInBatch, element) =>
+                        (dequeued, batch, indexInBatch, queueElement) =>
                         {
-                            (int id, string text, DateTime time) = element;
-                            dataTable.Rows.Add(id, text, time);
+                            var element = queueElement.Element;
+                            dataTable
+                                    .Rows
+                                    .Add
+                                        (
+                                            element.id
+                                            , element.text
+                                            , element.time
+                                            , queueElement
+                                                        .Timing
+                                                        .EnqueueTimestamp
+                                            , queueElement
+                                                        .Timing
+                                                        .DequeueTimestamp
+                                        );
+
+                            jArray
+                                .Add
+                                    (
+                                        new JObject
+                                        {
+                                            { "id" , element.id }
+                                            , { "text" , element.text }
+                                            , { "time" , element.time }
+                                            , { "EnqueueTimestamp", queueElement.Timing.EnqueueTimestamp }
+                                            , { "DequeueTimestamp", queueElement.Timing.DequeueTimestamp }
+                                        }
+                                    );
+                                   
                         }
                         , (dequeued, batch, indexInBatch) =>
                         {
-                            Console.WriteLine($"{nameof(dequeued)}:{dequeued};{nameof(batch)}:{batch};{nameof(indexInBatch)}:{indexInBatch};{nameof(dataTable.Rows.Count)}:{dataTable.Rows.Count}");
-                            var dataRows = dataTable.AsEnumerable();
-                            var dataColumns = dataTable.Columns;
-                            foreach (var dataRow in dataRows)
+                            try
                             {
-                                foreach (DataColumn dataColumn in dataColumns)
+                                #region use DataTable
+                                var dataRows = dataTable.AsEnumerable();
+                                var enqueueTimestamp = dataRows
+                                                            .Min
+                                                                (
+                                                                    (x) =>
+                                                                    {
+                                                                        return
+                                                                            x.Field<long>("EnqueueTimestamp");
+                                                                    }
+                                                                );
+                                var dequeueTimestamp = dataRows
+                                                            .Max
+                                                                (
+                                                                    (x) =>
+                                                                    {
+                                                                        return
+                                                                            x.Field<long>("DequeueTimestamp");
+                                                                    }
+                                                                );
+                                var durationInQueue = enqueueTimestamp.GetElapsedTime(dequeueTimestamp).TotalMilliseconds;
+                                Console.WriteLine($"{nameof(durationInQueue)}:{durationInQueue};{nameof(dequeued)}:{dequeued};{nameof(batch)}:{batch};{nameof(indexInBatch)}:{indexInBatch};{nameof(dataTable.Rows.Count)}:{dataTable.Rows.Count}");
+                                var dataColumns = dataTable.Columns;
+                                foreach (var dataRow in dataRows)
                                 {
-                                    var columnName = dataColumn.ColumnName;
-                                    //Console.Write($"{columnName}:{dataRow[columnName]}\t");
+                                    foreach (DataColumn dataColumn in dataColumns)
+                                    {
+                                        var columnName = dataColumn.ColumnName;
+                                        //Console.Write($"{columnName}:{dataRow[columnName]}\t");
+                                    }
+                                    //Console.Write("\n");
                                 }
-                                //Console.Write("\n");
+                                #endregion
+
+                                #region use JArray
+                                enqueueTimestamp = jArray
+                                                                                .Min
+                                                                                    (
+                                                                                        (x) =>
+                                                                                        {
+                                                                                            return
+                                                                                                x["EnqueueTimestamp"].Value<long>();
+                                                                                        }
+                                                                                    );
+                                dequeueTimestamp = jArray
+                                                        .Max
+                                                            (
+                                                                (x) =>
+                                                                {
+                                                                    return
+                                                                        x["DequeueTimestamp"].Value<long>();
+                                                                }
+                                                            );
+                                durationInQueue = enqueueTimestamp.GetElapsedTime(dequeueTimestamp).TotalMilliseconds;
+                                Console.WriteLine($"{nameof(durationInQueue)}:{durationInQueue};{nameof(dequeued)}:{dequeued};{nameof(batch)}:{batch};{nameof(indexInBatch)}:{indexInBatch};{nameof(jArray.Count)}:{jArray.Count}"); 
+                                #endregion
                             }
-                            dataTable.Clear();
+                            finally
+                            {
+                                dataTable.Clear();
+                                jArray.Clear();
+                            }
                         }
                         , 200
                         , 1000
                         , 1100
                     );
-            for (var i = 0; i < 1000; i++)
+            for (var i = 0; i < 10000; i++)
             {
                 processor.Enqueue((i, $"No.{i} Element", DateTime.Now));
                 Thread.Sleep(10);
@@ -239,6 +322,19 @@
             dataTable2.Rows.Add(F1, F2, F3);
 
             sqlParameter.Value = dataTable;
+            sqlConnection.Open();
+            dataReader = sqlCommand.ExecuteReader(CommandBehavior.CloseConnection);
+            while (dataReader.Read())
+            {
+                Console.WriteLine(dataReader.FieldCount);
+            }
+            dataReader.Close();
+
+
+
+            sqlConnection.Close();
+
+            
             sqlConnection.Open();
             dataReader = sqlCommand.ExecuteReader(CommandBehavior.CloseConnection);
             while (dataReader.Read())
