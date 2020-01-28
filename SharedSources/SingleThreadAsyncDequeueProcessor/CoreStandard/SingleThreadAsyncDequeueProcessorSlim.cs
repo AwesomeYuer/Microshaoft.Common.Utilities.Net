@@ -183,24 +183,28 @@
                                                     )
                                         )
                                     {
-                                        Interlocked.Increment(ref _dequeued);
+                                        Interlocked
+                                                .Increment(ref _dequeued);
                                         i ++;
-                                        item.DequeueTime = DateTime.Now;
+                                        item
+                                            .DequeueTime = DateTime.Now;
                                         onOnceDequeueProcessAction
-                                                (
-                                                    _dequeued
-                                                    , _dequeuedBatches
-                                                    , i
-                                                    , item.QueueElement
-                                                );
-                                        item.DequeueProcessedTime = DateTime.Now;
+                                                        (
+                                                            _dequeued
+                                                            , _dequeuedBatches
+                                                            , i
+                                                            , item.QueueElement
+                                                        );
+                                        item
+                                            .DequeueProcessedTime = DateTime.Now;
                                     }
                                 }
                                 else
                                 {
                                     if (sleepInMilliseconds > 0)
                                     {
-                                        Thread.Sleep(sleepInMilliseconds);
+                                        Thread
+                                            .Sleep(sleepInMilliseconds);
                                     }
                                 }
                                 if (onBatchDequeuesProcessAction != null)
@@ -219,11 +223,13 @@
                                         {
                                             if (stopwatch != null)
                                             {
-                                                stopwatch.Stop();
+                                                stopwatch
+                                                        .Stop();
                                             }
                                             try
                                             {
-                                                Interlocked.Increment(ref _dequeuedBatches);
+                                                Interlocked
+                                                        .Increment(ref _dequeuedBatches);
                                                 onBatchDequeuesProcessAction
                                                     (
                                                             _dequeued
@@ -233,10 +239,11 @@
                                             }
                                             finally
                                             {
+                                                i = 0;
                                                 if (stopwatch != null)
                                                 {
-                                                    i = 0;
-                                                    stopwatch.Restart();
+                                                    stopwatch
+                                                            .Restart();
                                                 }
                                             }
                                         }
@@ -250,12 +257,12 @@
                                if (OnCaughtException != null)
                                {
                                    rr = OnCaughtException
-                                           (
-                                               this
-                                               , x
-                                               , y
-                                               , z
-                                           );
+                                                    (
+                                                        this
+                                                        , x
+                                                        , y
+                                                        , z
+                                                    );
                                }
                                return rr;
                            }
