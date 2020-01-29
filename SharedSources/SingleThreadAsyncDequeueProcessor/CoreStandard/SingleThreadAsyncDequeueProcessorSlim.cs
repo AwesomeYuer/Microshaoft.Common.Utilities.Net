@@ -1,12 +1,15 @@
 ﻿namespace Microshaoft
 {
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Concurrent;
     using System.Diagnostics;
     using System.Threading;
     public class SingleThreadAsyncDequeueProcessorSlim<TElement>
     {
+        [JsonIgnore]
         public readonly Type ElementType;
+        [JsonIgnore]
         public readonly Type QueueElementType;
 
         public SingleThreadAsyncDequeueProcessorSlim()
