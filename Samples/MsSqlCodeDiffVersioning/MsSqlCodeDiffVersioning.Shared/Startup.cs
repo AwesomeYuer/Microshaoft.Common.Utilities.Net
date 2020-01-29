@@ -1163,8 +1163,8 @@
                     (
                         (middleware) =>
                         {
-                                    //onInitializeCallbackProcesses
-                                    var middlewareTypeName = middleware.GetType().Name;
+                            //onInitializeCallbackProcesses
+                            var middlewareTypeName = middleware.GetType().Name;
                             middleware
                                 .OnCaughtExceptionProcessFunc
                                     =
