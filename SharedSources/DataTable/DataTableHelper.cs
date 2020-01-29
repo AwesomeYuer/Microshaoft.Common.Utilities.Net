@@ -12,10 +12,31 @@ namespace Microshaoft
             return GenerateEmptyDataTable(type, needDefinitionAttributeProcess);
         }
 
+
+        public static DataTable GenerateEmptyDataTable
+                                    (
+                                        this Type target
+                                    )
+        {
+            if (target.IsValueTupleType())
+            {
+                return
+                    ValueTupleHelper
+                        .GenerateEmptyDataTable
+                            (
+                                target
+                            );
+            }
+            else
+            {
+                return
+                    GenerateEmptyDataTable(target, false);
+            }
+        }
         public static DataTable GenerateEmptyDataTable
                 (
                     this Type target
-                    , bool needDefinitionAttributeProcess = false
+                    , bool needDefinitionAttributeProcess
                 )
         {
             MemberAdditionalDefinitionAttribute attribute = null;

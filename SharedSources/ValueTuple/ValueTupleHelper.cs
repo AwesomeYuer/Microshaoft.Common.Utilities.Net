@@ -111,7 +111,7 @@ namespace Microshaoft
                 (
                     Type valueTupleType
                     , string prefixPath
-                    , string duplicateNameSuffix = null
+                    , string duplicateNameSuffix = "-1"
                     , bool checkIsValueTupleType = true
                     , HashSet<string> distinctedNames = null
                     , params string[] dataColumnsNames
@@ -146,6 +146,10 @@ namespace Microshaoft
             {
                 var isDrilled = false;
                 var dataColumnName = field.Name;
+                if (!prefixPath.IsNullOrEmptyOrWhiteSpace())
+                {
+                    dataColumnName = @$"{prefixPath}\{dataColumnName}";
+                }
                 var dataColumnType = field.FieldType;
                 if (dataColumnType.IsNullableType())
                 {
@@ -155,23 +159,24 @@ namespace Microshaoft
                 if (dataColumnType.IsValueTupleType())
                 {
                     var entries = GenerateDataColumns
-                                (
-                                    dataColumnType
-                                    , $@"{prefixPath}\{field.Name}"
-                                    , duplicateNameSuffix
-                                    , false
-                                    , distinctedNames
-                                    ,
-                                        (
-                                            (i < l)
-                                            ?
-                                            dataColumnsNames[i..]
-                                            :
-                                            null
-                                        )
+                                    (
+                                        dataColumnType
+                                        , $@"{prefixPath}\{field.Name}"
+                                        , duplicateNameSuffix
+                                        , false
+                                        , distinctedNames
+                                        ,
+                                            (
+                                                (i < l)
+                                                ?
+                                                dataColumnsNames[i..]
+                                                :
+                                                null
+                                            )
                                     );
                     foreach (var entry in entries)
                     {
+                        i ++;
                         yield
                             return
                                 entry;
@@ -183,36 +188,33 @@ namespace Microshaoft
                     if (i < l)
                     {
                         dataColumnName = dataColumnsNames[i];
-                        while
-                            (
-                                distinctedNames
-                                            .Contains
-                                                (
-                                                    dataColumnName
-                                                    , StringComparer
-                                                            .OrdinalIgnoreCase
-                                                )
-                            )
-                        {
-                            if (duplicateNameSuffix.IsNullOrEmptyOrWhiteSpace())
-                            {
-                                dataColumnName = $"{prefixPath}{dataColumnName}";
-                            }
-                            else
-                            {
-                                dataColumnName = $"{dataColumnName}{duplicateNameSuffix}";
-                            }
-
-                        }
-                        distinctedNames
-                                .Add
-                                    (
-                                        dataColumnName
-                                    );
                     }
+                    while
+                        (
+                            distinctedNames
+                                        .Contains
+                                            (
+                                                dataColumnName
+                                                , StringComparer
+                                                        .OrdinalIgnoreCase
+                                            )
+                        )
+                    {
+                        if (duplicateNameSuffix.IsNullOrEmptyOrWhiteSpace())
+                        {
+                            duplicateNameSuffix = "-1";
+                        }
+                        dataColumnName = $"{dataColumnName}{duplicateNameSuffix}";
+                    }
+                    distinctedNames
+                            .Add
+                                (
+                                    dataColumnName
+                                );
                 }
                 if (!isDrilled)
                 {
+                    i ++;
                     yield
                         return
                             new DataColumn
@@ -220,9 +222,9 @@ namespace Microshaoft
                                 ColumnName = dataColumnName
                                 , DataType = dataColumnType
                             };
-                    i++;
+                    
                 }
-                
+               
             }
             distinctedNames = null;
         }
@@ -243,24 +245,6 @@ namespace Microshaoft
                             , dataColumnsNames
                         );
         }
-        //public static IEnumerable<DataColumn> GenerateDataColumns
-        //(
-        //    this Type valueTupleType
-        //    , string duplicateNameSuffix = null
-        //    , params string[] dataColumnsNames
-        //)
-        //{
-        //    return
-        //        GenerateDataColumns
-        //                (
-        //                    valueTupleType
-        //                    , null
-        //                    , duplicateNameSuffix
-        //                    , true
-        //                    , null
-        //                    , dataColumnsNames
-        //                );
-        //}
 
         public static DataTable GenerateEmptyDataTable
                 (
