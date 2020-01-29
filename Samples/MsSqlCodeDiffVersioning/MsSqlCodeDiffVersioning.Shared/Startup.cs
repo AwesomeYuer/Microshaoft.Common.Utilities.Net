@@ -524,7 +524,7 @@
                             //.AddFilter(level => level >= LogLevel.Information)
                             ;
                     }
-            );
+                );
             var loggerFactory = services
                                     .BuildServiceProvider()
                                     .GetService<ILoggerFactory>();
