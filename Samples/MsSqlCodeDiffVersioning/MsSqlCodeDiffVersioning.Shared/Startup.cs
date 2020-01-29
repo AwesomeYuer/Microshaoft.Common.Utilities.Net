@@ -239,16 +239,24 @@
             //        <JTokenParametersValidateFilterAttribute>
             //            ();
 
-            ConcurrentDictionary<string, ExecutingInfo> executingCachingStore
-                    = new ConcurrentDictionary<string, ExecutingInfo>();
+            //ConcurrentDictionary<string, ExecutingInfo> executingCachingStore
+            //        = new ConcurrentDictionary<string, ExecutingInfo>();
             services
-                    .AddSingleton(executingCachingStore);
+                    .AddSingleton
+                        (
+                            GlobalManager
+                                .ExecutingCachingStore
+                        );
 
 
             #region 异步批量入库案例专用
             var asyncSaveToDbProcessor =
                 new SingleThreadAsyncDequeueProcessorSlim<JToken>();
-            var executor = new MsSqlStoreProceduresExecutor(executingCachingStore);
+            var executor = new MsSqlStoreProceduresExecutor
+                                        (
+                                            GlobalManager
+                                                    .ExecutingCachingStore
+                                        );
             var jArray = new JArray();
             asyncSaveToDbProcessor
                 .StartRunDequeueThreadProcess
@@ -293,45 +301,23 @@
 
             services
                 .AddSingleton
-                    //<SingleThreadAsyncDequeueProcessorSlim<JToken>>
                     (
                         asyncSaveToDbProcessor
                     );
             #endregion
 
             #region asyncRequestResponseLoggingProcessor
-            var asyncRequestResponseLoggingProcessor =
-                new SingleThreadAsyncDequeueProcessorSlim
-                        <
-                            (
-                                string url
-                                ,
-                                    (
-                                        string requestHeaders
-                                        , string requestBody
-                                        , string requestMethod
-                                        , DateTime? requestBeginTime
-                                        , long? requestContentLength
-                                        , string requestContentType
-                                    ) Request
-                                ,
-                                    (
-                                        string responseHeaders
-                                        , string responseBody
-                                        , int responseStatusCode
-                                        , DateTime? responseStartingTime
-                                        , long? responseContentLength
-                                        , string responseContentType
-                                    ) Response
-                                , double? requestResponseTimingInMilliseconds
-                            )
-                        >();
-
-
+            services
+                    .AddSingleton
+                        (
+                            GlobalManager
+                                    .AsyncRequestResponseLoggingProcessor
+                        );
             // there are only one Thread that's DequeueThread write it, so it's security
             var jArray2 = new JArray();
             Console.WriteLine($"Startup: {nameof(Thread.CurrentThread.ManagedThreadId)}:{Thread.CurrentThread.ManagedThreadId}");
-            asyncRequestResponseLoggingProcessor
+            GlobalManager
+                .AsyncRequestResponseLoggingProcessor
                 .StartRunDequeueThreadProcess
                     (
                         (dequeued, batch, indexInBatch, queueElement) =>
@@ -485,12 +471,7 @@
                         , 10
                     );
 
-            services
-                .AddSingleton
-                    //<SingleThreadAsyncDequeueProcessorSlim<JToken>>
-                    (
-                        asyncRequestResponseLoggingProcessor
-                    );
+
 
             #endregion
 

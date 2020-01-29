@@ -3,6 +3,7 @@
     using Newtonsoft.Json;
     using System;
     using System.Collections.Concurrent;
+    using System.Data;
     using System.Diagnostics;
     using System.Threading;
     public class SingleThreadAsyncDequeueProcessorSlim<TElement>
@@ -27,6 +28,28 @@
                 return
                     _queue.Count;
             }
+        }
+
+        public DataTable GenerateEmptyDataTableByElementType(params string[] dataColumnsNames)
+        {
+            return
+                ValueTupleHelper
+                        .GenerateEmptyDataTable
+                            (
+                                ElementType
+                                , dataColumnsNames
+                            );
+        }
+
+        public DataTable GenerateEmptyDataTableByQueueElementType(params string[] dataColumnsNames)
+        {
+            return
+                ValueTupleHelper
+                        .GenerateEmptyDataTable
+                            (
+                                QueueElementType
+                                , dataColumnsNames
+                            );
         }
         private ConcurrentQueue
                         <

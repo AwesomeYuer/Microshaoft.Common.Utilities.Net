@@ -1149,6 +1149,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\StoreProcedureExecutorController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\PerfMonController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\TrackingController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GlobalManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Program.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\StoreProcedureExecuteService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Startup.cs" />
