@@ -13,6 +13,9 @@
     <Folder Include="$(MSBuildThisFileDirectory)MetricsRegistry\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)curl\curl-ca-bundle.crt" />
+    <None Include="$(MSBuildThisFileDirectory)curl\curl.exe" />
+    <None Include="$(MSBuildThisFileDirectory)curl\libcurl-x64.dll" />
     <None Include="$(MSBuildThisFileDirectory)DataBase\MsSql.DataBase.sql" />
     <None Include="$(MSBuildThisFileDirectory)makecert\CA.cer" />
     <None Include="$(MSBuildThisFileDirectory)makecert\CA.pvk" />
@@ -1151,7 +1154,15 @@
     <Compile Include="$(MSBuildThisFileDirectory)Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="$(MSBuildThisFileDirectory)curlPerfTestPress1K.cmd">
+    <Page Include="$(MSBuildThisFileDirectory)PerfTestPressPS1K.ps1">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)PerfTestPressCURL1K.sh">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)PerfTestPressCURL1K.cmd">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

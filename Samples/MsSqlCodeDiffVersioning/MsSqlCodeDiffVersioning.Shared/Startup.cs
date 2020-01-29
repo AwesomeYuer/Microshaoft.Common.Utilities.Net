@@ -597,7 +597,7 @@
         {
 
             #region RequestResponseGuard
-            string timingKey = "beginTimestamp";
+            string requestResponseTimingLoggingItemKey = "beginTimestamp";
             //timingKey = string.Empty;
            
             var asyncRequestResponseLoggingProcessor =
@@ -610,20 +610,25 @@
                                         string requestHeaders
                                         , string requestBody
                                         , string requestMethod
+                                        , DateTime? requestBeginTime
                                     ) Request
                                 ,
                                     (
                                         string responseHeaders
                                         , string responseBody
                                         , int responseStatusCode
+                                        , DateTime? responseStartingTime
                                     ) Response
+                                , double? requestResponseTimingInMilliseconds
                             )
                         >();
             var dataTable = asyncRequestResponseLoggingProcessor
                                         .QueueElementType
                                         .GenerateEmptyDataTable
                                             (
-                                               "ID"
+                                                // Queue
+                                                "ID"
+
                                                 , "EnqueueTimestamp"
                                                 , "EnqueueTime"
                                                 , "DequeueTime"
@@ -632,14 +637,21 @@
                                                 , "DequeueProcessedTimestamp"
 
                                                 , "url"
+
+                                                // request
                                                 , "requestHeaders"
                                                 , "requestBody"
                                                 , "requestMethod"
+                                                , "requestBeginTime"
 
+                                                // response
                                                 , "responseHeaders"
                                                 , "responseBody"
                                                 , "responseStatusCode"
+                                                , "responseStartingTime"
 
+                                                // request response
+                                                , "requestResponseTimingInMilliseconds"
                                             );
 
             
@@ -657,25 +669,49 @@
                         {
                             var element = queueElement.Element;
                             Console.WriteLine($"Dequeue Once: {nameof(Thread.CurrentThread.ManagedThreadId)}:{Thread.CurrentThread.ManagedThreadId}");
+
+                            var enqueueTimestamp = queueElement.Timing.EnqueueTimestamp;
+                            var queueTimingInMilliseconds =
+                                                    (
+                                                        enqueueTimestamp.HasValue
+                                                        ?
+                                                        enqueueTimestamp.Value.GetElapsedTimeToNow().TotalMilliseconds
+                                                        :
+                                                        -1
+                                                    );
                             jArray
                                 .Add
                                     (
                                         new JObject
                                         {
                                               { "ID", queueElement.ID                                 }
-                                            , { "EnqueueTimestamp", queueElement.Timing.EnqueueTimestamp            }
+                                            //======================================================================
+                                            // Queue:
+                                            //, { "EnqueueTimestamp", queueElement.Timing.EnqueueTimestamp            }
                                             , { "EnqueueTime", queueElement.Timing.EnqueueTime                 }
                                             , { "DequeueTime", queueElement.Timing.DequeueTime                 }
-                                            , { "DequeueTimestamp", queueElement.Timing.DequeueTimestamp            }
-                                            , { "DequeueProcessedTime", queueElement.Timing.DequeueProcessedTime        }
-                                            , { "DequeueProcessedTimestamp", queueElement.Timing.DequeueProcessedTimestamp   }
+                                            , { "QueueTimingInMilliseconds", queueTimingInMilliseconds          }
+                                            //, { "DequeueTimestamp", queueElement.Timing.DequeueTimestamp            }
+                                            //, { "DequeueProcessedTime", queueElement.Timing.DequeueProcessedTime        }
+                                            //, { "DequeueProcessedTimestamp", queueElement.Timing.DequeueProcessedTimestamp   }
+                                            //=====================================================================
+                                            // common
                                             , { "url", element.url                                     }
+                                            //=====================================================================
+                                            // request:
                                             , { "requestHeaders", element.Request.requestHeaders                  }
                                             , { "requestBody", HttpUtility.UrlDecode(element.Request.requestBody)                     }
                                             , { "requestMethod", element.Request.requestMethod                   }
+                                            , { "requestBeginTime", element.Request.requestBeginTime                   }
+                                            //======================================================================
+                                            // response:
                                             , { "responseHeaders", element.Response.responseHeaders                }
                                             , { "responseBody", HttpUtility.UrlDecode(element.Response.responseBody)                   }
                                             , { "responseStatusCode", element.Response.responseStatusCode                   }
+                                            , { "responseStartingTime", element.Response.responseStartingTime                   }
+                                            //======================================================================
+                                            // request + response :
+                                            , { "requestResponseTimingInMilliseconds", element.requestResponseTimingInMilliseconds                   }
                                         }
                                     );
 
@@ -795,13 +831,35 @@
                                     .OnFilterProcessFunc
                                         = (httpContext, @event, stopwatchesPool, xConfiguration, xLoggerFactory, xLogger) =>
                                         {
-                                            if (timingKey.IsNullOrEmptyOrWhiteSpace())
+                                            if 
+                                                (
+                                                    requestResponseTimingLoggingItemKey
+                                                                    .IsNullOrEmptyOrWhiteSpace()
+                                                )
                                             {
                                                 return false;
                                             }
-                                            httpContext.Request.EnableBuffering();
-
                                             var request = httpContext.Request;
+                                            request.EnableBuffering();
+                                            xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
+                                            var httpRequestFeature = httpContext.Features.Get<IHttpRequestFeature>();
+                                            var url = httpRequestFeature.RawTarget;
+                                            httpRequestFeature = null;
+                                            var r = url.Contains("/api/", StringComparison.OrdinalIgnoreCase);
+                                            if (r)
+                                            {
+                                                httpContext
+                                                        .Items
+                                                        .TryAdd
+                                                            (
+                                                                requestResponseTimingLoggingItemKey
+                                                                ,
+                                                                    (
+                                                                        BeginTime: DateTime.Now
+                                                                        , BeginTimestamp: Stopwatch.GetTimestamp()
+                                                                    )
+                                                            );
+                                            }
                                             var requestBody = string.Empty;
                                             var requestBodyStream = request.Body;
                                             if (requestBodyStream.CanRead && requestBodyStream.CanSeek)
@@ -815,26 +873,6 @@
                                                             (
                                                                 nameof(requestBody)
                                                                 , requestBody
-                                                            );
-                                            }
-
-                                            xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
-                                            var httpRequestFeature = httpContext.Features.Get<IHttpRequestFeature>();
-                                            var url = httpRequestFeature.RawTarget;
-                                            httpRequestFeature = null;
-                                            var r = url.Contains("/api/", StringComparison.OrdinalIgnoreCase);
-                                            if (r)
-                                            {
-                                                httpContext
-                                                        .Items
-                                                        .TryAdd
-                                                            (
-                                                                timingKey
-                                                                ,
-                                                                    (
-                                                                        BeginTime: DateTime.Now
-                                                                        , BeginTimestamp: Stopwatch.GetTimestamp()
-                                                                    )
                                                             );
                                             }
                                             return r;
@@ -911,37 +949,8 @@
                                                 =>
                                             {
                                                 xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
-                                                var r = httpContext
-                                                                .Items
-                                                                .Remove
-                                                                    (
-                                                                        timingKey
-                                                                        , out var removed
-                                                                    );
-                                                if (r)
-                                                {
-                                                    (
-                                                        DateTime beginTime
-                                                        , long beginTimeStamp
-                                                    )
-                                                        = (ValueTuple<DateTime, long>) removed;
-                                                    removed = null;
-                                                    httpContext
-                                                        .Response
-                                                        .Headers["X-Request-Receive-BeginTime"]
-                                                                    = beginTime.ToString(defaultDateTimeFormat);
-                                                    httpContext
-                                                        .Response
-                                                        .Headers["X-Response-Send-BeginTime"]
-                                                                    = DateTime.Now.ToString(defaultDateTimeFormat);
-                                                    httpContext
-                                                        .Response
-                                                        .Headers["X-Request-Response-Timing-In-Milliseconds"]
-                                                                    = beginTimeStamp
-                                                                            .GetElapsedTimeToNow()
-                                                                            .TotalMilliseconds
-                                                                            .ToString();
-                                                }
+
+                                                
                                                 //return;
                                                 var httpRequestFeature = httpContext
                                                                                  .Features
@@ -980,7 +989,53 @@
                                                     responseBody = new StreamReader(response.Body).ReadToEnd();
                                                     Console.WriteLine(responseBody.Length);
                                                 }
-                                                var responseHeaders = Newtonsoft.Json.JsonConvert.SerializeObject(response.Headers);
+                                                
+
+                                                var r = httpContext
+                                                                .Items
+                                                                .Remove
+                                                                    (
+                                                                        requestResponseTimingLoggingItemKey
+                                                                        , out var removed
+                                                                    );
+                                                double requestResponseTimingInMilliseconds = -1;
+                                                DateTime? requestBeginTime = null;
+                                                DateTime? responseStartingTime = null;
+                                                if (r)
+                                                {
+                                                    (
+                                                        DateTime beginTime
+                                                        , long beginTimeStamp
+                                                    )
+                                                        = (ValueTuple<DateTime, long>) removed;
+                                                    removed = null;
+                                                    requestBeginTime = beginTime;
+                                                    httpContext
+                                                        .Response
+                                                        .Headers["X-Request-Receive-BeginTime"]
+                                                                    = beginTime.ToString(defaultDateTimeFormat);
+                                                    
+                                                    responseStartingTime = DateTime.Now;
+                                                    httpContext
+                                                        .Response
+                                                        .Headers["X-Response-Send-BeginTime"]
+                                                                    = responseStartingTime
+                                                                                        .Value
+                                                                                        .ToString(defaultDateTimeFormat);
+
+                                                    requestResponseTimingInMilliseconds = beginTimeStamp
+                                                                                                .GetElapsedTimeToNow()
+                                                                                                .TotalMilliseconds;
+                                                    httpContext
+                                                        .Response
+                                                        .Headers["X-Request-Response-Timing-In-Milliseconds"]
+                                                                    = requestResponseTimingInMilliseconds
+                                                                            .ToString();
+                                                }
+                                                var responseHeaders = Newtonsoft
+                                                                                .Json
+                                                                                .JsonConvert
+                                                                                .SerializeObject(response.Headers);
 
                                                 asyncRequestResponseLoggingProcessor
                                                     .Enqueue
@@ -992,13 +1047,17 @@
                                                                         requestHeaders
                                                                         , requestBody
                                                                         , request.Method
+                                                                        , requestBeginTime
                                                                     )
                                                                 ,
                                                                     (
                                                                         responseHeaders
                                                                         , responseBody
                                                                         , response.StatusCode
+                                                                        , responseStartingTime
                                                                     )
+                                                                , 
+                                                                    requestResponseTimingInMilliseconds
                                                             )
                                                         );
                                             };
