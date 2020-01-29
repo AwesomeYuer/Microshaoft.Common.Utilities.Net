@@ -246,12 +246,11 @@
 
 
             #region 异步批量入库案例专用
-            var processor =
+            var asyncSaveToDbProcessor =
                 new SingleThreadAsyncDequeueProcessorSlim<JToken>();
-
             var executor = new MsSqlStoreProceduresExecutor(executingCachingStore);
             var jArray = new JArray();
-            processor
+            asyncSaveToDbProcessor
                 .StartRunDequeueThreadProcess
                     (
                         (dequeued, batch, i, queueElement) =>
@@ -296,12 +295,205 @@
                 .AddSingleton
                     //<SingleThreadAsyncDequeueProcessorSlim<JToken>>
                     (
-                        processor
+                        asyncSaveToDbProcessor
                     );
             #endregion
 
+            #region asyncRequestResponseLoggingProcessor
+            var asyncRequestResponseLoggingProcessor =
+                new SingleThreadAsyncDequeueProcessorSlim
+                        <
+                            (
+                                string url
+                                ,
+                                    (
+                                        string requestHeaders
+                                        , string requestBody
+                                        , string requestMethod
+                                        , DateTime? requestBeginTime
+                                        , long? requestContentLength
+                                        , string requestContentType
+                                    ) Request
+                                ,
+                                    (
+                                        string responseHeaders
+                                        , string responseBody
+                                        , int responseStatusCode
+                                        , DateTime? responseStartingTime
+                                        , long? responseContentLength
+                                        , string responseContentType
+                                    ) Response
+                                , double? requestResponseTimingInMilliseconds
+                            )
+                        >();
 
-            
+
+            // there are only one Thread that's DequeueThread write it, so it's security
+            var jArray2 = new JArray();
+            Console.WriteLine($"Startup: {nameof(Thread.CurrentThread.ManagedThreadId)}:{Thread.CurrentThread.ManagedThreadId}");
+            asyncRequestResponseLoggingProcessor
+                .StartRunDequeueThreadProcess
+                    (
+                        (dequeued, batch, indexInBatch, queueElement) =>
+                        {
+                            var element = queueElement.Element;
+                            Console.WriteLine($"Dequeue Once: {nameof(Thread.CurrentThread.ManagedThreadId)}:{Thread.CurrentThread.ManagedThreadId}");
+
+                            var enqueueTimestamp = queueElement.Timing.EnqueueTimestamp;
+                            var queueTimingInMilliseconds =
+                                                    (
+                                                        enqueueTimestamp.HasValue
+                                                        ?
+                                                        enqueueTimestamp.Value.GetElapsedTimeToNow().TotalMilliseconds
+                                                        :
+                                                        -1
+                                                    );
+                            jArray2
+                                .Add
+                                    (
+                                        new JObject
+                                        {
+                                              { "ID",                                       queueElement.ID                                             }
+                                            //======================================================================
+                                            // Queue:
+                                            , { "EnqueueTime",                              queueElement.Timing.EnqueueTime                             }
+                                            , { "DequeueTime",                              queueElement.Timing.DequeueTime                             }
+                                            , { "QueueTimingInMilliseconds",                queueTimingInMilliseconds                                   }
+                                            //=====================================================================
+                                            // common
+                                            , { "url",                                      element.url                                                 }
+                                            //=====================================================================
+                                            // request:
+                                            , { "requestHeaders",                           element.Request.requestHeaders                              }
+                                            , { "requestBody",                              HttpUtility.UrlDecode(element.Request.requestBody)          }
+                                            , { "requestMethod",                            element.Request.requestMethod                               }
+                                            , { "requestBeginTime",                         element.Request.requestBeginTime                            }
+                                            , { "requestContentLength",                     element.Request.requestContentLength                        }
+                                            , { "requestContentType",                       element.Request.requestContentType                          }
+
+                                            //======================================================================
+                                            // response:
+                                            , { "responseHeaders",                          element.Response.responseHeaders                            }
+                                            , { "responseBody",                             HttpUtility.UrlDecode(element.Response.responseBody)        }
+                                            , { "responseStatusCode",                       element.Response.responseStatusCode                         }
+                                            , { "responseStartingTime",                     element.Response.responseStartingTime                       }
+                                            , { "responseContentLength",                    element.Response.responseContentLength                      }
+                                            , { "responseContentType",                      element.Response.responseContentType                        }
+                                            //======================================================================
+                                            // request + response :
+                                            , { "requestResponseTimingInMilliseconds",      element.requestResponseTimingInMilliseconds                 }
+                                        }
+                                    );
+
+                            #region use DataTable
+                            //dataTable
+                            //        .Rows
+                            //        .Add
+                            //            (
+                            //                queueElement.ID
+
+                            //                , queueElement.Timing.EnqueueTimestamp
+                            //                , queueElement.Timing.EnqueueTime
+                            //                , queueElement.Timing.DequeueTime
+                            //                , queueElement.Timing.DequeueTimestamp
+                            //                , queueElement.Timing.DequeueProcessedTime
+                            //                , queueElement.Timing.DequeueProcessedTimestamp
+
+                            //                , element.url
+                            //                , element.Request.requestHeaders
+                            //                , element.Request.requestBody
+                            //                , element.Request.requestMethod
+                            //                , element.Response.responseHeaders
+                            //                , element.Response.responseBody
+
+                            //            ); 
+                            #endregion
+
+                        }
+                        , (dequeued, batch, indexInBatch) =>
+                        {
+                            Console.WriteLine($"Dequeue Batch: {nameof(Thread.CurrentThread.ManagedThreadId)}:{Thread.CurrentThread.ManagedThreadId}");
+                            try
+                            {
+                                #region use DataTable
+                                //var dataRows = dataTable.AsEnumerable();
+                                //var enqueueTimestamp = dataRows
+                                //                            .Min
+                                //                                (
+                                //                                    (x) =>
+                                //                                    {
+                                //                                        return
+                                //                                            x.Field<long>("EnqueueTimestamp");
+                                //                                    }
+                                //                                );
+                                //var dequeueTimestamp = dataRows
+                                //                            .Max
+                                //                                (
+                                //                                    (x) =>
+                                //                                    {
+                                //                                        return
+                                //                                            x.Field<long>("DequeueTimestamp");
+                                //                                    }
+                                //                                );
+                                //var durationInQueue = enqueueTimestamp.GetElapsedTime(dequeueTimestamp).TotalMilliseconds;
+                                //Console.WriteLine($"{nameof(durationInQueue)}:{durationInQueue};{nameof(dequeued)}:{dequeued};{nameof(batch)}:{batch};{nameof(indexInBatch)}:{indexInBatch};{nameof(dataTable.Rows.Count)}:{dataTable.Rows.Count}");
+                                //var dataColumns = dataTable.Columns;
+                                //foreach (var dataRow in dataRows)
+                                //{
+                                //    foreach (DataColumn dataColumn in dataColumns)
+                                //    {
+                                //        var columnName = dataColumn.ColumnName;
+                                //        //Console.Write($"{columnName}:{dataRow[columnName]}\t");
+                                //    }
+                                //    //Console.Write("\n");
+                                //}
+                                #endregion
+
+                                // sql Connection should be here avoid cross threads
+                                var sqlConnection = new SqlConnection("Initial Catalog=test;Data Source=gateway.hyper-v.internal\\sql2019,11433;User=sa;Password=!@#123QWE");
+
+                                try
+                                {
+                                    executor
+                                        .ExecuteJsonResults
+                                            (
+                                                sqlConnection
+                                                , "zsp_Logging"
+                                                , new JObject
+                                                    {
+                                                        { "data", jArray2}
+                                                    }
+                                            );
+                                }
+                                finally
+                                {
+                                    if (sqlConnection.State != ConnectionState.Closed)
+                                    {
+                                        sqlConnection.Close();
+                                    }
+                                }
+                            }
+                            finally
+                            {
+                                //dataTable.Clear();
+                                //should be clear correctly!!!!
+                                jArray2.Clear();
+                            }
+                        }
+                        , 200
+                        , 5000
+                        , 10
+                    );
+
+            services
+                .AddSingleton
+                    //<SingleThreadAsyncDequeueProcessorSlim<JToken>>
+                    (
+                        asyncRequestResponseLoggingProcessor
+                    );
+
+            #endregion
+
 
             services
                 .AddSingleton
@@ -591,8 +783,37 @@
                             , IConfiguration configuration
                             , ILoggerFactory loggerFactory
 
-                            , ConcurrentDictionary<string, ExecutingInfo> executingCachingStore
-                        //, ILogger logger
+                            ,
+                                ConcurrentDictionary<string, ExecutingInfo>
+                                                                executingCachingStore
+                            ,
+                                SingleThreadAsyncDequeueProcessorSlim
+                                    <
+                                        (
+                                            string url
+                                            ,
+                                                (
+                                                    string requestHeaders
+                                                    , string requestBody
+                                                    , string requestMethod
+                                                    , DateTime? requestBeginTime
+                                                    , long? requestContentLength
+                                                    , string requestContentType
+                                                ) Request
+                                            ,
+                                                (
+                                                    string responseHeaders
+                                                    , string responseBody
+                                                    , int responseStatusCode
+                                                    , DateTime? responseStartingTime
+                                                    , long? responseContentLength
+                                                    , string responseContentType
+                                                ) Response
+                                            , double? requestResponseTimingInMilliseconds
+                                        )
+                                    >
+                                        asyncRequestResponseLoggingProcessor
+                                //, ILogger logger
                         )
         {
 
@@ -600,28 +821,8 @@
             string requestResponseTimingLoggingItemKey = "beginTimestamp";
             //timingKey = string.Empty;
            
-            var asyncRequestResponseLoggingProcessor =
-                new SingleThreadAsyncDequeueProcessorSlim
-                        <
-                            (
-                                string url
-                                ,
-                                    (
-                                        string requestHeaders
-                                        , string requestBody
-                                        , string requestMethod
-                                        , DateTime? requestBeginTime
-                                    ) Request
-                                ,
-                                    (
-                                        string responseHeaders
-                                        , string responseBody
-                                        , int responseStatusCode
-                                        , DateTime? responseStartingTime
-                                    ) Response
-                                , double? requestResponseTimingInMilliseconds
-                            )
-                        >();
+            
+            
             var dataTable = asyncRequestResponseLoggingProcessor
                                         .QueueElementType
                                         .GenerateEmptyDataTable
@@ -643,12 +844,16 @@
                                                 , "requestBody"
                                                 , "requestMethod"
                                                 , "requestBeginTime"
+                                                , "requestContentLength"
+                                                , "requestContentType"
 
                                                 // response
                                                 , "responseHeaders"
                                                 , "responseBody"
                                                 , "responseStatusCode"
                                                 , "responseStartingTime"
+                                                , "responseContentLength"
+                                                , "responseContentType"
 
                                                 // request response
                                                 , "requestResponseTimingInMilliseconds"
@@ -659,160 +864,7 @@
             { 
                 CachedParametersDefinitionExpiredInSeconds = 10
             };
-            // there are only one Thread that's DequeueThread write it, so it's security
-            var jArray = new JArray();
-            Console.WriteLine($"Startup: {nameof(Thread.CurrentThread.ManagedThreadId)}:{Thread.CurrentThread.ManagedThreadId}");
-            asyncRequestResponseLoggingProcessor
-                .StartRunDequeueThreadProcess
-                    (
-                        (dequeued, batch, indexInBatch, queueElement) =>
-                        {
-                            var element = queueElement.Element;
-                            Console.WriteLine($"Dequeue Once: {nameof(Thread.CurrentThread.ManagedThreadId)}:{Thread.CurrentThread.ManagedThreadId}");
-
-                            var enqueueTimestamp = queueElement.Timing.EnqueueTimestamp;
-                            var queueTimingInMilliseconds =
-                                                    (
-                                                        enqueueTimestamp.HasValue
-                                                        ?
-                                                        enqueueTimestamp.Value.GetElapsedTimeToNow().TotalMilliseconds
-                                                        :
-                                                        -1
-                                                    );
-                            jArray
-                                .Add
-                                    (
-                                        new JObject
-                                        {
-                                              { "ID", queueElement.ID                                 }
-                                            //======================================================================
-                                            // Queue:
-                                            //, { "EnqueueTimestamp", queueElement.Timing.EnqueueTimestamp            }
-                                            , { "EnqueueTime", queueElement.Timing.EnqueueTime                 }
-                                            , { "DequeueTime", queueElement.Timing.DequeueTime                 }
-                                            , { "QueueTimingInMilliseconds", queueTimingInMilliseconds          }
-                                            //, { "DequeueTimestamp", queueElement.Timing.DequeueTimestamp            }
-                                            //, { "DequeueProcessedTime", queueElement.Timing.DequeueProcessedTime        }
-                                            //, { "DequeueProcessedTimestamp", queueElement.Timing.DequeueProcessedTimestamp   }
-                                            //=====================================================================
-                                            // common
-                                            , { "url", element.url                                     }
-                                            //=====================================================================
-                                            // request:
-                                            , { "requestHeaders", element.Request.requestHeaders                  }
-                                            , { "requestBody", HttpUtility.UrlDecode(element.Request.requestBody)                     }
-                                            , { "requestMethod", element.Request.requestMethod                   }
-                                            , { "requestBeginTime", element.Request.requestBeginTime                   }
-                                            //======================================================================
-                                            // response:
-                                            , { "responseHeaders", element.Response.responseHeaders                }
-                                            , { "responseBody", HttpUtility.UrlDecode(element.Response.responseBody)                   }
-                                            , { "responseStatusCode", element.Response.responseStatusCode                   }
-                                            , { "responseStartingTime", element.Response.responseStartingTime                   }
-                                            //======================================================================
-                                            // request + response :
-                                            , { "requestResponseTimingInMilliseconds", element.requestResponseTimingInMilliseconds                   }
-                                        }
-                                    );
-
-                            #region use DataTable
-                            //dataTable
-                            //        .Rows
-                            //        .Add
-                            //            (
-                            //                queueElement.ID
-
-                            //                , queueElement.Timing.EnqueueTimestamp
-                            //                , queueElement.Timing.EnqueueTime
-                            //                , queueElement.Timing.DequeueTime
-                            //                , queueElement.Timing.DequeueTimestamp
-                            //                , queueElement.Timing.DequeueProcessedTime
-                            //                , queueElement.Timing.DequeueProcessedTimestamp
-
-                            //                , element.url
-                            //                , element.Request.requestHeaders
-                            //                , element.Request.requestBody
-                            //                , element.Request.requestMethod
-                            //                , element.Response.responseHeaders
-                            //                , element.Response.responseBody
-
-                            //            ); 
-                            #endregion
-
-                        }
-                        , (dequeued, batch, indexInBatch) =>
-                        {
-                            Console.WriteLine($"Dequeue Batch: {nameof(Thread.CurrentThread.ManagedThreadId)}:{Thread.CurrentThread.ManagedThreadId}");
-                            try
-                            {
-                                #region use DataTable
-                                //var dataRows = dataTable.AsEnumerable();
-                                //var enqueueTimestamp = dataRows
-                                //                            .Min
-                                //                                (
-                                //                                    (x) =>
-                                //                                    {
-                                //                                        return
-                                //                                            x.Field<long>("EnqueueTimestamp");
-                                //                                    }
-                                //                                );
-                                //var dequeueTimestamp = dataRows
-                                //                            .Max
-                                //                                (
-                                //                                    (x) =>
-                                //                                    {
-                                //                                        return
-                                //                                            x.Field<long>("DequeueTimestamp");
-                                //                                    }
-                                //                                );
-                                //var durationInQueue = enqueueTimestamp.GetElapsedTime(dequeueTimestamp).TotalMilliseconds;
-                                //Console.WriteLine($"{nameof(durationInQueue)}:{durationInQueue};{nameof(dequeued)}:{dequeued};{nameof(batch)}:{batch};{nameof(indexInBatch)}:{indexInBatch};{nameof(dataTable.Rows.Count)}:{dataTable.Rows.Count}");
-                                //var dataColumns = dataTable.Columns;
-                                //foreach (var dataRow in dataRows)
-                                //{
-                                //    foreach (DataColumn dataColumn in dataColumns)
-                                //    {
-                                //        var columnName = dataColumn.ColumnName;
-                                //        //Console.Write($"{columnName}:{dataRow[columnName]}\t");
-                                //    }
-                                //    //Console.Write("\n");
-                                //}
-                                #endregion
-
-                                // sql Connection should be here avoid cross threads
-                                var sqlConnection  = new SqlConnection("Initial Catalog=test;Data Source=gateway.hyper-v.internal\\sql2019,11433;User=sa;Password=!@#123QWE");
-                                
-                                try
-                                {
-                                    executor
-                                        .ExecuteJsonResults
-                                            (
-                                                sqlConnection
-                                                , "zsp_Logging"
-                                                , new JObject
-                                                    {
-                                                        { "data", jArray}
-                                                    }
-                                            );
-                                }
-                                finally
-                                {
-                                    if (sqlConnection.State != ConnectionState.Closed)
-                                    {
-                                        sqlConnection.Close();
-                                    }
-                                }
-                            }
-                            finally
-                            {
-                                //dataTable.Clear();
-                                jArray.Clear();
-                            }
-                        }
-                        , 200
-                        , 5000
-                        , 10
-                    );
+            
 
             app
                 .UseRequestResponseGuard
@@ -1010,14 +1062,12 @@
                                                         = (ValueTuple<DateTime, long>) removed;
                                                     removed = null;
                                                     requestBeginTime = beginTime;
-                                                    httpContext
-                                                        .Response
+                                                    response
                                                         .Headers["X-Request-Receive-BeginTime"]
                                                                     = beginTime.ToString(defaultDateTimeFormat);
                                                     
                                                     responseStartingTime = DateTime.Now;
-                                                    httpContext
-                                                        .Response
+                                                    response
                                                         .Headers["X-Response-Send-BeginTime"]
                                                                     = responseStartingTime
                                                                                         .Value
@@ -1026,8 +1076,7 @@
                                                     requestResponseTimingInMilliseconds = beginTimeStamp
                                                                                                 .GetElapsedTimeToNow()
                                                                                                 .TotalMilliseconds;
-                                                    httpContext
-                                                        .Response
+                                                    response
                                                         .Headers["X-Request-Response-Timing-In-Milliseconds"]
                                                                     = requestResponseTimingInMilliseconds
                                                                             .ToString();
@@ -1036,6 +1085,9 @@
                                                                                 .Json
                                                                                 .JsonConvert
                                                                                 .SerializeObject(response.Headers);
+
+                                                var responseContentLength = response.ContentLength;
+                                                
 
                                                 asyncRequestResponseLoggingProcessor
                                                     .Enqueue
@@ -1048,6 +1100,8 @@
                                                                         , requestBody
                                                                         , request.Method
                                                                         , requestBeginTime
+                                                                        , request.ContentLength
+                                                                        , request.ContentType
                                                                     )
                                                                 ,
                                                                     (
@@ -1055,6 +1109,8 @@
                                                                         , responseBody
                                                                         , response.StatusCode
                                                                         , responseStartingTime
+                                                                        , response.ContentLength
+                                                                        , response.ContentType
                                                                     )
                                                                 , 
                                                                     requestResponseTimingInMilliseconds
