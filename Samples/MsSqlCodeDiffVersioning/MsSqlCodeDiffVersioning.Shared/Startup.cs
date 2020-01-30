@@ -895,7 +895,14 @@
                                             var requestBody = string.Empty;
                                             //should not use using 
                                             var requestBodyStream = request.Body;
-                                            if (requestBodyStream.CanRead && requestBodyStream.CanSeek)
+                                            if 
+                                                (
+                                                    requestBodyStream
+                                                                    .CanRead
+                                                    &&
+                                                    requestBodyStream
+                                                                    .CanSeek
+                                                )
                                             {
                                                 requestBodyStream.Position = 0;
                                                 //should not use using
@@ -1036,7 +1043,14 @@
                                                 else
                                                 {
                                                     
-                                                    if (requestBodyStream.CanRead && requestBodyStream.CanSeek)
+                                                    if 
+                                                        (
+                                                            requestBodyStream
+                                                                            .CanRead
+                                                            &&
+                                                            requestBodyStream
+                                                                            .CanSeek
+                                                        )
                                                     {
                                                         requestBodyStream.Position = 0;
                                                         //
@@ -1044,12 +1058,26 @@
                                                         requestBody = new StreamReader(requestBodyStream).ReadToEnd();
                                                     }
                                                 }
-                                                var requestHeaders = Newtonsoft.Json.JsonConvert.SerializeObject(request.Headers);
+                                                var requestHeaders = Newtonsoft
+                                                                                .Json
+                                                                                .JsonConvert
+                                                                                .SerializeObject
+                                                                                        (
+                                                                                            request
+                                                                                                .Headers
+                                                                                        );
                                                 var requestPath = request.Path;
                                                 var response = httpContext.Response;
                                                 using var responseBodyStream = response.Body;
                                                 var responseBody = string.Empty;
-                                                if (responseBodyStream.CanRead && responseBodyStream.CanSeek)
+                                                if 
+                                                    (
+                                                        responseBodyStream
+                                                                        .CanRead
+                                                        &&
+                                                        responseBodyStream
+                                                                        .CanSeek
+                                                    )
                                                 {
                                                     responseBodyStream.Position = 0;
                                                     //
@@ -1098,7 +1126,11 @@
                                                 var responseHeaders = Newtonsoft
                                                                                 .Json
                                                                                 .JsonConvert
-                                                                                .SerializeObject(response.Headers);
+                                                                                .SerializeObject
+                                                                                        (
+                                                                                            response
+                                                                                                .Headers
+                                                                                        );
 
                                                 var responseContentLength = response.ContentLength;
 
