@@ -25,7 +25,7 @@
     <None Include="$(MSBuildThisFileDirectory)makecert\server.cer" />
     <None Include="$(MSBuildThisFileDirectory)makecert\server.pfx" />
     <None Include="$(MSBuildThisFileDirectory)makecert\server.pvk" />
-    <None Include="$(MSBuildThisFileDirectory)PerfTest\PerfTest.IO.2020-01-31.xlsx" />
+    <None Include="$(MSBuildThisFileDirectory)PerfTest\PerfTest.Web.IO.2020-01-31.xlsx" />
     <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\datatables\Buttons\1.5.6\js\dataTables.buttons.js" />
     <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\datatables\DataTables\1.10.18\AutoFill-2.3.0\js\autoFill.bootstrap.js" />
     <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\datatables\DataTables\1.10.18\AutoFill-2.3.0\js\autoFill.bootstrap.min.js" />
