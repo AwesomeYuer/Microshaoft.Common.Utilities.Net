@@ -72,6 +72,11 @@ namespace Microshaoft.Web
         //    Action<HttpContext, string, TInjector1, TInjector2, TInjector3, TInjector4>
         //                        OnResponseBodyStreamProcess;
 
+        public
+            Func<HttpContext, string, TInjector1, TInjector2, TInjector3, TInjector4, bool>
+                                        OnPredicateResponseWorkingStreamProcessFunc;
+
+
         public readonly
             Func
                 <
@@ -213,33 +218,54 @@ namespace Microshaoft.Web
             }
             if (needNext)
             {
-                var response = context.Response;
-                var originalResponseBodyStream = response.Body;
+                var needResponseWorkingStreamProcess = true;
+                if (OnPredicateResponseWorkingStreamProcessFunc != null)
+                {
+                    needResponseWorkingStreamProcess =
+                        OnPredicateResponseWorkingStreamProcessFunc
+                                (
+                                    context
+                                    , nameof(OnPredicateResponseWorkingStreamProcessFunc)
+                                    , _injector1
+                                    , _injector2
+                                    , _injector3
+                                    , _injector4
+                                );
+                }
                 try
                 {
-                    try
+                    if (needResponseWorkingStreamProcess)
                     {
-                        using var workingStream = new MemoryStream();
-                        response
-                                .Body = workingStream;
+                        var response = context.Response;
+                        var request = context.Request;
+                        var originalResponseBodyStream = response.Body;
+                        try
+                        {
+                            using var workingStream = new MemoryStream();
+                            response
+                                    .Body = workingStream;
+                            await
+                                _next(context);
+                            workingStream
+                                    .Position = 0;
+                            await
+                                workingStream
+                                        .CopyToAsync
+                                                (
+                                                    originalResponseBodyStream
+                                                );
+                        }
+                        finally
+                        {
+                            response
+                                    .Body = originalResponseBodyStream;
+                        }
+                    }
+                    else
+                    {
                         await
                             _next(context);
-                        workingStream
-                                .Position = 0;
-                        await
-                            workingStream
-                                    .CopyToAsync
-                                            (
-                                                originalResponseBodyStream
-                                            );
                     }
-                    finally
-                    {
-                        response
-                                .Body = originalResponseBodyStream;
-                    }
-                    //await
-                    //    _next(context);
                     OnAfterInvokedNextProcess?
                                             .Invoke
                                                 (

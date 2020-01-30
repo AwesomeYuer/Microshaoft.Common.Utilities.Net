@@ -913,6 +913,33 @@
                                             return r;
                                         };
                                 middleware
+                                    .OnPredicateResponseWorkingStreamProcessFunc
+                                        =
+                                            (
+                                                httpContext
+                                                , @event
+                                                , stopwatchesPool
+                                                , xConfiguration
+                                                , xLoggerFactory
+                                                , xLogger
+                                            )
+                                                =>
+                                            {
+                                                var request = httpContext
+                                                                        .Request;
+                                                var r = !request
+                                                                .Path
+                                                                .Value
+                                                                .Contains
+                                                                    (
+                                                                        "export"
+                                                                        , StringComparison
+                                                                                .OrdinalIgnoreCase
+                                                                    );
+                                                return r;
+                                            };
+
+                                middleware
                                     .OnInvokingProcessAsync
                                         =
                                             async
