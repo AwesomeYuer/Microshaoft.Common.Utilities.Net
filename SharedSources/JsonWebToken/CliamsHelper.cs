@@ -56,6 +56,30 @@
                             ).Value;
             return r;
         }
+        public static string GetClaimTypeValueOrDefault
+                                (
+                                    this ClaimsPrincipal target
+                                    , string claimType
+                                    , string defaultValue = null
+                                )
+
+        {
+            var r = defaultValue;
+            if
+                (
+                    TryGetClaimTypeValue
+                        (
+                            target
+                            , claimType
+                            , out var @value
+                        )
+                )
+            {
+                r = @value;
+            }
+            return r;
+        }
+
         public static bool TryGetClaimTypeValue
                                 (
                                     this ClaimsPrincipal target
