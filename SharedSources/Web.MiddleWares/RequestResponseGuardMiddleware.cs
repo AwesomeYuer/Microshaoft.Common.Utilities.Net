@@ -191,15 +191,15 @@ namespace Microshaoft.Web
                         try
                         {
                             needNext = OnInvokingProcessAsync
-                                                                (
-                                                                    context
-                                                                    , nameof(OnInvokingProcessAsync)
-                                                                    , _injector1
-                                                                    , _injector2
-                                                                    , _injector3
-                                                                    , _injector4
-                                                                )
-                                                                .Result;
+                                                    (
+                                                        context
+                                                        , nameof(OnInvokingProcessAsync)
+                                                        , _injector1
+                                                        , _injector2
+                                                        , _injector3
+                                                        , _injector4
+                                                    )
+                                                    .Result;
                         }
                         catch (Exception e)
                         {
