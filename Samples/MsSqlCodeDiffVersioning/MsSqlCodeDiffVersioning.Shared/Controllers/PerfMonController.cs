@@ -52,7 +52,6 @@
         [Route("Runtime")]
         public ActionResult Runtime()
         {
-            var process = Process.GetCurrentProcess();
             return
                 new JsonResult
                         (
@@ -76,6 +75,7 @@
                                                                             .IsOSPlatform(x);
                                                             }
                                                         )
+                                                    .ToString()
                                 , RuntimeInformation
                                             .FrameworkDescription
                                 , RuntimeInformation
@@ -86,11 +86,12 @@
                                             .ProcessArchitecture
                                 , Process = new 
                                     {
-                                        WorkingSet64                = $"{Math.Round(process.PrivateMemorySize64        / 1e+6, 2)} MB"
-                                        , PeakWorkingSet64          = $"{Math.Round(process.PeakWorkingSet64           / 1e+6, 2)} MB"
-                                        , PrivateMemorySize64       = $"{Math.Round(process.PrivateMemorySize64        / 1e+6, 2)} MB"
-                                        , VirtualMemorySize64       = $"{Math.Round(process.VirtualMemorySize64        / 1e+6, 2)} MB"
-                                        , PeakVirtualMemorySize64   = $"{Math.Round(process.PeakVirtualMemorySize64    / 1e+6, 2)} MB"
+                                        WorkingSet64                = $"{Math.Round(GlobalManager.CurrentProcess.PrivateMemorySize64        / 1e+6, 2)} MB"
+                                        , PeakWorkingSet64          = $"{Math.Round(GlobalManager.CurrentProcess.PeakWorkingSet64           / 1e+6, 2)} MB"
+                                        , PrivateMemorySize64       = $"{Math.Round(GlobalManager.CurrentProcess.PrivateMemorySize64        / 1e+6, 2)} MB"
+                                        , VirtualMemorySize64       = $"{Math.Round(GlobalManager.CurrentProcess.VirtualMemorySize64        / 1e+6, 2)} MB"
+                                        , PeakVirtualMemorySize64   = $"{Math.Round(GlobalManager.CurrentProcess.PeakVirtualMemorySize64    / 1e+6, 2)} MB"
+                                        , GlobalManager.CurrentProcess.StartTime
                                     }
                             }
                         );

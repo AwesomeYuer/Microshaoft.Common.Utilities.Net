@@ -21,7 +21,7 @@ Contact:
 |	Travis-CI:			| [![Build Status](https://travis-ci.org/Microshaoft/Microshaoft.Common.Utilities.Net.svg?branch=master)](https://travis-ci.org/Microshaoft/Microshaoft.Common.Utilities.Net)																							|
 
 
-Test Urls
+Test Urls:
 
 http://localhost:5000/
 
@@ -33,6 +33,16 @@ http://localhost:5000/api/perfmon/RequestResponseLoggingProcessor
 
 http://localhost:5000/api/perfmon/Runtime
 
+
+Too Simple Performance Test (non-concurrency):
+
+Memory Usage on Windows:
+
+![Image](Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.Shared/PerfTest/PerfTest.Memory.Usage.on.Windows.2020-01-31.png)
+
+Web IO Results:
+
+https://github.com/Microshaoft/Microshaoft.Common.Utilities.Net/blob/netcoreapp3.1.101/Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.Shared/PerfTest/PerfTest.IO.2020-01-31.xlsx
 
 
 .NET Today/Now and Tomorrow/Future
