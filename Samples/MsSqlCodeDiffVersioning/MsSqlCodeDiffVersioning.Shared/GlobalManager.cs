@@ -77,8 +77,21 @@
                                         , long? responseContentLength
                                         , string responseContentType
                                     ) Response
-                                , double? requestResponseTimingInMilliseconds
-
+                                , 
+                                    double? requestResponseTimingInMilliseconds
+                                ,
+                                    (
+                                        string clientIP
+                                        , decimal? locationLongitude
+                                        , decimal? locationLatitude
+                                    )  Location
+                                ,
+                                    (
+                                        string userID
+                                        , string roleID
+                                        , string organizationUnitID
+                                        , string deviceID
+                                    ) User
                             )
                         >
                             AsyncRequestResponseLoggingProcessor
@@ -104,20 +117,21 @@
                                                         , long? responseContentLength
                                                         , string responseContentType
                                                     ) Response
-                                                , double? requestResponseTimingInMilliseconds
-                                                //,
-                                                //    (
-                                                //        string osPlatformName
-                                                //        , string osVersion
-                                                //        , string frameworkDescription
-                                                //        , string machineHostName
-                                                //    ) ServerHost
-                                                //,
-                                                //    (
-                                                //        int processId
-                                                //        , DateTime? processStartTime
-                                                //        , string processName
-                                                //    ) Process
+                                                ,
+                                                    double? requestResponseTimingInMilliseconds
+                                                ,
+                                                    (
+                                                        string clientIP
+                                                        , decimal? locationLongitude
+                                                        , decimal? locationLatitude
+                                                    ) Location
+                                                ,
+                                                    (
+                                                        string userID
+                                                        , string roleID
+                                                        , string organizationUnitID
+                                                        , string deviceID
+                                                    ) User
                                             )
                                         >();
 

@@ -6,11 +6,10 @@
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Cors.Infrastructure;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Http.Features;
     using Microsoft.AspNetCore.Mvc.ApplicationModels;
     using Microsoft.AspNetCore.Mvc.Controllers;
-    using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
-    using Microsoft.AspNetCore.ResponseCaching;
     using Microsoft.AspNetCore.Server.Kestrel.Core;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -18,8 +17,6 @@
     using Microsoft.Extensions.Logging;
     using Microsoft.Net.Http.Headers;
     using Microsoft.OpenApi.Models;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.WebUtilities;
     //using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
     using System;
@@ -31,12 +28,11 @@
     using System.IO;
     using System.Linq;
     using System.Net;
-    using System.Reflection;
     using System.Text;
     using System.Text.Json;
+    using System.Threading;
     using System.Threading.Tasks;
     using System.Web;
-    using System.Threading;
 #if NETCOREAPP2_X
     using Microsoft.AspNetCore.Hosting;
 #else
@@ -136,11 +132,6 @@
 #if NETCOREAPP3_X
                 .AddNewtonsoftJson()
 #endif
-                //.SetCompatibilityVersion
-                //    (
-                //        CompatibilityVersion
-                //            .Version_2_1
-                //    )
                 ;
 
             #region ConfigurableActionConstrainedRouteApplicationModelProvider
@@ -234,77 +225,12 @@
                     );
             #endregion
 
-            //services
-            //  .AddSingleton
-            //        <JTokenParametersValidateFilterAttribute>
-            //            ();
-
-            //ConcurrentDictionary<string, ExecutingInfo> executingCachingStore
-            //        = new ConcurrentDictionary<string, ExecutingInfo>();
             services
                     .AddSingleton
                         (
                             GlobalManager
                                 .ExecutingCachingStore
                         );
-
-
-            #region 异步批量入库案例专用
-            var asyncSaveToDbProcessor =
-                new SingleThreadAsyncDequeueProcessorSlim<JToken>();
-            var executor = new MsSqlStoreProceduresExecutor
-                                        (
-                                            GlobalManager
-                                                    .ExecutingCachingStore
-                                        );
-            var jArray = new JArray();
-            asyncSaveToDbProcessor
-                .StartRunDequeueThreadProcess
-                    (
-                        (dequeued, batch, i, queueElement) =>
-                        {
-                            jArray
-                                .Add(queueElement.Element);
-                        }
-                        ,
-                        (dequeued, batch, i) =>
-                        {
-                            //Debugger.Break();
-                            var sqlConnection = new SqlConnection("Initial Catalog=test;Data Source=localhost;User=sa;Password=!@#123QWE");
-                            executor
-                                .ExecuteJsonResults
-                                    (
-                                        sqlConnection
-                                        , "zsp_Test"
-                                        , jArray
-                                        ,
-                                            (
-                                                resultSetIndex
-                                                , reader
-                                                , rowIndex
-                                                , columnIndex
-                                                , fieldType
-                                                , fieldName
-                                            )
-                                                =>
-                                            {
-                                                return (true, null);
-                                            }
-                                    );
-                            jArray.Clear();
-                        }
-                        , 1000
-                        , 10 * 1000
-                    );
-
-
-
-            services
-                .AddSingleton
-                    (
-                        asyncSaveToDbProcessor
-                    );
-            #endregion
 
             #region asyncRequestResponseLoggingProcessor
             services
@@ -314,7 +240,12 @@
                                     .AsyncRequestResponseLoggingProcessor
                         );
             // there are only one Thread that's DequeueThread write it, so it's security
-            var jArray2 = new JArray();
+            var jArrayData = new JArray();
+            var msSqlStoreProceduresExecutor =
+                    new MsSqlStoreProceduresExecutor(GlobalManager.ExecutingCachingStore)
+                    { 
+                        CachedParametersDefinitionExpiredInSeconds = 10
+                    };
             Console.WriteLine($"Startup: {nameof(Thread.CurrentThread.ManagedThreadId)}:{Thread.CurrentThread.ManagedThreadId}");
             GlobalManager
                 .AsyncRequestResponseLoggingProcessor
@@ -333,114 +264,65 @@
                                                         :
                                                         -1
                                                     );
-                            jArray2
+                            jArrayData
                                 .Add
                                     (
                                         new JObject
                                         {
-                                              { "ID",                                       queueElement.ID                                             }
+                                              { nameof(queueElement.ID)                                 , queueElement.ID                                           }
                                             //======================================================================
                                             // Queue:
-                                            , { "EnqueueTime",                              queueElement.Timing.EnqueueTime                             }
-                                            , { "DequeueTime",                              queueElement.Timing.DequeueTime                             }
-                                            , { "QueueTimingInMilliseconds",                queueTimingInMilliseconds                                   }
+                                            , { nameof(queueElement.Timing.EnqueueTime)                 , queueElement.Timing.EnqueueTime                           }
+                                            , { nameof(queueElement.Timing.DequeueTime)                 , queueElement.Timing.DequeueTime                           }
+                                            , { nameof(queueTimingInMilliseconds)                       , queueTimingInMilliseconds                                 }
                                             //=====================================================================
                                             // common
-                                            , { "url",                                      element.url                                                 }
+                                            , { nameof(element.url)                                     , element.url                                               }
                                             //=====================================================================
                                             // request:
-                                            , { "requestHeaders",                           element.Request.requestHeaders                              }
-                                            , { "requestBody",                              HttpUtility.UrlDecode(element.Request.requestBody)          }
-                                            , { "requestMethod",                            element.Request.requestMethod                               }
-                                            , { "requestBeginTime",                         element.Request.requestBeginTime                            }
-                                            , { "requestContentLength",                     element.Request.requestContentLength                        }
-                                            , { "requestContentType",                       element.Request.requestContentType                          }
+                                            , { nameof(element.Request.requestHeaders)                  , element.Request.requestHeaders                            }
+                                            , { nameof(element.Request.requestBody)                     , HttpUtility.UrlDecode(element.Request.requestBody)        }
+                                            , { nameof(element.Request.requestMethod)                   , element.Request.requestMethod                             }
+                                            , { nameof(element.Request.requestBeginTime)                , element.Request.requestBeginTime                          }
+                                            , { nameof(element.Request.requestContentLength)            , element.Request.requestContentLength                      }
+                                            , { nameof(element.Request.requestContentType)              , element.Request.requestContentType                        }
 
                                             //======================================================================
                                             // response:
-                                            , { "responseHeaders",                          element.Response.responseHeaders                            }
-                                            , { "responseBody",                             HttpUtility.UrlDecode(element.Response.responseBody)        }
-                                            , { "responseStatusCode",                       element.Response.responseStatusCode                         }
-                                            , { "responseStartingTime",                     element.Response.responseStartingTime                       }
-                                            , { "responseContentLength",                    element.Response.responseContentLength                      }
-                                            , { "responseContentType",                      element.Response.responseContentType                        }
+                                            , { nameof(element.Response.responseHeaders)                , element.Response.responseHeaders                          }
+                                            , { nameof(element.Response.responseBody)                   , HttpUtility.UrlDecode(element.Response.responseBody)      }
+                                            , { nameof(element.Response.responseStatusCode)             , element.Response.responseStatusCode                       }
+                                            , { nameof(element.Response.responseStartingTime)           , element.Response.responseStartingTime                     }
+                                            , { nameof(element.Response.responseContentLength)          , element.Response.responseContentLength                    }
+                                            , { nameof(element.Response.responseContentType)            , element.Response.responseContentType                      }
                                             //======================================================================
                                             // request + response :
-                                            , { "requestResponseTimingInMilliseconds",      element.requestResponseTimingInMilliseconds                 }
-
+                                            , { nameof(element.requestResponseTimingInMilliseconds)     , element.requestResponseTimingInMilliseconds               }
+                                            //======================================================================
+                                            // Location:
+                                            , { nameof(element.Location.clientIP)                       , element.Location.clientIP                                 }
+                                            , { nameof(element.Location.locationLongitude)              , element.Location.locationLongitude                        }
+                                            , { nameof(element.Location.locationLatitude)               , element.Location.locationLatitude                         }
+                                            //=======================================================================
+                                            // user:
+                                            , { nameof(element.User.userID)                             , element.User.userID                                       }
+                                            , { nameof(element.User.roleID)                             , element.User.roleID                                       }
+                                            , { nameof(element.User.organizationUnitID)                 , element.User.organizationUnitID                           }
+                                            , { nameof(element.User.deviceID)                           , element.User.deviceID                                     }
                                         }
                                     );
-
-                            #region use DataTable
-                            //dataTable
-                            //        .Rows
-                            //        .Add
-                            //            (
-                            //                queueElement.ID
-
-                            //                , queueElement.Timing.EnqueueTimestamp
-                            //                , queueElement.Timing.EnqueueTime
-                            //                , queueElement.Timing.DequeueTime
-                            //                , queueElement.Timing.DequeueTimestamp
-                            //                , queueElement.Timing.DequeueProcessedTime
-                            //                , queueElement.Timing.DequeueProcessedTimestamp
-
-                            //                , element.url
-                            //                , element.Request.requestHeaders
-                            //                , element.Request.requestBody
-                            //                , element.Request.requestMethod
-                            //                , element.Response.responseHeaders
-                            //                , element.Response.responseBody
-
-                            //            ); 
-                            #endregion
-
                         }
                         , (dequeued, batch, indexInBatch) =>
                         {
                             Console.WriteLine($"Dequeue Batch: {nameof(Thread.CurrentThread.ManagedThreadId)}:{Thread.CurrentThread.ManagedThreadId}");
                             try
                             {
-                                #region use DataTable
-                                //var dataRows = dataTable.AsEnumerable();
-                                //var enqueueTimestamp = dataRows
-                                //                            .Min
-                                //                                (
-                                //                                    (x) =>
-                                //                                    {
-                                //                                        return
-                                //                                            x.Field<long>("EnqueueTimestamp");
-                                //                                    }
-                                //                                );
-                                //var dequeueTimestamp = dataRows
-                                //                            .Max
-                                //                                (
-                                //                                    (x) =>
-                                //                                    {
-                                //                                        return
-                                //                                            x.Field<long>("DequeueTimestamp");
-                                //                                    }
-                                //                                );
-                                //var durationInQueue = enqueueTimestamp.GetElapsedTime(dequeueTimestamp).TotalMilliseconds;
-                                //Console.WriteLine($"{nameof(durationInQueue)}:{durationInQueue};{nameof(dequeued)}:{dequeued};{nameof(batch)}:{batch};{nameof(indexInBatch)}:{indexInBatch};{nameof(dataTable.Rows.Count)}:{dataTable.Rows.Count}");
-                                //var dataColumns = dataTable.Columns;
-                                //foreach (var dataRow in dataRows)
-                                //{
-                                //    foreach (DataColumn dataColumn in dataColumns)
-                                //    {
-                                //        var columnName = dataColumn.ColumnName;
-                                //        //Console.Write($"{columnName}:{dataRow[columnName]}\t");
-                                //    }
-                                //    //Console.Write("\n");
-                                //}
-                                #endregion
-
                                 // sql Connection should be here avoid cross threads
                                 var sqlConnection = new SqlConnection("Initial Catalog=test;Data Source=gateway.hyper-v.internal\\sql2019,11433;User=sa;Password=!@#123QWE");
 
                                 try
                                 {
-                                    executor
+                                    msSqlStoreProceduresExecutor
                                         .ExecuteJsonResults
                                             (
                                                 sqlConnection
@@ -454,7 +336,7 @@
                                                         , { "processId"                             , GlobalManager.CurrentProcess.Id               }
                                                         , { "processName"                           , GlobalManager.CurrentProcess.ProcessName      }
                                                         , { "processStartTime"                      , GlobalManager.CurrentProcess.StartTime        }
-                                                        , { "data"                                  , jArray2                                       }
+                                                        , { "data"                                  , jArrayData                                       }
                                                     }
                                             );
                                 }
@@ -470,7 +352,7 @@
                             {
                                 //dataTable.Clear();
                                 //should be clear correctly!!!!
-                                jArray2.Clear();
+                                jArrayData.Clear();
                             }
                         }
                         , 200
@@ -488,13 +370,10 @@
                     ();
 
             services
-                .AddSingleton
-                        <
-                           QueuedObjectsPool<Stopwatch>
-                        >
-                    (
-                            new QueuedObjectsPool<Stopwatch>(1024, true)
-                    );
+                    .AddSingleton
+                        (
+                            new QueuedObjectsPool<Stopwatch>(16, true)
+                        );
             services
                     .AddSingleton
                         (
@@ -781,53 +660,7 @@
             #region RequestResponseGuard
             string requestResponseTimingLoggingItemKey = "beginTimestamp";
             //timingKey = string.Empty;
-           
             
-            
-            var dataTable = GlobalManager
-                                        .AsyncRequestResponseLoggingProcessor
-                                        .QueueElementType
-                                        .GenerateEmptyDataTable
-                                            (
-                                                // Queue
-                                                "ID"
-
-                                                , "EnqueueTimestamp"
-                                                , "EnqueueTime"
-                                                , "DequeueTime"
-                                                , "DequeueTimestamp"
-                                                , "DequeueProcessedTime"
-                                                , "DequeueProcessedTimestamp"
-
-                                                , "url"
-
-                                                // request
-                                                , "requestHeaders"
-                                                , "requestBody"
-                                                , "requestMethod"
-                                                , "requestBeginTime"
-                                                , "requestContentLength"
-                                                , "requestContentType"
-
-                                                // response
-                                                , "responseHeaders"
-                                                , "responseBody"
-                                                , "responseStatusCode"
-                                                , "responseStartingTime"
-                                                , "responseContentLength"
-                                                , "responseContentType"
-
-                                                // request response
-                                                , "requestResponseTimingInMilliseconds"
-                                            );
-
-            
-            var executor = new MsSqlStoreProceduresExecutor(executingCachingStore)
-            { 
-                CachedParametersDefinitionExpiredInSeconds = 10
-            };
-            
-
             app
                 .UseRequestResponseGuard
                     <
@@ -1115,6 +948,38 @@
                                                                                         );
 
                                                 var responseContentLength = response.ContentLength;
+                                                var roleID = string.Empty;
+                                                roleID = httpContext
+                                                                    .User
+                                                                    .GetClaimTypeValueOrDefault
+                                                                        (
+                                                                            nameof(roleID)
+                                                                            , $"Unknown {nameof(roleID)}"
+                                                                        );
+                                                var organizationUnitID = string.Empty;
+                                                organizationUnitID = httpContext
+                                                                        .User
+                                                                        .GetClaimTypeValueOrDefault
+                                                                            (
+                                                                                nameof(organizationUnitID)
+                                                                                , $"Unknown {nameof(organizationUnitID)}"
+                                                                            );
+                                                var clientIP = httpContext
+                                                                        .Connection
+                                                                        .RemoteIpAddress
+                                                                        .ToString();
+                                                var userID = httpContext
+                                                                        .User
+                                                                        .Identity
+                                                                        .Name?? "Anonymous";
+                                                var deviceID = string.Empty;
+                                                deviceID = httpContext
+                                                                       .User
+                                                                       .GetClaimTypeValueOrDefault
+                                                                           (
+                                                                               nameof(deviceID)
+                                                                               , $"Unknown {nameof(deviceID)}"
+                                                                           );
 
                                                 GlobalManager
                                                     .AsyncRequestResponseLoggingProcessor
@@ -1142,6 +1007,19 @@
                                                                     )
                                                                 , 
                                                                     requestResponseTimingInMilliseconds
+                                                                ,
+                                                                    (
+                                                                        clientIP
+                                                                        , decimal.Parse("1.0")
+                                                                        , new decimal(1.0)
+                                                                    ) //Location
+                                                                ,
+                                                                    (
+                                                                        userID
+                                                                        , roleID
+                                                                        , organizationUnitID
+                                                                        , deviceID
+                                                                    ) //User
                                                             )
                                                         );
                                             };
