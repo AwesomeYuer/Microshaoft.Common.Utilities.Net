@@ -913,7 +913,7 @@
                                             return r;
                                         };
                                 middleware
-                                    .OnPredicateResponseWorkingStreamProcessFunc
+                                    .OnPredicateResponseBodyWorkingStreamProcessFunc
                                         =
                                             (
                                                 httpContext

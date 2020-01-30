@@ -74,7 +74,7 @@ namespace Microshaoft.Web
 
         public
             Func<HttpContext, string, TInjector1, TInjector2, TInjector3, TInjector4, bool>
-                                        OnPredicateResponseWorkingStreamProcessFunc;
+                                        OnPredicateResponseBodyWorkingStreamProcessFunc;
 
 
         public readonly
@@ -218,14 +218,14 @@ namespace Microshaoft.Web
             }
             if (needNext)
             {
-                var needResponseWorkingStreamProcess = true;
-                if (OnPredicateResponseWorkingStreamProcessFunc != null)
+                var needResponseBodyWorkingStreamProcess = true;
+                if (OnPredicateResponseBodyWorkingStreamProcessFunc != null)
                 {
-                    needResponseWorkingStreamProcess =
-                        OnPredicateResponseWorkingStreamProcessFunc
+                    needResponseBodyWorkingStreamProcess =
+                        OnPredicateResponseBodyWorkingStreamProcessFunc
                                 (
                                     context
-                                    , nameof(OnPredicateResponseWorkingStreamProcessFunc)
+                                    , nameof(OnPredicateResponseBodyWorkingStreamProcessFunc)
                                     , _injector1
                                     , _injector2
                                     , _injector3
@@ -234,7 +234,7 @@ namespace Microshaoft.Web
                 }
                 try
                 {
-                    if (needResponseWorkingStreamProcess)
+                    if (needResponseBodyWorkingStreamProcess)
                     {
                         var response = context.Response;
                         var request = context.Request;
