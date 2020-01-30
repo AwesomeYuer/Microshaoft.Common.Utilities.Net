@@ -76,6 +76,7 @@
                                                                             .IsOSPlatform(x);
                                                             }
                                                         )
+                                                    .ToString()
                                 , RuntimeInformation
                                             .FrameworkDescription
                                 , RuntimeInformation

@@ -367,6 +367,12 @@
                                             //======================================================================
                                             // request + response :
                                             , { "requestResponseTimingInMilliseconds",      element.requestResponseTimingInMilliseconds                 }
+
+                                            //======================================================================
+                                            // Server Host
+                                            , { "serverHostOsPlatformName",                 element.ServerHost.osPlatformName                           }
+                                            , { "serverHostOsVersion",                      element.ServerHost.osVersion                                }
+                                            , { "serverHostFrameworkDescription",           element.ServerHost.frameworkDescription                     }
                                         }
                                     );
 
@@ -766,33 +772,6 @@
                             ,
                                 ConcurrentDictionary<string, ExecutingInfo>
                                                                 executingCachingStore
-                            ,
-                                SingleThreadAsyncDequeueProcessorSlim
-                                    <
-                                        (
-                                            string url
-                                            ,
-                                                (
-                                                    string requestHeaders
-                                                    , string requestBody
-                                                    , string requestMethod
-                                                    , DateTime? requestBeginTime
-                                                    , long? requestContentLength
-                                                    , string requestContentType
-                                                ) Request
-                                            ,
-                                                (
-                                                    string responseHeaders
-                                                    , string responseBody
-                                                    , int responseStatusCode
-                                                    , DateTime? responseStartingTime
-                                                    , long? responseContentLength
-                                                    , string responseContentType
-                                                ) Response
-                                            , double? requestResponseTimingInMilliseconds
-                                        )
-                                    >
-                                        asyncRequestResponseLoggingProcessor
                                 //, ILogger logger
                         )
         {
@@ -803,7 +782,8 @@
            
             
             
-            var dataTable = asyncRequestResponseLoggingProcessor
+            var dataTable = GlobalManager
+                                        .AsyncRequestResponseLoggingProcessor
                                         .QueueElementType
                                         .GenerateEmptyDataTable
                                             (
@@ -1134,7 +1114,8 @@
 
                                                 var responseContentLength = response.ContentLength;
 
-                                                asyncRequestResponseLoggingProcessor
+                                                GlobalManager
+                                                    .AsyncRequestResponseLoggingProcessor
                                                     .Enqueue
                                                         (
                                                             (
@@ -1159,6 +1140,12 @@
                                                                     )
                                                                 , 
                                                                     requestResponseTimingInMilliseconds
+                                                                ,
+                                                                    (
+                                                                        GlobalManager.OsPlatformName
+                                                                        , GlobalManager.OsVersion
+                                                                        , GlobalManager.FrameworkDescription
+                                                                    )
                                                             )
                                                         );
                                             };

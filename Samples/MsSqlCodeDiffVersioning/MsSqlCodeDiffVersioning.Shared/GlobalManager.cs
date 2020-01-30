@@ -2,12 +2,41 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace WebApplication.ASPNetCore
 {
     public static class GlobalManager
     {
+        public static readonly string OsPlatformName =
+                                        EnumerableHelper
+                                                    .Range
+                                                        (
+                                                            OSPlatform.Linux
+                                                            , OSPlatform.OSX
+                                                            , OSPlatform.Windows
+                                                        )
+                                                    .First
+                                                        (
+                                                            (x) =>
+                                                            {
+                                                                return
+                                                                    RuntimeInformation
+                                                                            .IsOSPlatform(x);
+                                                            }
+                                                        )
+                                                    .ToString();
+
+        public static readonly string OsVersion = Environment
+                                                        .OSVersion
+                                                        .VersionString;
+
+
+        public static readonly string FrameworkDescription = RuntimeInformation
+                                                                    .FrameworkDescription;
+
         public static readonly
                     SingleThreadAsyncDequeueProcessorSlim
                         <
@@ -32,10 +61,16 @@ namespace WebApplication.ASPNetCore
                                         , string responseContentType
                                     ) Response
                                 , double? requestResponseTimingInMilliseconds
+                                ,
+                                    (
+                                        string osPlatformName
+                                        , string osVersion
+                                        , string frameworkDescription
+                                    ) ServerHost
                             )
                         >
-                            AsyncRequestResponseLoggingProcessor = 
-                                new SingleThreadAsyncDequeueProcessorSlim
+                            AsyncRequestResponseLoggingProcessor
+                                = new SingleThreadAsyncDequeueProcessorSlim
                                         <
                                             (
                                                 string url
@@ -58,8 +93,15 @@ namespace WebApplication.ASPNetCore
                                                         , string responseContentType
                                                     ) Response
                                                 , double? requestResponseTimingInMilliseconds
+                                                ,
+                                                    (
+                                                        string osPlatformName
+                                                        , string osVersion
+                                                        , string frameworkDescription
+                                                    ) ServerHost
                                             )
                                         >();
+
 
 
         public static readonly
