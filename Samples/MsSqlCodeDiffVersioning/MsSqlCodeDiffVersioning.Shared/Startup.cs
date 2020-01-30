@@ -300,15 +300,16 @@
                                             , { nameof(element.requestResponseTimingInMilliseconds)     , element.requestResponseTimingInMilliseconds               }
                                             //======================================================================
                                             // Location:
-                                            , { nameof(element.Location.clientIP)                       , element.Location.clientIP                                 }
-                                            , { nameof(element.Location.locationLongitude)              , element.Location.locationLongitude                        }
-                                            , { nameof(element.Location.locationLatitude)               , element.Location.locationLatitude                         }
+                                            , { nameof(element.User.Location.clientIP)                  , element.User.Location.clientIP                            }
+                                            , { nameof(element.User.Location.locationLongitude)         , element.User.Location.locationLongitude                   }
+                                            , { nameof(element.User.Location.locationLatitude)          , element.User.Location.locationLatitude                    }
                                             //=======================================================================
                                             // user:
                                             , { nameof(element.User.userID)                             , element.User.userID                                       }
                                             , { nameof(element.User.roleID)                             , element.User.roleID                                       }
-                                            , { nameof(element.User.organizationUnitID)                 , element.User.organizationUnitID                           }
-                                            , { nameof(element.User.deviceID)                           , element.User.deviceID                                     }
+                                            , { nameof(element.User.orgUnitID)                          , element.User.orgUnitID                                    }
+                                            , { nameof(element.User.Device.deviceID)                    , element.User.Device.deviceID                              }
+                                            , { nameof(element.User.Device.deviceInfo)                  , element.User.Device.deviceInfo                            }
                                         }
                                     );
                         }
@@ -332,11 +333,11 @@
                                                           { "serverHostOsPlatformName"              , GlobalManager.OsPlatformName                  }
                                                         , { "serverHostOsVersion"                   , GlobalManager.OsVersion                       }
                                                         , { "serverHostFrameworkDescription"        , GlobalManager.FrameworkDescription            }
-                                                        , { "serverHostMachineHostName"             , Environment.MachineName                       }
-                                                        , { "processId"                             , GlobalManager.CurrentProcess.Id               }
-                                                        , { "processName"                           , GlobalManager.CurrentProcess.ProcessName      }
-                                                        , { "processStartTime"                      , GlobalManager.CurrentProcess.StartTime        }
-                                                        , { "data"                                  , jArrayData                                       }
+                                                        , { "serverHostMachineName"                 , Environment.MachineName                       }
+                                                        , { "serverHostProcessId"                   , GlobalManager.CurrentProcess.Id               }
+                                                        , { "serverHostProcessName"                 , GlobalManager.CurrentProcess.ProcessName      }
+                                                        , { "serverHostProcessStartTime"            , GlobalManager.CurrentProcess.StartTime        }
+                                                        , { "data"                                  , jArrayData                                    }
                                                     }
                                             );
                                 }
@@ -947,22 +948,23 @@
                                                                                                 .Headers
                                                                                         );
 
-                                                var responseContentLength = response.ContentLength;
+                                                var responseContentLength = response
+                                                                                .ContentLength;
                                                 var roleID = string.Empty;
                                                 roleID = httpContext
                                                                     .User
                                                                     .GetClaimTypeValueOrDefault
                                                                         (
                                                                             nameof(roleID)
-                                                                            , $"Unknown {nameof(roleID)}"
+                                                                            , "AnonymousRole"
                                                                         );
-                                                var organizationUnitID = string.Empty;
-                                                organizationUnitID = httpContext
+                                                var orgUnitID = string.Empty;
+                                                orgUnitID = httpContext
                                                                         .User
                                                                         .GetClaimTypeValueOrDefault
                                                                             (
-                                                                                nameof(organizationUnitID)
-                                                                                , $"Unknown {nameof(organizationUnitID)}"
+                                                                                nameof(orgUnitID)
+                                                                                , "AnonymousOrgUnit"
                                                                             );
                                                 var clientIP = httpContext
                                                                         .Connection
@@ -971,16 +973,23 @@
                                                 var userID = httpContext
                                                                         .User
                                                                         .Identity
-                                                                        .Name?? "Anonymous";
+                                                                        .Name?? "AnonymousUser";
                                                 var deviceID = string.Empty;
                                                 deviceID = httpContext
                                                                        .User
                                                                        .GetClaimTypeValueOrDefault
                                                                            (
                                                                                nameof(deviceID)
-                                                                               , $"Unknown {nameof(deviceID)}"
+                                                                               , "AnonymousDevice"
                                                                            );
-
+                                                var deviceInfo = string.Empty;
+                                                deviceInfo = httpContext
+                                                                       .User
+                                                                       .GetClaimTypeValueOrDefault
+                                                                           (
+                                                                               nameof(deviceInfo)
+                                                                               , "UnknownDevice"
+                                                                           );
                                                 GlobalManager
                                                     .AsyncRequestResponseLoggingProcessor
                                                     .Enqueue
@@ -1009,16 +1018,19 @@
                                                                     requestResponseTimingInMilliseconds
                                                                 ,
                                                                     (
-                                                                        clientIP
-                                                                        , decimal.Parse("1.0")
-                                                                        , new decimal(1.0)
-                                                                    ) //Location
-                                                                ,
-                                                                    (
-                                                                        userID
+                                                                        (
+                                                                            clientIP
+                                                                            , decimal.Parse("1.0")
+                                                                            , new decimal(1.0)
+                                                                        ) //Location
+                                                                        , userID
                                                                         , roleID
-                                                                        , organizationUnitID
-                                                                        , deviceID
+                                                                        , orgUnitID
+                                                                        , 
+                                                                        (
+                                                                            deviceID
+                                                                            , deviceInfo
+                                                                        ) // Device
                                                                     ) //User
                                                             )
                                                         );

@@ -81,17 +81,21 @@
                                     double? requestResponseTimingInMilliseconds
                                 ,
                                     (
-                                        string clientIP
-                                        , decimal? locationLongitude
-                                        , decimal? locationLatitude
-                                    )  Location
-                                ,
-                                    (
-                                        string userID
+                                        (
+                                            string clientIP
+                                            , decimal? locationLongitude
+                                            , decimal? locationLatitude
+                                        ) Location
+                                        , string userID
                                         , string roleID
-                                        , string organizationUnitID
-                                        , string deviceID
+                                        , string orgUnitID
+                                        ,
+                                        (
+                                            string deviceID
+                                            , string deviceInfo
+                                        ) Device
                                     ) User
+
                             )
                         >
                             AsyncRequestResponseLoggingProcessor
@@ -121,16 +125,19 @@
                                                     double? requestResponseTimingInMilliseconds
                                                 ,
                                                     (
-                                                        string clientIP
-                                                        , decimal? locationLongitude
-                                                        , decimal? locationLatitude
-                                                    ) Location
-                                                ,
-                                                    (
-                                                        string userID
+                                                        (
+                                                            string clientIP
+                                                            , decimal? locationLongitude
+                                                            , decimal? locationLatitude
+                                                        ) Location
+                                                        , string userID
                                                         , string roleID
                                                         , string organizationUnitID
-                                                        , string deviceID
+                                                        , 
+                                                        (
+                                                            string deviceID
+                                                            , string deviceInfo
+                                                        ) Device
                                                     ) User
                                             )
                                         >();
