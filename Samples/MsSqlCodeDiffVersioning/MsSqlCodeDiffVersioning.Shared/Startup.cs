@@ -1101,7 +1101,6 @@
                                                                                 .SerializeObject(response.Headers);
 
                                                 var responseContentLength = response.ContentLength;
-                                                
 
                                                 asyncRequestResponseLoggingProcessor
                                                     .Enqueue
