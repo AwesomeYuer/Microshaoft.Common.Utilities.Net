@@ -322,9 +322,8 @@
                     (
                         (dequeued, batch, indexInBatch, queueElement) =>
                         {
-                            var element = queueElement.Element;
                             Console.WriteLine($"Dequeue Once: {nameof(Thread.CurrentThread.ManagedThreadId)}:{Thread.CurrentThread.ManagedThreadId}");
-
+                            var element = queueElement.Element;
                             var enqueueTimestamp = queueElement.Timing.EnqueueTimestamp;
                             var queueTimingInMilliseconds =
                                                     (
@@ -470,11 +469,7 @@
                         , 5000
                         , 10
                     );
-
-
-
             #endregion
-
 
             services
                 .AddSingleton
@@ -486,9 +481,9 @@
 
             services
                 .AddSingleton
-                    <
-                       QueuedObjectsPool<Stopwatch>
-                    >
+                        <
+                           QueuedObjectsPool<Stopwatch>
+                        >
                     (
                             new QueuedObjectsPool<Stopwatch>(1024, true)
                     );
@@ -500,19 +495,19 @@
 
 #if NETCOREAPP3_X
             var loggerFactory = LoggerFactory
-                                        .Create
-                                            (
-                                                builder =>
-                                                {
-                                                    builder
-                                                    //    .AddFilter("Microsoft", LogLevel.Warning)
-                                                    //    .AddFilter("System", LogLevel.Warning)
-                                                    //    .AddFilter("LoggingConsoleApp.Program", LogLevel.Debug)
-                                                        .AddConsole()
-                                                    //    .AddEventLog()
-                                                        ;
-                                                }
-                                            );
+                                            .Create
+                                                (
+                                                    builder =>
+                                                    {
+                                                        builder
+                                                        //    .AddFilter("Microsoft", LogLevel.Warning)
+                                                        //    .AddFilter("System", LogLevel.Warning)
+                                                        //    .AddFilter("LoggingConsoleApp.Program", LogLevel.Debug)
+                                                            .AddConsole()
+                                                        //    .AddEventLog()
+                                                            ;
+                                                    }
+                                                );
 #else
             services
                 .AddLogging
@@ -531,10 +526,13 @@
 #endif
             
             ILogger logger = loggerFactory.CreateLogger("Microshaoft.Logger");
-            services.AddSingleton(loggerFactory);
-            services.AddSingleton(logger);
+            services
+                    .AddSingleton(loggerFactory);
+            services
+                    .AddSingleton(logger);
 
-            services.AddSingleton<string>("Inject String");
+            services
+                    .AddSingleton<string>("Inject String");
 
             #region 跨域策略
             services
@@ -580,12 +578,12 @@
             #endregion
 
             services
-                .AddResponseCaching();
+                    .AddResponseCaching();
 
 #if NETCOREAPP2_X
             //for NETCOREAPP2_X only
-            //services
-            //    .AddSingleton<IActionSelector, SyncOrAsyncActionSelector>();
+            services
+                  .AddSingleton<IActionSelector, SyncOrAsyncActionSelector>();
 #endif
 
             #region Output CsvFormatterOptions
@@ -717,8 +715,8 @@
                                                  .UseSingleLineHeaderInCsv = section.Get<bool>();
                                     }
                                 }
-                                        //options.InputFormatters.Add(new CsvInputFormatter(csvFormatterOptions));
-                                        options
+                                //options.InputFormatters.Add(new CsvInputFormatter(csvFormatterOptions));
+                                options
                                     .OutputFormatters
                                     .Add
                                         (
@@ -740,13 +738,14 @@
             #endregion
 
             services
-                .Configure<KestrelServerOptions>
-                    (
-                        (options) =>
-                        {
-                            options.AllowSynchronousIO = true;
-                        }
-                    );
+                    .Configure<KestrelServerOptions>
+                        (
+                            (options) =>
+                            {
+                                options
+                                        .AllowSynchronousIO = true;
+                            }
+                        );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -894,11 +893,14 @@
                                                             );
                                             }
                                             var requestBody = string.Empty;
+                                            //should not use using 
                                             var requestBodyStream = request.Body;
                                             if (requestBodyStream.CanRead && requestBodyStream.CanSeek)
                                             {
                                                 requestBodyStream.Position = 0;
-                                                requestBody = new StreamReader(requestBodyStream).ReadToEnd();
+                                                //should not use using
+                                                var streamReader = new StreamReader(requestBodyStream);
+                                                requestBody = streamReader.ReadToEnd();
                                                 requestBodyStream.Position = 0;
                                                 httpContext
                                                         .Items
@@ -944,18 +946,17 @@
                                                     var jsonResult = new
                                                     {
                                                         statusCode = errorStatusCode
-                                                        ,
-                                                        resultCode = -1 * errorStatusCode
-                                                        ,
-                                                        message = errorMessage
+                                                        , resultCode = -1 * errorStatusCode
+                                                        , message = errorMessage
                                                     };
+                                                    using var responseBodyStream = response.Body;
                                                     await
                                                         JsonSerializer
-                                                                .SerializeAsync
-                                                                        (
-                                                                            response.Body
-                                                                            , jsonResult
-                                                                        );
+                                                                    .SerializeAsync
+                                                                            (
+                                                                                responseBodyStream
+                                                                                , jsonResult
+                                                                            );
                                                     result = false;
                                                 }
                                                 else
@@ -982,7 +983,6 @@
                                                 =>
                                             {
                                                 xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
-
                                                 
                                                 //return;
                                                 var httpRequestFeature = httpContext
@@ -990,6 +990,8 @@
                                                                                  .Get<IHttpRequestFeature>();
                                                 var url = httpRequestFeature.RawTarget;
                                                 var request = httpContext.Request;
+                                                //
+                                                using var requestBodyStream = request.Body;
                                                 var requestBody = string.Empty;
                                                 if
                                                     (
@@ -1006,24 +1008,28 @@
                                                 }
                                                 else
                                                 {
-                                                    if (request.Body.CanRead && request.Body.CanSeek)
+                                                    
+                                                    if (requestBodyStream.CanRead && requestBodyStream.CanSeek)
                                                     {
-                                                        request.Body.Position = 0;
-                                                        requestBody = new StreamReader(request.Body).ReadToEnd();
+                                                        requestBodyStream.Position = 0;
+                                                        //
+                                                        using var streamReader = new StreamReader(requestBodyStream);
+                                                        requestBody = new StreamReader(requestBodyStream).ReadToEnd();
                                                     }
                                                 }
                                                 var requestHeaders = Newtonsoft.Json.JsonConvert.SerializeObject(request.Headers);
                                                 var requestPath = request.Path;
                                                 var response = httpContext.Response;
+                                                using var responseBodyStream = response.Body;
                                                 var responseBody = string.Empty;
-                                                if (response.Body.CanRead && response.Body.CanSeek)
+                                                if (responseBodyStream.CanRead && responseBodyStream.CanSeek)
                                                 {
-                                                    response.Body.Position = 0;
-                                                    responseBody = new StreamReader(response.Body).ReadToEnd();
+                                                    responseBodyStream.Position = 0;
+                                                    //
+                                                    using var streamReader = new StreamReader(responseBodyStream);
+                                                    responseBody = streamReader.ReadToEnd();
                                                     Console.WriteLine(responseBody.Length);
                                                 }
-                                                
-
                                                 var r = httpContext
                                                                 .Items
                                                                 .Remove

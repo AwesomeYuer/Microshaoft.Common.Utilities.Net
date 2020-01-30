@@ -219,22 +219,24 @@ namespace Microshaoft.Web
                 {
                     try
                     {
-                        using (var processingStream = new MemoryStream())
-                        {
-                            response
-                                    .Body = processingStream;
-                            await
-                                _next(context);
-                            processingStream
-                                        .Position = 0;
-                            await
-                                processingStream
-                                        .CopyToAsync(originalResponseBodyStream);
-                        }
+                        using var workingStream = new MemoryStream();
+                        response
+                                .Body = workingStream;
+                        await
+                            _next(context);
+                        workingStream
+                                .Position = 0;
+                        await
+                            workingStream
+                                    .CopyToAsync
+                                            (
+                                                originalResponseBodyStream
+                                            );
                     }
                     finally
                     {
-                        context.Response.Body = originalResponseBodyStream;
+                        response
+                                .Body = originalResponseBodyStream;
                     }
                     //await
                     //    _next(context);
