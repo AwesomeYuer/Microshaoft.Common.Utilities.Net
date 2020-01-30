@@ -368,11 +368,6 @@
                                             // request + response :
                                             , { "requestResponseTimingInMilliseconds",      element.requestResponseTimingInMilliseconds                 }
 
-                                            //======================================================================
-                                            // Server Host
-                                            , { "serverHostOsPlatformName",                 element.ServerHost.osPlatformName                           }
-                                            , { "serverHostOsVersion",                      element.ServerHost.osVersion                                }
-                                            , { "serverHostFrameworkDescription",           element.ServerHost.frameworkDescription                     }
                                         }
                                     );
 
@@ -452,7 +447,14 @@
                                                 , "zsp_Logging"
                                                 , new JObject
                                                     {
-                                                        { "data", jArray2}
+                                                          { "serverHostOsPlatformName"              , GlobalManager.OsPlatformName                  }
+                                                        , { "serverHostOsVersion"                   , GlobalManager.OsVersion                       }
+                                                        , { "serverHostFrameworkDescription"        , GlobalManager.FrameworkDescription            }
+                                                        , { "serverHostMachineHostName"             , Environment.MachineName                       }
+                                                        , { "processId"                             , GlobalManager.CurrentProcess.Id               }
+                                                        , { "processName"                           , GlobalManager.CurrentProcess.ProcessName      }
+                                                        , { "processStartTime"                      , GlobalManager.CurrentProcess.StartTime        }
+                                                        , { "data"                                  , jArray2                                       }
                                                     }
                                             );
                                 }
@@ -1140,12 +1142,6 @@
                                                                     )
                                                                 , 
                                                                     requestResponseTimingInMilliseconds
-                                                                ,
-                                                                    (
-                                                                        GlobalManager.OsPlatformName
-                                                                        , GlobalManager.OsVersion
-                                                                        , GlobalManager.FrameworkDescription
-                                                                    )
                                                             )
                                                         );
                                             };
