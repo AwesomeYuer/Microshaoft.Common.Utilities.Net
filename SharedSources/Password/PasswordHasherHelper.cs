@@ -11,9 +11,9 @@ namespace Microshaoft
         *  =======================
         *
         *  Version 0:
-        *  PBKDF2 with HMAC-SHA1, 128-bit salt, 256-bit subkey, 1000 iterations.
+        *  PBKDF2 with HMAC-SHA1, 128-bit salt, 256-bit subKey, 1000 iterations.
         *  (See also: SDL crypto guidelines v5.1, Part III)
-        *  Format: { 0x00, salt, subkey }
+        *  Format: { 0x00, salt, subKey }
         */
         public static byte[] Hash
                                 (
@@ -21,16 +21,16 @@ namespace Microshaoft
                                     , HashAlgorithmName hashAlgorithmName = default
                                     , int saltBits = 128
                                     , int iterationCount = 1000
-                                    , int keyBits = 256
+                                    , int subKeyBits = 256
                                 )
         {
-            byte[] processBytes(byte[] saltBytes, byte[] keyBytes)
+            byte[] processBytes(byte[] saltBytes, byte[] subKeyBytes)
             {
                 var bytes = new byte
                                     [
                                         1
                                         + saltBytes.Length
-                                        + keyBytes.Length
+                                        + subKeyBytes.Length
                                     ];
                 var p = 1;
                 var l = saltBytes.Length;
@@ -44,11 +44,11 @@ namespace Microshaoft
                             , l
                         );
                 p += l;
-                l = keyBytes.Length;
+                l = subKeyBytes.Length;
                 Buffer
                     .BlockCopy
                         (
-                            keyBytes
+                            subKeyBytes
                             , 0
                             , bytes
                             , p
@@ -62,7 +62,7 @@ namespace Microshaoft
             {
                 using
                     (
-                        var deriveBytes = new Rfc2898DeriveBytes
+                        var rfc2898DeriveBytes = new Rfc2898DeriveBytes
                                                     (
                                                         password
                                                         , saltBits / 8
@@ -70,17 +70,17 @@ namespace Microshaoft
                                                     )
                     )
                 {
-                    var saltBytes = deriveBytes.Salt;
-                    var keyBytes = deriveBytes.GetBytes(keyBits / 8);
+                    var saltBytes = rfc2898DeriveBytes.Salt;
+                    var subKeyBytes = rfc2898DeriveBytes.GetBytes(subKeyBits / 8);
                     return
-                        processBytes(saltBytes, keyBytes);
+                        processBytes(saltBytes, subKeyBytes);
                 }
             }
             else
             {
                 using
                        (
-                           var deriveBytes = new Rfc2898DeriveBytes
+                           var rfc2898DeriveBytes = new Rfc2898DeriveBytes
                                                        (
                                                            password
                                                            , saltBits / 8
@@ -89,10 +89,10 @@ namespace Microshaoft
                                                        )
                        )
                 {
-                    var saltBytes = deriveBytes.Salt;
-                    var keyBytes = deriveBytes.GetBytes(keyBits / 8);
+                    var saltBytes = rfc2898DeriveBytes.Salt;
+                    var subKeyBytes = rfc2898DeriveBytes.GetBytes(subKeyBits / 8);
                     return
-                        processBytes(saltBytes, keyBytes);
+                        processBytes(saltBytes, subKeyBytes);
                 }
             }
         }
@@ -102,14 +102,14 @@ namespace Microshaoft
                                     , HashAlgorithmName hashAlgorithmName = default
                                     , int saltBits = 128
                                     , int iterationCount = 1000
-                                    , int keyBits = 256
+                                    , int subKeyBits = 256
                                 )
         {
             return
                 Convert
                         .ToBase64String
                             (
-                                Hash(password, hashAlgorithmName, saltBits, iterationCount, keyBits)
+                                Hash(password, hashAlgorithmName, saltBits, iterationCount, subKeyBits)
                             );
         }
 
@@ -120,7 +120,7 @@ namespace Microshaoft
                                     , HashAlgorithmName hashAlgorithmName = default
                                     , int saltBits = 128
                                     , int iterationCount = 1000
-                                    , int keyBits = 256
+                                    , int subKeyBits = 256
                                 )
         {
             return
@@ -131,7 +131,7 @@ namespace Microshaoft
                         , hashAlgorithmName
                         , saltBits
                         , iterationCount
-                        , keyBits
+                        , subKeyBits
                     );
         }
         public static bool Verify
@@ -141,7 +141,7 @@ namespace Microshaoft
                                     , HashAlgorithmName hashAlgorithmName
                                     , int saltBits = 128
                                     , int iterationCount = 1000
-                                    , int keyBits = 256
+                                    , int subKeyBits = 256
                                 )
         {
             var p = 1;
@@ -149,14 +149,14 @@ namespace Microshaoft
             var l = saltBytes.Length;
             Buffer.BlockCopy(hashedPasswordBytes, p, saltBytes, 0, l);
             p += l;
-            byte[] keyBytes = new byte[keyBits / 8];
-            l = keyBytes.Length;
-            Buffer.BlockCopy(hashedPasswordBytes, p, keyBytes, 0, l);
+            byte[] subKeyBytes = new byte[subKeyBits / 8];
+            l = subKeyBytes.Length;
+            Buffer.BlockCopy(hashedPasswordBytes, p, subKeyBytes, 0, l);
             if (hashAlgorithmName == default)
             {
                 using
                     (
-                        var r = new Rfc2898DeriveBytes
+                        var rfc2898DeriveBytes = new Rfc2898DeriveBytes
                                         (
                                             verifyingPassword
                                             , saltBytes
@@ -165,16 +165,16 @@ namespace Microshaoft
                     )
                 {
                     return
-                            r
-                                .GetBytes(keyBytes.Length)
-                                .SequenceEqual(keyBytes);
+                            rfc2898DeriveBytes
+                                .GetBytes(subKeyBytes.Length)
+                                .SequenceEqual(subKeyBytes);
                 }
             }
             else
             {
                 using
                         (
-                            var r = new Rfc2898DeriveBytes
+                            var rfc2898DeriveBytes = new Rfc2898DeriveBytes
                                             (
                                                 verifyingPassword
                                                 , saltBytes
@@ -184,9 +184,9 @@ namespace Microshaoft
                         )
                 {
                     return
-                            r
-                                .GetBytes(keyBytes.Length)
-                                .SequenceEqual(keyBytes);
+                            rfc2898DeriveBytes
+                                .GetBytes(subKeyBytes.Length)
+                                .SequenceEqual(subKeyBytes);
                 }
             }
         }
