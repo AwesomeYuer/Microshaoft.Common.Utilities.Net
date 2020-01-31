@@ -20,7 +20,7 @@ namespace Microshaoft
                                     string password
                                     , HashAlgorithmName hashAlgorithmName = default
                                     , int saltBits = 128
-                                    , int iterationCount = 1000
+                                    , int iterations = 1000
                                     , int subKeyBits = 256
                                 )
         {
@@ -66,7 +66,7 @@ namespace Microshaoft
                                                     (
                                                         password
                                                         , saltBits / 8
-                                                        , iterationCount
+                                                        , iterations
                                                     )
                     )
                 {
@@ -86,7 +86,7 @@ namespace Microshaoft
                                                        (
                                                            password
                                                            , saltBits / 8
-                                                           , iterationCount
+                                                           , iterations
                                                            , hashAlgorithmName
                                                        )
                        )
@@ -105,7 +105,7 @@ namespace Microshaoft
                                     string password
                                     , HashAlgorithmName hashAlgorithmName = default
                                     , int saltBits = 128
-                                    , int iterationCount = 1000
+                                    , int iterations = 1000
                                     , int subKeyBits = 256
                                 )
         {
@@ -118,7 +118,7 @@ namespace Microshaoft
                                             password
                                             , hashAlgorithmName
                                             , saltBits
-                                            , iterationCount
+                                            , iterations
                                             , subKeyBits
                                         )
                             );
@@ -130,7 +130,7 @@ namespace Microshaoft
                                     , string base64HashedPassword
                                     , HashAlgorithmName hashAlgorithmName = default
                                     , int saltBits = 128
-                                    , int iterationCount = 1000
+                                    , int iterations = 1000
                                     , int subKeyBits = 256
                                 )
         {
@@ -145,7 +145,7 @@ namespace Microshaoft
                                         )
                         , hashAlgorithmName
                         , saltBits
-                        , iterationCount
+                        , iterations
                         , subKeyBits
                     );
         }
@@ -155,7 +155,7 @@ namespace Microshaoft
                                     , byte[] hashedPasswordBytes
                                     , HashAlgorithmName hashAlgorithmName
                                     , int saltBits = 128
-                                    , int iterationCount = 1000
+                                    , int iterations = 1000
                                     , int subKeyBits = 256
                                 )
         {
@@ -191,7 +191,7 @@ namespace Microshaoft
                                         (
                                             verifyingPassword
                                             , saltBytes
-                                            , iterationCount
+                                            , iterations
                                         )
                     )
                 {
@@ -209,7 +209,7 @@ namespace Microshaoft
                                             (
                                                 verifyingPassword
                                                 , saltBytes
-                                                , iterationCount
+                                                , iterations
                                                 , hashAlgorithmName
                                             )
                         )
