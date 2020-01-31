@@ -142,6 +142,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\VersionRangeFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\VersionRangeFormatter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Observable\ObservableExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)OTP\OtpHashAlgorithm.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)OTP\Totp.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)OTP\TotpHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Password\PasswordHasherHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pools\00.PoolManager\PoolsManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pools\ObjectsPool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pools\QueuedObjectsPool.Partial.01.cs" />

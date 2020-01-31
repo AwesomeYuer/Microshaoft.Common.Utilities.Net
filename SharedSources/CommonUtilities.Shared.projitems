@@ -175,6 +175,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)OTP\TotpHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OTP\Totp.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OTP\OtpHashAlgorithm.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Password\PasswordHasherHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PerformanceCounter\Containers\00.IPerformanceCountersContainer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PerformanceCounter\Containers\00.IPerformanceCountersValuesClearable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PerformanceCounter\Containers\10.AbstractPerformanceCountersContainer.cs" />
