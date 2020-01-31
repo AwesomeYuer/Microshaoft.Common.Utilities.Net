@@ -15,7 +15,7 @@ namespace Microshaoft
         *  (See also: SDL crypto guidelines v5.1, Part III)
         *  Format: { 0x00, salt, subKey }
         */
-        public static byte[] Hash
+        public static byte[] ComputeHash
                                 (
                                     string password
                                     , HashAlgorithmName hashAlgorithmName = default
@@ -96,7 +96,7 @@ namespace Microshaoft
                 }
             }
         }
-        public static string HashToBase64String
+        public static string ComputeHashToBase64String
                                 (
                                     string password
                                     , HashAlgorithmName hashAlgorithmName = default
@@ -109,7 +109,7 @@ namespace Microshaoft
                 Convert
                         .ToBase64String
                             (
-                                Hash(password, hashAlgorithmName, saltBits, iterationCount, subKeyBits)
+                                ComputeHash(password, hashAlgorithmName, saltBits, iterationCount, subKeyBits)
                             );
         }
 
@@ -127,7 +127,11 @@ namespace Microshaoft
                 Verify
                     (
                         verifyingPassword
-                        , Convert.FromBase64String(base64HashedPassword)
+                        , Convert
+                                .FromBase64String
+                                        (
+                                            base64HashedPassword
+                                        )
                         , hashAlgorithmName
                         , saltBits
                         , iterationCount
@@ -195,13 +199,13 @@ namespace Microshaoft
             var password = "!@#123QWE";
 
             var hashedPassword = PasswordHasherHelper
-                                        .HashToBase64String
+                                        .ComputeHashToBase64String
                                             (password, HashAlgorithmName.SHA512);
             Console.WriteLine($"{nameof(password)} : {password}");
             Console.WriteLine($"{nameof(hashedPassword)} : {hashedPassword}");
 
             hashedPassword = PasswordHasherHelper
-                                        .HashToBase64String
+                                        .ComputeHashToBase64String
                                             (password, HashAlgorithmName.SHA512);
 
             Console.WriteLine($"{nameof(password)} : {password}");
