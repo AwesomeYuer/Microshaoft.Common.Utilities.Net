@@ -70,8 +70,10 @@ namespace Microshaoft
                                                     )
                     )
                 {
-                    var saltBytes = rfc2898DeriveBytes.Salt;
-                    var subKeyBytes = rfc2898DeriveBytes.GetBytes(subKeyBits / 8);
+                    var saltBytes = rfc2898DeriveBytes
+                                                    .Salt;
+                    var subKeyBytes = rfc2898DeriveBytes
+                                                    .GetBytes(subKeyBits / 8);
                     return
                         processBytes(saltBytes, subKeyBytes);
                 }
@@ -89,8 +91,10 @@ namespace Microshaoft
                                                        )
                        )
                 {
-                    var saltBytes = rfc2898DeriveBytes.Salt;
-                    var subKeyBytes = rfc2898DeriveBytes.GetBytes(subKeyBits / 8);
+                    var saltBytes = rfc2898DeriveBytes
+                                                    .Salt;
+                    var subKeyBytes = rfc2898DeriveBytes
+                                                    .GetBytes(subKeyBits / 8);
                     return
                         processBytes(saltBytes, subKeyBytes);
                 }
@@ -109,7 +113,14 @@ namespace Microshaoft
                 Convert
                         .ToBase64String
                             (
-                                ComputeHash(password, hashAlgorithmName, saltBits, iterationCount, subKeyBits)
+                                ComputeHash
+                                        (
+                                            password
+                                            , hashAlgorithmName
+                                            , saltBits
+                                            , iterationCount
+                                            , subKeyBits
+                                        )
                             );
         }
 
@@ -151,11 +162,27 @@ namespace Microshaoft
             var p = 1;
             byte[] saltBytes = new byte[saltBits / 8];
             var l = saltBytes.Length;
-            Buffer.BlockCopy(hashedPasswordBytes, p, saltBytes, 0, l);
+            Buffer
+                .BlockCopy
+                        (
+                            hashedPasswordBytes
+                            , p
+                            , saltBytes
+                            , 0
+                            , l
+                        );
             p += l;
             byte[] subKeyBytes = new byte[subKeyBits / 8];
             l = subKeyBytes.Length;
-            Buffer.BlockCopy(hashedPasswordBytes, p, subKeyBytes, 0, l);
+            Buffer
+                .BlockCopy
+                        (
+                            hashedPasswordBytes
+                            , p
+                            , subKeyBytes
+                            , 0
+                            , l
+                        );
             if (hashAlgorithmName == default)
             {
                 using
