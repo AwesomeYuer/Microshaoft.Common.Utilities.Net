@@ -10,8 +10,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\" />
-    <Folder Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\" />
-    <Folder Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\" />
+    <Folder Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\_models\" />
+    <Folder Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\_runing_models\" />
     <Folder Include="$(MSBuildThisFileDirectory)CompositionPlugins\" />
     <Folder Include="$(MSBuildThisFileDirectory)MetricsRegistry\" />
   </ItemGroup>

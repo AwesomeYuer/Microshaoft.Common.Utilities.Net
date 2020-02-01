@@ -3,7 +3,7 @@
     using Microsoft.Extensions.Configuration;
     public static class ConfigurationExtensions
     {
-        public static bool TryGetSection
+      public static bool TryGetSection
                     (
                         this IConfiguration target
                         , string sectionKey
