@@ -88,57 +88,43 @@ namespace Microshaoft.Web
                                         );
             if (success)
             {
-                success = masterConfiguration
-                                        .TryGetSection
+                allow = masterConfiguration
+                                        .GetValue
                                                 (
                                                     $"allow"
-                                                    , out var configuration
+                                                    , false
                                                 );
-                if (success)
-                {
-                    allow = configuration.Get<bool>();
-                }
                 if (allow)
                 {
-                    var needCheckOperations = false;
-                    success = masterConfiguration
-                                            .TryGetSection
+                    var needCheckOperations = masterConfiguration
+                                                .GetValue
                                                     (
                                                         $"needcheckoperations"
-                                                        , out configuration
+                                                        , false
                                                     );
-                    if (success)
-                    {
-                        needCheckOperations = configuration.Get<bool>();
-                    }
                     if (needCheckOperations)
                     {
-                        success = masterConfiguration
-                                                .TryGetSection
-                                                    (
-                                                        $"operations"
-                                                        , out configuration
-                                                    );
-                        if (success)
+                        var operations = masterConfiguration
+                                                    .GetValue<string[]>
+                                                        (
+                                                            $"operations"
+                                                        );
+                        allow = CheckUserOperations
+                                        (
+                                            httpContext
+                                            , operations
+                                        );
+                        if (!allow)
                         {
-                            var operations = configuration
-                                                    .Get<string[]>();
-                            allow = CheckUserOperations
-                                            (
-                                                httpContext
-                                                , operations
-                                            );
-                            if (!allow)
-                            {
-                                forbiddenMessage = $"forbidden by {configuration.Key}";
-                                setForbidResult();
-                            }
+                            forbiddenMessage = $"forbidden by {masterConfiguration.Key} Operations";
+                            setForbidResult();
                         }
                     }
+                    
                 }
                 else //(!allow)
                 {
-                    forbiddenMessage = $"forbidden by {configuration.Key}";
+                    forbiddenMessage = $"forbidden by {masterConfiguration.Key}";
                     setForbidResult();
                 }
             }

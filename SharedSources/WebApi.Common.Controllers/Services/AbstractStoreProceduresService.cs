@@ -189,30 +189,20 @@ namespace Microshaoft.Web
         //for override from derived class
         public virtual void Initialize()
         {
-            if
-                (
-                    _configuration
-                                .TryGet<int>
-                                    (
-                                        "CachedParametersDefinitionExpiredInSeconds"
-                                        , out var i
-                                    )
-                )
-            {
-                _cachedParametersDefinitionExpiredInSeconds = i;
-            }
-            if
-                (
-                    _configuration
-                                .TryGet<bool>
-                                    (
-                                        "NeedAutoRefreshExecutedTimeForSlideExpire"
-                                        , out var b
-                                    )
-                )
-            {
-                _needAutoRefreshExecutedTimeForSlideExpire = b;
-            }
+            _cachedParametersDefinitionExpiredInSeconds =
+                 _configuration
+                            .GetValue
+                                (
+                                    "CachedParametersDefinitionExpiredInSeconds"
+                                    , 3600
+                                );
+            _needAutoRefreshExecutedTimeForSlideExpire =
+                _configuration
+                            .GetValue
+                                (
+                                    "NeedAutoRefreshExecutedTimeForSlideExpire"
+                                    , false
+                                );
             LoadDynamicExecutors();
         }
         protected virtual string[] GetDynamicExecutorsPathsProcess()
@@ -917,9 +907,9 @@ namespace Microshaoft.Web
                 return
                     Result();
             }
-            actionConfiguration
-                        .TryGet<string>
-                                ("ConnectionID", out var connectionID);
+            var connectionID = actionConfiguration
+                                            .GetValue<string>
+                                                    ("ConnectionID");
             success = !connectionID.IsNullOrEmptyOrWhiteSpace();
             if (!success)
             {
@@ -929,11 +919,14 @@ namespace Microshaoft.Web
                     Result();
             }
             _configuration
-                            .TryGetSection
-                                    ($"Connections:{connectionID}", out var connectionConfiguration);
-            connectionConfiguration
-                            .TryGet<string>
-                                    ("ConnectionString", out connectionString);
+                        .TryGetSection
+                            (
+                                $"Connections:{connectionID}"
+                                , out var connectionConfiguration
+                            );
+            connectionString = connectionConfiguration
+                                            .GetValue<string>
+                                                    ("ConnectionString");
             success = !connectionString.IsNullOrEmptyOrWhiteSpace();
             if (!success)
             {
@@ -942,9 +935,9 @@ namespace Microshaoft.Web
                 return
                     Result();
             }
-            connectionConfiguration
-                            .TryGet<string>
-                                ("DataBaseType", out dataBaseType);
+            dataBaseType = connectionConfiguration
+                                    .GetValue<string>
+                                            ("DataBaseType");
             success = !dataBaseType
                             .IsNullOrEmptyOrWhiteSpace();
             if (!success)
@@ -954,13 +947,13 @@ namespace Microshaoft.Web
                 return
                     Result();
             }
-            
-            actionConfiguration
-                        .TryGet<string>
-                            ("StoreProcedureName", out storeProcedureName);
-            connectionConfiguration
-                        .TryGet<bool>
-                            ("EnableStatistics", out enableStatistics);
+
+            storeProcedureName = actionConfiguration
+                                        .GetValue<string>
+                                            ("StoreProcedureName");
+            enableStatistics = connectionConfiguration
+                                        .GetValue
+                                            ("EnableStatistics", false);
             actionConfiguration
                         .TryGetSection
                             ("DefaultAccessing", out var accessingConfiguration);

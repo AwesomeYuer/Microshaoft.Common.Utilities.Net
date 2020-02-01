@@ -247,19 +247,12 @@ namespace Microshaoft.WebApi.Controllers
             }
             var response = HttpContext
                                     .Response;
-            var downloadFileName = $"{routeName}.csv";
-            if 
-                (
-                    _configuration
-                                .TryGetSection
-                                    (
-                                        $"Routes:{routeName}:{httpMethod}:Exporting:DownloadFileName"
-                                        , out var downloadFileNameConfiguration
-                                    )
-                )
-            {
-                downloadFileName = downloadFileNameConfiguration.Value;
-            }
+            var downloadFileName = _configuration
+                                            .GetValue
+                                                (
+                                                    $"Routes:{routeName}:{httpMethod}:Exporting:DownloadFileName"
+                                                    , $"{routeName}.csv"
+                                                );
             downloadFileName = HttpUtility
                                     .UrlEncode(downloadFileName, e);
             response
@@ -329,10 +322,9 @@ namespace Microshaoft.WebApi.Controllers
                                                                 (
                                                                     (xx) =>
                                                                     {
-                                                                        var columnName =
-                                                                                    xx
-                                                                                        .GetValue<string>
-                                                                                                ("ColumnName");
+                                                                        var columnName = xx
+                                                                                            .GetValue<string>
+                                                                                                    ("ColumnName");
                                                                         var columnTitle = xx
                                                                                             .GetValue
                                                                                                     (

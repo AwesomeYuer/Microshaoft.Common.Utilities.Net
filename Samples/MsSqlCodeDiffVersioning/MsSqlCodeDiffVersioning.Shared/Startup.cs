@@ -664,7 +664,7 @@
             string requestResponseTimingLoggingItemKey = "beginTimestamp";
             //timingKey = string.Empty;
 
-            var needUse = configuration.GetOrDefault("useRequestResponseGuard", false);
+            var needUse = configuration.GetValue("useRequestResponseGuard", false);
             if (needUse)
             {
                 #region RequestResponseGuard
@@ -1128,7 +1128,7 @@
                                 );
                 #endregion
             }
-            needUse = configuration.GetOrDefault("useExceptionGuard", false);
+            needUse = configuration.GetValue("useExceptionGuard", false);
             if (needUse)
             {
                 #region ExceptionGuard
