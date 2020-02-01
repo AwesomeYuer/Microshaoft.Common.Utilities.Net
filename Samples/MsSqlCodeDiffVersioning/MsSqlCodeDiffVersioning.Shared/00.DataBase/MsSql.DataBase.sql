@@ -1,6 +1,6 @@
 USE [master]
 GO
-/****** Object:  Database [Test]    Script Date: 2/1/2020 11:51:35 PM ******/
+/****** Object:  Database [Test]    Script Date: 2/2/2020 2:06:29 AM ******/
 CREATE DATABASE [Test]
  CONTAINMENT = NONE
  ON  PRIMARY 
@@ -80,12 +80,12 @@ ALTER DATABASE [Test] SET QUERY_STORE = OFF
 GO
 USE [Test]
 GO
-/****** Object:  UserDefinedTableType [dbo].[udt_int]    Script Date: 2/1/2020 11:51:35 PM ******/
+/****** Object:  UserDefinedTableType [dbo].[udt_int]    Script Date: 2/2/2020 2:06:29 AM ******/
 CREATE TYPE [dbo].[udt_int] AS TABLE(
 	[F1] [int] NULL
 )
 GO
-/****** Object:  UserDefinedTableType [dbo].[udt_RequestResponseLoggingEntry]    Script Date: 2/1/2020 11:51:35 PM ******/
+/****** Object:  UserDefinedTableType [dbo].[udt_RequestResponseLoggingEntry]    Script Date: 2/2/2020 2:06:29 AM ******/
 CREATE TYPE [dbo].[udt_RequestResponseLoggingEntry] AS TABLE(
 	[ID] [bigint] NULL,
 	[EnqueueTime] [datetime] NULL,
@@ -106,7 +106,7 @@ CREATE TYPE [dbo].[udt_RequestResponseLoggingEntry] AS TABLE(
 	[responseContentType] [varchar](64) NULL,
 	[requestResponseTimingInMilliseconds] [decimal](16, 6) NULL,
 	[dbExecutingTimingInMilliseconds] [decimal](16, 6) NULL,
-	[clientIP] [varchar](16) NULL,
+	[clientIP] [varchar](64) NULL,
 	[locationLongitude] [decimal](24, 18) NULL,
 	[locationLatitude] [decimal](24, 18) NULL,
 	[userID] [varchar](32) NULL,
@@ -116,19 +116,19 @@ CREATE TYPE [dbo].[udt_RequestResponseLoggingEntry] AS TABLE(
 	[deviceInfo] [varchar](64) NULL
 )
 GO
-/****** Object:  UserDefinedTableType [dbo].[udt_varchar]    Script Date: 2/1/2020 11:51:35 PM ******/
+/****** Object:  UserDefinedTableType [dbo].[udt_varchar]    Script Date: 2/2/2020 2:06:29 AM ******/
 CREATE TYPE [dbo].[udt_varchar] AS TABLE(
 	[F1] [varchar](16) NULL
 )
 GO
-/****** Object:  UserDefinedTableType [dbo].[udt_vcidt]    Script Date: 2/1/2020 11:51:35 PM ******/
+/****** Object:  UserDefinedTableType [dbo].[udt_vcidt]    Script Date: 2/2/2020 2:06:29 AM ******/
 CREATE TYPE [dbo].[udt_vcidt] AS TABLE(
 	[varchar] [varchar](16) NULL,
 	[int] [int] NULL,
 	[date] [date] NULL
 )
 GO
-/****** Object:  UserDefinedFunction [dbo].[zTVF_SplitStringToTable]    Script Date: 2/1/2020 11:51:35 PM ******/
+/****** Object:  UserDefinedFunction [dbo].[zTVF_SplitStringToTable]    Script Date: 2/2/2020 2:06:29 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -215,7 +215,7 @@ BEGIN
 	return
 end
 GO
-/****** Object:  View [dbo].[zv_all_PARAMETERS]    Script Date: 2/1/2020 11:51:35 PM ******/
+/****** Object:  View [dbo].[zv_all_PARAMETERS]    Script Date: 2/2/2020 2:06:29 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -406,7 +406,7 @@ FROM
 WHERE
 	o.type IN ('P','FN','TF', 'IF', 'IS', 'AF','PC', 'FS', 'FT')  
 GO
-/****** Object:  Table [dbo].[RequestResponseLogging]    Script Date: 2/1/2020 11:51:35 PM ******/
+/****** Object:  Table [dbo].[RequestResponseLogging]    Script Date: 2/2/2020 2:06:29 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -435,7 +435,7 @@ CREATE TABLE [dbo].[RequestResponseLogging](
 	[serverHostOsPlatformName] [varchar](64) NULL,
 	[serverHostOsVersion] [varchar](64) NOT NULL,
 	[serverHostFrameworkDescription] [varchar](64) NULL,
-	[clientIP] [varchar](16) NULL,
+	[clientIP] [varchar](64) NULL,
 	[locationLongitude] [decimal](24, 18) NULL,
 	[locationLatitude] [decimal](24, 18) NULL,
 	[userID] [varchar](32) NULL,
@@ -455,7 +455,7 @@ CREATE TABLE [dbo].[RequestResponseLogging](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[zObjectsChangesLogsHistory]    Script Date: 2/1/2020 11:51:35 PM ******/
+/****** Object:  Table [dbo].[zObjectsChangesLogsHistory]    Script Date: 2/2/2020 2:06:29 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -479,7 +479,7 @@ CREATE TABLE [dbo].[zObjectsChangesLogsHistory](
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [Idx_stat]    Script Date: 2/1/2020 11:51:35 PM ******/
+/****** Object:  Index [Idx_stat]    Script Date: 2/2/2020 2:06:29 AM ******/
 CREATE NONCLUSTERED INDEX [Idx_stat] ON [dbo].[RequestResponseLogging]
 (
 	[serverHostProcessStartTime] ASC,
@@ -493,7 +493,7 @@ ALTER TABLE [dbo].[RequestResponseLogging] ADD  CONSTRAINT [DF_RequestResponseLo
 GO
 ALTER TABLE [dbo].[zObjectsChangesLogsHistory] ADD  CONSTRAINT [DF_zObjectsChangesLogsHistory_PostTime]  DEFAULT (getdate()) FOR [PostTime]
 GO
-/****** Object:  StoredProcedure [dbo].[usp_executesql]    Script Date: 2/1/2020 11:51:35 PM ******/
+/****** Object:  StoredProcedure [dbo].[usp_executesql]    Script Date: 2/2/2020 2:06:29 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -524,7 +524,7 @@ exec sp_executesql
 @sql
 end
 GO
-/****** Object:  StoredProcedure [dbo].[usp_TestUdt]    Script Date: 2/1/2020 11:51:35 PM ******/
+/****** Object:  StoredProcedure [dbo].[usp_TestUdt]    Script Date: 2/2/2020 2:06:29 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -544,7 +544,7 @@ from
 	@a
 end
 GO
-/****** Object:  StoredProcedure [dbo].[zsp_Logging]    Script Date: 2/1/2020 11:51:35 PM ******/
+/****** Object:  StoredProcedure [dbo].[zsp_Logging]    Script Date: 2/2/2020 2:06:29 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -564,7 +564,7 @@ begin
 declare @BaseTime datetime = '2020-01-01'
 declare @BatchingTime datetime
 set @BatchingTime = DATEADD(second, DATEDIFF(SECOND,@BaseTime, getdate()), @BaseTime)
-
+--select 1/0
 
 INSERT INTO 
 		[RequestResponseLogging]
@@ -661,7 +661,7 @@ from
 
 end
 GO
-/****** Object:  StoredProcedure [dbo].[zsp_Logging_Query]    Script Date: 2/1/2020 11:51:35 PM ******/
+/****** Object:  StoredProcedure [dbo].[zsp_Logging_Query]    Script Date: 2/2/2020 2:06:29 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -688,7 +688,7 @@ SELECT TOP (1000)
 	--truncate table [RequestResponseLogging]
 end
 GO
-/****** Object:  StoredProcedure [dbo].[zsp_Logging_Stat1]    Script Date: 2/1/2020 11:51:35 PM ******/
+/****** Object:  StoredProcedure [dbo].[zsp_Logging_Stat1]    Script Date: 2/2/2020 2:06:29 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -994,7 +994,7 @@ order by
 --	--truncate table [RequestResponseLogging]
 end
 GO
-/****** Object:  StoredProcedure [dbo].[zsp_Logging_Stat2]    Script Date: 2/1/2020 11:51:35 PM ******/
+/****** Object:  StoredProcedure [dbo].[zsp_Logging_Stat2]    Script Date: 2/2/2020 2:06:29 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1355,7 +1355,7 @@ from
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[zsp_Logging_Stats]    Script Date: 2/1/2020 11:51:35 PM ******/
+/****** Object:  StoredProcedure [dbo].[zsp_Logging_Stats]    Script Date: 2/2/2020 2:06:29 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1372,7 +1372,7 @@ exec [zsp_Logging_Stat2] 1, @p1
 
 end
 GO
-/****** Object:  StoredProcedure [dbo].[zsp_zObjectsChangesLogsHistory_Get]    Script Date: 2/1/2020 11:51:35 PM ******/
+/****** Object:  StoredProcedure [dbo].[zsp_zObjectsChangesLogsHistory_Get]    Script Date: 2/2/2020 2:06:29 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1530,7 +1530,7 @@ end
 	
 end
 GO
-/****** Object:  DdlTrigger [ztrigger_ddl]    Script Date: 2/1/2020 11:51:35 PM ******/
+/****** Object:  DdlTrigger [ztrigger_ddl]    Script Date: 2/2/2020 2:06:29 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
