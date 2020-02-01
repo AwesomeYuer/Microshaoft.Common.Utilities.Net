@@ -40,7 +40,7 @@ Too Simple Performance Test (non-concurrency):
 
 Memory Usage on Windows:
 
-![Image](Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.Shared/PerfTest/PerfTest.Memory.Usage.on.Windows.2020-01-31.small.png)
+![Image](Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.Shared/00.PerfTest/10.Results/PerfTest.on.Windows.Memory.Usage.2020-01-31.small.png)
 
 Web IO Results:
 
