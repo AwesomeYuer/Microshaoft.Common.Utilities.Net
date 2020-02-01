@@ -19,7 +19,7 @@
     <None Include="$(MSBuildThisFileDirectory)curl\curl-ca-bundle.crt" />
     <None Include="$(MSBuildThisFileDirectory)curl\curl.exe" />
     <None Include="$(MSBuildThisFileDirectory)curl\libcurl-x64.dll" />
-    <None Include="$(MSBuildThisFileDirectory)DataBase\MsSql.DataBase.sql" />
+    <None Include="$(MSBuildThisFileDirectory)00.DataBase\MsSql.DataBase.sql" />
     <None Include="$(MSBuildThisFileDirectory)makecert\CA.cer" />
     <None Include="$(MSBuildThisFileDirectory)makecert\CA.pvk" />
     <None Include="$(MSBuildThisFileDirectory)makecert\makecert.exe" />
