@@ -152,11 +152,11 @@
                                             .ProcessArchitecture
                                 , Process = new 
                                     {
-                                        WorkingSet64                = $"{Math.Round(GlobalManager.CurrentProcess.PrivateMemorySize64        / 1e+6, 6)} MB"
-                                        , PeakWorkingSet64          = $"{Math.Round(GlobalManager.CurrentProcess.PeakWorkingSet64           / 1e+6, 6)} MB"
-                                        , PrivateMemorySize64       = $"{Math.Round(GlobalManager.CurrentProcess.PrivateMemorySize64        / 1e+6, 6)} MB"
-                                        , VirtualMemorySize64       = $"{Math.Round(GlobalManager.CurrentProcess.VirtualMemorySize64        / 1e+6, 6)} MB"
-                                        , PeakVirtualMemorySize64   = $"{Math.Round(GlobalManager.CurrentProcess.PeakVirtualMemorySize64    / 1e+6, 6)} MB"
+                                        WorkingSet64                = $"{GlobalManager.CurrentProcess.PrivateMemorySize64       / 1e+6:N} MB"
+                                        , PeakWorkingSet64          = $"{GlobalManager.CurrentProcess.PeakWorkingSet64          / 1e+6:N} MB"
+                                        , PrivateMemorySize64       = $"{GlobalManager.CurrentProcess.PrivateMemorySize64       / 1e+6:N} MB"
+                                        , VirtualMemorySize64       = $"{GlobalManager.CurrentProcess.VirtualMemorySize64       / 1e+6:N} MB"
+                                        , PeakVirtualMemorySize64   = $"{GlobalManager.CurrentProcess.PeakVirtualMemorySize64   / 1e+6:N} MB"
                                         , GlobalManager.CurrentProcess.StartTime
                                     }
                             }
