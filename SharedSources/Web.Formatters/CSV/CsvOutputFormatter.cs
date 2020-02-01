@@ -214,6 +214,9 @@ namespace Microshaoft.Web
 
                         }
                     );
+
+            var encodingName = Encoding.UTF8.EncodingName;
+
             if 
                 (
                     _configuration
@@ -224,100 +227,66 @@ namespace Microshaoft.Web
                                     )
                 )
             {
-                IConfigurationSection section;
-                if
-                    (
-                        exportCsvFormatterConfiguration
-                                .TryGetSection
-                                    (
-                                        nameof(csvFormatterOptions.CsvColumnsDelimiter)
-                                        , out section
-                                    )
-                    )
-                {
-                    csvFormatterOptions
-                            .CsvColumnsDelimiter = section.Value;
-                }
-                if
-                    (
-                        exportCsvFormatterConfiguration
-                                .TryGetSection
-                                    (
-                                        nameof(csvFormatterOptions.DateFormat)
-                                        , out section
-                                    )
-                    )
-                {
-                    csvFormatterOptions
-                            .DateFormat = section.Value;
-                }
-                if
-                    (
-                        exportCsvFormatterConfiguration
-                                .TryGetSection
-                                    (
-                                        nameof(csvFormatterOptions.DateTimeFormat)
-                                        , out section
-                                    )
-                    )
-                {
-                    csvFormatterOptions
-                            .DateTimeFormat = section.Value;
-                }
-                if
-                    (
-                        exportCsvFormatterConfiguration
-                                .TryGetSection
-                                    (
-                                        nameof(csvFormatterOptions.DigitsTextSuffix)
-                                        , out section
-                                    )
-                    )
-                { 
-                    csvFormatterOptions
-                            .DigitsTextSuffix = section.Value;
-                }
-                if
-                    (
-                        exportCsvFormatterConfiguration
-                                .TryGetSection
-                                    (
-                                        nameof(csvFormatterOptions.Encoding)
-                                        , out section
-                                    )
-                    )
-                {
-                    csvFormatterOptions
-                            .Encoding = Encoding.GetEncoding(section.Value);
-                }
-                if
-                    (
-                        exportCsvFormatterConfiguration
-                                .TryGetSection
-                                    (
-                                        nameof(csvFormatterOptions.IncludeExcelDelimiterHeader)
-                                        , out section
-                                    )
-                    )
-                {
-                    csvFormatterOptions
-                            .IncludeExcelDelimiterHeader = section.Get<bool>();
-                }
-                if
-                    (
-                        exportCsvFormatterConfiguration
-                                .TryGetSection
-                                    (
-                                        nameof(csvFormatterOptions.UseSingleLineHeaderInCsv)
-                                        , out section
-                                    )
-                    )
-                {
-                   csvFormatterOptions
-                            .UseSingleLineHeaderInCsv = section.Get<bool>();
-                }
+                //IConfigurationSection section;
+                csvFormatterOptions
+                            .CsvColumnsDelimiter =
+                                        exportCsvFormatterConfiguration
+                                                .GetValue
+                                                        (
+                                                            nameof(csvFormatterOptions.CsvColumnsDelimiter)
+                                                            , ","
+                                                        );
+                csvFormatterOptions
+                            .DateFormat =
+                                        exportCsvFormatterConfiguration
+                                                .GetValue
+                                                        (
+                                                            nameof(csvFormatterOptions.DateFormat)
+                                                            , "yyyy-MM-dd"
+                                                        );
+                csvFormatterOptions
+                        .DateTimeFormat = exportCsvFormatterConfiguration
+                                                .GetValue
+                                                        (
+                                                            nameof(csvFormatterOptions.DateTimeFormat)
+                                                            , "yyyy-MM-ddTHH:mm:ss.fffff"
+                                                        );
+
+                csvFormatterOptions
+                        .DigitsTextSuffix = exportCsvFormatterConfiguration
+                                                .GetValue
+                                                        (
+                                                            nameof(csvFormatterOptions.DigitsTextSuffix)
+                                                            , "\t"
+                                                        );
+                encodingName = exportCsvFormatterConfiguration
+                                                .GetValue
+                                                        (
+                                                            nameof(csvFormatterOptions.Encoding)
+                                                            , encodingName
+                                                        );
+
+                csvFormatterOptions
+                            .Encoding = Encoding.GetEncoding(encodingName);
+
+
+                csvFormatterOptions
+                        .IncludeExcelDelimiterHeader = exportCsvFormatterConfiguration
+                                                .GetValue
+                                                        (
+                                                            nameof(csvFormatterOptions.IncludeExcelDelimiterHeader)
+                                                            , false
+                                                        );
+                csvFormatterOptions
+                        .UseSingleLineHeaderInCsv =
+                                    exportCsvFormatterConfiguration
+                                                .GetValue
+                                                        (
+                                                            nameof(csvFormatterOptions.UseSingleLineHeaderInCsv)
+                                                            , true
+                                                        );
             }
-            var encodingName = (string) request.Query["e"];
+            encodingName = (string) request.Query["e"];
             Encoding e = null;
             if (!encodingName.IsNullOrEmptyOrWhiteSpace())
             {
@@ -330,17 +299,12 @@ namespace Microshaoft.Web
             }
             var response = httpContext
                                     .Response;
-            var downloadFileName = $"{routeName}.csv";
-            var downloadFileNameConfiguration =
-                    _configuration
-                            .GetSection
-                                (
-                                    $"Routes:{routeName}:{httpMethod}:Exporting:DownloadFileName"
-                                );
-            if (downloadFileNameConfiguration.Exists())
-            {
-                downloadFileName = downloadFileNameConfiguration.Value;
-            }
+            var downloadFileName = _configuration
+                                        .GetValue
+                                                (
+                                                    $"Routes:{routeName}:{httpMethod}:Exporting:DownloadFileName"
+                                                    , $"{routeName}.csv"
+                                                );
             downloadFileName = HttpUtility
                                         .UrlEncode(downloadFileName, e);
             response

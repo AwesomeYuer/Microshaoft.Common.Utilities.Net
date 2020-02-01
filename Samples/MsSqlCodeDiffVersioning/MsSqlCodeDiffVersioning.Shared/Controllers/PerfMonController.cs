@@ -1,9 +1,13 @@
 ﻿namespace Microshaoft.WebApi.Controllers
 {
     using Microshaoft;
+    using Microshaoft.WebApi.ModelBinders;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Configuration;
+    using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Concurrent;
+    using System.Data.SqlClient;
     using System.Diagnostics;
     using System.Linq;
     using System.Runtime.InteropServices;
@@ -46,6 +50,68 @@
                             GlobalManager
                                     .AsyncRequestResponseLoggingProcessor
                         );
+        }
+
+
+        [HttpGet]
+        [Route("RequestResponseLoggingStats")]
+        public ActionResult<JToken> RequestResponseLoggingStats
+                                            (
+                                                 [ModelBinder(typeof(JTokenModelBinder))]
+                                                   JToken parameters = null
+                                            )
+        {
+            return
+                new JArray
+                    (
+                        new MsSqlStoreProceduresExecutor
+                                        (_executingCachingStore)
+                        {
+                            CachedParametersDefinitionExpiredInSeconds =
+                                ConfigurationHelper
+                                            .Configuration
+                                            .GetValue
+                                                (
+                                                    $"CachedParametersDefinitionExpiredInSeconds"
+                                                    , 3600
+                                                )
+                        }
+                            .ExecuteJsonResults
+                                (
+                                    new SqlConnection()
+                                    {
+                                        ConnectionString =
+                                            ConfigurationHelper
+                                                        .Configuration
+                                                        .GetValue<string>
+                                                            (
+                                                                $"Connections:c1:connectionString"
+                                                            )
+                                    }
+                                    , "zsp_Logging_Stats"
+                                    ,
+                                        (
+                                            parameters??
+                                                new JObject
+                                                    {
+                                                        { "p1", 0 }
+                                                    }
+                                        )
+                                )
+                                ["Outputs"]
+                                ["ResultSets"]
+                                .Select
+                                    (
+                                        (x) =>
+                                        {
+                                            return
+                                                new
+                                                    JArray(x["Rows"]);
+                                        }
+                                    )
+                    );
+            
+
         }
 
         [HttpGet]

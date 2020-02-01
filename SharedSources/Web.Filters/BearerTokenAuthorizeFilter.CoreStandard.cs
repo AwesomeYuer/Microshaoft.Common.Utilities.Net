@@ -80,19 +80,7 @@ namespace Microshaoft.Web
                                                     (
                                                         typeof(IConfiguration)
                                                     );
-            var jwtTokenName = "xJwtToken";
-            if
-                (
-                    configuration
-                            .TryGet<string>
-                                (
-                                    "TokenName"
-                                    , out var tokenNameInConfiguration
-                                )
-                )
-            {
-                jwtTokenName = tokenNameInConfiguration;
-            }
+            var jwtTokenName = configuration.GetValue("TokenName", "xJwtToken");
             JToken parameters = null;
             string secretJwtToken = string.Empty;
             if
@@ -201,19 +189,12 @@ namespace Microshaoft.Web
                     }
                     if (ok)
                     {
-                        var jwtExpireInSeconds = 60;
-                        if
-                            (
-                                configuration
-                                        .TryGet<int>
-                                            (
-                                                "ExpireInSeconds"
-                                                , out var expireInSecondsInConfiguration
-                                            )
-                            )
-                        {
-                            jwtExpireInSeconds = expireInSecondsInConfiguration;
-                        }
+                        var jwtExpireInSeconds = configuration
+                                                        .GetValue
+                                                            (
+                                                                "ExpireInSeconds"
+                                                                , 60
+                                                            );
                         if (jwtExpireInSeconds > 0)
                         {
                             var iat = claimsPrincipal
@@ -249,20 +230,11 @@ namespace Microshaoft.Web
                     }
                     if (ok)
                     {
-                        var jwtIssuer = string.Empty;
-                        if
-                            (
-                                configuration
-                                        .TryGet<string>
-                                            (
-                                                "Issuer"
-                                                , out var issuerInConfiguration
-                                            )
-                            )
-                        {
-                            jwtIssuer = issuerInConfiguration;
-                        }
-
+                        var jwtIssuer = configuration
+                                            .GetValue<string>
+                                                (
+                                                    "Issuer"
+                                                );
                         ok =
                             (
                                 string
@@ -289,17 +261,12 @@ namespace Microshaoft.Web
                     }
                     if (ok)
                     {
-                        string[] jwtAudiences = new string[] { };
-                        ok = configuration
-                                        .TryGet<string[]>
+                        string[] jwtAudiences = configuration
+                                        .GetValue<string[]>
                                             (
                                                 "Audiences"
-                                                , out var audiencesInConfiguration
+                                                , new string[] { }
                                             );
-                        if (ok)
-                        {
-                            jwtAudiences = audiencesInConfiguration;
-                        }
                         ok = jwtAudiences
                                  .Any
                                      (
@@ -332,19 +299,14 @@ namespace Microshaoft.Web
                     }
                     if (ok)
                     {
-                        var jwtNeedValidUserName = false;
-                        if
-                            (
-                                configuration
-                                        .TryGet<bool>
-                                            (
-                                                "NeedValidUserName"
-                                                , out var needValidUserNameInConfiguration
-                                            )
-                            )
-                        {
-                            jwtNeedValidUserName = needValidUserNameInConfiguration;
-                        }
+                        var jwtNeedValidUserName = configuration
+                                                            .GetValue
+                                                                (
+                                                                    "NeedValidUserName"
+                                                                    , false
+                                                                );
+                            
+                        
                         if (jwtNeedValidUserName)
                         {
                             var userName1 = context
@@ -382,19 +344,12 @@ namespace Microshaoft.Web
                     }
                     if (ok)
                     {
-                        var jwtNeedValidIP = false;
-                        if
-                             (
-                                 configuration
-                                         .TryGet<bool>
-                                             (
-                                                 "NeedValidIP"
-                                                 , out var needValidIPInConfiguration
-                                             )
-                             )
-                        {
-                            jwtNeedValidIP = needValidIPInConfiguration;
-                        }
+                        var jwtNeedValidIP = configuration
+                                                 .GetValue
+                                                     (
+                                                         "NeedValidIP"
+                                                         , false
+                                                     );
                         if (jwtNeedValidIP)
                         {
                             var requestIpAddress =

@@ -213,3 +213,6 @@ ModelManifest.xml
 /Samples/MsSqlCodeDiffVersioning/makecert
 /packages/Microsoft.Diagnostics.Tracing.TraceEvent.2.0.34
 /.git000
+
+**/logs/*
+

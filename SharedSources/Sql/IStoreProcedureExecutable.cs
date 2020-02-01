@@ -19,6 +19,7 @@ namespace Microshaoft
         (
             bool Success
             , JToken Result
+            , TimeSpan? Duration
         )
             ExecuteJsonResults
                 (
@@ -84,6 +85,7 @@ namespace Microshaoft
                 (
                     bool Success
                     , JToken Result
+                    , TimeSpan? Duration
                 )
             >
                 ExecuteJsonResultsAsync

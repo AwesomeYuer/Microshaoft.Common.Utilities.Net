@@ -262,6 +262,7 @@ namespace Microshaoft.WebApi.Controllers
                 int StatusCode
                 , string Message
                 , JToken Result
+                , TimeSpan? DbExecutingDuration
             )
                 result =
                         _service
@@ -367,6 +368,7 @@ namespace Microshaoft.WebApi.Controllers
                 int StatusCode
                 , string Message
                 , JToken Result
+                , TimeSpan? DbExecutingDuration
             )
                 result = await
                             _service
@@ -427,13 +429,33 @@ namespace Microshaoft.WebApi.Controllers
                                 int StatusCode
                                 , string Message
                                 , JToken Result
+                                , TimeSpan? DbExecutingDuration
                             )
                                 result
                     )
         {
+
             Response
                     .StatusCode = result
                                         .StatusCode;
+            var httpContext = Response.HttpContext;
+            var dbExecutingDuration = result
+                                            .DbExecutingDuration;
+            if
+                (
+                    dbExecutingDuration
+                        .HasValue
+                )
+            {
+                httpContext
+                        .Items
+                        .TryAdd
+                            (
+                                "dbExecutingDuration"
+                                , dbExecutingDuration
+                            );
+            }
+
             if (result.StatusCode == 200)
             {
                 //support custom output nest json by JSONPath in JsonFile Config
