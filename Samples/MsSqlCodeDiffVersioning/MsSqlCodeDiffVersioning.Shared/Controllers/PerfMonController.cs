@@ -63,52 +63,53 @@
         {
             return
                 new JArray
-                (
-
-                    new MsSqlStoreProceduresExecutor(_executingCachingStore)
-                    {
-                        CachedParametersDefinitionExpiredInSeconds =
-                                              ConfigurationHelper
-                                                            .Configuration
-                                                            .GetValue
-                                                                (
-                                                                    $"CachedParametersDefinitionExpiredInSeconds"
-                                                                    , 3600
-                                                                )
-                    }
-                        .ExecuteJsonResults
-                            (
-                                new SqlConnection()
-                                {
-                                    ConnectionString =
+                    (
+                        new MsSqlStoreProceduresExecutor
+                                        (_executingCachingStore)
+                        {
+                            CachedParametersDefinitionExpiredInSeconds =
+                                ConfigurationHelper
+                                            .Configuration
+                                            .GetValue
+                                                (
+                                                    $"CachedParametersDefinitionExpiredInSeconds"
+                                                    , 3600
+                                                )
+                        }
+                            .ExecuteJsonResults
+                                (
+                                    new SqlConnection()
+                                    {
+                                        ConnectionString =
                                             ConfigurationHelper
                                                         .Configuration
                                                         .GetValue<string>
                                                             (
                                                                 $"Connections:c1:connectionString"
                                                             )
-                                }
-                                , "zsp_Logging_Stats"
-                                ,
-                                    (
-                                        parameters??
-                                            new JObject
-                                                {
-                                                    { "p1", 0 }
-                                                }
-                                    )
-                            )
-                            ["Outputs"]
-                            ["ResultSets"]
-                            .Select
-                                (
-                                    (x) =>
-                                    {
-                                        return
-                                            new JArray(x["Rows"]);
                                     }
+                                    , "zsp_Logging_Stats"
+                                    ,
+                                        (
+                                            parameters??
+                                                new JObject
+                                                    {
+                                                        { "p1", 0 }
+                                                    }
+                                        )
                                 )
-                );
+                                ["Outputs"]
+                                ["ResultSets"]
+                                .Select
+                                    (
+                                        (x) =>
+                                        {
+                                            return
+                                                new
+                                                    JArray(x["Rows"]);
+                                        }
+                                    )
+                    );
             
 
         }
