@@ -164,7 +164,14 @@
                                                 path: "ExportCsvFormatter.json"
                                                 , optional: false
                                                 , reloadOnChange: true
-                                            );
+                                            )
+                                        .AddJsonFile
+                                            (
+                                                path: "useMiddleWares.json"
+                                                , optional: false
+                                                , reloadOnChange: true
+                                            )
+                                        ;
                                 if
                                     (
                                         !args

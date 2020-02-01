@@ -19,6 +19,7 @@ namespace Microshaoft.Web
         (
             bool Success
             , JToken Result
+            , TimeSpan? DbExecutingDuration
         )
                Process
                        (
@@ -48,6 +49,7 @@ namespace Microshaoft.Web
                 (
                     bool Success
                     , JToken Result
+                    , TimeSpan? DbExecutingDuration
                 )
             >
                ProcessAsync
@@ -81,6 +83,7 @@ namespace Microshaoft.Web
             int StatusCode
             , string Message
             , JToken Result
+            , TimeSpan? DbExecutingDuration
         )
             Process
                 (
@@ -111,6 +114,7 @@ namespace Microshaoft.Web
                     int StatusCode
                     , string Message
                     , JToken Result
+                    , TimeSpan? DbExecutingDuration
                 )
             >
                 ProcessAsync
@@ -383,6 +387,7 @@ namespace Microshaoft.Web
                 int StatusCode
                 , string Message
                 , JToken Result
+                , TimeSpan? DbExecutingDuration
             )
                 Process
                     (
@@ -416,6 +421,7 @@ namespace Microshaoft.Web
             string dataBaseType;
             string storeProcedureName;
             bool enableStatistics;
+            TimeSpan? dbExecutingDuration = null;
 
             (
                 success
@@ -440,7 +446,11 @@ namespace Microshaoft.Web
                     statusCode == 200
                 )
             {
-                (success, result) = Process
+                (
+                    success
+                    , result
+                    , dbExecutingDuration
+                ) = Process
                                         (
                                               connectionString
                                             , dataBaseType
@@ -471,6 +481,7 @@ namespace Microshaoft.Web
                     statusCode
                     , message
                     , result
+                    , dbExecutingDuration
                 );
         }
 
@@ -481,6 +492,7 @@ namespace Microshaoft.Web
                         int StatusCode
                         , string Message
                         , JToken Result
+                        , TimeSpan? DbExecutingDuration
                     )
                 >
             ProcessAsync
@@ -514,6 +526,7 @@ namespace Microshaoft.Web
             string connectionString;
             string dataBaseType;
             string storeProcedureName;
+            TimeSpan? dbExecutingDuration = null;
             bool enableStatistics;
 
             (
@@ -540,7 +553,11 @@ namespace Microshaoft.Web
                 )
             {
 
-                (success, result) = await
+                (
+                    success
+                    , result
+                    , dbExecutingDuration
+                ) = await
                                         ProcessAsync
                                             (
                                                   connectionString
@@ -572,6 +589,7 @@ namespace Microshaoft.Web
                     statusCode
                     , message
                     , result
+                    , dbExecutingDuration
                 );
         }
 
@@ -624,6 +642,8 @@ namespace Microshaoft.Web
                 (
                     bool Success
                     , JToken Result
+                    , TimeSpan? DbExecutingDuration
+
                 )
                     Process
                             (
@@ -651,6 +671,7 @@ namespace Microshaoft.Web
         {
             var beginTimeStamp = Stopwatch.GetTimestamp();
             var beginTime = DateTime.Now;
+            
             var success = _indexedExecutors
                                         .TryGetValue
                                             (
@@ -658,18 +679,24 @@ namespace Microshaoft.Web
                                                 , out var executor
                                             );
             JToken result = null;
+            TimeSpan? dbExecutingDuration = null;
             if (success)
             {
-                (success, result) = executor
-                                            .ExecuteJsonResults
-                                                (
-                                                    connectionString
-                                                    , storeProcedureName
-                                                    , parameters
-                                                    , onReadRowColumnProcessFunc
-                                                    , enableStatistics
-                                                    , commandTimeoutInSeconds
-                                                );
+
+                (
+                    success
+                    , result
+                    , dbExecutingDuration
+                ) = executor
+                            .ExecuteJsonResults
+                                (
+                                    connectionString
+                                    , storeProcedureName
+                                    , parameters
+                                    , onReadRowColumnProcessFunc
+                                    , enableStatistics
+                                    , commandTimeoutInSeconds
+                                );
                 if (success)
                 {
                     ResultTimingProcess
@@ -677,6 +704,7 @@ namespace Microshaoft.Web
                             result
                             , beginTime
                             , beginTimeStamp
+                            , dbExecutingDuration
                         );
                 }
             }
@@ -684,6 +712,7 @@ namespace Microshaoft.Web
                     (
                         success
                         , result
+                        , dbExecutingDuration
                     );
         }
 
@@ -692,10 +721,19 @@ namespace Microshaoft.Web
                     JToken result
                     , DateTime beginTime
                     , long beginTimeStamp
+                    , TimeSpan? dbExecutingDuration
                 )
         {
             result["BeginTime"] = beginTime;
             result["EndTime"] = DateTime.Now;
+            var x = result["DbExecutingDurationInMilliseconds"];
+            if
+                (
+                    dbExecutingDuration.HasValue
+                )
+            {
+                x = dbExecutingDuration.Value.TotalMilliseconds;
+            }
             result["DurationInMilliseconds"]
                 = beginTimeStamp
                         .GetElapsedTimeToNow()
@@ -708,6 +746,7 @@ namespace Microshaoft.Web
                             (
                                 bool Success
                                 , JToken Result
+                                , TimeSpan? DbExecutingDuration
                             )
                         >
             ProcessAsync
@@ -743,26 +782,30 @@ namespace Microshaoft.Web
                                                 , out var executor
                                             );
             JToken result = null;
+            TimeSpan? dbExecutingDuration = null;
             if (success)
             {
 
-                executor
-                    .InitializeInvokingCachingStore
-                            (
-                                _dbParametersDefinitionCachingStore
-                            );
-
-                (success, result) = await
-                                        executor
-                                            .ExecuteJsonResultsAsync
-                                                (
-                                                    connectionString
-                                                    , storeProcedureName
-                                                    , parameters
-                                                    , onReadRowColumnProcessFunc
-                                                    , enableStatistics
-                                                    , commandTimeoutInSeconds
-                                                );
+                //executor
+                //    .InitializeInvokingCachingStore
+                //            (
+                //                _dbParametersDefinitionCachingStore
+                //            );
+                (
+                    success
+                    , result
+                    , dbExecutingDuration
+                ) = await
+                        executor
+                            .ExecuteJsonResultsAsync
+                                (
+                                    connectionString
+                                    , storeProcedureName
+                                    , parameters
+                                    , onReadRowColumnProcessFunc
+                                    , enableStatistics
+                                    , commandTimeoutInSeconds
+                                );
                 if (success)
                 {
                     ResultTimingProcess
@@ -770,6 +813,7 @@ namespace Microshaoft.Web
                             result
                             , beginTime
                             , beginTimeStamp
+                            , dbExecutingDuration
                         );
                 }
             }
@@ -777,6 +821,7 @@ namespace Microshaoft.Web
                     (
                         success
                         , result
+                        , dbExecutingDuration
                     );
         }
         protected virtual

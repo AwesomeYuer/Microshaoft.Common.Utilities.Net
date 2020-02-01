@@ -96,7 +96,11 @@ namespace Microshaoft
                     var subKeyBytes = rfc2898DeriveBytes
                                                     .GetBytes(subKeyBits / 8);
                     return
-                        processBytes(saltBytes, subKeyBytes);
+                        processBytes
+                                (
+                                    saltBytes
+                                    , subKeyBytes
+                                );
                 }
             }
         }
@@ -195,10 +199,12 @@ namespace Microshaoft
                                         )
                     )
                 {
-                    return
-                            rfc2898DeriveBytes
+                    var r = rfc2898DeriveBytes
                                 .GetBytes(subKeyBytes.Length)
                                 .SequenceEqual(subKeyBytes);
+                    rfc2898DeriveBytes.Reset();
+                    return
+                            r;
                 }
             }
             else

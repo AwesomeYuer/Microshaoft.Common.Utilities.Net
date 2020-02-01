@@ -77,8 +77,11 @@
                                         , long? responseContentLength
                                         , string responseContentType
                                     ) Response
-                                , 
-                                    double? requestResponseTimingInMilliseconds
+                                ,
+                                    (
+                                        double? requestResponseTimingInMilliseconds
+                                        , double? dbExecutingTimingInMilliseconds
+                                    ) Timing
                                 ,
                                     (
                                         (
@@ -122,7 +125,10 @@
                                                         , string responseContentType
                                                     ) Response
                                                 ,
-                                                    double? requestResponseTimingInMilliseconds
+                                                    (
+                                                        double? requestResponseTimingInMilliseconds
+                                                        , double? dbExecutingTimingInMilliseconds
+                                                    ) Timing
                                                 ,
                                                     (
                                                         (

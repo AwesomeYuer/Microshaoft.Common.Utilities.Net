@@ -9,6 +9,9 @@
     <Import_RootNamespace>MsSqlCodeDiffVersioning.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\" />
+    <Folder Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\" />
+    <Folder Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\" />
     <Folder Include="$(MSBuildThisFileDirectory)CompositionPlugins\" />
     <Folder Include="$(MSBuildThisFileDirectory)MetricsRegistry\" />
   </ItemGroup>
@@ -25,7 +28,38 @@
     <None Include="$(MSBuildThisFileDirectory)makecert\server.cer" />
     <None Include="$(MSBuildThisFileDirectory)makecert\server.pfx" />
     <None Include="$(MSBuildThisFileDirectory)makecert\server.pvk" />
-    <None Include="$(MSBuildThisFileDirectory)PerfTest\PerfTest.Web.IO.2020-01-31.xlsx" />
+    <None Include="$(MSBuildThisFileDirectory)00.PerfTest\PerfTest.Web.IO.2020-01-31.xlsx" />
+    <None Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\BeetleX.dll" />
+    <None Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\BeetleX.FastHttpApi.dll" />
+    <None Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\BeetleX.WebApiBenchmarks.dll" />
+    <None Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\BeetleX.WebApiBenchmarks.pdb" />
+    <None Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\Microsoft.Extensions.Configuration.Abstractions.dll" />
+    <None Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\Microsoft.Extensions.Configuration.Binder.dll" />
+    <None Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\Microsoft.Extensions.Configuration.dll" />
+    <None Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
+    <None Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\Microsoft.Extensions.DependencyInjection.dll" />
+    <None Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\Microsoft.Extensions.FileProviders.Abstractions.dll" />
+    <None Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\Microsoft.Extensions.FileProviders.Physical.dll" />
+    <None Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\Microsoft.Extensions.FileSystemGlobbing.dll" />
+    <None Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\Microsoft.Extensions.Hosting.Abstractions.dll" />
+    <None Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\Microsoft.Extensions.Hosting.dll" />
+    <None Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\Microsoft.Extensions.Logging.Abstractions.dll" />
+    <None Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\Microsoft.Extensions.Logging.dll" />
+    <None Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\Microsoft.Extensions.Options.dll" />
+    <None Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\Microsoft.Extensions.Primitives.dll" />
+    <None Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\Newtonsoft.Json.dll" />
+    <None Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\System.Runtime.CompilerServices.Unsafe.dll" />
+    <None Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\webapibenchmark.bat" />
+    <None Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\webapibenchmark.sh" />
+    <None Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\_tempview\BeetleX.WebApiBenchmarks.views.js.bootstrap.js" />
+    <None Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\_tempview\BeetleX.WebApiBenchmarks.views.js.Controller.js" />
+    <None Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\_tempview\BeetleX.WebApiBenchmarks.views.js.echarts.js" />
+    <None Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\_tempview\BeetleX.WebApiBenchmarks.views.js.FastHttpApi.js" />
+    <None Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\_tempview\BeetleX.WebApiBenchmarks.views.js.jquery.js" />
+    <None Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\_tempview\BeetleX.WebApiBenchmarks.views.js.ModuleLoader.js" />
+    <None Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\_tempview\BeetleX.WebApiBenchmarks.views.js.Monitor.js" />
+    <None Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\_tempview\BeetleX.WebApiBenchmarks.views.js.ReadFileHandler.js" />
+    <None Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\_tempview\BeetleX.WebApiBenchmarks.views.js.vue.js" />
     <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\datatables\Buttons\1.5.6\js\dataTables.buttons.js" />
     <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\datatables\DataTables\1.10.18\AutoFill-2.3.0\js\autoFill.bootstrap.js" />
     <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\datatables\DataTables\1.10.18\AutoFill-2.3.0\js\autoFill.bootstrap.min.js" />
@@ -1156,15 +1190,15 @@
     <Compile Include="$(MSBuildThisFileDirectory)Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="$(MSBuildThisFileDirectory)PerfTest\PerfTestPressPS1K.ps1">
+    <Page Include="$(MSBuildThisFileDirectory)00.PerfTest\PerfTestPressPS1K.ps1">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)PerfTest\PerfTestPressCURL1K.sh">
+    <Page Include="$(MSBuildThisFileDirectory)00.PerfTest\PerfTestPressCURL1K.sh">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)PerfTest\PerfTestPressCURL1K.cmd">
+    <Page Include="$(MSBuildThisFileDirectory)00.PerfTest\PerfTestPressCURL1K.cmd">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1174,8 +1208,34 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="$(MSBuildThisFileDirectory)PerfTest\PerfTest.Memory.Usage.on.Windows.2020-01-31.png" />
-    <Content Include="$(MSBuildThisFileDirectory)PerfTest\PerfTest.Memory.Usage.on.Windows.2020-01-31.small.png" />
+    <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\PerfTest.Memory.Usage.on.Windows.2020-01-31.png" />
+    <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\PerfTest.Memory.Usage.on.Windows.2020-01-31.small.png" />
+    <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\BeetleX.WebApiBenchmarks.deps.json" />
+    <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\BeetleX.WebApiBenchmarks.runtimeconfig.json" />
+    <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\HttpConfig.json" />
+    <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\logs\BEETLEX_HTTP_SERVER_20200201_1.txt" />
+    <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\logs\BEETLEX_HTTP_SERVER_20200201_2.txt" />
+    <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\UseCase.json" />
+    <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\_tempview\BeetleX.WebApiBenchmarks.views.css.bootstrap-theme.css" />
+    <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\_tempview\BeetleX.WebApiBenchmarks.views.css.bootstrap.css" />
+    <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\_tempview\BeetleX.WebApiBenchmarks.views.css.site.css" />
+    <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\_tempview\BeetleX.WebApiBenchmarks.views.images.dd.png" />
+    <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\_tempview\BeetleX.WebApiBenchmarks.views.images.delete.png" />
+    <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\_tempview\BeetleX.WebApiBenchmarks.views.images.export.png" />
+    <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\_tempview\BeetleX.WebApiBenchmarks.views.images.folder_close.png" />
+    <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\_tempview\BeetleX.WebApiBenchmarks.views.images.folder_open.png" />
+    <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\_tempview\BeetleX.WebApiBenchmarks.views.images.import.png" />
+    <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\_tempview\BeetleX.WebApiBenchmarks.views.images.new.png" />
+    <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\_tempview\BeetleX.WebApiBenchmarks.views.images.test.png" />
+    <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\_tempview\BeetleX.WebApiBenchmarks.views.images.teststatus_default.png" />
+    <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\_tempview\BeetleX.WebApiBenchmarks.views.images.teststatus_error.png" />
+    <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\_tempview\BeetleX.WebApiBenchmarks.views.images.teststatus_ok.png" />
+    <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\_tempview\BeetleX.WebApiBenchmarks.views.images.tree_down.png" />
+    <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\_tempview\BeetleX.WebApiBenchmarks.views.images.tree_left.png" />
+    <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\_tempview\BeetleX.WebApiBenchmarks.views.images.unittest.png" />
+    <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\_tempview\BeetleX.WebApiBenchmarks.views.images.wx_pay.png" />
+    <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\_tempview\BeetleX.WebApiBenchmarks.views.index.html" />
+    <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\_tempview\BeetleX.WebApiBenchmarks.views.PublicModule.html" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\1.bmp" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\1.jpg" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\a.txt" />

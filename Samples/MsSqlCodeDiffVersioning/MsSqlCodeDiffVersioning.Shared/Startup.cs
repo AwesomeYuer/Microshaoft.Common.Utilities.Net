@@ -296,8 +296,10 @@
                                             , { nameof(element.Response.responseContentLength)          , element.Response.responseContentLength                    }
                                             , { nameof(element.Response.responseContentType)            , element.Response.responseContentType                      }
                                             //======================================================================
-                                            // request + response :
-                                            , { nameof(element.requestResponseTimingInMilliseconds)     , element.requestResponseTimingInMilliseconds               }
+                                            // Timing :
+                                            , { nameof(element.Timing.requestResponseTimingInMilliseconds)  , element.Timing.requestResponseTimingInMilliseconds    }
+                                            , { nameof(element.Timing.dbExecutingTimingInMilliseconds)      , element.Timing.dbExecutingTimingInMilliseconds        }
+
                                             //======================================================================
                                             // Location:
                                             , { nameof(element.User.Location.clientIP)                  , element.User.Location.clientIP                            }
@@ -658,208 +660,64 @@
                         )
         {
 
-            #region RequestResponseGuard
+
             string requestResponseTimingLoggingItemKey = "beginTimestamp";
             //timingKey = string.Empty;
-            
-            app
-                .UseRequestResponseGuard
-                    <
-                        QueuedObjectsPool<Stopwatch>
-                        , IConfiguration
-                        , ILoggerFactory
-                        , ILogger
-                    >
-                        (
-                            (middleware) =>
-                            {
-                                //onInitializeCallbackProcesses
-                                var middlewareTypeName = middleware.GetType().Name;
-                                middleware
-                                    .OnFilterProcessFunc
-                                        = (httpContext, @event, stopwatchesPool, xConfiguration, xLoggerFactory, xLogger) =>
-                                        {
-                                            if 
-                                                (
-                                                    requestResponseTimingLoggingItemKey
-                                                                    .IsNullOrEmptyOrWhiteSpace()
-                                                )
-                                            {
-                                                return false;
-                                            }
-                                            var request = httpContext.Request;
-                                            request.EnableBuffering();
-                                            xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
-                                            var httpRequestFeature = httpContext.Features.Get<IHttpRequestFeature>();
-                                            var url = httpRequestFeature.RawTarget;
-                                            httpRequestFeature = null;
-                                            var r = url.Contains("/api/", StringComparison.OrdinalIgnoreCase);
-                                            if (r)
-                                            {
-                                                httpContext
-                                                        .Items
-                                                        .TryAdd
-                                                            (
-                                                                requestResponseTimingLoggingItemKey
-                                                                ,
-                                                                    (
-                                                                        BeginTime: DateTime.Now
-                                                                        , BeginTimestamp: Stopwatch.GetTimestamp()
-                                                                    )
-                                                            );
-                                            }
-                                            var requestBody = string.Empty;
-                                            //should not use using 
-                                            var requestBodyStream = request.Body;
-                                            if 
-                                                (
-                                                    requestBodyStream
-                                                                    .CanRead
-                                                    &&
-                                                    requestBodyStream
-                                                                    .CanSeek
-                                                )
-                                            {
-                                                requestBodyStream.Position = 0;
-                                                //should not use using
-                                                var streamReader = new StreamReader(requestBodyStream);
-                                                requestBody = streamReader.ReadToEnd();
-                                                requestBodyStream.Position = 0;
-                                                httpContext
-                                                        .Items
-                                                        .TryAdd
-                                                            (
-                                                                nameof(requestBody)
-                                                                , requestBody
-                                                            );
-                                            }
-                                            return r;
-                                        };
-                                middleware
-                                    .OnPredicateResponseBodyWorkingStreamProcessFunc
-                                        =
-                                            (
-                                                httpContext
-                                                , @event
-                                                , stopwatchesPool
-                                                , xConfiguration
-                                                , xLoggerFactory
-                                                , xLogger
-                                            )
-                                                =>
-                                            {
-                                                var request = httpContext
-                                                                        .Request;
-                                                var r = !request
-                                                                .Path
-                                                                .Value
-                                                                .Contains
-                                                                    (
-                                                                        "export"
-                                                                        , StringComparison
-                                                                                .OrdinalIgnoreCase
-                                                                    );
-                                                return r;
-                                            };
 
-                                middleware
-                                    .OnInvokingProcessAsync
-                                        =
-                                            async
-                                            (
-                                                httpContext
-                                                , @event
-                                                , stopwatchesPool
-                                                , xConfiguration
-                                                , xLoggerFactory
-                                                , xLogger
-                                            )
-                                                =>
-                                            {
-                                                xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
-                                                var httpRequestFeature = httpContext
-                                                                                .Features
-                                                                                .Get<IHttpRequestFeature>();
-                                                var url = httpRequestFeature.RawTarget;
-                                                httpRequestFeature = null;
-                                                var result = false;
-                                                if
-                                                    (
-                                                        //request.ContentType == "image/jpeg"
-                                                        url.EndsWith("error.js")
-                                                    )
+            var needUse = configuration.GetOrDefault("useRequestResponseGuard", false);
+            if (needUse)
+            {
+                #region RequestResponseGuard
+                app
+                        .UseRequestResponseGuard
+                            <
+                                QueuedObjectsPool<Stopwatch>
+                                , IConfiguration
+                                , ILoggerFactory
+                                , ILogger
+                            >
+                                (
+                                    (middleware) =>
+                                    {
+                                    //onInitializeCallbackProcesses
+                                    var middlewareTypeName = middleware.GetType().Name;
+                                        middleware
+                                            .OnFilterProcessFunc
+                                                = (httpContext, @event, stopwatchesPool, xConfiguration, xLoggerFactory, xLogger) =>
                                                 {
-                                                    var response = httpContext.Response;
-                                                    var errorStatusCode = 500;
-                                                    var errorMessage = $"error in Middleware: [{middlewareTypeName}]";
-                                                    response.StatusCode = errorStatusCode;
-                                                    var jsonResult = new
+                                                    if
+                                                        (
+                                                            requestResponseTimingLoggingItemKey
+                                                                            .IsNullOrEmptyOrWhiteSpace()
+                                                        )
                                                     {
-                                                        statusCode = errorStatusCode
-                                                        , resultCode = -1 * errorStatusCode
-                                                        , message = errorMessage
-                                                    };
-                                                    using var responseBodyStream = response.Body;
-                                                    await
-                                                        JsonSerializer
-                                                                    .SerializeAsync
-                                                                            (
-                                                                                responseBodyStream
-                                                                                , jsonResult
-                                                                            );
-                                                    result = false;
-                                                }
-                                                else
-                                                {
-                                                    result = true;
-                                                }
-                                                return
-                                                    await
-                                                        Task
-                                                            .FromResult(result);
-                                            };
-                                middleware
-                                    .OnResponseStartingProcess
-                                        =
-                                           // don't support async 
-                                           (
-                                                httpContext
-                                                , @event
-                                                , stopwatchesPool
-                                                , xConfiguration
-                                                , xLoggerFactory
-                                                , xLogger
-                                            )
-                                                =>
-                                            {
-                                                xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
-                                                
-                                                //return;
-                                                var httpRequestFeature = httpContext
-                                                                                 .Features
-                                                                                 .Get<IHttpRequestFeature>();
-                                                var url = httpRequestFeature.RawTarget;
-                                                var request = httpContext.Request;
-                                                //
-                                                using var requestBodyStream = request.Body;
-                                                var requestBody = string.Empty;
-                                                if
-                                                    (
+                                                        return false;
+                                                    }
+                                                    var request = httpContext.Request;
+                                                    request.EnableBuffering();
+                                                    xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
+                                                    var httpRequestFeature = httpContext.Features.Get<IHttpRequestFeature>();
+                                                    var url = httpRequestFeature.RawTarget;
+                                                    httpRequestFeature = null;
+                                                    var r = url.Contains("/api/", StringComparison.OrdinalIgnoreCase);
+                                                    if (r)
+                                                    {
                                                         httpContext
                                                                 .Items
-                                                                .Remove
+                                                                .TryAdd
                                                                     (
-                                                                        nameof(requestBody)
-                                                                        , out var removedRequestBody
-                                                                    )
-                                                    )
-                                                {
-                                                    requestBody = (string) removedRequestBody;
-                                                }
-                                                else
-                                                {
-                                                    
-                                                    if 
+                                                                        requestResponseTimingLoggingItemKey
+                                                                        ,
+                                                                            (
+                                                                                BeginTime: DateTime.Now
+                                                                                , BeginTimestamp: Stopwatch.GetTimestamp()
+                                                                            )
+                                                                    );
+                                                    }
+                                                    var requestBody = string.Empty;
+                                                //should not use using 
+                                                var requestBodyStream = request.Body;
+                                                    if
                                                         (
                                                             requestBodyStream
                                                                             .CanRead
@@ -869,306 +727,489 @@
                                                         )
                                                     {
                                                         requestBodyStream.Position = 0;
-                                                        //
-                                                        using var streamReader = new StreamReader(requestBodyStream);
-                                                        requestBody = new StreamReader(requestBodyStream).ReadToEnd();
-                                                    }
-                                                }
-                                                var requestHeaders = Newtonsoft
-                                                                                .Json
-                                                                                .JsonConvert
-                                                                                .SerializeObject
-                                                                                        (
-                                                                                            request
-                                                                                                .Headers
-                                                                                        );
-                                                var requestPath = request.Path;
-                                                var response = httpContext.Response;
-                                                using var responseBodyStream = response.Body;
-                                                var responseBody = string.Empty;
-                                                if 
-                                                    (
-                                                        responseBodyStream
-                                                                        .CanRead
-                                                        &&
-                                                        responseBodyStream
-                                                                        .CanSeek
-                                                    )
-                                                {
-                                                    responseBodyStream.Position = 0;
-                                                    //
-                                                    using var streamReader = new StreamReader(responseBodyStream);
-                                                    responseBody = streamReader.ReadToEnd();
-                                                    Console.WriteLine(responseBody.Length);
-                                                }
-                                                var r = httpContext
-                                                                .Items
-                                                                .Remove
-                                                                    (
-                                                                        requestResponseTimingLoggingItemKey
-                                                                        , out var removed
-                                                                    );
-                                                double requestResponseTimingInMilliseconds = -1;
-                                                DateTime? requestBeginTime = null;
-                                                DateTime? responseStartingTime = null;
-                                                if (r)
-                                                {
-                                                    (
-                                                        DateTime beginTime
-                                                        , long beginTimeStamp
-                                                    )
-                                                        = (ValueTuple<DateTime, long>) removed;
-                                                    removed = null;
-                                                    requestBeginTime = beginTime;
-                                                    response
-                                                        .Headers["X-Request-Receive-BeginTime"]
-                                                                    = beginTime.ToString(defaultDateTimeFormat);
-                                                    
-                                                    responseStartingTime = DateTime.Now;
-                                                    response
-                                                        .Headers["X-Response-Send-BeginTime"]
-                                                                    = responseStartingTime
-                                                                                        .Value
-                                                                                        .ToString(defaultDateTimeFormat);
-
-                                                    requestResponseTimingInMilliseconds = beginTimeStamp
-                                                                                                .GetElapsedTimeToNow()
-                                                                                                .TotalMilliseconds;
-                                                    response
-                                                        .Headers["X-Request-Response-Timing-In-Milliseconds"]
-                                                                    = requestResponseTimingInMilliseconds
-                                                                            .ToString();
-                                                }
-                                                var responseHeaders = Newtonsoft
-                                                                                .Json
-                                                                                .JsonConvert
-                                                                                .SerializeObject
-                                                                                        (
-                                                                                            response
-                                                                                                .Headers
-                                                                                        );
-
-                                                var responseContentLength = response
-                                                                                .ContentLength;
-                                                var roleID = string.Empty;
-                                                roleID = httpContext
-                                                                    .User
-                                                                    .GetClaimTypeValueOrDefault
-                                                                        (
-                                                                            nameof(roleID)
-                                                                            , "AnonymousRole"
-                                                                        );
-                                                var orgUnitID = string.Empty;
-                                                orgUnitID = httpContext
-                                                                        .User
-                                                                        .GetClaimTypeValueOrDefault
-                                                                            (
-                                                                                nameof(orgUnitID)
-                                                                                , "AnonymousOrgUnit"
-                                                                            );
-                                                var clientIP = httpContext
-                                                                        .Connection
-                                                                        .RemoteIpAddress
-                                                                        .ToString();
-                                                var userID = httpContext
-                                                                        .User
-                                                                        .Identity
-                                                                        .Name?? "AnonymousUser";
-                                                var deviceID = string.Empty;
-                                                deviceID = httpContext
-                                                                       .User
-                                                                       .GetClaimTypeValueOrDefault
-                                                                           (
-                                                                               nameof(deviceID)
-                                                                               , "AnonymousDevice"
-                                                                           );
-                                                var deviceInfo = string.Empty;
-                                                deviceInfo = httpContext
-                                                                       .User
-                                                                       .GetClaimTypeValueOrDefault
-                                                                           (
-                                                                               nameof(deviceInfo)
-                                                                               , "UnknownDevice"
-                                                                           );
-                                                GlobalManager
-                                                    .AsyncRequestResponseLoggingProcessor
-                                                    .Enqueue
-                                                        (
-                                                            (
-                                                                url
-                                                                , 
-                                                                    (
-                                                                        requestHeaders
-                                                                        , requestBody
-                                                                        , request.Method
-                                                                        , requestBeginTime
-                                                                        , request.ContentLength
-                                                                        , request.ContentType
-                                                                    )
-                                                                ,
-                                                                    (
-                                                                        responseHeaders
-                                                                        , responseBody
-                                                                        , response.StatusCode
-                                                                        , responseStartingTime
-                                                                        , response.ContentLength
-                                                                        , response.ContentType
-                                                                    )
-                                                                , 
-                                                                    requestResponseTimingInMilliseconds
-                                                                ,
-                                                                    (
-                                                                        (
-                                                                            clientIP
-                                                                            , decimal.Parse("1.0")
-                                                                            , new decimal(1.0)
-                                                                        ) //Location
-                                                                        , userID
-                                                                        , roleID
-                                                                        , orgUnitID
-                                                                        , 
-                                                                        (
-                                                                            deviceID
-                                                                            , deviceInfo
-                                                                        ) // Device
-                                                                    ) //User
-                                                            )
-                                                        );
-                                            };
-                                middleware
-                                    .OnAfterInvokedNextProcess
-                                        =
-                                            (
-                                                httpContext
-                                                , @event
-                                                , stopwatchesPool
-                                                , xConfiguration
-                                                , xLoggerFactory
-                                                , xLogger
-                                            )
-                                                =>
-                                            {
-                                                //Console.WriteLine($"event: {@event} @ {middlewareTypeName}");
-                                                xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
-                                            };
-                                
-                                middleware
-                                    .OnResponseCompletedProcess
-                                        =
-                                           // don't support async
-                                           (
-                                                httpContext
-                                                , @event
-                                                , stopwatchesPool
-                                                , xConfiguration
-                                                , xLoggerFactory
-                                                , xLogger
-                                            )
-                                                =>
-                                            {
-                                                //throw new Exception();
-                                                if
-                                                    (
+                                                    //should not use using
+                                                    var streamReader = new StreamReader(requestBodyStream);
+                                                        requestBody = streamReader.ReadToEnd();
+                                                        requestBodyStream.Position = 0;
                                                         httpContext
                                                                 .Items
-                                                                .Remove
+                                                                .TryAdd
                                                                     (
-                                                                        AbstractStoreProceduresExecutorControllerBase
-                                                                            .requestJTokenParametersItemKey
-                                                                        , out var removed
-                                                                    )
-                                                    )
-                                                {
-                                                    if (removed is JToken parameters)
-                                                    {
-                                                        parameters = null;
+                                                                        nameof(requestBody)
+                                                                        , requestBody
+                                                                    );
                                                     }
-                                                    removed = null;
-                                                }
+                                                    return r;
+                                                };
+                                        middleware
+                                            .OnPredicateResponseBodyWorkingStreamProcessFunc
+                                                =
+                                                    (
+                                                        httpContext
+                                                        , @event
+                                                        , stopwatchesPool
+                                                        , xConfiguration
+                                                        , xLoggerFactory
+                                                        , xLogger
+                                                    )
+                                                        =>
+                                                    {
+                                                        var request = httpContext
+                                                                                .Request;
+                                                        var r = !request
+                                                                        .Path
+                                                                        .Value
+                                                                        .Contains
+                                                                            (
+                                                                                "export"
+                                                                                , StringComparison
+                                                                                        .OrdinalIgnoreCase
+                                                                            );
+                                                        return r;
+                                                    };
+
+                                        middleware
+                                            .OnInvokingProcessAsync
+                                                =
+                                                    async
+                                                    (
+                                                        httpContext
+                                                        , @event
+                                                        , stopwatchesPool
+                                                        , xConfiguration
+                                                        , xLoggerFactory
+                                                        , xLogger
+                                                    )
+                                                        =>
+                                                    {
+                                                        xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
+                                                        var httpRequestFeature = httpContext
+                                                                                        .Features
+                                                                                        .Get<IHttpRequestFeature>();
+                                                        var url = httpRequestFeature.RawTarget;
+                                                        httpRequestFeature = null;
+                                                        var result = false;
+                                                        if
+                                                            (
+                                                                //request.ContentType == "image/jpeg"
+                                                                url.EndsWith("error.js")
+                                                            )
+                                                        {
+                                                            var response = httpContext.Response;
+                                                            var errorStatusCode = 500;
+                                                            var errorMessage = $"error in Middleware: [{middlewareTypeName}]";
+                                                            response.StatusCode = errorStatusCode;
+                                                            var jsonResult = new
+                                                            {
+                                                                statusCode = errorStatusCode
+                                                                ,
+                                                                resultCode = -1 * errorStatusCode
+                                                                ,
+                                                                message = errorMessage
+                                                            };
+                                                            using var responseBodyStream = response.Body;
+                                                            await
+                                                                JsonSerializer
+                                                                            .SerializeAsync
+                                                                                    (
+                                                                                        responseBodyStream
+                                                                                        , jsonResult
+                                                                                    );
+                                                            result = false;
+                                                        }
+                                                        else
+                                                        {
+                                                            result = true;
+                                                        }
+                                                        return
+                                                            await
+                                                                Task
+                                                                    .FromResult(result);
+                                                    };
+                                        middleware
+                                            .OnResponseStartingProcess
+                                                =
+                                                   // don't support async 
+                                                   (
+                                                        httpContext
+                                                        , @event
+                                                        , stopwatchesPool
+                                                        , xConfiguration
+                                                        , xLoggerFactory
+                                                        , xLogger
+                                                    )
+                                                        =>
+                                                   {
+                                                       xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
+
+                                                   //return;
+                                                   var httpRequestFeature = httpContext
+                                                                                        .Features
+                                                                                        .Get<IHttpRequestFeature>();
+                                                       var url = httpRequestFeature.RawTarget;
+                                                       var request = httpContext.Request;
+                                                   //
+                                                   using var requestBodyStream = request.Body;
+                                                       var requestBody = string.Empty;
+                                                       if
+                                                           (
+                                                               httpContext
+                                                                       .Items
+                                                                       .Remove
+                                                                           (
+                                                                               nameof(requestBody)
+                                                                               , out var removedRequestBody
+                                                                           )
+                                                           )
+                                                       {
+                                                           requestBody = (string)removedRequestBody;
+                                                       }
+                                                       else
+                                                       {
+
+                                                           if
+                                                               (
+                                                                   requestBodyStream
+                                                                                   .CanRead
+                                                                   &&
+                                                                   requestBodyStream
+                                                                                   .CanSeek
+                                                               )
+                                                           {
+                                                               requestBodyStream.Position = 0;
+                                                           //
+                                                           using var streamReader = new StreamReader(requestBodyStream);
+                                                               requestBody = new StreamReader(requestBodyStream).ReadToEnd();
+                                                           }
+                                                       }
+                                                       var requestHeaders = Newtonsoft
+                                                                                       .Json
+                                                                                       .JsonConvert
+                                                                                       .SerializeObject
+                                                                                               (
+                                                                                                   request
+                                                                                                       .Headers
+                                                                                               );
+                                                       var requestPath = request.Path;
+                                                       var response = httpContext.Response;
+                                                       using var responseBodyStream = response.Body;
+                                                       var responseBody = string.Empty;
+                                                       if
+                                                           (
+                                                               responseBodyStream
+                                                                               .CanRead
+                                                               &&
+                                                               responseBodyStream
+                                                                               .CanSeek
+                                                           )
+                                                       {
+                                                           responseBodyStream.Position = 0;
+                                                       //
+                                                       using var streamReader = new StreamReader(responseBodyStream);
+                                                           responseBody = streamReader.ReadToEnd();
+                                                           Console.WriteLine(responseBody.Length);
+                                                       }
+                                                       var r = httpContext
+                                                               .Items
+                                                               .Remove
+                                                                   (
+                                                                       "dbExecutingDuration"
+                                                                       , out var removed
+
+                                                                   );
+                                                       double dbExecutingTimingInMilliseconds = -1;
+                                                       if (r)
+                                                       {
+                                                           TimeSpan? timespan = removed as TimeSpan?;
+                                                           if (timespan != null)
+                                                           {
+                                                               if (timespan.HasValue)
+                                                               {
+                                                                   dbExecutingTimingInMilliseconds = timespan.Value.TotalMilliseconds;
+                                                               }
+                                                           }
+
+
+
+
+                                                       }
+                                                       removed = null;
+                                                       r = httpContext
+                                                                       .Items
+                                                                       .Remove
+                                                                           (
+                                                                               requestResponseTimingLoggingItemKey
+                                                                               , out removed
+                                                                           );
+                                                       double requestResponseTimingInMilliseconds = -1;
+                                                       DateTime? requestBeginTime = null;
+                                                       DateTime? responseStartingTime = null;
+                                                       if (r)
+                                                       {
+                                                           (
+                                                               DateTime beginTime
+                                                               , long beginTimeStamp
+                                                           )
+                                                               = (ValueTuple<DateTime, long>)removed;
+                                                           removed = null;
+                                                           requestBeginTime = beginTime;
+                                                           response
+                                                               .Headers["X-Request-Receive-BeginTime"]
+                                                                           = beginTime.ToString(defaultDateTimeFormat);
+
+                                                           responseStartingTime = DateTime.Now;
+                                                           response
+                                                               .Headers["X-Response-Send-BeginTime"]
+                                                                           = responseStartingTime
+                                                                                               .Value
+                                                                                               .ToString(defaultDateTimeFormat);
+
+                                                           requestResponseTimingInMilliseconds = beginTimeStamp
+                                                                                                       .GetElapsedTimeToNow()
+                                                                                                       .TotalMilliseconds;
+                                                           response
+                                                               .Headers["X-Request-Response-Timing-In-Milliseconds"]
+                                                                           = requestResponseTimingInMilliseconds
+                                                                                   .ToString();
+                                                       }
+                                                       var responseHeaders = Newtonsoft
+                                                                                       .Json
+                                                                                       .JsonConvert
+                                                                                       .SerializeObject
+                                                                                               (
+                                                                                                   response
+                                                                                                       .Headers
+                                                                                               );
+
+                                                       var responseContentLength = response
+                                                                                       .ContentLength;
+                                                       var roleID = string.Empty;
+                                                       roleID = httpContext
+                                                                           .User
+                                                                           .GetClaimTypeValueOrDefault
+                                                                               (
+                                                                                   nameof(roleID)
+                                                                                   , "AnonymousRole"
+                                                                               );
+                                                       var orgUnitID = string.Empty;
+                                                       orgUnitID = httpContext
+                                                                               .User
+                                                                               .GetClaimTypeValueOrDefault
+                                                                                   (
+                                                                                       nameof(orgUnitID)
+                                                                                       , "AnonymousOrgUnit"
+                                                                                   );
+                                                       var clientIP = httpContext
+                                                                               .Connection
+                                                                               .RemoteIpAddress
+                                                                               .ToString();
+                                                       var userID = httpContext
+                                                                               .User
+                                                                               .Identity
+                                                                               .Name ?? "AnonymousUser";
+                                                       var deviceID = string.Empty;
+                                                       deviceID = httpContext
+                                                                              .User
+                                                                              .GetClaimTypeValueOrDefault
+                                                                                  (
+                                                                                      nameof(deviceID)
+                                                                                      , "AnonymousDevice"
+                                                                                  );
+                                                       var deviceInfo = string.Empty;
+                                                       deviceInfo = httpContext
+                                                                              .User
+                                                                              .GetClaimTypeValueOrDefault
+                                                                                  (
+                                                                                      nameof(deviceInfo)
+                                                                                      , "UnknownDevice"
+                                                                                  );
+                                                       GlobalManager
+                                                           .AsyncRequestResponseLoggingProcessor
+                                                           .Enqueue
+                                                               (
+                                                                   (
+                                                                       url
+                                                                       ,
+                                                                           (
+                                                                               requestHeaders
+                                                                               , requestBody
+                                                                               , request.Method
+                                                                               , requestBeginTime
+                                                                               , request.ContentLength
+                                                                               , request.ContentType
+                                                                           )
+                                                                       ,
+                                                                           (
+                                                                               responseHeaders
+                                                                               , responseBody
+                                                                               , response.StatusCode
+                                                                               , responseStartingTime
+                                                                               , response.ContentLength
+                                                                               , response.ContentType
+                                                                           )
+                                                                       ,
+                                                                           (
+                                                                               requestResponseTimingInMilliseconds
+                                                                               , dbExecutingTimingInMilliseconds
+                                                                           )
+                                                                       ,
+                                                                           (
+                                                                               (
+                                                                                   clientIP
+                                                                                   , decimal.Parse("1.0")
+                                                                                   , new decimal(1.0)
+                                                                               ) //Location
+                                                                               , userID
+                                                                               , roleID
+                                                                               , orgUnitID
+                                                                               ,
+                                                                               (
+                                                                                   deviceID
+                                                                                   , deviceInfo
+                                                                               ) // Device
+                                                                           ) //User
+                                                                   )
+                                                               );
+                                                   };
+                                        middleware
+                                            .OnAfterInvokedNextProcess
+                                                =
+                                                    (
+                                                        httpContext
+                                                        , @event
+                                                        , stopwatchesPool
+                                                        , xConfiguration
+                                                        , xLoggerFactory
+                                                        , xLogger
+                                                    )
+                                                        =>
+                                                    {
+                                                    //Console.WriteLine($"event: {@event} @ {middlewareTypeName}");
+                                                    xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
+                                                    };
+
+                                        middleware
+                                            .OnResponseCompletedProcess
+                                                =
+                                                   // don't support async
+                                                   (
+                                                        httpContext
+                                                        , @event
+                                                        , stopwatchesPool
+                                                        , xConfiguration
+                                                        , xLoggerFactory
+                                                        , xLogger
+                                                    )
+                                                        =>
+                                                   {
+                                                   //throw new Exception();
+                                                   if
+                                                           (
+                                                               httpContext
+                                                                       .Items
+                                                                       .Remove
+                                                                           (
+                                                                               AbstractStoreProceduresExecutorControllerBase
+                                                                                   .requestJTokenParametersItemKey
+                                                                               , out var removed
+                                                                           )
+                                                           )
+                                                       {
+                                                           if (removed is JToken parameters)
+                                                           {
+                                                               parameters = null;
+                                                           }
+                                                           removed = null;
+                                                       }
+                                                       xLogger
+                                                           .LogInformation($"event: {@event} @ {middlewareTypeName}");
+                                                   };
+                                    }
+                                );
+                #endregion
+            }
+            needUse = configuration.GetOrDefault("useExceptionGuard", false);
+            if (needUse)
+            {
+                #region ExceptionGuard
+                app
+                        .UseExceptionGuard<string>
+                            (
+                                (middleware) =>
+                                {
+                                //onInitializeCallbackProcesses
+                                var middlewareTypeName = middleware.GetType().Name;
+                                    middleware
+                                        .OnCaughtExceptionProcessFunc
+                                            =
+                                            (
+                                                xHttpContext
+                                                , xConfiguration
+                                                , xException
+                                                , xLoggerFactory
+                                                , xLogger
+                                                , xTInjector
+                                            )
+                                                =>
+                                            {
                                                 xLogger
-                                                    .LogInformation($"event: {@event} @ {middlewareTypeName}");
+                                                    .LogError($"event: exception @ {middlewareTypeName}");
+                                                var reThrow = false;
+                                                var errorDetails = true;
+                                                var errorStatusCode = HttpStatusCode
+                                                                                .InternalServerError;
+                                                var errorResultCode = -1 * (int)errorStatusCode;
+                                                var errorMessage = nameof(HttpStatusCode.InternalServerError);
+
+                                                if (errorDetails)
+                                                {
+                                                    errorMessage = xException.ToString();
+                                                }
+
+                                                xLogger
+                                                    .LogOnDemand
+                                                        (
+                                                            LogLevel.Error
+                                                            , () =>
+                                                            {
+                                                                (
+                                                                    Exception LoggingException
+                                                                    , string LoggingMessage
+                                                                    , object[] LoggingArguments
+                                                                )
+                                                                    log =
+                                                                        (
+                                                                            xException
+                                                                            , $"LogOnDemand : {xException.ToString()}"
+                                                                            , null
+                                                                        );
+                                                                return
+                                                                       log;
+                                                            }
+                                                        );
+                                            //Console.WriteLine($"event: exception @ {middlewareTypeName}");
+
+                                            return
+                                                    (
+                                                        reThrow
+                                                        , errorDetails
+                                                        , errorStatusCode
+                                                        , errorResultCode
+                                                        , errorMessage
+                                                    );
                                             };
-                            }
-                        ); 
-            #endregion
+                                }
+                            );
+                #endregion
+            }
 
             app.UseCors();
 
-            #region ExceptionGuard
-            app
-                .UseExceptionGuard<string>
-                    (
-                        (middleware) =>
-                        {
-                            //onInitializeCallbackProcesses
-                            var middlewareTypeName = middleware.GetType().Name;
-                            middleware
-                                .OnCaughtExceptionProcessFunc
-                                    =
-                                    (
-                                        xHttpContext
-                                        , xConfiguration
-                                        , xException
-                                        , xLoggerFactory
-                                        , xLogger
-                                        , xTInjector
-                                    )
-                                        =>
-                                    {
-                                        xLogger
-                                            .LogError($"event: exception @ {middlewareTypeName}");
-                                        var reThrow = false;
-                                        var errorDetails = true;
-                                        var errorStatusCode = HttpStatusCode
-                                                                        .InternalServerError;
-                                        var errorResultCode = -1 * (int)errorStatusCode;
-                                        var errorMessage = nameof(HttpStatusCode.InternalServerError);
-
-                                        if (errorDetails)
-                                        {
-                                            errorMessage = xException.ToString();
-                                        }
-
-                                        xLogger
-                                            .LogOnDemand
-                                                (
-                                                    LogLevel.Error
-                                                    , () =>
-                                                    {
-                                                        (
-                                                            Exception LoggingException
-                                                            , string LoggingMessage
-                                                            , object[] LoggingArguments
-                                                        )
-                                                            log =
-                                                                (
-                                                                    xException
-                                                                    , $"LogOnDemand : {xException.ToString()}"
-                                                                    , null
-                                                                );
-                                                        return
-                                                               log;
-                                                    }
-                                                );
-                                                //Console.WriteLine($"event: exception @ {middlewareTypeName}");
-
-                                        return
-                                            (
-                                                reThrow
-                                                , errorDetails
-                                                , errorStatusCode
-                                                , errorResultCode
-                                                , errorMessage
-                                            );
-                                    };
-                        }
-                    ); 
-            #endregion
-
-            if (1 == 0)
+            if (1 == 1)
             {
                 #region ExceptionHandler
-                app.UseExceptionHandler
+                app
+                    .UseExceptionHandler
                             (
                                 new ExceptionHandlerOptions()
                                 {

@@ -6,6 +6,7 @@
     using System.Collections.Concurrent;
     using System.Data;
     using System.Data.Common;
+    using System.Diagnostics;
     using System.Threading.Tasks;
 
     public abstract partial class
@@ -98,6 +99,7 @@
             (
                 bool Success
                 , JToken Result
+                , TimeSpan? Duration
             )
                 ExecuteJsonResults
                     (
@@ -122,6 +124,7 @@
                         , int commandTimeoutInSeconds = 90
                     )
         {
+            var beginTimestamp = Stopwatch.GetTimestamp();
             BeforeExecutingProcess
                     (
                         connectionString
@@ -137,6 +140,9 @@
                                         , onReadRowColumnProcessFunc
                                         , commandTimeoutInSeconds
                                     );
+            var duration = beginTimestamp.GetElapsedTimeToNow();
+
+
             //AfterExecutedProcess
             //    (
             //        storeProcedureName
@@ -146,6 +152,7 @@
                 (
                     Success: result != null
                     , Result: result
+                    , Duration: duration
                 );
         }
         public virtual async
@@ -154,6 +161,7 @@
                     (
                         bool Success
                         , JToken Result
+                        , TimeSpan? Duration
                     )
                 > 
                     ExecuteJsonResultsAsync
@@ -179,6 +187,7 @@
                                 , int commandTimeoutInSeconds = 90
                             )
         {
+            var beginTimestamp = Stopwatch.GetTimestamp();
             BeforeExecutingProcess
                     (
                         connectionString
@@ -195,6 +204,7 @@
                                                 , onReadRowColumnProcessFunc
                                                 , commandTimeoutInSeconds
                                             );
+            var duration = beginTimestamp.GetElapsedTimeToNow();
             //AfterExecutedProcess
             //    (
             //        storeProcedureName
@@ -204,6 +214,7 @@
                 (
                     Success: result != null
                     , Result: result
+                    , Duration: duration
                 );
         }
 

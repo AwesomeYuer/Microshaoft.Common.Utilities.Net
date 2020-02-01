@@ -29,6 +29,28 @@
             }
             return r;
         }
+        public static T GetOrDefault<T>
+                            (
+                                this IConfiguration target
+                                , string sectionKey
+                                , T defaultValue = default
+                            )
+        {
+            T r = defaultValue;
+            var b = TryGet
+                        (
+                            target
+                            , sectionKey
+                            , out T @value
+                        );
+            if (b)
+            {
+                r = @value;
+            }
+            return r;
+        }
+
+
         public static bool TryGet<T>
                         (
                             this IConfiguration target

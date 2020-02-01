@@ -37,6 +37,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="hostings - Copy.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Update="RoutesConfig\routes2.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

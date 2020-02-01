@@ -65,6 +65,11 @@ namespace Microshaoft.Web
                     var parameterName = inputParameter
                                                 .GetValue<string>("Name");
                     var allowOverride = false;
+                    if (parameters == null)
+                    {
+                        parameters = new JObject(); 
+                    }
+
                     var r = parameters
                                 .TryGetValue
                                     (
