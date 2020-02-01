@@ -12,6 +12,7 @@
     <Folder Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\logs\" />
     <Folder Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\_models\" />
     <Folder Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\_runing_models\" />
+    <Folder Include="$(MSBuildThisFileDirectory)00.PerfTest\50.Tools\" />
     <Folder Include="$(MSBuildThisFileDirectory)CompositionPlugins\" />
     <Folder Include="$(MSBuildThisFileDirectory)MetricsRegistry\" />
   </ItemGroup>
@@ -28,7 +29,7 @@
     <None Include="$(MSBuildThisFileDirectory)makecert\server.cer" />
     <None Include="$(MSBuildThisFileDirectory)makecert\server.pfx" />
     <None Include="$(MSBuildThisFileDirectory)makecert\server.pvk" />
-    <None Include="$(MSBuildThisFileDirectory)00.PerfTest\PerfTest.Web.IO.2020-01-31.xlsx" />
+    <None Include="$(MSBuildThisFileDirectory)00.PerfTest\10.Results\PerfTest.Web.IO.xlsx" />
     <None Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\BeetleX.dll" />
     <None Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\BeetleX.FastHttpApi.dll" />
     <None Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\BeetleX.WebApiBenchmarks.dll" />
@@ -1190,15 +1191,15 @@
     <Compile Include="$(MSBuildThisFileDirectory)Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="$(MSBuildThisFileDirectory)00.PerfTest\PerfTestPressPS1K.ps1">
+    <Page Include="$(MSBuildThisFileDirectory)00.PerfTest\50.Tools\PerfTestPressPS1K.ps1">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)00.PerfTest\PerfTestPressCURL1K.sh">
+    <Page Include="$(MSBuildThisFileDirectory)00.PerfTest\50.Tools\PerfTestPressCURL1K.sh">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)00.PerfTest\PerfTestPressCURL1K.cmd">
+    <Page Include="$(MSBuildThisFileDirectory)00.PerfTest\50.Tools\PerfTestPressCURL1K.cmd">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1208,8 +1209,11 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\PerfTest.Memory.Usage.on.Windows.2020-01-31.png" />
-    <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\PerfTest.Memory.Usage.on.Windows.2020-01-31.small.png" />
+    <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\10.Results\PerfTest.on.Linux.Web.IO.2020-02-02.02-40.png" />
+    <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\10.Results\PerfTest.on.Windows.Memory.Usage.2020-02-02.02-40.png" />
+    <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\10.Results\PerfTest.on.Windows.Web.IO.2020-02-02.02-40.png" />
+    <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\10.Results\PerfTest.on.Windows.Memory.Usage.2020-01-31.png" />
+    <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\10.Results\PerfTest.on.Windows.Memory.Usage.2020-01-31.small.png" />
     <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\BeetleX.WebApiBenchmarks.deps.json" />
     <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\BeetleX.WebApiBenchmarks.runtimeconfig.json" />
     <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\HttpConfig.json" />
