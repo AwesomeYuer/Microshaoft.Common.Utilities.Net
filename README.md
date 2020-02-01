@@ -33,6 +33,8 @@ http://localhost:5000/api/perfmon/RequestResponseLoggingProcessor
 
 http://localhost:5000/api/perfmon/Runtime
 
+http://localhost:8100/api/perfmon/RequestResponseLoggingStats
+
 
 Too Simple Performance Test (non-concurrency):
 
