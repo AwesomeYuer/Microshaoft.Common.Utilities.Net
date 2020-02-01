@@ -51,6 +51,20 @@ Memory Usage on Windows:
 
 Web IO Results:
 
+Special THANKS and ACKNOWLEDGEMENT WebApiBenchmark
+
+https://github.com/IKende/WebApiBenchmark
+
+On Windows:
+
+![Image](Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.Shared/00.PerfTest/10.Results/PerfTest.on.Windows.Web.IO.2020-02-02.02-40.png)
+
+On Linux:
+
+![Image](Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.Shared/00.PerfTest/10.Results/PerfTest.on.Linux.Web.IO.2020-02-02.02-40.png)
+
+More Statistics:
+
 https://github.com/Microshaoft/Microshaoft.Common.Utilities.Net/blob/netcoreapp3.1.101/Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.Shared/00.PerfTest/10.Results/PerfTest.Web.IO.xlsx
 
 .NET Today/Now and Tomorrow/Future
