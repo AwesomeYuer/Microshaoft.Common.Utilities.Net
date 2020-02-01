@@ -40,12 +40,18 @@ Too Simple Performance Test (non-concurrency):
 
 Memory Usage on Windows:
 
+2020-01-31 23:
+
 ![Image](Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.Shared/00.PerfTest/10.Results/PerfTest.on.Windows.Memory.Usage.2020-01-31.small.png)
+
+2020-02-02 02:
+
+![Image](Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.Shared/00.PerfTest/10.Results/PerfTest.on.Windows.Memory.Usage.2020-02-02.02-40.png)
+
 
 Web IO Results:
 
-https://github.com/Microshaoft/Microshaoft.Common.Utilities.Net/blob/netcoreapp3.1.101/Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.Shared/PerfTest/PerfTest.Web.IO.2020-01-31.xlsx
-
+https://github.com/Microshaoft/Microshaoft.Common.Utilities.Net/blob/netcoreapp3.1.101/Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.Shared/00.PerfTest/10.Results/PerfTest.Web.IO.2020-01-31.xlsx
 
 .NET Today/Now and Tomorrow/Future
 
