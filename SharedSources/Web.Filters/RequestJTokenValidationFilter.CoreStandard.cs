@@ -179,7 +179,11 @@ namespace Microshaoft.Web
                         () =>
                         {
                             return
-                                (_configuration == null);
+                                (
+                                    _configuration == null
+                                    ||
+                                    _indexedValidators == null
+                                );
                         }
                         , () =>
                         {

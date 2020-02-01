@@ -317,7 +317,11 @@ namespace Microshaoft.Web
                                             .NeedAutoRefreshExecutedTimeForSlideExpire
                                                 = NeedAutoRefreshExecutedTimeForSlideExpire;
                                     }
-                                    x.InitializeInvokingCachingStore(_dbParametersDefinitionCachingStore);
+                                    x
+                                        .InitializeInvokingCachingStore
+                                            (
+                                                _dbParametersDefinitionCachingStore
+                                            );
                                     return x;
                                 }
                              
