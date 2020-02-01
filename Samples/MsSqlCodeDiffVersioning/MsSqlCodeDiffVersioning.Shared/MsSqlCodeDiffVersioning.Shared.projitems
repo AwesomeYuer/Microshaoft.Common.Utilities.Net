@@ -9,7 +9,7 @@
     <Import_RootNamespace>MsSqlCodeDiffVersioning.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\" />
+    <Folder Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\logs\" />
     <Folder Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\_models\" />
     <Folder Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\_runing_models\" />
     <Folder Include="$(MSBuildThisFileDirectory)CompositionPlugins\" />
@@ -1213,8 +1213,6 @@
     <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\BeetleX.WebApiBenchmarks.deps.json" />
     <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\BeetleX.WebApiBenchmarks.runtimeconfig.json" />
     <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\HttpConfig.json" />
-    <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\logs\BEETLEX_HTTP_SERVER_20200201_1.txt" />
-    <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\logs\BEETLEX_HTTP_SERVER_20200201_2.txt" />
     <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\UseCase.json" />
     <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\_tempview\BeetleX.WebApiBenchmarks.views.css.bootstrap-theme.css" />
     <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\00.webapibenchmark\v0.8.7\_tempview\BeetleX.WebApiBenchmarks.views.css.bootstrap.css" />
