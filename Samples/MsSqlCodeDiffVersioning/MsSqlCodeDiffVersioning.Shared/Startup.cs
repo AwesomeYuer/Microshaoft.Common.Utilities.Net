@@ -56,6 +56,47 @@
 
         public void ConfigureServices(IServiceCollection services)
         {
+
+#if NETCOREAPP3_X
+            var loggerFactory = LoggerFactory
+                                            .Create
+                                                (
+                                                    builder =>
+                                                    {
+                                                        builder
+                                                        //    .AddFilter("Microsoft", LogLevel.Warning)
+                                                        //    .AddFilter("System", LogLevel.Warning)
+                                                        //    .AddFilter("LoggingConsoleApp.Program", LogLevel.Debug)
+                                                            .AddConsole()
+                                                        //    .AddEventLog()
+                                                            ;
+                                                    }
+                                                );
+#else
+            services
+                .AddLogging
+                (
+                    builder =>
+                    {
+                        builder
+                            .AddConsole()
+                            //.AddFilter(level => level >= LogLevel.Information)
+                            ;
+                    }
+                );
+            var loggerFactory = services
+                                    .BuildServiceProvider()
+                                    .GetService<ILoggerFactory>();
+#endif
+
+            ILogger logger = loggerFactory.CreateLogger("Microshaoft.Logger");
+            services
+                    .AddSingleton(loggerFactory);
+            services
+                    .AddSingleton(logger);
+
+
+
             ConfigurationHelper
                             .Load(Configuration);
 
@@ -343,6 +384,26 @@
                                                     }
                                             );
                                 }
+                                catch (Exception e)
+                                {
+                                    logger
+                                        .LogOnDemand
+                                                (
+                                                    LogLevel
+                                                            .Error
+                                                    , () =>
+                                                    {
+                                                        return
+                                                            (
+                                                                new EventId(-1000)
+                                                                , e
+                                                                , $"Caught Exception on {nameof(GlobalManager.AsyncRequestResponseLoggingProcessor)} onBatchDequeuesProcessAction"
+                                                                , null
+                                                            );
+                                                    }
+                                                );
+                                    throw;
+                                }
                                 finally
                                 {
                                     if (sqlConnection.State != ConnectionState.Closed)
@@ -383,43 +444,7 @@
                                Configuration
                         );
 
-#if NETCOREAPP3_X
-            var loggerFactory = LoggerFactory
-                                            .Create
-                                                (
-                                                    builder =>
-                                                    {
-                                                        builder
-                                                        //    .AddFilter("Microsoft", LogLevel.Warning)
-                                                        //    .AddFilter("System", LogLevel.Warning)
-                                                        //    .AddFilter("LoggingConsoleApp.Program", LogLevel.Debug)
-                                                            .AddConsole()
-                                                        //    .AddEventLog()
-                                                            ;
-                                                    }
-                                                );
-#else
-            services
-                .AddLogging
-                (
-                    builder =>
-                    {
-                        builder
-                            .AddConsole()
-                            //.AddFilter(level => level >= LogLevel.Information)
-                            ;
-                    }
-                );
-            var loggerFactory = services
-                                    .BuildServiceProvider()
-                                    .GetService<ILoggerFactory>();
-#endif
-            
-            ILogger logger = loggerFactory.CreateLogger("Microshaoft.Logger");
-            services
-                    .AddSingleton(loggerFactory);
-            services
-                    .AddSingleton(logger);
+
 
             services
                     .AddSingleton<string>("Inject String");
@@ -656,7 +681,7 @@
                             ,
                                 ConcurrentDictionary<string, ExecutingInfo>
                                                                 executingCachingStore
-                                //, ILogger logger
+                            , ILogger logger
                         )
         {
 
@@ -928,10 +953,6 @@
                                                                    dbExecutingTimingInMilliseconds = timespan.Value.TotalMilliseconds;
                                                                }
                                                            }
-
-
-
-
                                                        }
                                                        removed = null;
                                                        r = httpContext
@@ -1084,8 +1105,8 @@
                                                     )
                                                         =>
                                                     {
-                                                    //Console.WriteLine($"event: {@event} @ {middlewareTypeName}");
-                                                    xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
+                                                        //Console.WriteLine($"event: {@event} @ {middlewareTypeName}");
+                                                        xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
                                                     };
 
                                         middleware
