@@ -270,27 +270,10 @@
                             GlobalManager
                                     .AsyncRequestResponseLoggingProcessor
                         );
-            // there are only one Thread that's DequeueThread write it, so it's security
-            var jArrayData = new JArray();
-            var msSqlStoreProceduresExecutor =
-                    new MsSqlStoreProceduresExecutor(GlobalManager.ExecutingCachingStore)
-                    { 
-                        CachedParametersDefinitionExpiredInSeconds
-                            = Configuration
-                                        .GetValue
-                                            (
-                                                "CachedParametersDefinitionExpiredInSeconds"
-                                                , 3600
-                                            )
-                    };
             //Console.WriteLine($"Startup: {nameof(Thread.CurrentThread.ManagedThreadId)}:{Thread.CurrentThread.ManagedThreadId}");
             GlobalManager
                 .AsyncRequestResponseLoggingProcessor
                 .OnCaughtException += AsyncRequestResponseLoggingProcessor_OnCaughtException;
-
-            var connectionID = "c1";
-            var connectionString = string.Empty;
-            connectionString = Configuration.GetValue<string>($"connections:{connectionID}:{nameof(connectionString)}");
 
             var asyncProcessorConfigurationPrefixKeys = $"SingleThreadAsyncDequeueProcessors:AsyncRequestResponseLoggingProcessor";
             int sleepInMilliseconds = Configuration
@@ -313,6 +296,22 @@
                                                     $"{asyncProcessorConfigurationPrefixKeys}:{nameof(waitOneBatchMaxDequeuedTimes)}"
                                                     , 100
                                                 );
+            var msSqlStoreProceduresExecutor =
+                    new MsSqlStoreProceduresExecutor(GlobalManager.ExecutingCachingStore)
+                        {
+                            CachedParametersDefinitionExpiredInSeconds
+                                = Configuration
+                                            .GetValue
+                                                (
+                                                    "CachedParametersDefinitionExpiredInSeconds"
+                                                    , 3600
+                                                )
+                        };
+            var connectionID = "c1";
+            var connectionString = string.Empty;
+            connectionString = Configuration.GetValue<string>($"connections:{connectionID}:{nameof(connectionString)}");
+            // there are only one Thread that's DequeueThread write it, so it's security
+            var jArrayData = new JArray();
             GlobalManager
                 .AsyncRequestResponseLoggingProcessor
                 .StartRunDequeueThreadProcess
