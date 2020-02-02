@@ -39,8 +39,6 @@
             {
                 OsPlatformName = $"Unknown {nameof(OsPlatformName)}:[{ProcessAlignedSecondsStartTime:yyyy-MM-dd HH:mm:ss}]";
             }
-
-
         }
 
         public static readonly Process CurrentProcess;

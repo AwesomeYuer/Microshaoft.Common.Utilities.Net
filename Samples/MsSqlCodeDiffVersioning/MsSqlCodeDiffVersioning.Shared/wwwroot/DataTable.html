@@ -287,14 +287,14 @@
                 cursor: col-resize;
                 background-color: darkgrey;
                 border-radius: 100%;
-                box-shadow:0px 0px  10px 5px grey;
+                box-shadow: 0px 0px 10px 5px grey;
             }
 
             .gutter.gutter-vertical {
                 cursor: row-resize;
                 background-color: darkgrey;
                 border-radius: 50%;
-                box-shadow:0px 0px  10px 5px grey;
+                box-shadow: 0px 0px 10px 5px grey;
             }
 
             .split.split-horizontal,
@@ -319,44 +319,19 @@
             padding-top: 100px;
             color: #000000
         }
-
-        @keyframes rotateAnimate {
-		  from {
-			transform: rotate(0deg) skew(-30deg)
-		  }
-		 
-		  to {
-			transform: rotate(360deg) skew(-30deg)
-		  }
-		}
-		 
-		.fan-wrapper {
-		  overflow: hidden;
-		  position: relative;
-		  margin: 100px;
-		  width: 300px;
-		  height: 300px;
-		  border-radius: 50%;
-		  background: grey;
-		}
-		 
-		.fan {
-		  position: absolute;
-		  right: 0;
-		  animation: rotateAnimate 2s linear infinite;
-		  /* 这一行很重要，设置左下角为旋转点 */
-		  transform-origin: 0% 100%;
-		  width: 150px;
-		  height: 150px;
-		  background: darkgrey;
-		}
     </style>
+    <link href="styles/taiji.css" rel="stylesheet" />
+    <link href="styles/fan.css" rel="stylesheet" />
 </head>
 <body>
     <div id="loading" align="center">
         Loading ...
+        <!--
         <div class="fan-wrapper">
             <div class="fan"></div>
+        </div>
+        -->
+        <div class="box-taiji">
         </div>
     </div>
     <div align="center">

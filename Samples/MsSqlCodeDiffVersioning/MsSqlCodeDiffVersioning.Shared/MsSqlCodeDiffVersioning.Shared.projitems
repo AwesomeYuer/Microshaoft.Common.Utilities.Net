@@ -1188,7 +1188,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)GlobalManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Program.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\StoreProcedureExecuteService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Startup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Startup.02.Configure.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Startup.01.ConfigureServices.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="$(MSBuildThisFileDirectory)00.PerfTest\50.Tools\PerfTestPressPS1K.ps1">
@@ -1472,6 +1473,9 @@
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\libs\monaco-editor\min\vs\editor\editor.main.css" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\libs\monaco-editor\package.json" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\libs\monaco-editor\ThirdPartyNotices.txt" />
+    <Content Include="$(MSBuildThisFileDirectory)wwwroot\styles\fan.css" />
+    <Content Include="$(MSBuildThisFileDirectory)wwwroot\styles\taiji-3D.css" />
+    <Content Include="$(MSBuildThisFileDirectory)wwwroot\styles\taiji.css" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\xhrblob.html" />
   </ItemGroup>
 </Project>

@@ -1,12 +1,12 @@
 USE [master]
 GO
-/****** Object:  Database [Test]    Script Date: 2/2/2020 3:10:06 AM ******/
+/****** Object:  Database [Test]    Script Date: 2/3/2020 3:02:43 AM ******/
 CREATE DATABASE [Test]
  CONTAINMENT = NONE
  ON  PRIMARY 
 ( NAME = N'Test', FILENAME = N'D:\MSSQL\Data\Test\Test.mdf' , SIZE = 2961024KB , MAXSIZE = UNLIMITED, FILEGROWTH = 1024KB )
  LOG ON 
-( NAME = N'Test_log', FILENAME = N'D:\MSSQL\Data\Test\Test_log.ldf' , SIZE = 1475904KB , MAXSIZE = 2048GB , FILEGROWTH = 10%)
+( NAME = N'Test_log', FILENAME = N'D:\MSSQL\Data\Test\Test_log.ldf' , SIZE = 1623488KB , MAXSIZE = 2048GB , FILEGROWTH = 10%)
  WITH CATALOG_COLLATION = DATABASE_DEFAULT
 GO
 ALTER DATABASE [Test] SET COMPATIBILITY_LEVEL = 140
@@ -80,12 +80,12 @@ ALTER DATABASE [Test] SET QUERY_STORE = OFF
 GO
 USE [Test]
 GO
-/****** Object:  UserDefinedTableType [dbo].[udt_int]    Script Date: 2/2/2020 3:10:06 AM ******/
+/****** Object:  UserDefinedTableType [dbo].[udt_int]    Script Date: 2/3/2020 3:02:43 AM ******/
 CREATE TYPE [dbo].[udt_int] AS TABLE(
 	[F1] [int] NULL
 )
 GO
-/****** Object:  UserDefinedTableType [dbo].[udt_RequestResponseLoggingEntry]    Script Date: 2/2/2020 3:10:06 AM ******/
+/****** Object:  UserDefinedTableType [dbo].[udt_RequestResponseLoggingEntry]    Script Date: 2/3/2020 3:02:43 AM ******/
 CREATE TYPE [dbo].[udt_RequestResponseLoggingEntry] AS TABLE(
 	[ID] [bigint] NULL,
 	[EnqueueTime] [datetime] NULL,
@@ -116,19 +116,19 @@ CREATE TYPE [dbo].[udt_RequestResponseLoggingEntry] AS TABLE(
 	[deviceInfo] [varchar](64) NULL
 )
 GO
-/****** Object:  UserDefinedTableType [dbo].[udt_varchar]    Script Date: 2/2/2020 3:10:06 AM ******/
+/****** Object:  UserDefinedTableType [dbo].[udt_varchar]    Script Date: 2/3/2020 3:02:43 AM ******/
 CREATE TYPE [dbo].[udt_varchar] AS TABLE(
 	[F1] [varchar](16) NULL
 )
 GO
-/****** Object:  UserDefinedTableType [dbo].[udt_vcidt]    Script Date: 2/2/2020 3:10:06 AM ******/
+/****** Object:  UserDefinedTableType [dbo].[udt_vcidt]    Script Date: 2/3/2020 3:02:43 AM ******/
 CREATE TYPE [dbo].[udt_vcidt] AS TABLE(
 	[varchar] [varchar](16) NULL,
 	[int] [int] NULL,
 	[date] [date] NULL
 )
 GO
-/****** Object:  UserDefinedFunction [dbo].[zTVF_SplitStringToTable]    Script Date: 2/2/2020 3:10:06 AM ******/
+/****** Object:  UserDefinedFunction [dbo].[zTVF_SplitStringToTable]    Script Date: 2/3/2020 3:02:43 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -215,7 +215,7 @@ BEGIN
 	return
 end
 GO
-/****** Object:  View [dbo].[zv_all_PARAMETERS]    Script Date: 2/2/2020 3:10:06 AM ******/
+/****** Object:  View [dbo].[zv_all_PARAMETERS]    Script Date: 2/3/2020 3:02:43 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -406,7 +406,7 @@ FROM
 WHERE
 	o.type IN ('P','FN','TF', 'IF', 'IS', 'AF','PC', 'FS', 'FT')  
 GO
-/****** Object:  Table [dbo].[RequestResponseLogging]    Script Date: 2/2/2020 3:10:06 AM ******/
+/****** Object:  Table [dbo].[RequestResponseLogging]    Script Date: 2/3/2020 3:02:43 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -455,7 +455,7 @@ CREATE TABLE [dbo].[RequestResponseLogging](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[zObjectsChangesLogsHistory]    Script Date: 2/2/2020 3:10:06 AM ******/
+/****** Object:  Table [dbo].[zObjectsChangesLogsHistory]    Script Date: 2/3/2020 3:02:43 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -479,7 +479,7 @@ CREATE TABLE [dbo].[zObjectsChangesLogsHistory](
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [Idx_stat]    Script Date: 2/2/2020 3:10:06 AM ******/
+/****** Object:  Index [Idx_stat]    Script Date: 2/3/2020 3:02:43 AM ******/
 CREATE NONCLUSTERED INDEX [Idx_stat] ON [dbo].[RequestResponseLogging]
 (
 	[serverHostProcessStartTime] ASC,
@@ -493,7 +493,7 @@ ALTER TABLE [dbo].[RequestResponseLogging] ADD  CONSTRAINT [DF_RequestResponseLo
 GO
 ALTER TABLE [dbo].[zObjectsChangesLogsHistory] ADD  CONSTRAINT [DF_zObjectsChangesLogsHistory_PostTime]  DEFAULT (getdate()) FOR [PostTime]
 GO
-/****** Object:  StoredProcedure [dbo].[usp_executesql]    Script Date: 2/2/2020 3:10:06 AM ******/
+/****** Object:  StoredProcedure [dbo].[usp_executesql]    Script Date: 2/3/2020 3:02:43 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -524,7 +524,7 @@ exec sp_executesql
 @sql
 end
 GO
-/****** Object:  StoredProcedure [dbo].[usp_TestUdt]    Script Date: 2/2/2020 3:10:06 AM ******/
+/****** Object:  StoredProcedure [dbo].[usp_TestUdt]    Script Date: 2/3/2020 3:02:43 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -544,7 +544,7 @@ from
 	@a
 end
 GO
-/****** Object:  StoredProcedure [dbo].[zsp_Logging]    Script Date: 2/2/2020 3:10:06 AM ******/
+/****** Object:  StoredProcedure [dbo].[zsp_Logging]    Script Date: 2/3/2020 3:02:43 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -661,7 +661,7 @@ from
 
 end
 GO
-/****** Object:  StoredProcedure [dbo].[zsp_Logging_Query]    Script Date: 2/2/2020 3:10:06 AM ******/
+/****** Object:  StoredProcedure [dbo].[zsp_Logging_Query]    Script Date: 2/3/2020 3:02:43 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -688,7 +688,7 @@ SELECT TOP (1000)
 	--truncate table [RequestResponseLogging]
 end
 GO
-/****** Object:  StoredProcedure [dbo].[zsp_Logging_Stat1]    Script Date: 2/2/2020 3:10:06 AM ******/
+/****** Object:  StoredProcedure [dbo].[zsp_Logging_Stat1]    Script Date: 2/3/2020 3:02:43 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -994,7 +994,7 @@ order by
 --	--truncate table [RequestResponseLogging]
 end
 GO
-/****** Object:  StoredProcedure [dbo].[zsp_Logging_Stat2]    Script Date: 2/2/2020 3:10:06 AM ******/
+/****** Object:  StoredProcedure [dbo].[zsp_Logging_Stat2]    Script Date: 2/3/2020 3:02:43 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1300,62 +1300,92 @@ as
 			) AS pvt
 
 )
+, TT
+as
+(
+	select
+		  a.Timing
+		, a.serverHostProcessStartTime
+		, a.serverHostOsPlatformName
+		, a.serverHostOsVersion
+		, DATEDIFF(SECOND, a.[min requestBeginTime], a.[max responseStartingTime]) as [duration in seconds (s)]
+		, a.[min Timing]							as [min Timing (ms)]
+		, a.[avg Timing]							as [avg Timing (ms)]
+		, a.[max Timing]							as [max Timing (ms)]
+		, a.[last Timing]							as [last Timing (ms)]
+		, a.[stdevp Timing]							as [stdevp Timing (ms)]
+		, b.[Total Count]							as [Total Count]
+		, 
+			  c.[(-2, -1]] count]
+			+ c.[(-1, 0]] count]
+			+ c.[(0, +1]] count]
+			+ c.[(+1, +2]] count]					as [(-2, +2]] stdevp count]
+
+		,
+			  b.[(-2, -1]] %]
+			+ b.[(-1, 0]] %]
+			+ b.[(0, +1]] %]
+			+ b.[(+2, +3]] %]						as [(-2, +2]] stdevp (%)]
+
+
+		, a.[avg Timing] - 2 * a.[stdevp Timing]	as [avg - 2 * stdevp (ms)] --可能为负数
+		, a.[avg Timing] + 2 * a.[stdevp Timing]	as [avg + 2 * stdevp (ms)]
+	
+		, a.[min AutoID]
+		, a.[max AutoID]
+
+		, a.[min requestBeginTime]					as [min requestBeginTime]
+		, a.[max responseStartingTime]				as [max responseStartingTime]
+
+	from
+		T1 a
+			left join
+				TP1 b
+					on
+						a.serverHostProcessStartTime	= b.serverHostProcessStartTime		
+						and
+						a.serverHostOsPlatformName		= b.serverHostOsPlatformName
+						and
+						a.serverHostOsVersion			= b.serverHostOsVersion
+			left join
+				TP2 c
+					on
+						a.serverHostProcessStartTime	= c.serverHostProcessStartTime		
+						and								  
+						a.serverHostOsPlatformName		= c.serverHostOsPlatformName
+						and								  
+						a.serverHostOsVersion			= c.serverHostOsVersion
+)
 select
 	a.Timing
 	, a.serverHostProcessStartTime
 	, a.serverHostOsPlatformName
 	, a.serverHostOsVersion
-	, DATEDIFF(SECOND, a.[min requestBeginTime], a.[max responseStartingTime]) as [duration in seconds (s)]
-	, a.[min Timing]							as [min Timing (ms)]
-	, a.[avg Timing]							as [avg Timing (ms)]
-	, a.[max Timing]							as [max Timing (ms)]
-	, a.[last Timing]							as [last Timing (ms)]
-	, a.[stdevp Timing]							as [stdevp Timing (ms)]
-	, b.[Total Count]							as [Total Count]
-	, 
-		  c.[(-2, -1]] count]
-		+ c.[(-1, 0]] count]
-		+ c.[(0, +1]] count]
-		+ c.[(+1, +2]] count]					as [(-2, +2]] stdevp count]
-
-	,
-		  b.[(-2, -1]] %]
-		+ b.[(-1, 0]] %]
-		+ b.[(0, +1]] %]
-		+ b.[(+2, +3]] %]						as [(-2, +2]] stdevp (%)]
-
-
-	, a.[avg Timing] - 2 * a.[stdevp Timing]	as [avg - 2 * stdevp (ms)]
-	, a.[avg Timing] + 2 * a.[stdevp Timing]	as [avg + 2 * stdevp (ms)]
-	
+	, a.[duration in seconds (s)]
+	, a.[min Timing (ms)]
+	, a.[avg Timing (ms)]
+	, a.[max Timing (ms)]
+	, a.[last Timing (ms)]
+	, a.[stdevp Timing (ms)]
+	, a.[Total Count]
+	, a.[(-2, +2]] stdevp count]
+	, a.[(-2, +2]] stdevp (%)]
+	, IIF(a.[avg - 2 * stdevp (ms)] >= 0, a.[avg - 2 * stdevp (ms)], 0) as [avg - 2 * stdevp (ms)] --可能为负数
+	, a.[avg + 2 * stdevp (ms)]
 	, a.[min AutoID]
 	, a.[max AutoID]
-
-	, a.[min requestBeginTime]					as [min requestBeginTime]
-	, a.[max responseStartingTime]				as [max responseStartingTime]
-
+	, a.[min requestBeginTime]
+	, a.[max responseStartingTime]
 from
-	T1 a
-		left join
-			TP1 b
-				on
-					a.serverHostProcessStartTime	= b.serverHostProcessStartTime		
-					and
-					a.serverHostOsPlatformName		= b.serverHostOsPlatformName
-					and
-					a.serverHostOsVersion			= b.serverHostOsVersion
-		left join
-			TP2 c
-				on
-					a.serverHostProcessStartTime	= c.serverHostProcessStartTime		
-					and								  
-					a.serverHostOsPlatformName		= c.serverHostOsPlatformName
-					and								  
-					a.serverHostOsVersion			= c.serverHostOsVersion
+	TT a
+order by
+	a.serverHostProcessStartTime desc
+	, a.serverHostOsPlatformName	
+	, a.serverHostOsVersion		
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[zsp_Logging_Stats]    Script Date: 2/2/2020 3:10:06 AM ******/
+/****** Object:  StoredProcedure [dbo].[zsp_Logging_Stats]    Script Date: 2/3/2020 3:02:43 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1372,7 +1402,7 @@ exec [zsp_Logging_Stat2] 1, @p1
 
 end
 GO
-/****** Object:  StoredProcedure [dbo].[zsp_zObjectsChangesLogsHistory_Get]    Script Date: 2/2/2020 3:10:06 AM ******/
+/****** Object:  StoredProcedure [dbo].[zsp_zObjectsChangesLogsHistory_Get]    Script Date: 2/3/2020 3:02:43 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1530,7 +1560,7 @@ end
 	
 end
 GO
-/****** Object:  DdlTrigger [ztrigger_ddl]    Script Date: 2/2/2020 3:10:06 AM ******/
+/****** Object:  DdlTrigger [ztrigger_ddl]    Script Date: 2/3/2020 3:02:43 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON

@@ -1,0 +1,21 @@
+﻿.fan-wrapper {
+    overflow: hidden;
+    position: relative;
+    margin: 200px;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, darkgrey, grey)
+}
+
+.fan {
+    position: absolute;
+    right: 0;
+    animation: rotateAnimate 2s linear infinite;
+    /* 这一行很重要，设置左下角为旋转点 */
+    transform-origin: 0% 100%;
+    width: 200px;
+    height: 200px;
+    /*background: darkgrey;*/
+    background: radial-gradient(circle, grey, darkgrey)
+}

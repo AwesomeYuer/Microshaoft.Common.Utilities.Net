@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="libs/jquery-ui/jquery-ui-1.12.1.css">
     <script src="libs/jquery-ui/jquery-ui-1.12.1.js"></script>
     <script src="libs/monaco-editor/min/vs/loader.js"></script>
+
+
+
     <style type="text/css">
         body {
             font-size: 12px;
@@ -72,37 +75,9 @@
             padding-top: 100px;
             color: #000000
         }
-
-        @keyframes rotateAnimate {
-            from {
-                transform: rotate(0deg) skew(-30deg)
-            }
-            to {
-                transform: rotate(360deg) skew(-30deg)
-            }
-        }
-
-        .fan-wrapper {
-            overflow: hidden;
-            position: relative;
-            margin: 100px;
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            background: grey;
-        }
-
-        .fan {
-            position: absolute;
-            right: 0;
-            animation: rotateAnimate 2s linear infinite;
-            /* 这一行很重要，设置左下角为旋转点 */
-            transform-origin: 0% 100%;
-            width: 150px;
-            height: 150px;
-            background: darkgrey;
-        }
     </style>
+    <link href="styles/taiji.css" rel="stylesheet" />
+    <link href="styles/fan.css" rel="stylesheet" />
     <script type="text/javascript">
         $(document).ready(function () {
             $('#loading').hide();
@@ -158,8 +133,12 @@
 <body>
     <div id="loading" align="center">
         Loading ...
-        <div class="fan-wrapper">
-            <div class="fan"></div>
+        <!--
+            <div class="fan-wrapper">
+                <div class="fan"></div>
+            </div>
+        -->
+        <div class="box-taiji">
         </div>
     </div>
     <div>
