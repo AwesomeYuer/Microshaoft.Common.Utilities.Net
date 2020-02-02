@@ -1,0 +1,14 @@
+﻿{
+  "SingleThreadAsyncDequeueProcessors": {
+    "AsyncRequestResponseLoggingProcessor": {
+      "sleepInMilliseconds": 500,
+      "waitOneBatchTimeOutInMilliseconds": 1000,
+      "waitOneBatchMaxDequeuedTimes": 200
+    }
+
+
+  }
+
+
+
+}

@@ -1,31 +1,26 @@
-FROM mcr.microsoft.com/dotnet/core/aspnet:2.2-stretch-slim AS base
+#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
+
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
-EXPOSE 5001
-EXPOSE 5000
 
-FROM mcr.microsoft.com/dotnet/core/sdk:2.2-stretch AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.WebApplication.csproj", "Samples/MsSqlCodeDiffVersioning/"]
-COPY ["StoreProcedureWebApiExecutor/StoreProcedureWebApiExecutor.Core/Microshaoft.StoreProcedureExecutorWebApiService.Core.csproj", "StoreProcedureWebApiExecutor/StoreProcedureWebApiExecutor.Core/"]
-COPY ["JTokenModelParameterValidatorsPlugins/JTokenModelParameterValidatorSamplePlugin/JTokenModelParameterValidatorSamplePlugin.csproj", "JTokenModelParameterValidatorsPlugins/JTokenModelParameterValidatorSamplePlugin/"]
-COPY ["StoreProcedureWebApiExecutorsPlugins/MsSQL.StoreProcedureWebApiExecutor.Plugin/MsSQL.StoreProcedureWebApiExecutor.Plugin.csproj", "StoreProcedureWebApiExecutorsPlugins/MsSQL.StoreProcedureWebApiExecutor.Plugin/"]
-COPY ["StoreProcedureWebApiExecutorsPlugins/MySQL.StoreProcedureWebApiExecutor.Plugin/MySQL.StoreProcedureWebApiExecutor.Plugin.csproj", "StoreProcedureWebApiExecutorsPlugins/MySQL.StoreProcedureWebApiExecutor.Plugin/"]
-RUN dotnet restore "JTokenModelParameterValidatorsPlugins/JTokenModelParameterValidatorSamplePlugin/JTokenModelParameterValidatorSamplePlugin.csproj"
-RUN dotnet restore "StoreProcedureWebApiExecutorsPlugins/MsSQL.StoreProcedureWebApiExecutor.Plugin/MsSQL.StoreProcedureWebApiExecutor.Plugin.csproj"
-RUN dotnet restore "StoreProcedureWebApiExecutorsPlugins/MySQL.StoreProcedureWebApiExecutor.Plugin/MySQL.StoreProcedureWebApiExecutor.Plugin.csproj"
-RUN dotnet restore "Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.WebApplication.csproj"
-
+COPY ["Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.3x/MsSqlCodeDiffVersioning.3x.csproj", "Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.3x/"]
+COPY ["Microshaoft.WebApiUtilities.NET/Microshaoft.WebApiUtilities.NET.Core.3.x/Microshaoft.WebApiUtilities.NET.Core.3.x.csproj", "Microshaoft.WebApiUtilities.NET/Microshaoft.WebApiUtilities.NET.Core.3.x/"]
+COPY ["CommonUtilities/CommonUtilities.Lite.Standard.2.x/CommonUtilities.Lite.Standard.2.x.csproj", "CommonUtilities/CommonUtilities.Lite.Standard.2.x/"]
+COPY ["Microshaoft.StoreProceduresExecutors.NET/Microshaoft.StoreProceduresExecutors.NET.Standard.2.x/Microshaoft.StoreProceduresExecutors.NET.Standard.2.x.csproj", "Microshaoft.StoreProceduresExecutors.NET/Microshaoft.StoreProceduresExecutors.NET.Standard.2.x/"]
+COPY ["Microshaoft.Json.NET/Microshaoft.Json.NET.Standard.2.x/Microshaoft.Json.NET.Standard.2.x.csproj", "Microshaoft.Json.NET/Microshaoft.Json.NET.Standard.2.x/"]
+RUN dotnet restore "Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.3x/MsSqlCodeDiffVersioning.3x.csproj"
 COPY . .
-RUN dotnet build "JTokenModelParameterValidatorsPlugins/JTokenModelParameterValidatorSamplePlugin/JTokenModelParameterValidatorSamplePlugin.csproj" -c Release -o /app/CompositionPlugins
-RUN dotnet build "StoreProcedureWebApiExecutorsPlugins/MsSQL.StoreProcedureWebApiExecutor.Plugin/MsSQL.StoreProcedureWebApiExecutor.Plugin.csproj" -c Release -o /app/CompositionPlugins
-RUN dotnet build "StoreProcedureWebApiExecutorsPlugins/MySQL.StoreProcedureWebApiExecutor.Plugin/MySQL.StoreProcedureWebApiExecutor.Plugin.csproj" -c Release -o /app/CompositionPlugins
-RUN dotnet build "Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.WebApplication.csproj" -c Release -o /app
+WORKDIR "/src/Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.3x"
+RUN dotnet build "MsSqlCodeDiffVersioning.3x.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "JTokenModelParameterValidatorsPlugins/JTokenModelParameterValidatorSamplePlugin/JTokenModelParameterValidatorSamplePlugin.csproj" -c Release -o /app/CompositionPlugins
-RUN dotnet publish "StoreProcedureWebApiExecutorsPlugins/MsSQL.StoreProcedureWebApiExecutor.Plugin/MsSQL.StoreProcedureWebApiExecutor.Plugin.csproj" -c Release -o /app/CompositionPlugins
-RUN dotnet publish "StoreProcedureWebApiExecutorsPlugins/MySQL.StoreProcedureWebApiExecutor.Plugin/MySQL.StoreProcedureWebApiExecutor.Plugin.csproj" -c Release -o /app/CompositionPlugins
-RUN dotnet publish "Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.WebApplication.csproj" -c Release -o /app
-COPY ["StoreProcedureWebApiExecutorsPlugins/MySQL.StoreProcedureWebApiExecutor.Plugin/MySQL.StoreProcedureWebApiExecutor.Plugin.csproj", "StoreProcedureWebApiExecutorsPlugins/MySQL.StoreProcedureWebApiExecutor.Plugin/"]
+RUN dotnet publish "MsSqlCodeDiffVersioning.3x.csproj" -c Release -o /app/publish
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "MsSqlCodeDiffVersioning.3x.dll"]

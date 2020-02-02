@@ -6,7 +6,7 @@
     <DockerfileContext>..\..</DockerfileContext>-->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <DockerfileContext>..\..</DockerfileContext>
+    <DockerfileContext>..\..\..</DockerfileContext>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>TRACE;NETCOREAPP;NETCOREAPP3_X</DefineConstants>

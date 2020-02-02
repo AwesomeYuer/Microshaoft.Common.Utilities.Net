@@ -171,6 +171,12 @@
                                                 , optional: false
                                                 , reloadOnChange: true
                                             )
+                                        .AddJsonFile
+                                            (
+                                                path: "singleThreadAsyncDequeueProcessors.json"
+                                                , optional: false
+                                                , reloadOnChange: true
+                                            )
                                         ;
                                 if
                                     (

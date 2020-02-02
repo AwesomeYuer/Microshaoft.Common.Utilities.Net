@@ -1188,7 +1188,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)GlobalManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Program.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\StoreProcedureExecuteService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Startup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Startup.02.Configure.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Startup.01.ConfigureServices.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="$(MSBuildThisFileDirectory)00.PerfTest\50.Tools\PerfTestPressPS1K.ps1">
