@@ -8,7 +8,6 @@
     using System;
     using System.Collections.Concurrent;
     using System.Data.SqlClient;
-    using System.Diagnostics;
     using System.Linq;
     using System.Runtime.InteropServices;
     using WebApplication.ASPNetCore;
@@ -150,15 +149,34 @@
                                             .OSDescription
                                 , RuntimeInformation
                                             .ProcessArchitecture
-                                , Process = new 
+                                , Process = new
                                     {
-                                        WorkingSet64                = $"{GlobalManager.CurrentProcess.PrivateMemorySize64       / 1e+6:N} MB"
-                                        , PeakWorkingSet64          = $"{GlobalManager.CurrentProcess.PeakWorkingSet64          / 1e+6:N} MB"
-                                        , PrivateMemorySize64       = $"{GlobalManager.CurrentProcess.PrivateMemorySize64       / 1e+6:N} MB"
-                                        , VirtualMemorySize64       = $"{GlobalManager.CurrentProcess.VirtualMemorySize64       / 1e+6:N} MB"
-                                        , PeakVirtualMemorySize64   = $"{GlobalManager.CurrentProcess.PeakVirtualMemorySize64   / 1e+6:N} MB"
-                                        , GlobalManager.CurrentProcess.StartTime
-                                    }
+                                        GlobalManager.CurrentProcess.StartTime
+                                        , MemoryUtilization = new
+                                            {
+                                                WorkingSet64 = $"{GlobalManager.CurrentProcess.PrivateMemorySize64 / 1e+6:N} MB"
+                                                , PeakWorkingSet64 = $"{GlobalManager.CurrentProcess.PeakWorkingSet64 / 1e+6:N} MB"
+                                                , PrivateMemorySize64 = $"{GlobalManager.CurrentProcess.PrivateMemorySize64 / 1e+6:N} MB"
+                                                , VirtualMemorySize64 = $"{GlobalManager.CurrentProcess.VirtualMemorySize64 / 1e+6:N} MB"
+                                                , PeakVirtualMemorySize64 = $"{GlobalManager.CurrentProcess.PeakVirtualMemorySize64 / 1e+6:N} MB"
+                                                , PagedMemorySize64 = $"{GlobalManager.CurrentProcess.PagedMemorySize64 / 1e+6:N} MB"
+                                                , PeakPagedMemorySize64 = $"{GlobalManager.CurrentProcess.PeakPagedMemorySize64 / 1e+6:N} MB"
+                                                , PagedSystemMemorySize64 = $"{GlobalManager.CurrentProcess.PagedSystemMemorySize64 / 1e+6:N} MB"
+                                            }
+                                        , ProcessorUtilization = new
+                                            { 
+                                                GlobalManager
+                                                        .CurrentProcess
+                                                        .TotalProcessorTime
+                                                , GlobalManager
+                                                        .CurrentProcess
+                                                        .UserProcessorTime
+                                                , GlobalManager
+                                                        .CurrentProcess
+                                                        .PrivilegedProcessorTime
+                                        }
+                                }
+                                    
                             }
                         );
         }

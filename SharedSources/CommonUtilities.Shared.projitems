@@ -270,6 +270,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\Constraint\ConstrainedRouteAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\JTokenModelBinder\HttpRequestHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\Services\AbstractStoreProceduresService.NETCoreApp3x.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\Services\IStoreProceduresService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\Services\IStoreProceduresWebApiService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\StoreProcedureExecutorController\AbstractStoreProcedureExecutorControllerBase.4.NET.Core.Standard.BigDataExport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\StoreProcedureExecutorController\AbstractStoreProcedureExecutorControllerBase.1.NET.All.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\StoreProcedureExecutorController\AbstractStoreProcedureExecutorControllerBase.3.NET.Core.Standard.cs" />
