@@ -5,6 +5,5 @@
       "waitOneBatchTimeOutInMilliseconds": 1000,
       "waitOneBatchMaxDequeuedTimes": 200
     }
-
   }
 }
