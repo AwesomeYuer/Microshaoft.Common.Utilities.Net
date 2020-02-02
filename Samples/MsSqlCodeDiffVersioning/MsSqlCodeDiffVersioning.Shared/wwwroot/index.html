@@ -61,21 +61,82 @@
         }
     </style>
 
+    <style type="text/css">
+        #loading {
+            position: fixed;
+            top: 0px;
+            right: 0px;
+            bottom: 0px;
+            filter: alpha(opacity=60);
+            background-color: #777;
+            z-index: 1002;
+            left: 0px;
+            display: none;
+            opacity: 0.5;
+            -moz-opacity: 0.5;
+            padding-top: 100px;
+            color: #000000
+        }
+
+
+        @keyframes rotateAnimate {
+            from {
+                transform: rotate(0deg) skew(-30deg)
+            }
+
+            to {
+                transform: rotate(360deg) skew(-30deg)
+            }
+        }
+
+        .fan-wrapper {
+            overflow: hidden;
+            position: relative;
+            margin: 100px;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: grey;
+        }
+
+        .fan {
+            position: absolute;
+            right: 0;
+            animation: rotateAnimate 2s linear infinite;
+            /* 这一行很重要，设置左下角为旋转点 */
+            transform-origin: 0% 100%;
+            width: 150px;
+            height: 150px;
+            background: darkgrey;
+        }
+    </style>
+
+
     <!-- <link rel="stylesheet" href="Scripts/highlight/styles/default.css">
     <script src="Scripts/highlight/highlight.pack.js"></script>
     <script>hljs.initHighlightingOnLoad();</script> -->
     <script type="text/javascript">
 
+        $(document).ready(function () {
+            $('#loading').hide();
+        });
+
+
         $(function () {
             $('#datepicker1').datepicker();
         });
-
         var baseUrl = "http://localhost:5000";
-        //baseUrl = "http://sops-sp-03.eastus.cloudapp.azure.com:8001";
         baseUrl = "";
         function GetObjectsTexts() {
+            $('#loading').fadeIn();
             //debugger;
-            var left = vm.SelectedItem().ID;
+            var left = -1;
+            if (vm.SelectedItem() != undefined) {
+                left = vm.SelectedItem().ID;
+            } else {
+                $('#loading').fadeOut();
+                return;
+            }
             var right = -1;
             if (vm.SelectedDetailItem() != undefined) {
                 right = vm.SelectedDetailItem().ID;
@@ -105,6 +166,7 @@
                     diffUsingJS(parseInt(vm.SelectedDiffViewType()),
                         x1, x2
                     );
+                    $('#loading').fadeOut();
                 }
             );
         }
@@ -135,6 +197,17 @@
 </head>
 
 <body>
+    <div id="loading" align="center">
+        <!--<img src="images/loading.gif" width="28" height="28" align="absmiddle" />-->
+        Loading ...
+
+        <div class="fan-wrapper">
+            <div class="fan"></div>
+        </div>
+    </div>
+
+
+
     <div>
         Search Object's Name Contains Text:<input id="search" type="text" />
         Search Host Name Contains Text:<input id="searchHostName" type="text" />
@@ -244,6 +317,7 @@
                 return r;
             });
             this.SortByAddSequence = function () {
+                $('#loading').fadeIn();
                 self.Items.sort(function (x, y) {
                     var r = x.AddSequence > y.AddSequence ? -1 : 1;
                     if (self.SortByAddSequenceState()) {
@@ -252,6 +326,7 @@
                     return r;
                 });
                 self.SortByAddSequenceState(!self.SortByAddSequenceState());
+                $('#loading').fadeOut();
             };
             this.SortByObjectNameState = ko.observable(false);
             this.SortByObjectNameDirection = ko.computed(function () {
@@ -266,6 +341,7 @@
                 return r;
             });
             this.SortByObjectName = function () {
+                $('#loading').fadeIn();
                 this.Items.sort(
                     function (x, y) {
                         var r = (
@@ -279,6 +355,7 @@
                         return r;
                     });
                 self.SortByObjectNameState(!self.SortByObjectNameState());
+                $('#loading').fadeOut();
             };
         };
 
@@ -300,7 +377,7 @@
                 original: monaco.editor.createModel(originalTxt, 'sql'),
                 modified: monaco.editor.createModel(modifiedTxt, 'sql')
             });
-
+            $('#loading').fadeOut();
         }
         function Clear() {
             vm.Items.removeAll();
@@ -308,6 +385,7 @@
         }
 
         function GetMasterList() {
+            $('#loading').fadeIn();
             //jsonp cross domain
             var search = document.getElementById("search").value;
             var beforeTime = document.getElementById("datepicker1").value;
@@ -330,6 +408,7 @@
                         }
                     }
                     );
+                    $('#loading').fadeOut();
                 }
             );
         }

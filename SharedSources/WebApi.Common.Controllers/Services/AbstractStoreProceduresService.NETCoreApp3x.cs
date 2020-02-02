@@ -100,7 +100,7 @@ namespace Microshaoft.Web
                                 , int commandTimeoutInSeconds = 90
                             )
         {
-            var success = _indexedExecutors
+            var success = IndexedExecutors
                                         .TryGetValue
                                             (
                                                 dataBaseType

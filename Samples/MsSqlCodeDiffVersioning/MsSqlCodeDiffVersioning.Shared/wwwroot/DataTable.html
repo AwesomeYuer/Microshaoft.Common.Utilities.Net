@@ -59,8 +59,7 @@
                     sql = ss;
                 }
             }
-            var url = "https://local.bank-of-china.com/a.json";
-            url = 'http://localhost:5000/api/StoreProcedureExecutor/usp_executesql';
+            var url = 'http://localhost:5000/api/StoreProcedureExecutor/usp_executesql';
             url = "/api/StoreProcedureExecutor/usp_executesql";
             var downloadUrl = '/api/StoreProcedureExecutor/bigdataexport/usp_executesql'
             //var downloadUrl = '/api/StoreProcedureExecutor/export/usp_executesql'
@@ -322,12 +321,48 @@
             padding-top: 100px;
             color: #000000
         }
+
+
+        @keyframes rotateAnimate {
+		  from {
+			transform: rotate(0deg) skew(-30deg)
+		  }
+		 
+		  to {
+			transform: rotate(360deg) skew(-30deg)
+		  }
+		}
+		 
+		.fan-wrapper {
+		  overflow: hidden;
+		  position: relative;
+		  margin: 100px;
+		  width: 300px;
+		  height: 300px;
+		  border-radius: 50%;
+		  background: grey;
+		}
+		 
+		.fan {
+		  position: absolute;
+		  right: 0;
+		  animation: rotateAnimate 2s linear infinite;
+		  /* 这一行很重要，设置左下角为旋转点 */
+		  transform-origin: 0% 100%;
+		  width: 150px;
+		  height: 150px;
+		  background: darkgrey;
+		}
     </style>
 </head>
 <body>
     <div id="loading" align="center">
         <!--<img src="images/loading.gif" width="28" height="28" align="absmiddle" />-->
         Loading ...
+
+        <div class="fan-wrapper">
+            <div class="fan"></div>
+        </div>
     </div>
     <div align="center">
         <a id="downloader" target="_blank">downloader</a>

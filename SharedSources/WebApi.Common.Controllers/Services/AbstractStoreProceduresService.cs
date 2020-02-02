@@ -13,134 +13,6 @@ namespace Microshaoft.Web
     using System.Linq;
     using System.Reflection;
     using System.Threading.Tasks;
-
-    public interface IStoreProceduresService
-    {
-        (
-            bool Success
-            , JToken Result
-            , TimeSpan? DbExecutingDuration
-        )
-               Process
-                       (
-                           string connectionString
-                           , string dataBaseType
-                           , string storeProcedureName
-                           , JToken parameters = null
-                           , Func
-                               <
-                                    int             // resultSet index
-                                    , IDataReader
-                                    , int           // row index
-                                    , int           // column index
-                                    , Type          // fieldType
-                                    , string        // fieldName
-                                    ,
-                                        (
-                                            bool NeedDefaultProcess
-                                            , JProperty Field   //  JObject Field 对象
-                                        )
-                               > onReadRowColumnProcessFunc = null
-                           , bool enableStatistics = false
-                           , int commandTimeoutInSeconds = 90
-                       );
-        Task
-            <
-                (
-                    bool Success
-                    , JToken Result
-                    , TimeSpan? DbExecutingDuration
-                )
-            >
-               ProcessAsync
-                       (
-                           string connectionString
-                           , string dataBaseType
-                           , string storeProcedureName
-                           , JToken parameters = null
-                           , Func
-                               <
-                                    int             // resultSet index
-                                    , IDataReader
-                                    , int           // row index         
-                                    , int           // column index
-                                    , Type          // fieldType
-                                    , string        // fieldName
-                                    ,
-                                        (
-                                            bool NeedDefaultProcess
-                                            , JProperty Field   //  JObject Field 对象
-                                        )
-                               > onReadRowColumnProcessFunc = null
-                           , bool enableStatistics = false
-                           , int commandTimeoutInSeconds = 90
-                       );
-    }
-
-    public interface IStoreProceduresWebApiService
-    {
-        (
-            int StatusCode
-            , string Message
-            , JToken Result
-            , TimeSpan? DbExecutingDuration
-        )
-            Process
-                (
-                    string routeName
-                    , JToken parameters = null
-                    , Func
-                            <
-                                int             // resultSet index
-                                , IDataReader
-                                , int           // row index        
-                                , int           // column index
-                                , Type          // fieldType
-                                , string        // fieldName
-                                , 
-                                    (
-                                        bool NeedDefaultProcess
-                                        , JProperty Field   //  JObject Field 对象
-                                    )
-                            > onReadRowColumnProcessFunc = null
-                    , string httpMethod = "Get"
-                    //, bool enableStatistics = false
-                    , int commandTimeoutInSeconds = 101
-                );
-
-        Task
-            <
-                (
-                    int StatusCode
-                    , string Message
-                    , JToken Result
-                    , TimeSpan? DbExecutingDuration
-                )
-            >
-                ProcessAsync
-                    (
-                        string routeName
-                        , JToken parameters = null
-                        , Func
-                                <
-                                    int             // resultSet index
-                                    , IDataReader
-                                    , int           // row index
-                                    , int           // column index
-                                    , Type          // fieldType
-                                    , string        // fieldName
-                                    , 
-                                        (
-                                            bool NeedDefaultProcess
-                                            , JProperty Field   //  JObject Field 对象
-                                        )
-                                > onReadRowColumnProcessFunc = null
-                        , string httpMethod = "Get"
-                        //, bool enableStatistics = false
-                        , int commandTimeoutInSeconds = 101
-                    );
-    }
-
     public abstract partial class
                 AbstractStoreProceduresService
                                 :
@@ -169,10 +41,9 @@ namespace Microshaoft.Web
                         -1;
             }
         }
-        private static readonly object _locker = new object();
+        private readonly object _locker = new object();
         protected readonly IConfiguration _configuration;
-
-        public readonly ConcurrentDictionary<string, ExecutingInfo>
+        private readonly ConcurrentDictionary<string, ExecutingInfo>
                             _dbParametersDefinitionCachingStore;
         public AbstractStoreProceduresService
                     (
@@ -182,8 +53,8 @@ namespace Microshaoft.Web
                     )
         {
             _configuration = configuration;
-            _dbParametersDefinitionCachingStore
-                = dbParametersDefinitionCachingStore;
+            _dbParametersDefinitionCachingStore =
+                                dbParametersDefinitionCachingStore;
             Initialize();
         }
         //for override from derived class
@@ -253,9 +124,11 @@ namespace Microshaoft.Web
                                                 x.StartsWith(".")
                                             )
                                         {
-                                            path = path.TrimStart('.', '\\', '/');
+                                            path = path
+                                                        .TrimStart('.', '\\', '/');
                                         }
-                                        path = Path.Combine
+                                        path = Path
+                                                    .Combine
                                                         (
                                                             executingDirectory
                                                             , path
@@ -303,7 +176,8 @@ namespace Microshaoft.Web
                                 (x) =>
                                 {
                                     return
-                                        x.DataBaseType;
+                                        x
+                                            .DataBaseType;
                                 }
                                 ,
                                 (x) =>
@@ -333,14 +207,14 @@ namespace Microshaoft.Web
                         {
                             return
                                 (
-                                    _indexedExecutors
+                                    IndexedExecutors
                                     ==
                                     null
                                 );
                         }
                         , () =>
                         {
-                            _indexedExecutors = indexedExecutors;
+                            IndexedExecutors = indexedExecutors;
                         }
                     );
         }
@@ -356,25 +230,13 @@ namespace Microshaoft.Web
             get => _needAutoRefreshExecutedTimeForSlideExpire;
             private set => _needAutoRefreshExecutedTimeForSlideExpire = value;
         }
-
-        private
-            IDictionary
-                    <
-                        string
-                        , IStoreProcedureExecutable
-                    >
-                        _indexedExecutors;
         public
             IDictionary
                     <
                         string
                         , IStoreProcedureExecutable
                     >
-                        IndexedExecutors
-        {
-            get => _indexedExecutors;
-            set => _indexedExecutors = value;
-        }
+                        IndexedExecutors { get; set; }
 
         public
             (
@@ -445,15 +307,15 @@ namespace Microshaoft.Web
                     , result
                     , dbExecutingDuration
                 ) = Process
-                                        (
-                                              connectionString
-                                            , dataBaseType
-                                            , storeProcedureName
-                                            , parameters
-                                            , onReadRowColumnProcessFunc
-                                            , enableStatistics
-                                            , commandTimeoutInSeconds
-                                        );
+                        (
+                              connectionString
+                            , dataBaseType
+                            , storeProcedureName
+                            , parameters
+                            , onReadRowColumnProcessFunc
+                            , enableStatistics
+                            , commandTimeoutInSeconds
+                        );
 
                 if
                     (
@@ -552,16 +414,16 @@ namespace Microshaoft.Web
                     , result
                     , dbExecutingDuration
                 ) = await
-                                        ProcessAsync
-                                            (
-                                                  connectionString
-                                                , dataBaseType
-                                                , storeProcedureName
-                                                , parameters
-                                                , onReadRowColumnProcessFunc
-                                                , enableStatistics
-                                                , commandTimeoutInSeconds
-                                            );
+                        ProcessAsync
+                            (
+                                  connectionString
+                                , dataBaseType
+                                , storeProcedureName
+                                , parameters
+                                , onReadRowColumnProcessFunc
+                                , enableStatistics
+                                , commandTimeoutInSeconds
+                            );
 
                 if 
                     (
@@ -666,17 +528,16 @@ namespace Microshaoft.Web
             var beginTimeStamp = Stopwatch.GetTimestamp();
             var beginTime = DateTime.Now;
             
-            var success = _indexedExecutors
-                                        .TryGetValue
-                                            (
-                                                dataBaseType
-                                                , out var executor
-                                            );
+            var success = IndexedExecutors
+                                    .TryGetValue
+                                        (
+                                            dataBaseType
+                                            , out var executor
+                                        );
             JToken result = null;
             TimeSpan? dbExecutingDuration = null;
             if (success)
             {
-
                 (
                     success
                     , result
@@ -720,18 +581,29 @@ namespace Microshaoft.Web
         {
             result["BeginTime"] = beginTime;
             result["EndTime"] = DateTime.Now;
-            var x = result["DbExecutingDurationInMilliseconds"];
+            var jCurrent 
+                    = result["DurationInMilliseconds"]
+                    = beginTimeStamp
+                            .GetElapsedTimeToNow()
+                            .TotalMilliseconds;
             if
                 (
                     dbExecutingDuration.HasValue
                 )
             {
-                x = dbExecutingDuration.Value.TotalMilliseconds;
+                jCurrent
+                        .Parent
+                        .AddAfterSelf
+                            (
+                                new JProperty
+                                        (
+                                            "DbExecutingDurationInMilliseconds"
+                                            , dbExecutingDuration
+                                                            .Value
+                                                            .TotalMilliseconds
+                                        )
+                            );
             }
-            result["DurationInMilliseconds"]
-                = beginTimeStamp
-                        .GetElapsedTimeToNow()
-                        .TotalMilliseconds;
         }
 
         public virtual async
@@ -769,7 +641,7 @@ namespace Microshaoft.Web
         {
             var beginTimeStamp = Stopwatch.GetTimestamp();
             var beginTime = DateTime.Now;
-            var success = _indexedExecutors
+            var success = IndexedExecutors
                                         .TryGetValue
                                             (
                                                 dataBaseType
@@ -779,12 +651,6 @@ namespace Microshaoft.Web
             TimeSpan? dbExecutingDuration = null;
             if (success)
             {
-
-                //executor
-                //    .InitializeInvokingCachingStore
-                //            (
-                //                _dbParametersDefinitionCachingStore
-                //            );
                 (
                     success
                     , result
@@ -836,8 +702,6 @@ namespace Microshaoft.Web
                             , string httpMethod
                         )
         {
-            var success = true;
-            var statusCode = 500;
             string message = "ok";
             var connectionString = string.Empty;
             var storeProcedureName = string.Empty;
@@ -845,6 +709,8 @@ namespace Microshaoft.Web
             var commandTimeoutInSeconds = 120;
             
             var enableStatistics = false;
+            bool success;
+            int statusCode;
             (
                 bool Result
                 , int StatusCode
@@ -963,33 +829,31 @@ namespace Microshaoft.Web
                             ("DefaultAccessing", out var accessingConfiguration);
             if (enableStatistics)
             {
-                bool b;
-                if 
+                if
                     (
                         actionConfiguration
-                                    .TryGet<bool>("EnableStatistics", out b)
-                                    
+                                    .TryGet(nameof(enableStatistics), out bool b)
+
                     )
                 {
                     enableStatistics = b;
                 }
                 else
                 {
-                    if 
+                    if
                         (
                             accessingConfiguration
-                                        .TryGet<bool>("EnableStatistics", out b)
+                                        .TryGet(nameof(enableStatistics), out b)
                         )
                     {
                         enableStatistics = b;
                     }
                 }
             }
-            int i = 0;
-            if 
+            if
                 (
                     accessingConfiguration
-                                    .TryGet<int>("CommandTimeoutInSeconds", out i)
+                                    .TryGet(nameof(commandTimeoutInSeconds), out int i)
                 )
             {
                 commandTimeoutInSeconds = i;
@@ -999,17 +863,17 @@ namespace Microshaoft.Web
                 if
                     (
                         actionConfiguration
-                                   .TryGet<int>("CommandTimeoutInSeconds", out i)
+                                   .TryGet(nameof(commandTimeoutInSeconds), out i)
                     )
                 {
                     commandTimeoutInSeconds = i;
                 }
                 else
                 {
-                    if 
+                    if
                         (
                             connectionConfiguration
-                                            .TryGet<int>("CommandTimeoutInSeconds", out i)
+                                            .TryGet(nameof(commandTimeoutInSeconds), out i)
                         )
                     {
                         commandTimeoutInSeconds = i;
@@ -1113,9 +977,7 @@ namespace Microshaoft.Web
                                 , int commandTimeoutInSeconds = 90
                             )
         {
-            //var beginTimeStamp = Stopwatch.GetTimestamp();
-            //var beginTime = DateTime.Now;
-            var success = _indexedExecutors
+            var success = IndexedExecutors
                                         .TryGetValue
                                             (
                                                 dataBaseType
@@ -1218,17 +1080,14 @@ namespace Microshaoft.Web
                                 , int commandTimeoutInSeconds = 90
                             )
         {
-            //var beginTimeStamp = Stopwatch.GetTimestamp();
-            //var beginTime = DateTime.Now;
-            var success = _indexedExecutors
-                                        .TryGetValue
-                                            (
-                                                dataBaseType
-                                                , out var executor
-                                            );
+            var success = IndexedExecutors
+                                    .TryGetValue
+                                        (
+                                            dataBaseType
+                                            , out var executor
+                                        );
             if (success)
             {
-                
                 await
                     executor
                         .ExecuteReaderProcessAsync
