@@ -1473,6 +1473,7 @@
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\libs\monaco-editor\package.json" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\libs\monaco-editor\ThirdPartyNotices.txt" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\styles\fan.css" />
+    <Content Include="$(MSBuildThisFileDirectory)wwwroot\styles\taiji-3D.css" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\styles\taiji.css" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\xhrblob.html" />
   </ItemGroup>
