@@ -241,12 +241,12 @@
     <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\datatables\DataTables\1.10.19\js\jquery.dataTables.js" />
     <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\datatables\FixedHeader\3.1.5\js\dataTables.fixedHeader.js" />
     <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\jquery-ui\jquery-ui-1.12.1.js" />
-    <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\jquery\jquery-3.3.1.js" />
-    <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\jquery\jquery-3.3.1.min.js" />
+    <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\jquery\jquery-3.4.1.js" />
+    <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\jquery\jquery-3.4.1.min.js" />
     <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\jsdifflib\difflib.js" />
     <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\jsdifflib\diffview.js" />
-    <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\knockout\knockout-3.4.2.debug.js" />
-    <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\knockout\knockout-3.4.2.js" />
+    <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\knockout\knockout-3.5.1.debug.js" />
+    <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\knockout\knockout-3.5.1.js" />
     <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\monaco-editor\CHANGELOG.md" />
     <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\monaco-editor\dev\vs\base\worker\workerMain.js" />
     <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\monaco-editor\dev\vs\base\worker\workerMain.js.map" />

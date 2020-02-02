@@ -15,7 +15,7 @@
     <link rel="stylesheet" type="text/css" href="libs/datatables/DataTables/1.10.18/RowReorder-1.2.4/css/rowReorder.dataTables.css" />
     <link rel="stylesheet" type="text/css" href="libs/datatables/DataTables/1.10.18/Scroller-1.5.0/css/scroller.dataTables.css" />
     <link rel="stylesheet" type="text/css" href="libs/datatables/DataTables/1.10.18/Select-1.2.6/css/select.dataTables.css" />
-    <script src="libs/jquery/jquery-3.3.1.js"></script>
+    <script src="libs/jquery/jquery-3.4.1.js"></script>
     <script type="text/javascript" src="libs/datatables/DataTables/1.10.18/JSZip-2.5.0/jszip.js"></script>
     <script type="text/javascript" src="libs/datatables/DataTables/1.10.18/pdfmake-0.1.36/pdfmake.js"></script>
     <script type="text/javascript" src="libs/datatables/DataTables/1.10.18/pdfmake-0.1.36/vfs_fonts.js"></script>
@@ -42,7 +42,6 @@
         var binded1 = false;
         var binded2 = false;
         var usedDataTables = null;
-
         function RowColumnCellProcess(cell, type, row, meta) {
             if (typeof (cell) == "object") {
                 cell = JSON.stringify(cell);
@@ -66,7 +65,6 @@
             //downloadUrl = url;
             var downloader = document.getElementById("downloader");
             var rowcount = parseInt(document.getElementById("rowcount").value);
-
             var download = (document.getElementById("download").checked == true);
             if (!download) {
                 if (binded1) {
@@ -317,11 +315,10 @@
             left: 0px;
             display: none;
             opacity: 0.5;
-            -moz-opacity: 0.5;
+            /*-moz-opacity: 0.5;*/
             padding-top: 100px;
             color: #000000
         }
-
 
         @keyframes rotateAnimate {
 		  from {
@@ -357,9 +354,7 @@
 </head>
 <body>
     <div id="loading" align="center">
-        <!--<img src="images/loading.gif" width="28" height="28" align="absmiddle" />-->
         Loading ...
-
         <div class="fan-wrapper">
             <div class="fan"></div>
         </div>
@@ -372,15 +367,11 @@
         <label for="download">download</label>
     </div>
     <div id="up" class="split content">
-        <!--<div id="sql-editor" style="text-align:left;width:800px;height:200px;border:1px solid grey"></div>-->
-
     </div>
     <div id="down" class="split content" style="overflow:auto">
         Data:<br />
-
         <div id="DataOutputsPanel">
         </div>
-
         <br />
         <hr />
         <br />
@@ -390,7 +381,6 @@
             </table>
         </div>
     </div>
-
     <script>
         require.config({ paths: { 'vs': 'libs/monaco-editor/min/vs' } });
         var editor;
