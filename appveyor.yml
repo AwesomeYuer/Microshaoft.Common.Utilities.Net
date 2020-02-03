@@ -1,6 +1,2 @@
-﻿version: 1.0.{build}
-build_script:
-- sh: >-
-    build_script:
-      - dotnet build Microshaoft.Common.Utilities.Net.sln -c Debug
-      - dotnet build Microshaoft.Common.Utilities.Net.sln -c Debug
+﻿build_script:
+- sh: dotnet build Microshaoft.Common.Utilities.Net.sln -c Debug
