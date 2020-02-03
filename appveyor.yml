@@ -1,2 +1,7 @@
-﻿build:
-    project: Microshaoft.Common.Utilities.Net.sln
+﻿# test
+image:
+    - Ubuntu
+build_script:
+    - sh: dotnet build Microshaoft.Common.Utilities.Net.sln -c Debug
+    - sh: dotnet build Microshaoft.Common.Utilities.Net.sln -c Release
+#    - sh: ./appveyorBuild.sh
