@@ -78,11 +78,13 @@ namespace Microshaoft.Web
                                                 (
                                                     (x) =>
                                                     {
-                                                        return
-                                                            x
+                                                        x = x
                                                                 .ToLower()
                                                                 .Trim()
                                                                 .Trim('/');
+                                                        x = $"/{x}/";
+                                                        return
+                                                                x;
                                                     }
                                                 )
                                             .OrderByDescending
@@ -96,7 +98,12 @@ namespace Microshaoft.Web
                                             .ToArray();
                         }
                     );
-            var path = request.Path.Value.Trim().Trim('/');
+            var path = request
+                            .Path
+                            .Value
+                            .Trim()
+                            .Trim('/');
+            path = $"/{path}/";
             var allow = _allows
                                 .Any
                                     (
@@ -104,7 +111,7 @@ namespace Microshaoft.Web
                                         {
                                             return
                                                 path
-                                                    .Contains
+                                                    .StartsWith
                                                         (
                                                             x
                                                             , StringComparison
