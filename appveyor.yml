@@ -1,2 +1,3 @@
-﻿build_script:
+﻿# test
+build_script:
     - sh: .\appveyorBuild.sh
