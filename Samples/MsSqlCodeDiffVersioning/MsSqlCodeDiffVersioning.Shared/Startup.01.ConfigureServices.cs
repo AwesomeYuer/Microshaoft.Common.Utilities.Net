@@ -21,7 +21,6 @@
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
-    using System.Threading;
     using System.Web;
 #if NETCOREAPP2_X
     using Microsoft.AspNetCore.Hosting;
@@ -44,6 +43,7 @@
             get;
         }
 
+        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
 
@@ -85,7 +85,8 @@
             services
                     .AddSingleton(logger);
 
-
+            services
+                    .AddSingleton<ConfigurationSwitchAuthorizeFilter>();
 
             ConfigurationHelper
                             .Load(Configuration);
@@ -273,7 +274,24 @@
             //Console.WriteLine($"Startup: {nameof(Thread.CurrentThread.ManagedThreadId)}:{Thread.CurrentThread.ManagedThreadId}");
             GlobalManager
                 .AsyncRequestResponseLoggingProcessor
-                .OnCaughtException += AsyncRequestResponseLoggingProcessor_OnCaughtException;
+                .OnCaughtException += 
+                        (
+                            sender
+                            , exception
+                            , newException
+                            , innerExceptionMessage
+                        )
+                            =>
+                        {
+                            return
+                                LoggingOnCaughtException
+                                        (
+                                            logger
+                                           , exception
+                                           , newException
+                                           , innerExceptionMessage
+                                        );
+                        };
 
             var asyncProcessorConfigurationPrefixKeys = $"SingleThreadAsyncDequeueProcessors:AsyncRequestResponseLoggingProcessor";
             int sleepInMilliseconds = Configuration
@@ -434,7 +452,7 @@
                         AbstractStoreProceduresService
                         , StoreProceduresExecuteService
                     >
-                    ();
+                        ();
 
             services
                     .AddSingleton
@@ -442,13 +460,10 @@
                             new QueuedObjectsPool<Stopwatch>(16, true)
                         );
             services
-                    .AddSingleton
-                        (
-                               Configuration
-                        );
+                    .AddSingleton(Configuration);
 
             services
-                    .AddSingleton<string>("Inject String");
+                    .AddSingleton("Inject String");
 
             #region 跨域策略
             services
@@ -664,16 +679,17 @@
                         );
         }
 
-        private bool AsyncRequestResponseLoggingProcessor_OnCaughtException
+        private bool LoggingOnCaughtException
                         (
-                            SingleThreadAsyncDequeueProcessorSlim<(string url, (string requestHeaders, string requestBody, string requestMethod, DateTime? requestBeginTime, long? requestContentLength, string requestContentType) Request, (string responseHeaders, string responseBody, int responseStatusCode, DateTime? responseStartingTime, long? responseContentLength, string responseContentType) Response, (double? requestResponseTimingInMilliseconds, double? dbExecutingTimingInMilliseconds) Timing, ((string clientIP, decimal? locationLongitude, decimal? locationLatitude) Location, string userID, string roleID, string orgUnitID, (string deviceID, string deviceInfo) Device) User)> sender
+                            //SingleThreadAsyncDequeueProcessorSlim<(string url, (string requestHeaders, string requestBody, string requestMethod, DateTime? requestBeginTime, long? requestContentLength, string requestContentType) Request, (string responseHeaders, string responseBody, int responseStatusCode, DateTime? responseStartingTime, long? responseContentLength, string responseContentType) Response, (double? requestResponseTimingInMilliseconds, double? dbExecutingTimingInMilliseconds) Timing, ((string clientIP, decimal? locationLongitude, decimal? locationLatitude) Location, string userID, string roleID, string orgUnitID, (string deviceID, string deviceInfo) Device) User)> sender
+                            ILogger logger
                             , Exception exception
                             , Exception newException
                             , string innerExceptionMessage
                         )
         {
             var rethrow = false;
-            _logger
+            logger
                 .LogOnDemand
                         (
                             LogLevel
@@ -692,7 +708,7 @@
             return rethrow;
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        
 
     }
 }

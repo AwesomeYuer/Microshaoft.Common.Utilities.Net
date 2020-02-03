@@ -38,9 +38,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="hostings - Copy.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Update="RoutesConfig\routes2.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -59,6 +56,12 @@
     <Content Update="JwtValidation.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="singleThreadAsyncDequeueProcessors.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="useMiddleWares.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Update="wwwrootpaths.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0" />
+
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Microshaoft.WebApiUtilities.NET\Microshaoft.WebApiUtilities.NET.Core.3.x\Microshaoft.WebApiUtilities.NET.Core.3.x.csproj" />
+  </ItemGroup>
+</Project>

@@ -177,6 +177,12 @@
                                                 , optional: false
                                                 , reloadOnChange: true
                                             )
+                                        .AddJsonFile
+                                            (
+                                                path: "configurationSwitchAuthorizeFilter.json"
+                                                , optional: false
+                                                , reloadOnChange: true
+                                            )
                                         ;
                                 if
                                     (
