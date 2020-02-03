@@ -61,3 +61,4 @@
 [2/1/2020 6:18:23 PM] [Info] BeetleX server info:[serverGC:False] [IOQueue:False] [V:1.2.5.0]
 [2/1/2020 6:18:23 PM] [Info] BeetleX FastHttpApi start@[v:1.3.7.0]
 [2/1/2020 6:18:23 PM] [Info] Web api benchmark started[0.8.7.0]
+[2/4/2020 1:42:55 AM] [Error] @9090 accept completed socket error OperationAborted!
