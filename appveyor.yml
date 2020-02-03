@@ -2,4 +2,5 @@
 image:
     - Ubuntu
 build_script:
-    - sh: ./appveyorBuild.sh
+    - sh: dotnet build Microshaoft.Common.Utilities.Net.sln -c Debug
+#    - sh: ./appveyorBuild.sh
