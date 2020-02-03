@@ -27,13 +27,15 @@ http://localhost:5000/
 
 http://localhost:5000/DataTable.html
 
-http://localhost:5000/api/perfmon/ExecutingCachingStore
+http://localhost:5000/api/admin/ExecutingCachingStore
 
-http://localhost:5000/api/perfmon/RequestResponseLoggingProcessor
+http://localhost:5000/api/admin/RequestResponseLoggingProcessor
 
-http://localhost:5000/api/perfmon/Runtime
+http://localhost:5000/api/admin/Runtime
 
-http://localhost:5000/api/perfmon/RequestResponseLoggingStats
+http://localhost:5000/api/admin/RequestResponseLoggingStats
+
+http://localhost:5000/api/admin/Echo
 
 
 Too Simple Performance Test (non-concurrency):

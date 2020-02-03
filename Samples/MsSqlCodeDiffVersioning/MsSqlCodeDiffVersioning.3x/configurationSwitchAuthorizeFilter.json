@@ -1,0 +1,6 @@
+{
+  "AuthorizedAccessPaths": [
+    "/api/admin/echo",
+    "/api/admin/"
+  ]
+}

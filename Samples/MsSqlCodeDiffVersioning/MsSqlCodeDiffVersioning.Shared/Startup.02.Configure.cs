@@ -27,12 +27,9 @@
 #endif
     public partial class Startup
     {
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-
         private ILogger _logger;
 
-
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure
                         (
                             IApplicationBuilder app
@@ -42,7 +39,7 @@
 #else
                                 IWebHostEnvironment
 #endif
-                                env
+                                environment
                             , IConfiguration configuration
                             , ILoggerFactory loggerFactory
 
@@ -52,10 +49,12 @@
                         )
         {
             _logger = logger;
+            app.UseCors();
+
             string requestResponseTimingLoggingItemKey = "beginTimestamp";
             //timingKey = string.Empty;
-            var needUse = configuration.GetValue("useRequestResponseGuard", false);
-            if (needUse)
+            var needUseMiddleware = configuration.GetValue("useRequestResponseGuard", false);
+            if (needUseMiddleware)
             {
                 #region RequestResponseGuard
                 app
@@ -130,15 +129,15 @@
                                                     requestBodyStream.Position = 0;
                                                     //should not use using
                                                     var streamReader = new StreamReader(requestBodyStream);
-                                                                                    requestBody = streamReader.ReadToEnd();
-                                                                                    requestBodyStream.Position = 0;
-                                                                                    httpContext
-                                                                                            .Items
-                                                                                            .TryAdd
-                                                                                                (
-                                                                                                    nameof(requestBody)
-                                                                                                    , requestBody
-                                                                                                );
+                                                    requestBody = streamReader.ReadToEnd();
+                                                    requestBodyStream.Position = 0;
+                                                    httpContext
+                                                            .Items
+                                                            .TryAdd
+                                                                (
+                                                                    nameof(requestBody)
+                                                                    , requestBody
+                                                                );
                                                 }
                                                 return r;
                                             };
@@ -250,79 +249,84 @@
                                                     =>
                                                 {
                                                     xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
-                                                            //return;
-                                                            var httpRequestFeature = httpContext
-                                                                                                .Features
-                                                                                                .Get<IHttpRequestFeature>();
+                                                    //return;
+
+                                                    #region Request
+                                                    var httpRequestFeature = httpContext
+                                                                                .Features
+                                                                                .Get<IHttpRequestFeature>();
                                                     var url = httpRequestFeature.RawTarget;
                                                     var request = httpContext.Request;
-                                                            //
-                                                            using var requestBodyStream = request.Body;
+                                                    //
+                                                    using var requestBodyStream = request.Body;
                                                     var requestBody = string.Empty;
                                                     if
-                                                                (
-                                                                    httpContext
-                                                                            .Items
-                                                                            .Remove
-                                                                                (
-                                                                                    nameof(requestBody)
-                                                                                    , out var removedRequestBody
-                                                                                )
-                                                                )
+                                                        (
+                                                            httpContext
+                                                                    .Items
+                                                                    .Remove
+                                                                        (
+                                                                            nameof(requestBody)
+                                                                            , out var removedRequestBody
+                                                                        )
+                                                        )
                                                     {
                                                         requestBody = (string)removedRequestBody;
                                                     }
                                                     else
                                                     {
                                                         if
-                                                                    (
-                                                                        requestBodyStream
-                                                                                        .CanRead
-                                                                        &&
-                                                                        requestBodyStream
-                                                                                        .CanSeek
-                                                                    )
+                                                            (
+                                                                requestBodyStream
+                                                                                .CanRead
+                                                                &&
+                                                                requestBodyStream
+                                                                                .CanSeek
+                                                            )
                                                         {
                                                             requestBodyStream.Position = 0;
-                                                                    //
-                                                                    using var streamReader = new StreamReader(requestBodyStream);
+                                                            //
+                                                            using var streamReader = new StreamReader(requestBodyStream);
                                                             requestBody = new StreamReader(requestBodyStream).ReadToEnd();
                                                         }
                                                     }
                                                     var requestHeaders = Newtonsoft
-                                                                                        .Json
-                                                                                        .JsonConvert
-                                                                                        .SerializeObject
-                                                                                                (
-                                                                                                    request
-                                                                                                        .Headers
-                                                                                                );
+                                                                                .Json
+                                                                                .JsonConvert
+                                                                                .SerializeObject
+                                                                                        (
+                                                                                            request
+                                                                                                .Headers
+                                                                                        );
                                                     var requestPath = request.Path;
+                                                    #endregion
+
+                                                    #region Response
                                                     var response = httpContext.Response;
                                                     using var responseBodyStream = response.Body;
                                                     var responseBody = string.Empty;
                                                     if
-                                                                (
-                                                                    responseBodyStream
-                                                                                    .CanRead
-                                                                    &&
-                                                                    responseBodyStream
-                                                                                    .CanSeek
-                                                                )
+                                                        (
+                                                            responseBodyStream
+                                                                            .CanRead
+                                                            &&
+                                                            responseBodyStream
+                                                                            .CanSeek
+                                                        )
                                                     {
                                                         responseBodyStream.Position = 0;
-                                                                //
-                                                                using var streamReader = new StreamReader(responseBodyStream);
+                                                        //
+                                                        using var streamReader = new StreamReader(responseBodyStream);
                                                         responseBody = streamReader.ReadToEnd();
-                                                        Console.WriteLine(responseBody.Length);
+                                                        //Console.WriteLine(responseBody.Length);
                                                     }
                                                     var r = httpContext
-                                                                            .Items
-                                                                            .Remove
-                                                                                (
-                                                                                    "dbExecutingDuration"
-                                                                                    , out var removed
-                                                                                );
+                                                                    .Items
+                                                                    .Remove
+                                                                        (
+                                                                            "dbExecutingDuration"
+                                                                            , out var removed
+                                                                        );
                                                     double dbExecutingTimingInMilliseconds = -1;
                                                     if (r)
                                                     {
@@ -331,147 +335,157 @@
                                                         {
                                                             if (timespan.HasValue)
                                                             {
-                                                                dbExecutingTimingInMilliseconds = timespan.Value.TotalMilliseconds;
+                                                                dbExecutingTimingInMilliseconds =
+                                                                        timespan.Value.TotalMilliseconds;
                                                             }
                                                         }
                                                     }
                                                     removed = null;
                                                     r = httpContext
-                                                                            .Items
-                                                                            .Remove
-                                                                                (
-                                                                                    requestResponseTimingLoggingItemKey
-                                                                                    , out removed
-                                                                                );
+                                                                .Items
+                                                                .Remove
+                                                                    (
+                                                                        requestResponseTimingLoggingItemKey
+                                                                        , out removed
+                                                                    );
                                                     double requestResponseTimingInMilliseconds = -1;
                                                     DateTime? requestBeginTime = null;
                                                     DateTime? responseStartingTime = null;
                                                     if (r)
                                                     {
                                                         (
-                                                                    DateTime beginTime
-                                                                    , long beginTimeStamp
-                                                                )
-                                                                    = (ValueTuple<DateTime, long>)removed;
+                                                            DateTime beginTime
+                                                            , long beginTimeStamp
+                                                        )
+                                                        = (ValueTuple<DateTime, long>) removed;
                                                         removed = null;
                                                         requestBeginTime = beginTime;
                                                         response
-                                                                    .Headers["X-Request-Receive-BeginTime"]
-                                                                                = beginTime.ToString(defaultDateTimeFormat);
+                                                            .Headers["X-Request-Receive-BeginTime"]
+                                                                        = beginTime
+                                                                                    .ToString(defaultDateTimeFormat);
 
                                                         responseStartingTime = DateTime.Now;
                                                         response
-                                                                    .Headers["X-Response-Send-BeginTime"]
-                                                                                = responseStartingTime
-                                                                                                    .Value
-                                                                                                    .ToString(defaultDateTimeFormat);
+                                                            .Headers["X-Response-Send-BeginTime"]
+                                                                        = responseStartingTime
+                                                                                    .Value
+                                                                                    .ToString(defaultDateTimeFormat);
 
-                                                        requestResponseTimingInMilliseconds = beginTimeStamp
-                                                                                                            .GetElapsedTimeToNow()
-                                                                                                            .TotalMilliseconds;
+                                                        requestResponseTimingInMilliseconds
+                                                                        = beginTimeStamp
+                                                                                    .GetElapsedTimeToNow()
+                                                                                    .TotalMilliseconds;
                                                         response
-                                                                    .Headers["X-Request-Response-Timing-In-Milliseconds"]
-                                                                                = requestResponseTimingInMilliseconds
-                                                                                        .ToString();
+                                                            .Headers["X-Request-Response-Timing-In-Milliseconds"]
+                                                                        = requestResponseTimingInMilliseconds
+                                                                                .ToString();
                                                     }
                                                     var responseHeaders = Newtonsoft
-                                                                                            .Json
-                                                                                            .JsonConvert
-                                                                                            .SerializeObject
-                                                                                                    (
-                                                                                                        response
-                                                                                                            .Headers
-                                                                                                    );
-
+                                                                                    .Json
+                                                                                    .JsonConvert
+                                                                                    .SerializeObject
+                                                                                            (
+                                                                                                response
+                                                                                                    .Headers
+                                                                                            );
                                                     var responseContentLength = response
-                                                                                            .ContentLength;
+                                                                                    .ContentLength;
+                                                    #endregion
+
+                                                    #region Claims
                                                     var roleID = string.Empty;
                                                     roleID = httpContext
-                                                                                .User
-                                                                                .GetClaimTypeValueOrDefault
-                                                                                    (
-                                                                                        nameof(roleID)
-                                                                                        , "AnonymousRole"
-                                                                                    );
+                                                                        .User
+                                                                        .GetClaimTypeValueOrDefault
+                                                                            (
+                                                                                nameof(roleID)
+                                                                                , "AnonymousRole"
+                                                                            );
                                                     var orgUnitID = string.Empty;
                                                     orgUnitID = httpContext
-                                                                                    .User
-                                                                                    .GetClaimTypeValueOrDefault
-                                                                                        (
-                                                                                            nameof(orgUnitID)
-                                                                                            , "AnonymousOrgUnit"
-                                                                                        );
+                                                                        .User
+                                                                        .GetClaimTypeValueOrDefault
+                                                                            (
+                                                                                nameof(orgUnitID)
+                                                                                , "AnonymousOrgUnit"
+                                                                            );
                                                     var clientIP = httpContext
-                                                                                    .Connection
-                                                                                    .RemoteIpAddress
-                                                                                    .ToString();
+                                                                        .Connection
+                                                                        .RemoteIpAddress
+                                                                        .ToString();
                                                     var userID = httpContext
-                                                                                    .User
-                                                                                    .Identity
-                                                                                    .Name ?? "AnonymousUser";
+                                                                        .User
+                                                                        .Identity
+                                                                        .Name ?? "AnonymousUser";
                                                     var deviceID = string.Empty;
                                                     deviceID = httpContext
-                                                                                    .User
-                                                                                    .GetClaimTypeValueOrDefault
-                                                                                        (
-                                                                                            nameof(deviceID)
-                                                                                            , "AnonymousDevice"
-                                                                                        );
+                                                                        .User
+                                                                        .GetClaimTypeValueOrDefault
+                                                                            (
+                                                                                nameof(deviceID)
+                                                                                , "AnonymousDevice"
+                                                                            );
                                                     var deviceInfo = string.Empty;
                                                     deviceInfo = httpContext
-                                                                                    .User
-                                                                                    .GetClaimTypeValueOrDefault
-                                                                                        (
-                                                                                            nameof(deviceInfo)
-                                                                                            , "UnknownDevice"
-                                                                                        );
+                                                                        .User
+                                                                        .GetClaimTypeValueOrDefault
+                                                                            (
+                                                                                nameof(deviceInfo)
+                                                                                , "UnknownDevice"
+                                                                            ); 
+                                                    #endregion
+
+                                                    #region GlobalManager.AsyncRequestResponseLoggingProcessor.Enqueue
                                                     GlobalManager
-                                                                .AsyncRequestResponseLoggingProcessor
-                                                                .Enqueue
-                                                                    (
+                                                        .AsyncRequestResponseLoggingProcessor
+                                                        .Enqueue
+                                                            (
+                                                                (
+                                                                    url
+                                                                    ,
                                                                         (
-                                                                            url
-                                                                            ,
-                                                                                (
-                                                                                    requestHeaders
-                                                                                    , requestBody
-                                                                                    , request.Method
-                                                                                    , requestBeginTime
-                                                                                    , request.ContentLength
-                                                                                    , request.ContentType
-                                                                                )
-                                                                            ,
-                                                                                (
-                                                                                    responseHeaders
-                                                                                    , responseBody
-                                                                                    , response.StatusCode
-                                                                                    , responseStartingTime
-                                                                                    , response.ContentLength
-                                                                                    , response.ContentType
-                                                                                )
-                                                                            ,
-                                                                                (
-                                                                                    requestResponseTimingInMilliseconds
-                                                                                    , dbExecutingTimingInMilliseconds
-                                                                                )
-                                                                            ,
-                                                                                (
-                                                                                    (
-                                                                                        clientIP
-                                                                                        , decimal.Parse("1.0")
-                                                                                        , new decimal(1.0)
-                                                                                    ) //Location
-                                                                                    , userID
-                                                                                    , roleID
-                                                                                    , orgUnitID
-                                                                                    ,
-                                                                                    (
-                                                                                        deviceID
-                                                                                        , deviceInfo
-                                                                                    ) // Device
-                                                                                ) //User
+                                                                            requestHeaders
+                                                                            , requestBody
+                                                                            , request.Method
+                                                                            , requestBeginTime
+                                                                            , request.ContentLength
+                                                                            , request.ContentType
                                                                         )
-                                                                    );
+                                                                    ,
+                                                                        (
+                                                                            responseHeaders
+                                                                            , responseBody
+                                                                            , response.StatusCode
+                                                                            , responseStartingTime
+                                                                            , response.ContentLength
+                                                                            , response.ContentType
+                                                                        )
+                                                                    ,
+                                                                        (
+                                                                            requestResponseTimingInMilliseconds
+                                                                            , dbExecutingTimingInMilliseconds
+                                                                        )
+                                                                    ,
+                                                                        (
+                                                                            (
+                                                                                clientIP
+                                                                                , decimal.Parse("1.0")
+                                                                                , new decimal(1.0)
+                                                                            ) //Location
+                                                                            , userID
+                                                                            , roleID
+                                                                            , orgUnitID
+                                                                            ,
+                                                                            (
+                                                                                deviceID
+                                                                                , deviceInfo
+                                                                            ) // Device
+                                                                        ) //User
+                                                                )
+                                                            ); 
+                                                    #endregion
+
                                                 };
                                     #endregion
 
@@ -536,84 +550,81 @@
                             );
                 #endregion
             }
-            needUse = configuration.GetValue("useExceptionGuard", false);
-            if (needUse)
+            needUseMiddleware = configuration.GetValue("useExceptionGuard", false);
+            if (needUseMiddleware)
             {
                 #region ExceptionGuard
                 app
-                        .UseExceptionGuard<string>
-                            (
-                                (middleware) =>
-                                {
+                    .UseExceptionGuard<string>
+                        (
+                            (middleware) =>
+                            {
                                 //onInitializeCallbackProcesses
                                 var middlewareTypeName = middleware.GetType().Name;
-                                    middleware
-                                        .OnCaughtExceptionProcessFunc
-                                            =
-                                            (
-                                                xHttpContext
-                                                , xConfiguration
-                                                , xException
-                                                , xLoggerFactory
-                                                , xLogger
-                                                , xTInjector
-                                            )
-                                                =>
+                                middleware
+                                    .OnCaughtExceptionProcessFunc
+                                        =
+                                        (
+                                            xHttpContext
+                                            , xConfiguration
+                                            , xException
+                                            , xLoggerFactory
+                                            , xLogger
+                                            , xTInjector
+                                        )
+                                            =>
+                                        {
+                                            xLogger
+                                                .LogError($"event: exception @ {middlewareTypeName}");
+                                            var reThrow = false;
+                                            var errorDetails = true;
+                                            var errorStatusCode = HttpStatusCode
+                                                                            .InternalServerError;
+                                            var errorResultCode = -1 * (int)errorStatusCode;
+                                            var errorMessage = nameof(HttpStatusCode.InternalServerError);
+
+                                            if (errorDetails)
                                             {
-                                                xLogger
-                                                    .LogError($"event: exception @ {middlewareTypeName}");
-                                                var reThrow = false;
-                                                var errorDetails = true;
-                                                var errorStatusCode = HttpStatusCode
-                                                                                .InternalServerError;
-                                                var errorResultCode = -1 * (int)errorStatusCode;
-                                                var errorMessage = nameof(HttpStatusCode.InternalServerError);
+                                                errorMessage = xException.ToString();
+                                            }
 
-                                                if (errorDetails)
-                                                {
-                                                    errorMessage = xException.ToString();
-                                                }
-
-                                                xLogger
-                                                    .LogOnDemand
-                                                        (
-                                                            LogLevel.Error
-                                                            , () =>
-                                                            {
-                                                                (
-                                                                    Exception LoggingException
-                                                                    , string LoggingMessage
-                                                                    , object[] LoggingArguments
-                                                                )
-                                                                    log =
-                                                                        (
-                                                                            xException
-                                                                            , $"LogOnDemand : {xException.ToString()}"
-                                                                            , null
-                                                                        );
-                                                                return
-                                                                       log;
-                                                            }
-                                                        );
-                                            //Console.WriteLine($"event: exception @ {middlewareTypeName}");
-
-                                            return
+                                            xLogger
+                                                .LogOnDemand
                                                     (
-                                                        reThrow
-                                                        , errorDetails
-                                                        , errorStatusCode
-                                                        , errorResultCode
-                                                        , errorMessage
+                                                        LogLevel.Error
+                                                        , () =>
+                                                        {
+                                                            (
+                                                                Exception LoggingException
+                                                                , string LoggingMessage
+                                                                , object[] LoggingArguments
+                                                            )
+                                                                log =
+                                                                    (
+                                                                        xException
+                                                                        , $"LogOnDemand : {xException.ToString()}"
+                                                                        , null
+                                                                    );
+                                                            return
+                                                                    log;
+                                                        }
                                                     );
-                                            };
-                                }
-                            );
+                                            //Console.WriteLine($"event: exception @ {middlewareTypeName}");
+                                            return
+                                                (
+                                                    reThrow
+                                                    , errorDetails
+                                                    , errorStatusCode
+                                                    , errorResultCode
+                                                    , errorMessage
+                                                );
+                                        };
+                            }
+                        );
                 #endregion
             }
-
-            app.UseCors();
-
-            if (1 == 1)
+            needUseMiddleware = configuration.GetValue("useExceptionHandler", false);
+            if (needUseMiddleware)
             {
                 #region ExceptionHandler
                 app
@@ -623,7 +634,7 @@
                                 {
                                     ExceptionHandler = new ExceptionOnDemandHandlerMiddleware
                                                             (
-                                                                env
+                                                                environment
                                                                 , configuration
                                                             )
                                     {
@@ -652,13 +663,13 @@
                 #endregion
                 //app.UseDeveloperExceptionPage();
             }
-            //else
+
             {
                 //app.UseHsts();
             }
             //app.UseHttpsRedirection();
 
-#if NETCOREAPPX_X
+#if NETCOREAPPX_X //only for NETCOREAPP2_X
             #region SyncAsyncActionSelector 拦截处理
             app
                 .UseCustomActionSelector<SyncOrAsyncActionSelector>
@@ -735,7 +746,7 @@
                         {
                             DefaultFileNames =
                                 {
-                                            "index.html"
+                                    "index.html"
                                 }
                         }
                     );

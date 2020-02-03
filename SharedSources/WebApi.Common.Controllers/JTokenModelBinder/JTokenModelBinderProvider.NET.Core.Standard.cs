@@ -9,12 +9,8 @@ namespace Microshaoft.WebApi.ModelBinders
     using System.Threading.Tasks;
     public class JTokenModelBinder : IModelBinder
     {
-        //public JTokenModelBinder()
-        //{ }
-
         private const string _itemKeyOfRequestJTokenParameters = "requestJTokenParameters";
-
-        public async Task BindModelAsync(ModelBindingContext bindingContext)
+        public Task BindModelAsync(ModelBindingContext bindingContext)
         {
             var httpContext = bindingContext
                                         .HttpContext;
@@ -82,6 +78,8 @@ namespace Microshaoft.WebApi.ModelBinders
                                                     (
                                                         parameters
                                                     );
+            return
+                Task.CompletedTask;
         }
     }
 }

@@ -262,11 +262,11 @@ namespace Microshaoft.Web
                     if (ok)
                     {
                         string[] jwtAudiences = configuration
-                                        .GetValue<string[]>
-                                            (
-                                                "Audiences"
-                                                , new string[] { }
-                                            );
+                                                        .GetOrDefault
+                                                            (
+                                                                "Audiences"
+                                                                , new string[] { }
+                                                            );
                         ok = jwtAudiences
                                  .Any
                                      (

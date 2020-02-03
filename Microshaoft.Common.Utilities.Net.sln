@@ -141,6 +141,10 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "JTokenModelParameterValidat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JTokenValidatorSamplePlugin.NET.Core.3.x", "Plugins\JsonParametersValidators\SamplePlugin\SamplePlugin.NET.Core.3.x\JTokenValidatorSamplePlugin.NET.Core.3.x.csproj", "{016C7778-B0E5-4995-BE87-D44E267371A9}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "30.Swagger", "30.Swagger", "{702A189B-E5AC-4343-8B52-3A614C5B36B0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Swagger.WebApplication", "Samples\Swagger.WebApplication\Swagger.WebApplication.csproj", "{3DCA8530-241A-40B9-A338-2CFBD4A60015}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Plugins\StoreProceduresExecutors\MsSQL\MsSQL.Plugin.Shared\MsSQL.StoreProcedureExecutor.Plugin.Shared.projitems*{0579c429-5e45-494c-b0f0-2b46dc1c8a77}*SharedItemsImports = 13
@@ -230,6 +234,10 @@ Global
 		{016C7778-B0E5-4995-BE87-D44E267371A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{016C7778-B0E5-4995-BE87-D44E267371A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{016C7778-B0E5-4995-BE87-D44E267371A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DCA8530-241A-40B9-A338-2CFBD4A60015}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DCA8530-241A-40B9-A338-2CFBD4A60015}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DCA8530-241A-40B9-A338-2CFBD4A60015}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DCA8530-241A-40B9-A338-2CFBD4A60015}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -291,6 +299,8 @@ Global
 		{BE9EFE7C-2F7A-45D2-AAD7-8D6E6B173BEB} = {3B803759-A04C-4681-8FFD-EE306F93D450}
 		{A85EFE1E-6A82-40FB-92AC-08ACBC50DC52} = {BD24E06F-6ADC-4C6B-8FBA-300B912BC243}
 		{016C7778-B0E5-4995-BE87-D44E267371A9} = {7562606B-4C6F-45EB-99F6-8CA3BD8EFC2C}
+		{702A189B-E5AC-4343-8B52-3A614C5B36B0} = {E3B1E8C0-D370-4099-9377-8B567A0B7485}
+		{3DCA8530-241A-40B9-A338-2CFBD4A60015} = {702A189B-E5AC-4343-8B52-3A614C5B36B0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3A79E5CD-0524-4DA6-B26C-17C43FF8E9FB}

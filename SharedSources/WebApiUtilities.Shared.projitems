@@ -25,6 +25,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Web.Filter.ConcurrencyLimiter\ResettableBooleanCompletionSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Filter.ConcurrencyLimiter\StackPolicy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Filters\BearerTokenAuthorizeFilter.CoreStandard.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Web.Filters\ConfigurationSwitchAuthorizeFilter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Filters\CustomFilters.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Filters\IHttpRequestValidateable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.Filters\OperationsAuthorizeFilter.CoreStandard.cs" />

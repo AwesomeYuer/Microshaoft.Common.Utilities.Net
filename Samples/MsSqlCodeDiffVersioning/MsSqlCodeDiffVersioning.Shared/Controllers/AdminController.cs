@@ -1,6 +1,7 @@
 ﻿namespace Microshaoft.WebApi.Controllers
 {
     using Microshaoft;
+    using Microshaoft.Web;
     using Microshaoft.WebApi.ModelBinders;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
@@ -14,12 +15,13 @@
 
     [Route("api/[controller]")]
     [ApiController]
-    public class PerfMonController : ControllerBase
+    [ServiceFilter(typeof(ConfigurationSwitchAuthorizeFilter))]
+    public class AdminController : ControllerBase
     {
         private readonly ConcurrentDictionary<string, ExecutingInfo>
                                         _executingCachingStore;
         
-        public PerfMonController
+        public AdminController
                         (
                             ConcurrentDictionary<string, ExecutingInfo>
                                         executingCachingStore
@@ -109,8 +111,6 @@
                                         }
                                     )
                     );
-            
-
         }
 
         [HttpGet]
@@ -122,7 +122,8 @@
                         (
                             new
                             {
-                                Environment.OSVersion
+                                Environment
+                                        .OSVersion
                                 , OSPlatform =
                                         EnumerableHelper
                                                     .Range
@@ -151,21 +152,23 @@
                                             .ProcessArchitecture
                                 , Process = new
                                     {
-                                        GlobalManager.CurrentProcess.StartTime
+                                          GlobalManager
+                                                .CurrentProcess
+                                                .StartTime
                                         , MemoryUtilization = new
                                             {
-                                                WorkingSet64 = $"{GlobalManager.CurrentProcess.PrivateMemorySize64 / 1e+6:N} MB"
-                                                , PeakWorkingSet64 = $"{GlobalManager.CurrentProcess.PeakWorkingSet64 / 1e+6:N} MB"
-                                                , PrivateMemorySize64 = $"{GlobalManager.CurrentProcess.PrivateMemorySize64 / 1e+6:N} MB"
-                                                , VirtualMemorySize64 = $"{GlobalManager.CurrentProcess.VirtualMemorySize64 / 1e+6:N} MB"
-                                                , PeakVirtualMemorySize64 = $"{GlobalManager.CurrentProcess.PeakVirtualMemorySize64 / 1e+6:N} MB"
-                                                , PagedMemorySize64 = $"{GlobalManager.CurrentProcess.PagedMemorySize64 / 1e+6:N} MB"
-                                                , PeakPagedMemorySize64 = $"{GlobalManager.CurrentProcess.PeakPagedMemorySize64 / 1e+6:N} MB"
-                                                , PagedSystemMemorySize64 = $"{GlobalManager.CurrentProcess.PagedSystemMemorySize64 / 1e+6:N} MB"
+                                                WorkingSet64                = $"{GlobalManager.CurrentProcess.PrivateMemorySize64       / 1e+6:N} MB"
+                                                , PeakWorkingSet64          = $"{GlobalManager.CurrentProcess.PeakWorkingSet64          / 1e+6:N} MB"
+                                                , PrivateMemorySize64       = $"{GlobalManager.CurrentProcess.PrivateMemorySize64       / 1e+6:N} MB"
+                                                , VirtualMemorySize64       = $"{GlobalManager.CurrentProcess.VirtualMemorySize64       / 1e+6:N} MB"
+                                                , PeakVirtualMemorySize64   = $"{GlobalManager.CurrentProcess.PeakVirtualMemorySize64   / 1e+6:N} MB"
+                                                , PagedMemorySize64         = $"{GlobalManager.CurrentProcess.PagedMemorySize64         / 1e+6:N} MB"
+                                                , PeakPagedMemorySize64     = $"{GlobalManager.CurrentProcess.PeakPagedMemorySize64     / 1e+6:N} MB"
+                                                , PagedSystemMemorySize64   = $"{GlobalManager.CurrentProcess.PagedSystemMemorySize64   / 1e+6:N} MB"
                                             }
                                         , ProcessorUtilization = new
                                             { 
-                                                GlobalManager
+                                                  GlobalManager
                                                         .CurrentProcess
                                                         .TotalProcessorTime
                                                 , GlobalManager
@@ -179,6 +182,70 @@
                                     
                             }
                         );
+        }
+
+        [HttpDelete]
+        [HttpGet]
+        [HttpHead]
+        [HttpOptions]
+        [HttpPatch]
+        [HttpPost]
+        [HttpPut]
+        [Route("Echo/{* }")]
+        public ActionResult Echo
+                (
+                     [ModelBinder(typeof(JTokenModelBinder))]
+                        JToken parameters = null
+                )
+        {
+            return
+                new JsonResult
+                (
+                    new
+                    {
+                        jsonRequestParameters = parameters
+                        , Request = new
+                            {
+                                  Request.ContentLength
+                                , Request.ContentType
+                                , Request.Cookies
+                                , Request.HasFormContentType
+                                , Request.Headers
+                                , Request.Host
+                                , Request.IsHttps
+                                , Request.Method
+                                , Request.Path
+                                , Request.PathBase
+                                , Request.Protocol
+                                , Request.Query
+                                , Request.QueryString
+                                , Request.RouteValues
+                                , Request.Scheme
+                            }
+                        , HttpContext = new
+                            {
+                                Connection = new
+                                {
+                                    RemoteIpAddress = HttpContext
+                                                            .Connection
+                                                            .RemoteIpAddress
+                                                            .ToString()
+                                }
+                                //, HttpContext.Items
+                                , User = new
+                                {
+                                    HttpContext.User.Claims
+                                    , Identity = new
+                                    {
+                                        HttpContext
+                                                .User
+                                                .Identity
+                                                .Name
+                                    }
+                                }
+                            }
+                    }
+                );
         }
     }
 }
