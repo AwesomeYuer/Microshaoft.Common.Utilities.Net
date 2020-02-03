@@ -1,5 +1,2 @@
-﻿version: '{build}'  
-image: 
- - Ubuntu
-build_script:  
- - ps: .\build.ps1
+﻿build_script:
+    - sh: .\appveyorBuild.sh
