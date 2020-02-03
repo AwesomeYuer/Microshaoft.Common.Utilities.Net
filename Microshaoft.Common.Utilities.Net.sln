@@ -97,6 +97,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00.Solution Items", "00.Sol
 		.gitignore = .gitignore
 		.travis.yml = .travis.yml
 		appveyor.yml = appveyor.yml
+		appveyorBuild.sh = appveyorBuild.sh
 		azure-pipelines.yml = azure-pipelines.yml
 		copyrundebug3x.sh = copyrundebug3x.sh
 		dotNET.Schedule.2019.jpg = dotNET.Schedule.2019.jpg

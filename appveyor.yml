@@ -1,2 +1,5 @@
-﻿build_script:
-- sh: dotnet build Microshaoft.Common.Utilities.Net.sln -c Debug
+﻿version: '{build}'  
+image: 
+ - Ubuntu
+build_script:  
+ - ps: .\build.ps1
