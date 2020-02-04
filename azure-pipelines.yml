@@ -1,5 +1,5 @@
 trigger:
-- master
+- '*'
 
 pool:
   name: Hosted Ubuntu 1604
@@ -20,9 +20,16 @@ steps:
     projects: Microshaoft.Common.Utilities.Net.sln
 
 - task: DotNetCoreCLI@2
-  displayName: 'dotnet build'
+  displayName: 'dotnet build Debug'
   inputs:
     projects: Microshaoft.Common.Utilities.Net.sln
+    arguments: '-c Debug'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet build Release'
+  inputs:
+    projects: Microshaoft.Common.Utilities.Net.sln
+    arguments: '-c Release'
 
 - task: DotNetCoreCLI@2
   displayName: Test
