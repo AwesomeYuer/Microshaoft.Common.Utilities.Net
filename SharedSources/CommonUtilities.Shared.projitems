@@ -35,6 +35,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)00.NET35\Tuple.Net35.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.NET35\WriteableTuple.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\BytesHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\PeUtility.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\CompressHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\CryptographyHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\DateTimeHelper.cs" />

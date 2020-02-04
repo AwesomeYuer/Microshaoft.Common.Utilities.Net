@@ -60,6 +60,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\LockHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\PathFileHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\PathHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\PeUtility.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\RandomHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\RemotingHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\SecureStringHelper.cs" />
