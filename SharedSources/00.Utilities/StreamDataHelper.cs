@@ -6,14 +6,14 @@
     public static class StreamDataHelper
     {
 
-        public static IEnumerable<byte[]> ReadDataToBuffers(Stream stream, int bufferSize)
+        public static IEnumerable<byte[]> ReadDataToBuffers(this Stream target, int bufferSize)
         {
             int l = bufferSize;
             int r = 1;
             while (r > 0)
             {
                 var buffer = new byte[l];
-                r = stream
+                r = target
                             .Read
                                 (
                                     buffer
@@ -34,7 +34,7 @@
 
         public static byte[] ReadDataToFixedLengthBytes
                             (
-                                Stream stream,
+                                this Stream target,
                                 int length
                             )
         {
@@ -42,7 +42,7 @@
             byte[] data = new byte[length];
             while (p < length)
             {
-                int r = stream.Read
+                int r = target.Read
                                     (
                                         data
                                         , p
@@ -52,20 +52,20 @@
             }
             return data;
         }
-        public static byte[] ReadDataToBytes(Stream stream)
+        public static byte[] ReadDataToBytes(this Stream target)
         {
             byte[] buffer = new byte[64 * 1024];
-            MemoryStream ms = new MemoryStream();
+            using MemoryStream ms = new MemoryStream();
             int l = 0;
             long position = -1;
-            if (stream.CanSeek)
+            if (target.CanSeek)
             {
-                position = stream.Position;
-                stream.Position = 0;
+                position = target.Position;
+                target.Position = 0;
             }
             while (true)
             {
-                int r = stream.Read(buffer, 0, buffer.Length);
+                int r = target.Read(buffer, 0, buffer.Length);
                 if (r > 0)
                 {
                     l += r;
@@ -81,11 +81,11 @@
             ms.Read(bytes, 0, (int)l);
 
             ms.Close();
-            ms.Dispose();
-            ms = null;
+            //ms.Dispose();
+            //ms = null;
             if (position >= 0)
             {
-                stream.Position = position;
+                target.Position = position;
             }
             return bytes;
         }

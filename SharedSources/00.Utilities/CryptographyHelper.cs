@@ -271,7 +271,7 @@ namespace Microshaoft
             stream.Position = 0;
             buffer = hashAlgorithm.ComputeHash(stream);
             stream.Close();
-            stream.Dispose();
+            //stream.Dispose();
             secret.EncryptorHashSignature 
                         = encryptorPrivateKeyPfxProvider
                                                     .SignHash
