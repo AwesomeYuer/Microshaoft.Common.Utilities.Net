@@ -318,8 +318,8 @@ namespace ConsoleApplication
         //[STAThread]
         private class UserModelDto
         {
-            public string UserName;
-            public DateTime? BrithDate;
+            public string UserName = null;
+            public DateTime? BrithDate = null;
 
         }
 

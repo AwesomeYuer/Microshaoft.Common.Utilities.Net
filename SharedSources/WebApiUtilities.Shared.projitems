@@ -9,8 +9,6 @@
     <Import_RootNamespace>WebApiUtilities.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)MEF.Composition\MEF.Contracts.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)MEF.Composition\MEFHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MEF.Composition\MEFHelper.NET.Core.Standard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Socket\SocketAwaitableEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Tcp\DuplexPipe.cs" />

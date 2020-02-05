@@ -116,7 +116,7 @@
                     resultSet
                 );
         }
-        private static async Task DataReadingProcessAsync
+        private static /*async*/ Task DataReadingProcessAsync
                 (
                     int resultSetID
                     , Func
@@ -179,6 +179,8 @@
                 (
                     resultSet
                 );
+            return
+                Task.CompletedTask;
         }
 
         private static void ResultProcess

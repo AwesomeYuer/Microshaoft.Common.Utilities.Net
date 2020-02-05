@@ -8,7 +8,6 @@
     /// </summary>
     public static class CompressHelper
     {
-
         public static byte[] GZipCompress(byte[] DATA)
         {
             //Console.WriteLine("GZipCompress");
@@ -16,11 +15,11 @@
             using GZipStream stream = new GZipStream(ms, CompressionMode.Compress, true);
             stream.Write(DATA, 0, DATA.Length);
             stream.Close();
-            stream.Dispose();
+            //stream.Dispose();
             //stream = null;
             byte[] buffer = StreamDataHelper.ReadDataToBytes(ms);
             ms.Close();
-            ms.Dispose();
+            //ms.Dispose();
             //ms = null;
             return buffer;
         }
@@ -31,20 +30,18 @@
             using GZipStream stream = new GZipStream(ms, CompressionMode.Decompress);
             byte[] buffer = StreamDataHelper.ReadDataToBytes(stream);
             ms.Close();
-            ms.Dispose();
+            //ms.Dispose();
             stream.Close();
-            stream.Dispose();
+            //stream.Dispose();
             return buffer;
         }
         public static Stream GZipCompress(Stream DATA)
         {
-            Console.WriteLine("GZipCompress");
             byte[] buffer = StreamDataHelper.ReadDataToBytes(DATA);
-            using MemoryStream ms = new MemoryStream();
+            MemoryStream ms = new MemoryStream();
             using GZipStream stream = new GZipStream(ms, CompressionMode.Compress, true);
             stream.Write(buffer, 0, buffer.Length);
             stream.Close();
-            stream.Dispose();
             if (ms.CanSeek)
             {
                 ms.Position = 0;
@@ -53,10 +50,9 @@
         }
         public static Stream GZipDecompress(Stream data)
         {
-
             byte[] buffer = StreamDataHelper.ReadDataToBytes(data);
-            using MemoryStream ms = new MemoryStream(buffer);
-            using GZipStream stream = new GZipStream(ms, CompressionMode.Decompress);
+            MemoryStream ms = new MemoryStream(buffer);
+            GZipStream stream = new GZipStream(ms, CompressionMode.Decompress);
             if (stream.CanSeek)
             {
                 stream.Position = 0;
@@ -69,10 +65,10 @@
             using DeflateStream stream = new DeflateStream(ms, CompressionMode.Compress, true);
             stream.Write(DATA, 0, DATA.Length);
             stream.Close();
-            stream.Dispose();
+            //stream.Dispose();
             byte[] buffer = StreamDataHelper.ReadDataToBytes(ms);
             ms.Close();
-            ms.Dispose();
+            //ms.Dispose();
             return buffer;
         }
         public static byte[] DeflateDecompress(byte[] data)
@@ -82,20 +78,18 @@
             byte[] buffer = StreamDataHelper.ReadDataToBytes(stream);
 
             ms.Close();
-            ms.Dispose();
+            //ms.Dispose();
             stream.Close();
-            stream.Dispose();
+            //stream.Dispose();
             return buffer;
         }
         public static Stream DeflateCompress(Stream DATA)
         {
             byte[] buffer = StreamDataHelper.ReadDataToBytes(DATA);
-            using MemoryStream ms = new MemoryStream();
+            MemoryStream ms = new MemoryStream();
             using DeflateStream stream = new DeflateStream(ms, CompressionMode.Compress, true);
             stream.Write(buffer, 0, buffer.Length);
-
             stream.Close();
-            stream.Dispose();
             if (ms.CanSeek)
             {
                 ms.Position = 0;
@@ -105,8 +99,8 @@
         public static Stream DeflateDecompress(Stream data)
         {
             byte[] buffer = StreamDataHelper.ReadDataToBytes(data);
-            using MemoryStream ms = new MemoryStream(buffer);
-            using DeflateStream stream = new DeflateStream(ms, CompressionMode.Decompress);
+            MemoryStream ms = new MemoryStream(buffer);
+            DeflateStream stream = new DeflateStream(ms, CompressionMode.Decompress);
             if (stream.CanSeek)
             {
                 stream.Position = 0;

@@ -104,7 +104,7 @@
             byte[] buffer = StreamDataHelper.ReadDataToBytes(ms);
             string xml = Encoding.UTF8.GetString(buffer);
             ms.Close();
-            ms.Dispose();
+            //ms.Dispose();
             return xml;
         }
         public static string DataContractSerializerObjectToXml<T>(T Object)
@@ -120,7 +120,7 @@
             //ms.Position = 0;
             T Object = (T)serializer.ReadObject(ms);
             ms.Close();
-            ms.Dispose();
+            //ms.Dispose();
             //ms = null;
             return Object;
         }
@@ -132,7 +132,7 @@
             //ms.Position = 0;
             T Object = (T)serializer.ReadObject(ms);
             ms.Close();
-            ms.Dispose();
+            //ms.Dispose();
             return Object;
         }
 #if NETFRAMEWORK4_X
@@ -205,7 +205,7 @@
             serializer.WriteObject(ms, Object);
             string json = Encoding.UTF8.GetString(ms.GetBuffer());
             ms.Close();
-            ms.Dispose();
+            //ms.Dispose();
             return json;
         }
         public static T DataContractSerializerJsonToObject<T>(string json)
@@ -219,7 +219,7 @@
             using MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(json));
             T Object = (T)serializer.ReadObject(ms);
             ms.Close();
-            ms.Dispose();
+            //ms.Dispose();
             return Object;
         }
 
