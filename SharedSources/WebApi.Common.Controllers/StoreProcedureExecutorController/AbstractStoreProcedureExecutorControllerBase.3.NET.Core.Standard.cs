@@ -31,9 +31,12 @@ namespace Microshaoft.WebApi.Controllers
                             _configuration;
         public AbstractStoreProceduresExecutorControllerBase
                     (
-                        AbstractStoreProceduresService service
-                        , IConfiguration configuration
-                        , IOptions<CsvFormatterOptions> csvFormatterOptions
+                        AbstractStoreProceduresService
+                                        service
+                        , IConfiguration
+                                        configuration
+                        , IOptions<CsvFormatterOptions>
+                                        csvFormatterOptions
                     )
         {
             _csvFormatterOptions = csvFormatterOptions.Value;
@@ -293,7 +296,6 @@ namespace Microshaoft.WebApi.Controllers
                     );
         }
 
-
         [HttpDelete]
         [HttpGet]
         [HttpHead]
@@ -326,7 +328,7 @@ namespace Microshaoft.WebApi.Controllers
                     + "{resultJsonPathPart6?}"
                 )
         ]
-        //#endif
+//#endif
         [
             Route
                 (
@@ -402,28 +404,6 @@ namespace Microshaoft.WebApi.Controllers
                         , result
                     );
         }
-        [HttpGet]
-        [Route("admin/{routeName}")]
-        public IDictionary<string, IStoreProcedureExecutable>
-            Admin
-                (
-                    //必须有该参数
-                    string routeName
-                )
-        {
-            return
-                _service
-                    .IndexedExecutors
-                    //.Select
-                    //    (
-                    //        (x) =>
-                    //        {
-                    //            x.Value
-                    //        }
-                    //    )
-                    ;
-        }
-
         private ActionResult<JToken> ResultProcess
                     (
                         string routeName
@@ -514,19 +494,19 @@ namespace Microshaoft.WebApi.Controllers
             else
             {
                 return
-                    new
-                        JsonResult
-                            (
-                                new
-                                {
-                                    statusCode = result
-                                                    .StatusCode
-                                    , resultCode = -1 * result
-                                                            .StatusCode
-                                    , message = result
-                                                    .Message
-                                }
-                            )
+                        new
+                            JsonResult
+                                (
+                                    new
+                                    {
+                                        statusCode = result
+                                                        .StatusCode
+                                        , resultCode = -1 * result
+                                                                .StatusCode
+                                        , message = result
+                                                        .Message
+                                    }
+                                )
                     {
                         StatusCode = result.StatusCode
                         , ContentType = "application/json"

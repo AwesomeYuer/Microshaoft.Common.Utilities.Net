@@ -8,6 +8,7 @@
     using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Concurrent;
+    using System.Collections.Generic;
     using System.Data.SqlClient;
     using System.Linq;
     using System.Runtime.InteropServices;
@@ -20,15 +21,39 @@
     {
         private readonly ConcurrentDictionary<string, ExecutingInfo>
                                         _executingCachingStore;
-        
+        protected readonly AbstractStoreProceduresService
+                                        _storeProceduresService;
         public AdminController
                         (
                             ConcurrentDictionary<string, ExecutingInfo>
                                         executingCachingStore
+                            , AbstractStoreProceduresService
+                                        storeProceduresService
+
                         )
         {
             _executingCachingStore = executingCachingStore;
+            _storeProceduresService = storeProceduresService;
         }
+
+        [HttpGet]
+        [Route("IndexedExecutors")]
+        public IDictionary<string, IStoreProcedureExecutable>
+                    IndexedExecutors()
+                        {
+                            return
+                                _storeProceduresService
+                                    .IndexedExecutors
+                                    //.Select
+                                    //    (
+                                    //        (x) =>
+                                    //        {
+                                    //            x.Value
+                                    //        }
+                                    //    )
+                                    ;
+                        }
+
 
         [HttpGet]
         [Route("ExecutingCachingStore")]
