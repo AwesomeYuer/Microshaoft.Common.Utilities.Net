@@ -11,6 +11,7 @@ namespace Microshaoft.WebApi.Controllers
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Diagnostics;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -30,9 +31,12 @@ namespace Microshaoft.WebApi.Controllers
                             _configuration;
         public AbstractStoreProceduresExecutorControllerBase
                     (
-                        AbstractStoreProceduresService service
-                        , IConfiguration configuration
-                        , IOptions<CsvFormatterOptions> csvFormatterOptions
+                        AbstractStoreProceduresService
+                                        service
+                        , IConfiguration
+                                        configuration
+                        , IOptions<CsvFormatterOptions>
+                                        csvFormatterOptions
                     )
         {
             _csvFormatterOptions = csvFormatterOptions.Value;
@@ -258,6 +262,8 @@ namespace Microshaoft.WebApi.Controllers
                                         string resultJsonPathPart6 = null
                                 )
         {
+            var beginTimestamp = Stopwatch.GetTimestamp();
+            var beginTime = DateTime.Now;
             (
                 int StatusCode
                 , string Message
@@ -278,6 +284,8 @@ namespace Microshaoft.WebApi.Controllers
                 ResultProcess
                     (
                         routeName
+                        , beginTimestamp
+                        , beginTime
                         , resultJsonPathPart1
                         , resultJsonPathPart2
                         , resultJsonPathPart3
@@ -287,7 +295,6 @@ namespace Microshaoft.WebApi.Controllers
                         , result
                     );
         }
-
 
         [HttpDelete]
         [HttpGet]
@@ -321,7 +328,7 @@ namespace Microshaoft.WebApi.Controllers
                     + "{resultJsonPathPart6?}"
                 )
         ]
-        //#endif
+//#endif
         [
             Route
                 (
@@ -364,6 +371,8 @@ namespace Microshaoft.WebApi.Controllers
                                         string resultJsonPathPart6 = null
                                 )
         {
+            var beginTimestamp = Stopwatch.GetTimestamp();
+            var beginTime = DateTime.Now;
             (
                 int StatusCode
                 , string Message
@@ -384,6 +393,8 @@ namespace Microshaoft.WebApi.Controllers
                 ResultProcess
                     (
                         routeName
+                        , beginTimestamp
+                        , beginTime
                         , resultJsonPathPart1
                         , resultJsonPathPart2
                         , resultJsonPathPart3
@@ -393,31 +404,11 @@ namespace Microshaoft.WebApi.Controllers
                         , result
                     );
         }
-        [HttpGet]
-        [Route("admin/{routeName}")]
-        public IDictionary<string, IStoreProcedureExecutable>
-            Admin
-                (
-                    //必须有该参数
-                    string routeName
-                )
-        {
-            return
-                _service
-                    .IndexedExecutors
-                    //.Select
-                    //    (
-                    //        (x) =>
-                    //        {
-                    //            x.Value
-                    //        }
-                    //    )
-                    ;
-        }
-
         private ActionResult<JToken> ResultProcess
                     (
                         string routeName
+                        , long beginTimestamp
+                        , DateTime beginTime
                         , string resultJsonPathPart1
                         , string resultJsonPathPart2
                         , string resultJsonPathPart3
@@ -434,7 +425,6 @@ namespace Microshaoft.WebApi.Controllers
                                 result
                     )
         {
-
             Response
                     .StatusCode = result
                                         .StatusCode;
@@ -455,7 +445,13 @@ namespace Microshaoft.WebApi.Controllers
                                 , dbExecutingDuration
                             );
             }
-
+            var jResult = result.Result;
+            jResult["BeginTime"] = beginTime;
+            jResult["EndTime"] = DateTime.Now;
+            jResult["DurationInMilliseconds"] =
+                            beginTimestamp
+                                    .GetElapsedTimeToNow()
+                                    .TotalMilliseconds;
             if (result.StatusCode == 200)
             {
                 //support custom output nest json by JSONPath in JsonFile Config
@@ -463,12 +459,10 @@ namespace Microshaoft.WebApi.Controllers
                     .Result = MapByConfiguration
                                     (
                                         routeName
-                                        , result
-                                                .Result
+                                        , jResult
                                     );
                 result
-                    .Result = result
-                                .Result
+                    .Result = jResult
                                 .GetDescendantByPathKeys
                                         (
                                             resultJsonPathPart1
@@ -500,19 +494,19 @@ namespace Microshaoft.WebApi.Controllers
             else
             {
                 return
-                    new
-                        JsonResult
-                            (
-                                new
-                                {
-                                    statusCode = result
-                                                    .StatusCode
-                                    , resultCode = -1 * result
-                                                            .StatusCode
-                                    , message = result
-                                                    .Message
-                                }
-                            )
+                        new
+                            JsonResult
+                                (
+                                    new
+                                    {
+                                        statusCode = result
+                                                        .StatusCode
+                                        , resultCode = -1 * result
+                                                                .StatusCode
+                                        , message = result
+                                                        .Message
+                                    }
+                                )
                     {
                         StatusCode = result.StatusCode
                         , ContentType = "application/json"
@@ -526,10 +520,10 @@ namespace Microshaoft.WebApi.Controllers
             (
                 JToken parameters
                 , string key = requestJTokenParametersItemKey
-                
             )
         {
-            var httpContext = ControllerContext.HttpContext;
+            var httpContext = ControllerContext
+                                            .HttpContext;
             if
                 (
                     httpContext
@@ -541,7 +535,7 @@ namespace Microshaoft.WebApi.Controllers
                             )
                 )
             {
-                if (!Object.ReferenceEquals(@value, parameters))
+                if (!object.ReferenceEquals(@value, parameters))
                 {
                     httpContext
                         .Items[key]
@@ -555,9 +549,6 @@ namespace Microshaoft.WebApi.Controllers
                     .Add(key, parameters);
             }
         }
-
-
-
     }
 }
 #endif

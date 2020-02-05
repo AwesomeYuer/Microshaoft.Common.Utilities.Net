@@ -32,26 +32,30 @@
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure
                         (
-                            IApplicationBuilder app
+                            IApplicationBuilder
+                                        app
                             ,
 #if NETCOREAPP2_X
                                 IHostingEnvironment
 #else
                                 IWebHostEnvironment
 #endif
-                                environment
-                            , IConfiguration configuration
-                            , ILoggerFactory loggerFactory
-
+                                        environment
+                            , IConfiguration
+                                        configuration
+                            , ILoggerFactory
+                                        loggerFactory
                             , ConcurrentDictionary<string, ExecutingInfo>
-                                            executingCachingStore
-                            , ILogger logger
+                                        executingCachingStore
+                            , ILogger
+                                        logger
                         )
         {
             _logger = logger;
             app.UseCors();
 
-            string requestResponseTimingLoggingItemKey = "beginTimestamp";
+            var requestResponseTimingItemKey = string.Empty;
+            requestResponseTimingItemKey = nameof(requestResponseTimingItemKey);
             //timingKey = string.Empty;
             var needUseMiddleware = configuration.GetValue("useRequestResponseGuard", false);
             if (needUseMiddleware)
@@ -87,7 +91,7 @@
                                             {
                                                 if
                                                     (
-                                                        requestResponseTimingLoggingItemKey
+                                                        requestResponseTimingItemKey
                                                                         .IsNullOrEmptyOrWhiteSpace()
                                                     )
                                                 {
@@ -106,7 +110,7 @@
                                                             .Items
                                                             .TryAdd
                                                                 (
-                                                                    requestResponseTimingLoggingItemKey
+                                                                    requestResponseTimingItemKey
                                                                     ,
                                                                         (
                                                                             BeginTime: DateTime.Now
@@ -345,26 +349,27 @@
                                                                 .Items
                                                                 .Remove
                                                                     (
-                                                                        requestResponseTimingLoggingItemKey
+                                                                        requestResponseTimingItemKey
                                                                         , out removed
                                                                     );
-                                                    double requestResponseTimingInMilliseconds = -1;
+                                                    double? requestResponseTimingInMilliseconds = null;
                                                     DateTime? requestBeginTime = null;
                                                     DateTime? responseStartingTime = null;
                                                     if (r)
                                                     {
+                                                        var
                                                         (
-                                                            DateTime beginTime
-                                                            , long beginTimeStamp
+                                                            beginTime
+                                                            , beginTimeStamp
                                                         )
-                                                        = (ValueTuple<DateTime, long>) removed;
+                                                        =
+                                                        (ValueTuple<DateTime, long>) removed;
                                                         removed = null;
                                                         requestBeginTime = beginTime;
                                                         response
                                                             .Headers["X-Request-Receive-BeginTime"]
                                                                         = beginTime
                                                                                     .ToString(defaultDateTimeFormat);
-
                                                         responseStartingTime = DateTime.Now;
                                                         response
                                                             .Headers["X-Response-Send-BeginTime"]
