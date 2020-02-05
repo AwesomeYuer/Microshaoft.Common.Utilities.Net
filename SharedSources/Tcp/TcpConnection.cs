@@ -43,7 +43,7 @@ namespace Microshaoft
         // We claim to have inherent keep-alive so the client doesn't kill the connection when it hasn't seen ping frames.
         public bool HasInherentKeepAlive { get; } = true;
 
-        public Task DisposeAsync()
+        public new Task DisposeAsync()
         {
             Transport?.Output.Complete();
             Transport?.Input.Complete();

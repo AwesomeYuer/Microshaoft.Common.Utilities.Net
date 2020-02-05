@@ -38,7 +38,7 @@
 
     public static class DateTimeHelper
     {
-        public static readonly DateTime TimeEpoch = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).Add(TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now));
+        //public static readonly DateTime TimeEpoch = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).Add(TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now));
         public static readonly DateTime TimeUtcEpoch = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
         public const string TimeShortFormat = @"yyyy-MM-dd HH:mm:ss";
         public const string TimeLongFormat = @"yyyy-MM-dd HH:mm:ss.fffffff";

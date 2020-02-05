@@ -11,7 +11,6 @@ namespace Microshaoft.WebApi.Controllers
     using System.Threading.Tasks;
 #if NETCOREAPP3_X
     using Microshaoft.AspNetCore.ConcurrencyLimiters;
-    using System.Runtime.InteropServices;
 #endif
 
     //[Route("api/[controller]")]
@@ -21,8 +20,6 @@ namespace Microshaoft.WebApi.Controllers
     public class StoreProcedureExecutorController
                     : AbstractStoreProceduresExecutorControllerBase
     {
-
-        
 
         public StoreProcedureExecutorController
                             (
@@ -38,7 +35,6 @@ namespace Microshaoft.WebApi.Controllers
                     )
         {
         }
-
 
         /// <summary>
         /// ProcessActionRequest
@@ -105,9 +101,6 @@ namespace Microshaoft.WebApi.Controllers
                             );
         }
 
-
-
-
         /// <summary>
         /// ProcessActionRequestAsync 
         /// </summary>
@@ -164,7 +157,6 @@ namespace Microshaoft.WebApi.Controllers
                             );
         }
 
-
         /// <summary>
         /// ProcessActionRequestAsync  Export
         /// </summary>
@@ -207,10 +199,6 @@ namespace Microshaoft.WebApi.Controllers
                             , parameters
                         );
         }
-
-
-
-
     }
 }
 #endif
