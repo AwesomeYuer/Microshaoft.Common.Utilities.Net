@@ -1,4 +1,4 @@
-﻿//#if !XAMARIN && NETFRAMEWORK4_X
+﻿#if IBM_Data_DB2_Core
 namespace Microshaoft
 {
     using Newtonsoft.Json.Linq;
@@ -117,4 +117,4 @@ namespace Microshaoft
         }
     }
 }
-//#endif
+#endif

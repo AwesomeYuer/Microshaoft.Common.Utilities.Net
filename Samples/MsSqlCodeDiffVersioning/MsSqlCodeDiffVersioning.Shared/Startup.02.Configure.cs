@@ -99,7 +99,7 @@
                                                 }
                                                 var request = httpContext.Request;
                                                 request.EnableBuffering();
-                                                xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
+                                                //xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
                                                 var httpRequestFeature = httpContext.Features.Get<IHttpRequestFeature>();
                                                 var url = httpRequestFeature.RawTarget;
                                                 httpRequestFeature = null;
@@ -191,7 +191,7 @@
                                                 )
                                                     =>
                                                 {
-                                                    xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
+                                                    //xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
                                                     var httpRequestFeature = httpContext
                                                                                     .Features
                                                                                     .Get<IHttpRequestFeature>();
@@ -211,10 +211,8 @@
                                                         var jsonResult = new
                                                         {
                                                             statusCode = errorStatusCode
-                                                            ,
-                                                            resultCode = -1 * errorStatusCode
-                                                            ,
-                                                            message = errorMessage
+                                                            , resultCode = -1 * errorStatusCode
+                                                            , message = errorMessage
                                                         };
                                                         using var responseBodyStream = response.Body;
                                                         await
@@ -252,7 +250,7 @@
                                                 )
                                                     =>
                                                 {
-                                                    xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
+                                                    //xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
                                                     //return;
                                                     xLogger
                                                         .LogOnDemand
@@ -338,7 +336,7 @@
                                                                                             "dbExecutingDuration"
                                                                                             , out var removed
                                                                                         );
-                                                                    double dbExecutingTimingInMilliseconds = -1;
+                                                                    double? dbExecutingTimingInMilliseconds = null;
                                                                     if (r)
                                                                     {
                                                                         TimeSpan? timespan = removed as TimeSpan?;
@@ -364,7 +362,8 @@
                                                                     DateTime? responseStartingTime = null;
                                                                     if (r)
                                                                     {
-                                                                        var (
+                                                                        var
+                                                                        (
                                                                             beginTime
                                                                             , beginTimeStamp
                                                                         )
@@ -449,52 +448,52 @@
 
                                                                     #region GlobalManager.AsyncRequestResponseLoggingProcessor.Enqueue
                                                                     GlobalManager
-                                                                        .AsyncRequestResponseLoggingProcessor
-                                                                        .Enqueue
-                                                                            (
+                                                                            .AsyncRequestResponseLoggingProcessor
+                                                                            .Enqueue
                                                                                 (
-                                                                                    url
-                                                                                    ,
-                                                                                        (
-                                                                                            requestHeaders
-                                                                                            , requestBody
-                                                                                            , request.Method
-                                                                                            , requestBeginTime
-                                                                                            , request.ContentLength
-                                                                                            , request.ContentType
-                                                                                        )
-                                                                                    ,
-                                                                                        (
-                                                                                            responseHeaders
-                                                                                            , responseBody
-                                                                                            , response.StatusCode
-                                                                                            , responseStartingTime
-                                                                                            , response.ContentLength
-                                                                                            , response.ContentType
-                                                                                        )
-                                                                                    ,
-                                                                                        (
-                                                                                            requestResponseTimingInMilliseconds
-                                                                                            , dbExecutingTimingInMilliseconds
-                                                                                        )
-                                                                                    ,
-                                                                                        (
+                                                                                    (
+                                                                                        url
+                                                                                        ,
                                                                                             (
-                                                                                                clientIP
-                                                                                                , decimal.Parse("1.0")
-                                                                                                , new decimal(1.0)
-                                                                                            ) //Location
-                                                                                            , userID
-                                                                                            , roleID
-                                                                                            , orgUnitID
-                                                                                            ,
+                                                                                                requestHeaders
+                                                                                                , requestBody
+                                                                                                , request.Method
+                                                                                                , requestBeginTime
+                                                                                                , request.ContentLength
+                                                                                                , request.ContentType
+                                                                                            )
+                                                                                        ,
                                                                                             (
-                                                                                                deviceID
-                                                                                                , deviceInfo
-                                                                                            ) // Device
-                                                                                        ) //User
-                                                                                )
-                                                                            );
+                                                                                                responseHeaders
+                                                                                                , responseBody
+                                                                                                , response.StatusCode
+                                                                                                , responseStartingTime
+                                                                                                , response.ContentLength
+                                                                                                , response.ContentType
+                                                                                            )
+                                                                                        ,
+                                                                                            (
+                                                                                                requestResponseTimingInMilliseconds
+                                                                                                , dbExecutingTimingInMilliseconds
+                                                                                            )
+                                                                                        ,
+                                                                                            (
+                                                                                                (
+                                                                                                    clientIP
+                                                                                                    , decimal.Parse("1.0")
+                                                                                                    , new decimal(1.0)
+                                                                                                ) //Location
+                                                                                                , userID
+                                                                                                , roleID
+                                                                                                , orgUnitID
+                                                                                                ,
+                                                                                                (
+                                                                                                    deviceID
+                                                                                                    , deviceInfo
+                                                                                                ) // Device
+                                                                                            ) //User
+                                                                                    )
+                                                                                );
                                                                     #endregion
                                                                 }
                                                             );
@@ -516,7 +515,7 @@
                                                     =>
                                                 {
                                                     //Console.WriteLine($"event: {@event} @ {middlewareTypeName}");
-                                                    xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
+                                                    //xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
                                                 };
                                     #endregion
 
@@ -554,8 +553,8 @@
                                                         }
                                                         removed = null;
                                                     }
-                                                    xLogger
-                                                        .LogInformation($"event: {@event} @ {middlewareTypeName}");
+                                                    //xLogger
+                                                    //    .LogInformation($"event: {@event} @ {middlewareTypeName}");
                                                 }; 
                                     #endregion
                                 }

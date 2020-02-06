@@ -1,4 +1,5 @@
-﻿namespace Microshaoft.CompositionPlugins
+﻿#if IBM_Data_DB2_Core
+namespace Microshaoft.CompositionPlugins
 {
     using Microshaoft;
     using System.Composition;
@@ -46,3 +47,4 @@
         }
     }
 }
+#endif
