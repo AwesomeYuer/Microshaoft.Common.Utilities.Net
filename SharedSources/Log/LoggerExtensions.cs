@@ -5,7 +5,6 @@ namespace Microshaoft
     using System;
     public static class LoggerExtensions
     {
-
         public static void LogOnDemand
                 (
                    this ILogger target
@@ -18,8 +17,6 @@ namespace Microshaoft
                 processAction();
             }
         }
-
-
         public static void LogOnDemand
                 (
                    this ILogger target
