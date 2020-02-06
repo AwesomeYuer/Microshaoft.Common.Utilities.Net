@@ -290,14 +290,14 @@
                         {
                             return
                                 GlobalManager
-                                    .OnCaughtExceptionProcessFunc
-                                        (
-                                            GlobalManager
-                                                    .GlobalLogger
-                                           , exception
-                                           , newException
-                                           , innerExceptionMessage
-                                        );
+                                        .OnCaughtExceptionProcessFunc
+                                            (
+                                                GlobalManager
+                                                        .GlobalLogger
+                                               , exception
+                                               , newException
+                                               , innerExceptionMessage
+                                            );
                         };
 
             var asyncProcessorConfigurationPrefixKeys = $"SingleThreadAsyncDequeueProcessors:AsyncRequestResponseLoggingProcessor";

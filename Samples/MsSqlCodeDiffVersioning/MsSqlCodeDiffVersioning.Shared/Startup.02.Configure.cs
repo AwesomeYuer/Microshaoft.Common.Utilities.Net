@@ -586,8 +586,6 @@
                                         )
                                             =>
                                         {
-                                            xLogger
-                                                .LogError($"event: exception @ {middlewareTypeName}");
                                             var reThrow = false;
                                             var errorDetails = true;
                                             var errorStatusCode = HttpStatusCode
@@ -607,8 +605,6 @@
                                                                         , xException
                                                                         , $"event: exception @ middleware : {middlewareTypeName}"
                                                                     );
-
-                                            //Console.WriteLine($"event: exception @ {middlewareTypeName}");
                                             return
                                                 (
                                                     reThrow
@@ -648,13 +644,13 @@
                                                  errorMessage = xCaughtException.ToString();
                                              }
                                              var reThrow = GlobalManager
-                                                            .OnCaughtExceptionProcessFunc
-                                                                (
-                                                                    logger
-                                                                    , xCaughtException
-                                                                    , xCaughtException
-                                                                    , $"event: exception @ middleware : {middlewareTypeName}"
-                                                                );
+                                                                .OnCaughtExceptionProcessFunc
+                                                                    (
+                                                                        logger
+                                                                        , xCaughtException
+                                                                        , xCaughtException
+                                                                        , $"event: exception @ middleware : {middlewareTypeName}"
+                                                                    );
                                              return
                                                  (
                                                     errorDetails

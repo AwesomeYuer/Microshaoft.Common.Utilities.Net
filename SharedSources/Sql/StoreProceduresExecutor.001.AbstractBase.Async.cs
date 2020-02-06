@@ -542,11 +542,11 @@
                 connection
                         .Open();
                 var dataReader = command
-                                    .ExecuteReader
-                                        (
-                                            CommandBehavior
-                                                .CloseConnection
-                                        );
+                                        .ExecuteReader
+                                            (
+                                                CommandBehavior
+                                                    .CloseConnection
+                                            );
                 do
                 {
                     DataReadingProcess
