@@ -125,16 +125,17 @@
                             }
                         )
 #endif
-                    .ConfigureLogging
-                        (
-                            (hostBuilderContext, loggingBuilder) =>
-                            {
-                                loggingBuilder
-                                        .SetMinimumLevel(LogLevel.Error);
-                                loggingBuilder
-                                    .AddConsole();
-                            }
-                        )
+                    //.ConfigureLogging
+                    //    (
+                    //        (loggingBuilder) =>
+                    //        {
+
+                    //            loggingBuilder
+                    //                    .SetMinimumLevel(LogLevel.None);
+                    //            //loggingBuilder
+                    //            //    .AddConsole();
+                    //        }
+                    //    )
                     .ConfigureAppConfiguration
                         (
                             (hostingContext, configurationBuilder) =>
@@ -183,6 +184,13 @@
                                                 , optional: false
                                                 , reloadOnChange: true
                                             )
+                                        //.AddJsonFile
+                                        //    (
+                                        //        path: "appsettings.json"
+                                        //        , optional: false
+                                        //        , reloadOnChange: true
+                                        //    )
+                                            
                                         ;
                                 if
                                     (

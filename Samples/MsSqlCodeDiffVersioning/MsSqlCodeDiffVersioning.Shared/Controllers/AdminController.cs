@@ -1,16 +1,19 @@
 ﻿namespace Microshaoft.WebApi.Controllers
 {
     using Microshaoft;
+    using Microshaoft.Extensions.Logging;
     using Microshaoft.Web;
     using Microshaoft.WebApi.ModelBinders;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Logging;
     using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Data.SqlClient;
     using System.Linq;
+    using System.Reflection;
     using System.Runtime.InteropServices;
     using WebApplication.ASPNetCore;
 
@@ -35,6 +38,110 @@
             _executingCachingStore = executingCachingStore;
             _storeProceduresService = storeProceduresService;
         }
+        [HttpPost]
+        [HttpGet]
+        [Route("RequestResponseLoggingLogLevel")]
+        public LogLevel
+            RequestResponseLoggingLogLevel
+                    (
+                        [ModelBinder(typeof(JTokenModelBinder))]
+                            JToken parameters = null
+                    )
+        {
+            //if (Request.Method == "POST")
+            {
+                
+                if (parameters is JObject jObject)
+                {
+                    var r = jObject
+                                .TryGetValue
+                                        (
+                                            "RequestResponseLoggingLogLevel"
+                                            , StringComparison
+                                                        .OrdinalIgnoreCase
+                                            , out var @value
+                                        );
+                    if (r)
+                    {
+                        if (value is JValue jValue)
+                        {
+                            int i = jValue
+                                        .Value<int>();
+                            if (Enum.IsDefined(typeof(LogLevel), i))
+                            {
+                                GlobalManager
+                                        .RequestResponseLoggingLogLevel = (LogLevel) i;
+                            }
+                        }
+                    }
+                }
+            }
+            return
+                GlobalManager
+                    .RequestResponseLoggingLogLevel;
+        }
+        [HttpPost]
+        [HttpGet]
+        [Route("GlobalLogger")]
+        public ILogger
+                    GlobalLogger
+                            (
+                                [ModelBinder(typeof(JTokenModelBinder))]
+                                        JToken parameters = null
+                            )
+        {
+            if (Request.Method == "POST")
+            {
+                if (parameters is JObject jObject)
+                {
+                    var r = jObject.TryGetValue("MIn", StringComparison.OrdinalIgnoreCase, out var @value);
+                    if (r)
+                    {
+                        if (value is JValue jValue)
+                        {
+                            int i =  jValue.Value<int>();
+                            if (Enum.IsDefined(typeof(LogLevel), i))
+                            {
+                                
+
+
+                            }
+
+
+                        }
+
+                    }
+                }
+            
+            }
+
+
+            var type = GlobalManager.GlobalLogger.GetType();
+            var field = type.GetField("<MessageLoggers>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic);
+            var array = ((Array)field.GetValue(GlobalManager.GlobalLogger));
+            type = null;
+            for (int i = 0; i < array.Length; i++)
+            {
+                var messageLogger = array.GetValue(i);
+                if (type == null)
+                {
+                    type = messageLogger.GetType();
+                }
+                var f = type.GetField("<MinLevel>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic);
+                int x = (int)f.GetValue(messageLogger);
+                f.SetValue(messageLogger, LogLevel.Debug);
+                x = (int)f.GetValue(messageLogger);
+            }
+
+            //GlobalManager.GlobalLogger.se
+
+            //var xxxx = (GlobalManager.GlobalLogger);
+
+            return
+                GlobalManager
+                        .GlobalLogger;
+        }
+
 
         [HttpGet]
         [Route("IndexedExecutors")]

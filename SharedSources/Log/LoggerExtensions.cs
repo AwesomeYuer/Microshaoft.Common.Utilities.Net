@@ -9,6 +9,18 @@ namespace Microshaoft
                 (
                    this ILogger target
                     , LogLevel logLevel
+                    , Action processAction
+                )
+        {
+            if (target.IsEnabled(logLevel))
+            {
+                processAction();
+            }
+        }
+        public static void LogOnDemand
+                (
+                   this ILogger target
+                    , LogLevel logLevel
                     , Func<string> messageFactory
                 )
         {
