@@ -9,7 +9,6 @@
     <Import_RootNamespace>CommonUtilities.Lite.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)0.Temp\Temp.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\00.Shared\ActivatorUtilities\ActivatorUtilities.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\00.Shared\ActivatorUtilities\ActivatorUtilitiesConstructorAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\00.Shared\ActivatorUtilities\ObjectFactory.cs" />
@@ -84,6 +83,20 @@
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\ConfigurationAppSettingsHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\ConfigurationExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\ConfigurationHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ConsoleLogger\AnsiLogConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ConsoleLogger\AnsiSystemConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ConsoleLogger\ConsoleLoggerFactoryExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ConsoleLogger\ConsoleLoggerFormat.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ConsoleLogger\ConsoleLoggerOptions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ConsoleLogger\ConsoleLoggerProcessor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ConsoleLogger\IAnsiSystemConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ConsoleLogger\IConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ConsoleLogger\LightConsoleLogger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ConsoleLogger\LightConsoleLoggerProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ConsoleLogger\LogMessageEntry.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ConsoleLogger\NullExternalScopeProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ConsoleLogger\NullScope.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ConsoleLogger\WindowsLogConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Console\ConsoleHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Console\DebugConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Console\WindowsBackgroundInteractiveConsole.cs" />

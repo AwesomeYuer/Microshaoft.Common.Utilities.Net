@@ -1,6 +1,9 @@
 ﻿namespace WebApplication.ASPNetCore
 {
     using Microshaoft;
+    using Microshaoft.Extensions.Logging;
+    using Microsoft.Extensions.Logging;
+
     using System;
     using System.Collections.Concurrent;
     using System.Diagnostics;
@@ -40,6 +43,42 @@
                 OsPlatformName = $"Unknown {nameof(OsPlatformName)}:[{ProcessAlignedSecondsStartTime:yyyy-MM-dd HH:mm:ss}]";
             }
         }
+
+        public static LogLevel RequestResponseLoggingLogLevel = LogLevel.Trace;
+
+        public static readonly ILoggerFactory GlobalLoggerFactory =
+                            LoggerFactory
+                                    .Create
+                                        (
+                                            (loggingBuilder) =>
+                                            {
+                                                //loggingBuilder
+                                                //            .AddConsole1();
+
+                                                loggingBuilder
+                                                        .SetMinimumLevel
+                                                                (
+                                                                    LogLevel
+                                                                            .Information
+                                                                )
+                                                        .AddConsole();
+
+                                                //        ;
+                                                //    .AddFilter("Microsoft", LogLevel.Warning)
+                                                //    .AddFilter("System", LogLevel.Warning)
+                                                //    .AddFilter("LoggingConsoleApp.Program", LogLevel.Debug)
+                                                //.AddConsole()
+                                                //    .AddEventLog()
+                                                //;
+                                            }
+                                        );
+
+        public static readonly ILogger GlobalLogger = GlobalLoggerFactory
+                                                                .CreateLogger("Microshaoft.Logger.Category");
+
+
+
+
 
         public static readonly Process CurrentProcess;
         public static readonly DateTime ProcessAlignedSecondsStartTime;
@@ -154,7 +193,34 @@
                         new ConcurrentDictionary<string, ExecutingInfo>
                                 (StringComparer.OrdinalIgnoreCase);
 
-
+        public static bool OnCaughtExceptionProcessFunc
+                (
+                    ILogger logger
+                    , Exception exception
+                    , Exception newException
+                    , string innerExceptionMessage
+                )
+        {
+            var rethrow = false;
+            logger
+                .LogOnDemand
+                        (
+                            LogLevel
+                                    .Error
+                            , () =>
+                            {
+                                return
+                                    (
+                                        new EventId(-1000)
+                                        , exception
+                                        , innerExceptionMessage
+                                        , null
+                                    );
+                            }
+                        );
+            return
+                rethrow;
+        }
 
     }
 }

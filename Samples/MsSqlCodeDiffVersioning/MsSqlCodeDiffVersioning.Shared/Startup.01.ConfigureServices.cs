@@ -1,6 +1,8 @@
 ﻿namespace WebApplication.ASPNetCore
 {
     using Microshaoft;
+    using Microshaoft.Extensions.Logging;
+    using Microshaoft.Extensions.Logging.Console;
     using Microshaoft.Web;
     using Microshaoft.WebApi.Controllers;
     using Microsoft.AspNetCore.Cors.Infrastructure;
@@ -46,22 +48,10 @@
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            ConfigurationHelper
+                        .Load(Configuration);
 #if NETCOREAPP3_X
-            var loggerFactory = LoggerFactory
-                                            .Create
-                                                (
-                                                    builder =>
-                                                    {
-                                                        builder
-                                                        //    .AddFilter("Microsoft", LogLevel.Warning)
-                                                        //    .AddFilter("System", LogLevel.Warning)
-                                                        //    .AddFilter("LoggingConsoleApp.Program", LogLevel.Debug)
-                                                            .AddConsole()
-                                                        //    .AddEventLog()
-                                                            ;
-                                                    }
-                                                );
+
 #else
             services
                 .AddLogging
@@ -78,18 +68,33 @@
                                     .BuildServiceProvider()
                                     .GetService<ILoggerFactory>();
 #endif
+            //var loggerFactory = LoggerFactory.Create
+            //                                    (
+            //                                        (loggingBuilder) =>
+            //                                        {
+            //                                            loggingBuilder
+            //                                                .SetMinimumLevel(LogLevel.Debug)
+            //                                                .AddConsole1();
 
-            ILogger logger = loggerFactory.CreateLogger("Microshaoft.Logger");
+            //                                        }
+            //                                    );
+            //loggerFactory.AddProvider(new LightConsoleLoggerProvider(null));
+
+            #region Logging
             services
-                    .AddSingleton(loggerFactory);
+             .AddSingleton
+                     (
+                         GlobalManager.GlobalLoggerFactory
+                     );
             services
-                    .AddSingleton(logger);
+                    .AddSingleton
+                            (
+                                GlobalManager.GlobalLogger
+                            ); 
+            #endregion
 
             services
                     .AddSingleton<ConfigurationSwitchAuthorizeFilter>();
-
-            ConfigurationHelper
-                            .Load(Configuration);
 
             #region SwaggerGen
             services
@@ -284,9 +289,11 @@
                             =>
                         {
                             return
-                                LoggingOnCaughtException
+                                GlobalManager
+                                    .OnCaughtExceptionProcessFunc
                                         (
-                                            logger
+                                            GlobalManager
+                                                    .GlobalLogger
                                            , exception
                                            , newException
                                            , innerExceptionMessage
@@ -679,34 +686,7 @@
                         );
         }
 
-        private bool LoggingOnCaughtException
-                        (
-                            //SingleThreadAsyncDequeueProcessorSlim<(string url, (string requestHeaders, string requestBody, string requestMethod, DateTime? requestBeginTime, long? requestContentLength, string requestContentType) Request, (string responseHeaders, string responseBody, int responseStatusCode, DateTime? responseStartingTime, long? responseContentLength, string responseContentType) Response, (double? requestResponseTimingInMilliseconds, double? dbExecutingTimingInMilliseconds) Timing, ((string clientIP, decimal? locationLongitude, decimal? locationLatitude) Location, string userID, string roleID, string orgUnitID, (string deviceID, string deviceInfo) Device) User)> sender
-                            ILogger logger
-                            , Exception exception
-                            , Exception newException
-                            , string innerExceptionMessage
-                        )
-        {
-            var rethrow = false;
-            logger
-                .LogOnDemand
-                        (
-                            LogLevel
-                                    .Error
-                            , () =>
-                            {
-                                return
-                                    (
-                                        new EventId(-1000)
-                                        , exception
-                                        , $"Caught Exception on {nameof(GlobalManager.AsyncRequestResponseLoggingProcessor)} onBatchDequeuesProcessAction"
-                                        , null
-                                    );
-                            }
-                        );
-            return rethrow;
-        }
+
 
         
 
