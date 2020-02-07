@@ -101,7 +101,7 @@
             {
                 if (parameters is JObject jObject)
                 {
-                    var r = jObject.TryGetValue("MIn", StringComparison.OrdinalIgnoreCase, out var @value);
+                    var r = jObject.TryGetValue("MinmumLogLevel", StringComparison.OrdinalIgnoreCase, out var @value);
                     if (r)
                     {
                         if (value is JValue jValue)
@@ -109,19 +109,12 @@
                             int i =  jValue.Value<int>();
                             if (Enum.IsDefined(typeof(LogLevel), i))
                             {
-                                
-
 
                             }
-
-
                         }
-
                     }
                 }
-            
             }
-
 
             var type = GlobalManager.GlobalLogger.GetType();
             var field = type.GetField("<MessageLoggers>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic);
@@ -371,18 +364,96 @@
                                                             .ToString()
                                 }
                                 //, HttpContext.Items
-                                , User = new
-                                {
-                                    //HttpContext.User.Claims
-                                    //, 
-                                    Identity = new
-                                    {
+                                , User = 
+                                    (
                                         HttpContext
-                                                .User
-                                                .Identity
-                                                .Name
-                                    }
-                                }
+                                                .User != null
+                                        ?
+                                        new
+                                        {
+                                            Identity = 
+                                                (
+                                                    HttpContext
+                                                        .User
+                                                        .Identity
+                                                    !=
+                                                    null
+                                                    ?
+                                                    new
+                                                    {
+                                                        HttpContext
+                                                                .User
+                                                                .Identity
+                                                                .Name
+                                                        , HttpContext
+                                                                .User
+                                                                .Identity
+                                                                .IsAuthenticated
+                                                        , HttpContext
+                                                                .User
+                                                                .Identity
+                                                                .AuthenticationType
+                                                    }
+                                                    :
+                                                    null
+                                                )
+                                            , Claims = 
+                                                (
+                                                    HttpContext
+                                                            .User
+                                                            .Claims?
+                                                            .Select
+                                                                (
+                                                                    (x) =>
+                                                                    {
+                                                                        return
+                                                                            new
+                                                                            {
+                                                                                x.Type
+                                                                                , x.Value
+                                                                                , x.ValueType
+                                                                                , x.Issuer
+                                                                                , x.OriginalIssuer
+                                                                                , Subject = 
+                                                                                        (
+                                                                                            x.Subject != null
+                                                                                            ?
+                                                                                            new
+                                                                                                { 
+                                                                                                    x.Subject.IsAuthenticated
+                                                                                                    , x.Subject.AuthenticationType
+                                                                                                    , x.Subject.Name
+                                                                                                    , x.Subject.NameClaimType
+                                                                                                    , x.Subject.RoleClaimType
+                                                                                                    , x.Subject.Label
+                                                                                                    , Actor = 
+                                                                                                        (
+                                                                                                            x.Subject.Actor != null
+                                                                                                            ?
+                                                                                                            new
+                                                                                                            { 
+                                                                                                                  x.Subject.Actor.IsAuthenticated
+                                                                                                                , x.Subject.Actor.AuthenticationType
+                                                                                                                , x.Subject.Actor.Name
+                                                                                                                , x.Subject.Actor.NameClaimType
+                                                                                                                , x.Subject.Actor.RoleClaimType
+                                                                                                                , x.Subject.Actor.Label
+                                                                                                            }
+                                                                                                            :
+                                                                                                            null
+                                                                                                        )
+                                                                                                }
+                                                                                            :
+                                                                                            null
+                                                                                        )
+                                                                            };
+                                                                    }
+                                                                )
+                                                )
+                                        }
+                                        :
+                                        null
+                                    )
                             }
                     }
                 );

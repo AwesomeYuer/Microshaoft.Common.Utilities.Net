@@ -9,7 +9,7 @@
     <Import_RootNamespace>Microshaoft.Json.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)JsonWebToken\CliamsHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)JsonWebToken\ClaimsHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)JsonWebToken\JwtTokenHelper.NET.All.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)JsonWebToken\JwtTokenHelper.NET.Framework.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\DynamicJson\DynamicJson.00.cs" />

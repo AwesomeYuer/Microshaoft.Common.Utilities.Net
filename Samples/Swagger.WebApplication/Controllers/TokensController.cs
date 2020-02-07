@@ -1,28 +1,16 @@
-﻿
-
-namespace Swagger.WebApplication.Controllers
+﻿namespace Swagger.WebApplication.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reactive.Subjects;
-    using System.Reflection.Metadata.Ecma335;
-    using System.Runtime.InteropServices;
-    using System.Security.Cryptography.Xml;
-    using System.Threading.Tasks;
     using Microshaoft;
     using Microshaoft.WebApi.ModelBinders;
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json.Linq;
+    using System;
     [ApiController]
     [Route("[controller]")]
     public class TokensController : ControllerBase
     {
-
         private readonly ILogger<EchoController> _logger;
-
         public TokensController(ILogger<EchoController> logger)
         {
             _logger = logger;
@@ -69,14 +57,8 @@ namespace Swagger.WebApplication.Controllers
                                             , out var y
                                         )
                             )
-
                         {
-                            
-                                                        
-
-
                         }
-
                     }
                 }
             }

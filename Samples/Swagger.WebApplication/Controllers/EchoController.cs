@@ -2,27 +2,17 @@
 
 namespace Swagger.WebApplication.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Runtime.InteropServices;
-    using System.Threading.Tasks;
     using Microshaoft.WebApi.ModelBinders;
-    using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json.Linq;
+    using System.Linq;
     [Authorize/*(JwtBearerDefaults.AuthenticationScheme)*/]
     [ApiController]
     [Route("[controller]")]
     public class EchoController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
         private readonly ILogger<EchoController> _logger;
 
         public EchoController(ILogger<EchoController> logger)
@@ -80,8 +70,8 @@ namespace Swagger.WebApplication.Controllers
                                 //, HttpContext.Items
                                 , User = new
                                 {
-                                    //HttpContext.User.Claims
-                                    Identity = new
+                                      Claims = HttpContext.User.Claims.ToArray()
+                                    , Identity = new
                                     {
                                         HttpContext
                                                 .User
