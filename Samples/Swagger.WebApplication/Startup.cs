@@ -1,18 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
-
 namespace Swagger.WebApplication
 {
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
+    using Microsoft.IdentityModel.Tokens;
+    using Microsoft.OpenApi.Models;
+    using System;
+    using System.Linq;
+    using System.Text;
     public class Startup
     {
 
@@ -35,6 +33,61 @@ namespace Swagger.WebApplication
                 .AddControllers()
                 .AddNewtonsoftJson()
                 ;
+
+            var symmetricSecurityKey = new SymmetricSecurityKey
+                                                (
+                                                    Encoding
+                                                            .UTF8
+                                                            .GetBytes
+                                                                (
+                                                                    Program.defaultSecretKey
+                                                                )
+                                                );
+            services
+                    .AddAuthentication
+                        (
+                            //(options) =>
+                            //{
+                            //    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                            //    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                            //}
+                            JwtBearerDefaults
+                                        .AuthenticationScheme
+                        )
+                    .AddJwtBearer
+                        (
+                            (options) =>
+                            {
+                                options
+                                    .TokenValidationParameters =
+                                        new TokenValidationParameters()
+                                        {
+                                            //ValidIssuer = jwtSecurityToken.Issuer,
+                                            ValidateIssuer = false,
+                                            //ValidAudiences = jwtSecurityToken.Audiences,
+                                            ValidateAudience = false,
+                                            IssuerSigningKey = symmetricSecurityKey,
+                                            ValidateIssuerSigningKey = true,
+                                            //ValidateLifetime = validateLifetime,
+                                            //ClockSkew = TimeSpan.FromSeconds(clockSkewInSeconds)
+                                        };
+                            }
+                        );
+
+            //services
+            //        .AddAuthorization
+            //            (
+            //                (options) =>
+            //                {
+            //                    options
+            //                        .AddPolicy
+            //                            (
+            //                                "CheeseburgerPolicy"
+            //                                , policy => policy.RequireClaim("icanhazcheeseburger", "true")
+            //                            );
+            //                }
+            //            );
+
             #region SwaggerGen
             services
                 .AddSwaggerGen
@@ -103,7 +156,18 @@ namespace Swagger.WebApplication
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
+
+            string SecretKey = "seriouslyneverleavethissittinginyourcode";
+            SymmetricSecurityKey signingKey =
+                new SymmetricSecurityKey(Encoding.ASCII.GetBytes(SecretKey));
+
+            //loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            //loggerFactory.AddDebug();
+
+            
+
 
 
             #region Swagger

@@ -2,11 +2,94 @@
 {
     using Newtonsoft.Json.Linq;
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Net;
+    using System.Reflection;
     using System.Security.Claims;
-    public static class CliamsHelper
+    public static class ClaimsHelper
     {
+
+        private static IDictionary<string, string> _claimTypes
+    = new Func<IDictionary<string, string>>
+        (
+            () =>
+            {
+                return
+                    typeof(ClaimTypes)
+                        .GetFields
+                            (
+                                BindingFlags.Public
+                                |
+                                BindingFlags.Static
+                                |
+                                BindingFlags.FlattenHierarchy
+                            )
+                        .Where
+                            (
+                                (x) =>
+                                {
+                                    return
+                                        (
+                                            x.FieldType == typeof(string)
+                                            &&
+                                            x.IsLiteral
+                                            &&
+                                            !x.IsInitOnly
+                                        );
+                                }
+                            )
+                        .ToDictionary
+                            (
+                                (x) =>
+                                {
+                                    return
+                                        x.Name;
+                                }
+                                , (x) =>
+                                {
+                                    return
+                                        x
+                                            .GetValue(null)
+                                            .ToString();
+                                }
+                                , StringComparer.OrdinalIgnoreCase
+                            );
+            }
+        )();
+
+        public static IEnumerable<Claim> AsClaims(this JToken target)
+        {
+               var jValues = target
+                                .GetAllJValues();
+               return
+                    jValues
+                        .Select
+                            (
+                                (x) =>
+                                {
+                                    var value = string.Empty;
+                                    var key = x.Path;
+                                    if (_claimTypes.TryGetValue(key, out value))
+                                    {
+                                        key = value;
+                                    }
+                                    else
+                                    {
+                                        key = x.Path;
+                                    }
+                                    return
+                                        new Claim
+                                                (
+                                                    key
+                                                    , x.Value.ToString()
+                                                );
+                                }
+                            );
+
+    }
+
+
         public static bool TryGetClaimTypeJTokenValue
                                 (
                                     this ClaimsPrincipal target
