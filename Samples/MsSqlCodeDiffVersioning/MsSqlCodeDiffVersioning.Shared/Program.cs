@@ -141,6 +141,8 @@
                             (hostingContext, configurationBuilder) =>
                             {
                                 configurationBuilder
+                                        .AddUserSecrets("2cf2bf85-4b45-4fa4-a64c-169d9e832d95");
+                                configurationBuilder
                                         .SetBasePath(executingDirectory)
                                         .AddJsonFile
                                             (
@@ -184,6 +186,7 @@
                                                 , optional: false
                                                 , reloadOnChange: true
                                             )
+
                                         //.AddJsonFile
                                         //    (
                                         //        path: "appsettings.json"
