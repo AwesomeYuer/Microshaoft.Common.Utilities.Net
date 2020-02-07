@@ -86,10 +86,7 @@
                                                 );
                                 }
                             );
-
-    }
-
-
+        }
         public static bool TryGetClaimTypeJTokenValue
                                 (
                                     this ClaimsPrincipal target
