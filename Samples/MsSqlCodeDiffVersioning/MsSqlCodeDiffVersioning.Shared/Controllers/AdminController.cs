@@ -20,8 +20,13 @@
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
+    /*
+     * Jwt Bear
+     * eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImFhYWFhIiwiYWEiOiJBQUFBIiwibmJmIjoxNTgxMDU3NTg1LCJleHAiOjE1ODEwNjExODUsImlhdCI6MTU4MTA1NzU4NSwiaXNzIjoiSXNzdWVyMSIsImF1ZCI6IkF1ZGllbmNlMSJ9.I8m7hKe7mGl9faiUfdSb2oz9lJof5YEUM6LL5LUmWWw
+     * eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImFhYWFhIiwiYWEiOiJBQUFBIiwibmJmIjoxNTgxMDU3MjMwLCJleHAiOjE1ODEwNjA4MzAsImlhdCI6MTU4MTA1NzIzMCwiaXNzIjoiSXNzdWVyMSIsImF1ZCI6IkF1ZGllbmNlMSJ9.PBXgD2ZS1pwRgD3nyOumvcjMt0_u6-Ph0xyev_I3Wyo
+    */
+    //[AllowAnonymous]
     [ServiceFilter(typeof(ConfigurationSwitchAuthorizeFilter))]
-    
     public class AdminController : ControllerBase
     {
         private readonly ConcurrentDictionary<string, ExecutingInfo>
