@@ -736,9 +736,14 @@
                                     };
                         }
                     );
-#endregion
+            #endregion
 #endif
+            //should before app.UseMvc();
+            app.UseAuthentication();
+            app.UseAuthorization();
+            
             app.UseMvc();
+
             Console.WriteLine(Directory.GetCurrentDirectory());
 
             #region StaticFiles
@@ -774,8 +779,11 @@
                                         , swaggerTitle
                                     );
                         }
-                    ); 
+                    );
             #endregion
+
+
+
 
             //app.UseEndpoints(endpoints =>
             //    {

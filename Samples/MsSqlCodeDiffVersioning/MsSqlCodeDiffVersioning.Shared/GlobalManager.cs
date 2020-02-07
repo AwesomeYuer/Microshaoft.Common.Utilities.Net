@@ -1,14 +1,16 @@
 ﻿namespace WebApplication.ASPNetCore
 {
     using Microshaoft;
-    using Microshaoft.Extensions.Logging;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
-
+    using Microsoft.IdentityModel.Tokens;
     using System;
     using System.Collections.Concurrent;
     using System.Diagnostics;
     using System.Linq;
     using System.Runtime.InteropServices;
+    using System.Text;
+
     public static class GlobalManager
     {
         static GlobalManager()
@@ -76,8 +78,21 @@
         public static readonly ILogger GlobalLogger = GlobalLoggerFactory
                                                                 .CreateLogger("Microshaoft.Logger.Category");
 
-
-
+        public static readonly SymmetricSecurityKey jwtSymmetricSecurityKey = new SymmetricSecurityKey
+                                        (
+                                            Encoding
+                                                    .UTF8
+                                                    .GetBytes
+                                                        (
+                                                            ConfigurationHelper.Configuration.GetValue<string>("SecretKey")
+                                                        )
+                                        );
+        public static readonly SigningCredentials jwtSigningCredentials = new SigningCredentials
+                                (
+                                    jwtSymmetricSecurityKey
+                                    , SecurityAlgorithms.HmacSha256Signature
+                                    , SecurityAlgorithms.Sha256Digest
+                                );
 
 
         public static readonly Process CurrentProcess;

@@ -1,9 +1,9 @@
 ﻿namespace Microshaoft.WebApi.Controllers
 {
     using Microshaoft;
-    using Microshaoft.Extensions.Logging;
     using Microshaoft.Web;
     using Microshaoft.WebApi.ModelBinders;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
@@ -19,7 +19,9 @@
 
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     [ServiceFilter(typeof(ConfigurationSwitchAuthorizeFilter))]
+    
     public class AdminController : ControllerBase
     {
         private readonly ConcurrentDictionary<string, ExecutingInfo>
@@ -366,8 +368,9 @@
                                 //, HttpContext.Items
                                 , User = new
                                 {
-                                    HttpContext.User.Claims
-                                    , Identity = new
+                                    //HttpContext.User.Claims
+                                    //, 
+                                    Identity = new
                                     {
                                         HttpContext
                                                 .User

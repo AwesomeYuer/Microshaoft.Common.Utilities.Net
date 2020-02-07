@@ -1,10 +1,9 @@
 ﻿namespace WebApplication.ASPNetCore
 {
     using Microshaoft;
-    using Microshaoft.Extensions.Logging;
-    using Microshaoft.Extensions.Logging.Console;
     using Microshaoft.Web;
     using Microshaoft.WebApi.Controllers;
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Cors.Infrastructure;
     using Microsoft.AspNetCore.Mvc.ApplicationModels;
     using Microsoft.AspNetCore.Mvc.Controllers;
@@ -12,7 +11,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
-    using Microsoft.Extensions.Logging;
+    using Microsoft.IdentityModel.Tokens;
     using Microsoft.Net.Http.Headers;
     using Microsoft.OpenApi.Models;
     //using Newtonsoft.Json;
@@ -684,11 +683,39 @@
                                         .AllowSynchronousIO = true;
                             }
                         );
+
+            #region JwtBearer Authentication
+            services
+                    .AddAuthentication
+                        (
+                            //(options) =>
+                            //{
+                            //    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                            //    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                            //}
+                            JwtBearerDefaults
+                                        .AuthenticationScheme
+                        )
+                    .AddJwtBearer
+                        (
+                            (options) =>
+                            {
+                                options
+                                    .TokenValidationParameters =
+                                        new TokenValidationParameters()
+                                        {
+                                            //ValidIssuer = jwtSecurityToken.Issuer
+                                            ValidateIssuer = false
+                                            //, ValidAudiences = jwtSecurityToken.Audiences
+                                            , ValidateAudience = false
+                                            , IssuerSigningKey = GlobalManager.jwtSymmetricSecurityKey
+                                            , ValidateIssuerSigningKey = true
+                                            //, ValidateLifetime = validateLifetime
+                                            //, ClockSkew = TimeSpan.FromSeconds(clockSkewInSeconds)
+                                        };
+                            }
+                        ); 
+            #endregion
         }
-
-
-
-        
-
     }
 }

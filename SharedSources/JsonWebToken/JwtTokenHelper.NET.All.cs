@@ -44,53 +44,7 @@ namespace Microshaoft
 
     public static partial class JwtTokenHelper
     {
-        private static IDictionary<string, string> _claimTypes
-            = new Func<IDictionary<string, string>>
-                (
-                    () =>
-                    {
-                        return
-                            typeof(ClaimTypes)
-                                .GetFields
-                                    (
-                                        BindingFlags.Public
-                                        |
-                                        BindingFlags.Static
-                                        |
-                                        BindingFlags.FlattenHierarchy
-                                    )
-                                .Where
-                                    (
-                                        (x) =>
-                                        {
-                                            return
-                                                (
-                                                    x.FieldType == typeof(string)
-                                                    &&
-                                                    x.IsLiteral
-                                                    &&
-                                                    !x.IsInitOnly
-                                                );
-                                        }
-                                    )
-                                .ToDictionary
-                                    (
-                                        (x) =>
-                                        {
-                                            return
-                                                x.Name;
-                                        }
-                                        , (x) =>
-                                        {
-                                            return
-                                                x
-                                                    .GetValue(null)
-                                                    .ToString();
-                                        }
-                                        , StringComparer.OrdinalIgnoreCase
-                                    );
-                    }
-                )();
+
 
         public static bool TryValidateToken
                                 (
@@ -190,31 +144,7 @@ namespace Microshaoft
                                 , string plainTextSecurityKeyEncoding = "UTF-8"
                             )
         {
-            var jValues = jClaimsIdentity
-                                .GetAllJValues();
-            var claims = jValues
-                            .Select
-                                (
-                                    (x) =>
-                                    {
-                                        var value = string.Empty;
-                                        var key = x.Path;
-                                        if (_claimTypes.TryGetValue(key, out value))
-                                        {
-                                            key = value;
-                                        }
-                                        else
-                                        {
-                                            key = x.Path;
-                                        }
-                                        return
-                                            new Claim
-                                                    (
-                                                        key
-                                                        , x.Value.ToString()
-                                                    );
-                                    }
-                                );
+            var claims = jClaimsIdentity.AsClaims();
             var r = TryIssueToken
                         (
                             issuer

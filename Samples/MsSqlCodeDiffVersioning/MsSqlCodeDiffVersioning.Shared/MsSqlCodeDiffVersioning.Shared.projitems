@@ -1184,6 +1184,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\AntiXssJsonpController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\StoreProcedureExecutorController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\AdminController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controllers\TokensController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\TrackingController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GlobalManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Program.cs" />

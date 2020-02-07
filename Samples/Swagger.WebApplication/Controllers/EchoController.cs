@@ -1,15 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
-using Microshaoft.WebApi.ModelBinders;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Linq;
+﻿
 
 namespace Swagger.WebApplication.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Runtime.InteropServices;
+    using System.Threading.Tasks;
+    using Microshaoft.WebApi.ModelBinders;
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Logging;
+    using Newtonsoft.Json.Linq;
+    [Authorize/*(JwtBearerDefaults.AuthenticationScheme)*/]
     [ApiController]
     [Route("[controller]")]
     public class EchoController : ControllerBase
@@ -45,29 +49,49 @@ namespace Swagger.WebApplication.Controllers
                 (
                     new
                     {
-                        Request = new
-                        {
-                              parameters
-                            , Request.ContentLength
-                            , Request.ContentType
-                            , Request.Cookies
-                            , Request.HasFormContentType
-                            , Request.Headers
-                            , Request.Host
-                            , Request.IsHttps
-                            , Request.Method
-                            , Request.Path
-                            , Request.PathBase
-                            , Request.Protocol
-                            , Request.Query
-                            , Request.QueryString
-                            , Request.RouteValues
-                            , Request.Scheme
-                        }
+                        jsonRequestParameters = parameters
+                        , Request = new
+                            {
+                                  Request.ContentLength
+                                , Request.ContentType
+                                , Request.Cookies
+                                , Request.HasFormContentType
+                                , Request.Headers
+                                , Request.Host
+                                , Request.IsHttps
+                                , Request.Method
+                                , Request.Path
+                                , Request.PathBase
+                                , Request.Protocol
+                                , Request.Query
+                                , Request.QueryString
+                                , Request.RouteValues
+                                , Request.Scheme
+                            }
+                        , HttpContext = new
+                            {
+                                Connection = new
+                                {
+                                    RemoteIpAddress = HttpContext
+                                                            .Connection
+                                                            .RemoteIpAddress
+                                                            .ToString()
+                                }
+                                //, HttpContext.Items
+                                , User = new
+                                {
+                                    //HttpContext.User.Claims
+                                    Identity = new
+                                    {
+                                        HttpContext
+                                                .User
+                                                .Identity
+                                                .Name
+                                    }
+                                }
+                            }
                     }
                 );
-
-                
         }
     }
 }

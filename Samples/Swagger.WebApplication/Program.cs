@@ -1,16 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-
 namespace Swagger.WebApplication
 {
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.Hosting;
     public class Program
     {
+
+        public const string defaultSecretKey = "Hello World!Hello World!Hello World!Hello World!Hello World!";
+
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
