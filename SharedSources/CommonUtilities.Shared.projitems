@@ -121,7 +121,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)FasterUtilities\StateTransitions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FasterUtilities\Status.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpClientHelper\HttpClientHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)JsonWebToken\CliamsHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)JsonWebToken\ClaimsHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\DynamicJson\DynamicJson.01.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\DynamicJson\DynamicJson.00.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JsonFileHelper.cs" />

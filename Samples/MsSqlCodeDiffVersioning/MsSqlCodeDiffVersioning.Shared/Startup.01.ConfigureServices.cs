@@ -710,7 +710,7 @@
                                             , ValidateAudience = false
                                             , IssuerSigningKey = GlobalManager.jwtSymmetricSecurityKey
                                             , ValidateIssuerSigningKey = true
-                                            //, ValidateLifetime = validateLifetime
+                                            , ValidateLifetime = false
                                             //, ClockSkew = TimeSpan.FromSeconds(clockSkewInSeconds)
                                         };
                             }
