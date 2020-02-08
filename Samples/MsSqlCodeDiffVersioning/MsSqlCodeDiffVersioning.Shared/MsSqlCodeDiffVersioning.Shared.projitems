@@ -1193,6 +1193,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Startup.01.ConfigureServices.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="$(MSBuildThisFileDirectory)00.DataBase\mysql.docker.txt">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="$(MSBuildThisFileDirectory)00.PerfTest\50.Tools\PerfTestPressPS1K.ps1">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
