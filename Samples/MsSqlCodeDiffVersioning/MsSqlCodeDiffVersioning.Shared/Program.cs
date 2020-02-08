@@ -330,10 +330,11 @@
             return
                 r;
         }
-
-
-
-        public static IEnumerable<string> GetExistsPaths(string configurationJsonFile, string sectionName)
+        public static IEnumerable<string> GetExistsPaths
+                                                    (
+                                                        string configurationJsonFile
+                                                        , string sectionName
+                                                    )
         {
             var configurationBuilder = new ConfigurationBuilder();
             configurationBuilder
@@ -350,32 +351,33 @@
                                                         .Location
                                                 );
             var result = configuration
-                                .GetSection(sectionName)
-                                .AsEnumerable()
+                                .GetOrDefault<string[]>
+                                     (sectionName)
+                                //.GetSection(sectionName)
+                                //.AsEnumerable()
                                 .Select
                                     (
                                         (x) =>
                                         {
-                                            var r = x.Value;
-                                            if (!r.IsNullOrEmptyOrWhiteSpace())
+                                            if (!x.IsNullOrEmptyOrWhiteSpace())
                                             {
                                                 if
                                                     (
-                                                        r.StartsWith(".")
+                                                        x.StartsWith(".")
                                                         &&
-                                                        !r.StartsWith("..")
+                                                        !x.StartsWith("..")
                                                     )
                                                 {
-                                                    r = r.TrimStart('.', '\\', '/');
+                                                    x = x.TrimStart('.', '\\', '/');
                                                 }
-                                                r = Path
+                                                x = Path
                                                         .Combine
                                                             (
                                                                 executingDirectory
-                                                                , r
+                                                                , x
                                                             );
                                             }
-                                            return r;
+                                            return x;
                                         }
                                     )
                                 .Where
