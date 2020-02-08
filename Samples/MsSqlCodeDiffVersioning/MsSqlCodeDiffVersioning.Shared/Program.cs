@@ -4,7 +4,6 @@
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Hosting;
-    using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Primitives;
     using Newtonsoft.Json.Linq;
     using System;
@@ -110,7 +109,6 @@
                 Host
 #endif
                     .CreateDefaultBuilder(args)
-
 #if NETCOREAPP2_X
                     .UseConfiguration(hostingsConfiguration)
 #elif NETCOREAPP3_X
@@ -190,17 +188,13 @@
                                                 , optional: false
                                                 , reloadOnChange: true
                                             )
-
                                         //.AddJsonFile
                                         //    (
                                         //        path: "appsettings.json"
                                         //        , optional: false
                                         //        , reloadOnChange: true
                                         //    )
-                                            
                                         ;
-                                
-        
                                 if
                                     (
                                         !args
