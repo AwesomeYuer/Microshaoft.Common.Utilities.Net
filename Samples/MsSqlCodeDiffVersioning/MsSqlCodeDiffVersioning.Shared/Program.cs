@@ -140,8 +140,12 @@
                         (
                             (hostingContext, configurationBuilder) =>
                             {
+                                var secretsID = GetUsersSecretsID("usersSecretsID.json");
                                 configurationBuilder
-                                        .AddUserSecrets("2cf2bf85-4b45-4fa4-a64c-169d9e832d95");
+                                        .AddUserSecrets
+                                            (
+                                                secretsID
+                                            );
                                 configurationBuilder
                                         .SetBasePath(executingDirectory)
                                         .AddJsonFile
@@ -195,6 +199,8 @@
                                         //    )
                                             
                                         ;
+                                
+        
                                 if
                                     (
                                         !args
@@ -316,6 +322,23 @@
 #endif
                     ;
         }
+        public static string GetUsersSecretsID(string configurationJsonFile)
+        {
+            var configurationBuilder = new ConfigurationBuilder();
+            configurationBuilder
+                        .AddJsonFile
+                                (
+                                    configurationJsonFile
+                                );
+            var configuration = configurationBuilder.Build();
+            var r = configuration
+                            .GetOrDefault<string>("userSecretsID");
+            return
+                r;
+        }
+
+
+
         public static IEnumerable<string> GetExistsPaths(string configurationJsonFile, string sectionName)
         {
             var configurationBuilder = new ConfigurationBuilder();
