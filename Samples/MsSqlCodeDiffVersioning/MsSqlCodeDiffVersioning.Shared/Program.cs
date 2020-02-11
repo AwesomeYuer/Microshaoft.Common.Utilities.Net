@@ -4,7 +4,6 @@
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Hosting;
-    using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Primitives;
     using Newtonsoft.Json.Linq;
     using System;
@@ -110,7 +109,6 @@
                 Host
 #endif
                     .CreateDefaultBuilder(args)
-
 #if NETCOREAPP2_X
                     .UseConfiguration(hostingsConfiguration)
 #elif NETCOREAPP3_X
@@ -140,6 +138,12 @@
                         (
                             (hostingContext, configurationBuilder) =>
                             {
+                                var secretsID = GetUsersSecretsID("usersSecretsID.json");
+                                configurationBuilder
+                                        .AddUserSecrets
+                                            (
+                                                secretsID
+                                            );
                                 configurationBuilder
                                         .SetBasePath(executingDirectory)
                                         .AddJsonFile
@@ -190,7 +194,6 @@
                                         //        , optional: false
                                         //        , reloadOnChange: true
                                         //    )
-                                            
                                         ;
                                 if
                                     (
@@ -313,7 +316,25 @@
 #endif
                     ;
         }
-        public static IEnumerable<string> GetExistsPaths(string configurationJsonFile, string sectionName)
+        public static string GetUsersSecretsID(string configurationJsonFile)
+        {
+            var configurationBuilder = new ConfigurationBuilder();
+            configurationBuilder
+                        .AddJsonFile
+                                (
+                                    configurationJsonFile
+                                );
+            var configuration = configurationBuilder.Build();
+            var r = configuration
+                            .GetOrDefault<string>("userSecretsID");
+            return
+                r;
+        }
+        public static IEnumerable<string> GetExistsPaths
+                                                    (
+                                                        string configurationJsonFile
+                                                        , string sectionName
+                                                    )
         {
             var configurationBuilder = new ConfigurationBuilder();
             configurationBuilder
@@ -330,32 +351,33 @@
                                                         .Location
                                                 );
             var result = configuration
-                                .GetSection(sectionName)
-                                .AsEnumerable()
+                                .GetOrDefault<string[]>
+                                     (sectionName)
+                                //.GetSection(sectionName)
+                                //.AsEnumerable()
                                 .Select
                                     (
                                         (x) =>
                                         {
-                                            var r = x.Value;
-                                            if (!r.IsNullOrEmptyOrWhiteSpace())
+                                            if (!x.IsNullOrEmptyOrWhiteSpace())
                                             {
                                                 if
                                                     (
-                                                        r.StartsWith(".")
+                                                        x.StartsWith(".")
                                                         &&
-                                                        !r.StartsWith("..")
+                                                        !x.StartsWith("..")
                                                     )
                                                 {
-                                                    r = r.TrimStart('.', '\\', '/');
+                                                    x = x.TrimStart('.', '\\', '/');
                                                 }
-                                                r = Path
+                                                x = Path
                                                         .Combine
                                                             (
                                                                 executingDirectory
-                                                                , r
+                                                                , x
                                                             );
                                             }
-                                            return r;
+                                            return x;
                                         }
                                     )
                                 .Where

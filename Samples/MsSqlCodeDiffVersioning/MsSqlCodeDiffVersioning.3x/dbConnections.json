@@ -1,7 +1,7 @@
 {
   "CachedParametersDefinitionExpiredInSeconds": 10,
   "NeedAutoRefreshExecutedTimeForSlideExpire": false,
-  "Connections": {
+  "Connections111111": {
     "c1": {
       "dataBasetype": "mssql",
       //need sql server side configure MSSQL named instance TCP/IP port to 11433 on gateway.hyper-v.internal

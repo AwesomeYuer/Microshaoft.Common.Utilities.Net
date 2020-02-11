@@ -24,10 +24,16 @@ namespace Microshaoft.Web
                         , string jwtTokenName = "xJwtToken"
                     )
         {
+            bool r;
             JToken jToken = null;
-            void RequestFormBodyProcess()
+            void requestFormBodyProcess()
             {
-                if (target.HasFormContentType)
+                if 
+                    (
+                        !target.IsJsonRequest()
+                        &&
+                        target.HasFormContentType
+                    )
                 {
                     if (onFormProcessFuncAsync != null)
                     {
@@ -36,20 +42,15 @@ namespace Microshaoft.Web
                 }
                 else
                 {
-                    //if (request.IsJsonRequest())
+                    using var streamReader = new StreamReader(target.Body);
+                    var json = streamReader.ReadToEnd();
+                    if (!json.IsNullOrEmptyOrWhiteSpace())
                     {
-                        using (var streamReader = new StreamReader(target.Body))
-                        {
-                            var json = streamReader.ReadToEnd();
-                            if (!json.IsNullOrEmptyOrWhiteSpace())
-                            {
-                                jToken = JToken.Parse(json);
-                            }
-                        }
+                        jToken = JToken.Parse(json);
                     }
                 }
             }
-            void RequestQueryStringHeaderProcess()
+            void requestQueryStringHeaderProcess()
             {
                 var queryString = target.QueryString.Value;
                 if (queryString.IsNullOrEmptyOrWhiteSpace())
@@ -92,7 +93,7 @@ namespace Microshaoft.Web
             // 取 jwtToken 优先级顺序：Header → QueryString → Body
             StringValues jwtToken = string.Empty;
             var needExtractJwtToken = !jwtTokenName.IsNullOrEmptyOrWhiteSpace();
-            void ExtractJwtToken()
+            void extractJwtToken()
             {
                 if (needExtractJwtToken)
                 {
@@ -119,8 +120,8 @@ namespace Microshaoft.Web
                                , out jwtToken
                             );
             }
-            RequestQueryStringHeaderProcess();
-            ExtractJwtToken();
+            requestQueryStringHeaderProcess();
+            extractJwtToken();
             if
                 (
                     string.Compare(target.Method, "get", true) != 0
@@ -128,8 +129,8 @@ namespace Microshaoft.Web
                     string.Compare(target.Method, "head", true) != 0
                 )
             {
-                RequestFormBodyProcess();
-                ExtractJwtToken();
+                requestFormBodyProcess();
+                extractJwtToken();
                 //if (jToken == null)
                 //{
                 //    RequestHeaderProcess();
@@ -137,7 +138,7 @@ namespace Microshaoft.Web
             }
             parameters = jToken;
             secretJwtToken = jwtToken;
-            bool r = true;
+            r = true;
             return r;
         }
 

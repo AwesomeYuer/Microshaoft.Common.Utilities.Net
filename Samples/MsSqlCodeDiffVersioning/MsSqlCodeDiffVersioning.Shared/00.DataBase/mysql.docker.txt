@@ -1,0 +1,47 @@
+﻿sudo docker run --name=microshaoft-mysql -p 3306:3306 -d mysql/mysql-server:latest
+
+sudo docker run --name=microshaoft-mysql -p 3306:3306 -d microshaoft/mysql-server
+
+
+sudo docker logs ae89e1834340 2>&1 | grep GENERATED
+
+
+
+9ErIqYB7@HG3JybolLUPQ3k@PhO
+
+sudo docker exec -it ae89e1834340 mysql -uroot -p
+
+
+
+
+shell> docker exec -it mysql1 mysql -uroot -p
+
+mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY 'password';
+
+
+
+CREATE USER 'sa'@'localhost' IDENTIFIED BY 'w!th0utp@$$w0rd';
+GRANT ALL PRIVILEGES ON *.* TO 'sa'@'localhost' WITH GRANT OPTION;
+
+
+CREATE USER 'sa'@'vm-misc' IDENTIFIED BY 'w!th0utp@$$w0rd';
+GRANT ALL PRIVILEGES ON *.* TO 'sa'@'vm-misc' WITH GRANT OPTION;
+
+
+CREATE USER 'sa'@'vm-misc' IDENTIFIED BY 'w!th0utp@$$w0rd';
+GRANT ALL PRIVILEGES ON *.* TO 'sa'@'vm-misc' WITH GRANT OPTION;
+
+
+
+
+CREATE USER 'sa'@'%' IDENTIFIED BY 'w!th0utp@$$w0rd';
+GRANT ALL PRIVILEGES ON *.* TO 'sa'@'%' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+
+
+
+CREATE USER 'monty'@'localhost' IDENTIFIED BY 'some_pass';
+GRANT ALL PRIVILEGES ON *.* TO 'monty'@'localhost' WITH GRANT OPTION;
+mysql> CREATE USER 'monty'@'%' IDENTIFIED BY 'some_pass';
+mysql> GRANT ALL PRIVILEGES ON *.* TO 'monty'@'%'
+->     WITH GRANT OPTION;

@@ -11,52 +11,52 @@
     {
 
         private static IDictionary<string, string> _claimTypes
-    = new Func<IDictionary<string, string>>
-        (
-            () =>
-            {
-                return
-                    typeof(ClaimTypes)
-                        .GetFields
-                            (
-                                BindingFlags.Public
-                                |
-                                BindingFlags.Static
-                                |
-                                BindingFlags.FlattenHierarchy
-                            )
-                        .Where
-                            (
-                                (x) =>
-                                {
-                                    return
-                                        (
-                                            x.FieldType == typeof(string)
-                                            &&
-                                            x.IsLiteral
-                                            &&
-                                            !x.IsInitOnly
-                                        );
-                                }
-                            )
-                        .ToDictionary
-                            (
-                                (x) =>
-                                {
-                                    return
-                                        x.Name;
-                                }
-                                , (x) =>
-                                {
-                                    return
-                                        x
-                                            .GetValue(null)
-                                            .ToString();
-                                }
-                                , StringComparer.OrdinalIgnoreCase
-                            );
-            }
-        )();
+                = new Func<IDictionary<string, string>>
+                        (
+                            () =>
+                            {
+                                return
+                                    typeof(ClaimTypes)
+                                        .GetFields
+                                            (
+                                                BindingFlags.Public
+                                                |
+                                                BindingFlags.Static
+                                                |
+                                                BindingFlags.FlattenHierarchy
+                                            )
+                                        .Where
+                                            (
+                                                (x) =>
+                                                {
+                                                    return
+                                                        (
+                                                            x.FieldType == typeof(string)
+                                                            &&
+                                                            x.IsLiteral
+                                                            &&
+                                                            !x.IsInitOnly
+                                                        );
+                                                }
+                                            )
+                                        .ToDictionary
+                                            (
+                                                (x) =>
+                                                {
+                                                    return
+                                                        x.Name;
+                                                }
+                                                , (x) =>
+                                                {
+                                                    return
+                                                        x
+                                                            .GetValue(null)
+                                                            .ToString();
+                                                }
+                                                , StringComparer.OrdinalIgnoreCase
+                                            );
+                            }
+                        )();
 
         public static IEnumerable<Claim> AsClaims(this JToken target)
         {
@@ -86,10 +86,7 @@
                                                 );
                                 }
                             );
-
-    }
-
-
+        }
         public static bool TryGetClaimTypeJTokenValue
                                 (
                                     this ClaimsPrincipal target

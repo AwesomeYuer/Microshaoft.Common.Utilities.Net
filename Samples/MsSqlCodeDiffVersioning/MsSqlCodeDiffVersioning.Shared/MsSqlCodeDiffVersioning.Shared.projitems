@@ -1193,6 +1193,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Startup.01.ConfigureServices.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="$(MSBuildThisFileDirectory)00.DataBase\mysql.docker.txt">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="$(MSBuildThisFileDirectory)00.PerfTest\50.Tools\PerfTestPressPS1K.ps1">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1475,6 +1479,7 @@
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\libs\monaco-editor\package.json" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\libs\monaco-editor\ThirdPartyNotices.txt" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\styles\fan.css" />
+    <Content Include="$(MSBuildThisFileDirectory)wwwroot\styles\text-magic.css" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\styles\taiji-3D.css" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\styles\taiji.css" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\xhrblob.html" />
