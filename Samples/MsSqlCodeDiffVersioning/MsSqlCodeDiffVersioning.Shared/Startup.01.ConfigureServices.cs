@@ -198,58 +198,6 @@
                                                                         <ConstrainedRouteAttribute>
                                                                     (
                                                                         attribute
-                                                                        , (actionConstraintContext, constrainedRouteAttribute) =>
-                                                                        {
-                                                                            var routeContext = actionConstraintContext.RouteContext;
-                                                                            var routeData = routeContext
-                                                                                                    .RouteData;
-                                                                            var routeName = string.Empty;
-                                                                            var r = false;
-                                                                            if (routeData.Values.ContainsKey(nameof(routeName)))
-                                                                            {
-                                                                                routeName = routeData.Values[nameof(routeName)].ToString();
-                                                                                r = true;
-                                                                            }
-                                                                            r = r ? (actionConstraintContext.Candidates.Count == 1) : false;
-                                                                            if (!r)
-                                                                            {
-                                                                                var httpContext = routeContext
-                                                                                                        .HttpContext;
-                                                                                var request = httpContext
-                                                                                                    .Request;
-                                                                                var type = typeof(AbstractStoreProceduresExecutorControllerBase);
-                                                                                var currentCandidateAction = actionConstraintContext
-                                                                                                                        .CurrentCandidate
-                                                                                                                        .Action;
-
-                                                                                var isAsyncExecuting = ((ControllerActionDescriptor)currentCandidateAction)
-                                                                                                                    .MethodInfo
-                                                                                                                    .IsAsync();
-
-                                                                                var httpMethod = $"Http{request.Method}";
-
-                                                                                var accessingConfigurationKey = "DefaultAccessing";
-                                                                                if (request.Path.ToString().Contains("/export/", StringComparison.OrdinalIgnoreCase))
-                                                                                {
-                                                                                    accessingConfigurationKey = "exporting";
-                                                                                }
-                                                                                var isAsyncExecutingInConfiguration =
-                                                                                                constrainedRouteAttribute
-                                                                                                                .Configuration
-                                                                                                                .GetValue
-                                                                                                                    (
-                                                                                                                        $"Routes:{routeName}:{httpMethod}:{accessingConfigurationKey}:isAsyncExecuting"
-                                                                                                                        , false 
-                                                                                                                    );
-                                                                                r =
-                                                                                    (
-                                                                                        isAsyncExecutingInConfiguration
-                                                                                        ==
-                                                                                        isAsyncExecuting
-                                                                                    );
-                                                                            }
-                                                                            return r;
-                                                                        }
                                                                     );
                                                     }
                                                 );
