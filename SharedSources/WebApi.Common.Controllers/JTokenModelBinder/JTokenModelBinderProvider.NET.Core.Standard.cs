@@ -10,14 +10,15 @@ namespace Microshaoft.WebApi.ModelBinders
     public class JTokenModelBinder : IModelBinder
     {
         private const string _itemKeyOfRequestJTokenParameters = "requestJTokenParameters";
-        public Task BindModelAsync(ModelBindingContext bindingContext)
+
+        public virtual JToken GetJTokenModelBindingResult(ModelBindingContext bindingContext)
         {
             var httpContext = bindingContext
                                         .HttpContext;
             var request = httpContext
                                     .Request;
             IConfiguration configuration =
-                        (IConfiguration) httpContext
+                        (IConfiguration)httpContext
                                                 .RequestServices
                                                 .GetService
                                                     (
@@ -72,6 +73,12 @@ namespace Microshaoft.WebApi.ModelBinders
                                 , secretJwtToken
                             );
             }
+            return parameters;
+        }
+
+        public virtual Task BindModelAsync(ModelBindingContext bindingContext)
+        {
+            var parameters = GetJTokenModelBindingResult(bindingContext);
             bindingContext
                         .Result = ModelBindingResult
                                                 .Success
@@ -79,7 +86,8 @@ namespace Microshaoft.WebApi.ModelBinders
                                                         parameters
                                                     );
             return
-                Task.CompletedTask;
+                Task
+                    .CompletedTask;
         }
     }
 }

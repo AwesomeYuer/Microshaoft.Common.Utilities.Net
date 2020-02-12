@@ -371,6 +371,7 @@ namespace Microshaoft.WebApi.Controllers
                                         string resultJsonPathPart6 = null
                                 )
         {
+
             var beginTimestamp = Stopwatch.GetTimestamp();
             var beginTime = DateTime.Now;
             (
