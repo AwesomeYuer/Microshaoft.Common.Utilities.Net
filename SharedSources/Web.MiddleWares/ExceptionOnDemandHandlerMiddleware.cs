@@ -8,6 +8,7 @@ namespace Microshaoft.Web
     using System;
     using System.Net;
     using System.Text.Json;
+    using SystemJsonSerializer = System.Text.Json.JsonSerializer;
     using System.Threading.Tasks;
     public /*sealed */ class ExceptionOnDemandHandlerMiddleware
     {
@@ -79,7 +80,8 @@ namespace Microshaoft.Web
                     , resultCode = errorResultCode
                     , message = errorMessage
                 };
-                await JsonSerializer
+                await
+                    SystemJsonSerializer
                                 .SerializeAsync
                                         (
                                             response.Body

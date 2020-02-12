@@ -8,7 +8,7 @@ namespace Microshaoft.WebApi.Controllers
     using Newtonsoft.Json.Linq;
     using System;
 #if NETCOREAPP3_X
-    using SysTxtJson = System.Text.Json;
+    using SystemJsonSerializer = System.Text.Json.JsonSerializer;
     using System.Threading.Tasks;
 #endif
     //[ModelBinder(BinderType = typeof(RequestParams))]
@@ -114,8 +114,7 @@ namespace Microshaoft.WebApi.Controllers
                                 JToken
                                     .Parse
                                         (
-                                            SysTxtJson
-                                                .JsonSerializer
+                                            SystemJsonSerializer
                                                     .Serialize
                                                         (
                                                             parameters

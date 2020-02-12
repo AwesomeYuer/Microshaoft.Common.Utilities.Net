@@ -21,6 +21,7 @@
     using System.Net;
     using System.Text.Json;
     using System.Threading.Tasks;
+    using SystemJsonSerializer = System.Text.Json.JsonSerializer;
 #if NETCOREAPP2_X
     using Microsoft.AspNetCore.Hosting;
 #else
@@ -216,7 +217,7 @@
                                                         };
                                                         using var responseBodyStream = response.Body;
                                                         await
-                                                            JsonSerializer
+                                                            SystemJsonSerializer
                                                                         .SerializeAsync
                                                                                 (
                                                                                     responseBodyStream

@@ -9,6 +9,7 @@ namespace Microshaoft.Web
     using System;
     using System.Net;
     using System.Threading.Tasks;
+    using SystemJsonSerializer = System.Text.Json.JsonSerializer;
     using System.Text.Json;
     public class ExceptionGuardMiddleware<TInjector>
     //竟然没有接口?
@@ -147,7 +148,7 @@ namespace Microshaoft.Web
                                 , message = errorMessage
                             };
                 await
-                        JsonSerializer
+                        SystemJsonSerializer
                             .SerializeAsync
                                     (response.Body, jsonResult, defaultJsonSerializerOptions);
                 //await
