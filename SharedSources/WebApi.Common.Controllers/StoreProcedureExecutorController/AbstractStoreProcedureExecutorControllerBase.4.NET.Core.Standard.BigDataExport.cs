@@ -10,18 +10,26 @@ namespace Microshaoft.WebApi.Controllers
     using System;
     using System.Data;
     using System.Data.SqlClient;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
+    using System.Runtime.InteropServices;
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using System.Web;
 
+    internal static class ApplicationInternalManager
+    {
+        internal static readonly Process CurrentProcess = Process.GetCurrentProcess();
+    }
     public abstract partial class 
                 AbstractStoreProceduresExecutorControllerBase
                     :
                         ControllerBase
     {
+        
+
         public const string requestJTokenParametersItemKey = nameof(requestJTokenParametersItemKey);
         private readonly Regex _digitsRegex = new Regex(@"^\d+$");
         private readonly byte[] _utf8BomBytes = new byte[]
@@ -598,8 +606,9 @@ namespace Microshaoft.WebApi.Controllers
             //.Flush();
             //i++;
         }
+
         // 用于诊断回显请求信息
-        public JsonResult EchoRequestInfoAsJsonResult(JToken parameters = null)
+        public virtual JsonResult EchoRequestInfoAsJsonResult(JToken parameters = null)
         { 
             return
                 new JsonResult
@@ -753,6 +762,89 @@ namespace Microshaoft.WebApi.Controllers
                     }
                 );
         }
+        // 可在子类中调用开放成 WebAPI
+        public virtual ActionResult EchoRequestInfo(JToken parameters = null)
+        {
+            return
+                EchoRequestInfoAsJsonResult(parameters);
+        }
+        // 用于诊断回显请求信息
+        public virtual JsonResult RuntimeAsJsonResult()
+        {
+            return
+                new JsonResult
+                        (
+                            new
+                            {
+                                Environment
+                                        .OSVersion
+                                , OSPlatform =
+                                        EnumerableHelper
+                                                    .Range
+                                                        (
+                                                            OSPlatform.Linux
+                                                            , OSPlatform.OSX
+                                                            , OSPlatform.Windows
+                                                        )
+                                                    .First
+                                                        (
+                                                            (x) =>
+                                                            {
+                                                                return
+                                                                    RuntimeInformation
+                                                                            .IsOSPlatform(x);
+                                                            }
+                                                        )
+                                                    .ToString()
+                                , RuntimeInformation
+                                            .FrameworkDescription
+                                , RuntimeInformation
+                                            .OSArchitecture
+                                , RuntimeInformation
+                                            .OSDescription
+                                , RuntimeInformation
+                                            .ProcessArchitecture
+                                , Process = new
+                                    {
+                                        ApplicationInternalManager
+                                                .CurrentProcess
+                                                .StartTime
+                                        , MemoryUtilization = new
+                                            {
+                                                WorkingSet64                = $"{ApplicationInternalManager.CurrentProcess.PrivateMemorySize64       / 1e+6:N} MB"
+                                                , PeakWorkingSet64          = $"{ApplicationInternalManager.CurrentProcess.PeakWorkingSet64          / 1e+6:N} MB"
+                                                , PrivateMemorySize64       = $"{ApplicationInternalManager.CurrentProcess.PrivateMemorySize64       / 1e+6:N} MB"
+                                                , VirtualMemorySize64       = $"{ApplicationInternalManager.CurrentProcess.VirtualMemorySize64       / 1e+6:N} MB"
+                                                , PeakVirtualMemorySize64   = $"{ApplicationInternalManager.CurrentProcess.PeakVirtualMemorySize64   / 1e+6:N} MB"
+                                                , PagedMemorySize64         = $"{ApplicationInternalManager.CurrentProcess.PagedMemorySize64         / 1e+6:N} MB"
+                                                , PeakPagedMemorySize64     = $"{ApplicationInternalManager.CurrentProcess.PeakPagedMemorySize64     / 1e+6:N} MB"
+                                                , PagedSystemMemorySize64   = $"{ApplicationInternalManager.CurrentProcess.PagedSystemMemorySize64   / 1e+6:N} MB"
+                                            }
+                                        , ProcessorUtilization = new
+                                            {
+                                                ApplicationInternalManager
+                                                        .CurrentProcess
+                                                        .TotalProcessorTime
+                                                , ApplicationInternalManager
+                                                        .CurrentProcess
+                                                        .UserProcessorTime
+                                                , ApplicationInternalManager
+                                                        .CurrentProcess
+                                                        .PrivilegedProcessorTime
+                                        }
+                                }
+                                    
+                            }
+                        );
+        }
+        // 可在子类中调用开放成 WebAPI
+        public virtual ActionResult Runtime()
+        {
+            return
+                RuntimeAsJsonResult();
+        }
+
+
     }
 }
 #endif

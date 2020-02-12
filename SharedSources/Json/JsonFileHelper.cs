@@ -7,7 +7,7 @@ namespace Microshaoft
     using System.IO;
     using System.Linq;
     using System.Text;
-    using SysTxtJson = System.Text.Json;
+    using SystemJsonSerializer = System.Text.Json.JsonSerializer;
     public static class JsonFileHelper
     {
         public static string WriteOneJArray<T>
@@ -61,7 +61,7 @@ namespace Microshaoft
             {
                 using (var streamWriter = new StreamWriter(fileStream))
                 {
-                    var json = SysTxtJson.JsonSerializer.Serialize(data);
+                    var json = SystemJsonSerializer.Serialize(data);
                     //var r = JsonConvert.DeserializeObject<T[]>(json);
                     streamWriter.BaseStream.Seek(0, SeekOrigin.End);
                     streamWriter.WriteLine(beginSplitter);
@@ -116,7 +116,7 @@ namespace Microshaoft
                                 i ++;
                                 var json = sb.ToString().Trim();
                                 sb.Clear();
-                                var r = SysTxtJson.JsonSerializer.Deserialize<T[]>(json);
+                                var r = SystemJsonSerializer.Deserialize<T[]>(json);
                                 //Console.WriteLine("JArray: {0}", r.Count());
                                 OnReadedOneJArrayProcessFunc(i, r);
                             }
