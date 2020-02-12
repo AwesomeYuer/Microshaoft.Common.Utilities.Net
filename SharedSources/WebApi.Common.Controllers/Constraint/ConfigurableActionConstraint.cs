@@ -1,8 +1,10 @@
 ﻿#if NETCOREAPP
 namespace Microshaoft
 {
+    using Microshaoft.WebApi.Controllers;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.ActionConstraints;
+    using Microsoft.AspNetCore.Mvc.Controllers;
     using System;
 
     public class ConfigurableActionConstraint<TRouteAttribute>
@@ -12,7 +14,7 @@ namespace Microshaoft
                                     , IServiceProvider
                     where
                         TRouteAttribute
-                                : RouteAttribute
+                                : RouteAttribute , IConfigurable
     {
         private readonly TRouteAttribute _routeAttribute;
         public ConfigurableActionConstraint
@@ -21,11 +23,12 @@ namespace Microshaoft
                             routeAttribute
                         , Func
                                 <
-                                    ActionConstraintContext
+                                    ConfigurableActionConstraint<TRouteAttribute>
+                                    , ActionConstraintContext
                                     , TRouteAttribute
                                     , bool
                                 >
-                            onAcceptCandidateActionProcessFunc
+                            onAcceptCandidateActionProcessFunc = null
                     )
         {
             _routeAttribute = routeAttribute;
@@ -36,7 +39,8 @@ namespace Microshaoft
         private readonly
                         Func
                             <
-                                ActionConstraintContext
+                                ConfigurableActionConstraint<TRouteAttribute>
+                                , ActionConstraintContext
                                 , TRouteAttribute
                                 , bool
                             >
@@ -58,12 +62,79 @@ namespace Microshaoft
 
         public bool Accept(ActionConstraintContext context)
         {
-            return
-                _onAcceptCandidateActionProcessFunc
+            var r = false;
+            if (_onAcceptCandidateActionProcessFunc != null)
+            {
+                r = _onAcceptCandidateActionProcessFunc
                             (
-                                context
+                                this
+                                , context
                                 , _routeAttribute
                             );
+            }
+            else
+            {
+                r = (context.Candidates.Count == 1);
+                if (!r)
+                {
+                    var currentCandidateAction = context
+                                                .CurrentCandidate
+                                                .Action;
+                    var currentControllerActionDescriptor = ((ControllerActionDescriptor) currentCandidateAction);
+                    var controllerType = currentControllerActionDescriptor.ControllerTypeInfo.AsType();
+                    var routeContext = context.RouteContext;
+                    var routeData = routeContext
+                                            .RouteData;
+                    var routeName = string.Empty;
+
+                    if
+                        (
+                            typeof(AbstractStoreProceduresExecutorControllerBase)
+                                    .IsAssignableFrom(controllerType)
+                            &&
+                            routeData
+                                    .Values
+                                    .ContainsKey
+                                        (nameof(routeName))
+                            &&
+                            !routeData
+                                    .Values[nameof(routeName)]
+                                    .ToString()
+                                    .IsNullOrEmptyOrWhiteSpace()
+                        )
+                    {
+                        var httpContext = routeContext
+                                                    .HttpContext;
+                        var request = httpContext
+                                                .Request;
+                        var isAsyncExecuting = currentControllerActionDescriptor
+                                                            .MethodInfo
+                                                            .IsAsync();
+                        var httpMethod = $"Http{request.Method}";
+                        var accessingConfigurationKey = "DefaultAccessing";
+                        if (request.Path.ToString().Contains("/export/", StringComparison.OrdinalIgnoreCase))
+                        {
+                            accessingConfigurationKey = "exporting";
+                        }
+                        var isAsyncExecutingInConfiguration =
+                                        _routeAttribute
+                                                        .Configuration
+                                                        .GetOrDefault
+                                                            (
+                                                                $"Routes:{routeName}:{httpMethod}:{accessingConfigurationKey}:isAsyncExecuting"
+                                                                , false
+                                                            );
+                        r =
+                            (
+                                isAsyncExecutingInConfiguration
+                                ==
+                                isAsyncExecuting
+                            );
+                    }
+                }
+            }
+            return
+                    r;
         }
     }
 }
