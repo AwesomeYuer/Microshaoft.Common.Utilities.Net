@@ -10,6 +10,7 @@ namespace Microshaoft.WebApi.Controllers
 #if NETCOREAPP3_X
     using SystemJsonSerializer = System.Text.Json.JsonSerializer;
     using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Authorization;
 #endif
     //[ModelBinder(BinderType = typeof(RequestParams))]
     public class RequestParams : JTokenModelBinder
@@ -57,7 +58,7 @@ namespace Microshaoft.WebApi.Controllers
         [HttpPatch]
         [HttpPost]
         [HttpPut]
-        [Route("Echo/{* }")]
+        [Route("Echo1")]
         public ActionResult<JToken> Echo
                         (
                             [ModelBinder(typeof(JTokenModelBinder))]
@@ -146,6 +147,38 @@ namespace Microshaoft.WebApi.Controllers
                 base
                     .EchoRequestInfoAsJsonResult
                             ();
+        }
+
+        [HttpGet]
+        [Route("admin/echo/{* }")]
+        [Authorize]
+        /*
+        * Test Jwt Bear Token
+        * eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImFhYWFhIiwiYWEiOiJBQUFBIiwibmJmIjoxNTgxMDU3MjMwLCJleHAiOjE1ODEwNjA4MzAsImlhdCI6MTU4MTA1NzIzMCwiaXNzIjoiSXNzdWVyMSIsImF1ZCI6IkF1ZGllbmNlMSJ9.PBXgD2ZS1pwRgD3nyOumvcjMt0_u6-Ph0xyev_I3Wyo
+        */
+        public override ActionResult EchoRequestInfo
+                                (
+                                    [ModelBinder(typeof(JTokenModelBinder))]
+                                    JToken parameters = null
+                                )
+        {
+            return
+                base
+                    .EchoRequestInfo(parameters);
+        }
+
+        [HttpGet]
+        [Route("admin/runtime")]
+        [Authorize]
+        /*
+        * Test Jwt Bear Token
+        * eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImFhYWFhIiwiYWEiOiJBQUFBIiwibmJmIjoxNTgxMDU3MjMwLCJleHAiOjE1ODEwNjA4MzAsImlhdCI6MTU4MTA1NzIzMCwiaXNzIjoiSXNzdWVyMSIsImF1ZCI6IkF1ZGllbmNlMSJ9.PBXgD2ZS1pwRgD3nyOumvcjMt0_u6-Ph0xyev_I3Wyo
+        */
+        public override ActionResult Runtime()
+        {
+            return
+                base
+                    .Runtime();
         }
     }
 }
