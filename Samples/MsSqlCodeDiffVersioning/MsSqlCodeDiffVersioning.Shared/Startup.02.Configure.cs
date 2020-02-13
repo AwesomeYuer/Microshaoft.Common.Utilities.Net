@@ -560,12 +560,12 @@
                             );
                 #endregion
             }
-            needUseMiddleware = configuration.GetValue("useExceptionGuard", false);
+            needUseMiddleware = configuration.GetValue("useRequestResponseExceptionGuard", false);
             if (needUseMiddleware)
             {
-                #region ExceptionGuard
+                #region UseRequestResponseExceptionGuard
                 app
-                    .UseExceptionGuard<string>
+                    .UseRequestResponseExceptionGuard<string>
                         (
                             (middleware) =>
                             {
