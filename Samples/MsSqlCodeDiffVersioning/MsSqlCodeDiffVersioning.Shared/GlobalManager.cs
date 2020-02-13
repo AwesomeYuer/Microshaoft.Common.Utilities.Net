@@ -228,7 +228,7 @@
                     , string innerExceptionMessage
                 )
         {
-            var rethrow = false;
+            var reThrow = false;
             logger
                 .LogOnDemand
                         (
@@ -246,7 +246,7 @@
                             }
                         );
             return
-                rethrow;
+                reThrow;
         }
 
     }

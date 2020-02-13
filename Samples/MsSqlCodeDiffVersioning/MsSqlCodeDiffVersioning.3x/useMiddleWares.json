@@ -1,6 +1,6 @@
 {
   "useRequestResponseGuard": true,
-  "useExceptionGuard": true,
+  "useRequestResponseExceptionGuard": true,
   "useExceptionHandler": true
 
 }

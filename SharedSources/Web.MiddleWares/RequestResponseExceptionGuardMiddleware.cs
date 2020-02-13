@@ -11,7 +11,7 @@ namespace Microshaoft.Web
     using System.Threading.Tasks;
     using SystemJsonSerializer = System.Text.Json.JsonSerializer;
     using System.Text.Json;
-    public class ExceptionGuardMiddleware<TInjector>
+    public class RequestResponseExceptionGuardMiddleware<TInjector>
     //竟然没有接口?
     {
         private readonly RequestDelegate _next;
@@ -52,13 +52,13 @@ namespace Microshaoft.Web
                 >
                     OnFinallyProcessAction;
 
-        private ExceptionGuardMiddleware
+        private RequestResponseExceptionGuardMiddleware
                     (
                         RequestDelegate
                                 next
                         , Action
                             <
-                                ExceptionGuardMiddleware
+                                RequestResponseExceptionGuardMiddleware
                                     <TInjector>
                             >
                                 onInitializeCallbackProcesses = null
@@ -73,7 +73,7 @@ namespace Microshaoft.Web
         public readonly ILoggerFactory LoggerFactory;
         public readonly ILogger Logger;
 
-        public ExceptionGuardMiddleware
+        public RequestResponseExceptionGuardMiddleware
             (
                 RequestDelegate next
                 , IConfiguration configuration
@@ -82,7 +82,7 @@ namespace Microshaoft.Web
                 , TInjector injector
                 , Action
                     <
-                        ExceptionGuardMiddleware<TInjector>
+                        RequestResponseExceptionGuardMiddleware<TInjector>
                     >
                         onInitializeCallbackProcesses = default
             ) : this(next, onInitializeCallbackProcesses)
@@ -178,12 +178,12 @@ namespace Microshaoft.Web
 
     public static partial class RequestResponseGuardMiddwareExtensions
     {
-        public static IApplicationBuilder UseExceptionGuard<TInjector>
+        public static IApplicationBuilder UseRequestResponseExceptionGuard<TInjector>
             (
                 this IApplicationBuilder
                         target
                 , Action
-                    <ExceptionGuardMiddleware<TInjector>>
+                    <RequestResponseExceptionGuardMiddleware<TInjector>>
                         onInitializeCallbackProcesses = default
             )
         {
@@ -193,7 +193,7 @@ namespace Microshaoft.Web
                         (
                             typeof
                                 (
-                                    ExceptionGuardMiddleware
+                                    RequestResponseExceptionGuardMiddleware
                                                         <TInjector>
                                 )
                             , onInitializeCallbackProcesses
