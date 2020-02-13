@@ -46,7 +46,19 @@
             }
         }
 
-        public static LogLevel RequestResponseLoggingLogLevel = LogLevel.Trace;
+        public static LogLevel RequestResponseLoggingLogLevel = 
+                            Enum
+                                .Parse<LogLevel>
+                                    (
+                                        ConfigurationHelper
+                                                    .Configuration
+                                                    .GetValue
+                                                        (
+                                                            "RequestResponseLoggingLogLevel"
+                                                            , nameof(LogLevel.Trace)
+                                                        )
+                                        , true
+                                    );
 
         public static readonly ILoggerFactory GlobalLoggerFactory =
                             LoggerFactory

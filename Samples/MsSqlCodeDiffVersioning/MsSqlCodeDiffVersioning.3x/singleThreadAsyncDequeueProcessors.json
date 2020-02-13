@@ -1,4 +1,5 @@
 ﻿{
+  "RequestResponseLoggingLogLevel": "information",
   "SingleThreadAsyncDequeueProcessors": {
     "AsyncRequestResponseLoggingProcessor": {
       "sleepInMilliseconds": 500,
