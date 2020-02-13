@@ -9,7 +9,7 @@
     {
         (
             bool Success
-            , JToken Result
+            , JToken JResult
             , TimeSpan? DbExecutingDuration
         )
                Process
@@ -39,7 +39,7 @@
             <
                 (
                     bool Success
-                    , JToken Result
+                    , JToken JResult
                     , TimeSpan? DbExecutingDuration
                 )
             >

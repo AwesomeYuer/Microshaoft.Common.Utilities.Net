@@ -10,7 +10,7 @@
         (
             int StatusCode
             , string Message
-            , JToken Result
+            , JToken JResult
             , TimeSpan? DbExecutingDuration
         )
             Process
@@ -41,7 +41,7 @@
                 (
                     int StatusCode
                     , string Message
-                    , JToken Result
+                    , JToken JResult
                     , TimeSpan? DbExecutingDuration
                 )
             >

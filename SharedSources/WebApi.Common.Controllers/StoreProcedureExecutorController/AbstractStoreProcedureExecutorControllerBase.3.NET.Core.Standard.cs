@@ -9,11 +9,19 @@ namespace Microshaoft.WebApi.Controllers
     using Microsoft.Extensions.Options;
     using Newtonsoft.Json.Linq;
     using System;
+    //using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Data;
     using System.Diagnostics;
     using System.Linq;
+    using System.Runtime.InteropServices;
     using System.Threading.Tasks;
+
+    internal static class InternalApplicationManager
+    {
+        internal static readonly Process CurrentProcess = Process.GetCurrentProcess();
+    }
+
 
     //[Route("api/[controller]")]
     [ConstrainedRoute("api/[controller]")]
@@ -199,6 +207,18 @@ namespace Microshaoft.WebApi.Controllers
         [
             Route
                 (
+                    "echo/{routeName}/"
+                    + "{resultJsonPathPart1?}/"
+                    + "{resultJsonPathPart2?}/"
+                    + "{resultJsonPathPart3?}/"
+                    + "{resultJsonPathPart4?}/"
+                    + "{resultJsonPathPart5?}/"
+                    + "{resultJsonPathPart6?}"
+                )
+        ]
+        [
+            Route
+                (
                     "{routeName}/"
                     + "{resultJsonPathPart1?}/"
                     + "{resultJsonPathPart2?}/"
@@ -262,9 +282,24 @@ namespace Microshaoft.WebApi.Controllers
                                         string resultJsonPathPart6 = null
                                 )
         {
-            var beginTimestamp = Stopwatch.GetTimestamp();
+            bool allowEchoRequestInfo = _configuration
+                                                .GetValue
+                                                    (
+                                                        $"{nameof(allowEchoRequestInfo)}"
+                                                        , false
+                                                    );
+            if
+                (
+                    allowEchoRequestInfo
+                    &&
+                    Request.Path.Value.Contains("/echo/", StringComparison.OrdinalIgnoreCase)
+                )
+            {
+                return
+                    EchoRequestInfo(parameters);
+            }
             var beginTime = DateTime.Now;
-             
+            var beginTimestamp = Stopwatch.GetTimestamp();
             (
                 int statusCode
                 , string message
@@ -378,7 +413,22 @@ namespace Microshaoft.WebApi.Controllers
                                         string resultJsonPathPart6 = null
                                 )
         {
-
+            bool allowEchoRequestInfo = _configuration
+                                                .GetValue
+                                                    (
+                                                        $"{nameof(allowEchoRequestInfo)}"
+                                                        , false
+                                                    );
+            if
+                (
+                    allowEchoRequestInfo
+                    &&
+                    Request.Path.Value.Contains("/echo/", StringComparison.OrdinalIgnoreCase)
+                )
+            {
+                return
+                    EchoRequestInfo(parameters);
+            }
             var beginTimestamp = Stopwatch.GetTimestamp();
             var beginTime = DateTime.Now;
             (
@@ -563,6 +613,243 @@ namespace Microshaoft.WebApi.Controllers
                     .Items
                     .Add(key, parameters);
             }
+        }
+        
+        // 用于诊断回显请求信息
+        public virtual JsonResult EchoRequestInfoAsJsonResult(JToken parameters = null)
+        { 
+            return
+                new JsonResult
+                (
+                    new
+                    {
+                        jsonRequestParameters = parameters
+                        , Request = new
+                            {
+                                  Request.ContentLength
+                                , Request.ContentType
+                                , Request.Cookies
+                                , Request.HasFormContentType
+                                , Request.Headers
+                                , Request.Host
+                                , Request.IsHttps
+                                , Request.Method
+                                , Request.Path
+                                , Request.PathBase
+                                , Request.Protocol
+                                , Request.Query
+                                , Request.QueryString
+                                , Request.RouteValues
+                                , Request.Scheme
+                            }
+                        , HttpContext = new
+                            {
+                                Connection = new
+                                {
+                                    RemoteIpAddress = HttpContext
+                                                            .Connection
+                                                            .RemoteIpAddress
+                                                            .ToString()
+                                }
+                                //, HttpContext.Items
+                                , User = 
+                                    (
+                                        HttpContext
+                                                .User != null
+                                        ?
+                                        new
+                                        {
+                                            Identity = 
+                                                (
+                                                    HttpContext
+                                                        .User
+                                                        .Identity
+                                                    !=
+                                                    null
+                                                    ?
+                                                    new
+                                                    {
+                                                        HttpContext
+                                                                .User
+                                                                .Identity
+                                                                .Name
+                                                        , HttpContext
+                                                                .User
+                                                                .Identity
+                                                                .IsAuthenticated
+                                                        , HttpContext
+                                                                .User
+                                                                .Identity
+                                                                .AuthenticationType
+                                                    }
+                                                    :
+                                                    null
+                                                )
+                                            , Claims = 
+                                                (
+                                                    HttpContext
+                                                            .User
+                                                            .Claims?
+                                                            .Select
+                                                                (
+                                                                    (x) =>
+                                                                    {
+                                                                        return
+                                                                            new
+                                                                            {
+                                                                                x.Type
+                                                                                , x.Value
+                                                                                , x.ValueType
+                                                                                , x.Issuer
+                                                                                , x.OriginalIssuer
+                                                                                , Subject = 
+                                                                                        (
+                                                                                            x.Subject != null
+                                                                                            ?
+                                                                                            new
+                                                                                                { 
+                                                                                                    x.Subject.IsAuthenticated
+                                                                                                    , x.Subject.AuthenticationType
+                                                                                                    , x.Subject.Name
+                                                                                                    , x.Subject.NameClaimType
+                                                                                                    , x.Subject.RoleClaimType
+                                                                                                    , x.Subject.Label
+                                                                                                    , Actor = 
+                                                                                                        (
+                                                                                                            x.Subject.Actor != null
+                                                                                                            ?
+                                                                                                            new
+                                                                                                            { 
+                                                                                                                  x.Subject.Actor.IsAuthenticated
+                                                                                                                , x.Subject.Actor.AuthenticationType
+                                                                                                                , x.Subject.Actor.Name
+                                                                                                                , x.Subject.Actor.NameClaimType
+                                                                                                                , x.Subject.Actor.RoleClaimType
+                                                                                                                , x.Subject.Actor.Label
+                                                                                                            }
+                                                                                                            :
+                                                                                                            null
+                                                                                                        )
+                                                                                                }
+                                                                                            :
+                                                                                            null
+                                                                                        )
+                                                                            };
+                                                                    }
+                                                                )
+                                                )
+                                        }
+                                        :
+                                        null
+                                    )
+                            }
+                        , ProcessingControllerContext = new 
+                            {
+                                ActionDescriptor = new
+                                { 
+                                    ControllerContext.ActionDescriptor.ControllerName
+                                    , ControllerContext.ActionDescriptor.ActionName
+                                    , ControllerContext.ActionDescriptor.DisplayName
+                                    , ControllerContext.ActionDescriptor.RouteValues
+                                    , Parameters = ControllerContext.ActionDescriptor
+                                                                    .Parameters
+                                                                    .Select
+                                                                        (
+                                                                            (x) =>
+                                                                            {
+                                                                                return
+                                                                                        new
+                                                                                        {
+                                                                                            ParameterName = x.Name
+                                                                                            , ParameterTypeName = x.ParameterType.Name
+                                                                                        };
+                                                                            }
+                                                                        )
+                                }
+                            }
+                    }
+                );
+        }
+        // 可在子类中调用开放成 WebAPI
+        public virtual ActionResult EchoRequestInfo(JToken parameters = null)
+        {
+            return
+                EchoRequestInfoAsJsonResult(parameters);
+        }
+        // 用于诊断回显请求信息
+        public virtual JsonResult RuntimeAsJsonResult()
+        {
+            return
+                new JsonResult
+                        (
+                            new
+                            {
+                                Environment
+                                        .OSVersion
+                                , OSPlatform =
+                                        EnumerableHelper
+                                                    .Range
+                                                        (
+                                                            OSPlatform.Linux
+                                                            , OSPlatform.OSX
+                                                            , OSPlatform.Windows
+                                                        )
+                                                    .First
+                                                        (
+                                                            (x) =>
+                                                            {
+                                                                return
+                                                                    RuntimeInformation
+                                                                            .IsOSPlatform(x);
+                                                            }
+                                                        )
+                                                    .ToString()
+                                , RuntimeInformation
+                                            .FrameworkDescription
+                                , RuntimeInformation
+                                            .OSArchitecture
+                                , RuntimeInformation
+                                            .OSDescription
+                                , RuntimeInformation
+                                            .ProcessArchitecture
+                                , Process = new
+                                    {
+                                        InternalApplicationManager
+                                                .CurrentProcess
+                                                .StartTime
+                                        , MemoryUtilization = new
+                                            {
+                                                WorkingSet64                = $"{InternalApplicationManager.CurrentProcess.PrivateMemorySize64       / 1e+6:N} MB"
+                                                , PeakWorkingSet64          = $"{InternalApplicationManager.CurrentProcess.PeakWorkingSet64          / 1e+6:N} MB"
+                                                , PrivateMemorySize64       = $"{InternalApplicationManager.CurrentProcess.PrivateMemorySize64       / 1e+6:N} MB"
+                                                , VirtualMemorySize64       = $"{InternalApplicationManager.CurrentProcess.VirtualMemorySize64       / 1e+6:N} MB"
+                                                , PeakVirtualMemorySize64   = $"{InternalApplicationManager.CurrentProcess.PeakVirtualMemorySize64   / 1e+6:N} MB"
+                                                , PagedMemorySize64         = $"{InternalApplicationManager.CurrentProcess.PagedMemorySize64         / 1e+6:N} MB"
+                                                , PeakPagedMemorySize64     = $"{InternalApplicationManager.CurrentProcess.PeakPagedMemorySize64     / 1e+6:N} MB"
+                                                , PagedSystemMemorySize64   = $"{InternalApplicationManager.CurrentProcess.PagedSystemMemorySize64   / 1e+6:N} MB"
+                                            }
+                                        , ProcessorUtilization = new
+                                            {
+                                                InternalApplicationManager
+                                                        .CurrentProcess
+                                                        .TotalProcessorTime
+                                                , InternalApplicationManager
+                                                        .CurrentProcess
+                                                        .UserProcessorTime
+                                                , InternalApplicationManager
+                                                        .CurrentProcess
+                                                        .PrivilegedProcessorTime
+                                        }
+                                }
+                                    
+                            }
+                        );
+        }
+        // 可在子类中调用开放成 WebAPI
+        public virtual ActionResult Runtime()
+        {
+            return
+                RuntimeAsJsonResult();
         }
     }
 }

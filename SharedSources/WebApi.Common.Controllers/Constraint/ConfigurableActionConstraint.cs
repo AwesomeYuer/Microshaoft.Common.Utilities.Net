@@ -69,8 +69,9 @@ namespace Microshaoft
                 var routeContext = actionConstraintContext.RouteContext;
                 var routeData = routeContext
                                         .RouteData;
-                var routeName = string.Empty;
-
+                string routeName = routeData
+                                        .Values[nameof(routeName)]
+                                        .ToString();
                 if
                     (
                         typeof(TControllerType)
@@ -81,9 +82,7 @@ namespace Microshaoft
                                 .ContainsKey
                                     (nameof(routeName))
                         &&
-                        !routeData
-                                .Values[nameof(routeName)]
-                                .ToString()
+                        !routeName
                                 .IsNullOrEmptyOrWhiteSpace()
                     )
                 {
