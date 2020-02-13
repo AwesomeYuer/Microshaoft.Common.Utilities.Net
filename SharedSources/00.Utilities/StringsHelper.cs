@@ -5,7 +5,18 @@
     using System.Text;
     public static class StringHelper
     {
-
+        public static string RemoveStarts(this string target, string remove)
+        {
+            var r = target;
+            if (target.StartsWith(remove, StringComparison.OrdinalIgnoreCase))
+            {
+                var l = target.Length;
+                var ll = remove.Length;
+                r = target.Substring(l - ll);
+            }
+            return
+                r;
+        }
         public static IEnumerable<string> SplitToCharacters(this string target)
         {
             //原来有一个"零宽度连接符"(Zero - width joiner / ZWJ)的概念，

@@ -39,7 +39,7 @@ namespace Microshaoft.WebApi.Controllers
         /// <summary>
         /// ProcessActionRequest
         /// </summary>
-        /// <param name="routeName">routeName</param>
+        /// <param name="actionRoutePath">actionRoutePath</param>
         /// <param name="parameters">Json Request Parameters</param>
         /// <param name="resultJsonPathPart1"></param>
         /// <param name="resultJsonPathPart2"></param>
@@ -61,24 +61,10 @@ namespace Microshaoft.WebApi.Controllers
         [JTokenParametersValidateFilter(AccessingConfigurationKey = "DefaultAccessing")]
         [BearerTokenBasedAuthorizeFilter(IsRequired = false)]
         override public ActionResult<JToken>
-            ProcessActionRequest
+            ProcessActionRequestResult
                 (
-                    [FromRoute]
-                        string routeName
-                    , [ModelBinder(typeof(JTokenModelBinder))]
+                    [ModelBinder(typeof(JTokenModelBinder))]
                         JToken parameters = null
-                    , [FromRoute]
-                        string resultJsonPathPart1 = null
-                    , [FromRoute]
-                        string resultJsonPathPart2 = null
-                    , [FromRoute]
-                        string resultJsonPathPart3 = null
-                    , [FromRoute]
-                        string resultJsonPathPart4 = null
-                    , [FromRoute]
-                        string resultJsonPathPart5 = null
-                    , [FromRoute]
-                        string resultJsonPathPart6 = null
                 )
         {
             base
@@ -88,23 +74,16 @@ namespace Microshaoft.WebApi.Controllers
                         );
             return
                     base
-                        .ProcessActionRequest
+                        .ProcessActionRequestResult
                             (
-                                routeName
-                                , parameters
-                                , resultJsonPathPart1
-                                , resultJsonPathPart2
-                                , resultJsonPathPart3
-                                , resultJsonPathPart4
-                                , resultJsonPathPart5
-                                , resultJsonPathPart6
+                                parameters
                             );
         }
 
         /// <summary>
         /// ProcessActionRequestAsync 
         /// </summary>
-        /// <param name="routeName">routeName</param>
+        /// <param name="actionRoutePath">actionRoutePath</param>
         /// <param name="parameters">Json Request Parameters</param>
         /// <param name="resultJsonPathPart1"></param>
         /// <param name="resultJsonPathPart2"></param>
@@ -116,24 +95,10 @@ namespace Microshaoft.WebApi.Controllers
         [BearerTokenBasedAuthorizeFilter(IsRequired = false)]
         [JTokenParametersValidateFilter(AccessingConfigurationKey = "exporting")]
         override public async Task<ActionResult<JToken>>
-            ProcessActionRequestAsync
+            ProcessActionRequestResultAsync
                 (
-                    [FromRoute]
-                        string routeName
-                    , [ModelBinder(typeof(JTokenModelBinder))]
+                    [ModelBinder(typeof(JTokenModelBinder))]
                         JToken parameters = null
-                    , [FromRoute]
-                        string resultJsonPathPart1 = null
-                    , [FromRoute]
-                        string resultJsonPathPart2 = null
-                    , [FromRoute]
-                        string resultJsonPathPart3 = null
-                    , [FromRoute]
-                        string resultJsonPathPart4 = null
-                    , [FromRoute]
-                        string resultJsonPathPart5 = null
-                    , [FromRoute]
-                        string resultJsonPathPart6 = null
                 )
         {
             base
@@ -144,16 +109,9 @@ namespace Microshaoft.WebApi.Controllers
             return
                 await
                     base
-                        .ProcessActionRequestAsync
+                        .ProcessActionRequestResultAsync
                             (
-                                routeName
-                                , parameters
-                                , resultJsonPathPart1
-                                , resultJsonPathPart2
-                                , resultJsonPathPart3
-                                , resultJsonPathPart4
-                                , resultJsonPathPart5
-                                , resultJsonPathPart6
+                                parameters
                             );
         }
 
@@ -167,38 +125,20 @@ namespace Microshaoft.WebApi.Controllers
         [
             Route
                 (
-                    "foo/bar/{routeName}/"
-                    + "{resultJsonPathPart1?}/"
-                    + "{resultJsonPathPart2?}/"
-                    + "{resultJsonPathPart3?}/"
-                    + "{resultJsonPathPart4?}/"
-                    + "{resultJsonPathPart5?}/"
-                    + "{resultJsonPathPart6?}"
+                    "foo/bar/{* }"
                 )
         ]
 
         [
             Route
                 (
-                    "foo/bar/export/{routeName}/"
-                    + "{resultJsonPathPart1?}/"
-                    + "{resultJsonPathPart2?}/"
-                    + "{resultJsonPathPart3?}/"
-                    + "{resultJsonPathPart4?}/"
-                    + "{resultJsonPathPart5?}/"
-                    + "{resultJsonPathPart6?}"
+                    "foo/bar/export/{* }"
                 )
         ]
         [
             Route
             (
-                "foo/bar/sync/{routeName}/"
-                + "{resultJsonPathPart1?}/"
-                + "{resultJsonPathPart2?}/"
-                + "{resultJsonPathPart3?}/"
-                + "{resultJsonPathPart4?}/"
-                + "{resultJsonPathPart5?}/"
-                + "{resultJsonPathPart6?}"
+                "foo/bar/sync/{* }"
             )
         ]
         [OperationsAuthorizeFilter(false)]
@@ -215,35 +155,14 @@ namespace Microshaoft.WebApi.Controllers
         public ActionResult<JToken>
                                 ProcessActionRequestFooBar
                                 (
-                                    [FromRoute]
-                                                string routeName
-                                    , [ModelBinder(typeof(JTokenModelBinder))]
-                                                JToken parameters = null
-                                    , [FromRoute]
-                                                string resultJsonPathPart1 = null
-                                    , [FromRoute]
-                                                string resultJsonPathPart2 = null
-                                    , [FromRoute]
-                                                string resultJsonPathPart3 = null
-                                    , [FromRoute]
-                                                string resultJsonPathPart4 = null
-                                    , [FromRoute]
-                                                string resultJsonPathPart5 = null
-                                    , [FromRoute]
-                                                string resultJsonPathPart6 = null
+                                    [ModelBinder(typeof(JTokenModelBinder))]
+                                        JToken parameters = null
                                 )
         {
             return
-                    ProcessActionRequest
+                    ProcessActionRequestResult
                             (
-                                routeName
-                                , parameters
-                                , resultJsonPathPart1
-                                , resultJsonPathPart2
-                                , resultJsonPathPart3
-                                , resultJsonPathPart4
-                                , resultJsonPathPart5
-                                , resultJsonPathPart6
+                                parameters
                             );
         }
 
@@ -258,38 +177,20 @@ namespace Microshaoft.WebApi.Controllers
         [
             Route
                 (
-                    "foo/bar/{routeName}/"
-                    + "{resultJsonPathPart1?}/"
-                    + "{resultJsonPathPart2?}/"
-                    + "{resultJsonPathPart3?}/"
-                    + "{resultJsonPathPart4?}/"
-                    + "{resultJsonPathPart5?}/"
-                    + "{resultJsonPathPart6?}"
+                    "foo/bar/{* }"
                 )
         ]
 
         [
             Route
                 (
-                    "foo/bar/export/{routeName}/"
-                    + "{resultJsonPathPart1?}/"
-                    + "{resultJsonPathPart2?}/"
-                    + "{resultJsonPathPart3?}/"
-                    + "{resultJsonPathPart4?}/"
-                    + "{resultJsonPathPart5?}/"
-                    + "{resultJsonPathPart6?}"
+                    "foo/bar/export/{* }"
                 )
         ]
         [
             Route
             (
-                "foo/bar/async/{routeName}/"
-                + "{resultJsonPathPart1?}/"
-                + "{resultJsonPathPart2?}/"
-                + "{resultJsonPathPart3?}/"
-                + "{resultJsonPathPart4?}/"
-                + "{resultJsonPathPart5?}/"
-                + "{resultJsonPathPart6?}"
+                "foo/bar/async/{* }/"
             )
         ]
         [OperationsAuthorizeFilter(false)]
@@ -306,36 +207,15 @@ namespace Microshaoft.WebApi.Controllers
         public async Task<ActionResult<JToken>>
                                 ProcessActionRequestFooBarAsync
                                 (
-                                    [FromRoute]
-                                                string routeName
-                                    , [ModelBinder(typeof(JTokenModelBinder))]
-                                                JToken parameters = null
-                                    , [FromRoute]
-                                                string resultJsonPathPart1 = null
-                                    , [FromRoute]
-                                                string resultJsonPathPart2 = null
-                                    , [FromRoute]
-                                                string resultJsonPathPart3 = null
-                                    , [FromRoute]
-                                                string resultJsonPathPart4 = null
-                                    , [FromRoute]
-                                                string resultJsonPathPart5 = null
-                                    , [FromRoute]
-                                                string resultJsonPathPart6 = null
+                                    [ModelBinder(typeof(JTokenModelBinder))]
+                                        JToken parameters = null
                                 )
         {
             return
                 await
-                    ProcessActionRequestAsync
+                    ProcessActionRequestResultAsync
                             (
-                                routeName
-                                , parameters
-                                , resultJsonPathPart1
-                                , resultJsonPathPart2
-                                , resultJsonPathPart3
-                                , resultJsonPathPart4
-                                , resultJsonPathPart5
-                                , resultJsonPathPart6
+                                parameters
                             );
         }
 
@@ -343,7 +223,7 @@ namespace Microshaoft.WebApi.Controllers
         /// <summary>
         /// ProcessActionRequestAsync  Export
         /// </summary>
-        /// <param name="routeName">routeName</param>
+        /// <param name="actionRoutePath">actionRoutePath</param>
         /// <param name="parameters">Json Request Parameters</param>
         /// <param name="resultJsonPathPart1"></param>
         /// <param name="resultJsonPathPart2"></param>
@@ -355,7 +235,7 @@ namespace Microshaoft.WebApi.Controllers
         [
              Route
                  (
-                     "bigdataexport/{routeName}/"
+                     "bigdataexport/{* }"
                  )
         ]
         [BearerTokenBasedAuthorizeFilter(IsRequired = false)]
@@ -363,10 +243,8 @@ namespace Microshaoft.WebApi.Controllers
         override public async Task
                         ProcessActionRequestAsync
                             (
-                                [FromRoute]
-                                string routeName
-                                , [ModelBinder(typeof(JTokenModelBinder))]
-                                JToken parameters = null
+                                [ModelBinder(typeof(JTokenModelBinder))]
+                                    JToken parameters = null
                             )
         {
             base
@@ -378,8 +256,7 @@ namespace Microshaoft.WebApi.Controllers
                 base
                     .ProcessActionRequestAsync
                         (
-                            routeName
-                            , parameters
+                            parameters
                         );
         }
     }

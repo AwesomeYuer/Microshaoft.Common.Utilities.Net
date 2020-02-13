@@ -28,7 +28,8 @@ namespace Microshaoft.Web
             var httpContext = context.HttpContext;
             var request = httpContext.Request;
             var httpMethod = $"http{request.Method}";
-            var routeName = (string) context.ActionArguments["routeName"];
+            //var actionRoutePath = (string) context.ActionArguments["actionRoutePath"];
+            var actionRoutepath = request.GetActionRoutePath();
             JObject parameters = (JObject) context.ActionArguments["parameters"];
             _locker
                 .LockIf
@@ -54,7 +55,7 @@ namespace Microshaoft.Web
                     _configuration
                         .TryGetSection
                             (
-                                $"Routes:{routeName}:{httpMethod}:{AccessingConfigurationKey}:InputsParameters"
+                                $"Routes:{actionRoutepath}:{httpMethod}:{AccessingConfigurationKey}:InputsParameters"
                                 , out var inputsParametersConfiguration
                             )
                 )

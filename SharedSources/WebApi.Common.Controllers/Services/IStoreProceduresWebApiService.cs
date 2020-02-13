@@ -15,7 +15,7 @@
         )
             Process
                 (
-                    string routeName
+                    string actionRoutePath
                     , JToken parameters = null
                     , Func
                             <
@@ -47,7 +47,7 @@
             >
                 ProcessAsync
                     (
-                        string routeName
+                        string actionRoutePath
                         , JToken parameters = null
                         , Func
                                 <

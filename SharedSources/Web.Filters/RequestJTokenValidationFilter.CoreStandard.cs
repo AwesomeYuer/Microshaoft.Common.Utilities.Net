@@ -170,9 +170,6 @@ namespace Microshaoft.Web
         public virtual void OnActionExecuting(ActionExecutingContext context)
         {
             var httpContext = context.HttpContext;
-            var request = httpContext.Request;
-            var httpMethod = $"http{request.Method}";
-            var routeName = (string) context.ActionArguments["routeName"];
             _locker
                 .LockIf
                     (
@@ -197,12 +194,21 @@ namespace Microshaoft.Web
                             LoadDynamicValidators();
                         }
                     );
+            //return;
+            var request = httpContext.Request;
+            var httpMethod = $"http{request.Method}";
+            //var actionRoutePath = (string) context.ActionArguments["actionRoutePath"];
+            //                          .RouteData;
+            string actionRoutePath = context
+                                            .RouteData
+                                            .Values[" "]
+                                            .ToString();
             if 
                 (
                     _configuration
                             .TryGetSection
                                     (
-                                        ($"Routes:{routeName}:{httpMethod}:{AccessingConfigurationKey}:RequestValidator")
+                                        $"Routes:{actionRoutePath}:{httpMethod}:{AccessingConfigurationKey}:RequestValidator"
                                         , out var validatorConfiguration
                                     )
                 )
