@@ -207,50 +207,26 @@ namespace Microshaoft.WebApi.Controllers
         [
             Route
                 (
-                    "echo/{routeName}/"
-                    + "{resultJsonPathPart1?}/"
-                    + "{resultJsonPathPart2?}/"
-                    + "{resultJsonPathPart3?}/"
-                    + "{resultJsonPathPart4?}/"
-                    + "{resultJsonPathPart5?}/"
-                    + "{resultJsonPathPart6?}"
+                    "echo/{* }"
                 )
         ]
         [
             Route
                 (
-                    "{routeName}/"
-                    + "{resultJsonPathPart1?}/"
-                    + "{resultJsonPathPart2?}/"
-                    + "{resultJsonPathPart3?}/"
-                    + "{resultJsonPathPart4?}/"
-                    + "{resultJsonPathPart5?}/"
-                    + "{resultJsonPathPart6?}"
+                    "exec/{* }"
                 )
         ]
  
         [
             Route
                 (
-                    "export/{routeName}/"
-                    + "{resultJsonPathPart1?}/"
-                    + "{resultJsonPathPart2?}/"
-                    + "{resultJsonPathPart3?}/"
-                    + "{resultJsonPathPart4?}/"
-                    + "{resultJsonPathPart5?}/"
-                    + "{resultJsonPathPart6?}"
+                    "export/{* }"
                 )
         ]
         [
             Route
                 (
-                    "sync/{routeName}/"
-                    + "{resultJsonPathPart1?}/"
-                    + "{resultJsonPathPart2?}/"
-                    + "{resultJsonPathPart3?}/"
-                    + "{resultJsonPathPart4?}/"
-                    + "{resultJsonPathPart5?}/"
-                    + "{resultJsonPathPart6?}"
+                    "sync/{* }"
                 )
         ]
         [OperationsAuthorizeFilter(false)]
@@ -262,24 +238,10 @@ namespace Microshaoft.WebApi.Controllers
         ]
         [OptionalProduces("text/csv", RequestPathKey = "/export/")]
         public virtual ActionResult<JToken>
-                            ProcessActionRequest
+                            ProcessActionRequestResult
                                 (
-                                    [FromRoute]
-                                        string routeName
-                                    , [ModelBinder(typeof(JTokenModelBinder))]
+                                    [ModelBinder(typeof(JTokenModelBinder))]
                                         JToken parameters = null
-                                    , [FromRoute]
-                                        string resultJsonPathPart1 = null
-                                    , [FromRoute]
-                                        string resultJsonPathPart2 = null
-                                    , [FromRoute]
-                                        string resultJsonPathPart3 = null
-                                    , [FromRoute]
-                                        string resultJsonPathPart4 = null
-                                    , [FromRoute]
-                                        string resultJsonPathPart5 = null
-                                    , [FromRoute]
-                                        string resultJsonPathPart6 = null
                                 )
         {
             bool allowEchoRequestInfo = _configuration
@@ -298,6 +260,8 @@ namespace Microshaoft.WebApi.Controllers
                 return
                     EchoRequestInfo(parameters);
             }
+            //var routeName = Request.Path.Value;
+            var actionRoutePath = Request.GetActionRoutePath();
             var beginTime = DateTime.Now;
             var beginTimestamp = Stopwatch.GetTimestamp();
             (
@@ -310,7 +274,7 @@ namespace Microshaoft.WebApi.Controllers
                     _service
                         .Process
                             (
-                                routeName
+                                actionRoutePath
                                 , parameters
                                 , OnReadRowColumnProcessFunc
                                 , Request.Method
@@ -319,15 +283,9 @@ namespace Microshaoft.WebApi.Controllers
             return
                 ResultProcess
                     (
-                        routeName
+                        actionRoutePath
                         , beginTimestamp
                         , beginTime
-                        , resultJsonPathPart1
-                        , resultJsonPathPart2
-                        , resultJsonPathPart3
-                        , resultJsonPathPart4
-                        , resultJsonPathPart5
-                        , resultJsonPathPart6
                         , 
                             (
                                 statusCode
@@ -349,38 +307,20 @@ namespace Microshaoft.WebApi.Controllers
         [
             Route
                 (
-                    "{routeName}/"
-                    + "{resultJsonPathPart1?}/"
-                    + "{resultJsonPathPart2?}/"
-                    + "{resultJsonPathPart3?}/"
-                    + "{resultJsonPathPart4?}/"
-                    + "{resultJsonPathPart5?}/"
-                    + "{resultJsonPathPart6?}"
+                    "exec/{* }"
                 )
         ]
         [
             Route
                 (
-                    "export/{routeName}/"
-                    + "{resultJsonPathPart1?}/"
-                    + "{resultJsonPathPart2?}/"
-                    + "{resultJsonPathPart3?}/"
-                    + "{resultJsonPathPart4?}/"
-                    + "{resultJsonPathPart5?}/"
-                    + "{resultJsonPathPart6?}"
+                    "export/{* }"
                 )
         ]
 //#endif
         [
             Route
                 (
-                    "async/{routeName}/"
-                    + "{resultJsonPathPart1?}/"
-                    + "{resultJsonPathPart2?}/"
-                    + "{resultJsonPathPart3?}/"
-                    + "{resultJsonPathPart4?}/"
-                    + "{resultJsonPathPart5?}/"
-                    + "{resultJsonPathPart6?}"
+                    "async/{* }"
                 )
         ]
        
@@ -393,24 +333,10 @@ namespace Microshaoft.WebApi.Controllers
         ]
         [OptionalProduces("text/csv", RequestPathKey = "/export/")]
         public virtual async Task<ActionResult<JToken>>
-                            ProcessActionRequestAsync
+                            ProcessActionRequestResultAsync
                                 (
-                                    [FromRoute]
-                                        string routeName
-                                    , [ModelBinder(typeof(JTokenModelBinder))]
+                                    [ModelBinder(typeof(JTokenModelBinder))]
                                         JToken parameters = null
-                                    , [FromRoute]
-                                        string resultJsonPathPart1 = null
-                                    , [FromRoute]
-                                        string resultJsonPathPart2 = null
-                                    , [FromRoute]
-                                        string resultJsonPathPart3 = null
-                                    , [FromRoute]
-                                        string resultJsonPathPart4 = null
-                                    , [FromRoute]
-                                        string resultJsonPathPart5 = null
-                                    , [FromRoute]
-                                        string resultJsonPathPart6 = null
                                 )
         {
             bool allowEchoRequestInfo = _configuration
@@ -429,6 +355,7 @@ namespace Microshaoft.WebApi.Controllers
                 return
                     EchoRequestInfo(parameters);
             }
+            var actionRoutePath = Request.GetActionRoutePath();
             var beginTimestamp = Stopwatch.GetTimestamp();
             var beginTime = DateTime.Now;
             (
@@ -441,7 +368,7 @@ namespace Microshaoft.WebApi.Controllers
                         _service
                                 .ProcessAsync
                                     (
-                                        routeName
+                                        actionRoutePath
                                         , parameters
                                         , OnReadRowColumnProcessFunc
                                         , Request.Method
@@ -450,15 +377,9 @@ namespace Microshaoft.WebApi.Controllers
             return
                 ResultProcess
                     (
-                        routeName
+                        actionRoutePath
                         , beginTimestamp
                         , beginTime
-                        , resultJsonPathPart1
-                        , resultJsonPathPart2
-                        , resultJsonPathPart3
-                        , resultJsonPathPart4
-                        , resultJsonPathPart5
-                        , resultJsonPathPart6
                         , 
                             (
                                 statusCode
@@ -473,12 +394,6 @@ namespace Microshaoft.WebApi.Controllers
                         string routeName
                         , long beginTimestamp
                         , DateTime beginTime
-                        , string resultJsonPathPart1
-                        , string resultJsonPathPart2
-                        , string resultJsonPathPart3
-                        , string resultJsonPathPart4
-                        , string resultJsonPathPart5
-                        , string resultJsonPathPart6
                         ,
                             (
                                 int StatusCode
@@ -487,6 +402,12 @@ namespace Microshaoft.WebApi.Controllers
                                 , TimeSpan? DbExecutingDuration
                             )
                                 result
+                        , string resultJsonPathPart1 = null
+                        , string resultJsonPathPart2 = null
+                        , string resultJsonPathPart3 = null
+                        , string resultJsonPathPart4 = null
+                        , string resultJsonPathPart5 = null
+                        , string resultJsonPathPart6 = null
                     )
         {
             Response

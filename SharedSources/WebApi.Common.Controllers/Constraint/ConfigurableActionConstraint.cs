@@ -1,6 +1,7 @@
 ﻿#if NETCOREAPP
 namespace Microshaoft
 {
+    using Microshaoft.Web;
     using Microshaoft.WebApi.Controllers;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.ActionConstraints;
@@ -61,35 +62,29 @@ namespace Microshaoft
             var r = (actionConstraintContext.Candidates.Count == 1);
             if (!r)
             {
+                var httpContext = actionConstraintContext.RouteContext.HttpContext;
+                var request = httpContext.Request;
                 var currentCandidateAction = actionConstraintContext
                                                 .CurrentCandidate
                                                 .Action;
                 var currentControllerActionDescriptor = ((ControllerActionDescriptor) currentCandidateAction);
                 var currentControllerType = currentControllerActionDescriptor.ControllerTypeInfo.AsType();
                 var routeContext = actionConstraintContext.RouteContext;
-                var routeData = routeContext
-                                        .RouteData;
-                string routeName = routeData
-                                        .Values[nameof(routeName)]
-                                        .ToString();
+                var actionRoutePath = routeContext.RouteData.Values[" "].ToString();
                 if
                     (
                         typeof(TControllerType)
                                 .IsAssignableFrom(currentControllerType)
+                        //&&
+                        //routeData
+                        //        .Values
+                        //        .ContainsKey
+                        //            (nameof(routeName))
                         &&
-                        routeData
-                                .Values
-                                .ContainsKey
-                                    (nameof(routeName))
-                        &&
-                        !routeName
+                        !actionRoutePath
                                 .IsNullOrEmptyOrWhiteSpace()
                     )
                 {
-                    var httpContext = routeContext
-                                                .HttpContext;
-                    var request = httpContext
-                                            .Request;
                     var isAsyncExecuting = currentControllerActionDescriptor
                                                         .MethodInfo
                                                         .IsAsync();
@@ -104,7 +99,7 @@ namespace Microshaoft
                                             .Configuration
                                             .GetOrDefault
                                                 (
-                                                    $"Routes:{routeName}:{httpMethod}:{accessingConfigurationKey}:isAsyncExecuting"
+                                                    $"Routes:{actionRoutePath}:{httpMethod}:{accessingConfigurationKey}:isAsyncExecuting"
                                                     , false
                                                 );
                     r =

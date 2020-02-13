@@ -1,7 +1,7 @@
 {
   "AllowEchoRequestInfo" : true,
   "Routes": {
-    "sp_helptext": {
+    "mssql/sp_helptext": {
       "HttPGet": {
         "connectionID": "c1",
         "storeProcedureName": "sp_helptext",
@@ -10,7 +10,7 @@
         "Scope": "sp_down"
       }
     },
-    "usp_executesql": {
+    "mssql/usp_executesql": {
       "HttPPost": {
         "connectionID": "c1",
         "storeProcedureName": "usp_executesql",
@@ -18,7 +18,7 @@
           "allow": true,
           "needCheckOperations": true,
           "operations": [ "a1", "a2" ],
-          "isAsyncExecuting": false,
+          "isAsyncExecuting": true,
           "EnableStatistics": true,
           "requestvAlidator": "simpleValidator1",
           "commandtimeoutInSeconds": 103,

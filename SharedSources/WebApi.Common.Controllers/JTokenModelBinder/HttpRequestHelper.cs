@@ -15,6 +15,19 @@ namespace Microshaoft.Web
 
     public static partial class HttpRequestHelper
     {
+        public static string GetActionRoutePath
+                    (
+                        this HttpRequest target
+                        , string key = " "
+                    )
+        {
+            return
+                target
+                    .RouteValues[key]
+                    .ToString();
+        }
+
+
         public static bool TryParseJTokenParameters
                     (
                         this HttpRequest target

@@ -213,7 +213,7 @@ namespace Microshaoft.WebApi.Controllers
         [
              Route
                  (
-                     "bigdataexport/{routeName}/"
+                     "bigdataexport/{* }"
                  )
         ]
         [OperationsAuthorizeFilter(false)]
@@ -226,12 +226,11 @@ namespace Microshaoft.WebApi.Controllers
         public virtual async Task
                              ProcessActionRequestAsync
                                  (
-                                     [FromRoute]
-                                        string routeName
-                                     , [ModelBinder(typeof(JTokenModelBinder))]
+                                    [ModelBinder(typeof(JTokenModelBinder))]
                                         JToken parameters = null
                                  )
         {
+            var actionRoutePath = Request.GetActionRoutePath();
             var request = HttpContext
                                 .Request;
             var httpMethod = $"http{request.Method}";
@@ -251,8 +250,8 @@ namespace Microshaoft.WebApi.Controllers
             var downloadFileName = _configuration
                                             .GetValue
                                                 (
-                                                    $"Routes:{routeName}:{httpMethod}:Exporting:DownloadFileName"
-                                                    , $"{routeName}.csv"
+                                                    $"Routes:{actionRoutePath}:{httpMethod}:Exporting:DownloadFileName"
+                                                    , $"{actionRoutePath}.csv"
                                                 );
             downloadFileName = HttpUtility
                                     .UrlEncode(downloadFileName, e);
@@ -305,7 +304,7 @@ namespace Microshaoft.WebApi.Controllers
                         _configuration
                                     .TryGetSection
                                         (
-                                            $"Routes:{routeName}:{httpMethod}:Exporting:OutputColumns"
+                                            $"Routes:{actionRoutePath}:{httpMethod}:Exporting:OutputColumns"
                                             , out var allOutputColumnsConfiguration
                                         )
                     )
@@ -368,7 +367,7 @@ namespace Microshaoft.WebApi.Controllers
                     _service
                         .ProcessReaderReadRowsAsync
                             (
-                                routeName
+                                actionRoutePath
                                 , parameters
                                 , async (resultSetIndex, columns, reader, rowIndex) =>
                                 {
@@ -391,7 +390,7 @@ namespace Microshaoft.WebApi.Controllers
                 var entries = _service
                                     .ProcessReaderAsAsyncEnumerable
                                         (
-                                            routeName
+                                            actionRoutePath
                                             , parameters
                                             , Request
                                                     .Method

@@ -253,7 +253,7 @@ namespace Microshaoft.Web
             )
                 Process
                     (
-                        string routeName
+                        string actionRoutePath
                         , JToken parameters = null
                         , Func
                             <
@@ -298,7 +298,7 @@ namespace Microshaoft.Web
             )
                 = TryGetStoreProcedureInfo
                             (
-                                routeName
+                                actionRoutePath
                                 , httpMethod
                             );
             if 
@@ -359,7 +359,7 @@ namespace Microshaoft.Web
                 >
             ProcessAsync
                 (
-                    string routeName
+                    string actionRoutePath
                     , JToken parameters = null
                     , Func
                         <
@@ -404,7 +404,7 @@ namespace Microshaoft.Web
             ) 
                 = TryGetStoreProcedureInfo
                         (
-                            routeName
+                            actionRoutePath
                             , httpMethod
                         );
             if
@@ -704,7 +704,7 @@ namespace Microshaoft.Web
             )
             TryGetStoreProcedureInfo
                         (
-                            string routeName
+                            string actionRoutePath
                             , string httpMethod
                         )
         {
@@ -746,13 +746,13 @@ namespace Microshaoft.Web
             success = _configuration
                             .TryGetSection
                                     (
-                                        $"Routes:{routeName}"
+                                        $"Routes:{actionRoutePath}"
                                         , out var routeConfiguration
                                     );
             if (!success)
             {
                 statusCode = 404;
-                message = $"{routeName} not found";
+                message = $"{actionRoutePath} not found";
                 return
                     Result();
             }
@@ -903,7 +903,7 @@ namespace Microshaoft.Web
         public virtual void
                     ProcessReaderReadRows
                         (
-                            string routeName
+                            string actionRoutePath
                             , JToken parameters = null
                             , Action
                                 <
@@ -940,7 +940,7 @@ namespace Microshaoft.Web
             )
                 = TryGetStoreProcedureInfo
                             (
-                                routeName
+                                actionRoutePath
                                 , httpMethod
                             );
 
@@ -1006,7 +1006,7 @@ namespace Microshaoft.Web
         public virtual async Task
             ProcessReaderReadRowsAsync
                 (
-                    string routeName
+                    string actionRoutePath
                     , JToken parameters = null
                     , Func
                         <
@@ -1042,7 +1042,7 @@ namespace Microshaoft.Web
             )
                 = TryGetStoreProcedureInfo
                             (
-                                routeName
+                                actionRoutePath
                                 , httpMethod
                             );
 

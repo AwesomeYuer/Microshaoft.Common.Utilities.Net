@@ -170,9 +170,6 @@ namespace Microshaoft.Web
         public virtual void OnActionExecuting(ActionExecutingContext context)
         {
             var httpContext = context.HttpContext;
-            var request = httpContext.Request;
-            var httpMethod = $"http{request.Method}";
-            var routeName = (string) context.ActionArguments["routeName"];
             _locker
                 .LockIf
                     (
@@ -197,6 +194,15 @@ namespace Microshaoft.Web
                             LoadDynamicValidators();
                         }
                     );
+            //return;
+            var request = httpContext.Request;
+            var httpMethod = $"http{request.Method}";
+            //var routeName = (string) context.ActionArguments["routeName"];
+            //                          .RouteData;
+            string routeName = context
+                                    .RouteData
+                                    .Values[" "]
+                                    .ToString();
             if 
                 (
                     _configuration

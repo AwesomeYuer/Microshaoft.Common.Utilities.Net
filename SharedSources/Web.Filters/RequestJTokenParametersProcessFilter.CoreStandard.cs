@@ -28,7 +28,8 @@ namespace Microshaoft.Web
             var httpContext = context.HttpContext;
             var request = httpContext.Request;
             var httpMethod = $"http{request.Method}";
-            var routeName = (string) context.ActionArguments["routeName"];
+            //var routeName = (string) context.ActionArguments["routeName"];
+            var routeName = context.HttpContext.Request.Path.Value;
             JObject parameters = (JObject) context.ActionArguments["parameters"];
             _locker
                 .LockIf
