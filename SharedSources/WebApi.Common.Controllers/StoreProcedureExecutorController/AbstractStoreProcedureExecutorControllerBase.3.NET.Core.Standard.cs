@@ -264,22 +264,23 @@ namespace Microshaoft.WebApi.Controllers
         {
             var beginTimestamp = Stopwatch.GetTimestamp();
             var beginTime = DateTime.Now;
+             
             (
-                int StatusCode
-                , string Message
-                , JToken Result
-                , TimeSpan? DbExecutingDuration
+                int statusCode
+                , string message
+                , JToken jResult 
+                , TimeSpan? dbExecutingDuration
             )
-                result =
-                        _service
-                            .Process
-                                (
-                                    routeName
-                                    , parameters
-                                    , OnReadRowColumnProcessFunc
-                                    , Request.Method
-                                    //, 102
-                                );
+                =
+                    _service
+                        .Process
+                            (
+                                routeName
+                                , parameters
+                                , OnReadRowColumnProcessFunc
+                                , Request.Method
+                                //, 102
+                            );
             return
                 ResultProcess
                     (
@@ -292,7 +293,13 @@ namespace Microshaoft.WebApi.Controllers
                         , resultJsonPathPart4
                         , resultJsonPathPart5
                         , resultJsonPathPart6
-                        , result
+                        , 
+                            (
+                                statusCode
+                                , message
+                                , jResult
+                                , dbExecutingDuration
+                            )
                     );
         }
 
@@ -375,21 +382,21 @@ namespace Microshaoft.WebApi.Controllers
             var beginTimestamp = Stopwatch.GetTimestamp();
             var beginTime = DateTime.Now;
             (
-                int StatusCode
-                , string Message
-                , JToken Result
-                , TimeSpan? DbExecutingDuration
+                int statusCode
+                , string message
+                , JToken jResult
+                , TimeSpan? dbExecutingDuration
             )
-                result = await
-                            _service
-                                    .ProcessAsync
-                                        (
-                                            routeName
-                                            , parameters
-                                            , OnReadRowColumnProcessFunc
-                                            , Request.Method
-                                            //, 102
-                                        );
+                = await
+                        _service
+                                .ProcessAsync
+                                    (
+                                        routeName
+                                        , parameters
+                                        , OnReadRowColumnProcessFunc
+                                        , Request.Method
+                                        //, 102
+                                    );
             return
                 ResultProcess
                     (
@@ -402,7 +409,13 @@ namespace Microshaoft.WebApi.Controllers
                         , resultJsonPathPart4
                         , resultJsonPathPart5
                         , resultJsonPathPart6
-                        , result
+                        , 
+                            (
+                                statusCode
+                                , message
+                                , jResult
+                                , dbExecutingDuration
+                            )
                     );
         }
         private ActionResult<JToken> ResultProcess
@@ -420,7 +433,7 @@ namespace Microshaoft.WebApi.Controllers
                             (
                                 int StatusCode
                                 , string Message
-                                , JToken Result
+                                , JToken JResult
                                 , TimeSpan? DbExecutingDuration
                             )
                                 result
@@ -429,41 +442,42 @@ namespace Microshaoft.WebApi.Controllers
             Response
                     .StatusCode = result
                                         .StatusCode;
-            var httpContext = Response.HttpContext;
-            var dbExecutingDuration = result
-                                            .DbExecutingDuration;
-            if
-                (
-                    dbExecutingDuration
-                        .HasValue
-                )
-            {
-                httpContext
-                        .Items
-                        .TryAdd
-                            (
-                                "dbExecutingDuration"
-                                , dbExecutingDuration
-                            );
-            }
-            var jResult = result.Result;
-            jResult["BeginTime"] = beginTime;
-            jResult["EndTime"] = DateTime.Now;
-            jResult["DurationInMilliseconds"] =
-                            beginTimestamp
-                                    .GetElapsedTimeToNow()
-                                    .TotalMilliseconds;
             if (result.StatusCode == 200)
             {
+                var httpContext = Response.HttpContext;
+                var dbExecutingDuration = result
+                                                .DbExecutingDuration;
+                if
+                    (
+                        dbExecutingDuration
+                            .HasValue
+                    )
+                {
+                    httpContext
+                            .Items
+                            .TryAdd
+                                (
+                                    "dbExecutingDuration"
+                                    , dbExecutingDuration
+                                );
+                }
+                var jResult = result.JResult;
+                jResult["BeginTime"] = beginTime;
+                jResult["EndTime"] = DateTime.Now;
+                jResult["DurationInMilliseconds"] =
+                                beginTimestamp
+                                        .GetElapsedTimeToNow()
+                                        .TotalMilliseconds;
+
                 //support custom output nest json by JSONPath in JsonFile Config
                 result
-                    .Result = MapByConfiguration
+                    .JResult = MapByConfiguration
                                     (
                                         routeName
                                         , jResult
                                     );
                 result
-                    .Result = jResult
+                    .JResult = jResult
                                 .GetDescendantByPathKeys
                                         (
                                             resultJsonPathPart1
@@ -473,49 +487,49 @@ namespace Microshaoft.WebApi.Controllers
                                             , resultJsonPathPart5
                                             , resultJsonPathPart6
                                         );
-                if (result.Result == null)
+                if (result.JResult == null)
                 {
                     return
-                           new
-                               JsonResult
-                                   (
-                                       new
-                                       {
-                                           statusCode = 404
-                                           , resultCode = -404
-                                           , message = "data path not found"
-                                       }
-                                   )
-                           {
-                               StatusCode = 404
-                               , ContentType = "application/json"
-                           };
-                }
-            }
-            else
-            {
-                return
                         new
                             JsonResult
                                 (
                                     new
                                     {
-                                        statusCode = result
-                                                        .StatusCode
-                                        , resultCode = -1 * result
-                                                                .StatusCode
-                                        , message = result
-                                                        .Message
+                                        statusCode = 404
+                                        , resultCode = -404
+                                        , message = "data path not found"
                                     }
                                 )
-                    {
-                        StatusCode = result.StatusCode
-                        , ContentType = "application/json"
-                    };
+                        {
+                            StatusCode = 404
+                            , ContentType = "application/json"
+                        };
+                }
+            }
+            else
+            {
+                return
+                    new
+                        JsonResult
+                            (
+                                new
+                                {
+                                    statusCode = result
+                                                    .StatusCode
+                                    , resultCode = -1 * result
+                                                            .StatusCode
+                                    , message = result
+                                                    .Message
+                                }
+                            )
+                {
+                    StatusCode = result.StatusCode
+                    , ContentType = "application/json"
+                };
             }
             return
                 result
-                    .Result;
+                    .JResult;
         }
         public virtual void AddParametersToHttpContextItems
             (

@@ -139,7 +139,7 @@ namespace Microshaoft.WebApi.Controllers
         [Route("Echo3")]
         public ActionResult Echo
                 (
-                    [FromQuery(Name = "p1")]
+                    [FromQuery(Name = "q1")]
                     string param1 = null
                 )
         {

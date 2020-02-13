@@ -19,7 +19,6 @@
     using System.Diagnostics;
     using System.IO;
     using System.Net;
-    using System.Text.Json;
     using System.Threading.Tasks;
     using SystemJsonSerializer = System.Text.Json.JsonSerializer;
 #if NETCOREAPP2_X

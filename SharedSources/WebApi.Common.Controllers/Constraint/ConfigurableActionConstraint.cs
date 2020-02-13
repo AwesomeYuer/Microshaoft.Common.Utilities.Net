@@ -35,6 +35,91 @@ namespace Microshaoft
             _onAcceptCandidateActionProcessFunc
                         = onAcceptCandidateActionProcessFunc;
         }
+        public virtual bool OnAcceptAsyncOrSyncCandidateActionSelectorProcessFunc
+                                    (
+                                        ConfigurableActionConstraint<TRouteAttribute> configurableActionConstraint
+                                        , ActionConstraintContext actionConstraintContext
+                                        , TRouteAttribute routeAttribute
+                                    )
+        {
+            return
+                OnAcceptAsyncOrSyncCandidateActionSelectorProcessFunc
+                        <AbstractStoreProceduresExecutorControllerBase>
+                            (
+                                configurableActionConstraint
+                                , actionConstraintContext
+                                , routeAttribute
+                            );
+        }
+        protected virtual bool OnAcceptAsyncOrSyncCandidateActionSelectorProcessFunc<TControllerType>
+                                    (
+                                        ConfigurableActionConstraint<TRouteAttribute> configurableActionConstraint
+                                        , ActionConstraintContext actionConstraintContext
+                                        , TRouteAttribute routeAttribute
+                                    )
+        {
+            var r = (actionConstraintContext.Candidates.Count == 1);
+            if (!r)
+            {
+                var currentCandidateAction = actionConstraintContext
+                                                .CurrentCandidate
+                                                .Action;
+                var currentControllerActionDescriptor = ((ControllerActionDescriptor) currentCandidateAction);
+                var currentControllerType = currentControllerActionDescriptor.ControllerTypeInfo.AsType();
+                var routeContext = actionConstraintContext.RouteContext;
+                var routeData = routeContext
+                                        .RouteData;
+                var routeName = string.Empty;
+
+                if
+                    (
+                        typeof(TControllerType)
+                                .IsAssignableFrom(currentControllerType)
+                        &&
+                        routeData
+                                .Values
+                                .ContainsKey
+                                    (nameof(routeName))
+                        &&
+                        !routeData
+                                .Values[nameof(routeName)]
+                                .ToString()
+                                .IsNullOrEmptyOrWhiteSpace()
+                    )
+                {
+                    var httpContext = routeContext
+                                                .HttpContext;
+                    var request = httpContext
+                                            .Request;
+                    var isAsyncExecuting = currentControllerActionDescriptor
+                                                        .MethodInfo
+                                                        .IsAsync();
+                    var httpMethod = $"Http{request.Method}";
+                    var accessingConfigurationKey = "DefaultAccessing";
+                    if (request.Path.ToString().Contains("/export/", StringComparison.OrdinalIgnoreCase))
+                    {
+                        accessingConfigurationKey = "exporting";
+                    }
+                    var isAsyncExecutingInConfiguration =
+                            _routeAttribute
+                                            .Configuration
+                                            .GetOrDefault
+                                                (
+                                                    $"Routes:{routeName}:{httpMethod}:{accessingConfigurationKey}:isAsyncExecuting"
+                                                    , false
+                                                );
+                    r =
+                        (
+                            isAsyncExecutingInConfiguration
+                            ==
+                            isAsyncExecuting
+                        );
+                }
+            }
+            return
+                r;
+        }
+
 
         private readonly
                         Func
@@ -62,7 +147,7 @@ namespace Microshaoft
 
         public bool Accept(ActionConstraintContext context)
         {
-            var r = false;
+            bool r;
             if (_onAcceptCandidateActionProcessFunc != null)
             {
                 r = _onAcceptCandidateActionProcessFunc
@@ -74,64 +159,12 @@ namespace Microshaoft
             }
             else
             {
-                r = (context.Candidates.Count == 1);
-                if (!r)
-                {
-                    var currentCandidateAction = context
-                                                .CurrentCandidate
-                                                .Action;
-                    var currentControllerActionDescriptor = ((ControllerActionDescriptor) currentCandidateAction);
-                    var controllerType = currentControllerActionDescriptor.ControllerTypeInfo.AsType();
-                    var routeContext = context.RouteContext;
-                    var routeData = routeContext
-                                            .RouteData;
-                    var routeName = string.Empty;
-
-                    if
-                        (
-                            typeof(AbstractStoreProceduresExecutorControllerBase)
-                                    .IsAssignableFrom(controllerType)
-                            &&
-                            routeData
-                                    .Values
-                                    .ContainsKey
-                                        (nameof(routeName))
-                            &&
-                            !routeData
-                                    .Values[nameof(routeName)]
-                                    .ToString()
-                                    .IsNullOrEmptyOrWhiteSpace()
-                        )
-                    {
-                        var httpContext = routeContext
-                                                    .HttpContext;
-                        var request = httpContext
-                                                .Request;
-                        var isAsyncExecuting = currentControllerActionDescriptor
-                                                            .MethodInfo
-                                                            .IsAsync();
-                        var httpMethod = $"Http{request.Method}";
-                        var accessingConfigurationKey = "DefaultAccessing";
-                        if (request.Path.ToString().Contains("/export/", StringComparison.OrdinalIgnoreCase))
-                        {
-                            accessingConfigurationKey = "exporting";
-                        }
-                        var isAsyncExecutingInConfiguration =
-                                        _routeAttribute
-                                                        .Configuration
-                                                        .GetOrDefault
-                                                            (
-                                                                $"Routes:{routeName}:{httpMethod}:{accessingConfigurationKey}:isAsyncExecuting"
-                                                                , false
-                                                            );
-                        r =
+                r = OnAcceptAsyncOrSyncCandidateActionSelectorProcessFunc
                             (
-                                isAsyncExecutingInConfiguration
-                                ==
-                                isAsyncExecuting
+                                this
+                                , context
+                                , _routeAttribute
                             );
-                    }
-                }
             }
             return
                     r;

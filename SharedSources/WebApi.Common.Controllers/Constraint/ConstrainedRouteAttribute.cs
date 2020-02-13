@@ -11,7 +11,7 @@ namespace Microshaoft
         IConfiguration Configuration
         {
             get;
-            //set;
+            set;
         }
     }
 
@@ -39,13 +39,13 @@ namespace Microshaoft
 
         public IConfiguration Configuration
         {
-            get
-            {
-                return
-                    ConfigurationHelper
-                                .Configuration;
-            }
-            //set;
+            get;
+            //{
+            //    return
+            //        ConfigurationHelper
+            //                    .Configuration;
+            //}
+            set;
         }
 
         public
