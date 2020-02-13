@@ -191,9 +191,10 @@ namespace Microshaoft.Web
             var request = httpContext
                                 .Request;
             var httpMethod = $"http{request.Method}";
-            var routeName = (string) httpContext
-                                            .GetRouteData()
-                                            .Values["routeName"];
+            //var actionRoutePath = (string) httpContext
+            //                                .GetRouteData()
+            //                                .Values["actionRoutePath"];
+            var actionRoutePath = request.GetActionRoutePath();
             _locker
                 .LockIf
                     (
@@ -302,8 +303,8 @@ namespace Microshaoft.Web
             var downloadFileName = _configuration
                                         .GetValue
                                                 (
-                                                    $"Routes:{routeName}:{httpMethod}:Exporting:DownloadFileName"
-                                                    , $"{routeName}.csv"
+                                                    $"Routes:{actionRoutePath}:{httpMethod}:Exporting:DownloadFileName"
+                                                    , $"{actionRoutePath}.csv"
                                                 );
             downloadFileName = HttpUtility
                                         .UrlEncode(downloadFileName, e);
@@ -349,7 +350,7 @@ namespace Microshaoft.Web
                             _configuration
                                     .GetSection
                                         (
-                                            $"Routes:{routeName}:{httpMethod}:Exporting:OutputColumns"
+                                            $"Routes:{actionRoutePath}:{httpMethod}:Exporting:OutputColumns"
                                         );
                     (
                         string ColumnName

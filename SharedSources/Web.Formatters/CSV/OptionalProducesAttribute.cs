@@ -30,7 +30,7 @@ namespace Microshaoft
             {
                 var httpContext = context.HttpContext;
                 var request = httpContext.Request;
-                //var routeName = context.RouteData.Values["routeName"];
+                //var actionRoutePath = context.RouteData.Values["actionRoutePath"];
                 var path = request.Path.ToString();
                 var r = path
                             .Contains

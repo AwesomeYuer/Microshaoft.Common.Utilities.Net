@@ -111,7 +111,7 @@
                 left -= right;
             }
             var ids = left + ',' + right;
-            var url = baseUrl + "/api/StoreProcedureExecutor/exec/mssql/objects?SearchIdsList=" + ids;
+            var url = baseUrl + "/api/StoreProcedureExecutor/result/mssql/objects?SearchIdsList=" + ids;
             $.getJSON(
                 url
                 , function (data) {
@@ -322,7 +322,7 @@
             var beforeTime = document.getElementById("datepicker1").value;
             var searchHostName = document.getElementById("searchHostName").value;
             var searchDatabaseName = document.getElementById("searchDatabaseName").value;
-            var url = baseUrl + "/api/StoreProcedureExecutor/exec/mssql/objects?searchobjectname=" + search + "&searchhostname=" + searchHostName + "&searchdatabasename=" + searchDatabaseName + "&beforetime=" + beforeTime;
+            var url = baseUrl + "/api/StoreProcedureExecutor/result/mssql/objects?searchobjectname=" + search + "&searchhostname=" + searchHostName + "&searchdatabasename=" + searchDatabaseName + "&beforetime=" + beforeTime;
             $.getJSON(
                 url,
                 function (data) {

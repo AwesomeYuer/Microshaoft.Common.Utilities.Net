@@ -22,7 +22,7 @@ namespace Microshaoft.Web
             >
                     ProcessReaderAsAsyncEnumerable
                 (
-                    string routeName
+                    string actionRoutePath
                     , JToken parameters = null
                     , string httpMethod = "Get"
                     //, bool enableStatistics = false
@@ -52,7 +52,7 @@ namespace Microshaoft.Web
             )
                 = TryGetStoreProcedureInfo
                             (
-                                routeName
+                                actionRoutePath
                                 , httpMethod
                             );
 

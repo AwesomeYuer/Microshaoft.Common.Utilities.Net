@@ -53,7 +53,7 @@ namespace Microshaoft.WebApi.Controllers
         }
         private JToken MapByConfiguration
                     (
-                        string routeName
+                        string actionRoutePath
                         , JToken result
                     )
         {
@@ -79,7 +79,7 @@ namespace Microshaoft.WebApi.Controllers
                     _configuration
                             .TryGetSection
                                 (
-                                    $"Routes:{routeName}:{httpMethod}:{accessingConfigurationKey}:Outputs"
+                                    $"Routes:{actionRoutePath}:{httpMethod}:{accessingConfigurationKey}:Outputs"
                                     , out var outputsConfiguration
                                 )
                 )
@@ -213,7 +213,7 @@ namespace Microshaoft.WebApi.Controllers
         [
             Route
                 (
-                    "exec/{* }"
+                    "result/{* }"
                 )
         ]
  
@@ -260,7 +260,7 @@ namespace Microshaoft.WebApi.Controllers
                 return
                     EchoRequestInfo(parameters);
             }
-            //var routeName = Request.Path.Value;
+            //var actionRoutePath = Request.Path.Value;
             var actionRoutePath = Request.GetActionRoutePath();
             var beginTime = DateTime.Now;
             var beginTimestamp = Stopwatch.GetTimestamp();
@@ -307,7 +307,7 @@ namespace Microshaoft.WebApi.Controllers
         [
             Route
                 (
-                    "exec/{* }"
+                    "result/{* }"
                 )
         ]
         [
@@ -391,7 +391,7 @@ namespace Microshaoft.WebApi.Controllers
         }
         private ActionResult<JToken> ResultProcess
                     (
-                        string routeName
+                        string actionRoutePath
                         , long beginTimestamp
                         , DateTime beginTime
                         ,
@@ -444,7 +444,7 @@ namespace Microshaoft.WebApi.Controllers
                 result
                     .JResult = MapByConfiguration
                                     (
-                                        routeName
+                                        actionRoutePath
                                         , jResult
                                     );
                 result
@@ -521,7 +521,7 @@ namespace Microshaoft.WebApi.Controllers
                             )
                 )
             {
-                if (!object.ReferenceEquals(@value, parameters))
+                if (!ReferenceEquals(@value, parameters))
                 {
                     httpContext
                         .Items[key]

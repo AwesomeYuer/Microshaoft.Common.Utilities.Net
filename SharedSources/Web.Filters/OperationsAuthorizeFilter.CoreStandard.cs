@@ -77,7 +77,7 @@ namespace Microshaoft.Web
                                                                 );
                         }
                     );
-            //var routeName = (string) context.ActionArguments["routeName"];
+            //var actionRoutePath = (string) context.ActionArguments["actionRoutePath"];
             var actionRoutePath = context.HttpContext.Request.GetActionRoutePath();
             var httpMethod = $"http{request.Method}";
             var allow = _allowDefault;

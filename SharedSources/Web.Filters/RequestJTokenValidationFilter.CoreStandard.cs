@@ -197,18 +197,18 @@ namespace Microshaoft.Web
             //return;
             var request = httpContext.Request;
             var httpMethod = $"http{request.Method}";
-            //var routeName = (string) context.ActionArguments["routeName"];
+            //var actionRoutePath = (string) context.ActionArguments["actionRoutePath"];
             //                          .RouteData;
-            string routeName = context
-                                    .RouteData
-                                    .Values[" "]
-                                    .ToString();
+            string actionRoutePath = context
+                                            .RouteData
+                                            .Values[" "]
+                                            .ToString();
             if 
                 (
                     _configuration
                             .TryGetSection
                                     (
-                                        ($"Routes:{routeName}:{httpMethod}:{AccessingConfigurationKey}:RequestValidator")
+                                        $"Routes:{actionRoutePath}:{httpMethod}:{AccessingConfigurationKey}:RequestValidator"
                                         , out var validatorConfiguration
                                     )
                 )

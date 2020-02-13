@@ -709,9 +709,9 @@
                                                                 .HttpContext;
                                             var request = httpContext
                                                                 .Request;
-                                            var routeName = routeContext
+                                            var actionRoutePath = routeContext
                                                                 .RouteData
-                                                                .Values["routeName"]
+                                                                .Values["actionRoutePath"]
                                                                 .ToString();
                                             var httpMethod = $"Http{request.Method}";
                                             var isAsyncExecuting = false;
@@ -723,7 +723,7 @@
                                             }
                                             var isAsyncExecutingConfiguration =
                                                         configuration
-                                                            .GetSection($"Routes:{routeName}:{httpMethod}:{accessingConfigurationKey}:isAsyncExecuting");
+                                                            .GetSection($"Routes:{actionRoutePath}:{httpMethod}:{accessingConfigurationKey}:isAsyncExecuting");
 
                                             if (isAsyncExecutingConfiguration.Exists())
                                             {
