@@ -19,7 +19,6 @@
     using System.Diagnostics;
     using System.IO;
     using System.Net;
-    using System.Text.Json;
     using System.Threading.Tasks;
     using SystemJsonSerializer = System.Text.Json.JsonSerializer;
 #if NETCOREAPP2_X
@@ -55,8 +54,7 @@
             _logger = logger;
             app.UseCors();
 
-            var requestResponseTimingItemKey = string.Empty;
-            requestResponseTimingItemKey = nameof(requestResponseTimingItemKey);
+            string requestResponseTimingItemKey = nameof(requestResponseTimingItemKey);
             //timingKey = string.Empty;
             var needUseMiddleware = configuration.GetValue("useRequestResponseGuard", false);
             if (needUseMiddleware)
@@ -405,20 +403,20 @@
                                                                     #endregion
 
                                                                     #region Claims
-                                                                    var roleID = string.Empty;
+                                                                    string roleID = nameof(roleID);
                                                                     roleID = httpContext
                                                                                         .User
                                                                                         .GetClaimTypeValueOrDefault
                                                                                             (
-                                                                                                nameof(roleID)
+                                                                                                roleID
                                                                                                 , "AnonymousRole"
                                                                                             );
-                                                                    var orgUnitID = string.Empty;
+                                                                    string orgUnitID = nameof(orgUnitID);
                                                                     orgUnitID = httpContext
                                                                                         .User
                                                                                         .GetClaimTypeValueOrDefault
                                                                                             (
-                                                                                                nameof(orgUnitID)
+                                                                                                orgUnitID
                                                                                                 , "AnonymousOrgUnit"
                                                                                             );
                                                                     var clientIP = httpContext
@@ -429,20 +427,20 @@
                                                                                         .User
                                                                                         .Identity
                                                                                         .Name ?? "AnonymousUser";
-                                                                    var deviceID = string.Empty;
+                                                                    string deviceID = nameof(deviceID);
                                                                     deviceID = httpContext
                                                                                         .User
                                                                                         .GetClaimTypeValueOrDefault
                                                                                             (
-                                                                                                nameof(deviceID)
+                                                                                                deviceID
                                                                                                 , "AnonymousDevice"
                                                                                             );
-                                                                    var deviceInfo = string.Empty;
+                                                                    string deviceInfo = nameof(deviceInfo);
                                                                     deviceInfo = httpContext
                                                                                         .User
                                                                                         .GetClaimTypeValueOrDefault
                                                                                             (
-                                                                                                nameof(deviceInfo)
+                                                                                                deviceInfo
                                                                                                 , "UnknownDevice"
                                                                                             );
                                                                     #endregion

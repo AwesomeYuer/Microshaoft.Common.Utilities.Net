@@ -2,11 +2,9 @@
 {
     using Microshaoft;
     using Microshaoft.Web;
-    using Microshaoft.WebApi.Controllers;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Cors.Infrastructure;
     using Microsoft.AspNetCore.Mvc.ApplicationModels;
-    using Microsoft.AspNetCore.Mvc.Controllers;
     using Microsoft.AspNetCore.Server.Kestrel.Core;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -126,10 +124,10 @@
                                                                     }
                                                 }
                                     );
-                                    // Set the comments path for the Swagger JSON and UI.
-                                    //var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                                    //var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                                    //c.IncludeXmlComments(xmlPath);
+                            // Set the comments path for the Swagger JSON and UI.
+                            //var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                            //var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                            //c.IncludeXmlComments(xmlPath);
                             c
                                 .ResolveConflictingActions
                                     (
@@ -277,8 +275,8 @@
                                                 )
                         };
             var connectionID = "c1";
-            var connectionString = string.Empty;
-            connectionString = Configuration.GetValue<string>($"connections:{connectionID}:{nameof(connectionString)}");
+            string connectionString = nameof(connectionString);
+            connectionString = Configuration.GetValue<string>($"connections:{connectionID}:{connectionString}");
             // there are only one Thread that's DequeueThread write it, so it's security
             var jArrayData = new JArray();
             GlobalManager
@@ -359,7 +357,7 @@
                             //Console.WriteLine($"Dequeue Batch: {nameof(Thread.CurrentThread.ManagedThreadId)}:{Thread.CurrentThread.ManagedThreadId}");
                             // sql Connection should be here avoid cross threads
                             var sqlConnection = new SqlConnection(connectionString);
-                            var serverHost = string.Empty;
+                            string serverHost = nameof(serverHost);
                             try
                             {
                                 msSqlStoreProceduresExecutor
@@ -369,13 +367,13 @@
                                             , "zsp_Logging"
                                             , new JObject
                                                 {
-                                                      { $"{nameof(serverHost)}{nameof(GlobalManager.OsPlatformName)}"                       , GlobalManager.OsPlatformName                  }
-                                                    , { $"{nameof(serverHost)}{nameof(GlobalManager.OsVersion)}"                            , GlobalManager.OsVersion                       }
-                                                    , { $"{nameof(serverHost)}{nameof(GlobalManager.FrameworkDescription)}"                 , GlobalManager.FrameworkDescription            }
-                                                    , { $"{nameof(serverHost)}{nameof(Environment.MachineName)}"                            , Environment.MachineName                       }
-                                                    , { $"{nameof(serverHost)}ProcessId"                                                    , GlobalManager.CurrentProcess.Id               }
-                                                    , { $"{nameof(serverHost)}{nameof(GlobalManager.CurrentProcess.ProcessName)}"           , GlobalManager.CurrentProcess.ProcessName      }
-                                                    , { $"{nameof(serverHost)}ProcessStartTime"                                             , GlobalManager.CurrentProcess.StartTime        }
+                                                      { $"{serverHost}{nameof(GlobalManager.OsPlatformName)}"                       , GlobalManager.OsPlatformName                  }
+                                                    , { $"{serverHost}{nameof(GlobalManager.OsVersion)}"                            , GlobalManager.OsVersion                       }
+                                                    , { $"{serverHost}{nameof(GlobalManager.FrameworkDescription)}"                 , GlobalManager.FrameworkDescription            }
+                                                    , { $"{serverHost}{nameof(Environment.MachineName)}"                            , Environment.MachineName                       }
+                                                    , { $"{serverHost}ProcessId"                                                    , GlobalManager.CurrentProcess.Id               }
+                                                    , { $"{serverHost}{nameof(GlobalManager.CurrentProcess.ProcessName)}"           , GlobalManager.CurrentProcess.ProcessName      }
+                                                    , { $"{serverHost}ProcessStartTime"                                             , GlobalManager.CurrentProcess.StartTime        }
                                                     , { "data"                                                                              , jArrayData                                    }
                                                 }
                                         );

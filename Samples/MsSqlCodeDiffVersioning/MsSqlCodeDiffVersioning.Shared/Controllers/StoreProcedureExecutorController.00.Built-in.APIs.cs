@@ -157,6 +157,189 @@ namespace Microshaoft.WebApi.Controllers
                             );
         }
 
+        [HttpDelete]
+        [HttpGet]
+        [HttpHead]
+        [HttpOptions]
+        [HttpPatch]
+        [HttpPost]
+        [HttpPut]
+        [
+            Route
+                (
+                    "foo/bar/{routeName}/"
+                    + "{resultJsonPathPart1?}/"
+                    + "{resultJsonPathPart2?}/"
+                    + "{resultJsonPathPart3?}/"
+                    + "{resultJsonPathPart4?}/"
+                    + "{resultJsonPathPart5?}/"
+                    + "{resultJsonPathPart6?}"
+                )
+        ]
+
+        [
+            Route
+                (
+                    "foo/bar/export/{routeName}/"
+                    + "{resultJsonPathPart1?}/"
+                    + "{resultJsonPathPart2?}/"
+                    + "{resultJsonPathPart3?}/"
+                    + "{resultJsonPathPart4?}/"
+                    + "{resultJsonPathPart5?}/"
+                    + "{resultJsonPathPart6?}"
+                )
+        ]
+        [
+            Route
+            (
+                "foo/bar/sync/{routeName}/"
+                + "{resultJsonPathPart1?}/"
+                + "{resultJsonPathPart2?}/"
+                + "{resultJsonPathPart3?}/"
+                + "{resultJsonPathPart4?}/"
+                + "{resultJsonPathPart5?}/"
+                + "{resultJsonPathPart6?}"
+            )
+        ]
+        [OperationsAuthorizeFilter(false)]
+        [
+            RequestJTokenParametersProcessFilter
+                (
+                    AccessingConfigurationKey = "DefaultAccessing"
+                )
+        ]
+
+        [OptionalProduces("text/csv", RequestPathKey = "/export/")]
+        [JTokenParametersValidateFilter(AccessingConfigurationKey = "DefaultAccessing")]
+        [BearerTokenBasedAuthorizeFilter(IsRequired = false)]
+        public ActionResult<JToken>
+                                ProcessActionRequestFooBar
+                                (
+                                    [FromRoute]
+                                                string routeName
+                                    , [ModelBinder(typeof(JTokenModelBinder))]
+                                                JToken parameters = null
+                                    , [FromRoute]
+                                                string resultJsonPathPart1 = null
+                                    , [FromRoute]
+                                                string resultJsonPathPart2 = null
+                                    , [FromRoute]
+                                                string resultJsonPathPart3 = null
+                                    , [FromRoute]
+                                                string resultJsonPathPart4 = null
+                                    , [FromRoute]
+                                                string resultJsonPathPart5 = null
+                                    , [FromRoute]
+                                                string resultJsonPathPart6 = null
+                                )
+        {
+            return
+                    ProcessActionRequest
+                            (
+                                routeName
+                                , parameters
+                                , resultJsonPathPart1
+                                , resultJsonPathPart2
+                                , resultJsonPathPart3
+                                , resultJsonPathPart4
+                                , resultJsonPathPart5
+                                , resultJsonPathPart6
+                            );
+        }
+
+
+        [HttpDelete]
+        [HttpGet]
+        [HttpHead]
+        [HttpOptions]
+        [HttpPatch]
+        [HttpPost]
+        [HttpPut]
+        [
+            Route
+                (
+                    "foo/bar/{routeName}/"
+                    + "{resultJsonPathPart1?}/"
+                    + "{resultJsonPathPart2?}/"
+                    + "{resultJsonPathPart3?}/"
+                    + "{resultJsonPathPart4?}/"
+                    + "{resultJsonPathPart5?}/"
+                    + "{resultJsonPathPart6?}"
+                )
+        ]
+
+        [
+            Route
+                (
+                    "foo/bar/export/{routeName}/"
+                    + "{resultJsonPathPart1?}/"
+                    + "{resultJsonPathPart2?}/"
+                    + "{resultJsonPathPart3?}/"
+                    + "{resultJsonPathPart4?}/"
+                    + "{resultJsonPathPart5?}/"
+                    + "{resultJsonPathPart6?}"
+                )
+        ]
+        [
+            Route
+            (
+                "foo/bar/async/{routeName}/"
+                + "{resultJsonPathPart1?}/"
+                + "{resultJsonPathPart2?}/"
+                + "{resultJsonPathPart3?}/"
+                + "{resultJsonPathPart4?}/"
+                + "{resultJsonPathPart5?}/"
+                + "{resultJsonPathPart6?}"
+            )
+        ]
+        [OperationsAuthorizeFilter(false)]
+        [
+            RequestJTokenParametersProcessFilter
+                (
+                    AccessingConfigurationKey = "DefaultAccessing"
+                )
+        ]
+
+        [OptionalProduces("text/csv", RequestPathKey = "/export/")]
+        [JTokenParametersValidateFilter(AccessingConfigurationKey = "DefaultAccessing")]
+        [BearerTokenBasedAuthorizeFilter(IsRequired = false)]
+        public async Task<ActionResult<JToken>>
+                                ProcessActionRequestFooBarAsync
+                                (
+                                    [FromRoute]
+                                                string routeName
+                                    , [ModelBinder(typeof(JTokenModelBinder))]
+                                                JToken parameters = null
+                                    , [FromRoute]
+                                                string resultJsonPathPart1 = null
+                                    , [FromRoute]
+                                                string resultJsonPathPart2 = null
+                                    , [FromRoute]
+                                                string resultJsonPathPart3 = null
+                                    , [FromRoute]
+                                                string resultJsonPathPart4 = null
+                                    , [FromRoute]
+                                                string resultJsonPathPart5 = null
+                                    , [FromRoute]
+                                                string resultJsonPathPart6 = null
+                                )
+        {
+            return
+                await
+                    ProcessActionRequestAsync
+                            (
+                                routeName
+                                , parameters
+                                , resultJsonPathPart1
+                                , resultJsonPathPart2
+                                , resultJsonPathPart3
+                                , resultJsonPathPart4
+                                , resultJsonPathPart5
+                                , resultJsonPathPart6
+                            );
+        }
+
+
         /// <summary>
         /// ProcessActionRequestAsync  Export
         /// </summary>

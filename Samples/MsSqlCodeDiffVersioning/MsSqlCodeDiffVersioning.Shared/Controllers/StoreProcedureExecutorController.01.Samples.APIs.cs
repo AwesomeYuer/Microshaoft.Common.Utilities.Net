@@ -11,6 +11,8 @@ namespace Microshaoft.WebApi.Controllers
     using SystemJsonSerializer = System.Text.Json.JsonSerializer;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Authorization;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
 #endif
     //[ModelBinder(BinderType = typeof(RequestParams))]
     public class RequestParams : JTokenModelBinder
@@ -139,7 +141,7 @@ namespace Microshaoft.WebApi.Controllers
         [Route("Echo3")]
         public ActionResult Echo
                 (
-                    [FromQuery(Name = "p1")]
+                    [FromQuery(Name = "q1")]
                     string param1 = null
                 )
         {
@@ -179,6 +181,38 @@ namespace Microshaoft.WebApi.Controllers
             return
                 base
                     .Runtime();
+        }
+
+
+        [HttpGet]
+        [Route("admin/ExecutingDefinitionsCachingStore")]
+        [Authorize]
+        /*
+        * Test Jwt Bear Token
+        * eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImFhYWFhIiwiYWEiOiJBQUFBIiwibmJmIjoxNTgxMDU3MjMwLCJleHAiOjE1ODEwNjA4MzAsImlhdCI6MTU4MTA1NzIzMCwiaXNzIjoiSXNzdWVyMSIsImF1ZCI6IkF1ZGllbmNlMSJ9.PBXgD2ZS1pwRgD3nyOumvcjMt0_u6-Ph0xyev_I3Wyo
+        */
+        public ConcurrentDictionary<string, ExecutingInfo> GetDbParametersDefinitionCachingStore()
+        {
+            return
+                _service
+                    .DbParametersDefinitionCachingStore;
+        }
+        [HttpGet]
+        [Route("admin/IndexedStoreProceduresExecutors")]
+        [Authorize]
+        /*
+        * Test Jwt Bear Token
+        * eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImFhYWFhIiwiYWEiOiJBQUFBIiwibmJmIjoxNTgxMDU3MjMwLCJleHAiOjE1ODEwNjA4MzAsImlhdCI6MTU4MTA1NzIzMCwiaXNzIjoiSXNzdWVyMSIsImF1ZCI6IkF1ZGllbmNlMSJ9.PBXgD2ZS1pwRgD3nyOumvcjMt0_u6-Ph0xyev_I3Wyo
+        */
+        public IDictionary
+                    <
+                        string
+                        , IStoreProcedureExecutable
+                    > GetIndexedExecutors()
+        {
+            return
+                _service
+                    .IndexedExecutors;
         }
     }
 }

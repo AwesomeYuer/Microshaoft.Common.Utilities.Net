@@ -1,4 +1,5 @@
 {
+  "AllowEchoRequestInfo" : true,
   "Routes": {
     "sp_helptext": {
       "HttPGet": {
@@ -325,4 +326,4 @@
       }
     }
   }
- }
+}

@@ -1216,6 +1216,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\05.PerfMon\MsSqlCodeDiffVersioning.3x.exe.PerMon.IE.Only.htm" />
     <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\10.Results\PerfTest.on.Linux.Web.IO.2020-02-02.02-40.png" />
     <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\10.Results\PerfTest.on.Windows.Memory.Usage.2020-02-02.02-40.png" />
     <Content Include="$(MSBuildThisFileDirectory)00.PerfTest\10.Results\PerfTest.on.Windows.Web.IO.2020-02-02.02-40.png" />
