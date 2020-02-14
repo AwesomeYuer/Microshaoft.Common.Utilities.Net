@@ -48,7 +48,7 @@ namespace Microshaoft.WebApi.Controllers
         /// <param name="resultJsonPathPart5"></param>
         /// <param name="resultJsonPathPart6"></param>
         /// <returns>Json</returns>
-#if NETCOREAPP3_X
+#if NETCOREAPPX_X
         [
             ConcurrencyLimiterFilter
                 (
