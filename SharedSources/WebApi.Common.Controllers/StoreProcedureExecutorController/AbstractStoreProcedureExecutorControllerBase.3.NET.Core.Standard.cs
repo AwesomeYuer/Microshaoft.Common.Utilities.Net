@@ -772,14 +772,14 @@ namespace Microshaoft.WebApi.Controllers
                                                 .StartTime
                                         , MemoryUtilization = new
                                             {
-                                                WorkingSet64                = $"{InternalApplicationManager.CurrentProcess.PrivateMemorySize64       / (1.0d * unitDivisor):G29} {unitName}"
-                                                , PeakWorkingSet64          = $"{InternalApplicationManager.CurrentProcess.PeakWorkingSet64          / (1.0d * unitDivisor):G29} {unitName}"
-                                                , PrivateMemorySize64       = $"{InternalApplicationManager.CurrentProcess.PrivateMemorySize64       / (1.0d * unitDivisor):G29} {unitName}"
-                                                , VirtualMemorySize64       = $"{InternalApplicationManager.CurrentProcess.VirtualMemorySize64       / (1.0d * unitDivisor):G29} {unitName}"
-                                                , PeakVirtualMemorySize64   = $"{InternalApplicationManager.CurrentProcess.PeakVirtualMemorySize64   / (1.0d * unitDivisor):G29} {unitName}"
-                                                , PagedMemorySize64         = $"{InternalApplicationManager.CurrentProcess.PagedMemorySize64         / (1.0d * unitDivisor):G29} {unitName}"
-                                                , PeakPagedMemorySize64     = $"{InternalApplicationManager.CurrentProcess.PeakPagedMemorySize64     / (1.0d * unitDivisor):G29} {unitName}"
-                                                , PagedSystemMemorySize64   = $"{InternalApplicationManager.CurrentProcess.PagedSystemMemorySize64   / (1.0d * unitDivisor):G29} {unitName}"
+                                                WorkingSet64                = $"{InternalApplicationManager.CurrentProcess.PrivateMemorySize64       / unitDivisor:N9} {unitName}"
+                                                , PeakWorkingSet64          = $"{InternalApplicationManager.CurrentProcess.PeakWorkingSet64          / unitDivisor:N9} {unitName}"
+                                                , PrivateMemorySize64       = $"{InternalApplicationManager.CurrentProcess.PrivateMemorySize64       / unitDivisor:N9} {unitName}"
+                                                , VirtualMemorySize64       = $"{InternalApplicationManager.CurrentProcess.VirtualMemorySize64       / unitDivisor:N9} {unitName}"
+                                                , PeakVirtualMemorySize64   = $"{InternalApplicationManager.CurrentProcess.PeakVirtualMemorySize64   / unitDivisor:N9} {unitName}"
+                                                , PagedMemorySize64         = $"{InternalApplicationManager.CurrentProcess.PagedMemorySize64         / unitDivisor:N9} {unitName}"
+                                                , PeakPagedMemorySize64     = $"{InternalApplicationManager.CurrentProcess.PeakPagedMemorySize64     / unitDivisor:N9} {unitName}"
+                                                , PagedSystemMemorySize64   = $"{InternalApplicationManager.CurrentProcess.PagedSystemMemorySize64   / unitDivisor:N9} {unitName}"
                                             }
                                         , ProcessorUtilization = new
                                             {
