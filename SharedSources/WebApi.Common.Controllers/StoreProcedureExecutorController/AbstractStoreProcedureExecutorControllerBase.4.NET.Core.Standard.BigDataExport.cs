@@ -231,10 +231,8 @@ namespace Microshaoft.WebApi.Controllers
                                  )
         {
             var actionRoutePath = Request.GetActionRoutePath();
-            var request = HttpContext
-                                .Request;
-            var httpMethod = $"http{request.Method}";
-            var encodingName = (string) request.Query["e"];
+            var httpMethod = $"http{Request.Method}";
+            var encodingName = (string) Request.Query["e"];
             Encoding e = null;
             if (!encodingName.IsNullOrEmptyOrWhiteSpace())
             {

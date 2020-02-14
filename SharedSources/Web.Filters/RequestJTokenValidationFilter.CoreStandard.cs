@@ -199,67 +199,83 @@ namespace Microshaoft.Web
             var httpMethod = $"http{request.Method}";
             //var actionRoutePath = (string) context.ActionArguments["actionRoutePath"];
             //                          .RouteData;
-            string actionRoutePath = context
-                                            .RouteData
-                                            .Values[" "]
-                                            .ToString();
-            if 
+            
+            if
                 (
-                    _configuration
-                            .TryGetSection
-                                    (
-                                        $"Routes:{actionRoutePath}:{httpMethod}:{AccessingConfigurationKey}:RequestValidator"
-                                        , out var validatorConfiguration
-                                    )
+                    context
+                        .RouteData
+                        .Values
+                        .TryGetValue
+                            (
+                                " "
+                                , out var @value
+                            )
+                    &&
+                    @value != null
                 )
             {
-                var validatorName = validatorConfiguration.Value;
-                var parameter = context
-                                    .ActionArguments["parameters"] as JToken;
-                var hasValidator = _indexedValidators
-                                                .TryGetValue
-                                                        (
-                                                            validatorName
-                                                            , out var validator
-                                                        );
-                IActionResult result;
-                bool isValid;
-                if (hasValidator)
-                {
+                string actionRoutePath = @value.ToString();
+                var validatorName = _configuration
+                                            .GetValue
+                                                (
+                                                    $"Routes:{actionRoutePath}:{httpMethod}:{AccessingConfigurationKey}:RequestValidator"
+                                                    , string.Empty
+                                                );
+                if
                     (
-                        isValid
-                        , result
-                    ) = validator
-                                .Validate
-                                    (
-                                        parameter
-                                        , context
-                                    );
-                }
-                else
+                        !validatorName.IsNullOrEmptyOrWhiteSpace()
+                    )
                 {
-                    isValid = false;
-                    result = new JsonResult
-                                    (
-                                        new
-                                        {
-                                            statusCode = 400
-                                            , resultCode = -400
-                                            , message = "can't validate without validator plugin!"
-                                        }
-                                    )
+                    var parameter = context
+                                        .ActionArguments["parameters"] as JToken;
+                    var hasValidator = _indexedValidators
+                                                    .TryGetValue
+                                                            (
+                                                                validatorName
+                                                                , out var validator
+                                                            );
+                    IActionResult result;
+                    bool isValid;
+                    if (hasValidator)
                     {
-                        StatusCode = 400
-                        , ContentType = "application/json"
-                    };
+                        (
+                            isValid
+                            , result
+                        ) = validator
+                                    .Validate
+                                        (
+                                            parameter
+                                            , context
+                                        );
+                    }
+                    else
+                    {
+                        isValid = false;
+                        result = new JsonResult
+                                        (
+                                            new
+                                            {
+                                                statusCode = 400
+                                                , resultCode = -400
+                                                , message = "bad request, can't validate without validator plugin!"
+                                            }
+                                        )
+                        {
+                            StatusCode = 400
+                            , ContentType = "application/json"
+                        };
+                    }
+                    if (!isValid)
+                    {
+                        context
+                            .Result
+                                = result;
+                    }
                 }
-                if (!isValid)
-                {
-                    context
-                        .Result
-                            = result;
-                }
+
             }
+
+
         }
         public virtual void OnActionExecuted(ActionExecutedContext context)
         {

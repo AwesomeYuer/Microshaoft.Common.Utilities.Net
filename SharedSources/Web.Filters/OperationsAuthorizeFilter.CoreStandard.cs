@@ -56,8 +56,9 @@ namespace Microshaoft.Web
                 context
                     .Result = result;
             }
+
+
             var httpContext = context.HttpContext;
-            var request = httpContext.Request;
             _locker
                 .LockIf
                     (
@@ -77,57 +78,71 @@ namespace Microshaoft.Web
                                                                 );
                         }
                     );
+            var request = httpContext.Request;
             //var actionRoutePath = (string) context.ActionArguments["actionRoutePath"];
-            var actionRoutePath = context.HttpContext.Request.GetActionRoutePath();
-            var httpMethod = $"http{request.Method}";
-            var allow = _allowDefault;
-            var success = _configuration
-                                    .TryGetSection
-                                        (
-                                            $"Routes:{actionRoutePath}:{httpMethod}:{AccessingConfigurationKey}"
-                                            , out var masterConfiguration
-                                        );
-            if (success)
+            if
+                (
+                    request
+                        .TryGetActionRoutePath
+                            (
+                                out var actionRoutePath
+                            )
+                )
             {
-                allow = masterConfiguration
-                                        .GetValue
-                                                (
-                                                    $"allow"
-                                                    , false
-                                                );
-                if (allow)
+                var httpMethod = $"http{request.Method}";
+                var allow = _allowDefault;
+                var success = _configuration
+                                        .TryGetSection
+                                            (
+                                                $"Routes:{actionRoutePath}:{httpMethod}:{AccessingConfigurationKey}"
+                                                , out var masterConfiguration
+                                            );
+                if (success)
                 {
-                    var needCheckOperations = masterConfiguration
-                                                .GetValue
+                    allow = masterConfiguration
+                                            .GetValue
                                                     (
-                                                        $"needcheckoperations"
+                                                        $"allow"
                                                         , false
                                                     );
-                    if (needCheckOperations)
+                    if (allow)
                     {
-                        var operations = masterConfiguration
-                                                    .GetOrDefault<string[]>
+                        var needCheckOperations = masterConfiguration
+                                                    .GetValue
                                                         (
-                                                            $"operations"
+                                                            $"needcheckoperations"
+                                                            , false
                                                         );
-                        allow = CheckUserOperations
-                                        (
-                                            httpContext
-                                            , operations
-                                        );
-                        if (!allow)
+                        if (needCheckOperations)
                         {
-                            forbiddenMessage = $"forbidden by {masterConfiguration.Key} Operations";
-                            setForbidResult();
+                            var operations = masterConfiguration
+                                                        .GetOrDefault<string[]>
+                                                            (
+                                                                $"operations"
+                                                            );
+                            allow = CheckUserOperations
+                                            (
+                                                httpContext
+                                                , operations
+                                            );
+                            if (!allow)
+                            {
+                                forbiddenMessage = $"forbidden by {masterConfiguration.Key} check Operations";
+                                setForbidResult();
+                            }
                         }
                     }
-                    
+                    else //(!allow)
+                    {
+                        forbiddenMessage = $"forbidden by {masterConfiguration.Key}";
+                        setForbidResult();
+                    }
                 }
-                else //(!allow)
-                {
-                    forbiddenMessage = $"forbidden by {masterConfiguration.Key}";
-                    setForbidResult();
-                }
+            }
+            else
+            {
+                context
+                    .SetNotFoundJsonResult();
             }
         }
         public virtual void OnActionExecuted(ActionExecutedContext context)

@@ -449,15 +449,15 @@ namespace Microshaoft.WebApi.Controllers
                                     );
                 result
                     .JResult = jResult
-                                .GetDescendantByPathKeys
-                                        (
-                                            resultJsonPathPart1
-                                            , resultJsonPathPart2
-                                            , resultJsonPathPart3
-                                            , resultJsonPathPart4
-                                            , resultJsonPathPart5
-                                            , resultJsonPathPart6
-                                        );
+                                    .GetDescendantByPathKeys
+                                            (
+                                                resultJsonPathPart1
+                                                , resultJsonPathPart2
+                                                , resultJsonPathPart3
+                                                , resultJsonPathPart4
+                                                , resultJsonPathPart5
+                                                , resultJsonPathPart6
+                                            );
                 if (result.JResult == null)
                 {
                     return
@@ -468,7 +468,7 @@ namespace Microshaoft.WebApi.Controllers
                                     {
                                         statusCode = 404
                                         , resultCode = -404
-                                        , message = "data path not found"
+                                        , message = "result data not found by Json Path"
                                     }
                                 )
                         {
