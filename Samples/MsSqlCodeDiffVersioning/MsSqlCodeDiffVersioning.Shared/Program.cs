@@ -318,6 +318,8 @@
         }
         public static string GetUsersSecretsID(string configurationJsonFile)
         {
+            // windows: "%APPDATA%\Microsoft\UserSecrets\<user_secrets_id>\secrets.json"
+            // linux/macOS: ~/.microsoft/usersecrets/<user_secrets_id>/secrets.json
             var configurationBuilder = new ConfigurationBuilder();
             configurationBuilder
                         .AddJsonFile
