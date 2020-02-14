@@ -32,39 +32,61 @@
                                     actionExecutingContext
                         )
         {
-            var httpContext = actionExecutingContext.HttpContext;
-            var request = httpContext.Request;
-
+            //var httpContext = actionExecutingContext.HttpContext;
             IActionResult result = null;
             var isValid = true;
             var jObject = parameters as JObject;
-            if 
+            if
                 (
-                    jObject
-                        .TryGetValue
-                            (
-                                "ccc"
-                                , StringComparison
-                                        .OrdinalIgnoreCase
-                                ,out _
-                            )
+                    parameters != null
+                    &&
+                    jObject != null
                 )
             {
-                result = new JsonResult
+                if
+                    (
+                        jObject
+                            .TryGetValue
                                 (
-                                    new
-                                    {
-                                        statusCode = 400
-                                        , resultCode = -400
-                                        , message = "invalidate, must remove ccc"
-                                    }
+                                    "ccc"
+                                    , StringComparison
+                                            .OrdinalIgnoreCase
+                                    , out _
                                 )
+                    )
                 {
-                    StatusCode = 400
-                    , ContentType = "application/json"
-                };
-                isValid = false;
+                    result = new JsonResult
+                                    (
+                                        new
+                                        {
+                                            statusCode = 400
+                                            , resultCode = -400
+                                            , message = "Bad Request, invalidate, must remove ccc"
+                                        }
+                                    )
+                    {
+                        StatusCode = 400
+                        , ContentType = "application/json"
+                    };
+                    isValid = false;
+                }
             }
+            //else
+            //{ 
+            //    result = new JsonResult
+            //    (
+            //        new
+            //        {
+            //            statusCode = 400
+            //            , resultCode = -400
+            //            , message = "Bad Request, parameters should not be Null"
+            //        }
+            //    )
+            //    {
+            //        StatusCode = 400
+            //        , ContentType = "application/json"
+            //    };
+            //}
             return
                 (
                     IsValid : isValid

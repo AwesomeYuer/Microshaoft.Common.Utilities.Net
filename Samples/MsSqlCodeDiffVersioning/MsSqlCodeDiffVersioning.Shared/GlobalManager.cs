@@ -10,7 +10,54 @@
     using System.Linq;
     using System.Runtime.InteropServices;
     using System.Text;
+    using SingleThreadAsyncDequeueProcessor
+            = Microshaoft
+                    .SingleThreadAsyncDequeueProcessorSlim
+                        <
+                            (
+                                string url
+                                ,
+                                    (
+                                        string requestHeaders
+                                        , string requestBody
+                                        , string requestMethod
+                                        , System.DateTime? requestBeginTime
+                                        , long? requestContentLength
+                                        , string requestContentType
+                                    ) Request
+                                ,
+                                    (
+                                        string responseHeaders
+                                        , string responseBody
+                                        , int responseStatusCode
+                                        , System.DateTime? responseStartingTime
+                                        , long? responseContentLength
+                                        , string responseContentType
+                                    ) Response
+                                ,
+                                    (
+                                        double? requestResponseTimingInMilliseconds
+                                        , double? dbExecutingTimingInMilliseconds
+                                    ) Timing
+                                ,
+                                    (
+                                        (
+                                            string clientIP
+                                            , decimal? locationLongitude
+                                            , decimal? locationLatitude
+                                        ) Location
+                                        , string userID
+                                        , string roleID
+                                        , string orgUnitID
+                                        ,
+                                        (
+                                            string deviceID
+                                            , string deviceInfo
+                                        ) Device
+                                    ) User
 
+                            )
+                        >;
     public static class GlobalManager
     {
         static GlobalManager()
@@ -119,99 +166,9 @@
                                                                     .FrameworkDescription?? $"Unknown {nameof(FrameworkDescription)}:[{ProcessAlignedSecondsStartTime:yyyy-MM-dd HH:mm:ss}]";
 
         public static readonly
-                    SingleThreadAsyncDequeueProcessorSlim
-                        <
-                            (
-                                string url
-                                ,
-                                    (
-                                        string requestHeaders
-                                        , string requestBody
-                                        , string requestMethod
-                                        , DateTime? requestBeginTime
-                                        , long? requestContentLength
-                                        , string requestContentType
-                                    ) Request
-                                ,
-                                    (
-                                        string responseHeaders
-                                        , string responseBody
-                                        , int responseStatusCode
-                                        , DateTime? responseStartingTime
-                                        , long? responseContentLength
-                                        , string responseContentType
-                                    ) Response
-                                ,
-                                    (
-                                        double? requestResponseTimingInMilliseconds
-                                        , double? dbExecutingTimingInMilliseconds
-                                    ) Timing
-                                ,
-                                    (
-                                        (
-                                            string clientIP
-                                            , decimal? locationLongitude
-                                            , decimal? locationLatitude
-                                        ) Location
-                                        , string userID
-                                        , string roleID
-                                        , string orgUnitID
-                                        ,
-                                        (
-                                            string deviceID
-                                            , string deviceInfo
-                                        ) Device
-                                    ) User
-
-                            )
-                        >
+                    SingleThreadAsyncDequeueProcessor
                             AsyncRequestResponseLoggingProcessor
-                                = new SingleThreadAsyncDequeueProcessorSlim
-                                        <
-                                            (
-                                                string url
-                                                ,
-                                                    (
-                                                        string requestHeaders
-                                                        , string requestBody
-                                                        , string requestMethod
-                                                        , DateTime? requestBeginTime
-                                                        , long? requestContentLength
-                                                        , string requestContentType
-                                                    ) Request
-                                                ,
-                                                    (
-                                                        string responseHeaders
-                                                        , string responseBody
-                                                        , int responseStatusCode
-                                                        , DateTime? responseStartingTime
-                                                        , long? responseContentLength
-                                                        , string responseContentType
-                                                    ) Response
-                                                ,
-                                                    (
-                                                        double? requestResponseTimingInMilliseconds
-                                                        , double? dbExecutingTimingInMilliseconds
-                                                    ) Timing
-                                                ,
-                                                    (
-                                                        (
-                                                            string clientIP
-                                                            , decimal? locationLongitude
-                                                            , decimal? locationLatitude
-                                                        ) Location
-                                                        , string userID
-                                                        , string roleID
-                                                        , string organizationUnitID
-                                                        , 
-                                                        (
-                                                            string deviceID
-                                                            , string deviceInfo
-                                                        ) Device
-                                                    ) User
-                                            )
-                                        >();
-
+                                = new SingleThreadAsyncDequeueProcessor();
 
 
         public static readonly

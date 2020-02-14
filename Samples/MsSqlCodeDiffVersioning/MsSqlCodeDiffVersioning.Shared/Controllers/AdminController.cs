@@ -141,7 +141,6 @@
                         .GlobalLogger;
         }
 
-
         [HttpGet]
         [Route("IndexedExecutors")]
         public IDictionary<string, IStoreProcedureExecutable>
@@ -243,78 +242,6 @@
                                     )
                     );
         }
-
-        [HttpGet]
-        [Route("Runtime")]
-        public ActionResult Runtime()
-        {
-            return
-                new JsonResult
-                        (
-                            new
-                            {
-                                Environment
-                                        .OSVersion
-                                , OSPlatform =
-                                        EnumerableHelper
-                                                    .Range
-                                                        (
-                                                            OSPlatform.Linux
-                                                            , OSPlatform.OSX
-                                                            , OSPlatform.Windows
-                                                        )
-                                                    .First
-                                                        (
-                                                            (x) =>
-                                                            {
-                                                                return
-                                                                    RuntimeInformation
-                                                                            .IsOSPlatform(x);
-                                                            }
-                                                        )
-                                                    .ToString()
-                                , RuntimeInformation
-                                            .FrameworkDescription
-                                , RuntimeInformation
-                                            .OSArchitecture
-                                , RuntimeInformation
-                                            .OSDescription
-                                , RuntimeInformation
-                                            .ProcessArchitecture
-                                , Process = new
-                                    {
-                                          GlobalManager
-                                                .CurrentProcess
-                                                .StartTime
-                                        , MemoryUtilization = new
-                                            {
-                                                WorkingSet64                = $"{GlobalManager.CurrentProcess.PrivateMemorySize64       / 1e+6:N} MB"
-                                                , PeakWorkingSet64          = $"{GlobalManager.CurrentProcess.PeakWorkingSet64          / 1e+6:N} MB"
-                                                , PrivateMemorySize64       = $"{GlobalManager.CurrentProcess.PrivateMemorySize64       / 1e+6:N} MB"
-                                                , VirtualMemorySize64       = $"{GlobalManager.CurrentProcess.VirtualMemorySize64       / 1e+6:N} MB"
-                                                , PeakVirtualMemorySize64   = $"{GlobalManager.CurrentProcess.PeakVirtualMemorySize64   / 1e+6:N} MB"
-                                                , PagedMemorySize64         = $"{GlobalManager.CurrentProcess.PagedMemorySize64         / 1e+6:N} MB"
-                                                , PeakPagedMemorySize64     = $"{GlobalManager.CurrentProcess.PeakPagedMemorySize64     / 1e+6:N} MB"
-                                                , PagedSystemMemorySize64   = $"{GlobalManager.CurrentProcess.PagedSystemMemorySize64   / 1e+6:N} MB"
-                                            }
-                                        , ProcessorUtilization = new
-                                            { 
-                                                  GlobalManager
-                                                        .CurrentProcess
-                                                        .TotalProcessorTime
-                                                , GlobalManager
-                                                        .CurrentProcess
-                                                        .UserProcessorTime
-                                                , GlobalManager
-                                                        .CurrentProcess
-                                                        .PrivilegedProcessorTime
-                                        }
-                                }
-                                    
-                            }
-                        );
-        }
-
         [HttpDelete]
         [HttpGet]
         [HttpHead]

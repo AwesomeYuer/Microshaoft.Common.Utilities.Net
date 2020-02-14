@@ -21,7 +21,13 @@ namespace Microshaoft.WebApi.Controllers
     {
         internal static readonly Process CurrentProcess = Process.GetCurrentProcess();
     }
-
+    public enum DivisorOfBytesUnit : long
+    {
+          N = 1
+        , K = 1024
+        , M = K * K
+        , G = K * K * K
+    }
 
     //[Route("api/[controller]")]
     [ConstrainedRoute("api/[controller]")]
@@ -449,15 +455,15 @@ namespace Microshaoft.WebApi.Controllers
                                     );
                 result
                     .JResult = jResult
-                                .GetDescendantByPathKeys
-                                        (
-                                            resultJsonPathPart1
-                                            , resultJsonPathPart2
-                                            , resultJsonPathPart3
-                                            , resultJsonPathPart4
-                                            , resultJsonPathPart5
-                                            , resultJsonPathPart6
-                                        );
+                                    .GetDescendantByPathKeys
+                                            (
+                                                resultJsonPathPart1
+                                                , resultJsonPathPart2
+                                                , resultJsonPathPart3
+                                                , resultJsonPathPart4
+                                                , resultJsonPathPart5
+                                                , resultJsonPathPart6
+                                            );
                 if (result.JResult == null)
                 {
                     return
@@ -468,7 +474,7 @@ namespace Microshaoft.WebApi.Controllers
                                     {
                                         statusCode = 404
                                         , resultCode = -404
-                                        , message = "data path not found"
+                                        , message = "result data not found by Json Path"
                                     }
                                 )
                         {
@@ -698,8 +704,34 @@ namespace Microshaoft.WebApi.Controllers
                 EchoRequestInfoAsJsonResult(parameters);
         }
         // 用于诊断回显请求信息
-        public virtual JsonResult RuntimeAsJsonResult()
+        public virtual JsonResult RuntimeAsJsonResult(string unit = null)
         {
+            var type = typeof(DivisorOfBytesUnit);
+            long unitDivisor = (long) DivisorOfBytesUnit.K;
+            string unitName = $"{nameof(DivisorOfBytesUnit.K)}B";
+            if (!unit.IsNullOrEmptyOrWhiteSpace())
+            {
+                if
+                    (
+                        string.Compare(unit, "N", StringComparison.OrdinalIgnoreCase) == 0
+                        ||
+                        string.Compare(unit, "B", StringComparison.OrdinalIgnoreCase) == 0
+                    )
+                {
+                    unit = "N";
+                }
+                unit = unit.TrimEnd('B', 'b');
+            }
+            if (Enum.TryParse<DivisorOfBytesUnit>(unit, true, out var @value))
+            {
+                unitDivisor = (long) @value;
+                var name = Enum.GetName(type, @value);
+                if (name == "N")
+                {
+                    name = string.Empty;
+                }
+                unitName = $"{name}B";
+            }
             return
                 new JsonResult
                         (
@@ -740,14 +772,14 @@ namespace Microshaoft.WebApi.Controllers
                                                 .StartTime
                                         , MemoryUtilization = new
                                             {
-                                                WorkingSet64                = $"{InternalApplicationManager.CurrentProcess.PrivateMemorySize64       / 1e+6:N} MB"
-                                                , PeakWorkingSet64          = $"{InternalApplicationManager.CurrentProcess.PeakWorkingSet64          / 1e+6:N} MB"
-                                                , PrivateMemorySize64       = $"{InternalApplicationManager.CurrentProcess.PrivateMemorySize64       / 1e+6:N} MB"
-                                                , VirtualMemorySize64       = $"{InternalApplicationManager.CurrentProcess.VirtualMemorySize64       / 1e+6:N} MB"
-                                                , PeakVirtualMemorySize64   = $"{InternalApplicationManager.CurrentProcess.PeakVirtualMemorySize64   / 1e+6:N} MB"
-                                                , PagedMemorySize64         = $"{InternalApplicationManager.CurrentProcess.PagedMemorySize64         / 1e+6:N} MB"
-                                                , PeakPagedMemorySize64     = $"{InternalApplicationManager.CurrentProcess.PeakPagedMemorySize64     / 1e+6:N} MB"
-                                                , PagedSystemMemorySize64   = $"{InternalApplicationManager.CurrentProcess.PagedSystemMemorySize64   / 1e+6:N} MB"
+                                                WorkingSet64                = $"{InternalApplicationManager.CurrentProcess.PrivateMemorySize64       / (1.0d * unitDivisor):N9} {unitName}"
+                                                , PeakWorkingSet64          = $"{InternalApplicationManager.CurrentProcess.PeakWorkingSet64          / (1.0d * unitDivisor):N9} {unitName}"
+                                                , PrivateMemorySize64       = $"{InternalApplicationManager.CurrentProcess.PrivateMemorySize64       / (1.0d * unitDivisor):N9} {unitName}"
+                                                , VirtualMemorySize64       = $"{InternalApplicationManager.CurrentProcess.VirtualMemorySize64       / (1.0d * unitDivisor):N9} {unitName}"
+                                                , PeakVirtualMemorySize64   = $"{InternalApplicationManager.CurrentProcess.PeakVirtualMemorySize64   / (1.0d * unitDivisor):N9} {unitName}"
+                                                , PagedMemorySize64         = $"{InternalApplicationManager.CurrentProcess.PagedMemorySize64         / (1.0d * unitDivisor):N9} {unitName}"
+                                                , PeakPagedMemorySize64     = $"{InternalApplicationManager.CurrentProcess.PeakPagedMemorySize64     / (1.0d * unitDivisor):N9} {unitName}"
+                                                , PagedSystemMemorySize64   = $"{InternalApplicationManager.CurrentProcess.PagedSystemMemorySize64   / (1.0d * unitDivisor):N9} {unitName}"
                                             }
                                         , ProcessorUtilization = new
                                             {
@@ -767,10 +799,14 @@ namespace Microshaoft.WebApi.Controllers
                         );
         }
         // 可在子类中调用开放成 WebAPI
-        public virtual ActionResult Runtime()
+        public virtual ActionResult Runtime
+                                (
+                                    [FromQuery(Name = "u")]
+                                    string unit = "KB"
+                                )
         {
             return
-                RuntimeAsJsonResult();
+                RuntimeAsJsonResult(unit);
         }
     }
 }

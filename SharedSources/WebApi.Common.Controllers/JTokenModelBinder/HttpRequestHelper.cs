@@ -5,8 +5,11 @@ namespace Microshaoft.Web
     using System.IO;
     using System.Threading.Tasks;
     using System.Web;
+    using Microshaoft.Linq.Dynamic;
     using Microshaoft.WebApi;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Filters;
     using Microsoft.AspNetCore.Mvc.ModelBinding;
     using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
     using Microsoft.Extensions.Logging.Abstractions;
@@ -15,6 +18,113 @@ namespace Microshaoft.Web
 
     public static partial class HttpRequestHelper
     {
+        public static JsonResult NewJsonResult
+                                (
+                                    int statusCode
+                                    , int resultCode
+                                    , string message
+                                )
+        {
+            return
+                new JsonResult
+                        (
+                            new
+                            {
+                                statusCode
+                                , resultCode
+                                , message
+                            }
+                        )
+                    {
+                        StatusCode = statusCode
+                        , ContentType = "application/json"
+                    };
+        }
+
+        public static void SetJsonResult
+                                (
+                                    this ActionExecutingContext target
+                                    , int statusCode
+                                    , int resultCode
+                                    , string message
+                                )
+        {
+            target
+                .Result = NewJsonResult
+                            (
+                                statusCode
+                                , resultCode
+                                , message
+                            );
+        }
+        public static void SetJsonResult
+                        (
+                            this ActionExecutedContext target
+                            , int statusCode
+                            , int resultCode
+                            , string message
+                        )
+        {
+            target
+                .Result = NewJsonResult
+                            (
+                                statusCode
+                                , resultCode
+                                , message
+                            );
+        }
+        public static void SetNotFoundJsonResult
+                                (
+                                    this ActionExecutedContext target
+                                    , int? resultCode = null
+                                    , string message = null
+                                )
+        {
+            
+            var statusCode = 404;
+            if (resultCode == null || !resultCode.HasValue)
+            {
+                resultCode = -1 * statusCode;
+            }
+            if (message.IsNullOrEmptyOrWhiteSpace())
+            {
+                var request = target.HttpContext.Request;
+                message = $"{request.Path.Value} not found!";
+            }
+            target
+                .Result = NewJsonResult
+                            (
+                                statusCode
+                                , resultCode.Value
+                                , message
+                            );
+        }
+        public static void SetNotFoundJsonResult
+                        (
+                            this ActionExecutingContext target
+                            , int? resultCode = null
+                            , string message = null
+                        )
+        {
+            var statusCode = 404;
+            if (resultCode == null || !resultCode.HasValue)
+            {
+                resultCode = -1 * statusCode;
+            }
+            if (message.IsNullOrEmptyOrWhiteSpace())
+            {
+                var request = target.HttpContext.Request;
+                message = $"{request.Path.Value} not found!";
+            }
+            target
+                .Result = NewJsonResult
+                            (
+                                statusCode
+                                , resultCode.Value
+                                , message
+                            );
+        }
+
         public static string GetActionRoutePath
                     (
                         this HttpRequest target
@@ -27,6 +137,62 @@ namespace Microshaoft.Web
                     .ToString();
         }
 
+        public static string GetActionRoutePathOrEmpty
+            (
+                this HttpRequest target
+                , string key = " "
+            )
+        {
+            var r = string.Empty;
+            if
+                (
+                    TryGetActionRoutePath
+                        (
+                            target
+                            , out var @value
+                            , key
+                        )
+                )
+            {
+                r = @value;
+            }
+            return
+                r;
+        }
+        public static bool TryGetActionRoutePath
+            (
+                this HttpRequest target
+                , out string @value
+                , string key = " "
+            )
+        {
+            @value = string.Empty;
+            var r = false;
+            if
+                (
+                    target
+                        .RouteValues
+                        .TryGetValue
+                            (
+                                key
+                                , out var @object
+                            )
+                    &&
+                    @object != null
+                )
+            {
+                if (@object is string s)
+                {
+                    if (!s.IsNullOrEmptyOrWhiteSpace())
+                    {
+                        @value = s;
+                        r = true;
+                    }
+                }
+            }
+            return
+                r;
+        }
 
         public static bool TryParseJTokenParameters
                     (

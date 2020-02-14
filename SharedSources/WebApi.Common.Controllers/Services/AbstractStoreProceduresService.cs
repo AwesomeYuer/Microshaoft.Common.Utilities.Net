@@ -752,7 +752,7 @@ namespace Microshaoft.Web
             if (!success)
             {
                 statusCode = 404;
-                message = $"{actionRoutePath} not found";
+                message = $"{actionRoutePath} not found in {nameof(routeConfiguration)}";
                 return
                     Result();
             }
