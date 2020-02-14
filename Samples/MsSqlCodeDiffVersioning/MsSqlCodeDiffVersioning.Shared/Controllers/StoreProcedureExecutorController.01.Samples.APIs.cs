@@ -176,11 +176,15 @@ namespace Microshaoft.WebApi.Controllers
         * Test Jwt Bear Token
         * eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImFhYWFhIiwiYWEiOiJBQUFBIiwibmJmIjoxNTgxMDU3MjMwLCJleHAiOjE1ODEwNjA4MzAsImlhdCI6MTU4MTA1NzIzMCwiaXNzIjoiSXNzdWVyMSIsImF1ZCI6IkF1ZGllbmNlMSJ9.PBXgD2ZS1pwRgD3nyOumvcjMt0_u6-Ph0xyev_I3Wyo
         */
-        public override ActionResult Runtime()
+        public override ActionResult Runtime
+                                        (
+                                            [FromQuery(Name = "u")]
+                                            string unit = "KB"
+                                        )
         {
             return
                 base
-                    .Runtime();
+                    .Runtime(unit);
         }
 
 
