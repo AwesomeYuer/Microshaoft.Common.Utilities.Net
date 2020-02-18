@@ -120,6 +120,31 @@
     <Compile Include="$(MSBuildThisFileDirectory)FasterUtilities\SafeConcurrentDictionary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FasterUtilities\StateTransitions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FasterUtilities\Status.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.HttpBatchHandler\BatchMiddleware.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.HttpBatchHandler\BatchMiddlewareExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.HttpBatchHandler\Events\BatchEndContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.HttpBatchHandler\Events\BatchMiddlewareEvents.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.HttpBatchHandler\Events\BatchMiddlewareOptions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.HttpBatchHandler\Events\BatchRequestExecutedContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.HttpBatchHandler\Events\BatchRequestExecutingContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.HttpBatchHandler\Events\BatchRequestPreparationContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.HttpBatchHandler\Events\BatchStartContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.HttpBatchHandler\HttpRequestExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.HttpBatchHandler\HttpResponseExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.HttpBatchHandler\Multipart\HttpApplicationContent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.HttpBatchHandler\Multipart\HttpApplicationMultipart.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.HttpBatchHandler\Multipart\HttpApplicationRequestSection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.HttpBatchHandler\Multipart\HttpApplicationRequestSectionExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.HttpBatchHandler\Multipart\HttpApplicationResponseSection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.HttpBatchHandler\Multipart\HttpApplicationResponseSectionExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.HttpBatchHandler\Multipart\HttpContentExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.HttpBatchHandler\Multipart\IMultipart.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.HttpBatchHandler\Multipart\MultipartWriter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.HttpBatchHandler\Multipart\SectionHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.HttpBatchHandler\RequestState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.HttpBatchHandler\ResponseFeature.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.HttpBatchHandler\StreamExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebApi.HttpBatchHandler\WriteOnlyResponseStream.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpClientHelper\HttpClientHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)JsonWebToken\ClaimsHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\DynamicJson\DynamicJson.01.cs" />
@@ -348,5 +373,7 @@
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)00.Microsoft.Extensions\00.Shared\CommandLineUtils\Microsoft.Extensions.CommandLineUtils.Sources.projitems" />
     <None Include="$(MSBuildThisFileDirectory)DataAccess\Pager.StoreProcedure.Sample.sql" />
+    <None Include="$(MSBuildThisFileDirectory)WebApi.HttpBatchHandler\LICENSE" />
+    <None Include="$(MSBuildThisFileDirectory)WebApi.HttpBatchHandler\README.md" />
   </ItemGroup>
 </Project>

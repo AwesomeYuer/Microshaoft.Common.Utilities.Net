@@ -14,6 +14,7 @@ namespace Microshaoft.WebApi.Controllers
     using System.Data;
     using System.Diagnostics;
     using System.Linq;
+    using System.Reflection;
     using System.Runtime.InteropServices;
     using System.Threading.Tasks;
 
@@ -739,6 +740,8 @@ namespace Microshaoft.WebApi.Controllers
                             {
                                 Environment
                                         .OSVersion
+                                , Environment
+                                        .Is64BitOperatingSystem
                                 , OSPlatform =
                                         EnumerableHelper
                                                     .Range
@@ -757,19 +760,62 @@ namespace Microshaoft.WebApi.Controllers
                                                             }
                                                         )
                                                     .ToString()
+                                , Environment
+                                        .Version
                                 , RuntimeInformation
                                             .FrameworkDescription
+                                , CoreCLR =
+                                            (
+                                                (AssemblyInformationalVersionAttribute[])
+                                                    typeof(object)
+                                                            .Assembly
+                                                            .GetCustomAttributes
+                                                                (
+                                                                    typeof(AssemblyInformationalVersionAttribute)
+                                                                    , false
+                                                                )
+                                            )
+                                                [0]
+                                                    .InformationalVersion
+                                , CoreFx =
+                                            (
+                                                (AssemblyInformationalVersionAttribute[])
+                                                    typeof(Uri)
+                                                            .Assembly
+                                                            .GetCustomAttributes
+                                                                (
+                                                                    typeof(AssemblyInformationalVersionAttribute)
+                                                                    , false
+                                                                )
+                                            )
+                                                [0]
+                                                    .InformationalVersion
                                 , RuntimeInformation
                                             .OSArchitecture
                                 , RuntimeInformation
                                             .OSDescription
-                                , RuntimeInformation
-                                            .ProcessArchitecture
                                 , Process = new
                                     {
-                                        InternalApplicationManager
+                                        Architecture =
+                                            Enum
+                                                .GetName
+                                                    (
+                                                        typeof(Architecture)
+                                                        , RuntimeInformation
+                                                                .ProcessArchitecture
+                                                    )
+                                        , Environment
+                                                .Is64BitProcess
+                                        , InternalApplicationManager
                                                 .CurrentProcess
                                                 .StartTime
+                                        , InternalApplicationManager
+                                                .CurrentProcess
+                                                .HandleCount
+                                        , ThreadsCount = 
+                                                InternalApplicationManager
+                                                        .CurrentProcess
+                                                        .Threads.Count
                                         , MemoryUtilization = new
                                             {
                                                 WorkingSet64                = $"{InternalApplicationManager.CurrentProcess.PrivateMemorySize64       / (1.0d * unitDivisor):N9} {unitName}"

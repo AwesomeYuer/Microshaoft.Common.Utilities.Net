@@ -12,15 +12,19 @@ namespace Microshaoft.Web
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
-    using System.Security.Cryptography.X509Certificates;
     using System.Threading.Tasks;
     using SystemJsonSerializer = System.Text.Json.JsonSerializer;
-    using SingleThreadAsyncDequeueProcessor
+    using SingleThreadAsyncDequeueLoggingProcessor
             = Microshaoft
                     .SingleThreadAsyncDequeueProcessorSlim
                         <
                             (
-                                string url
+                                    (
+                                        string requestUrl
+                                        , string requestPath
+                                        , string requestPathBase
+                                        , string requestActionRoutePath
+                                    ) Url
                                 ,
                                     (
                                         string requestHeaders
@@ -353,7 +357,7 @@ namespace Microshaoft.Web
         }
         public void InitializeLoggingProcesses
                         (
-                            SingleThreadAsyncDequeueProcessor
+                            SingleThreadAsyncDequeueLoggingProcessor
                                 asyncRequestResponseLoggingProcessor
                             , Func<LogLevel>
                                 getLoggingLogLevelProcessFunc
@@ -386,10 +390,10 @@ namespace Microshaoft.Web
                         {
                             return false;
                         }
-                        var request = httpContext.Request;
+                        var request = httpContext.Request;                
                         request.EnableBuffering();
-                                                //xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
-                                                var httpRequestFeature = httpContext.Features.Get<IHttpRequestFeature>();
+                        //xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
+                        var httpRequestFeature = httpContext.Features.Get<IHttpRequestFeature>();
                         var url = httpRequestFeature.RawTarget;
                         httpRequestFeature = null;
                         var r = url.Contains("/api/", StringComparison.OrdinalIgnoreCase);
@@ -543,6 +547,7 @@ namespace Microshaoft.Web
                         {
                             //xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
                             //return;
+                            //bool supportTrailers = httpContext.Response.SupportsTrailers();
                             if (xLogger is ILogger logger)
                             {
                                 var logLevel = getLoggingLogLevelProcessFunc();
@@ -557,8 +562,11 @@ namespace Microshaoft.Web
                                                 var httpRequestFeature = httpContext
                                                         .Features
                                                         .Get<IHttpRequestFeature>();
-                                                var url = httpRequestFeature.RawTarget;
+                                                var requestUrl = httpRequestFeature.RawTarget;
                                                 var request = httpContext.Request;
+                                                var requestPath = request.Path;
+                                                var requestPathBase = request.PathBase.Value;
+                                                var requestActionRoutPath = request.GetActionRoutePathOrDefault("Unknown");
                                                 //
                                                 using var requestBodyStream = request.Body;
                                                 var requestBody = string.Empty;
@@ -600,7 +608,6 @@ namespace Microshaoft.Web
                                                                                         request
                                                                                             .Headers
                                                                                     );
-                                                var requestPath = request.Path;
                                                 #endregion
 
                                                 #region Response
@@ -661,7 +668,7 @@ namespace Microshaoft.Web
                                                         , beginTimeStamp
                                                     )
                                                     =
-                                                    (ValueTuple<DateTime, long>)removed;
+                                                    (ValueTuple<DateTime, long>) removed;
                                                     removed = null;
                                                     requestBeginTime = beginTime;
                                                     response
@@ -745,7 +752,12 @@ namespace Microshaoft.Web
                                                         .Enqueue
                                                             (
                                                                 (
-                                                                    url
+                                                                        (
+                                                                            requestUrl
+                                                                            , requestPath
+                                                                            , requestPathBase
+                                                                            , requestActionRoutPath
+                                                                        )
                                                                     ,
                                                                         (
                                                                             requestHeaders

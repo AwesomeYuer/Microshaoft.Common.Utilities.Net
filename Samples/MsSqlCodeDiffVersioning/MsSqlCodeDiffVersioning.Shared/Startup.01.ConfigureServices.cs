@@ -260,7 +260,10 @@
                                             , { nameof(queueTimingInMilliseconds)                   , queueTimingInMilliseconds                         }
                                             //=====================================================================
                                             // common
-                                            , { nameof(url)                                         , url                                               }
+                                            , { nameof(url.requestUrl)                              , url.requestUrl                                    }
+                                            , { nameof(url.requestPath)                             , url.requestPath                                   }
+                                            , { nameof(url.requestPathBase)                         , url.requestPathBase                               }
+                                            , { nameof(url.requestActionRoutePath)                  , url.requestActionRoutePath                        }
                                             //=====================================================================
                                             // request:
                                             , { nameof(Request.requestHeaders)                      , Request.requestHeaders                            }
@@ -322,7 +325,7 @@
                                                     , { $"{serverHost}ProcessId"                                                    , GlobalManager.CurrentProcess.Id               }
                                                     , { $"{serverHost}{nameof(GlobalManager.CurrentProcess.ProcessName)}"           , GlobalManager.CurrentProcess.ProcessName      }
                                                     , { $"{serverHost}ProcessStartTime"                                             , GlobalManager.CurrentProcess.StartTime        }
-                                                    , { "data"                                                                              , jArrayData                                    }
+                                                    , { "data"                                                                      , jArrayData                                    }
                                                 }
                                         );
                             }
