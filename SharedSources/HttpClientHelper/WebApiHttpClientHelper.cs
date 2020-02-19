@@ -4,11 +4,12 @@ namespace Microshaoft
     using System.Collections.Generic;
     using System.IO;
     using System.Net.Http;
+    using System.Text;
     using System.Threading.Tasks;
 
     public static partial class HttpClientHelper
     {
-        public static IEnumerable<HttpContent> GetHttpContentsAsEnumerable(this HttpResponseMessage target)
+        public static IEnumerable<HttpContent> GetContentsAsEnumerable(this HttpResponseMessage target)
         {
             var multipartMemoryStreamProvider = target.Content.ReadAsMultipartAsync().Result;
             var contents = multipartMemoryStreamProvider.Contents;
@@ -19,15 +20,41 @@ namespace Microshaoft
                         content;
             }
         }
-        public static IEnumerable<string> GetHttpContentsBodyStringsAsEnumerable(this HttpResponseMessage target)
+        private static Encoding GetEncodingOrDefault
+                                        (
+                                            string encodingName = null
+                                        )
+        {
+            Encoding encoding;
+            if (encodingName == null)
+            {
+                encoding = Encoding.UTF8;
+            }
+            else
+            {
+                encoding = Encoding.GetEncoding(encodingName);
+            }
+            return
+                encoding;
+
+        }
+
+
+        public static IEnumerable<string> GetContentBodyStringsAsEnumerable
+                                                (
+                                                    this HttpResponseMessage target
+                                                    , string encodingName = null
+                                                    , bool detectEncodingFromByteOrderMarks = false
+                                                )
         {
             var multipartMemoryStreamProvider = target.Content.ReadAsMultipartAsync().Result;
             var contents = multipartMemoryStreamProvider.Contents;
+            Encoding encoding = GetEncodingOrDefault(encodingName);
             foreach (var content in contents)
             {
                 using (var stream = content.ReadAsStreamAsync().Result)
                 {
-                    using (var streamReader = new StreamReader(stream))
+                    using (var streamReader = new StreamReader(stream, encoding, detectEncodingFromByteOrderMarks))
                     {
                         string s;
                         do
@@ -49,15 +76,21 @@ namespace Microshaoft
             }
         }
 
-        public static async IAsyncEnumerable<string> GetHttpContentsBodyStringsAsAsyncEnumerable(this HttpResponseMessage target)
+        public static async IAsyncEnumerable<string> GetContentBodyStringsAsAsyncEnumerable
+                                                            (
+                                                                this HttpResponseMessage target
+                                                                , string encodingName = null
+                                                                , bool detectEncodingFromByteOrderMarks = false
+                                                            )
         {
             var multipartMemoryStreamProvider = await target.Content.ReadAsMultipartAsync();
             var contents = multipartMemoryStreamProvider.Contents;
+            Encoding encoding = GetEncodingOrDefault(encodingName);
             foreach (var content in contents)
             {
                 using (var stream = await content.ReadAsStreamAsync())
                 {
-                    using (var streamReader = new StreamReader(stream))
+                    using (var streamReader = new StreamReader(stream, encoding, detectEncodingFromByteOrderMarks))
                     {
                         string s;
                         do
@@ -80,14 +113,14 @@ namespace Microshaoft
                 }
             }
         }
-        public static Task<HttpResponseMessage> SendBatchHttpRequestsMessageAsync
-                                                            (
-                                                                this HttpClient target
-                                                                , string relativeUrl
-                                                                , params HttpRequestMessage[] httpRequestMessages
-                                                            )
+        public static Task<HttpResponseMessage> SendBatchAsync
+                                                    (
+                                                        this HttpClient target
+                                                        , string relativeUrl
+                                                        , params HttpRequestMessage[] httpRequestMessages
+                                                    )
         {
-            var httpRequestMessage = CreateBatchHttpRequestMessage(relativeUrl, httpRequestMessages);
+            var httpRequestMessage = CreateBatchRequest(relativeUrl, httpRequestMessages);
             if (httpRequestMessage != null)
             {
                 return
@@ -99,11 +132,11 @@ namespace Microshaoft
             }
         }
 
-        public static HttpRequestMessage CreateBatchHttpRequestMessage
-                                                            (
-                                                                string relativeUrl
-                                                                , params HttpRequestMessage[] httpRequestMessages
-                                                            )
+        public static HttpRequestMessage CreateBatchRequest
+                                                    (
+                                                        string relativeUrl
+                                                        , params HttpRequestMessage[] httpRequestMessages
+                                                    )
         {
             MultipartContent multipartContent = null;
             foreach (var httpRequestMessage in httpRequestMessages)
@@ -143,7 +176,7 @@ namespace Microshaoft.Tests
             HttpClient client = new HttpClient();
             client.BaseAddress = new Uri(serviceBaseAddress);
             var response = await client
-                                    .SendBatchHttpRequestsMessageAsync
+                                    .SendBatchAsync
                                         (
                                             "api/asyncbatch"
                                             , new HttpRequestMessage(HttpMethod.Get, client.BaseAddress + "get1?id=1111")
@@ -151,17 +184,17 @@ namespace Microshaoft.Tests
                                         );
             var headers = JsonConvert.SerializeObject(response.Headers);
             Console.WriteLine($"{nameof(headers)}:{headers}");
-            var ss = response.GetHttpContentsBodyStringsAsEnumerable();
+            var ss = response.GetContentBodyStringsAsEnumerable();
             foreach (var s in ss)
             {
                 Console.WriteLine(s);
             }
 
-            var sss = response.GetHttpContentsBodyStringsAsAsyncEnumerable();
-            await foreach (var s in sss)
-            {
-                Console.WriteLine(s);
-            }
+            //var sss = response.GetHttpContentsBodyStringsAsAsyncEnumerable();
+            //await foreach (var s in sss)
+            //{
+            //    Console.WriteLine(s);
+            //}
             Console.WriteLine(response.StatusCode);
 
             Console.ReadLine();
