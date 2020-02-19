@@ -190,11 +190,11 @@ namespace Microshaoft.Tests
                 Console.WriteLine(s);
             }
 
-            //var sss = response.GetHttpContentsBodyStringsAsAsyncEnumerable();
-            //await foreach (var s in sss)
-            //{
-            //    Console.WriteLine(s);
-            //}
+            var sss = response.GetContentBodyStringsAsAsyncEnumerable();
+            await foreach (var s in sss)
+            {
+                Console.WriteLine(s);
+            }
             Console.WriteLine(response.StatusCode);
 
             Console.ReadLine();
