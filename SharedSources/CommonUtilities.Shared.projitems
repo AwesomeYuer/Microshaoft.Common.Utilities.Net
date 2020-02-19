@@ -120,6 +120,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)FasterUtilities\SafeConcurrentDictionary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FasterUtilities\StateTransitions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FasterUtilities\Status.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HttpClientHelper\WebApiHttpClientHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.HttpBatchHandler\BatchMiddleware.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.HttpBatchHandler\BatchMiddlewareExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.HttpBatchHandler\Events\BatchEndContext.cs" />

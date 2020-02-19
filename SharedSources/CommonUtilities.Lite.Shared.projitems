@@ -119,6 +119,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)FasterUtilities\Status.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileSharding\FileShardingHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpClientHelper\HttpClientHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HttpClientHelper\WebApiHttpClientHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KeyWordFilter\CharExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KeyWordFilter\FastFilter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KeyWordFilter\HashFilter.cs" />
