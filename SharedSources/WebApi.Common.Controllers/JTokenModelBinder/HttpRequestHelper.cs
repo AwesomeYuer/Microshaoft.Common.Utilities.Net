@@ -137,9 +137,10 @@ namespace Microshaoft.Web
                     .ToString();
         }
 
-        public static string GetActionRoutePathOrEmpty
+        public static string GetActionRoutePathOrDefault
             (
                 this HttpRequest target
+                , string defaultValue = default
                 , string key = " "
             )
         {
@@ -155,6 +156,10 @@ namespace Microshaoft.Web
                 )
             {
                 r = @value;
+            }
+            else
+            {
+                r = defaultValue;
             }
             return
                 r;

@@ -10,15 +10,20 @@
     using System.Linq;
     using System.Runtime.InteropServices;
     using System.Text;
-    using SingleThreadAsyncDequeueProcessor
+    using SingleThreadAsyncDequeueLoggingProcessor
             = Microshaoft
                     .SingleThreadAsyncDequeueProcessorSlim
                         <
                             (
-                                string url
+                                    (
+                                          string requestUrl
+                                        , string requestPath
+                                        , string requestPathBase
+                                        , string requestActionRoutePath
+                                    ) Url
                                 ,
                                     (
-                                        string requestHeaders
+                                          string requestHeaders
                                         , string requestBody
                                         , string requestMethod
                                         , System.DateTime? requestBeginTime
@@ -27,7 +32,7 @@
                                     ) Request
                                 ,
                                     (
-                                        string responseHeaders
+                                          string responseHeaders
                                         , string responseBody
                                         , int responseStatusCode
                                         , System.DateTime? responseStartingTime
@@ -37,12 +42,12 @@
                                 ,
                                     (
                                         double? requestResponseTimingInMilliseconds
-                                        , double? dbExecutingTimingInMilliseconds
+                                      , double? dbExecutingTimingInMilliseconds
                                     ) Timing
                                 ,
                                     (
                                         (
-                                            string clientIP
+                                              string clientIP
                                             , decimal? locationLongitude
                                             , decimal? locationLatitude
                                         ) Location
@@ -51,11 +56,10 @@
                                         , string orgUnitID
                                         ,
                                         (
-                                            string deviceID
+                                              string deviceID
                                             , string deviceInfo
                                         ) Device
                                     ) User
-
                             )
                         >;
     public static class GlobalManager
@@ -166,9 +170,9 @@
                                                                     .FrameworkDescription?? $"Unknown {nameof(FrameworkDescription)}:[{ProcessAlignedSecondsStartTime:yyyy-MM-dd HH:mm:ss}]";
 
         public static readonly
-                    SingleThreadAsyncDequeueProcessor
+                    SingleThreadAsyncDequeueLoggingProcessor
                             AsyncRequestResponseLoggingProcessor
-                                = new SingleThreadAsyncDequeueProcessor();
+                                = new SingleThreadAsyncDequeueLoggingProcessor();
 
 
         public static readonly
