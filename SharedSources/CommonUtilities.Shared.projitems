@@ -123,6 +123,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)FasterUtilities\StateTransitions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FasterUtilities\Status.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpClientHelper\WebApiHttpClientHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IEnumerableExtensions\IEnumerableExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IQueryable\IQueryableHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Object\ObjectExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ValueTuple\ValueTupleJsonConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WeakEvent\WeakEventHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WeakEvent\WeakEventListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WeakEvent\WeakEventManager.cs" />

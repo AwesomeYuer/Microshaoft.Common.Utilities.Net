@@ -1,6 +1,8 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
+
+// https://github.com/windows-toolkit/WindowsCommunityToolkit/blob/master/Microsoft.Toolkit.Uwp/Helpers/WeakEventListener.cs
 namespace Microshaoft
 {
     using System;
@@ -24,13 +26,22 @@ namespace Microshaoft
         /// Initializes a new instance of the <see cref="WeakEventListener{TInstance, TSource, TEventArgs}"/> class.
         /// </summary>
         /// <param name="instance">Instance subscribing to the event.</param>
-        public WeakEventListener(TInstance instance)
+        public WeakEventListener
+                        (
+                            TInstance
+                                    instance
+                            , Action<TInstance, TSource, TEventArgs>
+                                    onEventProcessAction
+                            , Action<WeakEventListener<TInstance, TSource, TEventArgs>>
+                                    onDetachProcessAction = null
+                        )
         {
             if (instance == null)
             {
                 throw new ArgumentNullException(nameof(instance));
             }
-
+            OnEventAction = onEventProcessAction;
+            OnDetachAction = onDetachProcessAction;
             weakInstance = new WeakReference(instance);
         }
 

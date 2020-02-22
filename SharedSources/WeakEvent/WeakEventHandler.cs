@@ -11,10 +11,10 @@ namespace Microshaoft
         private readonly WeakReference _targetWeakReference;
         private readonly MethodInfo _method;
 
-        public WeakEventHandler(EventHandler<TEventArgs> callback)
+        public WeakEventHandler(EventHandler<TEventArgs> handler, bool trackResurrection = false)
         {
-            _method = callback.Method;
-            _targetWeakReference = new WeakReference(callback.Target, true);
+            _method = handler.Method;
+            _targetWeakReference = new WeakReference(handler.Target, trackResurrection);
         }
 
         //[DebuggerNonUserCode]
@@ -23,11 +23,17 @@ namespace Microshaoft
             var target = _targetWeakReference.Target;
             if (target != null)
             {
-                var callback = (Action<object, TEventArgs>)Delegate.CreateDelegate(typeof(Action<object, TEventArgs>), target, _method, true);
-                if (callback != null)
-                {
-                    callback(sender, e);
-                }
+                (
+                    (Action<object, TEventArgs>)
+                        Delegate
+                            .CreateDelegate
+                                    (
+                                        typeof(Action<object, TEventArgs>)
+                                        , target
+                                        , _method
+                                        , true
+                                    )
+                )?.Invoke(sender, e);
             }
         }
     }

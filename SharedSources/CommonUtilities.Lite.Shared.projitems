@@ -122,6 +122,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)FileSharding\FileShardingHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpClientHelper\HttpClientHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpClientHelper\WebApiHttpClientHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IEnumerableExtensions\IEnumerableExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IQueryable\IQueryableHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KeyWordFilter\CharExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KeyWordFilter\FastFilter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KeyWordFilter\HashFilter.cs" />
@@ -159,6 +161,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\VersionRangeComparer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\VersionRangeFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\VersionRangeFormatter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Object\ObjectExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Observable\ObservableExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OTP\OtpHashAlgorithm.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OTP\Totp.cs" />
@@ -196,6 +199,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Type\TypeHelper.02.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Type\TypeHelper.03.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ValueTuple\ValueTupleHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ValueTuple\ValueTupleJsonConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WeakEvent\WeakEventHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WeakEvent\WeakEventListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WeakEvent\WeakEventManager.cs" />
