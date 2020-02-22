@@ -9,6 +9,7 @@
     <Import_RootNamespace>CommonUtilities.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Assembly\AssemblyResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConsoleLogger\AnsiLogConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConsoleLogger\AnsiSystemConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConsoleLogger\LightConsoleLoggerProvider.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\ConfigurationExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\ConfigurationAppSettingsHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Console\ConsoleHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Console\ConsoleTables.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Console\DebugConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\DirectoryHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\EasyTimer.cs" />
@@ -121,6 +123,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)FasterUtilities\StateTransitions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FasterUtilities\Status.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpClientHelper\WebApiHttpClientHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IEnumerableExtensions\IEnumerableExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IQueryable\IQueryableHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Object\ObjectExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ValueTuple\ValueTupleJsonConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WeakEvent\WeakEventHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WeakEvent\WeakEventListener.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WeakEvent\WeakEventManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.HttpBatchHandler\BatchMiddleware.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.HttpBatchHandler\BatchMiddlewareExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.HttpBatchHandler\Events\BatchEndContext.cs" />

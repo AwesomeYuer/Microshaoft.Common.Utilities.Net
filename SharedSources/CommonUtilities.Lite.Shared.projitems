@@ -71,6 +71,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\TryCatchFinallyHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\WindowTaskProcessorHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Assembly\AssemblyHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Assembly\AssemblyResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Caches\CacheItemEntryRemovedNotifier.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Caches\MruCache.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Caches\RefreshableCache.cs" />
@@ -98,6 +99,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ConsoleLogger\NullScope.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConsoleLogger\WindowsLogConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Console\ConsoleHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Console\ConsoleTables.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Console\DebugConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Console\WindowsBackgroundInteractiveConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Console\WindowsConsoleHelper.cs" />
@@ -120,6 +122,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)FileSharding\FileShardingHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpClientHelper\HttpClientHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpClientHelper\WebApiHttpClientHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IEnumerableExtensions\IEnumerableExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IQueryable\IQueryableHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KeyWordFilter\CharExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KeyWordFilter\FastFilter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KeyWordFilter\HashFilter.cs" />
@@ -157,6 +161,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\VersionRangeComparer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\VersionRangeFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NuGet.Versioning\VersionRangeFormatter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Object\ObjectExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Observable\ObservableExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OTP\OtpHashAlgorithm.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OTP\Totp.cs" />
@@ -194,6 +199,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Type\TypeHelper.02.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Type\TypeHelper.03.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ValueTuple\ValueTupleHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ValueTuple\ValueTupleJsonConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WeakEvent\WeakEventHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WeakEvent\WeakEventListener.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WeakEvent\WeakEventManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorkFlow\CommonJsonIoActivities\AbstractDynamicJsonIoActivity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorkFlow\CommonJsonIoActivities\AbstractJTokenIoActivity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorkFlow\WorkFlowHelper.cs" />
