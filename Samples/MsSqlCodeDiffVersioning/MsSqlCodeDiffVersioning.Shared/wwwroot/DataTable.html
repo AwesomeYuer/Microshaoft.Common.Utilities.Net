@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -39,6 +40,13 @@
     <script src="libs/monaco-editor/min/vs/loader.js"></script>
 
     <script>
+        $(document).keyup(function (e) {
+            if (e.key === "Escape") { // escape key maps to keycode `27`
+                // <DO YOUR WORK HERE>
+                $('#loading').hide();
+            }
+        });
+        window.jwtToken = "";
         var binded1 = false;
         var binded2 = false;
         var usedDataTables = null;
@@ -131,16 +139,18 @@
                                 var eid = "DataOutput_" + index.toString();
                                 $("#DataOutputsPanel").append('<table id="' + eid + '" class="cell-border display"><!--' + eid + '--></table>');
                                 var e = $("#" + eid);
-                                item.Columns.forEach(function (column, index) {
-                                    column.render = function (cell, type, row, meta) {
-                                        if (typeof (cell) == "object") {
-                                            cell = JSON.stringify(cell);
-                                            //column.Title += " Json";
-                                            //$(e.column(index).header()).text('My title');
-                                        }
-                                        return cell;
-                                    };
-                                });
+                                if (!item && typeof (item) != "undefined" && item != 0) {
+                                    item.Columns.forEach(function (column, index) {
+                                        column.render = function (cell, type, row, meta) {
+                                            if (typeof (cell) == "object") {
+                                                cell = JSON.stringify(cell);
+                                                //column.Title += " Json";
+                                                //$(e.column(index).header()).text('My title');
+                                            }
+                                            return cell;
+                                        };
+                                    });
+                                }
                                 e.DataTable({
                                     destroy: true,
                                     retrieve: true,
@@ -326,6 +336,9 @@
 </head>
 <body>
     <div id="loading" align="center">
+        <font size="10" color="red"><strong>Loading ...</strong></font>
+        <br>
+        <font size="10" color="red"><strong>press Esc for cancel waiting</strong></font>
         <div class="text-magic" data-word="Loading...">
             <div class="white"></div>
         </div>

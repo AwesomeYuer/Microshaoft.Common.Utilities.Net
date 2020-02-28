@@ -30,5 +30,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.ConcurrencyLimiter" Version="3.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.ResponseCaching" Version="2.2.0" />
+    <PackageReference Include="System.IO.Pipelines" Version="4.7.0" />
   </ItemGroup>
 </Project>
