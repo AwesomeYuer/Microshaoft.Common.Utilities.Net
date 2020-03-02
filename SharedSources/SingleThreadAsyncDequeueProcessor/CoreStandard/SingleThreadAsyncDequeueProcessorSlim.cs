@@ -90,6 +90,9 @@
                                         , Exception exception
                                         , Exception newException
                                         , string innerExceptionMessage
+                                        , DateTime? exceptionTime
+                                        , string source
+                                        , Guid? traceID
                                     );
         public event CaughtExceptionEventHandler
                                             OnCaughtException;
@@ -238,6 +241,7 @@
             stopwatch.Start();
             while (true)
             {
+                var exceptionSource = string.Empty;
                 TryCatchFinallyProcessHelper
                     .TryProcessCatchFinally
                         (
@@ -264,6 +268,7 @@
                                         queueElement
                                             .Timing
                                             .DequeueTimestamp = Stopwatch.GetTimestamp();
+                                        exceptionSource = $"{nameof(onOnceDequeueProcessAction)}";
                                         onOnceDequeueProcessAction
                                                         (
                                                             _dequeued
@@ -310,6 +315,7 @@
                                             {
                                                 Interlocked
                                                         .Increment(ref _dequeuedBatches);
+                                                exceptionSource = $"{nameof(onBatchDequeuesProcessAction)}";
                                                 onBatchDequeuesProcessAction
                                                                     (
                                                                         _dequeued
@@ -342,6 +348,9 @@
                                                         , x
                                                         , y
                                                         , z
+                                                        , DateTime.Now
+                                                        , exceptionSource
+                                                        , null
                                                     );
                                }
                                return rr;

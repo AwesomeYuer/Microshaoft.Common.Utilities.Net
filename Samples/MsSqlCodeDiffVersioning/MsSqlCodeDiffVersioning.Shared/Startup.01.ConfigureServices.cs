@@ -166,17 +166,20 @@
                     .AddSingleton
                         (
                             GlobalManager
-                                    .AsyncRequestResponseLoggingProcessor
+                                    .RequestResponseLoggingProcessor
                         );
             //Console.WriteLine($"Startup: {nameof(Thread.CurrentThread.ManagedThreadId)}:{Thread.CurrentThread.ManagedThreadId}");
             GlobalManager
-                .AsyncRequestResponseLoggingProcessor
-                .OnCaughtException += 
+                .RequestResponseLoggingProcessor
+                .OnCaughtException += //AsyncRequestResponseLoggingProcessor_OnCaughtException;
                         (
                             sender
                             , exception
                             , newException
                             , innerExceptionMessage
+                            , exceptionTime
+                            , exceptionSource
+                            , traceID
                         )
                             =>
                         {
@@ -189,8 +192,13 @@
                                                , exception
                                                , newException
                                                , innerExceptionMessage
+                                               , exceptionTime
+                                               , exceptionSource
+                                               , traceID
                                             );
                         };
+
+
 
             var asyncProcessorConfigurationPrefixKeys = $"SingleThreadAsyncDequeueProcessors:AsyncRequestResponseLoggingProcessor";
             int sleepInMilliseconds = Configuration
@@ -230,7 +238,7 @@
             // there are only one Thread that's DequeueThread write it, so it's security
             var jArrayData = new JArray();
             GlobalManager
-                .AsyncRequestResponseLoggingProcessor
+                .RequestResponseLoggingProcessor
                 .StartRunDequeueThreadProcess
                     (
                         (dequeued, batch, indexInBatch, queueElement) =>
@@ -262,6 +270,7 @@
                                             , { nameof(queueTimingInMilliseconds)                   , queueTimingInMilliseconds                         }
                                             //=====================================================================
                                             // common
+                                            , { nameof(url.requestTraceID)                          , url.requestTraceID                                }
                                             , { nameof(url.requestUrl)                              , url.requestUrl                                    }
                                             , { nameof(url.requestPath)                             , url.requestPath                                   }
                                             , { nameof(url.requestPathBase)                         , url.requestPathBase                               }
@@ -317,7 +326,7 @@
                                     .ExecuteJsonResults
                                         (
                                             sqlConnection
-                                            , "zsp_Logging"
+                                            , "zsp_RequestResponseLogging"
                                             , new JObject
                                                 {
                                                       { $"{serverHost}{nameof(GlobalManager.OsPlatformName)}"                       , GlobalManager.OsPlatformName                  }
@@ -347,6 +356,131 @@
                         , waitOneBatchMaxDequeuedTimes
                     );
             #endregion
+
+            GlobalManager
+                    .ErrorExceptionLoggingProcessor
+                    .OnCaughtException += //AsyncRequestResponseLoggingProcessor_OnCaughtException;
+                            (
+                                sender
+                                , exception
+                                , newException
+                                , innerExceptionMessage
+                                , exceptionTime
+                                , exceptionSource
+                                , traceID
+                            )
+                                =>
+                            {
+                                return
+                                    GlobalManager
+                                            .OnCaughtExceptionProcessFunc
+                                                (
+                                                    GlobalManager
+                                                            .GlobalLogger
+                                                   , exception
+                                                   , newException
+                                                   , innerExceptionMessage
+                                                   , exceptionTime
+                                                   , exceptionSource
+                                                   , traceID
+                                                );
+                            };
+
+            var msSqlStoreProceduresExecutor2 =
+                    new MsSqlStoreProceduresExecutor(GlobalManager.ExecutingCachingStore)
+                    {
+                        CachedParametersDefinitionExpiredInSeconds
+                                = Configuration
+                                            .GetValue
+                                                (
+                                                    "CachedParametersDefinitionExpiredInSeconds"
+                                                    , 3600
+                                                )
+                    };
+            var jArrayData2 = new JArray();
+            GlobalManager
+                .ErrorExceptionLoggingProcessor
+                .StartRunDequeueThreadProcess
+                    (
+                        (dequeued, batch, indexInBatch, queueElement) =>
+                        {
+                            //Console.WriteLine($"Dequeue Once: {nameof(Thread.CurrentThread.ManagedThreadId)}:{Thread.CurrentThread.ManagedThreadId}");
+                            var (errorExceptionTime, errorExceptionSource, errorExceptionTraceID, errorException) = queueElement.Element;
+                            var enqueueTimestamp = queueElement
+                                                            .Timing
+                                                            .EnqueueTimestamp;
+                            double? queueTimingInMilliseconds = null;
+                            if (enqueueTimestamp.HasValue)
+                            {
+                                queueTimingInMilliseconds =
+                                                enqueueTimestamp
+                                                                .Value
+                                                                .GetElapsedTimeToNow()
+                                                                .TotalMilliseconds;
+                            }
+                            jArrayData2
+                                .Add
+                                    (
+                                        new JObject
+                                        {
+                                              { nameof(queueElement.ID)                             , queueElement.ID                                   }
+                                            //======================================================================
+                                            // Queue:
+                                            , { nameof(queueElement.Timing.EnqueueTime)             , queueElement.Timing.EnqueueTime                   }
+                                            , { nameof(queueElement.Timing.DequeueTime)             , queueElement.Timing.DequeueTime                   }
+                                            , { nameof(queueTimingInMilliseconds)                   , queueTimingInMilliseconds                         }
+                                            //=====================================================================
+                                            , { nameof(errorExceptionTime)                          , errorExceptionTime                                }
+                                            , { nameof(errorExceptionSource)                        , errorExceptionSource                              }
+                                            , { nameof(errorExceptionTraceID)                       , errorExceptionTraceID                             }
+                                            , { nameof(errorException)                              , errorException                                    }
+
+                                        }
+                                    );
+                        }
+                        , (dequeued, batch, indexInBatch) =>
+                        {
+                            //Console.WriteLine($"Dequeue Batch: {nameof(Thread.CurrentThread.ManagedThreadId)}:{Thread.CurrentThread.ManagedThreadId}");
+                            // sql Connection should be here avoid cross threads
+                            var sqlConnection = new SqlConnection(connectionString);
+                            string serverHost = nameof(serverHost);
+                            try
+                            {
+                                msSqlStoreProceduresExecutor2
+                                    .ExecuteJsonResults
+                                        (
+                                            sqlConnection
+                                            , "zsp_ErrorExceptionLogging"
+                                            , new JObject
+                                                {
+                                                      { $"{serverHost}{nameof(GlobalManager.OsPlatformName)}"                       , GlobalManager.OsPlatformName                  }
+                                                    , { $"{serverHost}{nameof(GlobalManager.OsVersion)}"                            , GlobalManager.OsVersion                       }
+                                                    , { $"{serverHost}{nameof(GlobalManager.FrameworkDescription)}"                 , GlobalManager.FrameworkDescription            }
+                                                    , { $"{serverHost}{nameof(Environment.MachineName)}"                            , Environment.MachineName                       }
+                                                    , { $"{serverHost}ProcessId"                                                    , GlobalManager.CurrentProcess.Id               }
+                                                    , { $"{serverHost}{nameof(GlobalManager.CurrentProcess.ProcessName)}"           , GlobalManager.CurrentProcess.ProcessName      }
+                                                    , { $"{serverHost}ProcessStartTime"                                             , GlobalManager.CurrentProcess.StartTime        }
+                                                    , { "data"                                                                      , jArrayData2                                   }
+                                                }
+                                        );
+                            }
+                            finally
+                            {
+                                if (sqlConnection.State != ConnectionState.Closed)
+                                {
+                                    sqlConnection.Close();
+                                }
+                                //dataTable.Clear();
+                                //should be clear correctly!!!!
+                                jArrayData2.Clear();
+                            }
+                        }
+                        , sleepInMilliseconds
+                        , waitOneBatchTimeOutInMilliseconds
+                        , waitOneBatchMaxDequeuedTimes
+                    );
+
+
 
             services
                 .AddSingleton
@@ -613,6 +747,8 @@
                         ); 
             #endregion
         }
+
+        
     }
 }
 

@@ -11,6 +11,8 @@ namespace Microshaoft.Web
     using System.Threading.Tasks;
     using SystemJsonSerializer = System.Text.Json.JsonSerializer;
     using System.Text.Json;
+    using Microsoft.AspNetCore.Http.Features;
+
     public class RequestResponseExceptionGuardMiddleware<TInjector>
     //竟然没有接口?
     {
@@ -27,6 +29,11 @@ namespace Microshaoft.Web
                         , Exception
                         , ILoggerFactory
                         , ILogger
+
+                        , DateTime?         // time
+                        , string            // source
+                        , Guid?             // traceID
+
                         , TInjector
                         ,
                             (
@@ -35,6 +42,7 @@ namespace Microshaoft.Web
                                 , HttpStatusCode
                                 , int               // error Result Code
                                 , string            // error Message
+
                             )
                     >
                         OnCaughtExceptionProcessFunc;
@@ -111,10 +119,41 @@ namespace Microshaoft.Web
             }
             catch (Exception e)
             {
+                
                 exception = e;
                 caughtException = true;
+
                 if (OnCaughtExceptionProcessFunc != null)
                 {
+                    DateTime? errorTime = DateTime.Now;
+                    var httpRequestFeature = context
+                                                    .Features
+                                                    .Get<IHttpRequestFeature>();
+                    string requestResponseTimingItemKey = nameof(requestResponseTimingItemKey);
+                    DateTime beginTime = default;
+                    long beginTimeStamp = default;
+                    Guid? traceID = default;
+                    if
+                        (
+                            context
+                                .Items
+                                .TryGetValue
+                                    (
+                                        requestResponseTimingItemKey
+                                        , out var v
+                                    )
+                        )
+                    {
+                        (
+                            beginTime
+                            , beginTimeStamp
+                            , traceID
+                        )
+                        =
+                            (ValueTuple<DateTime, long, Guid?>) v;
+                        
+                    }
+                    var requestUrl = httpRequestFeature.RawTarget;
                     (
                         reThrow
                         , errorDetails
@@ -124,12 +163,15 @@ namespace Microshaoft.Web
                     )
                     = OnCaughtExceptionProcessFunc
                                 (
-                                    
                                     context
                                     , Configuration
                                     , exception
                                     , LoggerFactory
                                     , Logger
+
+                                    , errorTime
+                                    , requestUrl
+                                    , traceID
                                     , _injector
                                 );
                 }

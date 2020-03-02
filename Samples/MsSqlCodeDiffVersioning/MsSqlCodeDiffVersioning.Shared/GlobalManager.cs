@@ -10,7 +10,7 @@
     using System.Linq;
     using System.Runtime.InteropServices;
     using System.Text;
-    using SingleThreadAsyncDequeueLoggingProcessor
+    using AsyncRequestResponseLoggingProcessor
             = Microshaoft
                     .SingleThreadAsyncDequeueProcessorSlim
                         <
@@ -20,6 +20,7 @@
                                         , string requestPath
                                         , string requestPathBase
                                         , string requestActionRoutePath
+                                        , System.Guid? requestTraceID
                                     ) Url
                                 ,
                                     (
@@ -62,6 +63,20 @@
                                     ) User
                             )
                         >;
+
+
+    using AsyncErrorExceptionLoggingProcessor
+            = Microshaoft
+                    .SingleThreadAsyncDequeueProcessorSlim
+                        <
+                            (
+                                  System.DateTime? errorExceptionTime
+                                , string errorExceptionSource
+                                , System.Guid? errorExceptionTraceID
+                                , string errorException
+                            )
+                        >;
+
     public static class GlobalManager
     {
         static GlobalManager()
@@ -170,9 +185,15 @@
                                                                     .FrameworkDescription?? $"Unknown {nameof(FrameworkDescription)}:[{ProcessAlignedSecondsStartTime:yyyy-MM-dd HH:mm:ss}]";
 
         public static readonly
-                    SingleThreadAsyncDequeueLoggingProcessor
-                            AsyncRequestResponseLoggingProcessor
-                                = new SingleThreadAsyncDequeueLoggingProcessor();
+                    AsyncRequestResponseLoggingProcessor
+                            RequestResponseLoggingProcessor
+                                = new AsyncRequestResponseLoggingProcessor();
+
+
+        public static readonly
+                    AsyncErrorExceptionLoggingProcessor
+                            ErrorExceptionLoggingProcessor
+                                = new AsyncErrorExceptionLoggingProcessor();
 
 
         public static readonly
@@ -187,9 +208,32 @@
                     , Exception exception
                     , Exception newException
                     , string innerExceptionMessage
+                    
+                    , DateTime? errorTime
+                    , string errorSource
+                    , Guid? traceID
                 )
         {
             var reThrow = false;
+
+
+            ErrorExceptionLoggingProcessor
+                    .Enqueue
+                        (
+                            (
+                                errorTime
+                                , errorSource
+                                , traceID
+                                , exception.ToString()
+                            )
+                        );
+
+
+
+            Console.WriteLine($"GlobalManager.OnCaughtExceptionProcessFunc:[{nameof(errorTime)}:{errorTime}]");
+            Console.WriteLine($"GlobalManager.OnCaughtExceptionProcessFunc:[{nameof(errorSource)}:{errorSource}]");
+            Console.WriteLine($"GlobalManager.OnCaughtExceptionProcessFunc:[{nameof(traceID)}:{traceID}]");
+
             logger
                 .LogOnDemand
                         (
