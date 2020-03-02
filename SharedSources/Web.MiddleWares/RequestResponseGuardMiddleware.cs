@@ -390,8 +390,8 @@ namespace Microshaoft.Web
                         {
                             return false;
                         }
+
                         var request = httpContext.Request;                
-                        request.EnableBuffering();
                         //xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
                         var httpRequestFeature = httpContext.Features.Get<IHttpRequestFeature>();
                         var url = httpRequestFeature.RawTarget;
@@ -411,30 +411,48 @@ namespace Microshaoft.Web
                                                 )
                                         );
                         }
-                        var requestBody = string.Empty;
-                                                //should not use using 
-                                                var requestBodyStream = request.Body;
-                        if
-                            (
-                                requestBodyStream
-                                                .CanRead
-                                &&
-                                requestBodyStream
-                                                .CanSeek
-                            )
+                        var needRequestResponseLogging = false;
+                        if (xLogger is ILogger logger)
                         {
-                            requestBodyStream.Position = 0;
-                                                    //should not use using
-                                                    var streamReader = new StreamReader(requestBodyStream);
-                            requestBody = streamReader.ReadToEnd();
-                            requestBodyStream.Position = 0;
-                            httpContext
-                                    .Items
-                                    .TryAdd
-                                        (
-                                            nameof(requestBody)
-                                            , requestBody
-                                        );
+                            var logLevel = getLoggingLogLevelProcessFunc();
+                            logger
+                                .LogOnDemand
+                                    (
+                                        logLevel
+                                        , () =>
+                                        {
+                                            needRequestResponseLogging = true;
+                                        }
+                                    );
+                        }
+                        if (needRequestResponseLogging)
+                        {
+                            request.EnableBuffering();
+                            var requestBody = string.Empty;
+                            //should not use using 
+                            var requestBodyStream = request.Body;
+                            if
+                                (
+                                    requestBodyStream
+                                                    .CanRead
+                                    &&
+                                    requestBodyStream
+                                                    .CanSeek
+                                )
+                            {
+                                requestBodyStream.Position = 0;
+                                //should not use using
+                                var streamReader = new StreamReader(requestBodyStream);
+                                requestBody = streamReader.ReadToEnd();
+                                requestBodyStream.Position = 0;
+                                httpContext
+                                        .Items
+                                        .TryAdd
+                                            (
+                                                nameof(requestBody)
+                                                , requestBody
+                                            );
+                            }
                         }
                         return r;
                     };
@@ -545,9 +563,72 @@ namespace Microshaoft.Web
                         )
                             =>
                         {
-                            //xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
-                            //return;
-                            //bool supportTrailers = httpContext.Response.SupportsTrailers();
+                            #region requestResponseTiming
+                            var r = httpContext
+                                    .Items
+                                    .Remove
+                                        (
+                                            "dbExecutingDuration"
+                                            , out var removed
+                                        );
+                            double? dbExecutingTimingInMilliseconds = null;
+                            if (r)
+                            {
+                                TimeSpan? timespan = removed as TimeSpan?;
+                                if (timespan != null)
+                                {
+                                    if (timespan.HasValue)
+                                    {
+                                        dbExecutingTimingInMilliseconds =
+                                                timespan.Value.TotalMilliseconds;
+                                    }
+                                }
+                            }
+                            removed = null;
+                            r = httpContext
+                                        .Items
+                                        .Remove
+                                            (
+                                                requestResponseTimingItemKey
+                                                , out removed
+                                            );
+                            var response = httpContext.Response;
+                            double? requestResponseTimingInMilliseconds = null;
+                            DateTime? requestBeginTime = null;
+                            DateTime? responseStartingTime = null;
+                            if (r)
+                            {
+                                var
+                                    (
+                                        beginTime
+                                        , beginTimeStamp
+                                    )
+                                    =
+                                        (ValueTuple<DateTime, long>) removed;
+                                removed = null;
+                                requestBeginTime = beginTime;
+                                response
+                                    .Headers["X-Request-Receive-BeginTime"]
+                                                = beginTime
+                                                            .ToString(defaultDateTimeFormat);
+                                responseStartingTime = DateTime.Now;
+                                response
+                                    .Headers["X-Response-Send-BeginTime"]
+                                                = responseStartingTime
+                                                            .Value
+                                                            .ToString(defaultDateTimeFormat);
+
+                                requestResponseTimingInMilliseconds
+                                                = beginTimeStamp
+                                                            .GetElapsedTimeToNow()
+                                                            .TotalMilliseconds;
+                                response
+                                    .Headers["X-Request-Response-Timing-In-Milliseconds"]
+                                                = requestResponseTimingInMilliseconds
+                                                        .ToString();
+                            } 
+                            #endregion
+
                             var needRequestResponseLogging = true;
                             if
                                 (
@@ -627,95 +708,34 @@ namespace Microshaoft.Web
                                                     #endregion
 
                                                     #region Response
-                                                    var response = httpContext.Response;
-                                                        using var responseBodyStream = response.Body;
-                                                        var responseBody = string.Empty;
-                                                        if
-                                                            (
-                                                                responseBodyStream
-                                                                                .CanRead
-                                                                &&
-                                                                responseBodyStream
-                                                                                .CanSeek
-                                                            )
-                                                        {
-                                                            responseBodyStream.Position = 0;
+                                                    using var responseBodyStream = response.Body;
+                                                    var responseBody = string.Empty;
+                                                    if
+                                                        (
+                                                            responseBodyStream
+                                                                            .CanRead
+                                                            &&
+                                                            responseBodyStream
+                                                                            .CanSeek
+                                                        )
+                                                    {
+                                                        responseBodyStream.Position = 0;
                                                         //
                                                         using var streamReader = new StreamReader(responseBodyStream);
-                                                            responseBody = streamReader.ReadToEnd();
+                                                        responseBody = streamReader.ReadToEnd();
                                                         //Console.WriteLine(responseBody.Length);
                                                     }
-                                                        var r = httpContext
-                                                                        .Items
-                                                                        .Remove
-                                                                            (
-                                                                                "dbExecutingDuration"
-                                                                                , out var removed
-                                                                            );
-                                                        double? dbExecutingTimingInMilliseconds = null;
-                                                        if (r)
-                                                        {
-                                                            TimeSpan? timespan = removed as TimeSpan?;
-                                                            if (timespan != null)
-                                                            {
-                                                                if (timespan.HasValue)
-                                                                {
-                                                                    dbExecutingTimingInMilliseconds =
-                                                                            timespan.Value.TotalMilliseconds;
-                                                                }
-                                                            }
-                                                        }
-                                                        removed = null;
-                                                        r = httpContext
-                                                                    .Items
-                                                                    .Remove
-                                                                        (
-                                                                            requestResponseTimingItemKey
-                                                                            , out removed
-                                                                        );
-                                                        double? requestResponseTimingInMilliseconds = null;
-                                                        DateTime? requestBeginTime = null;
-                                                        DateTime? responseStartingTime = null;
-                                                        if (r)
-                                                        {
-                                                            var (
-                                                                beginTime
-                                                                , beginTimeStamp
-                                                            )
-                                                            =
-                                                            (ValueTuple<DateTime, long>)removed;
-                                                            removed = null;
-                                                            requestBeginTime = beginTime;
-                                                            response
-                                                                .Headers["X-Request-Receive-BeginTime"]
-                                                                            = beginTime
-                                                                                        .ToString(defaultDateTimeFormat);
-                                                            responseStartingTime = DateTime.Now;
-                                                            response
-                                                                .Headers["X-Response-Send-BeginTime"]
-                                                                            = responseStartingTime
-                                                                                        .Value
-                                                                                        .ToString(defaultDateTimeFormat);
-
-                                                            requestResponseTimingInMilliseconds
-                                                                            = beginTimeStamp
-                                                                                        .GetElapsedTimeToNow()
-                                                                                        .TotalMilliseconds;
-                                                            response
-                                                                .Headers["X-Request-Response-Timing-In-Milliseconds"]
-                                                                            = requestResponseTimingInMilliseconds
-                                                                                    .ToString();
-                                                        }
-                                                        var responseHeaders = Newtonsoft
-                                                                                        .Json
-                                                                                        .JsonConvert
-                                                                                        .SerializeObject
-                                                                                                (
-                                                                                                    response
-                                                                                                        .Headers
-                                                                                                );
-                                                        var responseContentLength = response
-                                                                                        .ContentLength;
+                                                    
+                                                    var responseHeaders = Newtonsoft
+                                                                                    .Json
+                                                                                    .JsonConvert
+                                                                                    .SerializeObject
+                                                                                            (
+                                                                                                response
+                                                                                                    .Headers
+                                                                                            );
+                                                    var responseContentLength = response
+                                                                                    .ContentLength;
                                                     #endregion
 
                                                     #region Claims
