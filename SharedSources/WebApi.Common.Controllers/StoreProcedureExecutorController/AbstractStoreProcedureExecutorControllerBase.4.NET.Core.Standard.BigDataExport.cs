@@ -216,7 +216,7 @@ namespace Microshaoft.WebApi.Controllers
                      "bigdataexport/{* }"
                  )
         ]
-        [OperationsAuthorizeFilter(false)]
+        [ServiceFilter(typeof(OperationsAuthorizeFilter))]
         [
             RequestJTokenParametersProcessFilter
                     (

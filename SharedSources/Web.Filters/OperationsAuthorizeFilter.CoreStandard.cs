@@ -20,11 +20,11 @@ namespace Microshaoft.Web
     {
         private IConfiguration _configuration;
         private object _locker = new object();
-        private bool _allowDefault = false;
+        //private bool _allowDefault = false;
         public string AccessingConfigurationKey { get; set; } = "DefaultAccessing";
         public OperationsAuthorizeFilter
                         (
-                            bool allowDefault = false
+                            //bool allowDefault = false
                         )
         {
             Initialize();
@@ -90,7 +90,7 @@ namespace Microshaoft.Web
                 )
             {
                 var httpMethod = $"http{request.Method}";
-                var allow = _allowDefault;
+                var allow = false; // _allowDefault;
                 var success = _configuration
                                         .TryGetSection
                                             (
@@ -99,26 +99,44 @@ namespace Microshaoft.Web
                                             );
                 if (success)
                 {
+                    bool needRequestResponseLogging = masterConfiguration
+                                                                    .GetValue
+                                                                        (
+                                                                            nameof(needRequestResponseLogging)
+                                                                            , true
+                                                                        );
+                    httpContext
+                            .Items
+                            .Add
+                                (
+                                    nameof(needRequestResponseLogging)
+                                    , needRequestResponseLogging
+                                );
+
                     allow = masterConfiguration
                                             .GetValue
                                                     (
                                                         $"allow"
                                                         , false
                                                     );
+
+
+
+
                     if (allow)
                     {
-                        var needCheckOperations = masterConfiguration
+                        bool needCheckOperations = masterConfiguration
                                                     .GetValue
                                                         (
-                                                            $"needcheckoperations"
+                                                            nameof(needCheckOperations)
                                                             , false
                                                         );
                         if (needCheckOperations)
                         {
-                            var operations = masterConfiguration
+                            string[] operations = masterConfiguration
                                                         .GetOrDefault<string[]>
                                                             (
-                                                                $"operations"
+                                                                nameof(operations)
                                                             );
                             allow = CheckUserOperations
                                             (

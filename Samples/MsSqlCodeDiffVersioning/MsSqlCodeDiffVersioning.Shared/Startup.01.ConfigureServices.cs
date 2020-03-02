@@ -39,6 +39,8 @@
         {
             ConfigurationHelper
                         .Load(Configuration);
+            services
+                    .AddSingleton<OperationsAuthorizeFilter>();
 #if NETCOREAPP3_X
 
 #else
