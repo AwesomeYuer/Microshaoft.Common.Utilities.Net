@@ -27,7 +27,7 @@
     <PackageReference Include="System.Reactive.Core" Version="4.3.2" />
     <PackageReference Include="System.Threading.Channels" Version="4.7.0" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
-    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.20" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.21" />
   </ItemGroup>
 
 </Project>
