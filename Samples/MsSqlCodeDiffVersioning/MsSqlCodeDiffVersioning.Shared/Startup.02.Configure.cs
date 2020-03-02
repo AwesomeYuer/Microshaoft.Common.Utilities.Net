@@ -66,7 +66,7 @@
                                     middleware
                                         .InitializeLoggingProcesses
                                             (
-                                                GlobalManager.AsyncRequestResponseLoggingProcessor
+                                                GlobalManager.RequestResponseLoggingProcessor
                                                 , () => GlobalManager.RequestResponseLoggingLogLevel
                                             );
                                 }
@@ -93,6 +93,11 @@
                                             , xException
                                             , xLoggerFactory
                                             , xLogger
+
+                                            , xErrorTime
+                                            , xErrorSource
+                                            , xTraceID
+
                                             , xTInjector
                                         )
                                             =>
@@ -115,6 +120,10 @@
                                                                         , xException
                                                                         , xException
                                                                         , $"event: exception @ middleware : {middlewareTypeName}"
+
+                                                                        , xErrorTime
+                                                                        , xErrorSource
+                                                                        , xTraceID
                                                                     );
                                             return
                                                 (
@@ -145,7 +154,7 @@
                                                             )
                                     {
                                         OnCaughtExceptionHandleProcess =
-                                         (xHttpContext, xConfiguration, xCaughtException) =>
+                                         (xHttpContext, xConfiguration, xCaughtException, xExceptionTime, xExceptionSource, xTraceID) =>
                                          {
                                              var middlewareTypeName = typeof(ExceptionOnDemandHandlerMiddleware).Name;
                                              var errorMessage = nameof(HttpStatusCode.InternalServerError);
@@ -161,6 +170,9 @@
                                                                         , xCaughtException
                                                                         , xCaughtException
                                                                         , $"event: exception @ middleware : {middlewareTypeName}"
+                                                                        , xExceptionTime
+                                                                        , xExceptionSource
+                                                                        , xTraceID
                                                                     );
                                              return
                                                  (

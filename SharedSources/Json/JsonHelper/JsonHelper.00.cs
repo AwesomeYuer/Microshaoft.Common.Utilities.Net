@@ -277,8 +277,8 @@
             }
             else if (underlyingType == typeof(Guid))
             {
-                var jValueString = target.Value<string>();
-                r = Guid.Parse(jValueString);
+                r = target.Value<Guid>();
+                //r = Guid.Parse(jValueString);
             }
             else if (underlyingType == typeof(DateTime))
             {

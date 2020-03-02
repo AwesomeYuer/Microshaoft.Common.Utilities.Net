@@ -10,6 +10,8 @@ namespace Microshaoft.Web
     using System.Text.Json;
     using SystemJsonSerializer = System.Text.Json.JsonSerializer;
     using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Http.Features;
+
     public /*sealed */ class ExceptionOnDemandHandlerMiddleware
     {
         private const string defaultErrorMessage = nameof(HttpStatusCode.InternalServerError);
@@ -33,6 +35,9 @@ namespace Microshaoft.Web
                         HttpContext
                         , IConfiguration
                         , Exception
+                        , DateTime?
+                        , string
+                        , Guid?
                         ,
                             (
                                 bool                // error Details
@@ -55,10 +60,39 @@ namespace Microshaoft.Web
             {
                 var errorDetails = false;
                 var errorStatusCode = HttpStatusCode.InternalServerError;
-                var errorResultCode = -1 * (int)errorStatusCode;
+                var errorResultCode = -1 * (int) errorStatusCode;
                 var errorMessage = defaultErrorMessage;
                 if (OnCaughtExceptionHandleProcess != null)
                 {
+                    DateTime? errorTime = DateTime.Now;
+                    var httpRequestFeature = context
+                                                    .Features
+                                                    .Get<IHttpRequestFeature>();
+                    string requestResponseTimingItemKey = nameof(requestResponseTimingItemKey);
+                    DateTime beginTime = default;
+                    long beginTimeStamp = default;
+                    Guid? traceID = default;
+                    if
+                        (
+                            context
+                                .Items
+                                .TryGetValue
+                                    (
+                                        requestResponseTimingItemKey
+                                        , out var v
+                                    )
+                        )
+                    {
+                        (
+                            beginTime
+                            , beginTimeStamp
+                            , traceID
+                        )
+                        =
+                            (ValueTuple<DateTime, long, Guid>)v;
+
+                    }
+                    var requestUrl = httpRequestFeature.RawTarget;
                     (
                         errorDetails
                         , errorStatusCode
@@ -66,9 +100,17 @@ namespace Microshaoft.Web
                         , errorMessage
                     )
                     =
-                    OnCaughtExceptionHandleProcess(context, _configuration, exception);
+                    OnCaughtExceptionHandleProcess
+                                (
+                                    context
+                                    , _configuration
+                                    , exception
+                                    , errorTime
+                                    , requestUrl
+                                    , traceID
+                                );
                 }
-                response.StatusCode = (int)errorStatusCode;
+                response.StatusCode = (int) errorStatusCode;
                 response.ContentType = defaultErrorResponseContentType;
                 if (errorDetails && errorMessage.IsNullOrEmptyOrWhiteSpace())
                 {

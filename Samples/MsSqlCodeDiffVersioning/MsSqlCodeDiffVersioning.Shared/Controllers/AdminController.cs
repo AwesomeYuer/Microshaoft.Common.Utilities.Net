@@ -179,7 +179,7 @@
                 new JsonResult
                         (
                             GlobalManager
-                                    .AsyncRequestResponseLoggingProcessor
+                                    .RequestResponseLoggingProcessor
                         );
         }
 

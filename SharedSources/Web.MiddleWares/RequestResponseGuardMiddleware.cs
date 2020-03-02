@@ -24,6 +24,7 @@ namespace Microshaoft.Web
                                         , string requestPath
                                         , string requestPathBase
                                         , string requestActionRoutePath
+                                        , System.Guid? requestTraceID
                                     ) Url
                                 ,
                                     (
@@ -408,6 +409,7 @@ namespace Microshaoft.Web
                                                 (
                                                     BeginTime: DateTime.Now
                                                     , BeginTimestamp: Stopwatch.GetTimestamp()
+                                                    , TraceID: Guid.NewGuid()
                                                 )
                                         );
                         }
@@ -597,17 +599,20 @@ namespace Microshaoft.Web
                             double? requestResponseTimingInMilliseconds = null;
                             DateTime? requestBeginTime = null;
                             DateTime? responseStartingTime = null;
+                            Guid? requestTraceID = null;
                             if (r)
                             {
-                                var
-                                    (
-                                        beginTime
-                                        , beginTimeStamp
-                                    )
+                                
+                                (
+                                    DateTime beginTime
+                                    , long beginTimeStamp
+                                    , Guid traceID
+                                )
                                     =
-                                        (ValueTuple<DateTime, long>) removed;
+                                        (ValueTuple<DateTime, long, Guid>) removed;
                                 removed = null;
                                 requestBeginTime = beginTime;
+                                requestTraceID = traceID;
                                 response
                                     .Headers["X-Request-Receive-BeginTime"]
                                                 = beginTime
@@ -658,8 +663,8 @@ namespace Microshaoft.Web
                                                 {
                                                     #region Request
                                                     var httpRequestFeature = httpContext
-                                                                .Features
-                                                                .Get<IHttpRequestFeature>();
+                                                                                    .Features
+                                                                                    .Get<IHttpRequestFeature>();
                                                     var requestUrl = httpRequestFeature.RawTarget;
                                                     var request = httpContext.Request;
                                                     var requestPath = request.Path;
@@ -693,7 +698,7 @@ namespace Microshaoft.Web
                                                         {
                                                             requestBodyStream.Position = 0;
                                                             using var streamReader = new StreamReader(requestBodyStream);
-                                                            requestBody = new StreamReader(requestBodyStream).ReadToEnd();
+                                                            requestBody = streamReader.ReadToEnd();
                                                         }
                                                     }
                                                     var requestHeaders = Newtonsoft
@@ -791,6 +796,7 @@ namespace Microshaoft.Web
                                                                                     , requestPath
                                                                                     , requestPathBase
                                                                                     , requestActionRoutPath
+                                                                                    , requestTraceID
                                                                                 )
                                                                             ,
                                                                                 (
