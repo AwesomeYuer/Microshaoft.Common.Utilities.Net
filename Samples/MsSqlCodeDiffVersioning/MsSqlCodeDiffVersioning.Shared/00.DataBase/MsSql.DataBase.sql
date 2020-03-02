@@ -668,10 +668,11 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE proc [dbo].[zsp_Logging_Query]
 	@ bigint = 0
+	, @Top int = 100
 as
 begin
 
-SELECT TOP (1000) 
+SELECT TOP (@top) 
 	a.AutoID
 	, a.BatchDateTimeStamp
 	, a.responseStatusCode

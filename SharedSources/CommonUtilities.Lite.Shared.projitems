@@ -70,6 +70,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\TaskProcessorHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\TryCatchFinallyHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)00.Utilities\WindowTaskProcessorHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AntiNet\AntiManagedDebugger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AntiNet\AntiManagedProfiler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AntiNet\HandleProcessCorruptedStateExceptionsAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AntiNet\PEInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AntiNet\Program.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Assembly\AssemblyHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Assembly\AssemblyResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Caches\CacheItemEntryRemovedNotifier.cs" />

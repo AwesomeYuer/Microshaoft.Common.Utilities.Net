@@ -17,6 +17,7 @@
         "DefaultAccessing": {
           "allow": true,
           "needCheckOperations": true,
+          "needRequestResponseLogging1111": false,
           "operations": [ "a1", "a2" ],
           "isAsyncExecuting": true,
           "EnableStatistics": true,

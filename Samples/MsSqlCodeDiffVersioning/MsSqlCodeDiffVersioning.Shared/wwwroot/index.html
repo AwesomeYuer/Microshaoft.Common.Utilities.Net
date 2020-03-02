@@ -81,6 +81,16 @@
     <link href="styles/text-magic.css" rel="stylesheet" />
 
     <script type="text/javascript">
+
+        $(document).keyup(function (e) {
+            if (e.key === "Escape") { // escape key maps to keycode `27`
+                // <DO YOUR WORK HERE>
+                $('#loading').hide();
+            }
+        });
+
+
+        window.jwtToken = "";
         $(document).ready(function () {
             $('#loading').hide();
         });
@@ -135,12 +145,16 @@
 </head>
 <body>
     <div id="loading" align="center">
-        Loading ...
+
+        <font size="10" color="red"><strong>Loading ...</strong></font>
+        <br>
+        <font size="10" color="red"><strong>press Esc for cancel waiting</strong></font>
+
         <!--
-        <div class="fan-wrapper">
-            <div class="fan"></div>
-        </div>
-    -->
+            <div class="fan-wrapper">
+                <div class="fan"></div>
+            </div>
+        -->
         <div class="text-magic" data-word="Loading...">
             <div class="white"></div>
         </div>

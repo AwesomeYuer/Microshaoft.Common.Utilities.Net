@@ -236,7 +236,7 @@ namespace Microshaoft.WebApi.Controllers
                     "sync/{* }"
                 )
         ]
-        [OperationsAuthorizeFilter(false)]
+        [ServiceFilter(typeof(OperationsAuthorizeFilter))]
         [
             RequestJTokenParametersProcessFilter
                 (
@@ -330,8 +330,8 @@ namespace Microshaoft.WebApi.Controllers
                     "async/{* }"
                 )
         ]
-       
-        [OperationsAuthorizeFilter(false)]
+
+        [ServiceFilter(typeof(OperationsAuthorizeFilter))]
         [
             RequestJTokenParametersProcessFilter
                     (

@@ -9,6 +9,11 @@
     <Import_RootNamespace>CommonUtilities.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)AntiNet\AntiManagedDebugger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AntiNet\AntiManagedProfiler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AntiNet\HandleProcessCorruptedStateExceptionsAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AntiNet\PEInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AntiNet\Program.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Assembly\AssemblyResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConsoleLogger\AnsiLogConsole.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConsoleLogger\AnsiSystemConsole.cs" />
