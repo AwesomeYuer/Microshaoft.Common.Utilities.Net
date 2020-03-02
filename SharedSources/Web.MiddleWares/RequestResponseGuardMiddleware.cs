@@ -351,9 +351,6 @@ namespace Microshaoft.Web
                     }
                 }
             }
-
-
-
         }
         public void InitializeLoggingProcesses
                         (
@@ -390,13 +387,16 @@ namespace Microshaoft.Web
                         {
                             return false;
                         }
-
                         var request = httpContext.Request;                
                         //xLogger.LogInformation($"event: {@event} @ {middlewareTypeName}");
                         var httpRequestFeature = httpContext.Features.Get<IHttpRequestFeature>();
                         var url = httpRequestFeature.RawTarget;
                         httpRequestFeature = null;
                         var r = url.Contains("/api/", StringComparison.OrdinalIgnoreCase);
+                        if (!r)
+                        {
+                            return false;
+                        }
                         if (r)
                         {
                             httpContext
@@ -565,12 +565,12 @@ namespace Microshaoft.Web
                         {
                             #region requestResponseTiming
                             var r = httpContext
-                                    .Items
-                                    .Remove
-                                        (
-                                            "dbExecutingDuration"
-                                            , out var removed
-                                        );
+                                            .Items
+                                            .Remove
+                                                (
+                                                    "dbExecutingDuration"
+                                                    , out var removed
+                                                );
                             double? dbExecutingTimingInMilliseconds = null;
                             if (r)
                             {
@@ -579,8 +579,9 @@ namespace Microshaoft.Web
                                 {
                                     if (timespan.HasValue)
                                     {
-                                        dbExecutingTimingInMilliseconds =
-                                                timespan.Value.TotalMilliseconds;
+                                        dbExecutingTimingInMilliseconds = timespan
+                                                                                .Value
+                                                                                .TotalMilliseconds;
                                     }
                                 }
                             }
@@ -659,52 +660,50 @@ namespace Microshaoft.Web
                                                     var httpRequestFeature = httpContext
                                                                 .Features
                                                                 .Get<IHttpRequestFeature>();
-                                                        var requestUrl = httpRequestFeature.RawTarget;
-                                                        var request = httpContext.Request;
-                                                        var requestPath = request.Path;
-                                                        var requestPathBase = request.PathBase.Value;
-                                                        var requestActionRoutPath = request.GetActionRoutePathOrDefault("Unknown");
-                                                    //
+                                                    var requestUrl = httpRequestFeature.RawTarget;
+                                                    var request = httpContext.Request;
+                                                    var requestPath = request.Path;
+                                                    var requestPathBase = request.PathBase.Value;
+                                                    var requestActionRoutPath = request.GetActionRoutePathOrDefault("Unknown");
                                                     using var requestBodyStream = request.Body;
-                                                        var requestBody = string.Empty;
+                                                    var requestBody = string.Empty;
+                                                    if
+                                                        (
+                                                            httpContext
+                                                                    .Items
+                                                                    .Remove
+                                                                        (
+                                                                            nameof(requestBody)
+                                                                            , out var removedRequestBody
+                                                                        )
+                                                        )
+                                                    {
+                                                        requestBody = (string) removedRequestBody;
+                                                    }
+                                                    else
+                                                    {
                                                         if
                                                             (
-                                                                httpContext
-                                                                        .Items
-                                                                        .Remove
-                                                                            (
-                                                                                nameof(requestBody)
-                                                                                , out var removedRequestBody
-                                                                            )
+                                                                requestBodyStream
+                                                                                .CanRead
+                                                                &&
+                                                                requestBodyStream
+                                                                                .CanSeek
                                                             )
                                                         {
-                                                            requestBody = (string)removedRequestBody;
-                                                        }
-                                                        else
-                                                        {
-                                                            if
-                                                                (
-                                                                    requestBodyStream
-                                                                                    .CanRead
-                                                                    &&
-                                                                    requestBodyStream
-                                                                                    .CanSeek
-                                                                )
-                                                            {
-                                                                requestBodyStream.Position = 0;
-                                                            //
+                                                            requestBodyStream.Position = 0;
                                                             using var streamReader = new StreamReader(requestBodyStream);
-                                                                requestBody = new StreamReader(requestBodyStream).ReadToEnd();
-                                                            }
+                                                            requestBody = new StreamReader(requestBodyStream).ReadToEnd();
                                                         }
-                                                        var requestHeaders = Newtonsoft
-                                                                                    .Json
-                                                                                    .JsonConvert
-                                                                                    .SerializeObject
-                                                                                            (
-                                                                                                request
-                                                                                                    .Headers
-                                                                                            );
+                                                    }
+                                                    var requestHeaders = Newtonsoft
+                                                                                .Json
+                                                                                .JsonConvert
+                                                                                .SerializeObject
+                                                                                        (
+                                                                                            request
+                                                                                                .Headers
+                                                                                        );
                                                     #endregion
 
                                                     #region Response
@@ -740,45 +739,45 @@ namespace Microshaoft.Web
 
                                                     #region Claims
                                                     string roleID = nameof(roleID);
-                                                        roleID = httpContext
-                                                                            .User
-                                                                            .GetClaimTypeValueOrDefault
-                                                                                (
-                                                                                    roleID
-                                                                                    , "AnonymousRole"
-                                                                                );
-                                                        string orgUnitID = nameof(orgUnitID);
-                                                        orgUnitID = httpContext
-                                                                            .User
-                                                                            .GetClaimTypeValueOrDefault
-                                                                                (
-                                                                                    orgUnitID
-                                                                                    , "AnonymousOrgUnit"
-                                                                                );
-                                                        var clientIP = httpContext
-                                                                            .Connection
-                                                                            .RemoteIpAddress
-                                                                            .ToString();
-                                                        var userID = httpContext
-                                                                            .User
-                                                                            .Identity
-                                                                            .Name ?? "AnonymousUser";
-                                                        string deviceID = nameof(deviceID);
-                                                        deviceID = httpContext
-                                                                            .User
-                                                                            .GetClaimTypeValueOrDefault
-                                                                                (
-                                                                                    deviceID
-                                                                                    , "AnonymousDevice"
-                                                                                );
-                                                        string deviceInfo = nameof(deviceInfo);
-                                                        deviceInfo = httpContext
-                                                                            .User
-                                                                            .GetClaimTypeValueOrDefault
-                                                                                (
-                                                                                    deviceInfo
-                                                                                    , "UnknownDevice"
-                                                                                );
+                                                    roleID = httpContext
+                                                                        .User
+                                                                        .GetClaimTypeValueOrDefault
+                                                                            (
+                                                                                roleID
+                                                                                , "AnonymousRole"
+                                                                            );
+                                                    string orgUnitID = nameof(orgUnitID);
+                                                    orgUnitID = httpContext
+                                                                        .User
+                                                                        .GetClaimTypeValueOrDefault
+                                                                            (
+                                                                                orgUnitID
+                                                                                , "AnonymousOrgUnit"
+                                                                            );
+                                                    var clientIP = httpContext
+                                                                        .Connection
+                                                                        .RemoteIpAddress
+                                                                        .ToString();
+                                                    var userID = httpContext
+                                                                        .User
+                                                                        .Identity
+                                                                        .Name ?? "AnonymousUser";
+                                                    string deviceID = nameof(deviceID);
+                                                    deviceID = httpContext
+                                                                        .User
+                                                                        .GetClaimTypeValueOrDefault
+                                                                            (
+                                                                                deviceID
+                                                                                , "AnonymousDevice"
+                                                                            );
+                                                    string deviceInfo = nameof(deviceInfo);
+                                                    deviceInfo = httpContext
+                                                                        .User
+                                                                        .GetClaimTypeValueOrDefault
+                                                                            (
+                                                                                deviceInfo
+                                                                                , "UnknownDevice"
+                                                                            );
                                                     #endregion
 
                                                     #region GlobalManager.AsyncRequestResponseLoggingProcessor.Enqueue
@@ -895,9 +894,9 @@ namespace Microshaoft.Web
                                 }
                                 removed = null;
                             }
-                                                    //xLogger
-                                                    //    .LogInformation($"event: {@event} @ {middlewareTypeName}");
-                                                };
+                            //xLogger
+                            //    .LogInformation($"event: {@event} @ {middlewareTypeName}");
+                        };
             #endregion
 
         }
