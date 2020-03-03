@@ -41,35 +41,6 @@
                         .Load(Configuration);
             services
                     .AddSingleton<OperationsAuthorizeFilter>();
-#if NETCOREAPP3_X
-
-#else
-            services
-                .AddLogging
-                (
-                    builder =>
-                    {
-                        builder
-                            .AddConsole()
-                            //.AddFilter(level => level >= LogLevel.Information)
-                            ;
-                    }
-                );
-            var loggerFactory = services
-                                    .BuildServiceProvider()
-                                    .GetService<ILoggerFactory>();
-#endif
-            //var loggerFactory = LoggerFactory.Create
-            //                                    (
-            //                                        (loggingBuilder) =>
-            //                                        {
-            //                                            loggingBuilder
-            //                                                .SetMinimumLevel(LogLevel.Debug)
-            //                                                .AddConsole1();
-
-            //                                        }
-            //                                    );
-            //loggerFactory.AddProvider(new LightConsoleLoggerProvider(null));
 
             #region Logging
             services
@@ -221,7 +192,7 @@
                                                     $"{asyncProcessorConfigurationPrefixKeys}:{nameof(waitOneBatchMaxDequeuedTimes)}"
                                                     , 100
                                                 );
-            var msSqlStoreProceduresExecutor =
+            var requestResponseLoggingExecutor =
                     new MsSqlStoreProceduresExecutor(GlobalManager.ExecutingCachingStore)
                         {
                             CachedParametersDefinitionExpiredInSeconds
@@ -236,7 +207,7 @@
             string connectionString = nameof(connectionString);
             connectionString = Configuration.GetValue<string>($"connections:{connectionID}:{connectionString}");
             // there are only one Thread that's DequeueThread write it, so it's security
-            var jArrayData = new JArray();
+            var requestResponseLoggingData = new JArray();
             GlobalManager
                 .RequestResponseLoggingProcessor
                 .StartRunDequeueThreadProcess
@@ -257,7 +228,7 @@
                                                                 .GetElapsedTimeToNow()
                                                                 .TotalMilliseconds;
                             }
-                            jArrayData
+                            requestResponseLoggingData
                                 .Add
                                     (
                                         new JObject
@@ -322,7 +293,7 @@
                             string serverHost = nameof(serverHost);
                             try
                             {
-                                msSqlStoreProceduresExecutor
+                                requestResponseLoggingExecutor
                                     .ExecuteJsonResults
                                         (
                                             sqlConnection
@@ -336,7 +307,7 @@
                                                     , { $"{serverHost}ProcessId"                                                    , GlobalManager.CurrentProcess.Id               }
                                                     , { $"{serverHost}{nameof(GlobalManager.CurrentProcess.ProcessName)}"           , GlobalManager.CurrentProcess.ProcessName      }
                                                     , { $"{serverHost}ProcessStartTime"                                             , GlobalManager.CurrentProcess.StartTime        }
-                                                    , { "data"                                                                      , jArrayData                                    }
+                                                    , { "data"                                                                      , requestResponseLoggingData                                    }
                                                 }
                                         );
                             }
@@ -348,7 +319,7 @@
                                 }
                                 //dataTable.Clear();
                                 //should be clear correctly!!!!
-                                jArrayData.Clear();
+                                requestResponseLoggingData.Clear();
                             }
                         }
                         , sleepInMilliseconds
@@ -357,36 +328,37 @@
                     );
             #endregion
 
+            #region ErrorExceptionLoggingProcessor
             GlobalManager
-                    .ErrorExceptionLoggingProcessor
-                    .OnCaughtException += //AsyncRequestResponseLoggingProcessor_OnCaughtException;
-                            (
-                                sender
-                                , exception
-                                , newException
-                                , innerExceptionMessage
-                                , exceptionTime
-                                , exceptionSource
-                                , traceID
-                            )
-                                =>
-                            {
-                                return
-                                    GlobalManager
-                                            .OnCaughtExceptionProcessFunc
-                                                (
-                                                    GlobalManager
-                                                            .GlobalLogger
-                                                   , exception
-                                                   , newException
-                                                   , innerExceptionMessage
-                                                   , exceptionTime
-                                                   , exceptionSource
-                                                   , traceID
-                                                );
-                            };
+                        .ErrorExceptionLoggingProcessor
+                        .OnCaughtException += //AsyncRequestResponseLoggingProcessor_OnCaughtException;
+                                (
+                                    sender
+                                    , exception
+                                    , newException
+                                    , innerExceptionMessage
+                                    , exceptionTime
+                                    , exceptionSource
+                                    , traceID
+                                )
+                                    =>
+                                {
+                                    return
+                                        GlobalManager
+                                                .OnCaughtExceptionProcessFunc
+                                                    (
+                                                        GlobalManager
+                                                                .GlobalLogger
+                                                       , exception
+                                                       , newException
+                                                       , innerExceptionMessage
+                                                       , exceptionTime
+                                                       , exceptionSource
+                                                       , traceID
+                                                    );
+                                };
 
-            var msSqlStoreProceduresExecutor2 =
+            var errorExceptionLoggingExecutor =
                     new MsSqlStoreProceduresExecutor(GlobalManager.ExecutingCachingStore)
                     {
                         CachedParametersDefinitionExpiredInSeconds
@@ -397,7 +369,7 @@
                                                     , 3600
                                                 )
                     };
-            var jArrayData2 = new JArray();
+            var errorExceptionLoggingData = new JArray();
             GlobalManager
                 .ErrorExceptionLoggingProcessor
                 .StartRunDequeueThreadProcess
@@ -405,7 +377,14 @@
                         (dequeued, batch, indexInBatch, queueElement) =>
                         {
                             //Console.WriteLine($"Dequeue Once: {nameof(Thread.CurrentThread.ManagedThreadId)}:{Thread.CurrentThread.ManagedThreadId}");
-                            var (errorExceptionTime, errorExceptionSource, errorExceptionTraceID, errorException) = queueElement.Element;
+                            var (
+                                    errorExceptionTime
+                                    , errorExceptionSource
+                                    , errorExceptionTraceID
+                                    , errorException
+                                )
+                                = queueElement
+                                            .Element;
                             var enqueueTimestamp = queueElement
                                                             .Timing
                                                             .EnqueueTimestamp;
@@ -418,7 +397,7 @@
                                                                 .GetElapsedTimeToNow()
                                                                 .TotalMilliseconds;
                             }
-                            jArrayData2
+                            errorExceptionLoggingData
                                 .Add
                                     (
                                         new JObject
@@ -446,7 +425,7 @@
                             string serverHost = nameof(serverHost);
                             try
                             {
-                                msSqlStoreProceduresExecutor2
+                                errorExceptionLoggingExecutor
                                     .ExecuteJsonResults
                                         (
                                             sqlConnection
@@ -460,7 +439,7 @@
                                                     , { $"{serverHost}ProcessId"                                                    , GlobalManager.CurrentProcess.Id               }
                                                     , { $"{serverHost}{nameof(GlobalManager.CurrentProcess.ProcessName)}"           , GlobalManager.CurrentProcess.ProcessName      }
                                                     , { $"{serverHost}ProcessStartTime"                                             , GlobalManager.CurrentProcess.StartTime        }
-                                                    , { "data"                                                                      , jArrayData2                                   }
+                                                    , { "data"                                                                      , errorExceptionLoggingData                                   }
                                                 }
                                         );
                             }
@@ -472,15 +451,14 @@
                                 }
                                 //dataTable.Clear();
                                 //should be clear correctly!!!!
-                                jArrayData2.Clear();
+                                errorExceptionLoggingData.Clear();
                             }
                         }
                         , sleepInMilliseconds
                         , waitOneBatchTimeOutInMilliseconds
                         , waitOneBatchMaxDequeuedTimes
-                    );
-
-
+                    ); 
+            #endregion
 
             services
                 .AddSingleton
@@ -747,9 +725,5 @@
                         ); 
             #endregion
         }
-
-        
     }
 }
-
-
