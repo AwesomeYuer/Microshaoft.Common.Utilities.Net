@@ -1446,7 +1446,7 @@ declare @BaseTime datetime = '2020-01-01'
 declare @BatchingTime datetime
 set @BatchingTime = DATEADD(second, DATEDIFF(SECOND,@BaseTime, getdate()), @BaseTime)
 --select 1/0
-select 1/0
+--select 1/0
 INSERT INTO 
 		[RequestResponseLogging]
            (
