@@ -24,17 +24,17 @@ import { editorCursorForeground, editorOverviewRulerBorder } from '../../../comm
 var Settings = /** @class */ (function () {
     function Settings(config, theme) {
         var options = config.options;
-        this.lineHeight = options.get(47 /* lineHeight */);
-        this.pixelRatio = options.get(101 /* pixelRatio */);
-        this.overviewRulerLanes = options.get(61 /* overviewRulerLanes */);
-        this.renderBorder = options.get(60 /* overviewRulerBorder */);
+        this.lineHeight = options.get(49 /* lineHeight */);
+        this.pixelRatio = options.get(105 /* pixelRatio */);
+        this.overviewRulerLanes = options.get(63 /* overviewRulerLanes */);
+        this.renderBorder = options.get(62 /* overviewRulerBorder */);
         var borderColor = theme.getColor(editorOverviewRulerBorder);
         this.borderColor = borderColor ? borderColor.toString() : null;
-        this.hideCursor = options.get(40 /* hideCursorInOverviewRuler */);
+        this.hideCursor = options.get(42 /* hideCursorInOverviewRuler */);
         var cursorColor = theme.getColor(editorCursorForeground);
         this.cursorColor = cursorColor ? cursorColor.transparent(0.7).toString() : null;
         this.themeType = theme.type;
-        var minimapOpts = options.get(52 /* minimap */);
+        var minimapOpts = options.get(54 /* minimap */);
         var minimapEnabled = minimapOpts.enabled;
         var minimapSide = minimapOpts.side;
         var backgroundColor = (minimapEnabled ? TokenizationRegistry.getDefaultBackground() : null);
@@ -44,14 +44,21 @@ var Settings = /** @class */ (function () {
         else {
             this.backgroundColor = Color.Format.CSS.formatHex(backgroundColor);
         }
-        var layoutInfo = options.get(103 /* layoutInfo */);
+        var layoutInfo = options.get(107 /* layoutInfo */);
         var position = layoutInfo.overviewRuler;
         this.top = position.top;
         this.right = position.right;
         this.domWidth = position.width;
         this.domHeight = position.height;
-        this.canvasWidth = (this.domWidth * this.pixelRatio) | 0;
-        this.canvasHeight = (this.domHeight * this.pixelRatio) | 0;
+        if (this.overviewRulerLanes === 0) {
+            // overview ruler is off
+            this.canvasWidth = 0;
+            this.canvasHeight = 0;
+        }
+        else {
+            this.canvasWidth = (this.domWidth * this.pixelRatio) | 0;
+            this.canvasHeight = (this.domHeight * this.pixelRatio) | 0;
+        }
         var _a = this._initLanes(1, this.canvasWidth, this.overviewRulerLanes), x = _a[0], w = _a[1];
         this.x = x;
         this.w = w;
@@ -240,6 +247,11 @@ var DecorationsOverviewRuler = /** @class */ (function (_super) {
         this._render();
     };
     DecorationsOverviewRuler.prototype._render = function () {
+        if (this._settings.overviewRulerLanes === 0) {
+            // overview ruler is off
+            this._domNode.setBackgroundColor(this._settings.backgroundColor ? this._settings.backgroundColor : '');
+            return;
+        }
         var canvasWidth = this._settings.canvasWidth;
         var canvasHeight = this._settings.canvasHeight;
         var lineHeight = this._settings.lineHeight;

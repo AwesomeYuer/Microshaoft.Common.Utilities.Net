@@ -165,9 +165,9 @@ var LinkDetector = /** @class */ (function () {
         this.listenersToRemove.add(clickLinkGesture.onCancel(function (e) {
             _this.cleanUpActiveLinkDecoration();
         }));
-        this.enabled = editor.getOption(50 /* links */);
+        this.enabled = editor.getOption(52 /* links */);
         this.listenersToRemove.add(editor.onDidChangeConfiguration(function (e) {
-            var enabled = editor.getOption(50 /* links */);
+            var enabled = editor.getOption(52 /* links */);
             if (_this.enabled === enabled) {
                 // No change in our configuration option
                 return;
@@ -248,7 +248,7 @@ var LinkDetector = /** @class */ (function () {
         });
     };
     LinkDetector.prototype.updateDecorations = function (links) {
-        var useMetaKey = (this.editor.getOption(57 /* multiCursorModifier */) === 'altKey');
+        var useMetaKey = (this.editor.getOption(59 /* multiCursorModifier */) === 'altKey');
         var oldDecorations = [];
         var keys = Object.keys(this.currentOccurrences);
         for (var i = 0, len = keys.length; i < len; i++) {
@@ -274,7 +274,7 @@ var LinkDetector = /** @class */ (function () {
     };
     LinkDetector.prototype._onEditorMouseMove = function (mouseEvent, withKey) {
         var _this = this;
-        var useMetaKey = (this.editor.getOption(57 /* multiCursorModifier */) === 'altKey');
+        var useMetaKey = (this.editor.getOption(59 /* multiCursorModifier */) === 'altKey');
         if (this.isEnabled(mouseEvent, withKey)) {
             this.cleanUpActiveLinkDecoration(); // always remove previous link decoration as their can only be one
             var occurrence_1 = this.getLinkOccurrence(mouseEvent.target.position);
@@ -290,7 +290,7 @@ var LinkDetector = /** @class */ (function () {
         }
     };
     LinkDetector.prototype.cleanUpActiveLinkDecoration = function () {
-        var useMetaKey = (this.editor.getOption(57 /* multiCursorModifier */) === 'altKey');
+        var useMetaKey = (this.editor.getOption(59 /* multiCursorModifier */) === 'altKey');
         if (this.activeLinkDecorationId) {
             var occurrence_2 = this.currentOccurrences[this.activeLinkDecorationId];
             if (occurrence_2) {

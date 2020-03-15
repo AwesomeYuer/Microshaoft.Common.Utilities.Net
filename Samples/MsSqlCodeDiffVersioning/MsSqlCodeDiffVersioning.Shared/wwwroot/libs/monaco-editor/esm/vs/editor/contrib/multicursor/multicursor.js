@@ -49,7 +49,7 @@ var InsertCursorAbove = /** @class */ (function (_super) {
                 weight: 100 /* EditorContrib */
             },
             menuOpts: {
-                menuId: 23 /* MenubarSelectionMenu */,
+                menuId: 25 /* MenubarSelectionMenu */,
                 group: '3_multi',
                 title: nls.localize({ key: 'miInsertCursorAbove', comment: ['&& denotes a mnemonic'] }, "&&Add Cursor Above"),
                 order: 2
@@ -91,7 +91,7 @@ var InsertCursorBelow = /** @class */ (function (_super) {
                 weight: 100 /* EditorContrib */
             },
             menuOpts: {
-                menuId: 23 /* MenubarSelectionMenu */,
+                menuId: 25 /* MenubarSelectionMenu */,
                 group: '3_multi',
                 title: nls.localize({ key: 'miInsertCursorBelow', comment: ['&& denotes a mnemonic'] }, "A&&dd Cursor Below"),
                 order: 3
@@ -129,7 +129,7 @@ var InsertCursorAtEndOfEachLineSelected = /** @class */ (function (_super) {
                 weight: 100 /* EditorContrib */
             },
             menuOpts: {
-                menuId: 23 /* MenubarSelectionMenu */,
+                menuId: 25 /* MenubarSelectionMenu */,
                 group: '3_multi',
                 title: nls.localize({ key: 'miInsertCursorAtEndOfEachLineSelected', comment: ['&& denotes a mnemonic'] }, "Add C&&ursors to Line Ends"),
                 order: 4
@@ -313,7 +313,7 @@ var MultiCursorSession = /** @class */ (function () {
         this.findController.highlightFindOptions();
         var allSelections = this._editor.getSelections();
         var lastAddedSelection = allSelections[allSelections.length - 1];
-        var nextMatch = this._editor.getModel().findNextMatch(this.searchText, lastAddedSelection.getEndPosition(), false, this.matchCase, this.wholeWord ? this._editor.getOption(92 /* wordSeparators */) : null, false);
+        var nextMatch = this._editor.getModel().findNextMatch(this.searchText, lastAddedSelection.getEndPosition(), false, this.matchCase, this.wholeWord ? this._editor.getOption(96 /* wordSeparators */) : null, false);
         if (!nextMatch) {
             return null;
         }
@@ -353,7 +353,7 @@ var MultiCursorSession = /** @class */ (function () {
         this.findController.highlightFindOptions();
         var allSelections = this._editor.getSelections();
         var lastAddedSelection = allSelections[allSelections.length - 1];
-        var previousMatch = this._editor.getModel().findPreviousMatch(this.searchText, lastAddedSelection.getStartPosition(), false, this.matchCase, this.wholeWord ? this._editor.getOption(92 /* wordSeparators */) : null, false);
+        var previousMatch = this._editor.getModel().findPreviousMatch(this.searchText, lastAddedSelection.getStartPosition(), false, this.matchCase, this.wholeWord ? this._editor.getOption(96 /* wordSeparators */) : null, false);
         if (!previousMatch) {
             return null;
         }
@@ -364,7 +364,7 @@ var MultiCursorSession = /** @class */ (function () {
             return [];
         }
         this.findController.highlightFindOptions();
-        return this._editor.getModel().findMatches(this.searchText, true, false, this.matchCase, this.wholeWord ? this._editor.getOption(92 /* wordSeparators */) : null, false, 1073741824 /* MAX_SAFE_SMALL_INTEGER */);
+        return this._editor.getModel().findMatches(this.searchText, true, false, this.matchCase, this.wholeWord ? this._editor.getOption(96 /* wordSeparators */) : null, false, 1073741824 /* MAX_SAFE_SMALL_INTEGER */);
     };
     return MultiCursorSession;
 }());
@@ -514,7 +514,7 @@ var MultiCursorSelectionController = /** @class */ (function (_super) {
         // - and the search string is non-empty
         // - and we're searching for a regex
         if (findState.isRevealed && findState.searchString.length > 0 && findState.isRegex) {
-            matches = this._editor.getModel().findMatches(findState.searchString, true, findState.isRegex, findState.matchCase, findState.wholeWord ? this._editor.getOption(92 /* wordSeparators */) : null, false, 1073741824 /* MAX_SAFE_SMALL_INTEGER */);
+            matches = this._editor.getModel().findMatches(findState.searchString, true, findState.isRegex, findState.matchCase, findState.wholeWord ? this._editor.getOption(96 /* wordSeparators */) : null, false, 1073741824 /* MAX_SAFE_SMALL_INTEGER */);
         }
         else {
             this._beginSessionIfNeeded(findController);
@@ -586,7 +586,7 @@ var AddSelectionToNextFindMatchAction = /** @class */ (function (_super) {
                 weight: 100 /* EditorContrib */
             },
             menuOpts: {
-                menuId: 23 /* MenubarSelectionMenu */,
+                menuId: 25 /* MenubarSelectionMenu */,
                 group: '3_multi',
                 title: nls.localize({ key: 'miAddSelectionToNextFindMatch', comment: ['&& denotes a mnemonic'] }, "Add &&Next Occurrence"),
                 order: 5
@@ -608,7 +608,7 @@ var AddSelectionToPreviousFindMatchAction = /** @class */ (function (_super) {
             alias: 'Add Selection To Previous Find Match',
             precondition: undefined,
             menuOpts: {
-                menuId: 23 /* MenubarSelectionMenu */,
+                menuId: 25 /* MenubarSelectionMenu */,
                 group: '3_multi',
                 title: nls.localize({ key: 'miAddSelectionToPreviousFindMatch', comment: ['&& denotes a mnemonic'] }, "Add P&&revious Occurrence"),
                 order: 6
@@ -672,7 +672,7 @@ var SelectHighlightsAction = /** @class */ (function (_super) {
                 weight: 100 /* EditorContrib */
             },
             menuOpts: {
-                menuId: 23 /* MenubarSelectionMenu */,
+                menuId: 25 /* MenubarSelectionMenu */,
                 group: '3_multi',
                 title: nls.localize({ key: 'miSelectHighlights', comment: ['&& denotes a mnemonic'] }, "Select All &&Occurrences"),
                 order: 7
@@ -737,12 +737,12 @@ var SelectionHighlighter = /** @class */ (function (_super) {
     function SelectionHighlighter(editor) {
         var _this = _super.call(this) || this;
         _this.editor = editor;
-        _this._isEnabled = editor.getOption(78 /* selectionHighlight */);
+        _this._isEnabled = editor.getOption(82 /* selectionHighlight */);
         _this.decorations = [];
         _this.updateSoon = _this._register(new RunOnceScheduler(function () { return _this._update(); }, 300));
         _this.state = null;
         _this._register(editor.onDidChangeConfiguration(function (e) {
-            _this._isEnabled = editor.getOption(78 /* selectionHighlight */);
+            _this._isEnabled = editor.getOption(82 /* selectionHighlight */);
         }));
         _this._register(editor.onDidChangeCursorSelection(function (e) {
             if (!_this._isEnabled) {
@@ -843,7 +843,7 @@ var SelectionHighlighter = /** @class */ (function (_super) {
                 return null;
             }
         }
-        return new SelectionHighlighterState(r.searchText, r.matchCase, r.wholeWord ? editor.getOption(92 /* wordSeparators */) : null);
+        return new SelectionHighlighterState(r.searchText, r.matchCase, r.wholeWord ? editor.getOption(96 /* wordSeparators */) : null);
     };
     SelectionHighlighter.prototype._setState = function (state) {
         if (SelectionHighlighterState.softEquals(this.state, state)) {

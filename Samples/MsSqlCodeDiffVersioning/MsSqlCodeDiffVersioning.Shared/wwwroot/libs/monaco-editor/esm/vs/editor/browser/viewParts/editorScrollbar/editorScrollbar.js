@@ -25,9 +25,9 @@ var EditorScrollbar = /** @class */ (function (_super) {
     function EditorScrollbar(context, linesContent, viewDomNode, overflowGuardDomNode) {
         var _this = _super.call(this, context) || this;
         var options = _this._context.configuration.options;
-        var scrollbar = options.get(74 /* scrollbar */);
-        var mouseWheelScrollSensitivity = options.get(54 /* mouseWheelScrollSensitivity */);
-        var fastScrollSensitivity = options.get(26 /* fastScrollSensitivity */);
+        var scrollbar = options.get(78 /* scrollbar */);
+        var mouseWheelScrollSensitivity = options.get(56 /* mouseWheelScrollSensitivity */);
+        var fastScrollSensitivity = options.get(27 /* fastScrollSensitivity */);
         var scrollbarOptions = {
             listenOnDomNode: viewDomNode.domNode,
             className: 'editor-scrollable' + ' ' + getThemeTypeSelector(context.theme.type),
@@ -47,7 +47,7 @@ var EditorScrollbar = /** @class */ (function (_super) {
             mouseWheelScrollSensitivity: mouseWheelScrollSensitivity,
             fastScrollSensitivity: fastScrollSensitivity,
         };
-        _this.scrollbar = _this._register(new SmoothScrollableElement(linesContent.domNode, scrollbarOptions, _this._context.viewLayout.scrollable));
+        _this.scrollbar = _this._register(new SmoothScrollableElement(linesContent.domNode, scrollbarOptions, _this._context.viewLayout.getScrollable()));
         PartFingerprints.write(_this.scrollbar.getDomNode(), 5 /* ScrollableElement */);
         _this.scrollbarDomNode = createFastDomNode(_this.scrollbar.getDomNode());
         _this.scrollbarDomNode.setPosition('absolute');
@@ -85,9 +85,9 @@ var EditorScrollbar = /** @class */ (function (_super) {
     };
     EditorScrollbar.prototype._setLayout = function () {
         var options = this._context.configuration.options;
-        var layoutInfo = options.get(103 /* layoutInfo */);
+        var layoutInfo = options.get(107 /* layoutInfo */);
         this.scrollbarDomNode.setLeft(layoutInfo.contentLeft);
-        var minimap = options.get(52 /* minimap */);
+        var minimap = options.get(54 /* minimap */);
         var side = minimap.side;
         if (side === 'right') {
             this.scrollbarDomNode.setWidth(layoutInfo.contentWidth + layoutInfo.minimapWidth);
@@ -95,7 +95,7 @@ var EditorScrollbar = /** @class */ (function (_super) {
         else {
             this.scrollbarDomNode.setWidth(layoutInfo.contentWidth);
         }
-        this.scrollbarDomNode.setHeight(layoutInfo.contentHeight);
+        this.scrollbarDomNode.setHeight(layoutInfo.height);
     };
     EditorScrollbar.prototype.getOverviewRulerLayoutInfo = function () {
         return this.scrollbar.getOverviewRulerLayoutInfo();
@@ -108,13 +108,13 @@ var EditorScrollbar = /** @class */ (function (_super) {
     };
     // --- begin event handlers
     EditorScrollbar.prototype.onConfigurationChanged = function (e) {
-        if (e.hasChanged(74 /* scrollbar */)
-            || e.hasChanged(54 /* mouseWheelScrollSensitivity */)
-            || e.hasChanged(26 /* fastScrollSensitivity */)) {
+        if (e.hasChanged(78 /* scrollbar */)
+            || e.hasChanged(56 /* mouseWheelScrollSensitivity */)
+            || e.hasChanged(27 /* fastScrollSensitivity */)) {
             var options = this._context.configuration.options;
-            var scrollbar = options.get(74 /* scrollbar */);
-            var mouseWheelScrollSensitivity = options.get(54 /* mouseWheelScrollSensitivity */);
-            var fastScrollSensitivity = options.get(26 /* fastScrollSensitivity */);
+            var scrollbar = options.get(78 /* scrollbar */);
+            var mouseWheelScrollSensitivity = options.get(56 /* mouseWheelScrollSensitivity */);
+            var fastScrollSensitivity = options.get(27 /* fastScrollSensitivity */);
             var newOpts = {
                 handleMouseWheel: scrollbar.handleMouseWheel,
                 mouseWheelScrollSensitivity: mouseWheelScrollSensitivity,
@@ -122,7 +122,7 @@ var EditorScrollbar = /** @class */ (function (_super) {
             };
             this.scrollbar.updateOptions(newOpts);
         }
-        if (e.hasChanged(103 /* layoutInfo */)) {
+        if (e.hasChanged(107 /* layoutInfo */)) {
             this._setLayout();
         }
         return true;

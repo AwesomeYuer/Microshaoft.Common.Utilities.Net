@@ -63,7 +63,7 @@ var WordDistance = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (!editor.getOption(85 /* suggest */).localityBonus) {
+                        if (!editor.getOption(89 /* suggest */).localityBonus) {
                             return [2 /*return*/, WordDistance.None];
                         }
                         if (!editor.hasModel()) {
@@ -95,7 +95,7 @@ var WordDistance = /** @class */ (function () {
                                     if (suggestion.kind === 17 /* Keyword */) {
                                         return 2 << 20;
                                     }
-                                    var word = suggestion.label;
+                                    var word = typeof suggestion.label === 'string' ? suggestion.label : suggestion.label.name;
                                     var wordLines = wordRanges[word];
                                     if (isFalsyOrEmpty(wordLines)) {
                                         return 2 << 20;

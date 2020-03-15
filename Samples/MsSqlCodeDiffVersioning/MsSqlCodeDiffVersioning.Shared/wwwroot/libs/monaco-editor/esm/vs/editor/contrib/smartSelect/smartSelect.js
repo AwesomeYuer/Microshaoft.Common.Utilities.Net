@@ -53,7 +53,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 import * as arrays from '../../../base/common/arrays.js';
 import { CancellationToken } from '../../../base/common/cancellation.js';
-import { EditorAction, registerEditorAction, registerEditorContribution, registerDefaultLanguageCommand } from '../../browser/editorExtensions.js';
+import { EditorAction, registerEditorAction, registerEditorContribution, registerModelCommand } from '../../browser/editorExtensions.js';
 import { Position } from '../../common/core/position.js';
 import { Range } from '../../common/core/range.js';
 import { Selection } from '../../common/core/selection.js';
@@ -201,7 +201,7 @@ var GrowSelectionAction = /** @class */ (function (_super) {
                 weight: 100 /* EditorContrib */
             },
             menuOpts: {
-                menuId: 23 /* MenubarSelectionMenu */,
+                menuId: 25 /* MenubarSelectionMenu */,
                 group: '1_basic',
                 title: nls.localize({ key: 'miSmartSelectGrow', comment: ['&& denotes a mnemonic'] }, "&&Expand Selection"),
                 order: 2
@@ -230,7 +230,7 @@ var ShrinkSelectionAction = /** @class */ (function (_super) {
                 weight: 100 /* EditorContrib */
             },
             menuOpts: {
-                menuId: 23 /* MenubarSelectionMenu */,
+                menuId: 25 /* MenubarSelectionMenu */,
                 group: '1_basic',
                 title: nls.localize({ key: 'miSmartSelectShrink', comment: ['&& denotes a mnemonic'] }, "&&Shrink Selection"),
                 order: 3
@@ -328,6 +328,11 @@ export function provideSelectionRanges(model, positions, token) {
         });
     });
 }
-registerDefaultLanguageCommand('_executeSelectionRangeProvider', function (model, _position, args) {
-    return provideSelectionRanges(model, args.positions, CancellationToken.None);
+registerModelCommand('_executeSelectionRangeProvider', function (model) {
+    var args = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        args[_i - 1] = arguments[_i];
+    }
+    var positions = args[0];
+    return provideSelectionRanges(model, positions, CancellationToken.None);
 });

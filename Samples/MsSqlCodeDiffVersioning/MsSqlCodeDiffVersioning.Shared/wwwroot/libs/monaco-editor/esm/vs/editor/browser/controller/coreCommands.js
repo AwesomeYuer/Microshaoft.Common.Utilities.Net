@@ -1494,7 +1494,7 @@ registerCommand(new EditorOrNativeTextInputCommand({
         primary: 2048 /* CtrlCmd */ | 31 /* KEY_A */
     },
     menuOpts: {
-        menuId: 23 /* MenubarSelectionMenu */,
+        menuId: 25 /* MenubarSelectionMenu */,
         group: '1_basic',
         title: nls.localize({ key: 'miSelectAll', comment: ['&& denotes a mnemonic'] }, "&&Select All"),
         order: 1
@@ -1511,7 +1511,7 @@ registerCommand(new EditorOrNativeTextInputCommand({
         primary: 2048 /* CtrlCmd */ | 56 /* KEY_Z */
     },
     menuOpts: {
-        menuId: 15 /* MenubarEditMenu */,
+        menuId: 17 /* MenubarEditMenu */,
         group: '1_do',
         title: nls.localize({ key: 'miUndo', comment: ['&& denotes a mnemonic'] }, "&&Undo"),
         order: 1
@@ -1531,7 +1531,7 @@ registerCommand(new EditorOrNativeTextInputCommand({
         mac: { primary: 2048 /* CtrlCmd */ | 1024 /* Shift */ | 56 /* KEY_Z */ }
     },
     menuOpts: {
-        menuId: 15 /* MenubarEditMenu */,
+        menuId: 17 /* MenubarEditMenu */,
         group: '1_do',
         title: nls.localize({ key: 'miRedo', comment: ['&& denotes a mnemonic'] }, "&&Redo"),
         order: 2

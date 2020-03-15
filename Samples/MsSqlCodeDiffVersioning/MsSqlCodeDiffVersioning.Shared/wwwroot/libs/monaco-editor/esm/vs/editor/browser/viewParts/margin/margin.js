@@ -22,8 +22,8 @@ var Margin = /** @class */ (function (_super) {
     function Margin(context) {
         var _this = _super.call(this, context) || this;
         var options = _this._context.configuration.options;
-        var layoutInfo = options.get(103 /* layoutInfo */);
-        _this._canUseLayerHinting = !options.get(21 /* disableLayerHinting */);
+        var layoutInfo = options.get(107 /* layoutInfo */);
+        _this._canUseLayerHinting = !options.get(22 /* disableLayerHinting */);
         _this._contentLeft = layoutInfo.contentLeft;
         _this._glyphMarginLeft = layoutInfo.glyphMarginLeft;
         _this._glyphMarginWidth = layoutInfo.glyphMarginWidth;
@@ -46,8 +46,8 @@ var Margin = /** @class */ (function (_super) {
     // --- begin event handlers
     Margin.prototype.onConfigurationChanged = function (e) {
         var options = this._context.configuration.options;
-        var layoutInfo = options.get(103 /* layoutInfo */);
-        this._canUseLayerHinting = !options.get(21 /* disableLayerHinting */);
+        var layoutInfo = options.get(107 /* layoutInfo */);
+        this._canUseLayerHinting = !options.get(22 /* disableLayerHinting */);
         this._contentLeft = layoutInfo.contentLeft;
         this._glyphMarginLeft = layoutInfo.glyphMarginLeft;
         this._glyphMarginWidth = layoutInfo.glyphMarginWidth;

@@ -21,6 +21,7 @@ var ViewOutgoingEvents = /** @class */ (function (_super) {
     __extends(ViewOutgoingEvents, _super);
     function ViewOutgoingEvents(viewModel) {
         var _this = _super.call(this) || this;
+        _this.onDidContentSizeChange = null;
         _this.onDidScroll = null;
         _this.onDidGainFocus = null;
         _this.onDidLoseFocus = null;
@@ -37,6 +38,11 @@ var ViewOutgoingEvents = /** @class */ (function (_super) {
         _this._viewModel = viewModel;
         return _this;
     }
+    ViewOutgoingEvents.prototype.emitContentSizeChange = function (e) {
+        if (this.onDidContentSizeChange) {
+            this.onDidContentSizeChange(e);
+        }
+    };
     ViewOutgoingEvents.prototype.emitScrollChanged = function (e) {
         if (this.onDidScroll) {
             this.onDidScroll(e);

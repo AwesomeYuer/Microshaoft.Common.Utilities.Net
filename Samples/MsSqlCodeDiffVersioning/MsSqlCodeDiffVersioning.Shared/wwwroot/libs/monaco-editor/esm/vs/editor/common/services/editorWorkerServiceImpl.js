@@ -69,7 +69,7 @@ import * as modes from '../modes.js';
 import { LanguageConfigurationRegistry } from '../modes/languageConfigurationRegistry.js';
 import { EditorSimpleWorker } from './editorSimpleWorker.js';
 import { IModelService } from './modelService.js';
-import { ITextResourceConfigurationService } from './resourceConfiguration.js';
+import { ITextResourceConfigurationService } from './textResourceConfigurationService.js';
 import { regExpFlags } from '../../../base/common/strings.js';
 import { isNonEmptyArray } from '../../../base/common/arrays.js';
 import { ILogService } from '../../../platform/log/common/log.js';

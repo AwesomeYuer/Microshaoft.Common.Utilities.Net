@@ -92,7 +92,7 @@ var TypeOperations = /** @class */ (function () {
             if (pasteOnNewLine) {
                 // Paste entire line at the beginning of line
                 var typeSelection = new Range(position.lineNumber, 1, position.lineNumber, 1);
-                commands[i] = new ReplaceCommandThatPreservesSelection(typeSelection, text, selection);
+                commands[i] = new ReplaceCommandThatPreservesSelection(typeSelection, text, selection, true);
             }
             else {
                 commands[i] = new ReplaceCommand(selection, text);
@@ -437,15 +437,19 @@ var TypeOperations = /** @class */ (function () {
             shouldPushStackElementAfter: false
         });
     };
+    TypeOperations._autoClosingPairIsSymmetric = function (autoClosingPair) {
+        var open = autoClosingPair.open, close = autoClosingPair.close;
+        return (open.indexOf(close) >= 0 || close.indexOf(open) >= 0);
+    };
     TypeOperations._isBeforeClosingBrace = function (config, autoClosingPair, characterAfter) {
         var otherAutoClosingPairs = config.autoClosingPairsClose2.get(characterAfter);
         if (!otherAutoClosingPairs) {
             return false;
         }
-        var thisBraceIsSymmetric = (autoClosingPair.open === autoClosingPair.close);
+        var thisBraceIsSymmetric = TypeOperations._autoClosingPairIsSymmetric(autoClosingPair);
         for (var _i = 0, otherAutoClosingPairs_1 = otherAutoClosingPairs; _i < otherAutoClosingPairs_1.length; _i++) {
             var otherAutoClosingPair = otherAutoClosingPairs_1[_i];
-            var otherBraceIsSymmetric = (otherAutoClosingPair.open === otherAutoClosingPair.close);
+            var otherBraceIsSymmetric = TypeOperations._autoClosingPairIsSymmetric(otherAutoClosingPair);
             if (!thisBraceIsSymmetric && otherBraceIsSymmetric) {
                 continue;
             }

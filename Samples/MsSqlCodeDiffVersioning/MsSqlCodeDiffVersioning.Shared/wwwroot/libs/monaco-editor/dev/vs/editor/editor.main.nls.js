@@ -1,6 +1,6 @@
 /*!-----------------------------------------------------------
  * Copyright (c) Microsoft Corporation. All rights reserved.
- * Version: 0.19.3(4bbae4b7d81ecff78ba65ddc8227b542e734257e)
+ * Version: 0.20.0(6363745c0a33c27b149b89342a7b96d354fb554c)
  * Released under the MIT license
  * https://github.com/Microsoft/vscode/blob/master/LICENSE.txt
  *-----------------------------------------------------------*/
@@ -127,6 +127,7 @@ define("vs/editor/editor.main.nls", {
 		"Remove trailing auto inserted whitespace.",
 		"Special handling for large files to disable certain memory intensive features.",
 		"Controls whether completions should be computed based on words in the document.",
+		"Controls whether the semanticHighlighting is shown for the languages that support it.",
 		"Keep peek editors open even when double clicking their content or when hitting `Escape`.",
 		"Lines above this length will not be tokenized for performance reasons",
 		"Timeout in milliseconds after which diff computation is cancelled. Use 0 for no timeout.",
@@ -139,6 +140,7 @@ define("vs/editor/editor.main.nls", {
 		"The editor will be permanently optimized for usage with a Screen Reader.",
 		"The editor will never be optimized for usage with a Screen Reader.",
 		"Controls whether the editor should run in a mode where it is optimized for screen readers.",
+		"Controls whether a space character is inserted when commenting.",
 		"Controls whether copying without a selection copies the current line.",
 		"Controls whether the search string in the Find Widget is seeded from the editor selection.",
 		"Never turn on Find in selection automatically (default)",
@@ -195,7 +197,7 @@ define("vs/editor/editor.main.nls", {
 		"Controls whether filtering and sorting suggestions accounts for small typos.",
 		"Controls whether sorting favours words that appear close to the cursor.",
 		"Controls whether remembered suggestion selections are shared between multiple workspaces and windows (needs `#editor.suggestSelection#`).",
-		"Control whether an active snippet prevents quick suggestions.",
+		"Controls whether an active snippet prevents quick suggestions.",
 		"Controls whether to show or hide icons in suggestions.",
 		"Controls how many suggestions IntelliSense will show before showing a scrollbar (maximum 15).",
 		"This setting is deprecated, please use separate settings like 'editor.suggest.showKeywords' or 'editor.suggest.showSnippets' instead.",
@@ -225,6 +227,7 @@ define("vs/editor/editor.main.nls", {
 		"When enabled IntelliSense shows `folder`-suggestions.",
 		"When enabled IntelliSense shows `typeParameter`-suggestions.",
 		"When enabled IntelliSense shows `snippet`-suggestions.",
+		"Controls the visibility of the status bar at the bottom of the suggest widget.",
 		"Controls whether suggestions should be accepted on commit characters. For example, in JavaScript, the semi-colon (`;`) can be a commit character that accepts a suggestion and types that character.",
 		"Only accept a suggestion with `Enter` when it makes a textual change.",
 		"Controls whether suggestions should be accepted on `Enter`, in addition to `Tab`. Helps to avoid ambiguity between inserting new lines or accepting suggestions.",
@@ -263,6 +266,7 @@ define("vs/editor/editor.main.nls", {
 		"Scrolling speed multiplier when pressing `Alt`.",
 		"Controls whether the editor has code folding enabled.",
 		"Controls the strategy for computing folding ranges. `auto` uses a language specific folding strategy, if available. `indentation` uses the indentation based folding strategy.",
+		"Controls whether the editor should highlight folded ranges.",
 		"Controls the font family.",
 		"Controls the font weight.",
 		"Controls whether the editor should automatically format the pasted content. A formatter must be available and the formatter should be able to format a range in a document.",
@@ -284,6 +288,9 @@ define("vs/editor/editor.main.nls", {
 		"Controls pasting when the line count of the pasted text matches the cursor count.",
 		"Controls whether the editor should highlight semantic symbol occurrences.",
 		"Controls whether a border should be drawn around the overview ruler.",
+		"Focus the tree when opening peek",
+		"Focus the editor when opening peek",
+		"Controls whether to focus the inline editor or the tree in the peek widget.",
 		"Controls the delay in milliseconds after which quick suggestions will show up.",
 		"Controls whether the editor should render control characters.",
 		"Controls whether the editor should render indent guides.",
@@ -329,7 +336,10 @@ define("vs/editor/editor.main.nls", {
 		"Wrapped lines get the same indentation as the parent.",
 		"Wrapped lines get +1 indentation toward the parent.",
 		"Wrapped lines get +2 indentation toward the parent.",
-		"Controls the indentation of wrapped lines."
+		"Controls the indentation of wrapped lines.",
+		"Assumes that all characters are of the same width. This is a fast algorithm that works correctly for monospace fonts and certain scripts (like Latin characters) where glyphs are of equal width.",
+		"Delegates wrapping points computation to the browser. This is a slow algorithm, that might cause freezes for large files, but it works correctly in all cases.",
+		"Controls the algorithm that computes wrapping points."
 	],
 	"vs/editor/common/modes/modesRegistry": [
 		"Plain Text"
@@ -571,7 +581,8 @@ define("vs/editor/editor.main.nls", {
 		"Unfold All Regions",
 		"Fold All",
 		"Unfold All",
-		"Fold Level {0}"
+		"Fold Level {0}",
+		"Color of the editor selection."
 	],
 	"vs/editor/contrib/fontZoom/fontZoom": [
 		"Editor Font Zoom In",
@@ -777,12 +788,16 @@ define("vs/editor/editor.main.nls", {
 	"vs/editor/contrib/rename/rename": [
 		"No result.",
 		"An unknown error occurred while resolving rename location",
+		"Renaming '{0}'",
 		"Successfully renamed '{0}' to '{1}'. Summary: {2}",
-		"Rename failed to execute.",
-		"Rename Symbol"
+		"Rename failed to apply edits",
+		"Rename failed to compute edits",
+		"Rename Symbol",
+		"Enable/disable the ability to preview changes before renaming"
 	],
 	"vs/editor/contrib/rename/renameInputField": [
-		"Rename input. Type new name and press Enter to commit."
+		"Rename input. Type new name and press Enter to commit.",
+		"{0} to Rename, {1} to Preview"
 	],
 	"vs/editor/contrib/smartSelect/smartSelect": [
 		"Expand Selection",
@@ -845,7 +860,12 @@ define("vs/editor/editor.main.nls", {
 		"Loading...",
 		"Loading...",
 		"No suggestions.",
-		"Item {0}, docs: {1}"
+		"{0} for less...",
+		"{0} for more...",
+		"Item {0}, docs: {1}",
+		"{0} to insert, {1} to replace",
+		"{0} to replace, {1} to insert",
+		"{0} to accept"
 	],
 	"vs/editor/contrib/toggleTabFocusMode/toggleTabFocusMode": [
 		"Toggle Tab Key Moves Focus",
@@ -869,6 +889,7 @@ define("vs/editor/editor.main.nls", {
 	"vs/platform/configuration/common/configurationRegistry": [
 		"Default Configuration Overrides",
 		"Configure editor settings to be overridden for a language.",
+		"This setting does not support per-language configuration.",
 		"Cannot register '{0}'. This matches property pattern '\\\\[.*\\\\]$' for describing language specific editor settings. Use 'configurationDefaults' contribution.",
 		"Cannot register '{0}'. This property is already registered."
 	],

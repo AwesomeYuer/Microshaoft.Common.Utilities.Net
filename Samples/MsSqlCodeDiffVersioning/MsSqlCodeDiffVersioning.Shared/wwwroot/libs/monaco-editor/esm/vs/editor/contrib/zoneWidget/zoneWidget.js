@@ -254,7 +254,7 @@ var ZoneWidget = /** @class */ (function () {
         }
     };
     ZoneWidget.prototype._decoratingElementsHeight = function () {
-        var lineHeight = this.editor.getOption(47 /* lineHeight */);
+        var lineHeight = this.editor.getOption(49 /* lineHeight */);
         var result = 0;
         if (this.options.showArrow) {
             var arrowHeight = Math.round(lineHeight / 3);
@@ -276,7 +276,7 @@ var ZoneWidget = /** @class */ (function () {
         // Render the widget as zone (rendering) and widget (lifecycle)
         var viewZoneDomNode = document.createElement('div');
         viewZoneDomNode.style.overflow = 'hidden';
-        var lineHeight = this.editor.getOption(47 /* lineHeight */);
+        var lineHeight = this.editor.getOption(49 /* lineHeight */);
         // adjust heightInLines to viewport
         var maxHeightInLines = (this.editor.getLayoutInfo().height / lineHeight) * 0.8;
         if (heightInLines >= maxHeightInLines) {
@@ -396,7 +396,7 @@ var ZoneWidget = /** @class */ (function () {
         }));
         this._disposables.add(this._resizeSash.onDidChange(function (evt) {
             if (data) {
-                var lineDelta = (evt.currentY - data.startY) / _this.editor.getOption(47 /* lineHeight */);
+                var lineDelta = (evt.currentY - data.startY) / _this.editor.getOption(49 /* lineHeight */);
                 var roundedLineDelta = lineDelta < 0 ? Math.ceil(lineDelta) : Math.floor(lineDelta);
                 var newHeightInLines = data.heightInLines + roundedLineDelta;
                 if (newHeightInLines > 5 && newHeightInLines < 35) {

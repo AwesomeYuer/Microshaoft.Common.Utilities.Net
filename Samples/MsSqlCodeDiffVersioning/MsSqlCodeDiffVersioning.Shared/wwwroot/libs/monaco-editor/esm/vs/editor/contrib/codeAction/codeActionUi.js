@@ -65,9 +65,9 @@ import { onUnexpectedError } from '../../../base/common/errors.js';
 import { Lazy } from '../../../base/common/lazy.js';
 import { Disposable, MutableDisposable } from '../../../base/common/lifecycle.js';
 import { MessageController } from '../message/messageController.js';
+import { IInstantiationService } from '../../../platform/instantiation/common/instantiation.js';
 import { CodeActionMenu } from './codeActionMenu.js';
 import { LightBulbWidget } from './lightBulbWidget.js';
-import { IInstantiationService } from '../../../platform/instantiation/common/instantiation.js';
 var CodeActionUi = /** @class */ (function (_super) {
     __extends(CodeActionUi, _super);
     function CodeActionUi(_editor, quickFixActionId, preferredFixActionId, delegate, instantiationService) {
@@ -87,7 +87,7 @@ var CodeActionUi = /** @class */ (function (_super) {
         });
         _this._lightBulbWidget = new Lazy(function () {
             var widget = _this._register(instantiationService.createInstance(LightBulbWidget, _this._editor, quickFixActionId, preferredFixActionId));
-            _this._register(widget.onClick(function (e) { return _this.showCodeActionList(e.actions, e, { includeDisabledActions: false }); }));
+            _this._register(widget.onClick(function (e) { return _this.showCodeActionList(e.trigger, e.actions, e, { includeDisabledActions: false }); }));
             return widget;
         });
         return _this;
@@ -115,8 +115,8 @@ var CodeActionUi = /** @class */ (function (_super) {
                         onUnexpectedError(e_1);
                         return [2 /*return*/];
                     case 4:
-                        this._lightBulbWidget.getValue().update(actions, newState.position);
-                        if (!(newState.trigger.type === 'manual')) return [3 /*break*/, 11];
+                        this._lightBulbWidget.getValue().update(actions, newState.trigger, newState.position);
+                        if (!(newState.trigger.type === 2 /* Manual */)) return [3 /*break*/, 11];
                         if (!((_b = newState.trigger.filter) === null || _b === void 0 ? void 0 : _b.include)) return [3 /*break*/, 10];
                         validActionToApply = this.tryGetValidActionToApply(newState.trigger, actions);
                         if (!validActionToApply) return [3 /*break*/, 9];
@@ -153,7 +153,7 @@ var CodeActionUi = /** @class */ (function (_super) {
                             }
                         }
                         this._activeCodeActions.value = actions;
-                        this._codeActionWidget.getValue().show(actions, newState.position, { includeDisabledActions: includeDisabledActions });
+                        this._codeActionWidget.getValue().show(newState.trigger, actions, newState.position, { includeDisabledActions: includeDisabledActions });
                         return [3 /*break*/, 12];
                     case 11:
                         // auto magically triggered
@@ -190,10 +190,10 @@ var CodeActionUi = /** @class */ (function (_super) {
         }
         return undefined;
     };
-    CodeActionUi.prototype.showCodeActionList = function (actions, at, options) {
+    CodeActionUi.prototype.showCodeActionList = function (trigger, actions, at, options) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                this._codeActionWidget.getValue().show(actions, at, options);
+                this._codeActionWidget.getValue().show(trigger, actions, at, options);
                 return [2 /*return*/];
             });
         });

@@ -86,12 +86,12 @@ var ClickLinkGesture = /** @class */ (function (_super) {
         _this._onCancel = _this._register(new Emitter());
         _this.onCancel = _this._onCancel.event;
         _this._editor = editor;
-        _this._opts = createOptions(_this._editor.getOption(57 /* multiCursorModifier */));
+        _this._opts = createOptions(_this._editor.getOption(59 /* multiCursorModifier */));
         _this.lastMouseMoveEvent = null;
         _this.hasTriggerKeyOnMouseDown = false;
         _this._register(_this._editor.onDidChangeConfiguration(function (e) {
-            if (e.hasChanged(57 /* multiCursorModifier */)) {
-                var newOpts = createOptions(_this._editor.getOption(57 /* multiCursorModifier */));
+            if (e.hasChanged(59 /* multiCursorModifier */)) {
+                var newOpts = createOptions(_this._editor.getOption(59 /* multiCursorModifier */));
                 if (_this._opts.equals(newOpts)) {
                     return;
                 }

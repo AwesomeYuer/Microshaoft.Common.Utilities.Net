@@ -43,12 +43,12 @@ var BareFontInfo = /** @class */ (function () {
      * @internal
      */
     BareFontInfo.createFromValidatedSettings = function (options, zoomLevel, ignoreEditorZoom) {
-        var fontFamily = options.get(31 /* fontFamily */);
-        var fontWeight = options.get(35 /* fontWeight */);
-        var fontSize = options.get(34 /* fontSize */);
-        var fontFeatureSettings = options.get(33 /* fontLigatures */);
-        var lineHeight = options.get(47 /* lineHeight */);
-        var letterSpacing = options.get(44 /* letterSpacing */);
+        var fontFamily = options.get(33 /* fontFamily */);
+        var fontWeight = options.get(37 /* fontWeight */);
+        var fontSize = options.get(36 /* fontSize */);
+        var fontFeatureSettings = options.get(35 /* fontLigatures */);
+        var lineHeight = options.get(49 /* lineHeight */);
+        var letterSpacing = options.get(46 /* letterSpacing */);
         return BareFontInfo._create(fontFamily, fontWeight, fontSize, fontFeatureSettings, lineHeight, letterSpacing, zoomLevel, ignoreEditorZoom);
     };
     /**
@@ -110,9 +110,27 @@ var FontInfo = /** @class */ (function (_super) {
         _this.typicalFullwidthCharacterWidth = opts.typicalFullwidthCharacterWidth;
         _this.canUseHalfwidthRightwardsArrow = opts.canUseHalfwidthRightwardsArrow;
         _this.spaceWidth = opts.spaceWidth;
+        _this.middotWidth = opts.middotWidth;
         _this.maxDigitWidth = opts.maxDigitWidth;
         return _this;
     }
+    /**
+     * @internal
+     */
+    FontInfo.prototype.equals = function (other) {
+        return (this.fontFamily === other.fontFamily
+            && this.fontWeight === other.fontWeight
+            && this.fontSize === other.fontSize
+            && this.fontFeatureSettings === other.fontFeatureSettings
+            && this.lineHeight === other.lineHeight
+            && this.letterSpacing === other.letterSpacing
+            && this.typicalHalfwidthCharacterWidth === other.typicalHalfwidthCharacterWidth
+            && this.typicalFullwidthCharacterWidth === other.typicalFullwidthCharacterWidth
+            && this.canUseHalfwidthRightwardsArrow === other.canUseHalfwidthRightwardsArrow
+            && this.spaceWidth === other.spaceWidth
+            && this.middotWidth === other.middotWidth
+            && this.maxDigitWidth === other.maxDigitWidth);
+    };
     return FontInfo;
 }(BareFontInfo));
 export { FontInfo };

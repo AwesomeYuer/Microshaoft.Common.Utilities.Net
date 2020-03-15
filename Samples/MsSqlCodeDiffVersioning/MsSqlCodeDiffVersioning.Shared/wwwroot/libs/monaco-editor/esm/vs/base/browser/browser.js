@@ -53,6 +53,6 @@ export var isWebKit = (userAgent.indexOf('AppleWebKit') >= 0);
 export var isChrome = (userAgent.indexOf('Chrome') >= 0);
 export var isSafari = (!isChrome && (userAgent.indexOf('Safari') >= 0));
 export var isWebkitWebView = (!isChrome && !isSafari && isWebKit);
-export var isIPad = (userAgent.indexOf('iPad') >= 0);
+export var isIPad = (userAgent.indexOf('iPad') >= 0 || (isSafari && navigator.maxTouchPoints > 0));
 export var isEdgeWebView = isEdge && (userAgent.indexOf('WebView/') >= 0);
 export var isStandalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);

@@ -192,7 +192,7 @@ var VisibleLinesCollection = /** @class */ (function () {
     };
     // ---- begin view event handlers
     VisibleLinesCollection.prototype.onConfigurationChanged = function (e) {
-        if (e.hasChanged(103 /* layoutInfo */)) {
+        if (e.hasChanged(107 /* layoutInfo */)) {
             return true;
         }
         return false;

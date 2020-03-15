@@ -24,19 +24,19 @@ var CursorConfiguration = /** @class */ (function () {
     function CursorConfiguration(languageIdentifier, modelOptions, configuration) {
         this._languageIdentifier = languageIdentifier;
         var options = configuration.options;
-        var layoutInfo = options.get(103 /* layoutInfo */);
-        this.readOnly = options.get(65 /* readOnly */);
+        var layoutInfo = options.get(107 /* layoutInfo */);
+        this.readOnly = options.get(68 /* readOnly */);
         this.tabSize = modelOptions.tabSize;
         this.indentSize = modelOptions.indentSize;
         this.insertSpaces = modelOptions.insertSpaces;
-        this.lineHeight = options.get(47 /* lineHeight */);
+        this.lineHeight = options.get(49 /* lineHeight */);
         this.pageSize = Math.max(1, Math.floor(layoutInfo.height / this.lineHeight) - 2);
-        this.useTabStops = options.get(91 /* useTabStops */);
-        this.wordSeparators = options.get(92 /* wordSeparators */);
-        this.emptySelectionClipboard = options.get(24 /* emptySelectionClipboard */);
-        this.copyWithSyntaxHighlighting = options.get(14 /* copyWithSyntaxHighlighting */);
-        this.multiCursorMergeOverlapping = options.get(56 /* multiCursorMergeOverlapping */);
-        this.multiCursorPaste = options.get(58 /* multiCursorPaste */);
+        this.useTabStops = options.get(95 /* useTabStops */);
+        this.wordSeparators = options.get(96 /* wordSeparators */);
+        this.emptySelectionClipboard = options.get(25 /* emptySelectionClipboard */);
+        this.copyWithSyntaxHighlighting = options.get(15 /* copyWithSyntaxHighlighting */);
+        this.multiCursorMergeOverlapping = options.get(58 /* multiCursorMergeOverlapping */);
+        this.multiCursorPaste = options.get(60 /* multiCursorPaste */);
         this.autoClosingBrackets = options.get(5 /* autoClosingBrackets */);
         this.autoClosingQuotes = options.get(7 /* autoClosingQuotes */);
         this.autoClosingOvertype = options.get(6 /* autoClosingOvertype */);
@@ -69,18 +69,18 @@ var CursorConfiguration = /** @class */ (function () {
         }
     }
     CursorConfiguration.shouldRecreate = function (e) {
-        return (e.hasChanged(103 /* layoutInfo */)
-            || e.hasChanged(92 /* wordSeparators */)
-            || e.hasChanged(24 /* emptySelectionClipboard */)
-            || e.hasChanged(56 /* multiCursorMergeOverlapping */)
-            || e.hasChanged(58 /* multiCursorPaste */)
+        return (e.hasChanged(107 /* layoutInfo */)
+            || e.hasChanged(96 /* wordSeparators */)
+            || e.hasChanged(25 /* emptySelectionClipboard */)
+            || e.hasChanged(58 /* multiCursorMergeOverlapping */)
+            || e.hasChanged(60 /* multiCursorPaste */)
             || e.hasChanged(5 /* autoClosingBrackets */)
             || e.hasChanged(7 /* autoClosingQuotes */)
             || e.hasChanged(6 /* autoClosingOvertype */)
             || e.hasChanged(10 /* autoSurround */)
-            || e.hasChanged(91 /* useTabStops */)
-            || e.hasChanged(47 /* lineHeight */)
-            || e.hasChanged(65 /* readOnly */));
+            || e.hasChanged(95 /* useTabStops */)
+            || e.hasChanged(49 /* lineHeight */)
+            || e.hasChanged(68 /* readOnly */));
     };
     Object.defineProperty(CursorConfiguration.prototype, "electricChars", {
         get: function () {

@@ -28,17 +28,29 @@ var ViewConfigurationChangedEvent = /** @class */ (function () {
     return ViewConfigurationChangedEvent;
 }());
 export { ViewConfigurationChangedEvent };
+var ViewContentSizeChangedEvent = /** @class */ (function () {
+    function ViewContentSizeChangedEvent(source) {
+        this.type = 2 /* ViewContentSizeChanged */;
+        this.contentWidth = source.contentWidth;
+        this.contentHeight = source.contentHeight;
+        this.contentWidthChanged = source.contentWidthChanged;
+        this.contentHeightChanged = source.contentHeightChanged;
+    }
+    return ViewContentSizeChangedEvent;
+}());
+export { ViewContentSizeChangedEvent };
 var ViewCursorStateChangedEvent = /** @class */ (function () {
-    function ViewCursorStateChangedEvent(selections) {
-        this.type = 2 /* ViewCursorStateChanged */;
+    function ViewCursorStateChangedEvent(selections, modelSelections) {
+        this.type = 3 /* ViewCursorStateChanged */;
         this.selections = selections;
+        this.modelSelections = modelSelections;
     }
     return ViewCursorStateChangedEvent;
 }());
 export { ViewCursorStateChangedEvent };
 var ViewDecorationsChangedEvent = /** @class */ (function () {
     function ViewDecorationsChangedEvent() {
-        this.type = 3 /* ViewDecorationsChanged */;
+        this.type = 4 /* ViewDecorationsChanged */;
         // Nothing to do
     }
     return ViewDecorationsChangedEvent;
@@ -46,7 +58,7 @@ var ViewDecorationsChangedEvent = /** @class */ (function () {
 export { ViewDecorationsChangedEvent };
 var ViewFlushedEvent = /** @class */ (function () {
     function ViewFlushedEvent() {
-        this.type = 4 /* ViewFlushed */;
+        this.type = 5 /* ViewFlushed */;
         // Nothing to do
     }
     return ViewFlushedEvent;
@@ -54,15 +66,22 @@ var ViewFlushedEvent = /** @class */ (function () {
 export { ViewFlushedEvent };
 var ViewFocusChangedEvent = /** @class */ (function () {
     function ViewFocusChangedEvent(isFocused) {
-        this.type = 5 /* ViewFocusChanged */;
+        this.type = 6 /* ViewFocusChanged */;
         this.isFocused = isFocused;
     }
     return ViewFocusChangedEvent;
 }());
 export { ViewFocusChangedEvent };
+var ViewLanguageConfigurationEvent = /** @class */ (function () {
+    function ViewLanguageConfigurationEvent() {
+        this.type = 7 /* ViewLanguageConfigurationChanged */;
+    }
+    return ViewLanguageConfigurationEvent;
+}());
+export { ViewLanguageConfigurationEvent };
 var ViewLineMappingChangedEvent = /** @class */ (function () {
     function ViewLineMappingChangedEvent() {
-        this.type = 6 /* ViewLineMappingChanged */;
+        this.type = 8 /* ViewLineMappingChanged */;
         // Nothing to do
     }
     return ViewLineMappingChangedEvent;
@@ -70,7 +89,7 @@ var ViewLineMappingChangedEvent = /** @class */ (function () {
 export { ViewLineMappingChangedEvent };
 var ViewLinesChangedEvent = /** @class */ (function () {
     function ViewLinesChangedEvent(fromLineNumber, toLineNumber) {
-        this.type = 7 /* ViewLinesChanged */;
+        this.type = 9 /* ViewLinesChanged */;
         this.fromLineNumber = fromLineNumber;
         this.toLineNumber = toLineNumber;
     }
@@ -79,7 +98,7 @@ var ViewLinesChangedEvent = /** @class */ (function () {
 export { ViewLinesChangedEvent };
 var ViewLinesDeletedEvent = /** @class */ (function () {
     function ViewLinesDeletedEvent(fromLineNumber, toLineNumber) {
-        this.type = 8 /* ViewLinesDeleted */;
+        this.type = 10 /* ViewLinesDeleted */;
         this.fromLineNumber = fromLineNumber;
         this.toLineNumber = toLineNumber;
     }
@@ -88,7 +107,7 @@ var ViewLinesDeletedEvent = /** @class */ (function () {
 export { ViewLinesDeletedEvent };
 var ViewLinesInsertedEvent = /** @class */ (function () {
     function ViewLinesInsertedEvent(fromLineNumber, toLineNumber) {
-        this.type = 9 /* ViewLinesInserted */;
+        this.type = 11 /* ViewLinesInserted */;
         this.fromLineNumber = fromLineNumber;
         this.toLineNumber = toLineNumber;
     }
@@ -97,7 +116,7 @@ var ViewLinesInsertedEvent = /** @class */ (function () {
 export { ViewLinesInsertedEvent };
 var ViewRevealRangeRequestEvent = /** @class */ (function () {
     function ViewRevealRangeRequestEvent(source, range, verticalType, revealHorizontal, scrollType) {
-        this.type = 10 /* ViewRevealRangeRequest */;
+        this.type = 12 /* ViewRevealRangeRequest */;
         this.source = source;
         this.range = range;
         this.verticalType = verticalType;
@@ -109,7 +128,7 @@ var ViewRevealRangeRequestEvent = /** @class */ (function () {
 export { ViewRevealRangeRequestEvent };
 var ViewScrollChangedEvent = /** @class */ (function () {
     function ViewScrollChangedEvent(source) {
-        this.type = 11 /* ViewScrollChanged */;
+        this.type = 13 /* ViewScrollChanged */;
         this.scrollWidth = source.scrollWidth;
         this.scrollLeft = source.scrollLeft;
         this.scrollHeight = source.scrollHeight;
@@ -122,24 +141,24 @@ var ViewScrollChangedEvent = /** @class */ (function () {
     return ViewScrollChangedEvent;
 }());
 export { ViewScrollChangedEvent };
+var ViewThemeChangedEvent = /** @class */ (function () {
+    function ViewThemeChangedEvent() {
+        this.type = 14 /* ViewThemeChanged */;
+    }
+    return ViewThemeChangedEvent;
+}());
+export { ViewThemeChangedEvent };
 var ViewTokensChangedEvent = /** @class */ (function () {
     function ViewTokensChangedEvent(ranges) {
-        this.type = 12 /* ViewTokensChanged */;
+        this.type = 15 /* ViewTokensChanged */;
         this.ranges = ranges;
     }
     return ViewTokensChangedEvent;
 }());
 export { ViewTokensChangedEvent };
-var ViewThemeChangedEvent = /** @class */ (function () {
-    function ViewThemeChangedEvent() {
-        this.type = 15 /* ViewThemeChanged */;
-    }
-    return ViewThemeChangedEvent;
-}());
-export { ViewThemeChangedEvent };
 var ViewTokensColorsChangedEvent = /** @class */ (function () {
     function ViewTokensColorsChangedEvent() {
-        this.type = 13 /* ViewTokensColorsChanged */;
+        this.type = 16 /* ViewTokensColorsChanged */;
         // Nothing to do
     }
     return ViewTokensColorsChangedEvent;
@@ -147,19 +166,12 @@ var ViewTokensColorsChangedEvent = /** @class */ (function () {
 export { ViewTokensColorsChangedEvent };
 var ViewZonesChangedEvent = /** @class */ (function () {
     function ViewZonesChangedEvent() {
-        this.type = 14 /* ViewZonesChanged */;
+        this.type = 17 /* ViewZonesChanged */;
         // Nothing to do
     }
     return ViewZonesChangedEvent;
 }());
 export { ViewZonesChangedEvent };
-var ViewLanguageConfigurationEvent = /** @class */ (function () {
-    function ViewLanguageConfigurationEvent() {
-        this.type = 16 /* ViewLanguageConfigurationChanged */;
-    }
-    return ViewLanguageConfigurationEvent;
-}());
-export { ViewLanguageConfigurationEvent };
 var ViewEventEmitter = /** @class */ (function (_super) {
     __extends(ViewEventEmitter, _super);
     function ViewEventEmitter() {

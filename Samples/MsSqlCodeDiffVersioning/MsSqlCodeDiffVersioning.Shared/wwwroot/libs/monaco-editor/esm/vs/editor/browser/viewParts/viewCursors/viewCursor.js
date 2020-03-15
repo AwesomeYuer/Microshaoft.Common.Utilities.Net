@@ -24,11 +24,11 @@ var ViewCursor = /** @class */ (function () {
     function ViewCursor(context) {
         this._context = context;
         var options = this._context.configuration.options;
-        var fontInfo = options.get(32 /* fontInfo */);
-        this._cursorStyle = options.get(17 /* cursorStyle */);
-        this._lineHeight = options.get(47 /* lineHeight */);
+        var fontInfo = options.get(34 /* fontInfo */);
+        this._cursorStyle = options.get(18 /* cursorStyle */);
+        this._lineHeight = options.get(49 /* lineHeight */);
         this._typicalHalfwidthCharacterWidth = fontInfo.typicalHalfwidthCharacterWidth;
-        this._lineCursorWidth = Math.min(options.get(20 /* cursorWidth */), this._typicalHalfwidthCharacterWidth);
+        this._lineCursorWidth = Math.min(options.get(21 /* cursorWidth */), this._typicalHalfwidthCharacterWidth);
         this._isVisible = true;
         // Create the dom node
         this._domNode = createFastDomNode(document.createElement('div'));
@@ -62,11 +62,11 @@ var ViewCursor = /** @class */ (function () {
     };
     ViewCursor.prototype.onConfigurationChanged = function (e) {
         var options = this._context.configuration.options;
-        var fontInfo = options.get(32 /* fontInfo */);
-        this._cursorStyle = options.get(17 /* cursorStyle */);
-        this._lineHeight = options.get(47 /* lineHeight */);
+        var fontInfo = options.get(34 /* fontInfo */);
+        this._cursorStyle = options.get(18 /* cursorStyle */);
+        this._lineHeight = options.get(49 /* lineHeight */);
         this._typicalHalfwidthCharacterWidth = fontInfo.typicalHalfwidthCharacterWidth;
-        this._lineCursorWidth = Math.min(options.get(20 /* cursorWidth */), this._typicalHalfwidthCharacterWidth);
+        this._lineCursorWidth = Math.min(options.get(21 /* cursorWidth */), this._typicalHalfwidthCharacterWidth);
         Configuration.applyFontInfo(this._domNode, fontInfo);
         return true;
     };

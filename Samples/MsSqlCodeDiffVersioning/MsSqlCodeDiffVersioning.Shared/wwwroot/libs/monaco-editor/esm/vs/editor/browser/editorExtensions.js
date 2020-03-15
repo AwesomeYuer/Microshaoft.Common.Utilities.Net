@@ -27,7 +27,7 @@ import { ContextKeyExpr, IContextKeyService } from '../../platform/contextkey/co
 import { KeybindingsRegistry } from '../../platform/keybinding/common/keybindingsRegistry.js';
 import { Registry } from '../../platform/registry/common/platform.js';
 import { ITelemetryService } from '../../platform/telemetry/common/telemetry.js';
-import { withNullAsUndefined } from '../../base/common/types.js';
+import { withNullAsUndefined, assertType } from '../../base/common/types.js';
 var Command = /** @class */ (function () {
     function Command(opts) {
         this.id = opts.id;
@@ -206,6 +206,62 @@ export function registerDefaultLanguageCommand(id, handler) {
             return new Promise(function (resolve, reject) {
                 try {
                     var result = handler(reference.object.textEditorModel, Position.lift(position), args);
+                    resolve(result);
+                }
+                catch (err) {
+                    reject(err);
+                }
+            }).finally(function () {
+                reference.dispose();
+            });
+        });
+    });
+}
+export function registerModelAndPositionCommand(id, handler) {
+    CommandsRegistry.registerCommand(id, function (accessor) {
+        var args = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments[_i];
+        }
+        var resource = args[0], position = args[1];
+        assertType(URI.isUri(resource));
+        assertType(Position.isIPosition(position));
+        var model = accessor.get(IModelService).getModel(resource);
+        if (model) {
+            var editorPosition = Position.lift(position);
+            return handler(model, editorPosition, args.slice(2));
+        }
+        return accessor.get(ITextModelService).createModelReference(resource).then(function (reference) {
+            return new Promise(function (resolve, reject) {
+                try {
+                    var result = handler(reference.object.textEditorModel, Position.lift(position), args.slice(2));
+                    resolve(result);
+                }
+                catch (err) {
+                    reject(err);
+                }
+            }).finally(function () {
+                reference.dispose();
+            });
+        });
+    });
+}
+export function registerModelCommand(id, handler) {
+    CommandsRegistry.registerCommand(id, function (accessor) {
+        var args = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments[_i];
+        }
+        var resource = args[0];
+        assertType(URI.isUri(resource));
+        var model = accessor.get(IModelService).getModel(resource);
+        if (model) {
+            return handler(model, args.slice(1));
+        }
+        return accessor.get(ITextModelService).createModelReference(resource).then(function (reference) {
+            return new Promise(function (resolve, reject) {
+                try {
+                    var result = handler(reference.object.textEditorModel, args.slice(1));
                     resolve(result);
                 }
                 catch (err) {

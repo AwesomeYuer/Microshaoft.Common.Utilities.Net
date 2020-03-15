@@ -887,14 +887,20 @@ define(["require", "exports"], function (require, exports) {
             });
         };
         CodeActionAdaptor.prototype._tsCodeFixActionToMonacoCodeAction = function (model, context, codeFix) {
-            var _this = this;
-            var edits = codeFix.changes.map(function (edit) { return ({
-                resource: model.uri,
-                edits: edit.textChanges.map(function (tc) { return ({
-                    range: _this._textSpanToRange(model, tc.span),
-                    text: tc.newText
-                }); })
-            }); });
+            var edits = [];
+            for (var _i = 0, _a = codeFix.changes; _i < _a.length; _i++) {
+                var change = _a[_i];
+                for (var _b = 0, _c = change.textChanges; _b < _c.length; _b++) {
+                    var textChange = _c[_b];
+                    edits.push({
+                        resource: model.uri,
+                        edit: {
+                            range: this._textSpanToRange(model, textChange.span),
+                            text: textChange.newText
+                        }
+                    });
+                }
+            }
             var action = {
                 title: codeFix.description,
                 edit: { edits: edits },
@@ -914,7 +920,7 @@ define(["require", "exports"], function (require, exports) {
         }
         RenameAdapter.prototype.provideRenameEdits = function (model, position, newName, token) {
             return __awaiter(this, void 0, void 0, function () {
-                var resource, fileName, offset, worker, renameInfo, renameLocations, fileNameToResourceTextEditMap, edits, _i, renameLocations_1, renameLocation, resourceTextEdit;
+                var resource, fileName, offset, worker, renameInfo, renameLocations, edits, _i, renameLocations_1, renameLocation;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
@@ -942,21 +948,15 @@ define(["require", "exports"], function (require, exports) {
                             if (!renameLocations || model.isDisposed()) {
                                 return [2 /*return*/];
                             }
-                            fileNameToResourceTextEditMap = {};
                             edits = [];
                             for (_i = 0, renameLocations_1 = renameLocations; _i < renameLocations_1.length; _i++) {
                                 renameLocation = renameLocations_1[_i];
-                                if (!(renameLocation.fileName in fileNameToResourceTextEditMap)) {
-                                    resourceTextEdit = {
-                                        edits: [],
-                                        resource: monaco.Uri.parse(renameLocation.fileName)
-                                    };
-                                    fileNameToResourceTextEditMap[renameLocation.fileName] = resourceTextEdit;
-                                    edits.push(resourceTextEdit);
-                                }
-                                fileNameToResourceTextEditMap[renameLocation.fileName].edits.push({
-                                    range: this._textSpanToRange(model, renameLocation.textSpan),
-                                    text: newName
+                                edits.push({
+                                    resource: monaco.Uri.parse(renameLocation.fileName),
+                                    edit: {
+                                        range: this._textSpanToRange(model, renameLocation.textSpan),
+                                        text: newName
+                                    }
                                 });
                             }
                             return [2 /*return*/, { edits: edits }];

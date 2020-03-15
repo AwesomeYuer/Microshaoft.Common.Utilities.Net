@@ -91,7 +91,7 @@ var CommonFindController = /** @class */ (function (_super) {
             if (shouldRestartFind) {
                 _this._start({
                     forceRevealReplace: false,
-                    seedSearchStringFromSelection: false && _this._editor.getOption(27 /* find */).seedSearchStringFromSelection,
+                    seedSearchStringFromSelection: false && _this._editor.getOption(28 /* find */).seedSearchStringFromSelection,
                     seedSearchStringFromGlobalClipboard: false,
                     shouldFocus: 0 /* NoFocusChange */,
                     shouldAnimate: false,
@@ -291,7 +291,7 @@ var CommonFindController = /** @class */ (function (_super) {
         return false;
     };
     CommonFindController.prototype.getGlobalBufferTerm = function () {
-        if (this._editor.getOption(27 /* find */).globalFindClipboard
+        if (this._editor.getOption(28 /* find */).globalFindClipboard
             && this._clipboardService
             && this._editor.hasModel()
             && !this._editor.getModel().isTooLargeForSyncing()) {
@@ -300,7 +300,7 @@ var CommonFindController = /** @class */ (function (_super) {
         return '';
     };
     CommonFindController.prototype.setGlobalBufferTerm = function (text) {
-        if (this._editor.getOption(27 /* find */).globalFindClipboard
+        if (this._editor.getOption(28 /* find */).globalFindClipboard
             && this._clipboardService
             && this._editor.hasModel()
             && !this._editor.getModel().isTooLargeForSyncing()) {
@@ -334,7 +334,7 @@ var FindController = /** @class */ (function (_super) {
         }
         var selection = this._editor.getSelection();
         var updateSearchScope = false;
-        switch (this._editor.getOption(27 /* find */).autoFindInSelection) {
+        switch (this._editor.getOption(28 /* find */).autoFindInSelection) {
             case 'always':
                 updateSearchScope = true;
                 break;
@@ -398,7 +398,7 @@ var StartFindAction = /** @class */ (function (_super) {
                 weight: 100 /* EditorContrib */
             },
             menuOpts: {
-                menuId: 15 /* MenubarEditMenu */,
+                menuId: 17 /* MenubarEditMenu */,
                 group: '3_find',
                 title: nls.localize({ key: 'miFind', comment: ['&& denotes a mnemonic'] }, "&&Find"),
                 order: 1
@@ -410,8 +410,8 @@ var StartFindAction = /** @class */ (function (_super) {
         if (controller) {
             controller.start({
                 forceRevealReplace: false,
-                seedSearchStringFromSelection: editor.getOption(27 /* find */).seedSearchStringFromSelection,
-                seedSearchStringFromGlobalClipboard: editor.getOption(27 /* find */).globalFindClipboard,
+                seedSearchStringFromSelection: editor.getOption(28 /* find */).seedSearchStringFromSelection,
+                seedSearchStringFromGlobalClipboard: editor.getOption(28 /* find */).globalFindClipboard,
                 shouldFocus: 1 /* FocusFindInput */,
                 shouldAnimate: true,
                 updateSearchScope: false
@@ -466,7 +466,7 @@ var MatchFindAction = /** @class */ (function (_super) {
         if (controller && !this._run(controller)) {
             controller.start({
                 forceRevealReplace: false,
-                seedSearchStringFromSelection: (controller.getState().searchString.length === 0) && editor.getOption(27 /* find */).seedSearchStringFromSelection,
+                seedSearchStringFromSelection: (controller.getState().searchString.length === 0) && editor.getOption(28 /* find */).seedSearchStringFromSelection,
                 seedSearchStringFromGlobalClipboard: true,
                 shouldFocus: 0 /* NoFocusChange */,
                 shouldAnimate: true,
@@ -581,7 +581,7 @@ var SelectionMatchFindAction = /** @class */ (function (_super) {
         if (!this._run(controller)) {
             controller.start({
                 forceRevealReplace: false,
-                seedSearchStringFromSelection: editor.getOption(27 /* find */).seedSearchStringFromSelection,
+                seedSearchStringFromSelection: editor.getOption(28 /* find */).seedSearchStringFromSelection,
                 seedSearchStringFromGlobalClipboard: false,
                 shouldFocus: 0 /* NoFocusChange */,
                 shouldAnimate: true,
@@ -650,7 +650,7 @@ var StartFindReplaceAction = /** @class */ (function (_super) {
                 weight: 100 /* EditorContrib */
             },
             menuOpts: {
-                menuId: 15 /* MenubarEditMenu */,
+                menuId: 17 /* MenubarEditMenu */,
                 group: '3_find',
                 title: nls.localize({ key: 'miReplace', comment: ['&& denotes a mnemonic'] }, "&&Replace"),
                 order: 2
@@ -658,7 +658,7 @@ var StartFindReplaceAction = /** @class */ (function (_super) {
         }) || this;
     }
     StartFindReplaceAction.prototype.run = function (accessor, editor) {
-        if (!editor.hasModel() || editor.getOption(65 /* readOnly */)) {
+        if (!editor.hasModel() || editor.getOption(68 /* readOnly */)) {
             return;
         }
         var controller = CommonFindController.get(editor);
@@ -667,7 +667,7 @@ var StartFindReplaceAction = /** @class */ (function (_super) {
         // we only seed search string from selection when the current selection is single line and not empty,
         // + the find input is not focused
         var seedSearchStringFromSelection = !currentSelection.isEmpty()
-            && currentSelection.startLineNumber === currentSelection.endLineNumber && editor.getOption(27 /* find */).seedSearchStringFromSelection
+            && currentSelection.startLineNumber === currentSelection.endLineNumber && editor.getOption(28 /* find */).seedSearchStringFromSelection
             && !findInputFocused;
         /*
          * if the existing search string in find widget is empty and we don't seed search string from selection, it means the Find Input is still empty, so we should focus the Find Input instead of Replace Input.
@@ -682,7 +682,7 @@ var StartFindReplaceAction = /** @class */ (function (_super) {
             controller.start({
                 forceRevealReplace: true,
                 seedSearchStringFromSelection: seedSearchStringFromSelection,
-                seedSearchStringFromGlobalClipboard: editor.getOption(27 /* find */).seedSearchStringFromSelection,
+                seedSearchStringFromGlobalClipboard: editor.getOption(28 /* find */).seedSearchStringFromSelection,
                 shouldFocus: shouldFocus,
                 shouldAnimate: true,
                 updateSearchScope: false

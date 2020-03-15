@@ -1,6 +1,6 @@
 /*!-----------------------------------------------------------
  * Copyright (c) Microsoft Corporation. All rights reserved.
- * Version: 0.19.3(4bbae4b7d81ecff78ba65ddc8227b542e734257e)
+ * Version: 0.20.0(6363745c0a33c27b149b89342a7b96d354fb554c)
  * Released under the MIT license
  * https://github.com/Microsoft/vscode/blob/master/LICENSE.txt
  *-----------------------------------------------------------*/
@@ -744,7 +744,7 @@ var AMDLoader;
                 var result = compileWrapper.apply(this.exports, args);
                 // cached data aftermath
                 that._handleCachedData(script, scriptSource, cachedDataPath, !options.cachedData, moduleManager);
-                that._verifyCachedData(script, scriptSource, cachedDataPath, hashData);
+                that._verifyCachedData(script, scriptSource, cachedDataPath, hashData, moduleManager);
                 return result;
             };
         };
@@ -791,7 +791,7 @@ var AMDLoader;
                     var scriptOpts = { filename: vmScriptPathOrUri_1, cachedData: cachedData };
                     var script = _this._createAndEvalScript(moduleManager, scriptSource, scriptOpts, callback, errorback);
                     _this._handleCachedData(script, scriptSource, cachedDataPath_1, wantsCachedData_1 && !cachedData, moduleManager);
-                    _this._verifyCachedData(script, scriptSource, cachedDataPath_1, hashData);
+                    _this._verifyCachedData(script, scriptSource, cachedDataPath_1, hashData, moduleManager);
                 });
             }
         };
@@ -922,7 +922,7 @@ var AMDLoader;
                 });
             }
         };
-        NodeScriptLoader.prototype._verifyCachedData = function (script, scriptSource, cachedDataPath, hashData) {
+        NodeScriptLoader.prototype._verifyCachedData = function (script, scriptSource, cachedDataPath, hashData, moduleManager) {
             var _this = this;
             if (!hashData) {
                 // nothing to do
@@ -938,8 +938,8 @@ var AMDLoader;
                 // for violations of this contract.
                 var hashDataNow = _this._crypto.createHash('md5').update(scriptSource, 'utf8').digest();
                 if (!hashData.equals(hashDataNow)) {
-                    console.warn("FAILED TO VERIFY CACHED DATA. Deleting '" + cachedDataPath + "' now, but a RESTART IS REQUIRED");
-                    _this._fs.unlink(cachedDataPath, function (err) { return console.error("FAILED to unlink: '" + cachedDataPath + "'", err); });
+                    moduleManager.getConfig().onError(new Error("FAILED TO VERIFY CACHED DATA, deleting stale '" + cachedDataPath + "' now, but a RESTART IS REQUIRED"));
+                    _this._fs.unlink(cachedDataPath, function (err) { return moduleManager.getConfig().onError(err); });
                 }
             }, Math.ceil(5000 * (1 + Math.random())));
         };
@@ -3850,7 +3850,7 @@ define(__m[8/*vs/base/common/lifecycle*/], __M([0/*require*/,1/*exports*/]), fun
     /**
      * Manages the lifecycle of a disposable value that may be changed.
      *
-     * This ensures that when the the disposable value is changed, the previously held disposable is disposed of. You can
+     * This ensures that when the disposable value is changed, the previously held disposable is disposed of. You can
      * also register a `MutableDisposable` on a `Disposable` to ensure it is automatically cleaned up.
      */
     var MutableDisposable = /** @class */ (function () {
@@ -4197,6 +4197,7 @@ define(__m[9/*vs/base/common/event*/], __M([0/*require*/,1/*exports*/,3/*vs/base
                         output = merge(output, cur);
                         if (leading && !handle) {
                             emitter.fire(output);
+                            output = undefined;
                         }
                         clearTimeout(handle);
                         handle = setTimeout(function () {
@@ -5492,46 +5493,6 @@ define(__m[20/*vs/base/common/strings*/], __M([0/*require*/,1/*exports*/]), func
         return (initialOffset - offset);
     }
     exports.prevCharLength = prevCharLength;
-    function _getCharContainingOffset(str, offset) {
-        var graphemeBreakTree = GraphemeBreakTree.getInstance();
-        var len = str.length;
-        var initialOffset = offset;
-        var initialCodePoint = getNextCodePoint(str, len, offset);
-        var initialGraphemeBreakType = graphemeBreakTree.getGraphemeBreakType(initialCodePoint);
-        offset += (initialCodePoint >= 65536 /* UNICODE_SUPPLEMENTARY_PLANE_BEGIN */ ? 2 : 1);
-        // extend to the right
-        var graphemeBreakType = initialGraphemeBreakType;
-        while (offset < len) {
-            var nextCodePoint = getNextCodePoint(str, len, offset);
-            var nextGraphemeBreakType = graphemeBreakTree.getGraphemeBreakType(nextCodePoint);
-            if (breakBetweenGraphemeBreakType(graphemeBreakType, nextGraphemeBreakType)) {
-                break;
-            }
-            offset += (nextCodePoint >= 65536 /* UNICODE_SUPPLEMENTARY_PLANE_BEGIN */ ? 2 : 1);
-            graphemeBreakType = nextGraphemeBreakType;
-        }
-        var endOffset = offset;
-        // extend to the left
-        offset = initialOffset;
-        graphemeBreakType = initialGraphemeBreakType;
-        while (offset > 0) {
-            var prevCodePoint = getPrevCodePoint(str, offset);
-            var prevGraphemeBreakType = graphemeBreakTree.getGraphemeBreakType(prevCodePoint);
-            if (breakBetweenGraphemeBreakType(prevGraphemeBreakType, graphemeBreakType)) {
-                break;
-            }
-            offset -= (prevCodePoint >= 65536 /* UNICODE_SUPPLEMENTARY_PLANE_BEGIN */ ? 2 : 1);
-            graphemeBreakType = prevGraphemeBreakType;
-        }
-        return [offset, endOffset];
-    }
-    function getCharContainingOffset(str, offset) {
-        if (offset > 0 && isLowSurrogate(str.charCodeAt(offset))) {
-            return _getCharContainingOffset(str, offset - 1);
-        }
-        return _getCharContainingOffset(str, offset);
-    }
-    exports.getCharContainingOffset = getCharContainingOffset;
     /**
      * Generated using https://github.com/alexandrudima/unicode-utils/blob/master/generate-rtl-test.js
      */
@@ -6021,15 +5982,6 @@ define(__m[11/*vs/base/common/uint*/], __M([0/*require*/,1/*exports*/]), functio
         return v | 0;
     }
     exports.toUint32 = toUint32;
-    function toUint32Array(arr) {
-        var len = arr.length;
-        var r = new Uint32Array(len);
-        for (var i = 0; i < len; i++) {
-            r[i] = toUint32(arr[i]);
-        }
-        return r;
-    }
-    exports.toUint32Array = toUint32Array;
 });
 
 /*---------------------------------------------------------------------------------------------
@@ -6351,7 +6303,7 @@ define(__m[12/*vs/base/common/uri*/], __M([0/*require*/,1/*exports*/,4/*vs/base/
     }());
     exports.URI = URI;
     var _pathSepMarker = platform_1.isWindows ? 1 : undefined;
-    // tslint:disable-next-line:class-name
+    // eslint-disable-next-line @typescript-eslint/class-name-casing
     var _URI = /** @class */ (function (_super) {
         __extends(_URI, _super);
         function _URI() {
@@ -8387,6 +8339,10 @@ define(__m[26/*vs/editor/common/modes/linkComputer*/], __M([0/*require*/,1/*expo
                                 // `*` terminates a link if the link began with `*`
                                 chClass = (linkBeginChCode === 42 /* Asterisk */) ? 1 /* ForceTermination */ : 0 /* None */;
                                 break;
+                            case 124 /* Pipe */:
+                                // `|` terminates a link if the link began with `|`
+                                chClass = (linkBeginChCode === 124 /* Pipe */) ? 1 /* ForceTermination */ : 0 /* None */;
+                                break;
                             default:
                                 chClass = classifier.get(chCode);
                         }
@@ -9020,98 +8976,102 @@ define(__m[28/*vs/editor/common/standalone/standaloneEnums*/], __M([0/*require*/
         EditorOption[EditorOption["autoSurround"] = 10] = "autoSurround";
         EditorOption[EditorOption["codeLens"] = 11] = "codeLens";
         EditorOption[EditorOption["colorDecorators"] = 12] = "colorDecorators";
-        EditorOption[EditorOption["contextmenu"] = 13] = "contextmenu";
-        EditorOption[EditorOption["copyWithSyntaxHighlighting"] = 14] = "copyWithSyntaxHighlighting";
-        EditorOption[EditorOption["cursorBlinking"] = 15] = "cursorBlinking";
-        EditorOption[EditorOption["cursorSmoothCaretAnimation"] = 16] = "cursorSmoothCaretAnimation";
-        EditorOption[EditorOption["cursorStyle"] = 17] = "cursorStyle";
-        EditorOption[EditorOption["cursorSurroundingLines"] = 18] = "cursorSurroundingLines";
-        EditorOption[EditorOption["cursorSurroundingLinesStyle"] = 19] = "cursorSurroundingLinesStyle";
-        EditorOption[EditorOption["cursorWidth"] = 20] = "cursorWidth";
-        EditorOption[EditorOption["disableLayerHinting"] = 21] = "disableLayerHinting";
-        EditorOption[EditorOption["disableMonospaceOptimizations"] = 22] = "disableMonospaceOptimizations";
-        EditorOption[EditorOption["dragAndDrop"] = 23] = "dragAndDrop";
-        EditorOption[EditorOption["emptySelectionClipboard"] = 24] = "emptySelectionClipboard";
-        EditorOption[EditorOption["extraEditorClassName"] = 25] = "extraEditorClassName";
-        EditorOption[EditorOption["fastScrollSensitivity"] = 26] = "fastScrollSensitivity";
-        EditorOption[EditorOption["find"] = 27] = "find";
-        EditorOption[EditorOption["fixedOverflowWidgets"] = 28] = "fixedOverflowWidgets";
-        EditorOption[EditorOption["folding"] = 29] = "folding";
-        EditorOption[EditorOption["foldingStrategy"] = 30] = "foldingStrategy";
-        EditorOption[EditorOption["fontFamily"] = 31] = "fontFamily";
-        EditorOption[EditorOption["fontInfo"] = 32] = "fontInfo";
-        EditorOption[EditorOption["fontLigatures"] = 33] = "fontLigatures";
-        EditorOption[EditorOption["fontSize"] = 34] = "fontSize";
-        EditorOption[EditorOption["fontWeight"] = 35] = "fontWeight";
-        EditorOption[EditorOption["formatOnPaste"] = 36] = "formatOnPaste";
-        EditorOption[EditorOption["formatOnType"] = 37] = "formatOnType";
-        EditorOption[EditorOption["glyphMargin"] = 38] = "glyphMargin";
-        EditorOption[EditorOption["gotoLocation"] = 39] = "gotoLocation";
-        EditorOption[EditorOption["hideCursorInOverviewRuler"] = 40] = "hideCursorInOverviewRuler";
-        EditorOption[EditorOption["highlightActiveIndentGuide"] = 41] = "highlightActiveIndentGuide";
-        EditorOption[EditorOption["hover"] = 42] = "hover";
-        EditorOption[EditorOption["inDiffEditor"] = 43] = "inDiffEditor";
-        EditorOption[EditorOption["letterSpacing"] = 44] = "letterSpacing";
-        EditorOption[EditorOption["lightbulb"] = 45] = "lightbulb";
-        EditorOption[EditorOption["lineDecorationsWidth"] = 46] = "lineDecorationsWidth";
-        EditorOption[EditorOption["lineHeight"] = 47] = "lineHeight";
-        EditorOption[EditorOption["lineNumbers"] = 48] = "lineNumbers";
-        EditorOption[EditorOption["lineNumbersMinChars"] = 49] = "lineNumbersMinChars";
-        EditorOption[EditorOption["links"] = 50] = "links";
-        EditorOption[EditorOption["matchBrackets"] = 51] = "matchBrackets";
-        EditorOption[EditorOption["minimap"] = 52] = "minimap";
-        EditorOption[EditorOption["mouseStyle"] = 53] = "mouseStyle";
-        EditorOption[EditorOption["mouseWheelScrollSensitivity"] = 54] = "mouseWheelScrollSensitivity";
-        EditorOption[EditorOption["mouseWheelZoom"] = 55] = "mouseWheelZoom";
-        EditorOption[EditorOption["multiCursorMergeOverlapping"] = 56] = "multiCursorMergeOverlapping";
-        EditorOption[EditorOption["multiCursorModifier"] = 57] = "multiCursorModifier";
-        EditorOption[EditorOption["multiCursorPaste"] = 58] = "multiCursorPaste";
-        EditorOption[EditorOption["occurrencesHighlight"] = 59] = "occurrencesHighlight";
-        EditorOption[EditorOption["overviewRulerBorder"] = 60] = "overviewRulerBorder";
-        EditorOption[EditorOption["overviewRulerLanes"] = 61] = "overviewRulerLanes";
-        EditorOption[EditorOption["parameterHints"] = 62] = "parameterHints";
-        EditorOption[EditorOption["quickSuggestions"] = 63] = "quickSuggestions";
-        EditorOption[EditorOption["quickSuggestionsDelay"] = 64] = "quickSuggestionsDelay";
-        EditorOption[EditorOption["readOnly"] = 65] = "readOnly";
-        EditorOption[EditorOption["renderControlCharacters"] = 66] = "renderControlCharacters";
-        EditorOption[EditorOption["renderIndentGuides"] = 67] = "renderIndentGuides";
-        EditorOption[EditorOption["renderFinalNewline"] = 68] = "renderFinalNewline";
-        EditorOption[EditorOption["renderLineHighlight"] = 69] = "renderLineHighlight";
-        EditorOption[EditorOption["renderWhitespace"] = 70] = "renderWhitespace";
-        EditorOption[EditorOption["revealHorizontalRightPadding"] = 71] = "revealHorizontalRightPadding";
-        EditorOption[EditorOption["roundedSelection"] = 72] = "roundedSelection";
-        EditorOption[EditorOption["rulers"] = 73] = "rulers";
-        EditorOption[EditorOption["scrollbar"] = 74] = "scrollbar";
-        EditorOption[EditorOption["scrollBeyondLastColumn"] = 75] = "scrollBeyondLastColumn";
-        EditorOption[EditorOption["scrollBeyondLastLine"] = 76] = "scrollBeyondLastLine";
-        EditorOption[EditorOption["selectionClipboard"] = 77] = "selectionClipboard";
-        EditorOption[EditorOption["selectionHighlight"] = 78] = "selectionHighlight";
-        EditorOption[EditorOption["selectOnLineNumbers"] = 79] = "selectOnLineNumbers";
-        EditorOption[EditorOption["showFoldingControls"] = 80] = "showFoldingControls";
-        EditorOption[EditorOption["showUnused"] = 81] = "showUnused";
-        EditorOption[EditorOption["snippetSuggestions"] = 82] = "snippetSuggestions";
-        EditorOption[EditorOption["smoothScrolling"] = 83] = "smoothScrolling";
-        EditorOption[EditorOption["stopRenderingLineAfter"] = 84] = "stopRenderingLineAfter";
-        EditorOption[EditorOption["suggest"] = 85] = "suggest";
-        EditorOption[EditorOption["suggestFontSize"] = 86] = "suggestFontSize";
-        EditorOption[EditorOption["suggestLineHeight"] = 87] = "suggestLineHeight";
-        EditorOption[EditorOption["suggestOnTriggerCharacters"] = 88] = "suggestOnTriggerCharacters";
-        EditorOption[EditorOption["suggestSelection"] = 89] = "suggestSelection";
-        EditorOption[EditorOption["tabCompletion"] = 90] = "tabCompletion";
-        EditorOption[EditorOption["useTabStops"] = 91] = "useTabStops";
-        EditorOption[EditorOption["wordSeparators"] = 92] = "wordSeparators";
-        EditorOption[EditorOption["wordWrap"] = 93] = "wordWrap";
-        EditorOption[EditorOption["wordWrapBreakAfterCharacters"] = 94] = "wordWrapBreakAfterCharacters";
-        EditorOption[EditorOption["wordWrapBreakBeforeCharacters"] = 95] = "wordWrapBreakBeforeCharacters";
-        EditorOption[EditorOption["wordWrapBreakObtrusiveCharacters"] = 96] = "wordWrapBreakObtrusiveCharacters";
-        EditorOption[EditorOption["wordWrapColumn"] = 97] = "wordWrapColumn";
-        EditorOption[EditorOption["wordWrapMinified"] = 98] = "wordWrapMinified";
-        EditorOption[EditorOption["wrappingIndent"] = 99] = "wrappingIndent";
-        EditorOption[EditorOption["editorClassName"] = 100] = "editorClassName";
-        EditorOption[EditorOption["pixelRatio"] = 101] = "pixelRatio";
-        EditorOption[EditorOption["tabFocusMode"] = 102] = "tabFocusMode";
-        EditorOption[EditorOption["layoutInfo"] = 103] = "layoutInfo";
-        EditorOption[EditorOption["wrappingInfo"] = 104] = "wrappingInfo";
+        EditorOption[EditorOption["comments"] = 13] = "comments";
+        EditorOption[EditorOption["contextmenu"] = 14] = "contextmenu";
+        EditorOption[EditorOption["copyWithSyntaxHighlighting"] = 15] = "copyWithSyntaxHighlighting";
+        EditorOption[EditorOption["cursorBlinking"] = 16] = "cursorBlinking";
+        EditorOption[EditorOption["cursorSmoothCaretAnimation"] = 17] = "cursorSmoothCaretAnimation";
+        EditorOption[EditorOption["cursorStyle"] = 18] = "cursorStyle";
+        EditorOption[EditorOption["cursorSurroundingLines"] = 19] = "cursorSurroundingLines";
+        EditorOption[EditorOption["cursorSurroundingLinesStyle"] = 20] = "cursorSurroundingLinesStyle";
+        EditorOption[EditorOption["cursorWidth"] = 21] = "cursorWidth";
+        EditorOption[EditorOption["disableLayerHinting"] = 22] = "disableLayerHinting";
+        EditorOption[EditorOption["disableMonospaceOptimizations"] = 23] = "disableMonospaceOptimizations";
+        EditorOption[EditorOption["dragAndDrop"] = 24] = "dragAndDrop";
+        EditorOption[EditorOption["emptySelectionClipboard"] = 25] = "emptySelectionClipboard";
+        EditorOption[EditorOption["extraEditorClassName"] = 26] = "extraEditorClassName";
+        EditorOption[EditorOption["fastScrollSensitivity"] = 27] = "fastScrollSensitivity";
+        EditorOption[EditorOption["find"] = 28] = "find";
+        EditorOption[EditorOption["fixedOverflowWidgets"] = 29] = "fixedOverflowWidgets";
+        EditorOption[EditorOption["folding"] = 30] = "folding";
+        EditorOption[EditorOption["foldingStrategy"] = 31] = "foldingStrategy";
+        EditorOption[EditorOption["foldingHighlight"] = 32] = "foldingHighlight";
+        EditorOption[EditorOption["fontFamily"] = 33] = "fontFamily";
+        EditorOption[EditorOption["fontInfo"] = 34] = "fontInfo";
+        EditorOption[EditorOption["fontLigatures"] = 35] = "fontLigatures";
+        EditorOption[EditorOption["fontSize"] = 36] = "fontSize";
+        EditorOption[EditorOption["fontWeight"] = 37] = "fontWeight";
+        EditorOption[EditorOption["formatOnPaste"] = 38] = "formatOnPaste";
+        EditorOption[EditorOption["formatOnType"] = 39] = "formatOnType";
+        EditorOption[EditorOption["glyphMargin"] = 40] = "glyphMargin";
+        EditorOption[EditorOption["gotoLocation"] = 41] = "gotoLocation";
+        EditorOption[EditorOption["hideCursorInOverviewRuler"] = 42] = "hideCursorInOverviewRuler";
+        EditorOption[EditorOption["highlightActiveIndentGuide"] = 43] = "highlightActiveIndentGuide";
+        EditorOption[EditorOption["hover"] = 44] = "hover";
+        EditorOption[EditorOption["inDiffEditor"] = 45] = "inDiffEditor";
+        EditorOption[EditorOption["letterSpacing"] = 46] = "letterSpacing";
+        EditorOption[EditorOption["lightbulb"] = 47] = "lightbulb";
+        EditorOption[EditorOption["lineDecorationsWidth"] = 48] = "lineDecorationsWidth";
+        EditorOption[EditorOption["lineHeight"] = 49] = "lineHeight";
+        EditorOption[EditorOption["lineNumbers"] = 50] = "lineNumbers";
+        EditorOption[EditorOption["lineNumbersMinChars"] = 51] = "lineNumbersMinChars";
+        EditorOption[EditorOption["links"] = 52] = "links";
+        EditorOption[EditorOption["matchBrackets"] = 53] = "matchBrackets";
+        EditorOption[EditorOption["minimap"] = 54] = "minimap";
+        EditorOption[EditorOption["mouseStyle"] = 55] = "mouseStyle";
+        EditorOption[EditorOption["mouseWheelScrollSensitivity"] = 56] = "mouseWheelScrollSensitivity";
+        EditorOption[EditorOption["mouseWheelZoom"] = 57] = "mouseWheelZoom";
+        EditorOption[EditorOption["multiCursorMergeOverlapping"] = 58] = "multiCursorMergeOverlapping";
+        EditorOption[EditorOption["multiCursorModifier"] = 59] = "multiCursorModifier";
+        EditorOption[EditorOption["multiCursorPaste"] = 60] = "multiCursorPaste";
+        EditorOption[EditorOption["occurrencesHighlight"] = 61] = "occurrencesHighlight";
+        EditorOption[EditorOption["overviewRulerBorder"] = 62] = "overviewRulerBorder";
+        EditorOption[EditorOption["overviewRulerLanes"] = 63] = "overviewRulerLanes";
+        EditorOption[EditorOption["parameterHints"] = 64] = "parameterHints";
+        EditorOption[EditorOption["peekWidgetDefaultFocus"] = 65] = "peekWidgetDefaultFocus";
+        EditorOption[EditorOption["quickSuggestions"] = 66] = "quickSuggestions";
+        EditorOption[EditorOption["quickSuggestionsDelay"] = 67] = "quickSuggestionsDelay";
+        EditorOption[EditorOption["readOnly"] = 68] = "readOnly";
+        EditorOption[EditorOption["renderControlCharacters"] = 69] = "renderControlCharacters";
+        EditorOption[EditorOption["renderIndentGuides"] = 70] = "renderIndentGuides";
+        EditorOption[EditorOption["renderFinalNewline"] = 71] = "renderFinalNewline";
+        EditorOption[EditorOption["renderLineHighlight"] = 72] = "renderLineHighlight";
+        EditorOption[EditorOption["renderValidationDecorations"] = 73] = "renderValidationDecorations";
+        EditorOption[EditorOption["renderWhitespace"] = 74] = "renderWhitespace";
+        EditorOption[EditorOption["revealHorizontalRightPadding"] = 75] = "revealHorizontalRightPadding";
+        EditorOption[EditorOption["roundedSelection"] = 76] = "roundedSelection";
+        EditorOption[EditorOption["rulers"] = 77] = "rulers";
+        EditorOption[EditorOption["scrollbar"] = 78] = "scrollbar";
+        EditorOption[EditorOption["scrollBeyondLastColumn"] = 79] = "scrollBeyondLastColumn";
+        EditorOption[EditorOption["scrollBeyondLastLine"] = 80] = "scrollBeyondLastLine";
+        EditorOption[EditorOption["selectionClipboard"] = 81] = "selectionClipboard";
+        EditorOption[EditorOption["selectionHighlight"] = 82] = "selectionHighlight";
+        EditorOption[EditorOption["selectOnLineNumbers"] = 83] = "selectOnLineNumbers";
+        EditorOption[EditorOption["showFoldingControls"] = 84] = "showFoldingControls";
+        EditorOption[EditorOption["showUnused"] = 85] = "showUnused";
+        EditorOption[EditorOption["snippetSuggestions"] = 86] = "snippetSuggestions";
+        EditorOption[EditorOption["smoothScrolling"] = 87] = "smoothScrolling";
+        EditorOption[EditorOption["stopRenderingLineAfter"] = 88] = "stopRenderingLineAfter";
+        EditorOption[EditorOption["suggest"] = 89] = "suggest";
+        EditorOption[EditorOption["suggestFontSize"] = 90] = "suggestFontSize";
+        EditorOption[EditorOption["suggestLineHeight"] = 91] = "suggestLineHeight";
+        EditorOption[EditorOption["suggestOnTriggerCharacters"] = 92] = "suggestOnTriggerCharacters";
+        EditorOption[EditorOption["suggestSelection"] = 93] = "suggestSelection";
+        EditorOption[EditorOption["tabCompletion"] = 94] = "tabCompletion";
+        EditorOption[EditorOption["useTabStops"] = 95] = "useTabStops";
+        EditorOption[EditorOption["wordSeparators"] = 96] = "wordSeparators";
+        EditorOption[EditorOption["wordWrap"] = 97] = "wordWrap";
+        EditorOption[EditorOption["wordWrapBreakAfterCharacters"] = 98] = "wordWrapBreakAfterCharacters";
+        EditorOption[EditorOption["wordWrapBreakBeforeCharacters"] = 99] = "wordWrapBreakBeforeCharacters";
+        EditorOption[EditorOption["wordWrapColumn"] = 100] = "wordWrapColumn";
+        EditorOption[EditorOption["wordWrapMinified"] = 101] = "wordWrapMinified";
+        EditorOption[EditorOption["wrappingIndent"] = 102] = "wrappingIndent";
+        EditorOption[EditorOption["wrappingStrategy"] = 103] = "wrappingStrategy";
+        EditorOption[EditorOption["editorClassName"] = 104] = "editorClassName";
+        EditorOption[EditorOption["pixelRatio"] = 105] = "pixelRatio";
+        EditorOption[EditorOption["tabFocusMode"] = 106] = "tabFocusMode";
+        EditorOption[EditorOption["layoutInfo"] = 107] = "layoutInfo";
+        EditorOption[EditorOption["wrappingInfo"] = 108] = "wrappingInfo";
     })(EditorOption = exports.EditorOption || (exports.EditorOption = {}));
     /**
      * End of line character preference.
@@ -9699,9 +9659,6 @@ define(__m[30/*vs/editor/common/viewModel/prefixSumComputer*/], __M([0/*require*
             this.prefixSumValidIndex = new Int32Array(1);
             this.prefixSumValidIndex[0] = -1;
         }
-        PrefixSumComputer.prototype.getCount = function () {
-            return this.values.length;
-        };
         PrefixSumComputer.prototype.insertValues = function (insertIndex, insertValues) {
             insertIndex = uint_1.toUint32(insertIndex);
             var oldValues = this.values;
@@ -9821,64 +9778,6 @@ define(__m[30/*vs/editor/common/viewModel/prefixSumComputer*/], __M([0/*require*
         return PrefixSumComputer;
     }());
     exports.PrefixSumComputer = PrefixSumComputer;
-    var PrefixSumComputerWithCache = /** @class */ (function () {
-        function PrefixSumComputerWithCache(values) {
-            this._cacheAccumulatedValueStart = 0;
-            this._cache = null;
-            this._actual = new PrefixSumComputer(values);
-            this._bustCache();
-        }
-        PrefixSumComputerWithCache.prototype._bustCache = function () {
-            this._cacheAccumulatedValueStart = 0;
-            this._cache = null;
-        };
-        PrefixSumComputerWithCache.prototype.insertValues = function (insertIndex, insertValues) {
-            if (this._actual.insertValues(insertIndex, insertValues)) {
-                this._bustCache();
-            }
-        };
-        PrefixSumComputerWithCache.prototype.changeValue = function (index, value) {
-            if (this._actual.changeValue(index, value)) {
-                this._bustCache();
-            }
-        };
-        PrefixSumComputerWithCache.prototype.removeValues = function (startIndex, cnt) {
-            if (this._actual.removeValues(startIndex, cnt)) {
-                this._bustCache();
-            }
-        };
-        PrefixSumComputerWithCache.prototype.getTotalValue = function () {
-            return this._actual.getTotalValue();
-        };
-        PrefixSumComputerWithCache.prototype.getAccumulatedValue = function (index) {
-            return this._actual.getAccumulatedValue(index);
-        };
-        PrefixSumComputerWithCache.prototype.getIndexOf = function (accumulatedValue) {
-            accumulatedValue = Math.floor(accumulatedValue); //@perf
-            if (this._cache !== null) {
-                var cacheIndex = accumulatedValue - this._cacheAccumulatedValueStart;
-                if (cacheIndex >= 0 && cacheIndex < this._cache.length) {
-                    // Cache hit!
-                    return this._cache[cacheIndex];
-                }
-            }
-            // Cache miss!
-            return this._actual.getIndexOf(accumulatedValue);
-        };
-        /**
-         * Gives a hint that a lot of requests are about to come in for these accumulated values.
-         */
-        PrefixSumComputerWithCache.prototype.warmUpCache = function (accumulatedValueStart, accumulatedValueEnd) {
-            var newCache = [];
-            for (var accumulatedValue = accumulatedValueStart; accumulatedValue <= accumulatedValueEnd; accumulatedValue++) {
-                newCache[accumulatedValue - accumulatedValueStart] = this.getIndexOf(accumulatedValue);
-            }
-            this._cache = newCache;
-            this._cacheAccumulatedValueStart = accumulatedValueStart;
-        };
-        return PrefixSumComputerWithCache;
-    }());
-    exports.PrefixSumComputerWithCache = PrefixSumComputerWithCache;
 });
 
 /*---------------------------------------------------------------------------------------------

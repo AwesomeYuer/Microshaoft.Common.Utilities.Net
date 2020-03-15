@@ -29,7 +29,7 @@ var ScrollDecorationViewPart = /** @class */ (function (_super) {
         _this._updateWidth();
         _this._shouldShow = false;
         var options = _this._context.configuration.options;
-        var scrollbar = options.get(74 /* scrollbar */);
+        var scrollbar = options.get(78 /* scrollbar */);
         _this._useShadows = scrollbar.useShadows;
         _this._domNode = createFastDomNode(document.createElement('div'));
         _this._domNode.setAttribute('role', 'presentation');
@@ -52,7 +52,7 @@ var ScrollDecorationViewPart = /** @class */ (function (_super) {
     };
     ScrollDecorationViewPart.prototype._updateWidth = function () {
         var options = this._context.configuration.options;
-        var layoutInfo = options.get(103 /* layoutInfo */);
+        var layoutInfo = options.get(107 /* layoutInfo */);
         if (layoutInfo.renderMinimap === 0 || (layoutInfo.minimapWidth > 0 && layoutInfo.minimapLeft === 0)) {
             this._width = layoutInfo.width;
         }
@@ -63,7 +63,7 @@ var ScrollDecorationViewPart = /** @class */ (function (_super) {
     // --- begin event handlers
     ScrollDecorationViewPart.prototype.onConfigurationChanged = function (e) {
         var options = this._context.configuration.options;
-        var scrollbar = options.get(74 /* scrollbar */);
+        var scrollbar = options.get(78 /* scrollbar */);
         this._useShadows = scrollbar.useShadows;
         this._updateWidth();
         this._updateShouldShow();

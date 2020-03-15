@@ -184,7 +184,7 @@ var ColorDetector = /** @class */ (function (_super) {
                             border: 'solid 0.1em #eee'
                         }
                     }
-                });
+                }, undefined, this._editor);
             }
             newDecorationsTypes[key] = true;
             decorations.push({

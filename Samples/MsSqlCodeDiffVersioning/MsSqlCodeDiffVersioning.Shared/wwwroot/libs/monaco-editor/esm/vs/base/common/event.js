@@ -146,6 +146,7 @@ export var Event;
                     output = merge(output, cur);
                     if (leading && !handle) {
                         emitter.fire(output);
+                        output = undefined;
                     }
                     clearTimeout(handle);
                     handle = setTimeout(function () {

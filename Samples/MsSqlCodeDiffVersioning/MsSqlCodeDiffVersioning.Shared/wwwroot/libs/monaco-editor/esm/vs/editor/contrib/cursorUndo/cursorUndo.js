@@ -38,6 +38,14 @@ var CursorState = /** @class */ (function () {
     };
     return CursorState;
 }());
+var StackElement = /** @class */ (function () {
+    function StackElement(cursorState, scrollTop, scrollLeft) {
+        this.cursorState = cursorState;
+        this.scrollTop = scrollTop;
+        this.scrollLeft = scrollLeft;
+    }
+    return StackElement;
+}());
 var CursorUndoRedoController = /** @class */ (function (_super) {
     __extends(CursorUndoRedoController, _super);
     function CursorUndoRedoController(editor) {
@@ -65,9 +73,9 @@ var CursorUndoRedoController = /** @class */ (function (_super) {
                 return;
             }
             var prevState = new CursorState(e.oldSelections);
-            var isEqualToLastUndoStack = (_this._undoStack.length > 0 && _this._undoStack[_this._undoStack.length - 1].equals(prevState));
+            var isEqualToLastUndoStack = (_this._undoStack.length > 0 && _this._undoStack[_this._undoStack.length - 1].cursorState.equals(prevState));
             if (!isEqualToLastUndoStack) {
-                _this._undoStack.push(prevState);
+                _this._undoStack.push(new StackElement(prevState, editor.getScrollTop(), editor.getScrollLeft()));
                 _this._redoStack = [];
                 if (_this._undoStack.length > 50) {
                     // keep the cursor undo stack bounded
@@ -84,20 +92,23 @@ var CursorUndoRedoController = /** @class */ (function (_super) {
         if (!this._editor.hasModel() || this._undoStack.length === 0) {
             return;
         }
-        this._redoStack.push(new CursorState(this._editor.getSelections()));
+        this._redoStack.push(new StackElement(new CursorState(this._editor.getSelections()), this._editor.getScrollTop(), this._editor.getScrollLeft()));
         this._applyState(this._undoStack.pop());
     };
     CursorUndoRedoController.prototype.cursorRedo = function () {
         if (!this._editor.hasModel() || this._redoStack.length === 0) {
             return;
         }
-        this._undoStack.push(new CursorState(this._editor.getSelections()));
+        this._undoStack.push(new StackElement(new CursorState(this._editor.getSelections()), this._editor.getScrollTop(), this._editor.getScrollLeft()));
         this._applyState(this._redoStack.pop());
     };
-    CursorUndoRedoController.prototype._applyState = function (state) {
+    CursorUndoRedoController.prototype._applyState = function (stackElement) {
         this._isCursorUndoRedo = true;
-        this._editor.setSelections(state.selections);
-        this._editor.revealRangeInCenterIfOutsideViewport(state.selections[0], 0 /* Smooth */);
+        this._editor.setSelections(stackElement.cursorState.selections);
+        this._editor.setScrollPosition({
+            scrollTop: stackElement.scrollTop,
+            scrollLeft: stackElement.scrollLeft
+        });
         this._isCursorUndoRedo = false;
     };
     CursorUndoRedoController.ID = 'editor.contrib.cursorUndoRedoController';

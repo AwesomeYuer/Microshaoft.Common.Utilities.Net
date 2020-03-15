@@ -57,7 +57,7 @@ var DragAndDropController = /** @class */ (function (_super) {
         this._modifierPressed = false;
     };
     DragAndDropController.prototype.onEditorKeyDown = function (e) {
-        if (!this._editor.getOption(23 /* dragAndDrop */)) {
+        if (!this._editor.getOption(24 /* dragAndDrop */)) {
             return;
         }
         if (hasTriggerModifier(e)) {
@@ -70,7 +70,7 @@ var DragAndDropController = /** @class */ (function (_super) {
         }
     };
     DragAndDropController.prototype.onEditorKeyUp = function (e) {
-        if (!this._editor.getOption(23 /* dragAndDrop */)) {
+        if (!this._editor.getOption(24 /* dragAndDrop */)) {
             return;
         }
         if (hasTriggerModifier(e)) {

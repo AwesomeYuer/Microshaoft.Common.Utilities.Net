@@ -23,6 +23,7 @@ var FastDomNode = /** @class */ (function () {
         this._display = '';
         this._position = '';
         this._visibility = '';
+        this._backgroundColor = '';
         this._layerHint = false;
         this._contain = 'none';
     }
@@ -155,6 +156,13 @@ var FastDomNode = /** @class */ (function () {
         }
         this._visibility = visibility;
         this.domNode.style.visibility = this._visibility;
+    };
+    FastDomNode.prototype.setBackgroundColor = function (backgroundColor) {
+        if (this._backgroundColor === backgroundColor) {
+            return;
+        }
+        this._backgroundColor = backgroundColor;
+        this.domNode.style.backgroundColor = this._backgroundColor;
     };
     FastDomNode.prototype.setLayerHinting = function (layerHint) {
         if (this._layerHint === layerHint) {

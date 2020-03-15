@@ -40,7 +40,7 @@ var MoveWordCommand = /** @class */ (function (_super) {
         if (!editor.hasModel()) {
             return;
         }
-        var wordSeparators = getMapForWordSeparators(editor.getOption(92 /* wordSeparators */));
+        var wordSeparators = getMapForWordSeparators(editor.getOption(96 /* wordSeparators */));
         var model = editor.getModel();
         var selections = editor.getSelections();
         var result = selections.map(function (sel) {
@@ -179,6 +179,7 @@ var CursorWordLeftSelect = /** @class */ (function (_super) {
     return CursorWordLeftSelect;
 }(WordLeftCommand));
 export { CursorWordLeftSelect };
+// Accessibility navigation commands should only be enabled on windows since they are tuned to what NVDA expects
 var CursorWordAccessibilityLeft = /** @class */ (function (_super) {
     __extends(CursorWordAccessibilityLeft, _super);
     function CursorWordAccessibilityLeft() {
@@ -189,8 +190,7 @@ var CursorWordAccessibilityLeft = /** @class */ (function (_super) {
             precondition: undefined,
             kbOpts: {
                 kbExpr: ContextKeyExpr.and(EditorContextKeys.textInputFocus, CONTEXT_ACCESSIBILITY_MODE_ENABLED),
-                primary: 2048 /* CtrlCmd */ | 15 /* LeftArrow */,
-                mac: { primary: 512 /* Alt */ | 15 /* LeftArrow */ },
+                win: { primary: 2048 /* CtrlCmd */ | 15 /* LeftArrow */ },
                 weight: 100 /* EditorContrib */ + 1
             }
         }) || this;
@@ -211,8 +211,7 @@ var CursorWordAccessibilityLeftSelect = /** @class */ (function (_super) {
             precondition: undefined,
             kbOpts: {
                 kbExpr: ContextKeyExpr.and(EditorContextKeys.textInputFocus, CONTEXT_ACCESSIBILITY_MODE_ENABLED),
-                primary: 2048 /* CtrlCmd */ | 1024 /* Shift */ | 15 /* LeftArrow */,
-                mac: { primary: 512 /* Alt */ | 1024 /* Shift */ | 15 /* LeftArrow */ },
+                win: { primary: 2048 /* CtrlCmd */ | 1024 /* Shift */ | 15 /* LeftArrow */ },
                 weight: 100 /* EditorContrib */ + 1
             }
         }) || this;
@@ -323,8 +322,7 @@ var CursorWordAccessibilityRight = /** @class */ (function (_super) {
             precondition: undefined,
             kbOpts: {
                 kbExpr: ContextKeyExpr.and(EditorContextKeys.textInputFocus, CONTEXT_ACCESSIBILITY_MODE_ENABLED),
-                primary: 2048 /* CtrlCmd */ | 17 /* RightArrow */,
-                mac: { primary: 512 /* Alt */ | 17 /* RightArrow */ },
+                win: { primary: 2048 /* CtrlCmd */ | 17 /* RightArrow */ },
                 weight: 100 /* EditorContrib */ + 1
             }
         }) || this;
@@ -345,8 +343,7 @@ var CursorWordAccessibilityRightSelect = /** @class */ (function (_super) {
             precondition: undefined,
             kbOpts: {
                 kbExpr: ContextKeyExpr.and(EditorContextKeys.textInputFocus, CONTEXT_ACCESSIBILITY_MODE_ENABLED),
-                primary: 2048 /* CtrlCmd */ | 1024 /* Shift */ | 17 /* RightArrow */,
-                mac: { primary: 512 /* Alt */ | 1024 /* Shift */ | 17 /* RightArrow */ },
+                win: { primary: 2048 /* CtrlCmd */ | 1024 /* Shift */ | 17 /* RightArrow */ },
                 weight: 100 /* EditorContrib */ + 1
             }
         }) || this;
@@ -370,7 +367,7 @@ var DeleteWordCommand = /** @class */ (function (_super) {
         if (!editor.hasModel()) {
             return;
         }
-        var wordSeparators = getMapForWordSeparators(editor.getOption(92 /* wordSeparators */));
+        var wordSeparators = getMapForWordSeparators(editor.getOption(96 /* wordSeparators */));
         var model = editor.getModel();
         var selections = editor.getSelections();
         var commands = selections.map(function (sel) {

@@ -120,7 +120,7 @@ export { ViewOverlays };
 var ViewOverlayLine = /** @class */ (function () {
     function ViewOverlayLine(configuration, dynamicOverlays) {
         this._configuration = configuration;
-        this._lineHeight = this._configuration.options.get(47 /* lineHeight */);
+        this._lineHeight = this._configuration.options.get(49 /* lineHeight */);
         this._dynamicOverlays = dynamicOverlays;
         this._domNode = null;
         this._renderedContent = null;
@@ -141,7 +141,7 @@ var ViewOverlayLine = /** @class */ (function () {
         // Nothing
     };
     ViewOverlayLine.prototype.onConfigurationChanged = function (e) {
-        this._lineHeight = this._configuration.options.get(47 /* lineHeight */);
+        this._lineHeight = this._configuration.options.get(49 /* lineHeight */);
     };
     ViewOverlayLine.prototype.renderLine = function (lineNumber, deltaTop, viewportData, sb) {
         var result = '';
@@ -177,7 +177,7 @@ var ContentViewOverlays = /** @class */ (function (_super) {
     function ContentViewOverlays(context) {
         var _this = _super.call(this, context) || this;
         var options = _this._context.configuration.options;
-        var layoutInfo = options.get(103 /* layoutInfo */);
+        var layoutInfo = options.get(107 /* layoutInfo */);
         _this._contentWidth = layoutInfo.contentWidth;
         _this.domNode.setHeight(0);
         return _this;
@@ -185,7 +185,7 @@ var ContentViewOverlays = /** @class */ (function (_super) {
     // --- begin event handlers
     ContentViewOverlays.prototype.onConfigurationChanged = function (e) {
         var options = this._context.configuration.options;
-        var layoutInfo = options.get(103 /* layoutInfo */);
+        var layoutInfo = options.get(107 /* layoutInfo */);
         this._contentWidth = layoutInfo.contentWidth;
         return _super.prototype.onConfigurationChanged.call(this, e) || true;
     };
@@ -205,17 +205,17 @@ var MarginViewOverlays = /** @class */ (function (_super) {
     function MarginViewOverlays(context) {
         var _this = _super.call(this, context) || this;
         var options = _this._context.configuration.options;
-        var layoutInfo = options.get(103 /* layoutInfo */);
+        var layoutInfo = options.get(107 /* layoutInfo */);
         _this._contentLeft = layoutInfo.contentLeft;
         _this.domNode.setClassName('margin-view-overlays');
         _this.domNode.setWidth(1);
-        Configuration.applyFontInfo(_this.domNode, options.get(32 /* fontInfo */));
+        Configuration.applyFontInfo(_this.domNode, options.get(34 /* fontInfo */));
         return _this;
     }
     MarginViewOverlays.prototype.onConfigurationChanged = function (e) {
         var options = this._context.configuration.options;
-        Configuration.applyFontInfo(this.domNode, options.get(32 /* fontInfo */));
-        var layoutInfo = options.get(103 /* layoutInfo */);
+        Configuration.applyFontInfo(this.domNode, options.get(34 /* fontInfo */));
+        var layoutInfo = options.get(107 /* layoutInfo */);
         this._contentLeft = layoutInfo.contentLeft;
         return _super.prototype.onConfigurationChanged.call(this, e) || true;
     };

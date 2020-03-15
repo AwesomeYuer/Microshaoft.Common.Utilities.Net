@@ -507,6 +507,12 @@ var TokensStore2 = /** @class */ (function () {
             var bStartCharacter = bTokens.getStartCharacter(bIndex);
             var bEndCharacter = bTokens.getEndCharacter(bIndex);
             var bMetadata = bTokens.getMetadata(bIndex);
+            var bMask = (((bMetadata & 1 /* SEMANTIC_USE_ITALIC */) ? 2048 /* ITALIC_MASK */ : 0)
+                | ((bMetadata & 2 /* SEMANTIC_USE_BOLD */) ? 4096 /* BOLD_MASK */ : 0)
+                | ((bMetadata & 4 /* SEMANTIC_USE_UNDERLINE */) ? 8192 /* UNDERLINE_MASK */ : 0)
+                | ((bMetadata & 8 /* SEMANTIC_USE_FOREGROUND */) ? 8372224 /* FOREGROUND_MASK */ : 0)
+                | ((bMetadata & 16 /* SEMANTIC_USE_BACKGROUND */) ? 4286578688 /* BACKGROUND_MASK */ : 0)) >>> 0;
+            var aMask = (~bMask) >>> 0;
             // push any token from `a` that is before `b`
             while (aIndex < aLen && aTokens.getEndOffset(aIndex) <= bStartCharacter) {
                 result[resultLen++] = aTokens.getEndOffset(aIndex);
@@ -519,17 +525,23 @@ var TokensStore2 = /** @class */ (function () {
                 result[resultLen++] = aTokens.getMetadata(aIndex);
             }
             // skip any tokens from `a` that are contained inside `b`
-            while (aIndex < aLen && aTokens.getEndOffset(aIndex) <= bEndCharacter) {
+            while (aIndex < aLen && aTokens.getEndOffset(aIndex) < bEndCharacter) {
+                result[resultLen++] = aTokens.getEndOffset(aIndex);
+                result[resultLen++] = (aTokens.getMetadata(aIndex) & aMask) | (bMetadata & bMask);
                 aIndex++;
             }
-            var aMetadata = aTokens.getMetadata(aIndex - 1 > 0 ? aIndex - 1 : aIndex);
-            var languageId = TokenMetadata.getLanguageId(aMetadata);
-            var tokenType = TokenMetadata.getTokenType(aMetadata);
-            // push the token from `b`
-            result[resultLen++] = bEndCharacter;
-            result[resultLen++] = ((bMetadata & 4294965248 /* LANG_TTYPE_CMPL */)
-                | ((languageId << 0 /* LANGUAGEID_OFFSET */) >>> 0)
-                | ((tokenType << 8 /* TOKEN_TYPE_OFFSET */) >>> 0));
+            if (aIndex < aLen && aTokens.getEndOffset(aIndex) === bEndCharacter) {
+                // `a` ends exactly at the same spot as `b`!
+                result[resultLen++] = aTokens.getEndOffset(aIndex);
+                result[resultLen++] = (aTokens.getMetadata(aIndex) & aMask) | (bMetadata & bMask);
+                aIndex++;
+            }
+            else {
+                var aMergeIndex = Math.min(Math.max(0, aIndex - 1), aLen - 1);
+                // push the token from `b`
+                result[resultLen++] = bEndCharacter;
+                result[resultLen++] = (aTokens.getMetadata(aMergeIndex) & aMask) | (bMetadata & bMask);
+            }
         }
         // push the remaining tokens from `a`
         while (aIndex < aLen) {

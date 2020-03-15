@@ -25,8 +25,8 @@ var ViewZones = /** @class */ (function (_super) {
     function ViewZones(context) {
         var _this = _super.call(this, context) || this;
         var options = _this._context.configuration.options;
-        var layoutInfo = options.get(103 /* layoutInfo */);
-        _this._lineHeight = options.get(47 /* lineHeight */);
+        var layoutInfo = options.get(107 /* layoutInfo */);
+        _this._lineHeight = options.get(49 /* lineHeight */);
         _this._contentWidth = layoutInfo.contentWidth;
         _this._contentLeft = layoutInfo.contentLeft;
         _this.domNode = createFastDomNode(document.createElement('div'));
@@ -74,11 +74,11 @@ var ViewZones = /** @class */ (function (_super) {
     };
     ViewZones.prototype.onConfigurationChanged = function (e) {
         var options = this._context.configuration.options;
-        var layoutInfo = options.get(103 /* layoutInfo */);
-        this._lineHeight = options.get(47 /* lineHeight */);
+        var layoutInfo = options.get(107 /* layoutInfo */);
+        this._lineHeight = options.get(49 /* lineHeight */);
         this._contentWidth = layoutInfo.contentWidth;
         this._contentLeft = layoutInfo.contentLeft;
-        if (e.hasChanged(47 /* lineHeight */)) {
+        if (e.hasChanged(49 /* lineHeight */)) {
             this._recomputeWhitespacesProps();
         }
         return true;

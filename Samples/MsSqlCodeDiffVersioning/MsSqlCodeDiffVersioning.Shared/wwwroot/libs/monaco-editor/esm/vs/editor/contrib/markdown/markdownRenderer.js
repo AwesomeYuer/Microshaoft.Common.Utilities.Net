@@ -70,7 +70,7 @@ var MarkdownRenderer = /** @class */ (function (_super) {
                     }
                     return tokenizeToString(value, undefined);
                 }).then(function (code) {
-                    return "<span style=\"font-family: " + _this._editor.getOption(32 /* fontInfo */).fontFamily + "\">" + code + "</span>";
+                    return "<span style=\"font-family: " + _this._editor.getOption(34 /* fontInfo */).fontFamily + "\">" + code + "</span>";
                 });
             },
             codeBlockRenderCallback: function () { return _this._onDidRenderCodeBlock.fire(); },

@@ -339,7 +339,81 @@ var PieceTreeBase = /** @class */ (function () {
         return ret;
     };
     PieceTreeBase.prototype.getLinesContent = function () {
-        return this.getContentOfSubTree(this.root).split(/\r\n|\r|\n/);
+        var _this = this;
+        var lines = [];
+        var linesLength = 0;
+        var currentLine = '';
+        var danglingCR = false;
+        this.iterate(this.root, function (node) {
+            if (node === SENTINEL) {
+                return true;
+            }
+            var piece = node.piece;
+            var pieceLength = piece.length;
+            if (pieceLength === 0) {
+                return true;
+            }
+            var buffer = _this._buffers[piece.bufferIndex].buffer;
+            var lineStarts = _this._buffers[piece.bufferIndex].lineStarts;
+            var pieceStartLine = piece.start.line;
+            var pieceEndLine = piece.end.line;
+            var pieceStartOffset = lineStarts[pieceStartLine] + piece.start.column;
+            if (danglingCR) {
+                if (buffer.charCodeAt(pieceStartOffset) === 10 /* LineFeed */) {
+                    // pretend the \n was in the previous piece..
+                    pieceStartOffset++;
+                    pieceLength--;
+                }
+                lines[linesLength++] = currentLine;
+                currentLine = '';
+                danglingCR = false;
+                if (pieceLength === 0) {
+                    return true;
+                }
+            }
+            if (pieceStartLine === pieceEndLine) {
+                // this piece has no new lines
+                if (!_this._EOLNormalized && buffer.charCodeAt(pieceStartOffset + pieceLength - 1) === 13 /* CarriageReturn */) {
+                    danglingCR = true;
+                    currentLine += buffer.substr(pieceStartOffset, pieceLength - 1);
+                }
+                else {
+                    currentLine += buffer.substr(pieceStartOffset, pieceLength);
+                }
+                return true;
+            }
+            // add the text before the first line start in this piece
+            currentLine += (_this._EOLNormalized
+                ? buffer.substring(pieceStartOffset, Math.max(pieceStartOffset, lineStarts[pieceStartLine + 1] - _this._EOLLength))
+                : buffer.substring(pieceStartOffset, lineStarts[pieceStartLine + 1]).replace(/(\r\n|\r|\n)$/, ''));
+            lines[linesLength++] = currentLine;
+            for (var line = pieceStartLine + 1; line < pieceEndLine; line++) {
+                currentLine = (_this._EOLNormalized
+                    ? buffer.substring(lineStarts[line], lineStarts[line + 1] - _this._EOLLength)
+                    : buffer.substring(lineStarts[line], lineStarts[line + 1]).replace(/(\r\n|\r|\n)$/, ''));
+                lines[linesLength++] = currentLine;
+            }
+            if (!_this._EOLNormalized && buffer.charCodeAt(lineStarts[pieceEndLine] + piece.end.column - 1) === 13 /* CarriageReturn */) {
+                danglingCR = true;
+                if (piece.end.column === 0) {
+                    // The last line ended with a \r, let's undo the push, it will be pushed by next iteration
+                    linesLength--;
+                }
+                else {
+                    currentLine = buffer.substr(lineStarts[pieceEndLine], piece.end.column - 1);
+                }
+            }
+            else {
+                currentLine = buffer.substr(lineStarts[pieceEndLine], piece.end.column);
+            }
+            return true;
+        });
+        if (danglingCR) {
+            lines[linesLength++] = currentLine;
+            currentLine = '';
+        }
+        lines[linesLength++] = currentLine;
+        return lines;
     };
     PieceTreeBase.prototype.getLength = function () {
         return this._length;
@@ -1334,15 +1408,6 @@ var PieceTreeBase = /** @class */ (function () {
         }
         fixInsert(this, z);
         return z;
-    };
-    PieceTreeBase.prototype.getContentOfSubTree = function (node) {
-        var _this = this;
-        var str = '';
-        this.iterate(node, function (node) {
-            str += _this.getNodeContent(node);
-            return true;
-        });
-        return str;
     };
     return PieceTreeBase;
 }());

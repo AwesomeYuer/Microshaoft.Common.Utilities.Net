@@ -56,23 +56,23 @@ var MinimapOptions = /** @class */ (function () {
     function MinimapOptions(configuration) {
         var _this = this;
         var options = configuration.options;
-        var pixelRatio = options.get(101 /* pixelRatio */);
-        var layoutInfo = options.get(103 /* layoutInfo */);
-        var fontInfo = options.get(32 /* fontInfo */);
+        var pixelRatio = options.get(105 /* pixelRatio */);
+        var layoutInfo = options.get(107 /* layoutInfo */);
+        var fontInfo = options.get(34 /* fontInfo */);
         this.renderMinimap = layoutInfo.renderMinimap | 0;
-        this.scrollBeyondLastLine = options.get(76 /* scrollBeyondLastLine */);
-        var minimapOpts = options.get(52 /* minimap */);
+        this.scrollBeyondLastLine = options.get(80 /* scrollBeyondLastLine */);
+        var minimapOpts = options.get(54 /* minimap */);
         this.showSlider = minimapOpts.showSlider;
         this.fontScale = Math.round(minimapOpts.scale * pixelRatio);
         this.charRenderer = once(function () { return MinimapCharRendererFactory.create(_this.fontScale, fontInfo.fontFamily); });
         this.pixelRatio = pixelRatio;
         this.typicalHalfwidthCharacterWidth = fontInfo.typicalHalfwidthCharacterWidth;
-        this.lineHeight = options.get(47 /* lineHeight */);
+        this.lineHeight = options.get(49 /* lineHeight */);
         this.minimapLeft = layoutInfo.minimapLeft;
         this.minimapWidth = layoutInfo.minimapWidth;
         this.minimapHeight = layoutInfo.height;
-        this.canvasInnerWidth = Math.max(1, Math.floor(pixelRatio * this.minimapWidth));
-        this.canvasInnerHeight = Math.max(1, Math.floor(pixelRatio * this.minimapHeight));
+        this.canvasInnerWidth = Math.floor(pixelRatio * this.minimapWidth);
+        this.canvasInnerHeight = Math.floor(pixelRatio * this.minimapHeight);
         this.canvasOuterWidth = this.canvasInnerWidth / pixelRatio;
         this.canvasOuterHeight = this.canvasInnerHeight / pixelRatio;
     }
@@ -359,7 +359,7 @@ var Minimap = /** @class */ (function (_super) {
                 var initialMouseOrthogonalPosition_1 = e.posx;
                 var initialSliderState_1 = _this._lastRenderData.renderedLayout;
                 _this._slider.toggleClassName('active', true);
-                _this._sliderMouseMoveMonitor.startMonitoring(standardMouseMoveMerger, function (mouseMoveData) {
+                _this._sliderMouseMoveMonitor.startMonitoring(e.target, e.buttons, standardMouseMoveMerger, function (mouseMoveData) {
                     var mouseOrthogonalDelta = Math.abs(mouseMoveData.posx - initialMouseOrthogonalPosition_1);
                     if (platform.isWindows && mouseOrthogonalDelta > MOUSE_DRAG_RESET_DISTANCE) {
                         // The mouse has wondered away from the scrollbar => reset dragging
@@ -445,9 +445,11 @@ var Minimap = /** @class */ (function (_super) {
     };
     Minimap.prototype._getBuffer = function () {
         if (!this._buffers) {
-            this._buffers = new MinimapBuffers(this._canvas.domNode.getContext('2d'), this._options.canvasInnerWidth, this._options.canvasInnerHeight, this._tokensColorTracker.getColor(2 /* DefaultBackground */));
+            if (this._options.canvasInnerWidth > 0 && this._options.canvasInnerHeight > 0) {
+                this._buffers = new MinimapBuffers(this._canvas.domNode.getContext('2d'), this._options.canvasInnerWidth, this._options.canvasInnerHeight, this._tokensColorTracker.getColor(2 /* DefaultBackground */));
+            }
         }
-        return this._buffers.getBuffer();
+        return this._buffers ? this._buffers.getBuffer() : null;
     };
     Minimap.prototype._onOptionsMaybeChanged = function () {
         var opts = new MinimapOptions(this._context.configuration);
@@ -594,7 +596,7 @@ var Minimap = /** @class */ (function (_super) {
     Minimap.prototype.renderDecorationOnLine = function (canvasContext, lineOffsetMap, decorationRange, decorationColor, layout, lineNumber, height, lineHeight, tabSize, charWidth) {
         var y = (lineNumber - layout.startLineNumber) * lineHeight;
         // Skip rendering the line if it's vertically outside our viewport
-        if (y + height < 0 || y > this._options.canvasOuterHeight) {
+        if (y + height < 0 || y > this._options.canvasInnerHeight) {
             return;
         }
         // Cache line offset data so that it is only read once per line
@@ -648,6 +650,10 @@ var Minimap = /** @class */ (function (_super) {
         }
         // Oh well!! We need to repaint some lines...
         var imageData = this._getBuffer();
+        if (!imageData) {
+            // 0 width or 0 height canvas, nothing to do
+            return null;
+        }
         // Render untouched lines by using last rendered data.
         var _a = Minimap._renderUntouchedLines(imageData, startLineNumber, endLineNumber, minimapLineHeight, this._lastRenderData), _dirtyY1 = _a[0], _dirtyY2 = _a[1], needed = _a[2];
         // Fetch rendering info from view model for rest of lines that need rendering.

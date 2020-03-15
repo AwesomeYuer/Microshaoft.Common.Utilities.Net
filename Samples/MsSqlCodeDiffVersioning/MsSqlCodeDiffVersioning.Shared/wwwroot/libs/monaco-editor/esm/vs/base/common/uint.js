@@ -20,11 +20,3 @@ export function toUint32(v) {
     }
     return v | 0;
 }
-export function toUint32Array(arr) {
-    var len = arr.length;
-    var r = new Uint32Array(len);
-    for (var i = 0; i < len; i++) {
-        r[i] = toUint32(arr[i]);
-    }
-    return r;
-}

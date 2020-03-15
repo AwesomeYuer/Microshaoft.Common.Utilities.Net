@@ -202,7 +202,6 @@ var LinesLayout = /** @class */ (function () {
     };
     LinesLayout.prototype._checkPendingChanges = function () {
         if (this._pendingChanges.mustCommit()) {
-            console.warn("Commiting pending changes before change accessor leaves due to read access.");
             this._pendingChanges.commit(this);
         }
     };

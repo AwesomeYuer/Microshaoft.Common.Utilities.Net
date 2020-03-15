@@ -43,23 +43,22 @@ var KeybindingLabel = /** @class */ (function () {
         this.didEverRender = true;
     };
     KeybindingLabel.prototype.renderPart = function (parent, part, match) {
-        var _a, _b, _c, _d, _e;
         var modifierLabels = UILabelProvider.modifierLabels[this.os];
         if (part.ctrlKey) {
-            this.renderKey(parent, modifierLabels.ctrlKey, Boolean((_a = match) === null || _a === void 0 ? void 0 : _a.ctrlKey), modifierLabels.separator);
+            this.renderKey(parent, modifierLabels.ctrlKey, Boolean(match === null || match === void 0 ? void 0 : match.ctrlKey), modifierLabels.separator);
         }
         if (part.shiftKey) {
-            this.renderKey(parent, modifierLabels.shiftKey, Boolean((_b = match) === null || _b === void 0 ? void 0 : _b.shiftKey), modifierLabels.separator);
+            this.renderKey(parent, modifierLabels.shiftKey, Boolean(match === null || match === void 0 ? void 0 : match.shiftKey), modifierLabels.separator);
         }
         if (part.altKey) {
-            this.renderKey(parent, modifierLabels.altKey, Boolean((_c = match) === null || _c === void 0 ? void 0 : _c.altKey), modifierLabels.separator);
+            this.renderKey(parent, modifierLabels.altKey, Boolean(match === null || match === void 0 ? void 0 : match.altKey), modifierLabels.separator);
         }
         if (part.metaKey) {
-            this.renderKey(parent, modifierLabels.metaKey, Boolean((_d = match) === null || _d === void 0 ? void 0 : _d.metaKey), modifierLabels.separator);
+            this.renderKey(parent, modifierLabels.metaKey, Boolean(match === null || match === void 0 ? void 0 : match.metaKey), modifierLabels.separator);
         }
         var keyLabel = part.keyLabel;
         if (keyLabel) {
-            this.renderKey(parent, keyLabel, Boolean((_e = match) === null || _e === void 0 ? void 0 : _e.keyCode), '');
+            this.renderKey(parent, keyLabel, Boolean(match === null || match === void 0 ? void 0 : match.keyCode), '');
         }
     };
     KeybindingLabel.prototype.renderKey = function (parent, label, highlight, separator) {

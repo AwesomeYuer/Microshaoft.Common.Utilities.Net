@@ -53,9 +53,9 @@ var SelectionsOverlay = /** @class */ (function (_super) {
         _this._previousFrameVisibleRangesWithStyle = [];
         _this._context = context;
         var options = _this._context.configuration.options;
-        _this._lineHeight = options.get(47 /* lineHeight */);
-        _this._roundedSelection = options.get(72 /* roundedSelection */);
-        _this._typicalHalfwidthCharacterWidth = options.get(32 /* fontInfo */).typicalHalfwidthCharacterWidth;
+        _this._lineHeight = options.get(49 /* lineHeight */);
+        _this._roundedSelection = options.get(76 /* roundedSelection */);
+        _this._typicalHalfwidthCharacterWidth = options.get(34 /* fontInfo */).typicalHalfwidthCharacterWidth;
         _this._selections = [];
         _this._renderResult = null;
         _this._context.addEventHandler(_this);
@@ -69,9 +69,9 @@ var SelectionsOverlay = /** @class */ (function (_super) {
     // --- begin event handlers
     SelectionsOverlay.prototype.onConfigurationChanged = function (e) {
         var options = this._context.configuration.options;
-        this._lineHeight = options.get(47 /* lineHeight */);
-        this._roundedSelection = options.get(72 /* roundedSelection */);
-        this._typicalHalfwidthCharacterWidth = options.get(32 /* fontInfo */).typicalHalfwidthCharacterWidth;
+        this._lineHeight = options.get(49 /* lineHeight */);
+        this._roundedSelection = options.get(76 /* roundedSelection */);
+        this._typicalHalfwidthCharacterWidth = options.get(34 /* fontInfo */).typicalHalfwidthCharacterWidth;
         return true;
     };
     SelectionsOverlay.prototype.onCursorStateChanged = function (e) {

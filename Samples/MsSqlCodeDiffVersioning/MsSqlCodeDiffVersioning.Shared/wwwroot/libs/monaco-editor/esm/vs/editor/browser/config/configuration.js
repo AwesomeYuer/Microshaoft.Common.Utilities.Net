@@ -120,6 +120,7 @@ var CSSBasedConfiguration = /** @class */ (function (_super) {
                     typicalFullwidthCharacterWidth: Math.max(readConfig.typicalFullwidthCharacterWidth, 5),
                     canUseHalfwidthRightwardsArrow: readConfig.canUseHalfwidthRightwardsArrow,
                     spaceWidth: Math.max(readConfig.spaceWidth, 5),
+                    middotWidth: Math.max(readConfig.middotWidth, 5),
                     maxDigitWidth: Math.max(readConfig.maxDigitWidth, 5),
                 }, false);
             }
@@ -154,7 +155,8 @@ var CSSBasedConfiguration = /** @class */ (function (_super) {
         // monospace test: used for whitespace rendering
         var rightwardsArrow = this.createRequest('→', 0 /* Regular */, all, monospace);
         var halfwidthRightwardsArrow = this.createRequest('￫', 0 /* Regular */, all, null);
-        this.createRequest('·', 0 /* Regular */, all, monospace);
+        // middle dot character
+        var middot = this.createRequest('·', 0 /* Regular */, all, monospace);
         // monospace test: some characters
         this.createRequest('|', 0 /* Regular */, all, monospace);
         this.createRequest('/', 0 /* Regular */, all, monospace);
@@ -212,6 +214,7 @@ var CSSBasedConfiguration = /** @class */ (function (_super) {
             typicalFullwidthCharacterWidth: typicalFullwidthCharacter.width,
             canUseHalfwidthRightwardsArrow: canUseHalfwidthRightwardsArrow,
             spaceWidth: space.width,
+            middotWidth: middot.width,
             maxDigitWidth: maxDigitWidth
         }, canTrustBrowserZoomLevel);
     };
@@ -230,7 +233,7 @@ var Configuration = /** @class */ (function (_super) {
             _this._elementSizeObserver.startObserving();
         }
         _this._register(browser.onDidChangeZoomLevel(function (_) { return _this._recomputeOptions(); }));
-        _this._register(_this.accessibilityService.onDidChangeAccessibilitySupport(function () { return _this._recomputeOptions(); }));
+        _this._register(_this.accessibilityService.onDidChangeScreenReaderOptimized(function () { return _this._recomputeOptions(); }));
         _this._recomputeOptions();
         return _this;
     }
@@ -281,7 +284,9 @@ var Configuration = /** @class */ (function (_super) {
             emptySelectionClipboard: browser.isWebKit || browser.isFirefox,
             pixelRatio: browser.getPixelRatio(),
             zoomLevel: browser.getZoomLevel(),
-            accessibilitySupport: this.accessibilityService.getAccessibilitySupport()
+            accessibilitySupport: (this.accessibilityService.isScreenReaderOptimized()
+                ? 2 /* Enabled */
+                : this.accessibilityService.getAccessibilitySupport())
         };
     };
     Configuration.prototype.readConfiguration = function (bareFontInfo) {

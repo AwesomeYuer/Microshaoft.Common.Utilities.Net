@@ -141,7 +141,7 @@ var SaturationBox = /** @class */ (function (_super) {
         if (e.target !== this.selection) {
             this.onDidChangePosition(e.offsetX, e.offsetY);
         }
-        this.monitor.startMonitoring(standardMouseMoveMerger, function (event) { return _this.onDidChangePosition(event.posx - origin.left, event.posy - origin.top); }, function () { return null; });
+        this.monitor.startMonitoring(e.target, e.buttons, standardMouseMoveMerger, function (event) { return _this.onDidChangePosition(event.posx - origin.left, event.posy - origin.top); }, function () { return null; });
         var mouseUpListener = dom.addDisposableGenericMouseUpListner(document, function () {
             _this._onColorFlushed.fire();
             mouseUpListener.dispose();
@@ -227,7 +227,7 @@ var Strip = /** @class */ (function (_super) {
         if (e.target !== this.slider) {
             this.onDidChangeTop(e.offsetY);
         }
-        monitor.startMonitoring(standardMouseMoveMerger, function (event) { return _this.onDidChangeTop(event.posy - origin.top); }, function () { return null; });
+        monitor.startMonitoring(e.target, e.buttons, standardMouseMoveMerger, function (event) { return _this.onDidChangeTop(event.posy - origin.top); }, function () { return null; });
         var mouseUpListener = dom.addDisposableGenericMouseUpListner(document, function () {
             _this._onColorFlushed.fire();
             mouseUpListener.dispose();

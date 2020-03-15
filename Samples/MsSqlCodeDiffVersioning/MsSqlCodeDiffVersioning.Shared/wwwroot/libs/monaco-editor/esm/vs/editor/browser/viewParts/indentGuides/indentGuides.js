@@ -27,12 +27,12 @@ var IndentGuidesOverlay = /** @class */ (function (_super) {
         _this._context = context;
         _this._primaryLineNumber = 0;
         var options = _this._context.configuration.options;
-        var wrappingInfo = options.get(104 /* wrappingInfo */);
-        var fontInfo = options.get(32 /* fontInfo */);
-        _this._lineHeight = options.get(47 /* lineHeight */);
+        var wrappingInfo = options.get(108 /* wrappingInfo */);
+        var fontInfo = options.get(34 /* fontInfo */);
+        _this._lineHeight = options.get(49 /* lineHeight */);
         _this._spaceWidth = fontInfo.spaceWidth;
-        _this._enabled = options.get(67 /* renderIndentGuides */);
-        _this._activeIndentEnabled = options.get(41 /* highlightActiveIndentGuide */);
+        _this._enabled = options.get(70 /* renderIndentGuides */);
+        _this._activeIndentEnabled = options.get(43 /* highlightActiveIndentGuide */);
         _this._maxIndentLeft = wrappingInfo.wrappingColumn === -1 ? -1 : (wrappingInfo.wrappingColumn * fontInfo.typicalHalfwidthCharacterWidth);
         _this._renderResult = null;
         _this._context.addEventHandler(_this);
@@ -46,12 +46,12 @@ var IndentGuidesOverlay = /** @class */ (function (_super) {
     // --- begin event handlers
     IndentGuidesOverlay.prototype.onConfigurationChanged = function (e) {
         var options = this._context.configuration.options;
-        var wrappingInfo = options.get(104 /* wrappingInfo */);
-        var fontInfo = options.get(32 /* fontInfo */);
-        this._lineHeight = options.get(47 /* lineHeight */);
+        var wrappingInfo = options.get(108 /* wrappingInfo */);
+        var fontInfo = options.get(34 /* fontInfo */);
+        this._lineHeight = options.get(49 /* lineHeight */);
         this._spaceWidth = fontInfo.spaceWidth;
-        this._enabled = options.get(67 /* renderIndentGuides */);
-        this._activeIndentEnabled = options.get(41 /* highlightActiveIndentGuide */);
+        this._enabled = options.get(70 /* renderIndentGuides */);
+        this._activeIndentEnabled = options.get(43 /* highlightActiveIndentGuide */);
         this._maxIndentLeft = wrappingInfo.wrappingColumn === -1 ? -1 : (wrappingInfo.wrappingColumn * fontInfo.typicalHalfwidthCharacterWidth);
         return true;
     };
@@ -117,14 +117,16 @@ var IndentGuidesOverlay = /** @class */ (function (_super) {
             var lineIndex = lineNumber - visibleStartLineNumber;
             var indent = indents[lineIndex];
             var result = '';
-            var leftMostVisiblePosition = ctx.visibleRangeForPosition(new Position(lineNumber, 1));
-            var left = leftMostVisiblePosition ? leftMostVisiblePosition.left : 0;
-            for (var i = 1; i <= indent; i++) {
-                var className = (containsActiveIndentGuide && i === activeIndentLevel ? 'cigra' : 'cigr');
-                result += "<div class=\"" + className + "\" style=\"left:" + left + "px;height:" + lineHeight + "px;width:" + indentWidth + "px\"></div>";
-                left += indentWidth;
-                if (left > scrollWidth || (this._maxIndentLeft > 0 && left > this._maxIndentLeft)) {
-                    break;
+            if (indent >= 1) {
+                var leftMostVisiblePosition = ctx.visibleRangeForPosition(new Position(lineNumber, 1));
+                var left = leftMostVisiblePosition ? leftMostVisiblePosition.left : 0;
+                for (var i = 1; i <= indent; i++) {
+                    var className = (containsActiveIndentGuide && i === activeIndentLevel ? 'cigra' : 'cigr');
+                    result += "<div class=\"" + className + "\" style=\"left:" + left + "px;height:" + lineHeight + "px;width:" + indentWidth + "px\"></div>";
+                    left += indentWidth;
+                    if (left > scrollWidth || (this._maxIndentLeft > 0 && left > this._maxIndentLeft)) {
+                        break;
+                    }
                 }
             }
             output[lineIndex] = result;

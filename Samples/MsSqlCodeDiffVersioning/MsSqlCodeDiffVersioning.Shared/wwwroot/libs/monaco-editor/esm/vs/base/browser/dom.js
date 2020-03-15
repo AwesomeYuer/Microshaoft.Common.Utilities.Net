@@ -269,7 +269,7 @@ export function addDisposableGenericMouseUpListner(node, handler, useCapture) {
 export function addDisposableNonBubblingMouseOutListener(node, handler) {
     return addDisposableListener(node, 'mouseout', function (e) {
         // Mouse out bubbles, so this is an attempt to ignore faux mouse outs coming from children elements
-        var toElement = (e.relatedTarget || e.target);
+        var toElement = (e.relatedTarget);
         while (toElement && toElement !== node) {
             toElement = toElement.parentNode;
         }
@@ -282,7 +282,7 @@ export function addDisposableNonBubblingMouseOutListener(node, handler) {
 export function addDisposableNonBubblingPointerOutListener(node, handler) {
     return addDisposableListener(node, 'pointerout', function (e) {
         // Mouse out bubbles, so this is an attempt to ignore faux mouse outs coming from children elements
-        var toElement = (e.relatedTarget || e.target);
+        var toElement = (e.relatedTarget);
         while (toElement && toElement !== node) {
             toElement = toElement.parentNode;
         }
@@ -437,6 +437,36 @@ export function addDisposableThrottledListener(node, type, handler, eventMerger,
 export function getComputedStyle(el) {
     return document.defaultView.getComputedStyle(el, null);
 }
+export function getClientArea(element) {
+    // Try with DOM clientWidth / clientHeight
+    if (element !== document.body) {
+        return new Dimension(element.clientWidth, element.clientHeight);
+    }
+    // If visual view port exits and it's on mobile, it should be used instead of window innerWidth / innerHeight, or document.body.clientWidth / document.body.clientHeight
+    if (platform.isIOS && window.visualViewport) {
+        var width = window.visualViewport.width;
+        var height = window.visualViewport.height - (browser.isStandalone
+            // in PWA mode, the visual viewport always includes the safe-area-inset-bottom (which is for the home indicator)
+            // even when you are using the onscreen monitor, the visual viewport will include the area between system statusbar and the onscreen keyboard
+            // plus the area between onscreen keyboard and the bottom bezel, which is 20px on iOS.
+            ? (20 + 4) // + 4px for body margin
+            : 0);
+        return new Dimension(width, height);
+    }
+    // Try innerWidth / innerHeight
+    if (window.innerWidth && window.innerHeight) {
+        return new Dimension(window.innerWidth, window.innerHeight);
+    }
+    // Try with document.body.clientWidth / document.body.clientHeight
+    if (document.body && document.body.clientWidth && document.body.clientHeight) {
+        return new Dimension(document.body.clientWidth, document.body.clientHeight);
+    }
+    // Try with document.documentElement.clientWidth / document.documentElement.clientHeight
+    if (document.documentElement && document.documentElement.clientWidth && document.documentElement.clientHeight) {
+        return new Dimension(document.documentElement.clientWidth, document.documentElement.clientHeight);
+    }
+    throw new Error('Unable to figure out browser width and height');
+}
 var SizeUtils = /** @class */ (function () {
     function SizeUtils() {
     }
@@ -510,10 +540,14 @@ export { Dimension };
 export function getTopLeftOffset(element) {
     // Adapted from WinJS.Utilities.getPosition
     // and added borders to the mix
-    var offsetParent = element.offsetParent, top = element.offsetTop, left = element.offsetLeft;
-    while ((element = element.parentNode) !== null && element !== document.body && element !== document.documentElement) {
+    var offsetParent = element.offsetParent;
+    var top = element.offsetTop;
+    var left = element.offsetLeft;
+    while ((element = element.parentNode) !== null
+        && element !== document.body
+        && element !== document.documentElement) {
         top -= element.scrollTop;
-        var c = getComputedStyle(element);
+        var c = isShadowRoot(element) ? null : getComputedStyle(element);
         if (c) {
             left -= c.direction !== 'rtl' ? element.scrollLeft : -element.scrollLeft;
         }
@@ -608,7 +642,7 @@ export function isAncestor(testChild, testAncestor) {
     return false;
 }
 export function findParentWithClass(node, clazz, stopAtClazzOrNode) {
-    while (node) {
+    while (node && node.nodeType === node.ELEMENT_NODE) {
         if (hasClass(node, clazz)) {
             return node;
         }
@@ -627,6 +661,22 @@ export function findParentWithClass(node, clazz, stopAtClazzOrNode) {
         node = node.parentNode;
     }
     return null;
+}
+export function isShadowRoot(node) {
+    return (node && !!node.host && !!node.mode);
+}
+export function isInShadowDOM(domNode) {
+    return !!getShadowRoot(domNode);
+}
+export function getShadowRoot(domNode) {
+    while (domNode.parentNode) {
+        if (domNode === document.body) {
+            // reached the body
+            return null;
+        }
+        domNode = domNode.parentNode;
+    }
+    return isShadowRoot(domNode) ? domNode : null;
 }
 export function createStyleSheet(container) {
     if (container === void 0) { container = document.getElementsByTagName('head')[0]; }
@@ -927,7 +977,7 @@ export function hide() {
     }
 }
 function findParentWithAttribute(node, attribute) {
-    while (node) {
+    while (node && node.nodeType === node.ELEMENT_NODE) {
         if (node instanceof HTMLElement && node.hasAttribute(attribute)) {
             return node;
         }

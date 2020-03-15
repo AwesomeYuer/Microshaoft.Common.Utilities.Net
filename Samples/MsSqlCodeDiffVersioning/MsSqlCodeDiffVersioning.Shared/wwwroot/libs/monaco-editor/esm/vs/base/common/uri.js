@@ -315,7 +315,7 @@ var URI = /** @class */ (function () {
 }());
 export { URI };
 var _pathSepMarker = isWindows ? 1 : undefined;
-// tslint:disable-next-line:class-name
+// eslint-disable-next-line @typescript-eslint/class-name-casing
 var _URI = /** @class */ (function (_super) {
     __extends(_URI, _super);
     function _URI() {

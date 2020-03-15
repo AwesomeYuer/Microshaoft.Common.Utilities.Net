@@ -422,7 +422,7 @@ var TextModel = /** @class */ (function (_super) {
     };
     TextModel.prototype.getOffsetAt = function (rawPosition) {
         this._assertNotDisposed();
-        var position = this._validatePosition(rawPosition.lineNumber, rawPosition.column, false);
+        var position = this._validatePosition(rawPosition.lineNumber, rawPosition.column, 0 /* Relaxed */);
         return this._buffer.getOffsetAt(position.lineNumber, position.column);
     };
     TextModel.prototype.getPositionAt = function (rawOffset) {
@@ -593,10 +593,7 @@ var TextModel = /** @class */ (function (_super) {
         }
         return new Range(startLineNumber, startColumn, endLineNumber, endColumn);
     };
-    /**
-     * @param strict Do NOT allow a position inside a high-low surrogate pair
-     */
-    TextModel.prototype._isValidPosition = function (lineNumber, column, strict) {
+    TextModel.prototype._isValidPosition = function (lineNumber, column, validationType) {
         if (typeof lineNumber !== 'number' || typeof column !== 'number') {
             return false;
         }
@@ -613,22 +610,23 @@ var TextModel = /** @class */ (function (_super) {
         if (lineNumber > lineCount) {
             return false;
         }
+        if (column === 1) {
+            return true;
+        }
         var maxColumn = this.getLineMaxColumn(lineNumber);
         if (column > maxColumn) {
             return false;
         }
-        if (strict) {
-            var charStartOffset = strings.getCharContainingOffset(this._buffer.getLineContent(lineNumber), column - 1)[0];
-            if (column !== charStartOffset + 1) {
+        if (validationType === 1 /* SurrogatePairs */) {
+            // !!At this point, column > 1
+            var charCodeBefore = this._buffer.getLineCharCode(lineNumber, column - 2);
+            if (strings.isHighSurrogate(charCodeBefore)) {
                 return false;
             }
         }
         return true;
     };
-    /**
-     * @param strict Do NOT allow a position inside a high-low surrogate pair
-     */
-    TextModel.prototype._validatePosition = function (_lineNumber, _column, strict) {
+    TextModel.prototype._validatePosition = function (_lineNumber, _column, validationType) {
         var lineNumber = Math.floor((typeof _lineNumber === 'number' && !isNaN(_lineNumber)) ? _lineNumber : 1);
         var column = Math.floor((typeof _column === 'number' && !isNaN(_column)) ? _column : 1);
         var lineCount = this._buffer.getLineCount();
@@ -645,89 +643,88 @@ var TextModel = /** @class */ (function (_super) {
         if (column >= maxColumn) {
             return new Position(lineNumber, maxColumn);
         }
-        if (strict) {
-            var charStartOffset = strings.getCharContainingOffset(this._buffer.getLineContent(lineNumber), column - 1)[0];
-            if (column !== charStartOffset + 1) {
-                return new Position(lineNumber, charStartOffset + 1);
+        if (validationType === 1 /* SurrogatePairs */) {
+            // If the position would end up in the middle of a high-low surrogate pair,
+            // we move it to before the pair
+            // !!At this point, column > 1
+            var charCodeBefore = this._buffer.getLineCharCode(lineNumber, column - 2);
+            if (strings.isHighSurrogate(charCodeBefore)) {
+                return new Position(lineNumber, column - 1);
             }
         }
         return new Position(lineNumber, column);
     };
     TextModel.prototype.validatePosition = function (position) {
+        var validationType = 1 /* SurrogatePairs */;
         this._assertNotDisposed();
         // Avoid object allocation and cover most likely case
         if (position instanceof Position) {
-            if (this._isValidPosition(position.lineNumber, position.column, true)) {
+            if (this._isValidPosition(position.lineNumber, position.column, validationType)) {
                 return position;
             }
         }
-        return this._validatePosition(position.lineNumber, position.column, true);
+        return this._validatePosition(position.lineNumber, position.column, validationType);
     };
-    /**
-     * @param strict Do NOT allow a range to have its boundaries inside a high-low surrogate pair
-     */
-    TextModel.prototype._isValidRange = function (range, strict) {
+    TextModel.prototype._isValidRange = function (range, validationType) {
         var startLineNumber = range.startLineNumber;
         var startColumn = range.startColumn;
         var endLineNumber = range.endLineNumber;
         var endColumn = range.endColumn;
-        if (!this._isValidPosition(startLineNumber, startColumn, false)) {
+        if (!this._isValidPosition(startLineNumber, startColumn, 0 /* Relaxed */)) {
             return false;
         }
-        if (!this._isValidPosition(endLineNumber, endColumn, false)) {
+        if (!this._isValidPosition(endLineNumber, endColumn, 0 /* Relaxed */)) {
             return false;
         }
-        if (strict) {
-            var startLineContent = this._buffer.getLineContent(startLineNumber);
-            if (startColumn < startLineContent.length + 1) {
-                var charStartOffset = strings.getCharContainingOffset(startLineContent, startColumn - 1)[0];
-                if (startColumn !== charStartOffset + 1) {
-                    return false;
-                }
+        if (validationType === 1 /* SurrogatePairs */) {
+            var charCodeBeforeStart = (startColumn > 1 ? this._buffer.getLineCharCode(startLineNumber, startColumn - 2) : 0);
+            var charCodeBeforeEnd = (endColumn > 1 && endColumn <= this._buffer.getLineLength(endLineNumber) ? this._buffer.getLineCharCode(endLineNumber, endColumn - 2) : 0);
+            var startInsideSurrogatePair = strings.isHighSurrogate(charCodeBeforeStart);
+            var endInsideSurrogatePair = strings.isHighSurrogate(charCodeBeforeEnd);
+            if (!startInsideSurrogatePair && !endInsideSurrogatePair) {
+                return true;
             }
-            if (endColumn >= 2) {
-                var endLineContent = (endLineNumber === startLineNumber ? startLineContent : this._buffer.getLineContent(endLineNumber));
-                var _a = strings.getCharContainingOffset(endLineContent, endColumn - 2), charEndOffset = _a[1];
-                if (endColumn !== charEndOffset + 1) {
-                    return false;
-                }
-            }
-            return true;
+            return false;
         }
         return true;
     };
     TextModel.prototype.validateRange = function (_range) {
+        var validationType = 1 /* SurrogatePairs */;
         this._assertNotDisposed();
         // Avoid object allocation and cover most likely case
         if ((_range instanceof Range) && !(_range instanceof Selection)) {
-            if (this._isValidRange(_range, true)) {
+            if (this._isValidRange(_range, validationType)) {
                 return _range;
             }
         }
-        var start = this._validatePosition(_range.startLineNumber, _range.startColumn, false);
-        var end = this._validatePosition(_range.endLineNumber, _range.endColumn, false);
+        var start = this._validatePosition(_range.startLineNumber, _range.startColumn, 0 /* Relaxed */);
+        var end = this._validatePosition(_range.endLineNumber, _range.endColumn, 0 /* Relaxed */);
         var startLineNumber = start.lineNumber;
         var startColumn = start.column;
         var endLineNumber = end.lineNumber;
         var endColumn = end.column;
-        var isEmpty = (startLineNumber === endLineNumber && startColumn === endColumn);
-        var startLineContent = this._buffer.getLineContent(startLineNumber);
-        if (startColumn < startLineContent.length + 1) {
-            var charStartOffset = strings.getCharContainingOffset(startLineContent, startColumn - 1)[0];
-            if (startColumn !== charStartOffset + 1) {
-                if (isEmpty) {
-                    // do not expand a collapsed range, simply move it to a valid location
-                    return new Range(startLineNumber, charStartOffset + 1, startLineNumber, charStartOffset + 1);
-                }
-                startColumn = charStartOffset + 1;
+        if (validationType === 1 /* SurrogatePairs */) {
+            var charCodeBeforeStart = (startColumn > 1 ? this._buffer.getLineCharCode(startLineNumber, startColumn - 2) : 0);
+            var charCodeBeforeEnd = (endColumn > 1 && endColumn <= this._buffer.getLineLength(endLineNumber) ? this._buffer.getLineCharCode(endLineNumber, endColumn - 2) : 0);
+            var startInsideSurrogatePair = strings.isHighSurrogate(charCodeBeforeStart);
+            var endInsideSurrogatePair = strings.isHighSurrogate(charCodeBeforeEnd);
+            if (!startInsideSurrogatePair && !endInsideSurrogatePair) {
+                return new Range(startLineNumber, startColumn, endLineNumber, endColumn);
             }
-        }
-        if (endColumn >= 2) {
-            var endLineContent = (endLineNumber === startLineNumber ? startLineContent : this._buffer.getLineContent(endLineNumber));
-            var _a = strings.getCharContainingOffset(endLineContent, endColumn - 2), charEndOffset = _a[1];
-            if (endColumn !== charEndOffset + 1) {
-                endColumn = charEndOffset + 1;
+            if (startLineNumber === endLineNumber && startColumn === endColumn) {
+                // do not expand a collapsed range, simply move it to a valid location
+                return new Range(startLineNumber, startColumn - 1, endLineNumber, endColumn - 1);
             }
+            if (startInsideSurrogatePair && endInsideSurrogatePair) {
+                // expand range at both ends
+                return new Range(startLineNumber, startColumn - 1, endLineNumber, endColumn + 1);
+            }
+            if (startInsideSurrogatePair) {
+                // only expand range at the start
+                return new Range(startLineNumber, startColumn - 1, endLineNumber, endColumn);
+            }
+            // only expand range at the end
+            return new Range(startLineNumber, startColumn, endLineNumber, endColumn + 1);
         }
         return new Range(startLineNumber, startColumn, endLineNumber, endColumn);
     };
@@ -1466,6 +1463,7 @@ var TextModel = /** @class */ (function (_super) {
     TextModel.prototype._matchBracket = function (position) {
         var lineNumber = position.lineNumber;
         var lineTokens = this._getLineTokens(lineNumber);
+        var tokenCount = lineTokens.getCount();
         var lineText = this._buffer.getLineContent(lineNumber);
         var tokenIndex = lineTokens.findTokenIndexAtOffset(position.column - 1);
         if (tokenIndex < 0) {
@@ -1476,6 +1474,15 @@ var TextModel = /** @class */ (function (_super) {
         if (currentModeBrackets && !ignoreBracketsInToken(lineTokens.getStandardTokenType(tokenIndex))) {
             // limit search to not go before `maxBracketLength`
             var searchStartOffset = Math.max(0, position.column - 1 - currentModeBrackets.maxBracketLength);
+            for (var i = tokenIndex - 1; i >= 0; i--) {
+                var tokenEndOffset = lineTokens.getEndOffset(i);
+                if (tokenEndOffset <= searchStartOffset) {
+                    break;
+                }
+                if (ignoreBracketsInToken(lineTokens.getStandardTokenType(i))) {
+                    searchStartOffset = tokenEndOffset;
+                }
+            }
             // limit search to not go after `maxBracketLength`
             var searchEndOffset = Math.min(lineText.length, position.column - 1 + currentModeBrackets.maxBracketLength);
             // it might be the case that [currentTokenStart -> currentTokenEnd] contains multiple brackets
@@ -1510,6 +1517,15 @@ var TextModel = /** @class */ (function (_super) {
                 // limit search in case previous token is very large, there's no need to go beyond `maxBracketLength`
                 var searchStartOffset = Math.max(0, position.column - 1 - prevModeBrackets.maxBracketLength);
                 var searchEndOffset = Math.min(lineText.length, position.column - 1 + prevModeBrackets.maxBracketLength);
+                for (var i = prevTokenIndex + 1; i < tokenCount; i++) {
+                    var tokenStartOffset = lineTokens.getStartOffset(i);
+                    if (tokenStartOffset >= searchEndOffset) {
+                        break;
+                    }
+                    if (ignoreBracketsInToken(lineTokens.getStandardTokenType(i))) {
+                        searchEndOffset = tokenStartOffset;
+                    }
+                }
                 var foundBracket = BracketsUtils.findPrevBracketInRange(prevModeBrackets.reversedRegex, lineNumber, lineText, searchStartOffset, searchEndOffset);
                 // check that we didn't hit a bracket too far away from position
                 if (foundBracket && foundBracket.startColumn <= position.column && position.column <= foundBracket.endColumn) {

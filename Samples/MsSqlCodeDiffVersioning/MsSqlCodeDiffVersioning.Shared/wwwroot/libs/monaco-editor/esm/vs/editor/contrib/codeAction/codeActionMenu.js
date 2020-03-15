@@ -71,13 +71,22 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 import { getDomNodePagePosition } from '../../../base/browser/dom.js';
+import { Separator } from '../../../base/browser/ui/actionbar/actionbar.js';
 import { Action } from '../../../base/common/actions.js';
 import { canceled } from '../../../base/common/errors.js';
 import { Lazy } from '../../../base/common/lazy.js';
 import { Disposable, MutableDisposable } from '../../../base/common/lifecycle.js';
 import { Position } from '../../common/core/position.js';
-import { refactorCommandId, sourceActionCommandId, codeActionCommandId, organizeImportsCommandId, fixAllCommandId } from './codeAction.js';
+import { CodeActionProviderRegistry } from '../../common/modes.js';
+import { codeActionCommandId, fixAllCommandId, organizeImportsCommandId, refactorCommandId, sourceActionCommandId } from './codeAction.js';
 import { CodeActionCommandArgs, CodeActionKind } from './types.js';
 import { IContextMenuService } from '../../../platform/contextview/browser/contextView.js';
 import { IKeybindingService } from '../../../platform/keybinding/common/keybinding.js';
@@ -111,7 +120,7 @@ var CodeActionMenu = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
-    CodeActionMenu.prototype.show = function (codeActions, at, options) {
+    CodeActionMenu.prototype.show = function (trigger, codeActions, at, options) {
         return __awaiter(this, void 0, void 0, function () {
             var actionsToShow, menuActions, anchor, resolver;
             var _this = this;
@@ -128,9 +137,7 @@ var CodeActionMenu = /** @class */ (function (_super) {
                 }
                 this._visible = true;
                 this._showingActions.value = codeActions;
-                menuActions = actionsToShow.map(function (action) {
-                    return new CodeActionAction(action, function () { return _this._delegate.onSelectCodeAction(action); });
-                });
+                menuActions = this.getMenuActions(trigger, actionsToShow);
                 anchor = Position.isIPosition(at) ? this._toCoords(at) : at || { x: 0, y: 0 };
                 resolver = this._keybindingResolver.getResolver();
                 this._contextMenuService.showContextMenu({
@@ -146,6 +153,29 @@ var CodeActionMenu = /** @class */ (function (_super) {
                 return [2 /*return*/];
             });
         });
+    };
+    CodeActionMenu.prototype.getMenuActions = function (trigger, actionsToShow) {
+        var _this = this;
+        var _a, _b;
+        var toCodeActionAction = function (action) { return new CodeActionAction(action, function () { return _this._delegate.onSelectCodeAction(action); }); };
+        var result = actionsToShow
+            .map(toCodeActionAction);
+        var model = this._editor.getModel();
+        if (model && result.length) {
+            for (var _i = 0, _c = CodeActionProviderRegistry.all(model); _i < _c.length; _i++) {
+                var provider = _c[_i];
+                if (provider._getAdditionalMenuItems) {
+                    var items = provider._getAdditionalMenuItems({ trigger: trigger.type, only: (_b = (_a = trigger.filter) === null || _a === void 0 ? void 0 : _a.include) === null || _b === void 0 ? void 0 : _b.value }, actionsToShow);
+                    if (items.length) {
+                        result.push.apply(result, __spreadArrays([new Separator()], items.map(function (command) { return toCodeActionAction({
+                            title: command.title,
+                            command: command,
+                        }); })));
+                    }
+                }
+            }
+        }
+        return result;
     };
     CodeActionMenu.prototype._toCoords = function (position) {
         if (!this._editor.hasModel()) {
@@ -194,10 +224,9 @@ var CodeActionKeybindingResolver = /** @class */ (function () {
             });
         });
         return function (action) {
-            var _a;
             if (action.kind) {
                 var binding = _this.bestKeybindingForCodeAction(action, allCodeActionBindings.getValue());
-                return (_a = binding) === null || _a === void 0 ? void 0 : _a.resolvedKeybinding;
+                return binding === null || binding === void 0 ? void 0 : binding.resolvedKeybinding;
             }
             return undefined;
         };

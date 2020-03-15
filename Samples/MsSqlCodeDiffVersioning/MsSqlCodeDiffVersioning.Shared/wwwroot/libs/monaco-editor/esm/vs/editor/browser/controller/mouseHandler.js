@@ -62,7 +62,7 @@ var MouseHandler = /** @class */ (function (_super) {
         _this._register(mouseEvents.onMouseDown(_this.viewHelper.viewDomNode, function (e) { return _this._onMouseDown(e); }));
         var onMouseWheel = function (browserEvent) {
             _this.viewController.emitMouseWheel(browserEvent);
-            if (!_this._context.configuration.options.get(55 /* mouseWheelZoom */)) {
+            if (!_this._context.configuration.options.get(57 /* mouseWheelZoom */)) {
                 return;
             }
             var e = new StandardWheelEvent(browserEvent);
@@ -151,7 +151,7 @@ var MouseHandler = /** @class */ (function (_super) {
         var targetIsContent = (t.type === 6 /* CONTENT_TEXT */ || t.type === 7 /* CONTENT_EMPTY */);
         var targetIsGutter = (t.type === 2 /* GUTTER_GLYPH_MARGIN */ || t.type === 3 /* GUTTER_LINE_NUMBERS */ || t.type === 4 /* GUTTER_LINE_DECORATIONS */);
         var targetIsLineNumbers = (t.type === 3 /* GUTTER_LINE_NUMBERS */);
-        var selectOnLineNumbers = this._context.configuration.options.get(79 /* selectOnLineNumbers */);
+        var selectOnLineNumbers = this._context.configuration.options.get(83 /* selectOnLineNumbers */);
         var targetIsViewZone = (t.type === 8 /* CONTENT_VIEW_ZONE */ || t.type === 5 /* GUTTER_VIEW_ZONE */);
         var targetIsWidget = (t.type === 9 /* CONTENT_WIDGET */);
         var shouldHandle = e.leftButton || e.middleButton;
@@ -255,8 +255,8 @@ var MouseDownOperation = /** @class */ (function (_super) {
         // Overwrite the detail of the MouseEvent, as it will be sent out in an event and contributions might rely on it.
         e.detail = this._mouseState.count;
         var options = this._context.configuration.options;
-        if (!options.get(65 /* readOnly */)
-            && options.get(23 /* dragAndDrop */)
+        if (!options.get(68 /* readOnly */)
+            && options.get(24 /* dragAndDrop */)
             && !this._mouseState.altKey // we don't support multiple mouse
             && e.detail < 2 // only single click on a selection can work
             && !this._isActive // the mouse is not down yet
@@ -266,7 +266,7 @@ var MouseDownOperation = /** @class */ (function (_super) {
         ) {
             this._mouseState.isDragAndDrop = true;
             this._isActive = true;
-            this._mouseMoveMonitor.startMonitoring(createMouseMoveEventMerger(null), function (e) { return _this._onMouseDownThenMove(e); }, function () {
+            this._mouseMoveMonitor.startMonitoring(e.target, e.buttons, createMouseMoveEventMerger(null), function (e) { return _this._onMouseDownThenMove(e); }, function () {
                 var position = _this._findMousePosition(_this._lastMouseEvent, true);
                 _this._viewController.emitMouseDrop({
                     event: _this._lastMouseEvent,
@@ -280,7 +280,7 @@ var MouseDownOperation = /** @class */ (function (_super) {
         this._dispatchMouse(position, e.shiftKey);
         if (!this._isActive) {
             this._isActive = true;
-            this._mouseMoveMonitor.startMonitoring(createMouseMoveEventMerger(null), function (e) { return _this._onMouseDownThenMove(e); }, function () { return _this._stop(); });
+            this._mouseMoveMonitor.startMonitoring(e.target, e.buttons, createMouseMoveEventMerger(null), function (e) { return _this._onMouseDownThenMove(e); }, function () { return _this._stop(); });
         }
     };
     MouseDownOperation.prototype._stop = function () {

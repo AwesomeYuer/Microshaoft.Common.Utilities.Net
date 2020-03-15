@@ -334,7 +334,7 @@ var BaseMenuActionViewItem = /** @class */ (function (_super) {
                 this.item.setAttribute('aria-keyshortcuts', "" + this.mnemonic);
             }
         }
-        this.check = append(this.item, $('span.menu-item-check'));
+        this.check = append(this.item, $('span.menu-item-check.codicon.codicon-check'));
         this.check.setAttribute('role', 'none');
         this.label = append(this.item, $('span.action-label'));
         if (this.options.label && this.options.keybinding) {
@@ -478,14 +478,14 @@ var BaseMenuActionViewItem = /** @class */ (function (_super) {
         }
         var isSelected = this.element && hasClass(this.element, 'focused');
         var fgColor = isSelected && this.menuStyle.selectionForegroundColor ? this.menuStyle.selectionForegroundColor : this.menuStyle.foregroundColor;
-        var bgColor = isSelected && this.menuStyle.selectionBackgroundColor ? this.menuStyle.selectionBackgroundColor : this.menuStyle.backgroundColor;
+        var bgColor = isSelected && this.menuStyle.selectionBackgroundColor ? this.menuStyle.selectionBackgroundColor : undefined;
         var border = isSelected && this.menuStyle.selectionBorderColor ? "thin solid " + this.menuStyle.selectionBorderColor : '';
         if (this.item) {
-            this.item.style.color = fgColor ? "" + fgColor : null;
-            this.item.style.backgroundColor = bgColor ? "" + bgColor : '';
+            this.item.style.color = fgColor ? fgColor.toString() : '';
+            this.item.style.backgroundColor = bgColor ? bgColor.toString() : '';
         }
         if (this.check) {
-            this.check.style.backgroundColor = fgColor ? "" + fgColor : '';
+            this.check.style.color = fgColor ? fgColor.toString() : '';
         }
         if (this.container) {
             this.container.style.border = border;
@@ -532,7 +532,7 @@ var SubmenuMenuActionViewItem = /** @class */ (function (_super) {
             addClass(this.item, 'monaco-submenu-item');
             this.item.setAttribute('aria-haspopup', 'true');
             this.updateAriaExpanded('false');
-            this.submenuIndicator = append(this.item, $('span.submenu-indicator'));
+            this.submenuIndicator = append(this.item, $('span.submenu-indicator.codicon.codicon-chevron-right'));
             this.submenuIndicator.setAttribute('aria-hidden', 'true');
         }
         this._register(addDisposableListener(this.element, EventType.KEY_UP, function (e) {
@@ -661,7 +661,7 @@ var SubmenuMenuActionViewItem = /** @class */ (function (_super) {
         var isSelected = this.element && hasClass(this.element, 'focused');
         var fgColor = isSelected && this.menuStyle.selectionForegroundColor ? this.menuStyle.selectionForegroundColor : this.menuStyle.foregroundColor;
         if (this.submenuIndicator) {
-            this.submenuIndicator.style.backgroundColor = fgColor ? "" + fgColor : '';
+            this.submenuIndicator.style.color = fgColor ? "" + fgColor : '';
         }
         if (this.parentData.submenu) {
             this.parentData.submenu.style(this.menuStyle);

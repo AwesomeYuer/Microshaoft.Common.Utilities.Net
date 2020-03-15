@@ -33,7 +33,7 @@ var IPadShowKeyboard = /** @class */ (function (_super) {
         return _this;
     }
     IPadShowKeyboard.prototype.update = function () {
-        var shouldHaveWidget = (!this.editor.getOption(65 /* readOnly */));
+        var shouldHaveWidget = (!this.editor.getOption(68 /* readOnly */));
         if (!this.widget && shouldHaveWidget) {
             this.widget = new ShowKeyboardWidget(this.editor);
         }

@@ -1,6 +1,6 @@
 /*!-----------------------------------------------------------
  * Copyright (c) Microsoft Corporation. All rights reserved.
- * Version: 0.19.3(4bbae4b7d81ecff78ba65ddc8227b542e734257e)
+ * Version: 0.20.0(6363745c0a33c27b149b89342a7b96d354fb554c)
  * Released under the MIT license
  * https://github.com/Microsoft/vscode/blob/master/LICENSE.txt
  *-----------------------------------------------------------*/
@@ -124,6 +124,7 @@ define("vs/editor/editor.main.nls.fr", {
 		"Supprimer l\'espace blanc de fin inséré automatiquement.",
 		"Traitement spécial des fichiers volumineux pour désactiver certaines fonctionnalités utilisant beaucoup de mémoire.",
 		"Contrôle si la saisie semi-automatique doit être calculée en fonction des mots présents dans le document.",
+		"Controls whether the semanticHighlighting is shown for the languages that support it.",
 		"Garder les éditeurs d\'aperçu ouverts même si l\'utilisateur double-clique sur son contenu ou appuie sur la touche Échap. ",
 		"Les lignes plus longues que cette valeur ne sont pas tokenisées pour des raisons de performances",
 		"Délai d\'expiration en millisecondes avant annulation du calcul de diff. Utilisez 0 pour supprimer le délai d\'expiration.",
@@ -136,6 +137,7 @@ define("vs/editor/editor.main.nls.fr", {
 		"L\'éditeur est optimisé en permanence pour une utilisation avec un lecteur d\'écran.",
 		"L\'éditeur n\'est jamais optimisé pour une utilisation avec un lecteur d\'écran.",
 		"Contrôle si l\'éditeur doit s\'exécuter dans un mode optimisé pour les lecteurs d\'écran.",
+		"Contrôle si un espace est inséré pour les commentaires.",
 		"Contrôle si la copie sans sélection permet de copier la ligne actuelle.",
 		"Détermine si la chaîne de recherche dans le Widget Recherche est initialisée avec la sélection de l’éditeur.",
 		"Ne jamais activer Rechercher automatiquement dans la sélection (par défaut)",
@@ -222,6 +224,7 @@ define("vs/editor/editor.main.nls.fr", {
 		"Si activé, IntelliSense montre des suggestions de type \'folder\'.",
 		"Si activé, IntelliSense montre des suggestions de type \'typeParameter\'.",
 		"Si activé, IntelliSense montre des suggestions de type \'snippet\'.",
+		"Contrôle la visibilité de la barre d\'état en bas du widget de suggestion.",
 		"Contrôle si les suggestions doivent être acceptées sur les caractères de validation. Par exemple, en JavaScript, le point-virgule (`;`) peut être un caractère de validation qui accepte une suggestion et tape ce caractère.",
 		"Accepter uniquement une suggestion avec \'Entrée\' quand elle effectue une modification textuelle.",
 		"Contrôle si les suggestions sont acceptées après appui sur \'Entrée\', en plus de \'Tab\'. Permet d’éviter toute ambiguïté entre l’insertion de nouvelles lignes et l\'acceptation de suggestions.",
@@ -260,6 +263,7 @@ define("vs/editor/editor.main.nls.fr", {
 		"Multiplicateur de vitesse de défilement quand vous appuyez sur \'Alt\'.",
 		"Contrôle si l\'éditeur a le pliage de code activé.",
 		"Contrôle la stratégie pour le calcul des plages de pliage. \'auto\' utilise une stratégie de pliage spécifique au langage, le cas échéant. \'indentation\' utilise la stratégie de pliage en fonction de la mise en retrait.",
+		"Contrôle si l\'éditeur doit mettre en évidence les plages pliées.",
 		"Contrôle la famille de polices.",
 		"Contrôle l\'épaisseur de police.",
 		"Détermine si l’éditeur doit automatiquement mettre en forme le contenu collé. Un formateur doit être disponible et être capable de mettre en forme une plage dans un document.",
@@ -281,6 +285,9 @@ define("vs/editor/editor.main.nls.fr", {
 		"Contrôle le collage quand le nombre de lignes du texte collé correspond au nombre de curseurs.",
 		"Contrôle si l\'éditeur doit mettre en surbrillance les occurrences de symboles sémantiques.",
 		"Contrôle si une bordure doit être dessinée autour de la règle de la vue d\'ensemble.",
+		"Placer le focus sur l\'arborescence à l\'ouverture de l\'aperçu",
+		"Placer le focus sur l\'éditeur à l\'ouverture de l\'aperçu",
+		"Contrôle s\'il faut mettre le focus sur l\'éditeur inline ou sur l\'arborescence dans le widget d\'aperçu.",
 		"Contrôle le délai en millisecondes après lequel des suggestions rapides sont affichées.",
 		"Contrôle si l’éditeur doit afficher les caractères de contrôle.",
 		"Contrôle si l’éditeur doit afficher les guides de mise en retrait.",
@@ -327,6 +334,9 @@ define("vs/editor/editor.main.nls.fr", {
 		"Les lignes justifiées obtiennent une mise en retrait +1 vers le parent.",
 		"Les lignes justifiées obtiennent une mise en retrait +2 vers le parent. ",
 		"Contrôle la mise en retrait des lignes justifiées.",
+		"Suppose que tous les caractères ont la même largeur. Il s\'agit d\'un algorithme rapide qui fonctionne correctement pour les polices à espacement fixe et certains scripts (comme les caractères latins) où les glyphes ont la même largeur.",
+		"Délègue le calcul des points de wrapping au navigateur. Il s\'agit d\'un algorithme lent qui peut provoquer le gel des grands fichiers, mais qui fonctionne correctement dans tous les cas.",
+		"Contrôle l\'algorithme qui calcule les points de wrapping.",
 	],
 	"vs/editor/common/modes/modesRegistry": [
 		"Texte brut",
@@ -418,7 +428,7 @@ define("vs/editor/editor.main.nls.fr", {
 	"vs/editor/contrib/bracketMatching/bracketMatching": [
 		"Couleur du marqueur de la règle d\'aperçu pour rechercher des parenthèses.",
 		"Atteindre le crochet",
-		"Select to Bracket",
+		"Sélectionner jusqu\'au crochet",
 		"Accéder au &&crochet",
 	],
 	"vs/editor/contrib/caretOperations/caretOperations": [
@@ -461,7 +471,7 @@ define("vs/editor/editor.main.nls.fr", {
 		"Aucune action source disponible pour \'{0}\'",
 		"Aucune action source par défaut disponible",
 		"Aucune action n\'est disponible",
-		"Organiser les Imports",
+		"Organiser les importations",
 		"Aucune action organiser les imports disponible",
 		"Tout corriger",
 		"Aucune action Tout corriger disponible",
@@ -569,6 +579,7 @@ define("vs/editor/editor.main.nls.fr", {
 		"Plier tout",
 		"Déplier tout",
 		"Niveau de pliage {0}",
+		"Couleur de la sélection de l\'éditeur.",
 	],
 	"vs/editor/contrib/fontZoom/fontZoom": [
 		"Agrandissement de l\'éditeur de polices de caractères",
@@ -774,12 +785,16 @@ define("vs/editor/editor.main.nls.fr", {
 	"vs/editor/contrib/rename/rename": [
 		"Aucun résultat.",
 		"Une erreur inconnue s’est produite lors de la résolution de l\'emplacement de renommage : {0}",
+		"Renommage de \'{0}\'",
 		"\'{0}\' renommé en \'{1}\'. Récapitulatif : {2}",
-		"Échec de l\'exécution du renommage.",
+		"Le renommage n\'a pas pu appliquer les modifications",
+		"Le renommage n\'a pas pu calculer les modifications",
 		"Renommer le symbole",
+		"Activer/désactiver la possibilité d\'afficher un aperçu des changements avant le renommage",
 	],
 	"vs/editor/contrib/rename/renameInputField": [
 		"Renommez l\'entrée. Tapez le nouveau nom et appuyez sur Entrée pour valider.",
+		"{0} pour renommer, {1} pour afficher un aperçu",
 	],
 	"vs/editor/contrib/smartSelect/smartSelect": [
 		"Étendre la sélection",
@@ -842,7 +857,12 @@ define("vs/editor/editor.main.nls.fr", {
 		"Chargement en cours...",
 		"Chargement en cours...",
 		"Pas de suggestions.",
+		"{0} pour moins...",
+		"{0} pour plus...",
 		"Item {0}, docs: {1}",
+		"{0} pour insérer, {1} pour remplacer",
+		"{0} pour remplacer, {1} pour insérer",
+		"{0} pour accepter",
 	],
 	"vs/editor/contrib/toggleTabFocusMode/toggleTabFocusMode": [
 		"Activer/désactiver l\'utilisation de la touche Tab pour déplacer le focus",
@@ -866,6 +886,7 @@ define("vs/editor/editor.main.nls.fr", {
 	"vs/platform/configuration/common/configurationRegistry": [
 		"Substitutions de configuration par défaut",
 		"Configurez les paramètres d\'éditeur à remplacer pour un langage.",
+		"Ce paramètre ne prend pas en charge la configuration par langue.",
 		"Impossible d\'inscrire \'{0}\'. Ceci correspond au modèle de propriété \'\\\\[.*\\\\]$\' permettant de décrire les paramètres d\'éditeur spécifiques à un langage. Utilisez la contribution \'configurationDefaults\'.",
 		"Impossible d\'inscrire \'{0}\'. Cette propriété est déjà inscrite.",
 	],
@@ -972,7 +993,7 @@ define("vs/editor/editor.main.nls.fr", {
 		"Couleur d\'arrière-plan de la liste/l\'arborescence de l\'élément sélectionné quand la liste/l\'arborescence est active. Une liste/arborescence active peut être sélectionnée au clavier, elle ne l\'est pas quand elle est inactive.",
 		"Couleur de premier plan de la liste/l\'arborescence pour l\'élément sélectionné quand la liste/l\'arborescence est active. Une liste/arborescence active peut être sélectionnée au clavier, elle ne l\'est pas quand elle est inactive.",
 		"Couleur d\'arrière-plan de la liste/l\'arborescence pour l\'élément sélectionné quand la liste/l\'arborescence est inactive. Une liste/arborescence active peut être sélectionnée au clavier, elle ne l\'est pas quand elle est inactive.",
-		"Couleur de premier plan de la liste/l\'arborescence pour l\'élément sélectionné quand la liste/l\'arborescence est active. Une liste/arborescence active peut être sélectionnée au clavier, elle ne l\'est pas quand elle est inactive.",
+		"Couleur de premier plan de la liste/l\'arborescence pour l\'élément sélectionné quand la liste/l\'arborescence est inactive. Une liste/arborescence active peut être sélectionnée au clavier, elle ne l\'est pas quand elle est inactive.",
 		"Couleur d\'arrière-plan de la liste/l\'arborescence pour l\'élément ayant le focus quand la liste/l\'arborescence est active. Une liste/arborescence active peut être sélectionnée au clavier (elle ne l\'est pas quand elle est inactive).",
 		"Arrière-plan de la liste/l\'arborescence pendant le pointage sur des éléments avec la souris.",
 		"Premier plan de la liste/l\'arborescence pendant le pointage sur des éléments avec la souris.",

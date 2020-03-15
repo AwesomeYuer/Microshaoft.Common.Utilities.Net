@@ -28,10 +28,10 @@ var ViewCursors = /** @class */ (function (_super) {
     function ViewCursors(context) {
         var _this = _super.call(this, context) || this;
         var options = _this._context.configuration.options;
-        _this._readOnly = options.get(65 /* readOnly */);
-        _this._cursorBlinking = options.get(15 /* cursorBlinking */);
-        _this._cursorStyle = options.get(17 /* cursorStyle */);
-        _this._cursorSmoothCaretAnimation = options.get(16 /* cursorSmoothCaretAnimation */);
+        _this._readOnly = options.get(68 /* readOnly */);
+        _this._cursorBlinking = options.get(16 /* cursorBlinking */);
+        _this._cursorStyle = options.get(18 /* cursorStyle */);
+        _this._cursorSmoothCaretAnimation = options.get(17 /* cursorSmoothCaretAnimation */);
         _this._selectionIsEmpty = true;
         _this._isVisible = false;
         _this._primaryCursor = new ViewCursor(_this._context);
@@ -60,10 +60,10 @@ var ViewCursors = /** @class */ (function (_super) {
     // --- begin event handlers
     ViewCursors.prototype.onConfigurationChanged = function (e) {
         var options = this._context.configuration.options;
-        this._readOnly = options.get(65 /* readOnly */);
-        this._cursorBlinking = options.get(15 /* cursorBlinking */);
-        this._cursorStyle = options.get(17 /* cursorStyle */);
-        this._cursorSmoothCaretAnimation = options.get(16 /* cursorSmoothCaretAnimation */);
+        this._readOnly = options.get(68 /* readOnly */);
+        this._cursorBlinking = options.get(16 /* cursorBlinking */);
+        this._cursorStyle = options.get(18 /* cursorStyle */);
+        this._cursorSmoothCaretAnimation = options.get(17 /* cursorSmoothCaretAnimation */);
         this._updateBlinking();
         this._updateDomClassName();
         this._primaryCursor.onConfigurationChanged(e);

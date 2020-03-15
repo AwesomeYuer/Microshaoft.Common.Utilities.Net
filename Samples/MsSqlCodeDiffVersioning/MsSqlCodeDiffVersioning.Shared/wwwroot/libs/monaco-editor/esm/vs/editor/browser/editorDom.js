@@ -164,7 +164,7 @@ var GlobalEditorMouseMoveMonitor = /** @class */ (function (_super) {
         _this._keydownListener = null;
         return _this;
     }
-    GlobalEditorMouseMoveMonitor.prototype.startMonitoring = function (merger, mouseMoveCallback, onStopCallback) {
+    GlobalEditorMouseMoveMonitor.prototype.startMonitoring = function (initialElement, initialButtons, merger, mouseMoveCallback, onStopCallback) {
         var _this = this;
         // Add a <<capture>> keydown event listener that will cancel the monitoring
         // if something other than a modifier key is pressed
@@ -179,7 +179,7 @@ var GlobalEditorMouseMoveMonitor = /** @class */ (function (_super) {
         var myMerger = function (lastEvent, currentEvent) {
             return merger(lastEvent, new EditorMouseEvent(currentEvent, _this._editorViewDomNode));
         };
-        this._globalMouseMoveMonitor.startMonitoring(myMerger, mouseMoveCallback, function () {
+        this._globalMouseMoveMonitor.startMonitoring(initialElement, initialButtons, myMerger, mouseMoveCallback, function () {
             _this._keydownListener.dispose();
             onStopCallback();
         });

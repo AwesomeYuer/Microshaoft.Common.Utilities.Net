@@ -73,13 +73,14 @@ import { ContextKeyExpr } from '../../../platform/contextkey/common/contextkey.j
 import { INotificationService } from '../../../platform/notification/common/notification.js';
 import { IEditorProgressService } from '../../../platform/progress/common/progress.js';
 import { getDefinitionsAtPosition, getImplementationsAtPosition, getTypeDefinitionsAtPosition, getDeclarationsAtPosition, getReferencesAtPosition } from './goToSymbol.js';
-import { CommandsRegistry } from '../../../platform/commands/common/commands.js';
+import { CommandsRegistry, ICommandService } from '../../../platform/commands/common/commands.js';
 import { EditorStateCancellationTokenSource } from '../../browser/core/editorState.js';
 import { ISymbolNavigationService } from './symbolNavigation.js';
 import { isStandalone } from '../../../base/browser/browser.js';
 import { URI } from '../../../base/common/uri.js';
 import { IInstantiationService } from '../../../platform/instantiation/common/instantiation.js';
 import { assertType } from '../../../base/common/types.js';
+import { EmbeddedCodeEditorWidget } from '../../browser/widget/embeddedCodeEditorWidget.js';
 MenuRegistry.appendMenuItem(7 /* EditorContext */, {
     submenu: 8 /* EditorContextPeek */,
     title: nls.localize('peek.submenu', "Peek"),
@@ -152,7 +153,7 @@ var SymbolNavigationAction = /** @class */ (function (_super) {
                 switch (_a.label) {
                     case 0:
                         gotoLocation = this._getGoToPreference(editor);
-                        if (!(this._configuration.openInPeek || (gotoLocation === 'peek' && model.references.length > 1))) return [3 /*break*/, 1];
+                        if (!(!(editor instanceof EmbeddedCodeEditorWidget) && (this._configuration.openInPeek || (gotoLocation === 'peek' && model.references.length > 1)))) return [3 /*break*/, 1];
                         this._openInPeek(editor, model);
                         return [3 /*break*/, 3];
                     case 1:
@@ -253,10 +254,10 @@ var DefinitionAction = /** @class */ (function (_super) {
             : nls.localize('generic.noResults', "No definition found");
     };
     DefinitionAction.prototype._getAlternativeCommand = function (editor) {
-        return editor.getOption(39 /* gotoLocation */).alternativeDefinitionCommand;
+        return editor.getOption(41 /* gotoLocation */).alternativeDefinitionCommand;
     };
     DefinitionAction.prototype._getGoToPreference = function (editor) {
-        return editor.getOption(39 /* gotoLocation */).multipleDefinitions;
+        return editor.getOption(41 /* gotoLocation */).multipleDefinitions;
     };
     return DefinitionAction;
 }(SymbolNavigationAction));
@@ -286,7 +287,7 @@ registerEditorAction((_a = /** @class */ (function (_super) {
                     order: 1.1
                 },
                 menuOpts: {
-                    menuId: 17 /* MenubarGoMenu */,
+                    menuId: 19 /* MenubarGoMenu */,
                     group: '4_symbol_nav',
                     order: 2,
                     title: nls.localize({ key: 'miGotoDefinition', comment: ['&& denotes a mnemonic'] }, "Go to &&Definition")
@@ -381,10 +382,10 @@ var DeclarationAction = /** @class */ (function (_super) {
             : nls.localize('decl.generic.noResults', "No declaration found");
     };
     DeclarationAction.prototype._getAlternativeCommand = function (editor) {
-        return editor.getOption(39 /* gotoLocation */).alternativeDeclarationCommand;
+        return editor.getOption(41 /* gotoLocation */).alternativeDeclarationCommand;
     };
     DeclarationAction.prototype._getGoToPreference = function (editor) {
-        return editor.getOption(39 /* gotoLocation */).multipleDeclarations;
+        return editor.getOption(41 /* gotoLocation */).multipleDeclarations;
     };
     return DeclarationAction;
 }(SymbolNavigationAction));
@@ -405,7 +406,7 @@ registerEditorAction((_d = /** @class */ (function (_super) {
                     order: 1.3
                 },
                 menuOpts: {
-                    menuId: 17 /* MenubarGoMenu */,
+                    menuId: 19 /* MenubarGoMenu */,
                     group: '4_symbol_nav',
                     order: 3,
                     title: nls.localize({ key: 'miGotoDeclaration', comment: ['&& denotes a mnemonic'] }, "Go to &&Declaration")
@@ -468,10 +469,10 @@ var TypeDefinitionAction = /** @class */ (function (_super) {
             : nls.localize('goToTypeDefinition.generic.noResults', "No type definition found");
     };
     TypeDefinitionAction.prototype._getAlternativeCommand = function (editor) {
-        return editor.getOption(39 /* gotoLocation */).alternativeTypeDefinitionCommand;
+        return editor.getOption(41 /* gotoLocation */).alternativeTypeDefinitionCommand;
     };
     TypeDefinitionAction.prototype._getGoToPreference = function (editor) {
-        return editor.getOption(39 /* gotoLocation */).multipleTypeDefinitions;
+        return editor.getOption(41 /* gotoLocation */).multipleTypeDefinitions;
     };
     return TypeDefinitionAction;
 }(SymbolNavigationAction));
@@ -497,7 +498,7 @@ registerEditorAction((_e = /** @class */ (function (_super) {
                     order: 1.4
                 },
                 menuOpts: {
-                    menuId: 17 /* MenubarGoMenu */,
+                    menuId: 19 /* MenubarGoMenu */,
                     group: '4_symbol_nav',
                     order: 3,
                     title: nls.localize({ key: 'miGotoTypeDefinition', comment: ['&& denotes a mnemonic'] }, "Go to &&Type Definition")
@@ -557,10 +558,10 @@ var ImplementationAction = /** @class */ (function (_super) {
             : nls.localize('goToImplementation.generic.noResults', "No implementation found");
     };
     ImplementationAction.prototype._getAlternativeCommand = function (editor) {
-        return editor.getOption(39 /* gotoLocation */).alternativeImplementationCommand;
+        return editor.getOption(41 /* gotoLocation */).alternativeImplementationCommand;
     };
     ImplementationAction.prototype._getGoToPreference = function (editor) {
-        return editor.getOption(39 /* gotoLocation */).multipleImplementations;
+        return editor.getOption(41 /* gotoLocation */).multipleImplementations;
     };
     return ImplementationAction;
 }(SymbolNavigationAction));
@@ -582,7 +583,7 @@ registerEditorAction((_g = /** @class */ (function (_super) {
                     weight: 100 /* EditorContrib */
                 },
                 menuOpts: {
-                    menuId: 17 /* MenubarGoMenu */,
+                    menuId: 19 /* MenubarGoMenu */,
                     group: '4_symbol_nav',
                     order: 4,
                     title: nls.localize({ key: 'miGotoImplementation', comment: ['&& denotes a mnemonic'] }, "Go to &&Implementations")
@@ -638,10 +639,10 @@ var ReferencesAction = /** @class */ (function (_super) {
             : nls.localize('references.noGeneric', "No references found");
     };
     ReferencesAction.prototype._getAlternativeCommand = function (editor) {
-        return editor.getOption(39 /* gotoLocation */).alternativeReferenceCommand;
+        return editor.getOption(41 /* gotoLocation */).alternativeReferenceCommand;
     };
     ReferencesAction.prototype._getGoToPreference = function (editor) {
-        return editor.getOption(39 /* gotoLocation */).multipleReferences;
+        return editor.getOption(41 /* gotoLocation */).multipleReferences;
     };
     return ReferencesAction;
 }(SymbolNavigationAction));
@@ -667,7 +668,7 @@ registerEditorAction(/** @class */ (function (_super) {
                 order: 1.45
             },
             menuOpts: {
-                menuId: 17 /* MenubarGoMenu */,
+                menuId: 19 /* MenubarGoMenu */,
                 group: '4_symbol_nav',
                 order: 5,
                 title: nls.localize({ key: 'miGotoReference', comment: ['&& denotes a mnemonic'] }, "Go to &&References")
@@ -727,12 +728,8 @@ registerEditorAction(/** @class */ (function (_super) {
 //#region --- GENERIC goto symbols command
 var GenericGoToLocationAction = /** @class */ (function (_super) {
     __extends(GenericGoToLocationAction, _super);
-    function GenericGoToLocationAction(_references, _gotoMultipleBehaviour) {
-        var _this = _super.call(this, {
-            muteMessage: true,
-            openInPeek: false,
-            openToSide: false
-        }, {
+    function GenericGoToLocationAction(config, _references, _gotoMultipleBehaviour) {
+        var _this = _super.call(this, config, {
             id: 'editor.action.goToLocation',
             label: nls.localize('label.generic', "Go To Any Symbol"),
             alias: 'Go To Any Symbol',
@@ -754,7 +751,7 @@ var GenericGoToLocationAction = /** @class */ (function (_super) {
     };
     GenericGoToLocationAction.prototype._getGoToPreference = function (editor) {
         var _a;
-        return _a = this._gotoMultipleBehaviour, (_a !== null && _a !== void 0 ? _a : editor.getOption(39 /* gotoLocation */).multipleReferences);
+        return (_a = this._gotoMultipleBehaviour) !== null && _a !== void 0 ? _a : editor.getOption(41 /* gotoLocation */).multipleReferences;
     };
     GenericGoToLocationAction.prototype._getAlternativeCommand = function () { return ''; };
     return GenericGoToLocationAction;
@@ -770,7 +767,7 @@ CommandsRegistry.registerCommand({
             { name: 'multiple', description: 'Define what to do when having multiple results, either `peek`, `gotoAndPeek`, or `goto' },
         ]
     },
-    handler: function (accessor, resource, position, references, multiple) { return __awaiter(void 0, void 0, void 0, function () {
+    handler: function (accessor, resource, position, references, multiple, openInPeek) { return __awaiter(void 0, void 0, void 0, function () {
         var editorService, editor;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -779,6 +776,7 @@ CommandsRegistry.registerCommand({
                     assertType(corePosition.Position.isIPosition(position));
                     assertType(Array.isArray(references));
                     assertType(typeof multiple === 'undefined' || typeof multiple === 'string');
+                    assertType(typeof openInPeek === 'undefined' || typeof openInPeek === 'boolean');
                     editorService = accessor.get(ICodeEditorService);
                     return [4 /*yield*/, editorService.openCodeEditor({ resource: resource }, editorService.getFocusedCodeEditor())];
                 case 1:
@@ -787,12 +785,30 @@ CommandsRegistry.registerCommand({
                         editor.setPosition(position);
                         editor.revealPositionInCenterIfOutsideViewport(position, 0 /* Smooth */);
                         return [2 /*return*/, editor.invokeWithinContext(function (accessor) {
-                                var command = new GenericGoToLocationAction(references, multiple);
+                                var command = new GenericGoToLocationAction({ muteMessage: true, openInPeek: Boolean(openInPeek), openToSide: false }, references, multiple);
                                 accessor.get(IInstantiationService).invokeFunction(command.run.bind(command), editor);
                             })];
                     }
                     return [2 /*return*/];
             }
+        });
+    }); }
+});
+CommandsRegistry.registerCommand({
+    id: 'editor.action.peekLocations',
+    description: {
+        description: 'Peek locations from a position in a file',
+        args: [
+            { name: 'uri', description: 'The text document in which to start', constraint: URI },
+            { name: 'position', description: 'The position at which to start', constraint: corePosition.Position.isIPosition },
+            { name: 'locations', description: 'An array of locations.', constraint: Array },
+            { name: 'multiple', description: 'Define what to do when having multiple results, either `peek`, `gotoAndPeek`, or `goto' },
+        ]
+    },
+    handler: function (accessor, resource, position, references, multiple) { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            accessor.get(ICommandService).executeCommand('editor.action.goToLocations', resource, position, references, multiple, true);
+            return [2 /*return*/];
         });
     }); }
 });
@@ -819,5 +835,5 @@ CommandsRegistry.registerCommand({
     }
 });
 // use NEW command
-CommandsRegistry.registerCommandAlias('editor.action.showReferences', 'editor.action.goToLocations');
+CommandsRegistry.registerCommandAlias('editor.action.showReferences', 'editor.action.peekLocations');
 //#endregion

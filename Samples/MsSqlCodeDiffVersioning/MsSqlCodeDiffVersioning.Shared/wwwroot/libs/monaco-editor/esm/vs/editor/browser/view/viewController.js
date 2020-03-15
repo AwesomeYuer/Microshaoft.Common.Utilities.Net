@@ -16,8 +16,8 @@ var ViewController = /** @class */ (function () {
         args.source = 'mouse';
         this.commandDelegate.executeEditorCommand(editorCommand, args);
     };
-    ViewController.prototype.paste = function (source, text, pasteOnNewLine, multicursorText) {
-        this.commandDelegate.paste(source, text, pasteOnNewLine, multicursorText);
+    ViewController.prototype.paste = function (source, text, pasteOnNewLine, multicursorText, mode) {
+        this.commandDelegate.paste(source, text, pasteOnNewLine, multicursorText, mode);
     };
     ViewController.prototype.type = function (source, text) {
         this.commandDelegate.type(source, text);
@@ -48,7 +48,7 @@ var ViewController = /** @class */ (function () {
         return viewPosition;
     };
     ViewController.prototype._hasMulticursorModifier = function (data) {
-        switch (this.configuration.options.get(57 /* multiCursorModifier */)) {
+        switch (this.configuration.options.get(59 /* multiCursorModifier */)) {
             case 'altKey':
                 return data.altKey;
             case 'ctrlKey':
@@ -59,7 +59,7 @@ var ViewController = /** @class */ (function () {
         return false;
     };
     ViewController.prototype._hasNonMulticursorModifier = function (data) {
-        switch (this.configuration.options.get(57 /* multiCursorModifier */)) {
+        switch (this.configuration.options.get(59 /* multiCursorModifier */)) {
             case 'altKey':
                 return data.ctrlKey || data.metaKey;
             case 'ctrlKey':
@@ -70,7 +70,7 @@ var ViewController = /** @class */ (function () {
         return false;
     };
     ViewController.prototype.dispatchMouse = function (data) {
-        var selectionClipboardIsOn = (platform.isLinux && this.configuration.options.get(77 /* selectionClipboard */));
+        var selectionClipboardIsOn = (platform.isLinux && this.configuration.options.get(81 /* selectionClipboard */));
         if (data.middleButton && !selectionClipboardIsOn) {
             this._columnSelect(data.position, data.mouseColumn, data.inSelectionMode);
         }

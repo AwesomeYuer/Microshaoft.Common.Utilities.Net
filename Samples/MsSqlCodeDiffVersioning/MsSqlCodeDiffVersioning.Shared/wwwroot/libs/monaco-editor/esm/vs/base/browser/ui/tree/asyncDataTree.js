@@ -258,7 +258,21 @@ function asObjectTreeOptions(options) {
             }
         }, keyboardNavigationLabelProvider: options.keyboardNavigationLabelProvider && __assign(__assign({}, options.keyboardNavigationLabelProvider), { getKeyboardNavigationLabel: function (e) {
                 return options.keyboardNavigationLabelProvider.getKeyboardNavigationLabel(e.element);
-            } }), sorter: undefined, expandOnlyOnTwistieClick: typeof options.expandOnlyOnTwistieClick === 'undefined' ? undefined : (typeof options.expandOnlyOnTwistieClick !== 'function' ? options.expandOnlyOnTwistieClick : (function (e) { return options.expandOnlyOnTwistieClick(e.element); })), ariaProvider: undefined, additionalScrollHeight: options.additionalScrollHeight });
+            } }), sorter: undefined, expandOnlyOnTwistieClick: typeof options.expandOnlyOnTwistieClick === 'undefined' ? undefined : (typeof options.expandOnlyOnTwistieClick !== 'function' ? options.expandOnlyOnTwistieClick : (function (e) { return options.expandOnlyOnTwistieClick(e.element); })), ariaProvider: options.ariaProvider && {
+            getPosInSet: function (el, index) {
+                return options.ariaProvider.getPosInSet(el.element, index);
+            },
+            getSetSize: function (el, index, listLength) {
+                return options.ariaProvider.getSetSize(el.element, index, listLength);
+            },
+            getRole: options.ariaProvider.getRole ? function (el) {
+                return options.ariaProvider.getRole(el.element);
+            } : undefined,
+            isChecked: options.ariaProvider.isChecked ? function (e) {
+                var _a;
+                return ((_a = options.ariaProvider) === null || _a === void 0 ? void 0 : _a.isChecked)(e.element);
+            } : undefined
+        }, additionalScrollHeight: options.additionalScrollHeight });
 }
 function dfs(node, fn) {
     fn(node);
@@ -453,6 +467,9 @@ var AsyncDataTree = /** @class */ (function () {
                         _a.label = 3;
                     case 3:
                         node = this.getDataNode(element);
+                        if (this.tree.hasElement(node) && !this.tree.isCollapsible(node)) {
+                            return [2 /*return*/, false];
+                        }
                         if (!node.refreshPromise) return [3 /*break*/, 6];
                         return [4 /*yield*/, this.root.refreshPromise];
                     case 4:

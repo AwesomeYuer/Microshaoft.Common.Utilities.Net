@@ -18718,15 +18718,17 @@ define('vs/language/html/languageFeatures',["require", "exports", "vscode-html-l
         }
         var resourceEdits = [];
         for (var uri in edit.changes) {
-            var edits = [];
+            var _uri = Uri.parse(uri);
             for (var _i = 0, _a = edit.changes[uri]; _i < _a.length; _i++) {
                 var e = _a[_i];
-                edits.push({
-                    range: toRange(e.range),
-                    text: e.newText
+                resourceEdits.push({
+                    resource: _uri,
+                    edit: {
+                        range: toRange(e.range),
+                        text: e.newText
+                    }
                 });
             }
-            resourceEdits.push({ resource: Uri.parse(uri), edits: edits });
         }
         return {
             edits: resourceEdits

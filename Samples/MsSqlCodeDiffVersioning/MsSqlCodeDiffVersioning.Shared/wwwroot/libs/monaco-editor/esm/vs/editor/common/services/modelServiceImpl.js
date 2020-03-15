@@ -30,14 +30,15 @@ import * as platform from '../../../base/common/platform.js';
 import * as errors from '../../../base/common/errors.js';
 import { EDITOR_MODEL_DEFAULTS } from '../config/editorOptions.js';
 import { TextModel } from '../model/textModel.js';
-import { SemanticTokensProviderRegistry } from '../modes.js';
+import { DocumentSemanticTokensProviderRegistry, TokenMetadata } from '../modes.js';
 import { PLAINTEXT_LANGUAGE_IDENTIFIER } from '../modes/modesRegistry.js';
-import { ITextResourcePropertiesService } from './resourceConfiguration.js';
+import { ITextResourcePropertiesService } from './textResourceConfigurationService.js';
 import { IConfigurationService } from '../../../platform/configuration/common/configuration.js';
 import { RunOnceScheduler } from '../../../base/common/async.js';
 import { CancellationTokenSource } from '../../../base/common/cancellation.js';
 import { SparseEncodedTokens, MultilineTokens2 } from '../model/tokensStore.js';
 import { IThemeService } from '../../../platform/theme/common/themeService.js';
+import { ILogService, LogLevel } from '../../../platform/log/common/log.js';
 function MODEL_ID(resource) {
     return resource.toString();
 }
@@ -76,7 +77,7 @@ var ModelData = /** @class */ (function () {
 var DEFAULT_EOL = (platform.isLinux || platform.isMacintosh) ? 1 /* LF */ : 2 /* CRLF */;
 var ModelServiceImpl = /** @class */ (function (_super) {
     __extends(ModelServiceImpl, _super);
-    function ModelServiceImpl(configurationService, resourcePropertiesService, themeService) {
+    function ModelServiceImpl(configurationService, resourcePropertiesService, themeService, logService) {
         var _this = _super.call(this) || this;
         _this._onModelAdded = _this._register(new Emitter());
         _this.onModelAdded = _this._onModelAdded.event;
@@ -90,7 +91,7 @@ var ModelServiceImpl = /** @class */ (function (_super) {
         _this._modelCreationOptionsByLanguageAndResource = Object.create(null);
         _this._configurationServiceSubscription = _this._configurationService.onDidChangeConfiguration(function (e) { return _this._updateModelOptions(); });
         _this._updateModelOptions();
-        _this._register(new SemanticColoringFeature(_this, themeService));
+        _this._register(new SemanticColoringFeature(_this, themeService, configurationService, logService));
         return _this;
     }
     ModelServiceImpl._readModelOptions = function (config, isForSimpleWidget) {
@@ -282,33 +283,70 @@ var ModelServiceImpl = /** @class */ (function (_super) {
     ModelServiceImpl = __decorate([
         __param(0, IConfigurationService),
         __param(1, ITextResourcePropertiesService),
-        __param(2, IThemeService)
+        __param(2, IThemeService),
+        __param(3, ILogService)
     ], ModelServiceImpl);
     return ModelServiceImpl;
 }(Disposable));
 export { ModelServiceImpl };
 var SemanticColoringFeature = /** @class */ (function (_super) {
     __extends(SemanticColoringFeature, _super);
-    function SemanticColoringFeature(modelService, themeService) {
+    function SemanticColoringFeature(modelService, themeService, configurationService, logService) {
         var _this = _super.call(this) || this;
+        _this._configurationService = configurationService;
         _this._watchers = Object.create(null);
-        _this._semanticStyling = _this._register(new SemanticStyling(themeService));
-        _this._register(modelService.onModelAdded(function (model) {
+        _this._semanticStyling = _this._register(new SemanticStyling(themeService, logService));
+        var isSemanticColoringEnabled = function (model) {
+            var options = configurationService.getValue(SemanticColoringFeature.SETTING_ID, { overrideIdentifier: model.getLanguageIdentifier().language, resource: model.uri });
+            return options && options.enabled;
+        };
+        var register = function (model) {
             _this._watchers[model.uri.toString()] = new ModelSemanticColoring(model, themeService, _this._semanticStyling);
+        };
+        var deregister = function (model, modelSemanticColoring) {
+            modelSemanticColoring.dispose();
+            delete _this._watchers[model.uri.toString()];
+        };
+        _this._register(modelService.onModelAdded(function (model) {
+            if (isSemanticColoringEnabled(model)) {
+                register(model);
+            }
         }));
         _this._register(modelService.onModelRemoved(function (model) {
-            _this._watchers[model.uri.toString()].dispose();
-            delete _this._watchers[model.uri.toString()];
+            var curr = _this._watchers[model.uri.toString()];
+            if (curr) {
+                deregister(model, curr);
+            }
         }));
+        _this._configurationService.onDidChangeConfiguration(function (e) {
+            if (e.affectsConfiguration(SemanticColoringFeature.SETTING_ID)) {
+                for (var _i = 0, _a = modelService.getModels(); _i < _a.length; _i++) {
+                    var model = _a[_i];
+                    var curr = _this._watchers[model.uri.toString()];
+                    if (isSemanticColoringEnabled(model)) {
+                        if (!curr) {
+                            register(model);
+                        }
+                    }
+                    else {
+                        if (curr) {
+                            deregister(model, curr);
+                        }
+                    }
+                }
+            }
+        });
         return _this;
     }
+    SemanticColoringFeature.SETTING_ID = 'editor.semanticHighlighting';
     return SemanticColoringFeature;
 }(Disposable));
 var SemanticStyling = /** @class */ (function (_super) {
     __extends(SemanticStyling, _super);
-    function SemanticStyling(_themeService) {
+    function SemanticStyling(_themeService, _logService) {
         var _this = _super.call(this) || this;
         _this._themeService = _themeService;
+        _this._logService = _logService;
         _this._caches = new WeakMap();
         if (_this._themeService) {
             // workaround for tests which use undefined... :/
@@ -320,7 +358,7 @@ var SemanticStyling = /** @class */ (function (_super) {
     }
     SemanticStyling.prototype.get = function (provider) {
         if (!this._caches.has(provider)) {
-            this._caches.set(provider, new SemanticColoringProviderStyling(provider.getLegend(), this._themeService));
+            this._caches.set(provider, new SemanticColoringProviderStyling(provider.getLegend(), this._themeService, this._logService));
         }
         return this._caches.get(provider);
     };
@@ -395,29 +433,62 @@ var HashTable = /** @class */ (function () {
     return HashTable;
 }());
 var SemanticColoringProviderStyling = /** @class */ (function () {
-    function SemanticColoringProviderStyling(_legend, _themeService) {
+    function SemanticColoringProviderStyling(_legend, _themeService, _logService) {
         this._legend = _legend;
         this._themeService = _themeService;
+        this._logService = _logService;
         this._hashTable = new HashTable();
     }
     SemanticColoringProviderStyling.prototype.getMetadata = function (tokenTypeIndex, tokenModifierSet) {
         var entry = this._hashTable.get(tokenTypeIndex, tokenModifierSet);
+        var metadata;
         if (entry) {
-            return entry.metadata;
+            metadata = entry.metadata;
         }
-        var tokenType = this._legend.tokenTypes[tokenTypeIndex];
-        var tokenModifiers = [];
-        for (var modifierIndex = 0; tokenModifierSet !== 0 && modifierIndex < this._legend.tokenModifiers.length; modifierIndex++) {
-            if (tokenModifierSet & 1) {
-                tokenModifiers.push(this._legend.tokenModifiers[modifierIndex]);
+        else {
+            var tokenType = this._legend.tokenTypes[tokenTypeIndex];
+            var tokenModifiers = [];
+            var modifierSet = tokenModifierSet;
+            for (var modifierIndex = 0; modifierSet > 0 && modifierIndex < this._legend.tokenModifiers.length; modifierIndex++) {
+                if (modifierSet & 1) {
+                    tokenModifiers.push(this._legend.tokenModifiers[modifierIndex]);
+                }
+                modifierSet = modifierSet >> 1;
             }
-            tokenModifierSet = tokenModifierSet >> 1;
+            var tokenStyle = this._themeService.getTheme().getTokenStyleMetadata(tokenType, tokenModifiers);
+            if (typeof tokenStyle === 'undefined') {
+                metadata = 2147483647 /* NO_STYLING */;
+            }
+            else {
+                metadata = 0;
+                if (typeof tokenStyle.italic !== 'undefined') {
+                    var italicBit = (tokenStyle.italic ? 1 /* Italic */ : 0) << 11 /* FONT_STYLE_OFFSET */;
+                    metadata |= italicBit | 1 /* SEMANTIC_USE_ITALIC */;
+                }
+                if (typeof tokenStyle.bold !== 'undefined') {
+                    var boldBit = (tokenStyle.bold ? 2 /* Bold */ : 0) << 11 /* FONT_STYLE_OFFSET */;
+                    metadata |= boldBit | 2 /* SEMANTIC_USE_BOLD */;
+                }
+                if (typeof tokenStyle.underline !== 'undefined') {
+                    var underlineBit = (tokenStyle.underline ? 4 /* Underline */ : 0) << 11 /* FONT_STYLE_OFFSET */;
+                    metadata |= underlineBit | 4 /* SEMANTIC_USE_UNDERLINE */;
+                }
+                if (tokenStyle.foreground) {
+                    var foregroundBits = (tokenStyle.foreground) << 14 /* FOREGROUND_OFFSET */;
+                    metadata |= foregroundBits | 8 /* SEMANTIC_USE_FOREGROUND */;
+                }
+                if (metadata === 0) {
+                    // Nothing!
+                    metadata = 2147483647 /* NO_STYLING */;
+                }
+            }
+            this._hashTable.add(tokenTypeIndex, tokenModifierSet, metadata);
         }
-        var metadata = this._themeService.getTheme().getTokenStyleMetadata(tokenType, tokenModifiers);
-        if (typeof metadata === 'undefined') {
-            metadata = 2147483647 /* NO_STYLING */;
+        if (this._logService.getLevel() === LogLevel.Trace) {
+            var type = this._legend.tokenTypes[tokenTypeIndex];
+            var modifiers = tokenModifierSet ? ' ' + this._legend.tokenModifiers.filter(function (_, i) { return tokenModifierSet & (1 << i); }).join(' ') : '';
+            this._logService.trace("tokenStyleMetadata " + (entry ? '[CACHED] ' : '') + type + modifiers + ": foreground " + TokenMetadata.getForeground(metadata) + ", fontStyle " + TokenMetadata.getFontStyle(metadata).toString(2));
         }
-        this._hashTable.add(tokenTypeIndex, tokenModifierSet, metadata);
         return metadata;
     };
     return SemanticColoringProviderStyling;
@@ -429,7 +500,7 @@ var SemanticTokensResponse = /** @class */ (function () {
         this.data = data;
     }
     SemanticTokensResponse.prototype.dispose = function () {
-        this._provider.releaseSemanticTokens(this.resultId);
+        this._provider.releaseDocumentSemanticTokens(this.resultId);
     };
     return SemanticTokensResponse;
 }());
@@ -448,7 +519,7 @@ var ModelSemanticColoring = /** @class */ (function (_super) {
                 _this._fetchSemanticTokens.schedule();
             }
         }));
-        _this._register(SemanticTokensProviderRegistry.onDidChange(function (e) { return _this._fetchSemanticTokens.schedule(); }));
+        _this._register(DocumentSemanticTokensProviderRegistry.onDidChange(function (e) { return _this._fetchSemanticTokens.schedule(); }));
         if (themeService) {
             // workaround for tests which use undefined... :/
             _this._register(themeService.onThemeChange(function (_) {
@@ -461,7 +532,6 @@ var ModelSemanticColoring = /** @class */ (function (_super) {
         return _this;
     }
     ModelSemanticColoring.prototype.dispose = function () {
-        this._isDisposed = true;
         if (this._currentResponse) {
             this._currentResponse.dispose();
             this._currentResponse = null;
@@ -470,6 +540,8 @@ var ModelSemanticColoring = /** @class */ (function (_super) {
             this._currentRequestCancellationTokenSource.cancel();
             this._currentRequestCancellationTokenSource = null;
         }
+        this._setSemanticTokens(null, null, null, []);
+        this._isDisposed = true;
         _super.prototype.dispose.call(this);
     };
     ModelSemanticColoring.prototype._fetchSemanticTokensNow = function () {
@@ -489,16 +561,25 @@ var ModelSemanticColoring = /** @class */ (function (_super) {
         });
         var styling = this._semanticStyling.get(provider);
         var lastResultId = this._currentResponse ? this._currentResponse.resultId || null : null;
-        var request = Promise.resolve(provider.provideSemanticTokens(this._model, lastResultId, null, this._currentRequestCancellationTokenSource.token));
+        var request = Promise.resolve(provider.provideDocumentSemanticTokens(this._model, lastResultId, this._currentRequestCancellationTokenSource.token));
         request.then(function (res) {
             _this._currentRequestCancellationTokenSource = null;
             contentChangeListener.dispose();
             _this._setSemanticTokens(provider, res || null, styling, pendingChanges);
         }, function (err) {
-            errors.onUnexpectedError(err);
+            if (!err || typeof err.message !== 'string' || err.message.indexOf('busy') === -1) {
+                errors.onUnexpectedError(err);
+            }
+            // Semantic tokens eats up all errors and considers errors to mean that the result is temporarily not available
+            // The API does not have a special error kind to express this...
             _this._currentRequestCancellationTokenSource = null;
             contentChangeListener.dispose();
-            _this._setSemanticTokens(provider, null, styling, pendingChanges);
+            if (pendingChanges.length > 0) {
+                // More changes occurred while the request was running
+                if (!_this._fetchSemanticTokens.isScheduled()) {
+                    _this._fetchSemanticTokens.schedule();
+                }
+            }
         });
     };
     ModelSemanticColoring._isSemanticTokens = function (v) {
@@ -521,7 +602,7 @@ var ModelSemanticColoring = /** @class */ (function (_super) {
         if (this._isDisposed) {
             // disposed!
             if (provider && tokens) {
-                provider.releaseSemanticTokens(tokens.resultId);
+                provider.releaseDocumentSemanticTokens(tokens.resultId);
             }
             return;
         }
@@ -663,7 +744,7 @@ var ModelSemanticColoring = /** @class */ (function (_super) {
         this._model.setSemanticTokens(null);
     };
     ModelSemanticColoring.prototype._getSemanticColoringProvider = function () {
-        var result = SemanticTokensProviderRegistry.ordered(this._model);
+        var result = DocumentSemanticTokensProviderRegistry.ordered(this._model);
         return (result.length > 0 ? result[0] : null);
     };
     return ModelSemanticColoring;

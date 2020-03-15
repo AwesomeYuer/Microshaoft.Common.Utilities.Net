@@ -25,8 +25,8 @@ var DecorationsOverlay = /** @class */ (function (_super) {
         var _this = _super.call(this) || this;
         _this._context = context;
         var options = _this._context.configuration.options;
-        _this._lineHeight = options.get(47 /* lineHeight */);
-        _this._typicalHalfwidthCharacterWidth = options.get(32 /* fontInfo */).typicalHalfwidthCharacterWidth;
+        _this._lineHeight = options.get(49 /* lineHeight */);
+        _this._typicalHalfwidthCharacterWidth = options.get(34 /* fontInfo */).typicalHalfwidthCharacterWidth;
         _this._renderResult = null;
         _this._context.addEventHandler(_this);
         return _this;
@@ -39,8 +39,8 @@ var DecorationsOverlay = /** @class */ (function (_super) {
     // --- begin event handlers
     DecorationsOverlay.prototype.onConfigurationChanged = function (e) {
         var options = this._context.configuration.options;
-        this._lineHeight = options.get(47 /* lineHeight */);
-        this._typicalHalfwidthCharacterWidth = options.get(32 /* fontInfo */).typicalHalfwidthCharacterWidth;
+        this._lineHeight = options.get(49 /* lineHeight */);
+        this._typicalHalfwidthCharacterWidth = options.get(34 /* fontInfo */).typicalHalfwidthCharacterWidth;
         return true;
     };
     DecorationsOverlay.prototype.onDecorationsChanged = function (e) {

@@ -66,7 +66,7 @@ var CopyLinesUpAction = /** @class */ (function (_super) {
                 weight: 100 /* EditorContrib */
             },
             menuOpts: {
-                menuId: 23 /* MenubarSelectionMenu */,
+                menuId: 25 /* MenubarSelectionMenu */,
                 group: '2_line',
                 title: nls.localize({ key: 'miCopyLinesUp', comment: ['&& denotes a mnemonic'] }, "&&Copy Line Up"),
                 order: 1
@@ -90,7 +90,7 @@ var CopyLinesDownAction = /** @class */ (function (_super) {
                 weight: 100 /* EditorContrib */
             },
             menuOpts: {
-                menuId: 23 /* MenubarSelectionMenu */,
+                menuId: 25 /* MenubarSelectionMenu */,
                 group: '2_line',
                 title: nls.localize({ key: 'miCopyLinesDown', comment: ['&& denotes a mnemonic'] }, "Co&&py Line Down"),
                 order: 2
@@ -108,7 +108,7 @@ var DuplicateSelectionAction = /** @class */ (function (_super) {
             alias: 'Duplicate Selection',
             precondition: EditorContextKeys.writable,
             menuOpts: {
-                menuId: 23 /* MenubarSelectionMenu */,
+                menuId: 25 /* MenubarSelectionMenu */,
                 group: '2_line',
                 title: nls.localize({ key: 'miDuplicateSelection', comment: ['&& denotes a mnemonic'] }, "&&Duplicate Selection"),
                 order: 5
@@ -176,7 +176,7 @@ var MoveLinesUpAction = /** @class */ (function (_super) {
                 weight: 100 /* EditorContrib */
             },
             menuOpts: {
-                menuId: 23 /* MenubarSelectionMenu */,
+                menuId: 25 /* MenubarSelectionMenu */,
                 group: '2_line',
                 title: nls.localize({ key: 'miMoveLinesUp', comment: ['&& denotes a mnemonic'] }, "Mo&&ve Line Up"),
                 order: 3
@@ -200,7 +200,7 @@ var MoveLinesDownAction = /** @class */ (function (_super) {
                 weight: 100 /* EditorContrib */
             },
             menuOpts: {
-                menuId: 23 /* MenubarSelectionMenu */,
+                menuId: 25 /* MenubarSelectionMenu */,
                 group: '2_line',
                 title: nls.localize({ key: 'miMoveLinesDown', comment: ['&& denotes a mnemonic'] }, "Move &&Line Down"),
                 order: 4
@@ -866,7 +866,7 @@ var AbstractCaseAction = /** @class */ (function (_super) {
         if (model === null) {
             return;
         }
-        var wordSeparators = editor.getOption(92 /* wordSeparators */);
+        var wordSeparators = editor.getOption(96 /* wordSeparators */);
         var commands = [];
         for (var i = 0, len = selections.length; i < len; i++) {
             var selection = selections[i];

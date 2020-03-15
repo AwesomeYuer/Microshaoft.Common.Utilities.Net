@@ -59,10 +59,9 @@ export var CommandsRegistry = new /** @class */ (function () {
         }
         var removeFn = commands.unshift(idOrCommand);
         var ret = toDisposable(function () {
-            var _a;
             removeFn();
             var command = _this._commands.get(id);
-            if ((_a = command) === null || _a === void 0 ? void 0 : _a.isEmpty()) {
+            if (command === null || command === void 0 ? void 0 : command.isEmpty()) {
                 _this._commands.delete(id);
             }
         });

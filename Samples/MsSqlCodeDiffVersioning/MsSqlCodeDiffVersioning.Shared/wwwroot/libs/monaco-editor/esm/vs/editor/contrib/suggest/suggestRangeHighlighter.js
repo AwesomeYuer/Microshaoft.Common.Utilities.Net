@@ -58,7 +58,7 @@ var SuggestRangeHighlighter = /** @class */ (function () {
         var _this = this;
         var _a;
         this._currentItem = item;
-        var opts = this._controller.editor.getOption(85 /* suggest */);
+        var opts = this._controller.editor.getOption(89 /* suggest */);
         var newDeco = [];
         if (opts.insertHighlight) {
             if (!this._shiftKeyListener) {

@@ -44,10 +44,7 @@
 	background-size: 16px !important;
 }
 
-.monaco-custom-checkbox.monaco-simple-checkbox.checked {
-	background: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNMTUgMy43NjM0NUw1LjgwNjg3IDExLjkzNTFMNS4wODU4NCAxMS44OTI3TDEgNy4yOTYxNEwxLjc2MzQ1IDYuNjE3NTJMNS41MDk5NyAxMC44MzI0TDE0LjMyMTQgM0wxNSAzLjc2MzQ1WiIgZmlsbD0iIzQyNDI0MiIvPg0KPC9zdmc+DQo=") center center no-repeat;
-}
-
-.monaco-custom-checkbox.monaco-simple-checkbox.checked {
-	background: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNMTUgMy43NjM0NUw1LjgwNjg3IDExLjkzNTFMNS4wODU4NCAxMS44OTI3TDEgNy4yOTYxNEwxLjc2MzQ1IDYuNjE3NTJMNS41MDk5NyAxMC44MzI0TDE0LjMyMTQgM0wxNSAzLjc2MzQ1WiIgZmlsbD0iI0M1QzVDNSIvPg0KPC9zdmc+DQo=") center center no-repeat;
+/* hide check when unchecked */
+.monaco-custom-checkbox.monaco-simple-checkbox.unchecked:not(.checked)::before {
+	visibility: hidden;;
 }

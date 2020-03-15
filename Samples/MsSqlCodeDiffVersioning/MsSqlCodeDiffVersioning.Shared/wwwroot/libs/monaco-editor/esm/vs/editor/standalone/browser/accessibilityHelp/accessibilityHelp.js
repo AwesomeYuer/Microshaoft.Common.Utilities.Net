@@ -191,8 +191,8 @@ var AccessibilityHelpWidget = /** @class */ (function (_super) {
             }
         }
         var text = getSelectionLabel(selections, charactersSelected);
-        if (options.get(43 /* inDiffEditor */)) {
-            if (options.get(65 /* readOnly */)) {
+        if (options.get(45 /* inDiffEditor */)) {
+            if (options.get(68 /* readOnly */)) {
                 text += AccessibilityHelpNLS.readonlyDiffEditor;
             }
             else {
@@ -200,7 +200,7 @@ var AccessibilityHelpWidget = /** @class */ (function (_super) {
             }
         }
         else {
-            if (options.get(65 /* readOnly */)) {
+            if (options.get(68 /* readOnly */)) {
                 text += AccessibilityHelpNLS.readonlyEditor;
             }
             else {
@@ -222,7 +222,7 @@ var AccessibilityHelpWidget = /** @class */ (function (_super) {
                 text += ' ' + turnOnMessage;
                 break;
         }
-        if (options.get(102 /* tabFocusMode */)) {
+        if (options.get(106 /* tabFocusMode */)) {
             text += '\n\n - ' + this._descriptionForCommand(ToggleTabFocusModeAction.ID, AccessibilityHelpNLS.tabFocusModeOnMsg, AccessibilityHelpNLS.tabFocusModeOnMsgNoKb);
         }
         else {

@@ -41,7 +41,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 import { flatten, coalesce } from '../../../base/common/arrays.js';
 import { CancellationToken } from '../../../base/common/cancellation.js';
 import { onUnexpectedExternalError } from '../../../base/common/errors.js';
-import { registerDefaultLanguageCommand } from '../../browser/editorExtensions.js';
+import { registerModelAndPositionCommand } from '../../browser/editorExtensions.js';
 import { DefinitionProviderRegistry, ImplementationProviderRegistry, TypeDefinitionProviderRegistry, DeclarationProviderRegistry, ReferenceProviderRegistry } from '../../common/modes.js';
 function getLocationLinks(model, position, registry, provide) {
     var provider = registry.ordered(model);
@@ -99,8 +99,8 @@ export function getReferencesAtPosition(model, position, compact, token) {
         });
     }); });
 }
-registerDefaultLanguageCommand('_executeDefinitionProvider', function (model, position) { return getDefinitionsAtPosition(model, position, CancellationToken.None); });
-registerDefaultLanguageCommand('_executeDeclarationProvider', function (model, position) { return getDeclarationsAtPosition(model, position, CancellationToken.None); });
-registerDefaultLanguageCommand('_executeImplementationProvider', function (model, position) { return getImplementationsAtPosition(model, position, CancellationToken.None); });
-registerDefaultLanguageCommand('_executeTypeDefinitionProvider', function (model, position) { return getTypeDefinitionsAtPosition(model, position, CancellationToken.None); });
-registerDefaultLanguageCommand('_executeReferenceProvider', function (model, position) { return getReferencesAtPosition(model, position, false, CancellationToken.None); });
+registerModelAndPositionCommand('_executeDefinitionProvider', function (model, position) { return getDefinitionsAtPosition(model, position, CancellationToken.None); });
+registerModelAndPositionCommand('_executeDeclarationProvider', function (model, position) { return getDeclarationsAtPosition(model, position, CancellationToken.None); });
+registerModelAndPositionCommand('_executeImplementationProvider', function (model, position) { return getImplementationsAtPosition(model, position, CancellationToken.None); });
+registerModelAndPositionCommand('_executeTypeDefinitionProvider', function (model, position) { return getTypeDefinitionsAtPosition(model, position, CancellationToken.None); });
+registerModelAndPositionCommand('_executeReferenceProvider', function (model, position) { return getReferencesAtPosition(model, position, false, CancellationToken.None); });

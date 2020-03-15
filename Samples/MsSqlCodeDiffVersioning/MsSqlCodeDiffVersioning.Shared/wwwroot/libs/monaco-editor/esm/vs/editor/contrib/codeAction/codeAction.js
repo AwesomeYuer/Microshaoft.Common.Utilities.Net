@@ -61,15 +61,15 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 import { equals, flatten, isNonEmptyArray, mergeSort } from '../../../base/common/arrays.js';
 import { CancellationToken } from '../../../base/common/cancellation.js';
 import { illegalArgument, isPromiseCanceledError, onUnexpectedExternalError } from '../../../base/common/errors.js';
+import { Disposable, DisposableStore } from '../../../base/common/lifecycle.js';
 import { URI } from '../../../base/common/uri.js';
+import { TextModelCancellationTokenSource } from '../../browser/core/editorState.js';
 import { registerLanguageCommand } from '../../browser/editorExtensions.js';
 import { Range } from '../../common/core/range.js';
 import { Selection } from '../../common/core/selection.js';
-import { CodeActionProviderRegistry } from '../../common/modes.js';
+import * as modes from '../../common/modes.js';
 import { IModelService } from '../../common/services/modelService.js';
 import { CodeActionKind, filtersAction, mayIncludeActionsOfKind } from './types.js';
-import { TextModelCancellationTokenSource } from '../../browser/core/editorState.js';
-import { DisposableStore, Disposable } from '../../../base/common/lifecycle.js';
 export var codeActionCommandId = 'editor.action.codeAction';
 export var refactorCommandId = 'editor.action.refactor';
 export var sourceActionCommandId = 'editor.action.sourceAction';
@@ -115,7 +115,7 @@ export function getCodeActions(model, rangeOrSelection, trigger, token) {
     var filter = trigger.filter || {};
     var codeActionContext = {
         only: (_a = filter.include) === null || _a === void 0 ? void 0 : _a.value,
-        trigger: trigger.type === 'manual' ? 2 /* Manual */ : 1 /* Automatic */
+        trigger: trigger.type,
     };
     var cts = new TextModelCancellationTokenSource(model, token);
     var providers = getCodeActionProviders(model, filter);
@@ -145,8 +145,8 @@ export function getCodeActions(model, rangeOrSelection, trigger, token) {
             }
         });
     }); });
-    var listener = CodeActionProviderRegistry.onDidChange(function () {
-        var newProviders = CodeActionProviderRegistry.all(model);
+    var listener = modes.CodeActionProviderRegistry.onDidChange(function () {
+        var newProviders = modes.CodeActionProviderRegistry.all(model);
         if (!equals(newProviders, providers)) {
             cts.cancel();
         }
@@ -160,7 +160,7 @@ export function getCodeActions(model, rangeOrSelection, trigger, token) {
     });
 }
 function getCodeActionProviders(model, filter) {
-    return CodeActionProviderRegistry.all(model)
+    return modes.CodeActionProviderRegistry.all(model)
         // Don't include providers that we know will not return code actions of interest
         .filter(function (provider) {
         if (!provider.providedCodeActionKinds) {
@@ -192,7 +192,7 @@ registerLanguageCommand('_executeCodeActionProvider', function (accessor, args) 
                     if (!validatedRangeOrSelection) {
                         throw illegalArgument();
                     }
-                    return [4 /*yield*/, getCodeActions(model, validatedRangeOrSelection, { type: 'manual', filter: { includeSourceActions: true, include: kind && kind.value ? new CodeActionKind(kind.value) : undefined } }, CancellationToken.None)];
+                    return [4 /*yield*/, getCodeActions(model, validatedRangeOrSelection, { type: 2 /* Manual */, filter: { includeSourceActions: true, include: kind && kind.value ? new CodeActionKind(kind.value) : undefined } }, CancellationToken.None)];
                 case 1:
                     codeActionSet = _a.sent();
                     setTimeout(function () { return codeActionSet.dispose(); }, 100);
