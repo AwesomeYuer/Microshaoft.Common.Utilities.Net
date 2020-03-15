@@ -39,8 +39,9 @@ var LightBulbState;
 (function (LightBulbState) {
     LightBulbState.Hidden = { type: 0 /* Hidden */ };
     var Showing = /** @class */ (function () {
-        function Showing(actions, editorPosition, widgetPosition) {
+        function Showing(actions, trigger, editorPosition, widgetPosition) {
             this.actions = actions;
+            this.trigger = trigger;
             this.editorPosition = editorPosition;
             this.widgetPosition = widgetPosition;
             this.type = 1 /* Showing */;
@@ -81,7 +82,7 @@ var LightBulbWidget = /** @class */ (function (_super) {
             // a bit of extra work to make sure the menu
             // doesn't cover the line-text
             var _a = dom.getDomNodePagePosition(_this._domNode), top = _a.top, height = _a.height;
-            var lineHeight = _this._editor.getOption(47 /* lineHeight */);
+            var lineHeight = _this._editor.getOption(49 /* lineHeight */);
             var pad = Math.floor(lineHeight / 3);
             if (_this.state.widgetPosition.position !== null && _this.state.widgetPosition.position.lineNumber < _this.state.editorPosition.lineNumber) {
                 pad += lineHeight;
@@ -89,7 +90,8 @@ var LightBulbWidget = /** @class */ (function (_super) {
             _this._onClick.fire({
                 x: e.posx,
                 y: top + height + pad,
-                actions: _this.state.actions
+                actions: _this.state.actions,
+                trigger: _this.state.trigger,
             });
         }));
         _this._register(dom.addDisposableListener(_this._domNode, 'mouseenter', function (e) {
@@ -101,13 +103,13 @@ var LightBulbWidget = /** @class */ (function (_super) {
             // showings until mouse is released
             _this.hide();
             var monitor = new GlobalMouseMoveMonitor();
-            monitor.startMonitoring(standardMouseMoveMerger, function () { }, function () {
+            monitor.startMonitoring(e.target, e.buttons, standardMouseMoveMerger, function () { }, function () {
                 monitor.dispose();
             });
         }));
         _this._register(_this._editor.onDidChangeConfiguration(function (e) {
             // hide when told to do so
-            if (e.hasChanged(45 /* lightbulb */) && !_this._editor.getOption(45 /* lightbulb */).enabled) {
+            if (e.hasChanged(47 /* lightbulb */) && !_this._editor.getOption(47 /* lightbulb */).enabled) {
                 _this.hide();
             }
         }));
@@ -128,13 +130,13 @@ var LightBulbWidget = /** @class */ (function (_super) {
     LightBulbWidget.prototype.getPosition = function () {
         return this._state.type === 1 /* Showing */ ? this._state.widgetPosition : null;
     };
-    LightBulbWidget.prototype.update = function (actions, atPosition) {
+    LightBulbWidget.prototype.update = function (actions, trigger, atPosition) {
         var _this = this;
         if (actions.validActions.length <= 0) {
             return this.hide();
         }
         var options = this._editor.getOptions();
-        if (!options.get(45 /* lightbulb */).enabled) {
+        if (!options.get(47 /* lightbulb */).enabled) {
             return this.hide();
         }
         var lineNumber = atPosition.lineNumber, column = atPosition.column;
@@ -143,7 +145,7 @@ var LightBulbWidget = /** @class */ (function (_super) {
             return this.hide();
         }
         var tabSize = model.getOptions().tabSize;
-        var fontInfo = options.get(32 /* fontInfo */);
+        var fontInfo = options.get(34 /* fontInfo */);
         var lineContent = model.getLineContent(lineNumber);
         var indent = TextModel.computeIndentLevel(lineContent, tabSize);
         var lineHasSpace = fontInfo.spaceWidth * indent > 22;
@@ -164,7 +166,7 @@ var LightBulbWidget = /** @class */ (function (_super) {
                 return this.hide();
             }
         }
-        this.state = new LightBulbState.Showing(actions, atPosition, {
+        this.state = new LightBulbState.Showing(actions, trigger, atPosition, {
             position: { lineNumber: effectiveLineNumber, column: 1 },
             preference: LightBulbWidget._posPref
         });
@@ -218,11 +220,11 @@ registerThemingParticipant(function (theme, collector) {
     // Lightbulb Icon
     var editorLightBulbForegroundColor = theme.getColor(editorLightBulbForeground);
     if (editorLightBulbForegroundColor) {
-        collector.addRule("\n\t\t.monaco-editor .contentWidgets .codicon-lightbulb,\n\t\t.monaco-workbench .markers-panel-container .codicon-lightbulb {\n\t\t\tcolor: " + editorLightBulbForegroundColor + ";\n\t\t}");
+        collector.addRule("\n\t\t.monaco-editor .contentWidgets .codicon-lightbulb {\n\t\t\tcolor: " + editorLightBulbForegroundColor + ";\n\t\t}");
     }
     // Lightbulb Auto Fix Icon
     var editorLightBulbAutoFixForegroundColor = theme.getColor(editorLightBulbAutoFixForeground);
     if (editorLightBulbAutoFixForegroundColor) {
-        collector.addRule("\n\t\t.monaco-editor .contentWidgets .codicon-lightbulb-autofix,\n\t\t.monaco-workbench .markers-panel-container .codicon-lightbulb-autofix {\n\t\t\tcolor: " + editorLightBulbAutoFixForegroundColor + ";\n\t\t}");
+        collector.addRule("\n\t\t.monaco-editor .contentWidgets .codicon-lightbulb-autofix {\n\t\t\tcolor: " + editorLightBulbAutoFixForegroundColor + ";\n\t\t}");
     }
 });

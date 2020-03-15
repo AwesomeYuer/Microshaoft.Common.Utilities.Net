@@ -73,20 +73,19 @@ import { escapeRegExpCharacters } from '../../../base/common/strings.js';
 import { EditorAction, EditorCommand } from '../../browser/editorExtensions.js';
 import { IBulkEditService } from '../../browser/services/bulkEditService.js';
 import { EditorContextKeys } from '../../common/editorContextKeys.js';
-import { refactorCommandId, sourceActionCommandId, codeActionCommandId, organizeImportsCommandId, fixAllCommandId } from './codeAction.js';
+import { codeActionCommandId, fixAllCommandId, organizeImportsCommandId, refactorCommandId, sourceActionCommandId } from './codeAction.js';
 import { CodeActionUi } from './codeActionUi.js';
 import { MessageController } from '../message/messageController.js';
 import * as nls from '../../../nls.js';
 import { ICommandService } from '../../../platform/commands/common/commands.js';
 import { ContextKeyExpr, IContextKeyService } from '../../../platform/contextkey/common/contextkey.js';
-import { IContextMenuService } from '../../../platform/contextview/browser/contextView.js';
 import { IInstantiationService } from '../../../platform/instantiation/common/instantiation.js';
-import { IKeybindingService } from '../../../platform/keybinding/common/keybinding.js';
 import { IMarkerService } from '../../../platform/markers/common/markers.js';
 import { INotificationService } from '../../../platform/notification/common/notification.js';
 import { IEditorProgressService } from '../../../platform/progress/common/progress.js';
+import { ITelemetryService } from '../../../platform/telemetry/common/telemetry.js';
 import { CodeActionModel, SUPPORTED_CODE_ACTIONS } from './codeActionModel.js';
-import { CodeActionKind, CodeActionCommandArgs } from './types.js';
+import { CodeActionCommandArgs, CodeActionKind } from './types.js';
 function contextKeyForSupportedActions(kind) {
     return ContextKeyExpr.regex(SUPPORTED_CODE_ACTIONS.keys()[0], new RegExp('(\\s|^)' + escapeRegExpCharacters(kind.value) + '\\b'));
 }
@@ -119,10 +118,8 @@ var argsSchema = {
 };
 var QuickFixController = /** @class */ (function (_super) {
     __extends(QuickFixController, _super);
-    function QuickFixController(editor, markerService, contextKeyService, progressService, contextMenuService, keybindingService, _commandService, _bulkEditService, _instantiationService) {
+    function QuickFixController(editor, markerService, contextKeyService, progressService, _instantiationService) {
         var _this = _super.call(this) || this;
-        _this._commandService = _commandService;
-        _this._bulkEditService = _bulkEditService;
         _this._instantiationService = _instantiationService;
         _this._editor = editor;
         _this._model = _this._register(new CodeActionModel(_this._editor, markerService, contextKeyService, progressService));
@@ -140,7 +137,7 @@ var QuickFixController = /** @class */ (function (_super) {
                                 return [3 /*break*/, 3];
                             case 2:
                                 if (retrigger) {
-                                    this._trigger({ type: 'auto', filter: {} });
+                                    this._trigger({ type: 1 /* Auto */, filter: {} });
                                 }
                                 return [7 /*endfinally*/];
                             case 3: return [2 /*return*/];
@@ -157,8 +154,8 @@ var QuickFixController = /** @class */ (function (_super) {
     QuickFixController.prototype.update = function (newState) {
         this._ui.getValue().update(newState);
     };
-    QuickFixController.prototype.showCodeActions = function (actions, at) {
-        return this._ui.getValue().showCodeActionList(actions, at, { includeDisabledActions: false });
+    QuickFixController.prototype.showCodeActions = function (trigger, actions, at) {
+        return this._ui.getValue().showCodeActionList(trigger, actions, at, { includeDisabledActions: false });
     };
     QuickFixController.prototype.manualTriggerAtCurrentPosition = function (notAvailableMessage, filter, autoApply) {
         if (!this._editor.hasModel()) {
@@ -166,35 +163,39 @@ var QuickFixController = /** @class */ (function (_super) {
         }
         MessageController.get(this._editor).closeMessage();
         var triggerPosition = this._editor.getPosition();
-        this._trigger({ type: 'manual', filter: filter, autoApply: autoApply, context: { notAvailableMessage: notAvailableMessage, position: triggerPosition } });
+        this._trigger({ type: 2 /* Manual */, filter: filter, autoApply: autoApply, context: { notAvailableMessage: notAvailableMessage, position: triggerPosition } });
     };
     QuickFixController.prototype._trigger = function (trigger) {
         return this._model.trigger(trigger);
     };
     QuickFixController.prototype._applyCodeAction = function (action) {
-        return this._instantiationService.invokeFunction(applyCodeAction, action, this._bulkEditService, this._commandService, this._editor);
+        return this._instantiationService.invokeFunction(applyCodeAction, action, this._editor);
     };
     QuickFixController.ID = 'editor.contrib.quickFixController';
     QuickFixController = __decorate([
         __param(1, IMarkerService),
         __param(2, IContextKeyService),
         __param(3, IEditorProgressService),
-        __param(4, IContextMenuService),
-        __param(5, IKeybindingService),
-        __param(6, ICommandService),
-        __param(7, IBulkEditService),
-        __param(8, IInstantiationService)
+        __param(4, IInstantiationService)
     ], QuickFixController);
     return QuickFixController;
 }(Disposable));
 export { QuickFixController };
-export function applyCodeAction(accessor, action, bulkEditService, commandService, editor) {
+export function applyCodeAction(accessor, action, editor) {
     return __awaiter(this, void 0, void 0, function () {
-        var notificationService, err_1, message;
+        var bulkEditService, commandService, telemetryService, notificationService, err_1, message;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
+                    bulkEditService = accessor.get(IBulkEditService);
+                    commandService = accessor.get(ICommandService);
+                    telemetryService = accessor.get(ITelemetryService);
                     notificationService = accessor.get(INotificationService);
+                    telemetryService.publicLog2('codeAction.applyCodeAction', {
+                        codeActionTitle: action.title,
+                        codeActionKind: action.kind,
+                        codeActionIsPreferred: !!action.isPreferred,
+                    });
                     if (!action.edit) return [3 /*break*/, 2];
                     return [4 /*yield*/, bulkEditService.apply(action.edit, { editor: editor })];
                 case 1:
@@ -275,12 +276,11 @@ var CodeActionCommand = /** @class */ (function (_super) {
         }) || this;
     }
     CodeActionCommand.prototype.runEditorCommand = function (_accessor, editor, userArgs) {
-        var _a;
         var args = CodeActionCommandArgs.fromUser(userArgs, {
             kind: CodeActionKind.Empty,
             apply: "ifSingle" /* IfSingle */,
         });
-        return triggerCodeActionsForEditorSelection(editor, typeof ((_a = userArgs) === null || _a === void 0 ? void 0 : _a.kind) === 'string'
+        return triggerCodeActionsForEditorSelection(editor, typeof (userArgs === null || userArgs === void 0 ? void 0 : userArgs.kind) === 'string'
             ? args.preferred
                 ? nls.localize('editor.action.codeAction.noneMessage.preferred.kind', "No preferred code actions for '{0}' available", userArgs.kind)
                 : nls.localize('editor.action.codeAction.noneMessage.kind', "No code actions for '{0}' available", userArgs.kind)
@@ -323,12 +323,11 @@ var RefactorAction = /** @class */ (function (_super) {
         }) || this;
     }
     RefactorAction.prototype.run = function (_accessor, editor, userArgs) {
-        var _a;
         var args = CodeActionCommandArgs.fromUser(userArgs, {
             kind: CodeActionKind.Refactor,
             apply: "never" /* Never */
         });
-        return triggerCodeActionsForEditorSelection(editor, typeof ((_a = userArgs) === null || _a === void 0 ? void 0 : _a.kind) === 'string'
+        return triggerCodeActionsForEditorSelection(editor, typeof (userArgs === null || userArgs === void 0 ? void 0 : userArgs.kind) === 'string'
             ? args.preferred
                 ? nls.localize('editor.action.refactor.noneMessage.preferred.kind', "No preferred refactorings for '{0}' available", userArgs.kind)
                 : nls.localize('editor.action.refactor.noneMessage.kind', "No refactorings for '{0}' available", userArgs.kind)
@@ -362,12 +361,11 @@ var SourceAction = /** @class */ (function (_super) {
         }) || this;
     }
     SourceAction.prototype.run = function (_accessor, editor, userArgs) {
-        var _a;
         var args = CodeActionCommandArgs.fromUser(userArgs, {
             kind: CodeActionKind.Source,
             apply: "never" /* Never */
         });
-        return triggerCodeActionsForEditorSelection(editor, typeof ((_a = userArgs) === null || _a === void 0 ? void 0 : _a.kind) === 'string'
+        return triggerCodeActionsForEditorSelection(editor, typeof (userArgs === null || userArgs === void 0 ? void 0 : userArgs.kind) === 'string'
             ? args.preferred
                 ? nls.localize('editor.action.source.noneMessage.preferred.kind', "No preferred source actions for '{0}' available", userArgs.kind)
                 : nls.localize('editor.action.source.noneMessage.kind', "No source actions for '{0}' available", userArgs.kind)

@@ -45,6 +45,7 @@ import { SelectionsOverlay } from '../viewParts/selections/selections.js';
 import { ViewCursors } from '../viewParts/viewCursors/viewCursors.js';
 import { ViewZones } from '../viewParts/viewZones/viewZones.js';
 import { Position } from '../../common/core/position.js';
+import { Range } from '../../common/core/range.js';
 import { RenderingContext } from '../../common/view/renderingContext.js';
 import { ViewContext } from '../../common/view/viewContext.js';
 import { ViewEventDispatcher } from '../../common/view/viewEventDispatcher.js';
@@ -204,7 +205,7 @@ var View = /** @class */ (function (_super) {
     };
     View.prototype._applyLayout = function () {
         var options = this._context.configuration.options;
-        var layoutInfo = options.get(103 /* layoutInfo */);
+        var layoutInfo = options.get(107 /* layoutInfo */);
         this.domNode.setWidth(layoutInfo.width);
         this.domNode.setHeight(layoutInfo.height);
         this.overflowGuardContainer.setWidth(layoutInfo.width);
@@ -214,12 +215,16 @@ var View = /** @class */ (function (_super) {
     };
     View.prototype.getEditorClassName = function () {
         var focused = this._textAreaHandler.isFocused() ? ' focused' : '';
-        return this._context.configuration.options.get(100 /* editorClassName */) + ' ' + getThemeTypeSelector(this._context.theme.type) + focused;
+        return this._context.configuration.options.get(104 /* editorClassName */) + ' ' + getThemeTypeSelector(this._context.theme.type) + focused;
     };
     // --- begin event handlers
     View.prototype.onConfigurationChanged = function (e) {
         this.domNode.setClassName(this.getEditorClassName());
         this._applyLayout();
+        return false;
+    };
+    View.prototype.onContentSizeChanged = function (e) {
+        this.outgoingEvents.emitContentSizeChange(e);
         return false;
     };
     View.prototype.onFocusChanged = function (e) {
@@ -386,16 +391,24 @@ var View = /** @class */ (function (_super) {
     View.prototype.isFocused = function () {
         return this._textAreaHandler.isFocused();
     };
+    View.prototype.setAriaOptions = function (options) {
+        this._textAreaHandler.setAriaOptions(options);
+    };
     View.prototype.addContentWidget = function (widgetData) {
         this.contentWidgets.addWidget(widgetData.widget);
         this.layoutContentWidget(widgetData);
         this._scheduleRender();
     };
     View.prototype.layoutContentWidget = function (widgetData) {
-        var newPosition = widgetData.position ? widgetData.position.position : null;
         var newRange = widgetData.position ? widgetData.position.range || null : null;
+        if (newRange === null) {
+            var newPosition = widgetData.position ? widgetData.position.position : null;
+            if (newPosition !== null) {
+                newRange = new Range(newPosition.lineNumber, newPosition.column, newPosition.lineNumber, newPosition.column);
+            }
+        }
         var newPreference = widgetData.position ? widgetData.position.preference : null;
-        this.contentWidgets.setWidgetPosition(widgetData.widget, newPosition, newRange, newPreference);
+        this.contentWidgets.setWidgetPosition(widgetData.widget, newRange, newPreference);
         this._scheduleRender();
     };
     View.prototype.removeContentWidget = function (widgetData) {

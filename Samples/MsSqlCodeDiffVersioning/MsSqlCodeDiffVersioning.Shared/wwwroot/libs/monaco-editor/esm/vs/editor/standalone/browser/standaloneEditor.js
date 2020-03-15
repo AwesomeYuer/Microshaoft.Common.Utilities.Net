@@ -8,7 +8,7 @@ import { OpenerService } from '../../browser/services/openerService.js';
 import { DiffNavigator } from '../../browser/widget/diffNavigator.js';
 import { EditorOptions, ConfigurationChangedEvent } from '../../common/config/editorOptions.js';
 import { BareFontInfo, FontInfo } from '../../common/config/fontInfo.js';
-import * as editorCommon from '../../common/editorCommon.js';
+import { EditorType } from '../../common/editorCommon.js';
 import { FindMatch, TextModelResolvedOptions } from '../../common/model.js';
 import * as modes from '../../common/modes.js';
 import { NULL_STATE, nullTokenize } from '../../common/modes/nullMode.js';
@@ -291,7 +291,7 @@ export function createMonacoEditorAPI() {
         TextModelResolvedOptions: TextModelResolvedOptions,
         FindMatch: FindMatch,
         // vars
-        EditorType: editorCommon.EditorType,
+        EditorType: EditorType,
         EditorOptions: EditorOptions
     };
 }

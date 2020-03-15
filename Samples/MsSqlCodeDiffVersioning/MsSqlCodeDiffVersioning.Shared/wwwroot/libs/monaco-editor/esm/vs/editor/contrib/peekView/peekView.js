@@ -204,7 +204,7 @@ var PeekViewWidget = /** @class */ (function (_super) {
             this.dispose();
             return;
         }
-        var headHeight = Math.ceil(this.editor.getOption(47 /* lineHeight */) * 1.2);
+        var headHeight = Math.ceil(this.editor.getOption(49 /* lineHeight */) * 1.2);
         var bodyHeight = Math.round(heightInPixel - (headHeight + 2 /* the border-top/bottom width*/));
         this._doLayoutHead(headHeight, widthInPixel);
         this._doLayoutBody(bodyHeight, widthInPixel);
@@ -225,7 +225,7 @@ var PeekViewWidget = /** @class */ (function (_super) {
 export { PeekViewWidget };
 export var peekViewTitleBackground = registerColor('peekViewTitle.background', { dark: '#1E1E1E', light: '#FFFFFF', hc: '#0C141F' }, nls.localize('peekViewTitleBackground', 'Background color of the peek view title area.'));
 export var peekViewTitleForeground = registerColor('peekViewTitleLabel.foreground', { dark: '#FFFFFF', light: '#333333', hc: '#FFFFFF' }, nls.localize('peekViewTitleForeground', 'Color of the peek view title.'));
-export var peekViewTitleInfoForeground = registerColor('peekViewTitleDescription.foreground', { dark: '#ccccccb3', light: '#6c6c6cb3', hc: '#FFFFFF99' }, nls.localize('peekViewTitleInfoForeground', 'Color of the peek view title info.'));
+export var peekViewTitleInfoForeground = registerColor('peekViewTitleDescription.foreground', { dark: '#ccccccb3', light: '#616161e6', hc: '#FFFFFF99' }, nls.localize('peekViewTitleInfoForeground', 'Color of the peek view title info.'));
 export var peekViewBorder = registerColor('peekView.border', { dark: '#007acc', light: '#007acc', hc: contrastBorder }, nls.localize('peekViewBorder', 'Color of the peek view borders and arrow.'));
 export var peekViewResultsBackground = registerColor('peekViewResult.background', { dark: '#252526', light: '#F3F3F3', hc: Color.black }, nls.localize('peekViewResultsBackground', 'Background color of the peek view result list.'));
 export var peekViewResultsMatchForeground = registerColor('peekViewResult.lineForeground', { dark: '#bbbbbb', light: '#646465', hc: Color.white }, nls.localize('peekViewResultsMatchForeground', 'Foreground color for line nodes in the peek view result list.'));

@@ -27,6 +27,7 @@ import { PagedScreenReaderStrategy, TextAreaState } from './textAreaState.js';
 import { PartFingerprints, ViewPart } from '../view/viewPart.js';
 import { LineNumbersOverlay } from '../viewParts/lineNumbers/lineNumbers.js';
 import { Margin } from '../viewParts/margin/margin.js';
+import { EditorOptions } from '../../common/config/editorOptions.js';
 import { getMapForWordSeparators } from '../../common/controller/wordCharacterClassifier.js';
 import { Position } from '../../common/core/position.js';
 import { Range } from '../../common/core/range.js';
@@ -56,18 +57,18 @@ var TextAreaHandler = /** @class */ (function (_super) {
         _this._scrollLeft = 0;
         _this._scrollTop = 0;
         var options = _this._context.configuration.options;
-        var layoutInfo = options.get(103 /* layoutInfo */);
-        _this._accessibilitySupport = options.get(2 /* accessibilitySupport */);
-        _this._accessibilityPageSize = options.get(3 /* accessibilityPageSize */);
+        var layoutInfo = options.get(107 /* layoutInfo */);
+        _this._setAccessibilityOptions(options);
         _this._contentLeft = layoutInfo.contentLeft;
         _this._contentWidth = layoutInfo.contentWidth;
-        _this._contentHeight = layoutInfo.contentHeight;
-        _this._fontInfo = options.get(32 /* fontInfo */);
-        _this._lineHeight = options.get(47 /* lineHeight */);
-        _this._emptySelectionClipboard = options.get(24 /* emptySelectionClipboard */);
-        _this._copyWithSyntaxHighlighting = options.get(14 /* copyWithSyntaxHighlighting */);
+        _this._contentHeight = layoutInfo.height;
+        _this._fontInfo = options.get(34 /* fontInfo */);
+        _this._lineHeight = options.get(49 /* lineHeight */);
+        _this._emptySelectionClipboard = options.get(25 /* emptySelectionClipboard */);
+        _this._copyWithSyntaxHighlighting = options.get(15 /* copyWithSyntaxHighlighting */);
         _this._visibleTextArea = null;
         _this._selections = [new Selection(1, 1, 1, 1)];
+        _this._modelSelections = [new Selection(1, 1, 1, 1)];
         _this._lastRenderPosition = null;
         // Text Area (The focus will always be in the textarea when the cursor is blinking)
         _this.textArea = createFastDomNode(document.createElement('textarea'));
@@ -83,7 +84,7 @@ var TextAreaHandler = /** @class */ (function (_super) {
         _this.textArea.setAttribute('aria-multiline', 'true');
         _this.textArea.setAttribute('aria-haspopup', 'false');
         _this.textArea.setAttribute('aria-autocomplete', 'both');
-        if (platform.isWeb && options.get(65 /* readOnly */)) {
+        if (platform.isWeb && options.get(68 /* readOnly */)) {
             _this.textArea.setAttribute('readonly', 'true');
         }
         _this.textAreaCover = createFastDomNode(document.createElement('div'));
@@ -101,22 +102,28 @@ var TextAreaHandler = /** @class */ (function (_super) {
         };
         var textAreaInputHost = {
             getDataToCopy: function (generateHTML) {
-                var rawTextToCopy = _this._context.model.getPlainTextToCopy(_this._selections, _this._emptySelectionClipboard, platform.isWindows);
+                var rawTextToCopy = _this._context.model.getPlainTextToCopy(_this._modelSelections, _this._emptySelectionClipboard, platform.isWindows);
                 var newLineCharacter = _this._context.model.getEOL();
-                var isFromEmptySelection = (_this._emptySelectionClipboard && _this._selections.length === 1 && _this._selections[0].isEmpty());
+                var isFromEmptySelection = (_this._emptySelectionClipboard && _this._modelSelections.length === 1 && _this._modelSelections[0].isEmpty());
                 var multicursorText = (Array.isArray(rawTextToCopy) ? rawTextToCopy : null);
                 var text = (Array.isArray(rawTextToCopy) ? rawTextToCopy.join(newLineCharacter) : rawTextToCopy);
                 var html = undefined;
+                var mode = null;
                 if (generateHTML) {
                     if (CopyOptions.forceCopyWithSyntaxHighlighting || (_this._copyWithSyntaxHighlighting && text.length < 65536)) {
-                        html = _this._context.model.getHTMLToCopy(_this._selections, _this._emptySelectionClipboard);
+                        var richText = _this._context.model.getRichTextToCopy(_this._modelSelections, _this._emptySelectionClipboard);
+                        if (richText) {
+                            html = richText.html;
+                            mode = richText.mode;
+                        }
                     }
                 }
                 return {
                     isFromEmptySelection: isFromEmptySelection,
                     multicursorText: multicursorText,
                     text: text,
-                    html: html
+                    html: html,
+                    mode: mode
                 };
             },
             getScreenReaderContent: function (currentState) {
@@ -159,11 +166,13 @@ var TextAreaHandler = /** @class */ (function (_super) {
         _this._register(_this._textAreaInput.onPaste(function (e) {
             var pasteOnNewLine = false;
             var multicursorText = null;
+            var mode = null;
             if (e.metadata) {
                 pasteOnNewLine = (_this._emptySelectionClipboard && !!e.metadata.isFromEmptySelection);
                 multicursorText = (typeof e.metadata.multicursorText !== 'undefined' ? e.metadata.multicursorText : null);
+                mode = e.metadata.mode;
             }
-            _this._viewController.paste('keyboard', e.text, pasteOnNewLine, multicursorText);
+            _this._viewController.paste('keyboard', e.text, pasteOnNewLine, multicursorText, mode);
         }));
         _this._register(_this._textAreaInput.onCut(function () {
             _this._viewController.cut('keyboard');
@@ -224,7 +233,7 @@ var TextAreaHandler = /** @class */ (function (_super) {
     };
     TextAreaHandler.prototype._getWordBeforePosition = function (position) {
         var lineContent = this._context.model.getLineContent(position.lineNumber);
-        var wordSeparators = getMapForWordSeparators(this._context.configuration.options.get(92 /* wordSeparators */));
+        var wordSeparators = getMapForWordSeparators(this._context.configuration.options.get(96 /* wordSeparators */));
         var column = position.column;
         var distance = 0;
         while (column > 1) {
@@ -255,22 +264,33 @@ var TextAreaHandler = /** @class */ (function (_super) {
         }
         return options.get(4 /* ariaLabel */);
     };
+    TextAreaHandler.prototype._setAccessibilityOptions = function (options) {
+        this._accessibilitySupport = options.get(2 /* accessibilitySupport */);
+        var accessibilityPageSize = options.get(3 /* accessibilityPageSize */);
+        if (this._accessibilitySupport === 2 /* Enabled */ && accessibilityPageSize === EditorOptions.accessibilityPageSize.defaultValue) {
+            // If a screen reader is attached and the default value is not set we shuold automatically increase the page size to 160 for a better experience
+            // If we put more than 160 lines the nvda can not handle this https://github.com/microsoft/vscode/issues/89717
+            this._accessibilityPageSize = 160;
+        }
+        else {
+            this._accessibilityPageSize = accessibilityPageSize;
+        }
+    };
     // --- begin event handlers
     TextAreaHandler.prototype.onConfigurationChanged = function (e) {
         var options = this._context.configuration.options;
-        var layoutInfo = options.get(103 /* layoutInfo */);
-        this._accessibilitySupport = options.get(2 /* accessibilitySupport */);
-        this._accessibilityPageSize = options.get(3 /* accessibilityPageSize */);
+        var layoutInfo = options.get(107 /* layoutInfo */);
+        this._setAccessibilityOptions(options);
         this._contentLeft = layoutInfo.contentLeft;
         this._contentWidth = layoutInfo.contentWidth;
-        this._contentHeight = layoutInfo.contentHeight;
-        this._fontInfo = options.get(32 /* fontInfo */);
-        this._lineHeight = options.get(47 /* lineHeight */);
-        this._emptySelectionClipboard = options.get(24 /* emptySelectionClipboard */);
-        this._copyWithSyntaxHighlighting = options.get(14 /* copyWithSyntaxHighlighting */);
+        this._contentHeight = layoutInfo.height;
+        this._fontInfo = options.get(34 /* fontInfo */);
+        this._lineHeight = options.get(49 /* lineHeight */);
+        this._emptySelectionClipboard = options.get(25 /* emptySelectionClipboard */);
+        this._copyWithSyntaxHighlighting = options.get(15 /* copyWithSyntaxHighlighting */);
         this.textArea.setAttribute('aria-label', this._getAriaLabel(options));
-        if (platform.isWeb && e.hasChanged(65 /* readOnly */)) {
-            if (options.get(65 /* readOnly */)) {
+        if (platform.isWeb && e.hasChanged(68 /* readOnly */)) {
+            if (options.get(68 /* readOnly */)) {
                 this.textArea.setAttribute('readonly', 'true');
             }
             else {
@@ -284,6 +304,7 @@ var TextAreaHandler = /** @class */ (function (_super) {
     };
     TextAreaHandler.prototype.onCursorStateChanged = function (e) {
         this._selections = e.selections.slice(0);
+        this._modelSelections = e.modelSelections.slice(0);
         this._textAreaInput.writeScreenReaderContent('selection changed');
         return true;
     };
@@ -321,6 +342,18 @@ var TextAreaHandler = /** @class */ (function (_super) {
     };
     TextAreaHandler.prototype.getLastRenderData = function () {
         return this._lastRenderPosition;
+    };
+    TextAreaHandler.prototype.setAriaOptions = function (options) {
+        if (options.activeDescendant) {
+            this.textArea.setAttribute('aria-haspopup', 'true');
+            this.textArea.setAttribute('aria-autocomplete', 'list');
+            this.textArea.setAttribute('aria-activedescendant', options.activeDescendant);
+        }
+        else {
+            this.textArea.setAttribute('aria-haspopup', 'false');
+            this.textArea.setAttribute('aria-autocomplete', 'both');
+            this.textArea.removeAttribute('aria-activedescendant');
+        }
     };
     TextAreaHandler.prototype.prepareRender = function (ctx) {
         this._primaryCursorPosition = new Position(this._selections[0].positionLineNumber, this._selections[0].positionColumn);
@@ -399,11 +432,11 @@ var TextAreaHandler = /** @class */ (function (_super) {
         tac.setWidth(1);
         tac.setHeight(1);
         var options = this._context.configuration.options;
-        if (options.get(38 /* glyphMargin */)) {
+        if (options.get(40 /* glyphMargin */)) {
             tac.setClassName('monaco-editor-background textAreaCover ' + Margin.OUTER_CLASS_NAME);
         }
         else {
-            if (options.get(48 /* lineNumbers */).renderType !== 0 /* Off */) {
+            if (options.get(50 /* lineNumbers */).renderType !== 0 /* Off */) {
                 tac.setClassName('monaco-editor-background textAreaCover ' + LineNumbersOverlay.CLASS_NAME);
             }
             else {

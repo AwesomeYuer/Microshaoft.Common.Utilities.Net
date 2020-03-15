@@ -283,7 +283,7 @@ export function setCollapseStateLevelsDown(foldingModel, doCollapse, levels, lin
  * Collapse or expand the regions at the given locations including all parents.
  * @param doCollapse Wheter to collase or expand
  * @param levels The number of levels. Use 1 to only impact the regions at the location, use Number.MAX_VALUE for all levels.
- * @param lineNumbers the location of the regions to collapse or expand, or if not set, all regions in the model.
+ * @param lineNumbers the location of the regions to collapse or expand.
  */
 export function setCollapseStateLevelsUp(foldingModel, doCollapse, levels, lineNumbers) {
     var toToggle = [];
@@ -291,6 +291,22 @@ export function setCollapseStateLevelsUp(foldingModel, doCollapse, levels, lineN
         var lineNumber = lineNumbers_3[_i];
         var regions = foldingModel.getAllRegionsAtLine(lineNumber, function (region, level) { return region.isCollapsed !== doCollapse && level <= levels; });
         toToggle.push.apply(toToggle, regions);
+    }
+    foldingModel.toggleCollapseState(toToggle);
+}
+/**
+ * Collapse or expand a region at the given locations. If the inner most region is already collapsed/expanded, uses the first parent instead.
+ * @param doCollapse Wheter to collase or expand
+ * @param lineNumbers the location of the regions to collapse or expand.
+ */
+export function setCollapseStateUp(foldingModel, doCollapse, lineNumbers) {
+    var toToggle = [];
+    for (var _i = 0, lineNumbers_4 = lineNumbers; _i < lineNumbers_4.length; _i++) {
+        var lineNumber = lineNumbers_4[_i];
+        var regions = foldingModel.getAllRegionsAtLine(lineNumber, function (region) { return region.isCollapsed !== doCollapse; });
+        if (regions.length > 0) {
+            toToggle.push(regions[0]);
+        }
     }
     foldingModel.toggleCollapseState(toToggle);
 }

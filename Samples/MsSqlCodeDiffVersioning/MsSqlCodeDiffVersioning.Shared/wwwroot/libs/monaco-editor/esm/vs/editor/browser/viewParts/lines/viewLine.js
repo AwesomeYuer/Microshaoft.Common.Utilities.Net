@@ -71,22 +71,24 @@ var ViewLineOptions = /** @class */ (function () {
     function ViewLineOptions(config, themeType) {
         this.themeType = themeType;
         var options = config.options;
-        var fontInfo = options.get(32 /* fontInfo */);
-        this.renderWhitespace = options.get(70 /* renderWhitespace */);
-        this.renderControlCharacters = options.get(66 /* renderControlCharacters */);
+        var fontInfo = options.get(34 /* fontInfo */);
+        this.renderWhitespace = options.get(74 /* renderWhitespace */);
+        this.renderControlCharacters = options.get(69 /* renderControlCharacters */);
         this.spaceWidth = fontInfo.spaceWidth;
+        this.middotWidth = fontInfo.middotWidth;
         this.useMonospaceOptimizations = (fontInfo.isMonospace
-            && !options.get(22 /* disableMonospaceOptimizations */));
+            && !options.get(23 /* disableMonospaceOptimizations */));
         this.canUseHalfwidthRightwardsArrow = fontInfo.canUseHalfwidthRightwardsArrow;
-        this.lineHeight = options.get(47 /* lineHeight */);
-        this.stopRenderingLineAfter = options.get(84 /* stopRenderingLineAfter */);
-        this.fontLigatures = options.get(33 /* fontLigatures */);
+        this.lineHeight = options.get(49 /* lineHeight */);
+        this.stopRenderingLineAfter = options.get(88 /* stopRenderingLineAfter */);
+        this.fontLigatures = options.get(35 /* fontLigatures */);
     }
     ViewLineOptions.prototype.equals = function (other) {
         return (this.themeType === other.themeType
             && this.renderWhitespace === other.renderWhitespace
             && this.renderControlCharacters === other.renderControlCharacters
             && this.spaceWidth === other.spaceWidth
+            && this.middotWidth === other.middotWidth
             && this.useMonospaceOptimizations === other.useMonospaceOptimizations
             && this.canUseHalfwidthRightwardsArrow === other.canUseHalfwidthRightwardsArrow
             && this.lineHeight === other.lineHeight
@@ -171,7 +173,7 @@ var ViewLine = /** @class */ (function () {
                 }
             }
         }
-        var renderLineInput = new RenderLineInput(options.useMonospaceOptimizations, options.canUseHalfwidthRightwardsArrow, lineData.content, lineData.continuesWithWrappedLine, lineData.isBasicASCII, lineData.containsRTL, lineData.minColumn - 1, lineData.tokens, actualInlineDecorations, lineData.tabSize, options.spaceWidth, options.stopRenderingLineAfter, options.renderWhitespace, options.renderControlCharacters, options.fontLigatures !== EditorFontLigatures.OFF, selectionsOnLine);
+        var renderLineInput = new RenderLineInput(options.useMonospaceOptimizations, options.canUseHalfwidthRightwardsArrow, lineData.content, lineData.continuesWithWrappedLine, lineData.isBasicASCII, lineData.containsRTL, lineData.minColumn - 1, lineData.tokens, actualInlineDecorations, lineData.tabSize, lineData.startVisibleColumn, options.spaceWidth, options.middotWidth, options.stopRenderingLineAfter, options.renderWhitespace, options.renderControlCharacters, options.fontLigatures !== EditorFontLigatures.OFF, selectionsOnLine);
         if (this._renderedViewLine && this._renderedViewLine.input.equals(renderLineInput)) {
             // no need to do anything, we have the same render input
             return false;
@@ -389,8 +391,16 @@ var RenderedViewLine = /** @class */ (function () {
                 return 0;
             }
             if (this._containsForeignElements === 1 /* Before */) {
-                // We have foreign element before the (empty) line
+                // We have foreign elements before the (empty) line
                 return this.getWidth();
+            }
+            // We have foreign elements before & after the (empty) line
+            var readingTarget = this._getReadingTarget(domNode);
+            if (readingTarget.firstChild) {
+                return readingTarget.firstChild.offsetWidth;
+            }
+            else {
+                return 0;
             }
         }
         if (this._pixelOffsetCache !== null) {

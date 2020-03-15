@@ -23,7 +23,7 @@ var LinesDecorationsOverlay = /** @class */ (function (_super) {
         var _this = _super.call(this) || this;
         _this._context = context;
         var options = _this._context.configuration.options;
-        var layoutInfo = options.get(103 /* layoutInfo */);
+        var layoutInfo = options.get(107 /* layoutInfo */);
         _this._decorationsLeft = layoutInfo.decorationsLeft;
         _this._decorationsWidth = layoutInfo.decorationsWidth;
         _this._renderResult = null;
@@ -38,7 +38,7 @@ var LinesDecorationsOverlay = /** @class */ (function (_super) {
     // --- begin event handlers
     LinesDecorationsOverlay.prototype.onConfigurationChanged = function (e) {
         var options = this._context.configuration.options;
-        var layoutInfo = options.get(103 /* layoutInfo */);
+        var layoutInfo = options.get(107 /* layoutInfo */);
         this._decorationsLeft = layoutInfo.decorationsLeft;
         this._decorationsWidth = layoutInfo.decorationsWidth;
         return true;

@@ -57,15 +57,20 @@ export var Context = {
 };
 var CompletionItem = /** @class */ (function () {
     function CompletionItem(position, completion, container, provider, model) {
+        var _this = this;
         this.position = position;
         this.completion = completion;
         this.container = container;
         this.provider = provider;
+        this.isResolved = false;
         // sorting, filtering
         this.score = FuzzyScore.Default;
         this.distance = 0;
+        this.textLabel = typeof completion.label === 'string'
+            ? completion.label
+            : completion.label.name;
         // ensure lower-variants (perf)
-        this.labelLow = completion.label.toLowerCase();
+        this.labelLow = this.textLabel.toLowerCase();
         this.sortTextLow = completion.sortText && completion.sortText.toLowerCase();
         this.filterTextLow = completion.filterText && completion.filterText.toLowerCase();
         // normalize ranges
@@ -83,15 +88,15 @@ var CompletionItem = /** @class */ (function () {
         var resolveCompletionItem = provider.resolveCompletionItem;
         if (typeof resolveCompletionItem !== 'function') {
             this.resolve = function () { return Promise.resolve(); };
+            this.isResolved = true;
         }
         else {
             var cached_1;
             this.resolve = function (token) {
                 if (!cached_1) {
-                    var isDone_1 = false;
                     cached_1 = Promise.resolve(resolveCompletionItem.call(provider, model, position, completion, token)).then(function (value) {
                         assign(completion, value);
-                        isDone_1 = true;
+                        _this.isResolved = true;
                     }, function (err) {
                         if (isPromiseCanceledError(err)) {
                             // the IPC queue will reject the request with the
@@ -100,7 +105,7 @@ var CompletionItem = /** @class */ (function () {
                         }
                     });
                     token.onCancellationRequested(function () {
-                        if (!isDone_1) {
+                        if (!_this.isResolved) {
                             // cancellation after the request has been
                             // dispatched -> reset cache
                             cached_1 = undefined;
@@ -170,7 +175,7 @@ export function provideSuggestionItems(model, position, options, context, token)
                             }
                             // fill in default sortText when missing
                             if (!suggestion.sortText) {
-                                suggestion.sortText = suggestion.label;
+                                suggestion.sortText = typeof suggestion.label === 'string' ? suggestion.label : suggestion.label.name;
                             }
                             allSuggestions.push(new CompletionItem(position, suggestion, container, provider, model));
                         }

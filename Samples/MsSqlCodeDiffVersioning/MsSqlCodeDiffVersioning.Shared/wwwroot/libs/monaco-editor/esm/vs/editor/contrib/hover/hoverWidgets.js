@@ -49,7 +49,7 @@ var ContentHoverWidget = /** @class */ (function (_super) {
             }
         });
         _this._register(_this._editor.onDidChangeConfiguration(function (e) {
-            if (e.hasChanged(32 /* fontInfo */)) {
+            if (e.hasChanged(34 /* fontInfo */)) {
                 _this.updateFont();
             }
         }));
@@ -136,7 +136,7 @@ var ContentHoverWidget = /** @class */ (function (_super) {
     };
     ContentHoverWidget.prototype.layout = function () {
         var height = Math.max(this._editor.getLayoutInfo().height / 4, 250);
-        var _a = this._editor.getOption(32 /* fontInfo */), fontSize = _a.fontSize, lineHeight = _a.lineHeight;
+        var _a = this._editor.getOption(34 /* fontInfo */), fontSize = _a.fontSize, lineHeight = _a.lineHeight;
         this._domNode.style.fontSize = fontSize + "px";
         this._domNode.style.lineHeight = lineHeight + "px";
         this._domNode.style.maxHeight = height + "px";
@@ -158,7 +158,7 @@ var GlyphHoverWidget = /** @class */ (function (_super) {
         _this._domNode.setAttribute('role', 'presentation');
         _this._showAtLineNumber = -1;
         _this._register(_this._editor.onDidChangeConfiguration(function (e) {
-            if (e.hasChanged(32 /* fontInfo */)) {
+            if (e.hasChanged(34 /* fontInfo */)) {
                 _this.updateFont();
             }
         }));
@@ -190,7 +190,7 @@ var GlyphHoverWidget = /** @class */ (function (_super) {
         var editorLayout = this._editor.getLayoutInfo();
         var topForLineNumber = this._editor.getTopForLineNumber(this._showAtLineNumber);
         var editorScrollTop = this._editor.getScrollTop();
-        var lineHeight = this._editor.getOption(47 /* lineHeight */);
+        var lineHeight = this._editor.getOption(49 /* lineHeight */);
         var nodeHeight = this._domNode.clientHeight;
         var top = topForLineNumber - editorScrollTop - ((nodeHeight - lineHeight) / 2);
         this._domNode.style.left = editorLayout.glyphMarginLeft + editorLayout.glyphMarginWidth + "px";

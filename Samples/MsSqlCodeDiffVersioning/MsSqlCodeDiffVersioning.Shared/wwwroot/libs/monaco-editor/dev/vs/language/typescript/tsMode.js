@@ -35,12 +35,12 @@ define(["require", "exports", "./workerManager", "./languageFeatures"], function
     exports.getTypeScriptWorker = getTypeScriptWorker;
     function setupMode(defaults, modeId) {
         var client = new workerManager_1.WorkerManager(modeId, defaults);
-        var worker = function (first) {
-            var more = [];
-            for (var _i = 1; _i < arguments.length; _i++) {
-                more[_i - 1] = arguments[_i];
+        var worker = function () {
+            var uris = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                uris[_i] = arguments[_i];
             }
-            return client.getLanguageServiceWorker.apply(client, [first].concat(more));
+            return client.getLanguageServiceWorker.apply(client, uris);
         };
         monaco.languages.registerCompletionItemProvider(modeId, new languageFeatures.SuggestAdapter(worker));
         monaco.languages.registerSignatureHelpProvider(modeId, new languageFeatures.SignatureHelpAdapter(worker));

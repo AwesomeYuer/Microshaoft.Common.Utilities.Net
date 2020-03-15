@@ -95,9 +95,8 @@ var InputBox = /** @class */ (function (_super) {
             // from ScrollableElement to DOM
             _this._register(_this.scrollableElement.onScroll(function (e) { return _this.input.scrollTop = e.scrollTop; }));
             var onSelectionChange = Event.filter(domEvent(document, 'selectionchange'), function () {
-                var _a;
                 var selection = document.getSelection();
-                return ((_a = selection) === null || _a === void 0 ? void 0 : _a.anchorNode) === wrapper;
+                return (selection === null || selection === void 0 ? void 0 : selection.anchorNode) === wrapper;
             });
             // from DOM to ScrollableElement
             _this._register(onSelectionChange(_this.updateScrollDimensions, _this));
@@ -343,7 +342,7 @@ var InputBox = /** @class */ (function (_super) {
                 dom.addClass(spanElement, _this.classForType(_this.message.type));
                 var styles = _this.stylesForType(_this.message.type);
                 spanElement.style.backgroundColor = styles.background ? styles.background.toString() : '';
-                spanElement.style.color = styles.foreground ? styles.foreground.toString() : null;
+                spanElement.style.color = styles.foreground ? styles.foreground.toString() : '';
                 spanElement.style.border = styles.border ? "1px solid " + styles.border : '';
                 dom.append(div, spanElement);
                 return null;

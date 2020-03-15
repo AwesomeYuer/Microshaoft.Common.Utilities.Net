@@ -387,7 +387,7 @@ var MonarchTokenizer = /** @class */ (function () {
                 regex = new RegExp(regexSource.substr(4, regexSource.length - 5), regex.ignoreCase ? 'i' : '');
             }
             var result = line.search(regex);
-            if (result === -1) {
+            if (result === -1 || (result !== 0 && rule.matchOnlyAtLineStart)) {
                 continue;
             }
             if (popOffset === -1 || result < popOffset) {

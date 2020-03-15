@@ -273,7 +273,7 @@ var QuickOpenWidget = /** @class */ (function (_super) {
     };
     QuickOpenWidget.prototype.applyStyles = function () {
         if (this.element) {
-            var foreground = this.styles.foreground ? this.styles.foreground.toString() : null;
+            var foreground = this.styles.foreground ? this.styles.foreground.toString() : '';
             var background = this.styles.background ? this.styles.background.toString() : '';
             var borderColor = this.styles.borderColor ? this.styles.borderColor.toString() : '';
             var widgetShadow = this.styles.widgetShadow ? this.styles.widgetShadow.toString() : '';
@@ -552,6 +552,7 @@ var QuickOpenWidget = /** @class */ (function (_super) {
         else if (autoFocus.autoFocusLastEntry) {
             if (entries.length > 1) {
                 this.tree.focusLast();
+                this.tree.reveal(this.tree.getFocus());
             }
         }
     };

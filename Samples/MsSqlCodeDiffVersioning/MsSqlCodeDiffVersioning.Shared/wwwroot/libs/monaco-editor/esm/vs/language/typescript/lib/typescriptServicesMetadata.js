@@ -1,1 +1,1 @@
-export var typescriptVersion = "3.7.3";
+export var typescriptVersion = "3.7.5";

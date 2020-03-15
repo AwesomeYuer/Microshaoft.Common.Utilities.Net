@@ -25,14 +25,14 @@ export var SeverityIcon;
 registerThemingParticipant(function (theme, collector) {
     var errorIconForeground = theme.getColor(problemsErrorIconForeground);
     if (errorIconForeground) {
-        collector.addRule("\n\t\t\t.monaco-editor .zone-widget .codicon-error,\n\t\t\t.monaco-workbench .markers-panel .marker-icon.codicon-error,\n\t\t\t.monaco-workbench .extensions-viewlet > .extensions .codicon-error,\n\t\t\t.monaco-workbench .dialog-box .dialog-message-row .codicon-error {\n\t\t\t\tcolor: " + errorIconForeground + ";\n\t\t\t}\n\t\t");
+        collector.addRule("\n\t\t\t.monaco-editor .zone-widget .codicon-error,\n\t\t\t.markers-panel .marker-icon.codicon-error,\n\t\t\t.extensions-viewlet > .extensions .codicon-error,\n\t\t\t.monaco-dialog-box .dialog-message-row .codicon-error {\n\t\t\t\tcolor: " + errorIconForeground + ";\n\t\t\t}\n\t\t");
     }
     var warningIconForeground = theme.getColor(problemsWarningIconForeground);
     if (errorIconForeground) {
-        collector.addRule("\n\t\t\t.monaco-editor .zone-widget .codicon-warning,\n\t\t\t.monaco-workbench .markers-panel .marker-icon.codicon-warning,\n\t\t\t.monaco-workbench .extensions-viewlet > .extensions .codicon-warning,\n\t\t\t.monaco-workbench .extension-editor .codicon-warning,\n\t\t\t.monaco-workbench .dialog-box .dialog-message-row .codicon-warning {\n\t\t\t\tcolor: " + warningIconForeground + ";\n\t\t\t}\n\t\t");
+        collector.addRule("\n\t\t\t.monaco-editor .zone-widget .codicon-warning,\n\t\t\t.markers-panel .marker-icon.codicon-warning,\n\t\t\t.extensions-viewlet > .extensions .codicon-warning,\n\t\t\t.extension-editor .codicon-warning,\n\t\t\t.monaco-dialog-box .dialog-message-row .codicon-warning {\n\t\t\t\tcolor: " + warningIconForeground + ";\n\t\t\t}\n\t\t");
     }
     var infoIconForeground = theme.getColor(problemsInfoIconForeground);
     if (errorIconForeground) {
-        collector.addRule("\n\t\t\t.monaco-editor .zone-widget .codicon-info,\n\t\t\t.monaco-workbench .markers-panel .marker-icon.codicon-info,\n\t\t\t.monaco-workbench .extensions-viewlet > .extensions .codicon-info,\n\t\t\t.monaco-workbench .extension-editor .codicon-info,\n\t\t\t.monaco-workbench .dialog-box .dialog-message-row .codicon-info {\n\t\t\t\tcolor: " + infoIconForeground + ";\n\t\t\t}\n\t\t");
+        collector.addRule("\n\t\t\t.monaco-editor .zone-widget .codicon-info,\n\t\t\t.markers-panel .marker-icon.codicon-info,\n\t\t\t.extensions-viewlet > .extensions .codicon-info,\n\t\t\t.extension-editor .codicon-info,\n\t\t\t.monaco-dialog-box .dialog-message-row .codicon-info {\n\t\t\t\tcolor: " + infoIconForeground + ";\n\t\t\t}\n\t\t");
     }
 });

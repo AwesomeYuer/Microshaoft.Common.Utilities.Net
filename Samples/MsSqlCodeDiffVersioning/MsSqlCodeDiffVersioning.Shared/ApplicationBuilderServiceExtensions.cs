@@ -1,11 +1,15 @@
 ﻿namespace WebApplication.ASPNetCore
 {
+    using Microshaoft.WebApi.ModelBinders;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.OpenApi.Models;
+    using Newtonsoft.Json.Linq;
     using Swashbuckle.AspNetCore.SwaggerGen;
     using System;
+    using System.Collections.Generic;
     using System.Linq;
+    using Swashbuckle.AspNetCore.Filters;
     public static class ApplicationBuilderServiceExtensions
     {
         private const string swaggerVersion = "v3.1.101";
@@ -54,6 +58,7 @@
                                     );
                             c
                                 .OperationFilter<SwaggerCustomHeadersFilter>();
+                            
                             c
                                 .AddSecurityDefinition
                                     (
@@ -96,11 +101,30 @@
                                     (
                                         (xApiDescriptions) =>
                                         {
+
+                                            foreach (var apiDescription in xApiDescriptions)
+                                            {
+                                                Console.WriteLine(apiDescription);
+                                            
+                                            }
+
+
                                             return
                                                 xApiDescriptions
                                                             .First();
                                         }
                                     );
+                            //c.UseInlineDefinitionsForEnums();
+                            
+                            c.MapType<JToken>
+                                (
+                                    () =>
+                                    {
+                                        return
+                                            new OpenApiSchema { Type = "object", AdditionalPropertiesAllowed = true };
+                                    }
+                                );
+
                         }
                     );
 
@@ -134,6 +158,30 @@
     {
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
+            var apiDescription = context.ApiDescription;
+            //var parameters = operation.Parameters;
+        
+
+            //if (apiDescription.HttpMethod == "POST")
+            //{
+            //    //var para = operation.Parameters.ToArray();
+            //    foreach (var parameter in parameters)
+            //    {
+            //        if (parameter.Name == "parameters")
+            //        {
+            //            foreach (var content in operation.RequestBody.Content)
+            //            {
+            //                content.add
+            //            }
+            //        }
+            //    }
+            //}
+
+            //operation.
+
+
+
+
             operation
                 .Parameters
                 .Add
@@ -147,5 +195,29 @@
                     );
         }
     }
+
+    public class Csv<T> : List<T> where T : IConvertible
+    {
+        public Csv<T> Append(string delimitedValues)
+        {
+            var splitValues = delimitedValues
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Cast<string>();
+
+            var convertedValues = splitValues
+                .Select(str => Convert.ChangeType(str, typeof(T)))
+                .Cast<T>();
+
+            this.AddRange(convertedValues);
+
+            return this;
+        }
+
+        public override string ToString()
+        {
+            return this.Aggregate("", (a, s) => $"{a},{s}").Trim(',');
+        }
+    }
+
 
 }

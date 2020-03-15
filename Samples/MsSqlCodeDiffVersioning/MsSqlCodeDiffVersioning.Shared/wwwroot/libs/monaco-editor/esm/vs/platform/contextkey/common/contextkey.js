@@ -236,10 +236,9 @@ var ContextKeyEqualsExpr = /** @class */ (function () {
         return false;
     };
     ContextKeyEqualsExpr.prototype.evaluate = function (context) {
-        /* tslint:disable:triple-equals */
         // Intentional ==
+        // eslint-disable-next-line eqeqeq
         return (context.getValue(this.key) == this.value);
-        /* tslint:enable:triple-equals */
     };
     ContextKeyEqualsExpr.prototype.keys = function () {
         return [this.key];
@@ -289,10 +288,9 @@ var ContextKeyNotEqualsExpr = /** @class */ (function () {
         return false;
     };
     ContextKeyNotEqualsExpr.prototype.evaluate = function (context) {
-        /* tslint:disable:triple-equals */
         // Intentional !=
+        // eslint-disable-next-line eqeqeq
         return (context.getValue(this.key) != this.value);
-        /* tslint:enable:triple-equals */
     };
     ContextKeyNotEqualsExpr.prototype.keys = function () {
         return [this.key];

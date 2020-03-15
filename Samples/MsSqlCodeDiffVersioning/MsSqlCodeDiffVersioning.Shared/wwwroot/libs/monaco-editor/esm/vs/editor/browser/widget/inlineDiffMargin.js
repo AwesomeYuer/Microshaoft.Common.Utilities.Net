@@ -70,9 +70,9 @@ var InlineDiffMargin = /** @class */ (function (_super) {
         // make sure the diff margin shows above overlay.
         _this._marginDomNode.style.zIndex = '10';
         _this._diffActions = document.createElement('div');
-        _this._diffActions.className = 'lightbulb-glyph';
+        _this._diffActions.className = 'codicon codicon-lightbulb lightbulb-glyph';
         _this._diffActions.style.position = 'absolute';
-        var lineHeight = editor.getOption(47 /* lineHeight */);
+        var lineHeight = editor.getOption(49 /* lineHeight */);
         var lineFeed = editor.getModel().getEOL();
         _this._diffActions.style.right = '0px';
         _this._diffActions.style.visibility = 'hidden';
@@ -108,7 +108,7 @@ var InlineDiffMargin = /** @class */ (function (_super) {
             }); });
             actions.push(copyLineAction);
         }
-        var readOnly = editor.getOption(65 /* readOnly */);
+        var readOnly = editor.getOption(68 /* readOnly */);
         if (!readOnly) {
             actions.push(new Action('diff.inline.revertChange', nls.localize('diff.inline.revertChange.label', "Revert this change"), undefined, true, function () { return __awaiter(_this, void 0, void 0, function () {
                 var column, column;

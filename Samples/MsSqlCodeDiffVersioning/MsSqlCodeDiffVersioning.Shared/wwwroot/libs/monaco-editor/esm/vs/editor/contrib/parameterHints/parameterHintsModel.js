@@ -155,7 +155,7 @@ var ParameterHintsModel = /** @class */ (function (_super) {
         var length = this.state.hints.signatures.length;
         var activeSignature = this.state.hints.activeSignature;
         var last = (activeSignature % length) === (length - 1);
-        var cycle = this.editor.getOption(62 /* parameterHints */).cycle;
+        var cycle = this.editor.getOption(64 /* parameterHints */).cycle;
         // If there is only one signature, or we're on last signature of list
         if ((length < 2 || last) && !cycle) {
             this.cancel();
@@ -170,7 +170,7 @@ var ParameterHintsModel = /** @class */ (function (_super) {
         var length = this.state.hints.signatures.length;
         var activeSignature = this.state.hints.activeSignature;
         var first = activeSignature === 0;
-        var cycle = this.editor.getOption(62 /* parameterHints */).cycle;
+        var cycle = this.editor.getOption(64 /* parameterHints */).cycle;
         // If there is only one signature, or we're on first signature of list
         if ((length < 2 || first) && !cycle) {
             this.cancel();
@@ -186,11 +186,10 @@ var ParameterHintsModel = /** @class */ (function (_super) {
         this._onChangedHints.fire(this.state.hints);
     };
     ParameterHintsModel.prototype.doTrigger = function (triggerId) {
-        var _a, _b;
         return __awaiter(this, void 0, void 0, function () {
             var isRetrigger, activeSignatureHelp, context, triggerContext, model, position, result, error_1;
-            return __generator(this, function (_c) {
-                switch (_c.label) {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
                         isRetrigger = this.state.type === 1 /* Active */ || this.state.type === 2 /* Pending */;
                         activeSignatureHelp = this.state.type === 1 /* Active */ ? this.state.hints : undefined;
@@ -214,19 +213,19 @@ var ParameterHintsModel = /** @class */ (function (_super) {
                         this.state = new ParameterHintState.Pending(createCancelablePromise(function (token) {
                             return provideSignatureHelp(model, position, triggerContext, token);
                         }));
-                        _c.label = 1;
+                        _a.label = 1;
                     case 1:
-                        _c.trys.push([1, 3, , 4]);
+                        _a.trys.push([1, 3, , 4]);
                         return [4 /*yield*/, this.state.request];
                     case 2:
-                        result = _c.sent();
+                        result = _a.sent();
                         // Check that we are still resolving the correct signature help
                         if (triggerId !== this.triggerId) {
-                            (_a = result) === null || _a === void 0 ? void 0 : _a.dispose();
+                            result === null || result === void 0 ? void 0 : result.dispose();
                             return [2 /*return*/, false];
                         }
                         if (!result || !result.value.signatures || result.value.signatures.length === 0) {
-                            (_b = result) === null || _b === void 0 ? void 0 : _b.dispose();
+                            result === null || result === void 0 ? void 0 : result.dispose();
                             this._lastSignatureHelpResult.clear();
                             this.cancel();
                             return [2 /*return*/, false];
@@ -239,7 +238,7 @@ var ParameterHintsModel = /** @class */ (function (_super) {
                         }
                         return [3 /*break*/, 4];
                     case 3:
-                        error_1 = _c.sent();
+                        error_1 = _a.sent();
                         if (triggerId === this.triggerId) {
                             this.state = ParameterHintState.Default;
                         }
@@ -309,7 +308,7 @@ var ParameterHintsModel = /** @class */ (function (_super) {
         }
     };
     ParameterHintsModel.prototype.onEditorConfigurationChange = function () {
-        this.triggerOnType = this.editor.getOption(62 /* parameterHints */).enabled;
+        this.triggerOnType = this.editor.getOption(64 /* parameterHints */).enabled;
         if (!this.triggerOnType) {
             this.cancel();
         }

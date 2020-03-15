@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import * as objects from '../../../common/objects.js';
-import { renderCodicons } from '../codiconLabel/codiconLabel.js';
+import { renderCodicons } from '../../../common/codicons.js';
 import { escape } from '../../../common/strings.js';
 var HighlightedLabel = /** @class */ (function () {
     function HighlightedLabel(container, supportCodicons) {
@@ -55,20 +55,25 @@ var HighlightedLabel = /** @class */ (function () {
             if (pos < highlight.start) {
                 htmlContent += '<span>';
                 var substring_1 = this.text.substring(pos, highlight.start);
-                htmlContent += this.supportCodicons ? renderCodicons(substring_1) : escape(substring_1);
+                htmlContent += this.supportCodicons ? renderCodicons(escape(substring_1)) : escape(substring_1);
                 htmlContent += '</span>';
                 pos = highlight.end;
             }
-            htmlContent += '<span class="highlight">';
+            if (highlight.extraClasses) {
+                htmlContent += "<span class=\"highlight " + highlight.extraClasses + "\">";
+            }
+            else {
+                htmlContent += "<span class=\"highlight\">";
+            }
             var substring = this.text.substring(highlight.start, highlight.end);
-            htmlContent += this.supportCodicons ? renderCodicons(substring) : escape(substring);
+            htmlContent += this.supportCodicons ? renderCodicons(escape(substring)) : escape(substring);
             htmlContent += '</span>';
             pos = highlight.end;
         }
         if (pos < this.text.length) {
             htmlContent += '<span>';
             var substring = this.text.substring(pos);
-            htmlContent += this.supportCodicons ? renderCodicons(substring) : escape(substring);
+            htmlContent += this.supportCodicons ? renderCodicons(escape(substring)) : escape(substring);
             htmlContent += '</span>';
         }
         this.domNode.innerHTML = htmlContent;

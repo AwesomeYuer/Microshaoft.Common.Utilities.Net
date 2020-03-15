@@ -442,45 +442,6 @@ export function prevCharLength(str, offset) {
     }
     return (initialOffset - offset);
 }
-function _getCharContainingOffset(str, offset) {
-    var graphemeBreakTree = GraphemeBreakTree.getInstance();
-    var len = str.length;
-    var initialOffset = offset;
-    var initialCodePoint = getNextCodePoint(str, len, offset);
-    var initialGraphemeBreakType = graphemeBreakTree.getGraphemeBreakType(initialCodePoint);
-    offset += (initialCodePoint >= 65536 /* UNICODE_SUPPLEMENTARY_PLANE_BEGIN */ ? 2 : 1);
-    // extend to the right
-    var graphemeBreakType = initialGraphemeBreakType;
-    while (offset < len) {
-        var nextCodePoint = getNextCodePoint(str, len, offset);
-        var nextGraphemeBreakType = graphemeBreakTree.getGraphemeBreakType(nextCodePoint);
-        if (breakBetweenGraphemeBreakType(graphemeBreakType, nextGraphemeBreakType)) {
-            break;
-        }
-        offset += (nextCodePoint >= 65536 /* UNICODE_SUPPLEMENTARY_PLANE_BEGIN */ ? 2 : 1);
-        graphemeBreakType = nextGraphemeBreakType;
-    }
-    var endOffset = offset;
-    // extend to the left
-    offset = initialOffset;
-    graphemeBreakType = initialGraphemeBreakType;
-    while (offset > 0) {
-        var prevCodePoint = getPrevCodePoint(str, offset);
-        var prevGraphemeBreakType = graphemeBreakTree.getGraphemeBreakType(prevCodePoint);
-        if (breakBetweenGraphemeBreakType(prevGraphemeBreakType, graphemeBreakType)) {
-            break;
-        }
-        offset -= (prevCodePoint >= 65536 /* UNICODE_SUPPLEMENTARY_PLANE_BEGIN */ ? 2 : 1);
-        graphemeBreakType = prevGraphemeBreakType;
-    }
-    return [offset, endOffset];
-}
-export function getCharContainingOffset(str, offset) {
-    if (offset > 0 && isLowSurrogate(str.charCodeAt(offset))) {
-        return _getCharContainingOffset(str, offset - 1);
-    }
-    return _getCharContainingOffset(str, offset);
-}
 /**
  * Generated using https://github.com/alexandrudima/unicode-utils/blob/master/generate-rtl-test.js
  */

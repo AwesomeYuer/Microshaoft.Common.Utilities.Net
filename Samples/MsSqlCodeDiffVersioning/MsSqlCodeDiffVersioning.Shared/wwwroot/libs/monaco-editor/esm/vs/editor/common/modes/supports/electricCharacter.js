@@ -40,13 +40,12 @@ var BracketElectricCharacterSupport = /** @class */ (function () {
         if (!r) {
             return null;
         }
-        var bracketText = text.substring(r.startColumn - 1, r.endColumn - 1);
-        bracketText = bracketText.toLowerCase();
+        var bracketText = text.substring(r.startColumn - 1, r.endColumn - 1).toLowerCase();
         var isOpen = this._richEditBrackets.textIsOpenBracket[bracketText];
         if (isOpen) {
             return null;
         }
-        var textBeforeBracket = text.substring(0, r.startColumn - 1);
+        var textBeforeBracket = context.getActualLineContentBefore(r.startColumn - 1);
         if (!/^\s*$/.test(textBeforeBracket)) {
             // There is other text on the line before the bracket
             return null;

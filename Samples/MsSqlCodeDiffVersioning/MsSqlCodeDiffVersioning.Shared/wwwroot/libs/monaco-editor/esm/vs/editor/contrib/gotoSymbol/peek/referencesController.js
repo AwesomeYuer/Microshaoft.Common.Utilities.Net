@@ -64,6 +64,8 @@ import { createCancelablePromise } from '../../../../base/common/async.js';
 import { getOuterEditor, PeekContext } from '../../peekView/peekView.js';
 import { IListService, WorkbenchListFocusContextKey } from '../../../../platform/list/browser/listService.js';
 import { KeybindingsRegistry } from '../../../../platform/keybinding/common/keybindingsRegistry.js';
+import { KeyChord } from '../../../../base/common/keyCodes.js';
+import { CommandsRegistry } from '../../../../platform/commands/common/commands.js';
 export var ctxReferenceSearchVisible = new RawContextKey('referenceSearchVisible', false);
 var ReferencesController = /** @class */ (function () {
     function ReferencesController(_defaultTreeKeyboardSupport, _editor, contextKeyService, _editorService, _notificationService, _instantiationService, _storageService, _configurationService) {
@@ -174,7 +176,11 @@ var ReferencesController = /** @class */ (function () {
                     var pos = new Position(range.startLineNumber, range.startColumn);
                     var selection = _this._model.nearestReference(uri, pos);
                     if (selection) {
-                        return _this._widget.setSelection(selection);
+                        return _this._widget.setSelection(selection).then(function () {
+                            if (_this._widget && _this._editor.getOption(65 /* peekWidgetDefaultFocus */) === 'editor') {
+                                _this._widget.focusOnPreviewEditor();
+                            }
+                        });
                     }
                 }
                 return undefined;
@@ -183,9 +189,21 @@ var ReferencesController = /** @class */ (function () {
             _this._notificationService.error(error);
         });
     };
+    ReferencesController.prototype.changeFocusBetweenPreviewAndReferences = function () {
+        if (!this._widget) {
+            // can be called while still resolving...
+            return;
+        }
+        if (this._widget.isPreviewEditorFocused()) {
+            this._widget.focusOnReferenceTree();
+        }
+        else {
+            this._widget.focusOnPreviewEditor();
+        }
+    };
     ReferencesController.prototype.goToNextOrPreviousReference = function (fwd) {
         return __awaiter(this, void 0, void 0, function () {
-            var currentPosition, source, target, editorFocus;
+            var currentPosition, source, target, editorFocus, previewEditorFocus;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -203,6 +221,7 @@ var ReferencesController = /** @class */ (function () {
                         }
                         target = this._model.nextOrPreviousReference(source, fwd);
                         editorFocus = this._editor.hasTextFocus();
+                        previewEditorFocus = this._widget.isPreviewEditorFocused();
                         return [4 /*yield*/, this._widget.setSelection(target)];
                     case 1:
                         _a.sent();
@@ -212,19 +231,25 @@ var ReferencesController = /** @class */ (function () {
                         if (editorFocus) {
                             this._editor.focus();
                         }
+                        else if (this._widget && previewEditorFocus) {
+                            this._widget.focusOnPreviewEditor();
+                        }
                         return [2 /*return*/];
                 }
             });
         });
     };
-    ReferencesController.prototype.closeWidget = function () {
+    ReferencesController.prototype.closeWidget = function (focusEditor) {
+        if (focusEditor === void 0) { focusEditor = true; }
         this._referenceSearchVisible.reset();
         this._disposables.clear();
         dispose(this._widget);
         dispose(this._model);
         this._widget = undefined;
         this._model = undefined;
-        this._editor.focus();
+        if (focusEditor) {
+            this._editor.focus();
+        }
         this._requestIdPool += 1; // Cancel pending requests
     };
     ReferencesController.prototype._gotoReference = function (ref) {
@@ -248,7 +273,7 @@ var ReferencesController = /** @class */ (function () {
             if (_this._editor === openedEditor) {
                 //
                 _this._widget.show(range);
-                _this._widget.focus();
+                _this._widget.focusOnReferenceTree();
             }
             else {
                 // we opened a different editor instance which means a different controller instance.
@@ -257,7 +282,7 @@ var ReferencesController = /** @class */ (function () {
                 var model_1 = _this._model.clone();
                 _this.closeWidget();
                 openedEditor.focus();
-                other.toggleWidget(range, createCancelablePromise(function (_) { return Promise.resolve(model_1); }), (_a = _this._peekMode, (_a !== null && _a !== void 0 ? _a : false)));
+                other.toggleWidget(range, createCancelablePromise(function (_) { return Promise.resolve(model_1); }), (_a = _this._peekMode) !== null && _a !== void 0 ? _a : false);
             }
         }, function (err) {
             _this._ignoreModelChangeEvent = false;
@@ -298,23 +323,22 @@ function withController(accessor, fn) {
     }
 }
 KeybindingsRegistry.registerCommandAndKeybindingRule({
-    id: 'goToNextReference',
-    weight: 200 /* WorkbenchContrib */ + 50,
-    primary: 62 /* F4 */,
-    secondary: [70 /* F12 */],
-    when: ctxReferenceSearchVisible,
+    id: 'togglePeekWidgetFocus',
+    weight: 100 /* EditorContrib */,
+    primary: KeyChord(2048 /* CtrlCmd */ | 41 /* KEY_K */, 60 /* F2 */),
+    when: ContextKeyExpr.or(ctxReferenceSearchVisible, PeekContext.inPeekEditor),
     handler: function (accessor) {
         withController(accessor, function (controller) {
-            controller.goToNextOrPreviousReference(true);
+            controller.changeFocusBetweenPreviewAndReferences();
         });
     }
 });
 KeybindingsRegistry.registerCommandAndKeybindingRule({
-    id: 'goToNextReferenceFromEmbeddedEditor',
-    weight: 100 /* EditorContrib */ + 50,
+    id: 'goToNextReference',
+    weight: 100 /* EditorContrib */ - 10,
     primary: 62 /* F4 */,
     secondary: [70 /* F12 */],
-    when: PeekContext.inPeekEditor,
+    when: ContextKeyExpr.or(ctxReferenceSearchVisible, PeekContext.inPeekEditor),
     handler: function (accessor) {
         withController(accessor, function (controller) {
             controller.goToNextOrPreviousReference(true);
@@ -323,47 +347,35 @@ KeybindingsRegistry.registerCommandAndKeybindingRule({
 });
 KeybindingsRegistry.registerCommandAndKeybindingRule({
     id: 'goToPreviousReference',
-    weight: 200 /* WorkbenchContrib */ + 50,
+    weight: 100 /* EditorContrib */ - 10,
     primary: 1024 /* Shift */ | 62 /* F4 */,
     secondary: [1024 /* Shift */ | 70 /* F12 */],
-    when: ctxReferenceSearchVisible,
+    when: ContextKeyExpr.or(ctxReferenceSearchVisible, PeekContext.inPeekEditor),
     handler: function (accessor) {
         withController(accessor, function (controller) {
             controller.goToNextOrPreviousReference(false);
         });
     }
 });
-KeybindingsRegistry.registerCommandAndKeybindingRule({
-    id: 'goToPreviousReferenceFromEmbeddedEditor',
-    weight: 100 /* EditorContrib */ + 50,
-    primary: 1024 /* Shift */ | 62 /* F4 */,
-    secondary: [1024 /* Shift */ | 70 /* F12 */],
-    when: PeekContext.inPeekEditor,
-    handler: function (accessor) {
-        withController(accessor, function (controller) {
-            controller.goToNextOrPreviousReference(false);
-        });
-    }
+// commands that aren't needed anymore because there is now ContextKeyExpr.OR
+CommandsRegistry.registerCommandAlias('goToNextReferenceFromEmbeddedEditor', 'goToNextReference');
+CommandsRegistry.registerCommandAlias('goToPreviousReferenceFromEmbeddedEditor', 'goToPreviousReference');
+// close
+CommandsRegistry.registerCommandAlias('closeReferenceSearchEditor', 'closeReferenceSearch');
+CommandsRegistry.registerCommand('closeReferenceSearch', function (accessor) { return withController(accessor, function (controller) { return controller.closeWidget(); }); });
+KeybindingsRegistry.registerKeybindingRule({
+    id: 'closeReferenceSearch',
+    weight: 100 /* EditorContrib */ - 101,
+    primary: 9 /* Escape */,
+    secondary: [1024 /* Shift */ | 9 /* Escape */],
+    when: ContextKeyExpr.and(PeekContext.inPeekEditor, ContextKeyExpr.not('config.editor.stablePeek'))
 });
-KeybindingsRegistry.registerCommandAndKeybindingRule({
+KeybindingsRegistry.registerKeybindingRule({
     id: 'closeReferenceSearch',
     weight: 200 /* WorkbenchContrib */ + 50,
     primary: 9 /* Escape */,
     secondary: [1024 /* Shift */ | 9 /* Escape */],
-    when: ContextKeyExpr.and(ctxReferenceSearchVisible, ContextKeyExpr.not('config.editor.stablePeek')),
-    handler: function (accessor) {
-        withController(accessor, function (controller) { return controller.closeWidget(); });
-    }
-});
-KeybindingsRegistry.registerCommandAndKeybindingRule({
-    id: 'closeReferenceSearchEditor',
-    weight: 100 /* EditorContrib */ - 101,
-    primary: 9 /* Escape */,
-    secondary: [1024 /* Shift */ | 9 /* Escape */],
-    when: ContextKeyExpr.and(PeekContext.inPeekEditor, ContextKeyExpr.not('config.editor.stablePeek')),
-    handler: function (accessor) {
-        withController(accessor, function (controller) { return controller.closeWidget(); });
-    }
+    when: ContextKeyExpr.and(ctxReferenceSearchVisible, ContextKeyExpr.not('config.editor.stablePeek'))
 });
 KeybindingsRegistry.registerCommandAndKeybindingRule({
     id: 'openReferenceToSide',
@@ -380,5 +392,13 @@ KeybindingsRegistry.registerCommandAndKeybindingRule({
         if (Array.isArray(focus) && focus[0] instanceof OneReference) {
             withController(accessor, function (controller) { return controller.openReference(focus[0], true); });
         }
+    }
+});
+CommandsRegistry.registerCommand('openReference', function (accessor) {
+    var _a;
+    var listService = accessor.get(IListService);
+    var focus = (_a = listService.lastFocusedList) === null || _a === void 0 ? void 0 : _a.getFocus();
+    if (Array.isArray(focus) && focus[0] instanceof OneReference) {
+        withController(accessor, function (controller) { return controller.openReference(focus[0], false); });
     }
 });

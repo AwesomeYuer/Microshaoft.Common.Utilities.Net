@@ -27,9 +27,9 @@ var AbstractLineHighlightOverlay = /** @class */ (function (_super) {
         var _this = _super.call(this) || this;
         _this._context = context;
         var options = _this._context.configuration.options;
-        var layoutInfo = options.get(103 /* layoutInfo */);
-        _this._lineHeight = options.get(47 /* lineHeight */);
-        _this._renderLineHighlight = options.get(69 /* renderLineHighlight */);
+        var layoutInfo = options.get(107 /* layoutInfo */);
+        _this._lineHeight = options.get(49 /* lineHeight */);
+        _this._renderLineHighlight = options.get(72 /* renderLineHighlight */);
         _this._contentLeft = layoutInfo.contentLeft;
         _this._contentWidth = layoutInfo.contentWidth;
         _this._selectionIsEmpty = true;
@@ -66,9 +66,9 @@ var AbstractLineHighlightOverlay = /** @class */ (function (_super) {
     };
     AbstractLineHighlightOverlay.prototype.onConfigurationChanged = function (e) {
         var options = this._context.configuration.options;
-        var layoutInfo = options.get(103 /* layoutInfo */);
-        this._lineHeight = options.get(47 /* lineHeight */);
-        this._renderLineHighlight = options.get(69 /* renderLineHighlight */);
+        var layoutInfo = options.get(107 /* layoutInfo */);
+        this._lineHeight = options.get(49 /* lineHeight */);
+        this._renderLineHighlight = options.get(72 /* renderLineHighlight */);
         this._contentLeft = layoutInfo.contentLeft;
         this._contentWidth = layoutInfo.contentWidth;
         return true;

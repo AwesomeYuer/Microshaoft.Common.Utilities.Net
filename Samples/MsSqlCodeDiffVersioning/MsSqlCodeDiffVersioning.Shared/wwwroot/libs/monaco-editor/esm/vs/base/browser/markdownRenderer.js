@@ -14,6 +14,7 @@ import { cloneAndChange } from '../common/objects.js';
 import { escape } from '../common/strings.js';
 import { URI } from '../common/uri.js';
 import { Schemas } from '../common/network.js';
+import { renderCodicons, markdownEscapeEscapedCodicons } from '../common/codicons.js';
 /**
  * Create html nodes for the given content element.
  */
@@ -109,7 +110,7 @@ export function renderMarkdown(markdown, options) {
         }
     };
     renderer.paragraph = function (text) {
-        return "<p>" + text + "</p>";
+        return "<p>" + (markdown.supportThemeIcons ? renderCodicons(text) : text) + "</p>";
     };
     if (options.codeBlockRenderer) {
         renderer.code = function (code, lang) {
@@ -164,7 +165,9 @@ export function renderMarkdown(markdown, options) {
     if (markdown.isTrusted) {
         allowedSchemes.push(Schemas.command);
     }
-    var renderedMarkdown = marked.parse(markdown.value, markedOptions);
+    var renderedMarkdown = marked.parse(markdown.supportThemeIcons
+        ? markdownEscapeEscapedCodicons(markdown.value)
+        : markdown.value, markedOptions);
     element.innerHTML = insane(renderedMarkdown, {
         allowedSchemes: allowedSchemes,
         allowedAttributes: {

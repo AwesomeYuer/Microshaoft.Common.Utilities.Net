@@ -111,26 +111,23 @@ var TypeScriptWorker = /** @class */ (function () {
                 related.forEach(function (diag2) { return diag2.file = undefined; });
             }
         });
+        return diagnostics;
     };
     TypeScriptWorker.prototype.getSyntacticDiagnostics = function (fileName) {
         var diagnostics = this._languageService.getSyntacticDiagnostics(fileName);
-        TypeScriptWorker.clearFiles(diagnostics);
-        return Promise.resolve(diagnostics);
+        return Promise.resolve(TypeScriptWorker.clearFiles(diagnostics));
     };
     TypeScriptWorker.prototype.getSemanticDiagnostics = function (fileName) {
         var diagnostics = this._languageService.getSemanticDiagnostics(fileName);
-        TypeScriptWorker.clearFiles(diagnostics);
-        return Promise.resolve(diagnostics);
+        return Promise.resolve(TypeScriptWorker.clearFiles(diagnostics));
     };
     TypeScriptWorker.prototype.getSuggestionDiagnostics = function (fileName) {
         var diagnostics = this._languageService.getSuggestionDiagnostics(fileName);
-        TypeScriptWorker.clearFiles(diagnostics);
-        return Promise.resolve(diagnostics);
+        return Promise.resolve(TypeScriptWorker.clearFiles(diagnostics));
     };
     TypeScriptWorker.prototype.getCompilerOptionsDiagnostics = function (fileName) {
         var diagnostics = this._languageService.getCompilerOptionsDiagnostics();
-        TypeScriptWorker.clearFiles(diagnostics);
-        return Promise.resolve(diagnostics);
+        return Promise.resolve(TypeScriptWorker.clearFiles(diagnostics));
     };
     TypeScriptWorker.prototype.getCompletionsAtPosition = function (fileName, position) {
         return Promise.resolve(this._languageService.getCompletionsAtPosition(fileName, position, undefined));

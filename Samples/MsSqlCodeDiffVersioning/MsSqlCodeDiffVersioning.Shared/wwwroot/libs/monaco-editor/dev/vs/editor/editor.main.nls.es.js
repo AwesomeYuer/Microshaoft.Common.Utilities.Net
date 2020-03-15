@@ -1,6 +1,6 @@
 /*!-----------------------------------------------------------
  * Copyright (c) Microsoft Corporation. All rights reserved.
- * Version: 0.19.3(4bbae4b7d81ecff78ba65ddc8227b542e734257e)
+ * Version: 0.20.0(6363745c0a33c27b149b89342a7b96d354fb554c)
  * Released under the MIT license
  * https://github.com/Microsoft/vscode/blob/master/LICENSE.txt
  *-----------------------------------------------------------*/
@@ -124,6 +124,7 @@ define("vs/editor/editor.main.nls.es", {
 		"Quitar el espacio en blanco final autoinsertado.",
 		"Manejo especial para archivos grandes para desactivar ciertas funciones de memoria intensiva.",
 		"Habilita sugerencias basadas en palabras.",
+		"Controls whether the semanticHighlighting is shown for the languages that support it.",
 		"Mantiene abiertos los editores interactivos, incluso al hacer doble clic en su contenido o presionar \"Escape\".",
 		"Las lineas por encima de esta longitud no se tokenizarán por razones de rendimiento.",
 		"Tiempo de espera en milisegundos después del cual se cancela el cálculo de diferencias. Utilice 0 para no usar tiempo de espera.",
@@ -136,6 +137,7 @@ define("vs/editor/editor.main.nls.es", {
 		"El editor se optimizará de forma permanente para su uso con un editor de pantalla.",
 		"El editor nunca se optimizará para su uso con un lector de pantalla.",
 		"Controla si el editor se debe ejecutar en un modo optimizado para lectores de pantalla.",
+		"Controla si se inserta un carácter de espacio al comentar.",
 		"Controla si al copiar sin selección se copia la línea actual.",
 		"Controla si la cadena de búsqueda del widget de búsqueda se inicializa desde la selección del editor.",
 		"No activar nunca Buscar en la selección automáticamente (predeterminado)",
@@ -153,7 +155,7 @@ define("vs/editor/editor.main.nls.es", {
 		"Vaya al resultado principal y habilite la navegación sin peek para otros",
 		"Esta configuración está en desuso. Use configuraciones separadas como \"editor.editor.gotoLocation.multipleDefinitions\" o \"editor.editor.gotoLocation.multipleImplementations\" en su lugar.",
 		"Controla el comportamiento del comando \"Ir a definición\" cuando existen varias ubicaciones de destino.",
-		"Controla el comportamiento del comando \"Ir a implementaciones\" cuando existen varias ubicaciones de destino.",
+		"Controla el comportamiento del comando \"Ir a definición de tipo\" cuando existen varias ubicaciones de destino.",
 		"Controla el comportamiento del comando \"Ir a declaración\" cuando existen varias ubicaciones de destino.",
 		"Controla el comportamiento del comando \"Ir a implementaciones\" cuando existen varias ubicaciones de destino.",
 		"Controla el comportamiento del comando \"Ir a referencias\" cuando existen varias ubicaciones de destino.",
@@ -222,6 +224,7 @@ define("vs/editor/editor.main.nls.es", {
 		"Si está habilitado, IntelliSense muestra sugerencias de tipo \"folder\".",
 		"Cuando está habilitado, IntelliSense muestra sugerencias de tipo \"typeParameter\".",
 		"Cuando está habilitado, IntelliSense muestra sugerencias de tipo \"snippet\".",
+		"Controla la visibilidad de la barra de estado en la parte inferior del widget de sugerencias.",
 		"Controla si se deben aceptar sugerencias en los caracteres de confirmación. Por ejemplo, en Javascript, el punto y coma (\";\") puede ser un carácter de confirmación que acepta una sugerencia y escribe ese carácter.",
 		"Aceptar solo una sugerencia con \"Entrar\" cuando realiza un cambio textual.",
 		"Controla si las sugerencias deben aceptarse con \"Entrar\", además de \"TAB\". Ayuda a evitar la ambigüedad entre insertar nuevas líneas o aceptar sugerencias.",
@@ -260,6 +263,7 @@ define("vs/editor/editor.main.nls.es", {
 		"Multiplicador de la velocidad de desplazamiento al presionar \"Alt\".",
 		"Controla si el editor tiene el plegado de código habilitado.",
 		"Controla la estrategia para calcular los intervalos de plegado. \"auto\" usa una estrategia de plegado específica del idioma, si está disponible. \"indentation\" usa la estrategia de plegado basada en sangría.",
+		"Controla si el editor debe destacar los rangos plegados.",
 		"Controla la familia de fuentes.",
 		"Controla el grosor de la fuente.",
 		"Controla si el editor debe dar formato automáticamente al contenido pegado. Debe haber disponible un formateador capaz de aplicar formato a un rango dentro de un documento. ",
@@ -281,6 +285,9 @@ define("vs/editor/editor.main.nls.es", {
 		"Controla el pegado cuando el recuento de líneas del texto pegado coincide con el recuento de cursores.",
 		"Controla si el editor debe resaltar las apariciones de símbolos semánticos.",
 		"Controla si debe dibujarse un borde alrededor de la regla de información general.",
+		"Enfocar el árbol al abrir la vista",
+		"Enfocar el editor al abrir la inspección",
+		"Controla si se debe enfocar el editor en línea o el árbol en el widget de vista.",
 		"Controla el retraso, en milisegundos, tras el cual aparecerán sugerencias rápidas.",
 		"Controla si el editor debe representar caracteres de control.",
 		"Controla si el editor debe representar guías de sangría.",
@@ -327,6 +334,9 @@ define("vs/editor/editor.main.nls.es", {
 		"A las líneas ajustadas se les aplica una sangría de +1 respecto al elemento primario.",
 		"A las líneas ajustadas se les aplica una sangría de +2 respecto al elemento primario.",
 		"Controla la sangría de las líneas ajustadas.",
+		"Se supone que todos los caracteres son del mismo ancho. Este es un algoritmo rápido que funciona correctamente para fuentes monoespaciales y ciertos scripts (como caracteres latinos) donde los glifos tienen el mismo ancho.",
+		"Delega el cálculo de puntos de ajuste en el explorador. Es un algoritmo lento, que podría causar bloqueos para archivos grandes, pero funciona correctamente en todos los casos.",
+		"Controla el algoritmo que calcula los puntos de ajuste.",
 	],
 	"vs/editor/common/modes/modesRegistry": [
 		"Texto sin formato",
@@ -452,7 +462,7 @@ define("vs/editor/editor.main.nls.es", {
 		"No hay acciones de código preferidas disponibles",
 		"No hay acciones de código disponibles",
 		"Refactorizar...",
-		"No hay refactorizaciones de \"{0}\" disponibles",
+		"No hay refactorizaciones preferidas de \"{0}\" disponibles",
 		"No hay refactorizaciones de \"{0}\" disponibles",
 		"No hay ninguna refactorización favorita disponible.",
 		"No hay refactorizaciones disponibles",
@@ -569,6 +579,7 @@ define("vs/editor/editor.main.nls.es", {
 		"Plegar todo",
 		"Desplegar todo",
 		"Nivel de plegamiento {0}",
+		"Color de la selección del editor.",
 	],
 	"vs/editor/contrib/fontZoom/fontZoom": [
 		"Acercarse a la tipografía del editor",
@@ -679,7 +690,7 @@ define("vs/editor/editor.main.nls.es", {
 	],
 	"vs/editor/contrib/hover/modesContentHover": [
 		"Cargando...",
-		"Problema de pico",
+		"Ver problema",
 		"Buscando correcciones rápidas...",
 		"No hay correcciones rápidas disponibles",
 		"Corrección Rápida",
@@ -774,12 +785,16 @@ define("vs/editor/editor.main.nls.es", {
 	"vs/editor/contrib/rename/rename": [
 		"No hay ningún resultado.",
 		"Error desconocido al resolver el cambio de nombre de la ubicación",
+		"Cambiando el nombre de \"{0}\"",
 		"Nombre cambiado correctamente de \'{0}\' a \'{1}\'. Resumen: {2}",
-		"No se pudo cambiar el nombre.",
+		"No se pudo cambiar el nombre a las ediciones de aplicación",
+		"No se pudo cambiar el nombre de las ediciones de cálculo",
 		"Cambiar el nombre del símbolo",
+		"Activar/desactivar la capacidad de previsualizar los cambios antes de cambiar el nombre",
 	],
 	"vs/editor/contrib/rename/renameInputField": [
 		"Cambie el nombre de la entrada. Escriba el nuevo nombre y presione Entrar para confirmar.",
+		"{0} para cambiar el nombre, {1} para obtener una vista previa",
 	],
 	"vs/editor/contrib/smartSelect/smartSelect": [
 		"Expandir selección",
@@ -842,7 +857,12 @@ define("vs/editor/editor.main.nls.es", {
 		"Cargando...",
 		"Cargando...",
 		"No hay sugerencias.",
+		"{0} por menos...",
+		"{0} para más...",
 		"Elemento {0}, documentos: {1}",
+		"{0} para insertar, {1} para reemplazar",
+		"{0} para reemplazar, {1} para insertar",
+		"{0} para aceptar",
 	],
 	"vs/editor/contrib/toggleTabFocusMode/toggleTabFocusMode": [
 		"Alternar tecla de tabulación para mover el punto de atención",
@@ -866,6 +886,7 @@ define("vs/editor/editor.main.nls.es", {
 	"vs/platform/configuration/common/configurationRegistry": [
 		"La configuración predeterminada se reemplaza",
 		"Establecer los valores de configuración que se reemplazarán para un lenguaje.",
+		"Esta configuración no admite la configuración por idioma.",
 		"No se puede registrar \"{0}\". Coincide con el patrón de propiedad \'\\\\[.*\\\\]$\' para describir la configuración del editor específica del lenguaje. Utilice la contribución \"configurationDefaults\".",
 		"No se puede registrar \"{0}\". Esta propiedad ya está registrada.",
 	],
@@ -923,7 +944,7 @@ define("vs/editor/editor.main.nls.es", {
 		"Selector de color rápido para la agrupación de etiquetas.",
 		"Selector de color rápido para la agrupación de bordes.",
 		"Color de fondo de la insignia. Las insignias son pequeñas etiquetas de información, por ejemplo los resultados de un número de resultados.",
-		"Color de fondo de la insignia. Las insignias son pequeñas etiquetas de información, por ejemplo los resultados de un número de resultados.",
+		"Color de primer plano de la insignia. Las insignias son pequeñas etiquetas de información, por ejemplo los resultados de un número de resultados.",
 		"Sombra de la barra de desplazamiento indica que la vista se ha despazado.",
 		"Color de fondo de control deslizante de barra de desplazamiento.",
 		"Color de fondo de barra de desplazamiento cursor cuando se pasar sobre el control.",
@@ -968,9 +989,9 @@ define("vs/editor/editor.main.nls.es", {
 		"Color de contorno para el texto quitado.",
 		"Color del borde entre ambos editores de texto.",
 		"Color de fondo de la lista o el árbol del elemento con el foco cuando la lista o el árbol están activos. Una lista o un árbol tienen el foco del teclado cuando están activos, cuando están inactivos no.",
-		"Color de fondo de la lista o el árbol del elemento con el foco cuando la lista o el árbol están activos. Una lista o un árbol tienen el foco del teclado cuando están activos, cuando están inactivos no.",
-		"Color de fondo de la lista o el árbol del elemento seleccionado cuando la lista o el árbol están activos. Una lista o un árbol tienen el foco del teclado cuando están activos, cuando están inactivos no.",
 		"Color de primer plano de la lista o el árbol del elemento con el foco cuando la lista o el árbol están activos. Una lista o un árbol tienen el foco del teclado cuando están activos, cuando están inactivos no.",
+		"Color de fondo de la lista o el árbol del elemento seleccionado cuando la lista o el árbol están activos. Una lista o un árbol tienen el foco del teclado cuando están activos, cuando están inactivos no.",
+		"Color de primer plano de la lista o el árbol del elemento seleccionado cuando la lista o el árbol están activos. Una lista o un árbol tienen el foco del teclado cuando están activos, cuando están inactivos no.",
 		"Color de fondo de la lista o el árbol del elemento seleccionado cuando la lista o el árbol están inactivos. Una lista o un árbol tienen el foco del teclado cuando están activos, cuando están inactivos no.",
 		"Color de primer plano de la lista o el árbol del elemento con el foco cuando la lista o el árbol esta inactiva. Una lista o un árbol tiene el foco del teclado cuando está activo, cuando esta inactiva no.",
 		"Color de fondo de la lista o el árbol del elemento con el foco cuando la lista o el árbol están inactivos. Una lista o un árbol tienen el foco del teclado cuando están activos, pero no cuando están inactivos.",
@@ -984,7 +1005,7 @@ define("vs/editor/editor.main.nls.es", {
 		"Color de trazo de árbol para las guías de sangría.",
 		"Color del borde de los menús.",
 		"Color de primer plano de los elementos de menú.",
-		"Color de fondo de los elementos de menú. ",
+		"Color de fondo de los elementos de menú.",
 		"Color de primer plano del menu para el elemento del menú seleccionado.",
 		"Color de fondo del menu para el elemento del menú seleccionado.",
 		"Color del borde del elemento seleccionado en los menús.",

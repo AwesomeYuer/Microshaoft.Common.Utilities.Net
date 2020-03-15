@@ -187,3 +187,4 @@ var MenuItemAction = /** @class */ (function (_super) {
     return MenuItemAction;
 }(ExecuteCommandAction));
 export { MenuItemAction };
+//#endregion

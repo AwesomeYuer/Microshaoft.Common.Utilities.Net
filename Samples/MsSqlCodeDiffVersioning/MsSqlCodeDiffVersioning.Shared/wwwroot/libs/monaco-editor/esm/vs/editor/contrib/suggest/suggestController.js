@@ -127,7 +127,7 @@ var SuggestController = /** @class */ (function () {
         this._toDispose = new DisposableStore();
         this.editor = editor;
         this.model = new SuggestModel(this.editor, editorWorker);
-        this.widget = new IdleValue(function () {
+        this.widget = this._toDispose.add(new IdleValue(function () {
             var widget = _this._instantiationService.createInstance(SuggestWidget, _this.editor);
             _this._toDispose.add(widget);
             _this._toDispose.add(widget.onDidSelect(function (item) { return _this._insertSuggestion(item, 0); }, _this));
@@ -164,11 +164,22 @@ var SuggestController = /** @class */ (function () {
                 makesTextEdit.set(value);
             }));
             _this._toDispose.add(toDisposable(function () { return makesTextEdit.reset(); }));
+            _this._toDispose.add(widget.onDetailsKeyDown(function (e) {
+                // cmd + c on macOS, ctrl + c on Win / Linux
+                if (e.toKeybinding().equals(new SimpleKeybinding(true, false, false, false, 33 /* KEY_C */)) ||
+                    (platform.isMacintosh && e.toKeybinding().equals(new SimpleKeybinding(false, false, false, true, 33 /* KEY_C */)))) {
+                    e.stopPropagation();
+                    return;
+                }
+                if (!e.toKeybinding().isModifierKey()) {
+                    _this.editor.focus();
+                }
+            }));
             return widget;
-        });
-        this._alternatives = new IdleValue(function () {
+        }));
+        this._alternatives = this._toDispose.add(new IdleValue(function () {
             return _this._toDispose.add(new SuggestAlternatives(_this.editor, _this._contextKeyService));
-        });
+        }));
         this._toDispose.add(_instantiationService.createInstance(WordContextKey, editor));
         this._toDispose.add(this.model.onDidTrigger(function (e) {
             _this.widget.getValue().showTriggered(e.auto, e.shy ? 250 : 50);
@@ -189,17 +200,6 @@ var SuggestController = /** @class */ (function () {
             if (!_sticky) {
                 _this.model.cancel();
                 _this.model.clear();
-            }
-        }));
-        this._toDispose.add(this.widget.getValue().onDetailsKeyDown(function (e) {
-            // cmd + c on macOS, ctrl + c on Win / Linux
-            if (e.toKeybinding().equals(new SimpleKeybinding(true, false, false, false, 33 /* KEY_C */)) ||
-                (platform.isMacintosh && e.toKeybinding().equals(new SimpleKeybinding(false, false, false, true, 33 /* KEY_C */)))) {
-                e.stopPropagation();
-                return;
-            }
-            if (!e.toKeybinding().isModifierKey()) {
-                _this.editor.focus();
             }
         }));
         // Manage the acceptSuggestionsOnEnter context key
@@ -298,7 +298,7 @@ var SuggestController = /** @class */ (function () {
     };
     SuggestController.prototype.getOverwriteInfo = function (item, toggleMode) {
         assertType(this.editor.hasModel());
-        var replace = this.editor.getOption(85 /* suggest */).insertMode === 'replace';
+        var replace = this.editor.getOption(89 /* suggest */).insertMode === 'replace';
         if (toggleMode) {
             replace = !replace;
         }
@@ -313,8 +313,9 @@ var SuggestController = /** @class */ (function () {
     };
     SuggestController.prototype._alertCompletionItem = function (_a) {
         var suggestion = _a.completion;
+        var textLabel = typeof suggestion.label === 'string' ? suggestion.label : suggestion.label.name;
         if (isNonEmptyArray(suggestion.additionalTextEdits)) {
-            var msg = nls.localize('arai.alert.snippet', "Accepting '{0}' made {1} additional edits", suggestion.label, suggestion.additionalTextEdits.length);
+            var msg = nls.localize('arai.alert.snippet', "Accepting '{0}' made {1} additional edits", textLabel, suggestion.additionalTextEdits.length);
             alert(msg);
         }
     };
@@ -480,11 +481,8 @@ var SuggestCommand = EditorCommand.bindToContribution(SuggestController.get);
 registerEditorCommand(new SuggestCommand({
     id: 'acceptSelectedSuggestion',
     precondition: SuggestContext.Visible,
-    handler: function (x, args) {
-        var alternative = typeof args === 'object' && typeof args.alternative === 'boolean'
-            ? args.alternative
-            : false;
-        x.acceptSelectedSuggestion(true, alternative);
+    handler: function (x) {
+        x.acceptSelectedSuggestion(true, false);
     }
 }));
 // normal tab
@@ -501,16 +499,22 @@ KeybindingsRegistry.registerKeybindingRule({
     primary: 3 /* Enter */,
     weight: weight
 });
+// todo@joh control enablement via context key
 // shift+enter and shift+tab use the alternative-flag so that the suggest controller
 // is doing the opposite of the editor.suggest.overwriteOnAccept-configuration
-KeybindingsRegistry.registerKeybindingRule({
-    id: 'acceptSelectedSuggestion',
-    when: ContextKeyExpr.and(SuggestContext.Visible, EditorContextKeys.textInputFocus),
-    primary: 1024 /* Shift */ | 2 /* Tab */,
-    secondary: [1024 /* Shift */ | 3 /* Enter */],
-    args: { alternative: true },
-    weight: weight
-});
+registerEditorCommand(new SuggestCommand({
+    id: 'acceptAlternativeSelectedSuggestion',
+    precondition: ContextKeyExpr.and(SuggestContext.Visible, EditorContextKeys.textInputFocus),
+    kbOpts: {
+        weight: weight,
+        kbExpr: EditorContextKeys.textInputFocus,
+        primary: 1024 /* Shift */ | 3 /* Enter */,
+        secondary: [1024 /* Shift */ | 2 /* Tab */],
+    },
+    handler: function (x) {
+        x.acceptSelectedSuggestion(false, true);
+    },
+}));
 // continue to support the old command
 CommandsRegistry.registerCommandAlias('acceptSelectedSuggestionOnEnter', 'acceptSelectedSuggestion');
 registerEditorCommand(new SuggestCommand({

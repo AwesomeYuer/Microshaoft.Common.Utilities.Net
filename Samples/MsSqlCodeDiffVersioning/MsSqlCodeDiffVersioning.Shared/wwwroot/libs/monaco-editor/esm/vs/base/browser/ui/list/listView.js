@@ -667,7 +667,7 @@ var ListView = /** @class */ (function () {
             }
         }
         // sanitize feedback list
-        feedback = distinct(feedback).filter(function (i) { return i >= -1 && i < _this.length; }).sort();
+        feedback = distinct(feedback).filter(function (i) { return i >= -1 && i < _this.length; }).sort(function (a, b) { return a - b; });
         feedback = feedback[0] === -1 ? [-1] : feedback;
         if (equalsDragFeedback(this.currentDragFeedback, feedback)) {
             return true;

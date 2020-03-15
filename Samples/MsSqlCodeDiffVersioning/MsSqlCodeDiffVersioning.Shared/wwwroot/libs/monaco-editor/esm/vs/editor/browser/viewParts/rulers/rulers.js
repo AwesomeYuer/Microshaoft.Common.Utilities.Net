@@ -30,8 +30,8 @@ var Rulers = /** @class */ (function (_super) {
         _this.domNode.setClassName('view-rulers');
         _this._renderedRulers = [];
         var options = _this._context.configuration.options;
-        _this._rulers = options.get(73 /* rulers */);
-        _this._typicalHalfwidthCharacterWidth = options.get(32 /* fontInfo */).typicalHalfwidthCharacterWidth;
+        _this._rulers = options.get(77 /* rulers */);
+        _this._typicalHalfwidthCharacterWidth = options.get(34 /* fontInfo */).typicalHalfwidthCharacterWidth;
         return _this;
     }
     Rulers.prototype.dispose = function () {
@@ -40,8 +40,8 @@ var Rulers = /** @class */ (function (_super) {
     // --- begin event handlers
     Rulers.prototype.onConfigurationChanged = function (e) {
         var options = this._context.configuration.options;
-        this._rulers = options.get(73 /* rulers */);
-        this._typicalHalfwidthCharacterWidth = options.get(32 /* fontInfo */).typicalHalfwidthCharacterWidth;
+        this._rulers = options.get(77 /* rulers */);
+        this._typicalHalfwidthCharacterWidth = options.get(34 /* fontInfo */).typicalHalfwidthCharacterWidth;
         return true;
     };
     Rulers.prototype.onScrollChanged = function (e) {

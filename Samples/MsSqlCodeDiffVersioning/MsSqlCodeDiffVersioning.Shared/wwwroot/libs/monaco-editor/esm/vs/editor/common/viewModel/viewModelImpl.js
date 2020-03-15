@@ -17,7 +17,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 import { Color } from '../../../base/common/color.js';
 import * as strings from '../../../base/common/strings.js';
-import { EDITOR_FONT_DEFAULTS } from '../config/editorOptions.js';
+import { EDITOR_FONT_DEFAULTS, filterValidationDecorations } from '../config/editorOptions.js';
 import { Position } from '../core/position.js';
 import { Range } from '../core/range.js';
 import { TokenizationRegistry } from '../modes.js';
@@ -25,7 +25,6 @@ import { tokenizeLineToHTML } from '../modes/textToHtmlTokenizer.js';
 import { MinimapTokensColorTracker } from './minimapTokensColorTracker.js';
 import * as viewEvents from '../view/viewEvents.js';
 import { ViewLayout } from '../viewLayout/viewLayout.js';
-import { CharacterHardWrappingLineMapperFactory } from './characterHardWrappingLineMapper.js';
 import { IdentityLinesCollection, SplitLinesCollection } from './splitLinesCollection.js';
 import { MinimapLinesRenderingData, ViewLineRenderingData } from './viewModel.js';
 import { ViewModelDecorations } from './viewModelDecorations.js';
@@ -34,7 +33,7 @@ import * as platform from '../../../base/common/platform.js';
 var USE_IDENTITY_LINES_COLLECTION = true;
 var ViewModel = /** @class */ (function (_super) {
     __extends(ViewModel, _super);
-    function ViewModel(editorId, configuration, model, scheduleAtNextAnimationFrame) {
+    function ViewModel(editorId, configuration, model, domLineBreaksComputerFactory, monospaceLineBreaksComputerFactory, scheduleAtNextAnimationFrame) {
         var _this = _super.call(this) || this;
         _this.editorId = editorId;
         _this.configuration = configuration;
@@ -49,14 +48,11 @@ var ViewModel = /** @class */ (function (_super) {
         }
         else {
             var options = _this.configuration.options;
-            var wrappingInfo = options.get(104 /* wrappingInfo */);
-            var fontInfo = options.get(32 /* fontInfo */);
-            var wordWrapBreakAfterCharacters = options.get(94 /* wordWrapBreakAfterCharacters */);
-            var wordWrapBreakBeforeCharacters = options.get(95 /* wordWrapBreakBeforeCharacters */);
-            var wordWrapBreakObtrusiveCharacters = options.get(96 /* wordWrapBreakObtrusiveCharacters */);
-            var wrappingIndent = options.get(99 /* wrappingIndent */);
-            var hardWrappingLineMapperFactory = new CharacterHardWrappingLineMapperFactory(wordWrapBreakBeforeCharacters, wordWrapBreakAfterCharacters, wordWrapBreakObtrusiveCharacters);
-            _this.lines = new SplitLinesCollection(_this.model, hardWrappingLineMapperFactory, _this.model.getOptions().tabSize, wrappingInfo.wrappingColumn, fontInfo.typicalFullwidthCharacterWidth / fontInfo.typicalHalfwidthCharacterWidth, wrappingIndent);
+            var fontInfo = options.get(34 /* fontInfo */);
+            var wrappingStrategy = options.get(103 /* wrappingStrategy */);
+            var wrappingInfo = options.get(108 /* wrappingInfo */);
+            var wrappingIndent = options.get(102 /* wrappingIndent */);
+            _this.lines = new SplitLinesCollection(_this.model, domLineBreaksComputerFactory, monospaceLineBreaksComputerFactory, fontInfo, _this.model.getOptions().tabSize, wrappingStrategy, wrappingInfo.wrappingColumn, wrappingIndent);
         }
         _this.coordinatesConverter = _this.lines.createCoordinatesConverter();
         _this.viewLayout = _this._register(new ViewLayout(_this.configuration, _this.getLineCount(), scheduleAtNextAnimationFrame));
@@ -67,6 +63,15 @@ var ViewModel = /** @class */ (function (_super) {
             try {
                 var eventsCollector = _this._beginEmit();
                 eventsCollector.emit(new viewEvents.ViewScrollChangedEvent(e));
+            }
+            finally {
+                _this._endEmit();
+            }
+        }));
+        _this._register(_this.viewLayout.onDidContentSizeChange(function (e) {
+            try {
+                var eventsCollector = _this._beginEmit();
+                eventsCollector.emit(new viewEvents.ViewContentSizeChangedEvent(e));
             }
             finally {
                 _this._endEmit();
@@ -121,10 +126,11 @@ var ViewModel = /** @class */ (function (_super) {
         }
         var restorePreviousViewportStart = false;
         var options = this.configuration.options;
-        var wrappingInfo = options.get(104 /* wrappingInfo */);
-        var fontInfo = options.get(32 /* fontInfo */);
-        var wrappingIndent = options.get(99 /* wrappingIndent */);
-        if (this.lines.setWrappingSettings(wrappingIndent, wrappingInfo.wrappingColumn, fontInfo.typicalFullwidthCharacterWidth / fontInfo.typicalHalfwidthCharacterWidth)) {
+        var fontInfo = options.get(34 /* fontInfo */);
+        var wrappingStrategy = options.get(103 /* wrappingStrategy */);
+        var wrappingInfo = options.get(108 /* wrappingInfo */);
+        var wrappingIndent = options.get(102 /* wrappingIndent */);
+        if (this.lines.setWrappingSettings(fontInfo, wrappingStrategy, wrappingInfo.wrappingColumn, wrappingIndent)) {
             eventsCollector.emit(new viewEvents.ViewFlushedEvent());
             eventsCollector.emit(new viewEvents.ViewLineMappingChangedEvent());
             eventsCollector.emit(new viewEvents.ViewDecorationsChangedEvent());
@@ -135,7 +141,7 @@ var ViewModel = /** @class */ (function (_super) {
                 restorePreviousViewportStart = true;
             }
         }
-        if (e.hasChanged(65 /* readOnly */)) {
+        if (e.hasChanged(68 /* readOnly */)) {
             // Must read again all decorations due to readOnly filtering
             this.decorations.reset();
             eventsCollector.emit(new viewEvents.ViewDecorationsChangedEvent());
@@ -157,8 +163,28 @@ var ViewModel = /** @class */ (function (_super) {
                 var hadModelLineChangeThatChangedLineMapping = false;
                 var changes = e.changes;
                 var versionId = e.versionId;
-                for (var j = 0, lenJ = changes.length; j < lenJ; j++) {
-                    var change = changes[j];
+                // Do a first pass to compute line mappings, and a second pass to actually interpret them
+                var lineBreaksComputer = _this.lines.createLineBreaksComputer();
+                for (var _i = 0, changes_1 = changes; _i < changes_1.length; _i++) {
+                    var change = changes_1[_i];
+                    switch (change.changeType) {
+                        case 4 /* LinesInserted */: {
+                            for (var _a = 0, _b = change.detail; _a < _b.length; _a++) {
+                                var line = _b[_a];
+                                lineBreaksComputer.addRequest(line, null);
+                            }
+                            break;
+                        }
+                        case 2 /* LineChanged */: {
+                            lineBreaksComputer.addRequest(change.detail, null);
+                            break;
+                        }
+                    }
+                }
+                var lineBreaks = lineBreaksComputer.finalize();
+                var lineBreaksOffset = 0;
+                for (var _c = 0, changes_2 = changes; _c < changes_2.length; _c++) {
+                    var change = changes_2[_c];
                     switch (change.changeType) {
                         case 1 /* Flush */: {
                             _this.lines.onModelFlushed();
@@ -178,7 +204,9 @@ var ViewModel = /** @class */ (function (_super) {
                             break;
                         }
                         case 4 /* LinesInserted */: {
-                            var linesInsertedEvent = _this.lines.onModelLinesInserted(versionId, change.fromLineNumber, change.toLineNumber, change.detail);
+                            var insertedLineBreaks = lineBreaks.slice(lineBreaksOffset, lineBreaksOffset + change.detail.length);
+                            lineBreaksOffset += change.detail.length;
+                            var linesInsertedEvent = _this.lines.onModelLinesInserted(versionId, change.fromLineNumber, change.toLineNumber, insertedLineBreaks);
                             if (linesInsertedEvent !== null) {
                                 eventsCollector.emit(linesInsertedEvent);
                                 _this.viewLayout.onLinesInserted(linesInsertedEvent.fromLineNumber, linesInsertedEvent.toLineNumber);
@@ -187,7 +215,9 @@ var ViewModel = /** @class */ (function (_super) {
                             break;
                         }
                         case 2 /* LineChanged */: {
-                            var _a = _this.lines.onModelLineChanged(versionId, change.lineNumber, change.detail), lineMappingChanged = _a[0], linesChangedEvent = _a[1], linesInsertedEvent = _a[2], linesDeletedEvent = _a[3];
+                            var changedLineBreakData = lineBreaks[lineBreaksOffset];
+                            lineBreaksOffset++;
+                            var _d = _this.lines.onModelLineChanged(versionId, change.lineNumber, changedLineBreakData), lineMappingChanged = _d[0], linesChangedEvent = _d[1], linesInsertedEvent = _d[2], linesDeletedEvent = _d[3];
                             hadModelLineChangeThatChangedLineMapping = lineMappingChanged;
                             if (linesChangedEvent) {
                                 eventsCollector.emit(linesChangedEvent);
@@ -395,7 +425,6 @@ var ViewModel = /** @class */ (function (_super) {
      * Gives a hint that a lot of requests are about to come in for these line numbers.
      */
     ViewModel.prototype.setViewport = function (startLineNumber, endLineNumber, centeredLineNumber) {
-        this.lines.warmUpLookupCache(startLineNumber, endLineNumber);
         this.viewportStartLine = startLineNumber;
         var position = this.coordinatesConverter.convertViewPositionToModelPosition(new Position(startLineNumber, this.getLineMinColumn(startLineNumber)));
         this.viewportStartLineTrackedRange = this.model._setTrackedRange(this.viewportStartLineTrackedRange, new Range(position.lineNumber, position.column, position.lineNumber, position.column), 1 /* NeverGrowsWhenTypingAtEdges */);
@@ -445,7 +474,7 @@ var ViewModel = /** @class */ (function (_super) {
         var lineData = this.lines.getViewLineData(lineNumber);
         var allInlineDecorations = this.decorations.getDecorationsViewportData(visibleRange).inlineDecorations;
         var inlineDecorations = allInlineDecorations[lineNumber - visibleRange.startLineNumber];
-        return new ViewLineRenderingData(lineData.minColumn, lineData.maxColumn, lineData.content, lineData.continuesWithWrappedLine, mightContainRTL, mightContainNonBasicASCII, lineData.tokens, inlineDecorations, tabSize);
+        return new ViewLineRenderingData(lineData.minColumn, lineData.maxColumn, lineData.content, lineData.continuesWithWrappedLine, mightContainRTL, mightContainNonBasicASCII, lineData.tokens, inlineDecorations, tabSize, lineData.startVisibleColumn);
     };
     ViewModel.prototype.getViewLineData = function (lineNumber) {
         return this.lines.getViewLineData(lineNumber);
@@ -455,7 +484,7 @@ var ViewModel = /** @class */ (function (_super) {
         return new MinimapLinesRenderingData(this.getTabSize(), result);
     };
     ViewModel.prototype.getAllOverviewRulerDecorations = function (theme) {
-        return this.lines.getAllOverviewRulerDecorations(this.editorId, this.configuration.options.get(65 /* readOnly */), theme);
+        return this.lines.getAllOverviewRulerDecorations(this.editorId, filterValidationDecorations(this.configuration.options), theme);
     };
     ViewModel.prototype.invalidateOverviewRulerColorCache = function () {
         var decorations = this.model.getOverviewRulerDecorations();
@@ -508,15 +537,14 @@ var ViewModel = /** @class */ (function (_super) {
     ViewModel.prototype.getEOL = function () {
         return this.model.getEOL();
     };
-    ViewModel.prototype.getPlainTextToCopy = function (ranges, emptySelectionClipboard, forceCRLF) {
-        var _this = this;
+    ViewModel.prototype.getPlainTextToCopy = function (modelRanges, emptySelectionClipboard, forceCRLF) {
         var newLineCharacter = forceCRLF ? '\r\n' : this.model.getEOL();
-        ranges = ranges.slice(0);
-        ranges.sort(Range.compareRangesUsingStarts);
+        modelRanges = modelRanges.slice(0);
+        modelRanges.sort(Range.compareRangesUsingStarts);
         var hasEmptyRange = false;
         var hasNonEmptyRange = false;
-        for (var _i = 0, ranges_1 = ranges; _i < ranges_1.length; _i++) {
-            var range = ranges_1[_i];
+        for (var _i = 0, modelRanges_1 = modelRanges; _i < modelRanges_1.length; _i++) {
+            var range = modelRanges_1[_i];
             if (range.isEmpty()) {
                 hasEmptyRange = true;
             }
@@ -529,10 +557,7 @@ var ViewModel = /** @class */ (function (_super) {
             if (!emptySelectionClipboard) {
                 return '';
             }
-            var modelLineNumbers = ranges.map(function (r) {
-                var viewLineStart = new Position(r.startLineNumber, 1);
-                return _this.coordinatesConverter.convertViewPositionToModelPosition(viewLineStart).lineNumber;
-            });
+            var modelLineNumbers = modelRanges.map(function (r) { return r.startLineNumber; });
             var result_1 = '';
             for (var i = 0; i < modelLineNumbers.length; i++) {
                 if (i > 0 && modelLineNumbers[i - 1] === modelLineNumbers[i]) {
@@ -546,39 +571,40 @@ var ViewModel = /** @class */ (function (_super) {
             // mixed empty selections and non-empty selections
             var result_2 = [];
             var prevModelLineNumber = 0;
-            for (var _a = 0, ranges_2 = ranges; _a < ranges_2.length; _a++) {
-                var range = ranges_2[_a];
-                var modelLineNumber = this.coordinatesConverter.convertViewPositionToModelPosition(new Position(range.startLineNumber, 1)).lineNumber;
-                if (range.isEmpty()) {
+            for (var _a = 0, modelRanges_2 = modelRanges; _a < modelRanges_2.length; _a++) {
+                var modelRange = modelRanges_2[_a];
+                var modelLineNumber = modelRange.startLineNumber;
+                if (modelRange.isEmpty()) {
                     if (modelLineNumber !== prevModelLineNumber) {
                         result_2.push(this.model.getLineContent(modelLineNumber));
                     }
                 }
                 else {
-                    result_2.push(this.getValueInRange(range, forceCRLF ? 2 /* CRLF */ : 0 /* TextDefined */));
+                    result_2.push(this.model.getValueInRange(modelRange, forceCRLF ? 2 /* CRLF */ : 0 /* TextDefined */));
                 }
                 prevModelLineNumber = modelLineNumber;
             }
             return result_2.length === 1 ? result_2[0] : result_2;
         }
         var result = [];
-        for (var _b = 0, ranges_3 = ranges; _b < ranges_3.length; _b++) {
-            var range = ranges_3[_b];
-            if (!range.isEmpty()) {
-                result.push(this.getValueInRange(range, forceCRLF ? 2 /* CRLF */ : 0 /* TextDefined */));
+        for (var _b = 0, modelRanges_3 = modelRanges; _b < modelRanges_3.length; _b++) {
+            var modelRange = modelRanges_3[_b];
+            if (!modelRange.isEmpty()) {
+                result.push(this.model.getValueInRange(modelRange, forceCRLF ? 2 /* CRLF */ : 0 /* TextDefined */));
             }
         }
         return result.length === 1 ? result[0] : result;
     };
-    ViewModel.prototype.getHTMLToCopy = function (viewRanges, emptySelectionClipboard) {
-        if (this.model.getLanguageIdentifier().id === 1 /* PlainText */) {
+    ViewModel.prototype.getRichTextToCopy = function (modelRanges, emptySelectionClipboard) {
+        var languageId = this.model.getLanguageIdentifier();
+        if (languageId.id === 1 /* PlainText */) {
             return null;
         }
-        if (viewRanges.length !== 1) {
+        if (modelRanges.length !== 1) {
             // no multiple selection support at this time
             return null;
         }
-        var range = this.coordinatesConverter.convertViewRangeToModelRange(viewRanges[0]);
+        var range = modelRanges[0];
         if (range.isEmpty()) {
             if (!emptySelectionClipboard) {
                 // nothing to copy
@@ -587,20 +613,23 @@ var ViewModel = /** @class */ (function (_super) {
             var lineNumber = range.startLineNumber;
             range = new Range(lineNumber, this.model.getLineMinColumn(lineNumber), lineNumber, this.model.getLineMaxColumn(lineNumber));
         }
-        var fontInfo = this.configuration.options.get(32 /* fontInfo */);
+        var fontInfo = this.configuration.options.get(34 /* fontInfo */);
         var colorMap = this._getColorMap();
         var fontFamily = fontInfo.fontFamily === EDITOR_FONT_DEFAULTS.fontFamily ? fontInfo.fontFamily : "'" + fontInfo.fontFamily + "', " + EDITOR_FONT_DEFAULTS.fontFamily;
-        return ("<div style=\""
-            + ("color: " + colorMap[1 /* DefaultForeground */] + ";")
-            + ("background-color: " + colorMap[2 /* DefaultBackground */] + ";")
-            + ("font-family: " + fontFamily + ";")
-            + ("font-weight: " + fontInfo.fontWeight + ";")
-            + ("font-size: " + fontInfo.fontSize + "px;")
-            + ("line-height: " + fontInfo.lineHeight + "px;")
-            + "white-space: pre;"
-            + "\">"
-            + this._getHTMLToCopy(range, colorMap)
-            + '</div>');
+        return {
+            mode: languageId.language,
+            html: ("<div style=\""
+                + ("color: " + colorMap[1 /* DefaultForeground */] + ";")
+                + ("background-color: " + colorMap[2 /* DefaultBackground */] + ";")
+                + ("font-family: " + fontFamily + ";")
+                + ("font-weight: " + fontInfo.fontWeight + ";")
+                + ("font-size: " + fontInfo.fontSize + "px;")
+                + ("line-height: " + fontInfo.lineHeight + "px;")
+                + "white-space: pre;"
+                + "\">"
+                + this._getHTMLToCopy(range, colorMap)
+                + '</div>')
+        };
     };
     ViewModel.prototype._getHTMLToCopy = function (modelRange, colorMap) {
         var startLineNumber = modelRange.startLineNumber;

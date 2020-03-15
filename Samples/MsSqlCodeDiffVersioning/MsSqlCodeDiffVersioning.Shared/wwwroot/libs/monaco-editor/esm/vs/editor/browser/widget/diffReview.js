@@ -446,7 +446,7 @@ var DiffReview = /** @class */ (function (_super) {
         var container = document.createElement('div');
         container.className = 'diff-review-table';
         container.setAttribute('role', 'list');
-        Configuration.applyFontInfoSlow(container, modifiedOptions.get(32 /* fontInfo */));
+        Configuration.applyFontInfoSlow(container, modifiedOptions.get(34 /* fontInfo */));
         var minOriginalLine = 0;
         var maxOriginalLine = 0;
         var minModifiedLine = 0;
@@ -540,9 +540,9 @@ var DiffReview = /** @class */ (function (_super) {
         var modifiedLineStart = diffEntry.modifiedLineStart;
         var modifiedLineEnd = diffEntry.modifiedLineEnd;
         var cnt = Math.max(modifiedLineEnd - modifiedLineStart, originalLineEnd - originalLineStart);
-        var originalLayoutInfo = originalOptions.get(103 /* layoutInfo */);
+        var originalLayoutInfo = originalOptions.get(107 /* layoutInfo */);
         var originalLineNumbersWidth = originalLayoutInfo.glyphMarginWidth + originalLayoutInfo.lineNumbersWidth;
-        var modifiedLayoutInfo = modifiedOptions.get(103 /* layoutInfo */);
+        var modifiedLayoutInfo = modifiedOptions.get(107 /* layoutInfo */);
         var modifiedLineNumbersWidth = 10 + modifiedLayoutInfo.glyphMarginWidth + modifiedLayoutInfo.lineNumbersWidth;
         for (var i = 0; i <= cnt; i++) {
             var originalLine = (originalLineStart === 0 ? 0 : originalLineStart + i);
@@ -615,7 +615,7 @@ var DiffReview = /** @class */ (function (_super) {
     };
     DiffReview._renderLine = function (model, options, tabSize, lineNumber) {
         var lineContent = model.getLineContent(lineNumber);
-        var fontInfo = options.get(32 /* fontInfo */);
+        var fontInfo = options.get(34 /* fontInfo */);
         var defaultMetadata = ((0 /* None */ << 11 /* FONT_STYLE_OFFSET */)
             | (1 /* DefaultForeground */ << 14 /* FOREGROUND_OFFSET */)
             | (2 /* DefaultBackground */ << 23 /* BACKGROUND_OFFSET */)) >>> 0;
@@ -625,7 +625,7 @@ var DiffReview = /** @class */ (function (_super) {
         var lineTokens = new LineTokens(tokens, lineContent);
         var isBasicASCII = ViewLineRenderingData.isBasicASCII(lineContent, model.mightContainNonBasicASCII());
         var containsRTL = ViewLineRenderingData.containsRTL(lineContent, isBasicASCII, model.mightContainRTL());
-        var r = renderViewLine(new RenderLineInput((fontInfo.isMonospace && !options.get(22 /* disableMonospaceOptimizations */)), fontInfo.canUseHalfwidthRightwardsArrow, lineContent, false, isBasicASCII, containsRTL, 0, lineTokens, [], tabSize, fontInfo.spaceWidth, options.get(84 /* stopRenderingLineAfter */), options.get(70 /* renderWhitespace */), options.get(66 /* renderControlCharacters */), options.get(33 /* fontLigatures */) !== EditorFontLigatures.OFF, null));
+        var r = renderViewLine(new RenderLineInput((fontInfo.isMonospace && !options.get(23 /* disableMonospaceOptimizations */)), fontInfo.canUseHalfwidthRightwardsArrow, lineContent, false, isBasicASCII, containsRTL, 0, lineTokens, [], tabSize, 0, fontInfo.spaceWidth, fontInfo.middotWidth, options.get(88 /* stopRenderingLineAfter */), options.get(74 /* renderWhitespace */), options.get(69 /* renderControlCharacters */), options.get(35 /* fontLigatures */) !== EditorFontLigatures.OFF, null));
         return r.html;
     };
     return DiffReview;

@@ -176,10 +176,9 @@ var ContextView = /** @class */ (function (_super) {
         this.view.style.width = 'initial';
     };
     ContextView.prototype.hide = function (data) {
-        var _a;
         var delegate = this.delegate;
         this.delegate = null;
-        if ((_a = delegate) === null || _a === void 0 ? void 0 : _a.onHide) {
+        if (delegate === null || delegate === void 0 ? void 0 : delegate.onHide) {
             delegate.onHide(data);
         }
         this.toDisposeOnClean.dispose();

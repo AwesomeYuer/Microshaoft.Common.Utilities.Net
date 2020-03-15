@@ -129,12 +129,18 @@ var IndexTreeModel = /** @class */ (function () {
             this.list.splice(listIndex, 1, [node]);
         }
     };
+    IndexTreeModel.prototype.has = function (location) {
+        return this.hasTreeNode(location);
+    };
     IndexTreeModel.prototype.getListIndex = function (location) {
         var _a = this.getTreeNodeWithListIndex(location), listIndex = _a.listIndex, visible = _a.visible, revealed = _a.revealed;
         return visible && revealed ? listIndex : -1;
     };
     IndexTreeModel.prototype.getListRenderCount = function (location) {
         return this.getTreeNode(location).renderNodeCount;
+    };
+    IndexTreeModel.prototype.isCollapsible = function (location) {
+        return this.getTreeNode(location).collapsible;
     };
     IndexTreeModel.prototype.setCollapsible = function (location, collapsible) {
         var _this = this;
@@ -200,6 +206,9 @@ var IndexTreeModel = /** @class */ (function () {
             if (isCollapsibleStateUpdate(update)) {
                 result = node.collapsible !== update.collapsible;
                 node.collapsible = update.collapsible;
+            }
+            else if (!node.collapsible) {
+                result = false;
             }
             else {
                 result = node.collapsed !== update.collapsed;
@@ -382,6 +391,18 @@ var IndexTreeModel = /** @class */ (function () {
             node.filterData = undefined;
             return getVisibleState(result);
         }
+    };
+    // cheap
+    IndexTreeModel.prototype.hasTreeNode = function (location, node) {
+        if (node === void 0) { node = this.root; }
+        if (!location || location.length === 0) {
+            return true;
+        }
+        var index = location[0], rest = location.slice(1);
+        if (index < 0 || index > node.children.length) {
+            return false;
+        }
+        return this.hasTreeNode(rest, node.children[index]);
     };
     // cheap
     IndexTreeModel.prototype.getTreeNode = function (location, node) {

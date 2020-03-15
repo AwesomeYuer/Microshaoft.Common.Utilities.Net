@@ -346,7 +346,7 @@
                             return x.ID == item.ID;
                         });
                         if (found == undefined) {
-                            item.OptionText = item.ObjectName + '(' + item.ID + ')' + ' @ ' + item.PostTime + ' @ ' + item.HostName;
+                            item.OptionText = item.ObjectName + '(' + item.ID + ')' + ' @ ' + item.DatabaseName + ' @ ' + item.DatabaseServerName + ' @ ' + item.PostTime + ' By ' + item.HostName;
                             item.DisableInDetail = ko.observable(false);
                             item.AddSequence = (++vm.Counter);
                             vm.Items.push(item);

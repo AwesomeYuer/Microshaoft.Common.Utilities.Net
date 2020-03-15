@@ -79,9 +79,9 @@ var GlyphMarginOverlay = /** @class */ (function (_super) {
         var _this = _super.call(this) || this;
         _this._context = context;
         var options = _this._context.configuration.options;
-        var layoutInfo = options.get(103 /* layoutInfo */);
-        _this._lineHeight = options.get(47 /* lineHeight */);
-        _this._glyphMargin = options.get(38 /* glyphMargin */);
+        var layoutInfo = options.get(107 /* layoutInfo */);
+        _this._lineHeight = options.get(49 /* lineHeight */);
+        _this._glyphMargin = options.get(40 /* glyphMargin */);
         _this._glyphMarginLeft = layoutInfo.glyphMarginLeft;
         _this._glyphMarginWidth = layoutInfo.glyphMarginWidth;
         _this._renderResult = null;
@@ -96,9 +96,9 @@ var GlyphMarginOverlay = /** @class */ (function (_super) {
     // --- begin event handlers
     GlyphMarginOverlay.prototype.onConfigurationChanged = function (e) {
         var options = this._context.configuration.options;
-        var layoutInfo = options.get(103 /* layoutInfo */);
-        this._lineHeight = options.get(47 /* lineHeight */);
-        this._glyphMargin = options.get(38 /* glyphMargin */);
+        var layoutInfo = options.get(107 /* layoutInfo */);
+        this._lineHeight = options.get(49 /* lineHeight */);
+        this._glyphMargin = options.get(40 /* glyphMargin */);
         this._glyphMarginLeft = layoutInfo.glyphMarginLeft;
         this._glyphMarginWidth = layoutInfo.glyphMarginWidth;
         return true;

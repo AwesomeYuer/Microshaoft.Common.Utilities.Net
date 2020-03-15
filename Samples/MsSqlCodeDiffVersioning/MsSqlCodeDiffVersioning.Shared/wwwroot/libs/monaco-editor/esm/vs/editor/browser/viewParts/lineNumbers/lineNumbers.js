@@ -34,12 +34,12 @@ var LineNumbersOverlay = /** @class */ (function (_super) {
     }
     LineNumbersOverlay.prototype._readConfig = function () {
         var options = this._context.configuration.options;
-        this._lineHeight = options.get(47 /* lineHeight */);
-        var lineNumbers = options.get(48 /* lineNumbers */);
+        this._lineHeight = options.get(49 /* lineHeight */);
+        var lineNumbers = options.get(50 /* lineNumbers */);
         this._renderLineNumbers = lineNumbers.renderType;
         this._renderCustomLineNumbers = lineNumbers.renderFn;
-        this._renderFinalNewline = options.get(68 /* renderFinalNewline */);
-        var layoutInfo = options.get(103 /* layoutInfo */);
+        this._renderFinalNewline = options.get(71 /* renderFinalNewline */);
+        var layoutInfo = options.get(107 /* layoutInfo */);
         this._lineNumbersLeft = layoutInfo.lineNumbersLeft;
         this._lineNumbersWidth = layoutInfo.lineNumbersWidth;
     };

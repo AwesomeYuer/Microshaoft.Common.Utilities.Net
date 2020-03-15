@@ -57,15 +57,15 @@ var ViewLines = /** @class */ (function (_super) {
         _this.domNode = _this._visibleLines.domNode;
         var conf = _this._context.configuration;
         var options = _this._context.configuration.options;
-        var fontInfo = options.get(32 /* fontInfo */);
-        var wrappingInfo = options.get(104 /* wrappingInfo */);
-        _this._lineHeight = options.get(47 /* lineHeight */);
+        var fontInfo = options.get(34 /* fontInfo */);
+        var wrappingInfo = options.get(108 /* wrappingInfo */);
+        _this._lineHeight = options.get(49 /* lineHeight */);
         _this._typicalHalfwidthCharacterWidth = fontInfo.typicalHalfwidthCharacterWidth;
         _this._isViewportWrapping = wrappingInfo.isViewportWrapping;
-        _this._revealHorizontalRightPadding = options.get(71 /* revealHorizontalRightPadding */);
-        _this._cursorSurroundingLines = options.get(18 /* cursorSurroundingLines */);
-        _this._cursorSurroundingLinesStyle = options.get(19 /* cursorSurroundingLinesStyle */);
-        _this._canUseLayerHinting = !options.get(21 /* disableLayerHinting */);
+        _this._revealHorizontalRightPadding = options.get(75 /* revealHorizontalRightPadding */);
+        _this._cursorSurroundingLines = options.get(19 /* cursorSurroundingLines */);
+        _this._cursorSurroundingLinesStyle = options.get(20 /* cursorSurroundingLinesStyle */);
+        _this._canUseLayerHinting = !options.get(22 /* disableLayerHinting */);
         _this._viewLineOptions = new ViewLineOptions(conf, _this._context.theme.type);
         PartFingerprints.write(_this.domNode, 7 /* ViewLines */);
         _this.domNode.setClassName('view-lines');
@@ -94,22 +94,22 @@ var ViewLines = /** @class */ (function (_super) {
     // ---- begin view event handlers
     ViewLines.prototype.onConfigurationChanged = function (e) {
         this._visibleLines.onConfigurationChanged(e);
-        if (e.hasChanged(104 /* wrappingInfo */)) {
+        if (e.hasChanged(108 /* wrappingInfo */)) {
             this._maxLineWidth = 0;
         }
         var options = this._context.configuration.options;
-        var fontInfo = options.get(32 /* fontInfo */);
-        var wrappingInfo = options.get(104 /* wrappingInfo */);
-        this._lineHeight = options.get(47 /* lineHeight */);
+        var fontInfo = options.get(34 /* fontInfo */);
+        var wrappingInfo = options.get(108 /* wrappingInfo */);
+        this._lineHeight = options.get(49 /* lineHeight */);
         this._typicalHalfwidthCharacterWidth = fontInfo.typicalHalfwidthCharacterWidth;
         this._isViewportWrapping = wrappingInfo.isViewportWrapping;
-        this._revealHorizontalRightPadding = options.get(71 /* revealHorizontalRightPadding */);
-        this._cursorSurroundingLines = options.get(18 /* cursorSurroundingLines */);
-        this._cursorSurroundingLinesStyle = options.get(19 /* cursorSurroundingLinesStyle */);
-        this._canUseLayerHinting = !options.get(21 /* disableLayerHinting */);
+        this._revealHorizontalRightPadding = options.get(75 /* revealHorizontalRightPadding */);
+        this._cursorSurroundingLines = options.get(19 /* cursorSurroundingLines */);
+        this._cursorSurroundingLinesStyle = options.get(20 /* cursorSurroundingLinesStyle */);
+        this._canUseLayerHinting = !options.get(22 /* disableLayerHinting */);
         Configuration.applyFontInfo(this.domNode, fontInfo);
         this._onOptionsMaybeChanged();
-        if (e.hasChanged(103 /* layoutInfo */)) {
+        if (e.hasChanged(107 /* layoutInfo */)) {
             this._maxLineWidth = 0;
         }
         return true;

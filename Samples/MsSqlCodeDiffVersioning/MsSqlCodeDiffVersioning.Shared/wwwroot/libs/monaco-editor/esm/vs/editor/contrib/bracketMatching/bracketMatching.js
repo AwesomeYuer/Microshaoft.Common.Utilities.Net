@@ -110,7 +110,7 @@ var BracketMatchingController = /** @class */ (function (_super) {
         _this._lastVersionId = 0;
         _this._decorations = [];
         _this._updateBracketsSoon = _this._register(new RunOnceScheduler(function () { return _this._updateBrackets(); }, 50));
-        _this._matchBrackets = _this._editor.getOption(51 /* matchBrackets */);
+        _this._matchBrackets = _this._editor.getOption(53 /* matchBrackets */);
         _this._updateBracketsSoon.schedule();
         _this._register(editor.onDidChangeCursorPosition(function (e) {
             if (_this._matchBrackets === 'never') {
@@ -133,8 +133,8 @@ var BracketMatchingController = /** @class */ (function (_super) {
             _this._updateBracketsSoon.schedule();
         }));
         _this._register(editor.onDidChangeConfiguration(function (e) {
-            if (e.hasChanged(51 /* matchBrackets */)) {
-                _this._matchBrackets = _this._editor.getOption(51 /* matchBrackets */);
+            if (e.hasChanged(53 /* matchBrackets */)) {
+                _this._matchBrackets = _this._editor.getOption(53 /* matchBrackets */);
                 _this._decorations = _this._editor.deltaDecorations(_this._decorations, []);
                 _this._lastBracketsData = [];
                 _this._lastVersionId = 0;
@@ -323,7 +323,7 @@ registerThemingParticipant(function (theme, collector) {
     }
 });
 // Go to menu
-MenuRegistry.appendMenuItem(17 /* MenubarGoMenu */, {
+MenuRegistry.appendMenuItem(19 /* MenubarGoMenu */, {
     group: '5_infile_nav',
     command: {
         id: 'editor.action.jumpToBracket',

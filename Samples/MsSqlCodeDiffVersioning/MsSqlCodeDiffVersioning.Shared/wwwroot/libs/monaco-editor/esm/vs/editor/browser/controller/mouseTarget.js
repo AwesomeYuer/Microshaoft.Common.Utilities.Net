@@ -22,6 +22,7 @@ import { ViewLine } from '../viewParts/lines/viewLine.js';
 import { Position } from '../../common/core/position.js';
 import { Range as EditorRange } from '../../common/core/range.js';
 import { CursorColumns } from '../../common/controller/cursorCommon.js';
+import * as dom from '../../../base/browser/dom.js';
 var PointerHandlerLastRenderData = /** @class */ (function () {
     function PointerHandlerLastRenderData(lastViewCursorsRenderData, lastTextareaPosition) {
         this.lastViewCursorsRenderData = lastViewCursorsRenderData;
@@ -142,10 +143,10 @@ var HitTestContext = /** @class */ (function () {
     function HitTestContext(context, viewHelper, lastRenderData) {
         this.model = context.model;
         var options = context.configuration.options;
-        this.layoutInfo = options.get(103 /* layoutInfo */);
+        this.layoutInfo = options.get(107 /* layoutInfo */);
         this.viewDomNode = viewHelper.viewDomNode;
-        this.lineHeight = options.get(47 /* lineHeight */);
-        this.typicalHalfwidthCharacterWidth = options.get(32 /* fontInfo */).typicalHalfwidthCharacterWidth;
+        this.lineHeight = options.get(49 /* lineHeight */);
+        this.typicalHalfwidthCharacterWidth = options.get(34 /* fontInfo */).typicalHalfwidthCharacterWidth;
         this.lastRenderData = lastRenderData;
         this._context = context;
         this._viewHelper = viewHelper;
@@ -540,9 +541,9 @@ var MouseTargetFactory = /** @class */ (function () {
     };
     MouseTargetFactory.prototype.getMouseColumn = function (editorPos, pos) {
         var options = this._context.configuration.options;
-        var layoutInfo = options.get(103 /* layoutInfo */);
+        var layoutInfo = options.get(107 /* layoutInfo */);
         var mouseContentHorizontalOffset = this._context.viewLayout.getCurrentScrollLeft() + pos.x - editorPos.x - layoutInfo.contentLeft;
-        return MouseTargetFactory._getMouseColumn(mouseContentHorizontalOffset, options.get(32 /* fontInfo */).typicalHalfwidthCharacterWidth);
+        return MouseTargetFactory._getMouseColumn(mouseContentHorizontalOffset, options.get(34 /* fontInfo */).typicalHalfwidthCharacterWidth);
     };
     MouseTargetFactory._getMouseColumn = function (mouseContentHorizontalOffset, typicalHalfwidthCharacterWidth) {
         if (mouseContentHorizontalOffset < 0) {
@@ -622,7 +623,19 @@ var MouseTargetFactory = /** @class */ (function () {
         return this._actualDoHitTestWithCaretRangeFromPoint(ctx, request.pos.toClientCoordinates());
     };
     MouseTargetFactory._actualDoHitTestWithCaretRangeFromPoint = function (ctx, coords) {
-        var range = document.caretRangeFromPoint(coords.clientX, coords.clientY);
+        var shadowRoot = dom.getShadowRoot(ctx.viewDomNode);
+        var range;
+        if (shadowRoot) {
+            if (typeof shadowRoot.caretRangeFromPoint === 'undefined') {
+                range = shadowCaretRangeFromPoint(shadowRoot, coords.clientX, coords.clientY);
+            }
+            else {
+                range = shadowRoot.caretRangeFromPoint(coords.clientX, coords.clientY);
+            }
+        }
+        else {
+            range = document.caretRangeFromPoint(coords.clientX, coords.clientY);
+        }
         if (!range || !range.startContainer) {
             return {
                 position: null,
@@ -775,3 +788,78 @@ var MouseTargetFactory = /** @class */ (function () {
     return MouseTargetFactory;
 }());
 export { MouseTargetFactory };
+export function shadowCaretRangeFromPoint(shadowRoot, x, y) {
+    var range = document.createRange();
+    // Get the element under the point
+    var el = shadowRoot.elementFromPoint(x, y);
+    if (el !== null) {
+        // Get the last child of the element until its firstChild is a text node
+        // This assumes that the pointer is on the right of the line, out of the tokens
+        // and that we want to get the offset of the last token of the line
+        while (el && el.firstChild && el.firstChild.nodeType !== el.firstChild.TEXT_NODE) {
+            el = el.lastChild;
+        }
+        // Grab its rect
+        var rect = el.getBoundingClientRect();
+        // And its font
+        var font = window.getComputedStyle(el, null).getPropertyValue('font');
+        // And also its txt content
+        var text = el.innerText;
+        // Position the pixel cursor at the left of the element
+        var pixelCursor = rect.left;
+        var offset = 0;
+        var step = void 0;
+        // If the point is on the right of the box put the cursor after the last character
+        if (x > rect.left + rect.width) {
+            offset = text.length;
+        }
+        else {
+            var charWidthReader = CharWidthReader.getInstance();
+            // Goes through all the characters of the innerText, and checks if the x of the point
+            // belongs to the character.
+            for (var i = 0; i < text.length + 1; i++) {
+                // The step is half the width of the character
+                step = charWidthReader.getCharWidth(text.charAt(i), font) / 2;
+                // Move to the center of the character
+                pixelCursor += step;
+                // If the x of the point is smaller that the position of the cursor, the point is over that character
+                if (x < pixelCursor) {
+                    offset = i;
+                    break;
+                }
+                // Move between the current character and the next
+                pixelCursor += step;
+            }
+        }
+        // Creates a range with the text node of the element and set the offset found
+        range.setStart(el.firstChild, offset);
+        range.setEnd(el.firstChild, offset);
+    }
+    return range;
+}
+var CharWidthReader = /** @class */ (function () {
+    function CharWidthReader() {
+        this._cache = {};
+        this._canvas = document.createElement('canvas');
+    }
+    CharWidthReader.getInstance = function () {
+        if (!CharWidthReader._INSTANCE) {
+            CharWidthReader._INSTANCE = new CharWidthReader();
+        }
+        return CharWidthReader._INSTANCE;
+    };
+    CharWidthReader.prototype.getCharWidth = function (char, font) {
+        var cacheKey = char + font;
+        if (this._cache[cacheKey]) {
+            return this._cache[cacheKey];
+        }
+        var context = this._canvas.getContext('2d');
+        context.font = font;
+        var metrics = context.measureText(char);
+        var width = metrics.width;
+        this._cache[cacheKey] = width;
+        return width;
+    };
+    CharWidthReader._INSTANCE = null;
+    return CharWidthReader;
+}());

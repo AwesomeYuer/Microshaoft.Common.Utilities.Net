@@ -173,7 +173,13 @@ function asListOptions(modelProvider, options) {
             },
             getPosInSet: function (node) {
                 return node.visibleChildIndex + 1;
-            }
+            },
+            isChecked: options.ariaProvider && options.ariaProvider.isChecked ? function (node) {
+                return options.ariaProvider.isChecked(node.element);
+            } : undefined,
+            getRole: options.ariaProvider && options.ariaProvider.getRole ? function (node) {
+                return options.ariaProvider.getRole(node.element);
+            } : undefined
         } });
 }
 var ComposedTreeDelegate = /** @class */ (function () {
@@ -1005,7 +1011,7 @@ var AbstractTree = /** @class */ (function () {
         // Make sure the `forEach` always runs
         onDidModelSplice(function () { return null; }, null, this.disposables);
         // Active nodes can change when the model changes or when focus or selection change.
-        // We debouce it with 0 delay since these events may fire in the same stack and we only
+        // We debounce it with 0 delay since these events may fire in the same stack and we only
         // want to run this once. It also doesn't matter if it runs on the next tick since it's only
         // a nice to have UI feature.
         onDidChangeActiveNodes.input = Event.chain(Event.any(onDidModelSplice, this.focus.onDidChange, this.selection.onDidChange))
@@ -1143,6 +1149,9 @@ var AbstractTree = /** @class */ (function () {
     AbstractTree.prototype.expand = function (location, recursive) {
         if (recursive === void 0) { recursive = false; }
         return this.model.setCollapsed(location, false, recursive);
+    };
+    AbstractTree.prototype.isCollapsible = function (location) {
+        return this.model.isCollapsible(location);
     };
     AbstractTree.prototype.setCollapsible = function (location, collapsible) {
         return this.model.setCollapsible(location, collapsible);

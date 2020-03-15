@@ -4,7 +4,8 @@
  *--------------------------------------------------------------------------------------------*/
 import './codelensWidget.css';
 import * as dom from '../../../base/browser/dom.js';
-import { renderCodicons } from '../../../base/browser/ui/codiconLabel/codiconLabel.js';
+import { renderCodicons } from '../../../base/common/codicons.js';
+import { escape } from '../../../base/common/strings.js';
 import { Range } from '../../common/core/range.js';
 import { ModelDecorationOptions } from '../../common/model/textModel.js';
 import { editorCodeLensForeground } from '../../common/view/editorColorRegistry.js';
@@ -53,7 +54,7 @@ var CodeLensContentWidget = /** @class */ (function () {
             }
             hasSymbol = true;
             if (lens.command) {
-                var title = renderCodicons(lens.command.title);
+                var title = renderCodicons(escape(lens.command.title));
                 if (lens.command.id) {
                     innerHtml += "<a id=" + i + ">" + title + "</a>";
                     this._commands.set(String(i), lens.command);
@@ -259,9 +260,11 @@ registerThemingParticipant(function (theme, collector) {
     var codeLensForeground = theme.getColor(editorCodeLensForeground);
     if (codeLensForeground) {
         collector.addRule(".monaco-editor .codelens-decoration { color: " + codeLensForeground + "; }");
+        collector.addRule(".monaco-editor .codelens-decoration .codicon { color: " + codeLensForeground + "; }");
     }
     var activeLinkForeground = theme.getColor(editorActiveLinkForeground);
     if (activeLinkForeground) {
         collector.addRule(".monaco-editor .codelens-decoration > a:hover { color: " + activeLinkForeground + " !important; }");
+        collector.addRule(".monaco-editor .codelens-decoration > a:hover .codicon { color: " + activeLinkForeground + " !important; }");
     }
 });

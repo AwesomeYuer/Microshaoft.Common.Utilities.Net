@@ -157,6 +157,9 @@ var CompressedObjectTreeModel = /** @class */ (function () {
         };
         this.model.setChildren(node, children, _onDidCreateNode, _onDidDeleteNode);
     };
+    CompressedObjectTreeModel.prototype.has = function (element) {
+        return this.nodes.has(element);
+    };
     CompressedObjectTreeModel.prototype.getListIndex = function (location) {
         var node = this.getCompressedNode(location);
         return this.model.getListIndex(node);
@@ -188,6 +191,10 @@ var CompressedObjectTreeModel = /** @class */ (function () {
             return null;
         }
         return parentNode.elements[parentNode.elements.length - 1];
+    };
+    CompressedObjectTreeModel.prototype.isCollapsible = function (location) {
+        var compressedNode = this.getCompressedNode(location);
+        return this.model.isCollapsible(compressedNode);
     };
     CompressedObjectTreeModel.prototype.setCollapsible = function (location, collapsible) {
         var compressedNode = this.getCompressedNode(location);
@@ -346,6 +353,9 @@ var CompressibleObjectTreeModel = /** @class */ (function () {
     CompressibleObjectTreeModel.prototype.setCompressionEnabled = function (enabled) {
         this.model.setCompressionEnabled(enabled);
     };
+    CompressibleObjectTreeModel.prototype.has = function (location) {
+        return this.model.has(location);
+    };
     CompressibleObjectTreeModel.prototype.getListIndex = function (location) {
         return this.model.getListIndex(location);
     };
@@ -360,6 +370,9 @@ var CompressibleObjectTreeModel = /** @class */ (function () {
     };
     CompressibleObjectTreeModel.prototype.getParentNodeLocation = function (location) {
         return this.model.getParentNodeLocation(location);
+    };
+    CompressibleObjectTreeModel.prototype.isCollapsible = function (location) {
+        return this.model.isCollapsible(location);
     };
     CompressibleObjectTreeModel.prototype.setCollapsible = function (location, collapsed) {
         return this.model.setCollapsible(location, collapsed);

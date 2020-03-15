@@ -195,6 +195,10 @@ var LinkComputer = /** @class */ (function () {
                             // `*` terminates a link if the link began with `*`
                             chClass = (linkBeginChCode === 42 /* Asterisk */) ? 1 /* ForceTermination */ : 0 /* None */;
                             break;
+                        case 124 /* Pipe */:
+                            // `|` terminates a link if the link began with `|`
+                            chClass = (linkBeginChCode === 124 /* Pipe */) ? 1 /* ForceTermination */ : 0 /* None */;
+                            break;
                         default:
                             chClass = classifier.get(chCode);
                     }

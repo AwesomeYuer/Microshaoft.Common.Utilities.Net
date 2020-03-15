@@ -104,21 +104,21 @@ var FindWidget = /** @class */ (function (_super) {
         _this._tryUpdateWidgetWidth();
         _this._findInput.inputBox.layout();
         _this._register(_this._codeEditor.onDidChangeConfiguration(function (e) {
-            if (e.hasChanged(65 /* readOnly */)) {
-                if (_this._codeEditor.getOption(65 /* readOnly */)) {
+            if (e.hasChanged(68 /* readOnly */)) {
+                if (_this._codeEditor.getOption(68 /* readOnly */)) {
                     // Hide replace part if editor becomes read only
                     _this._state.change({ isReplaceRevealed: false }, false);
                 }
                 _this._updateButtons();
             }
-            if (e.hasChanged(103 /* layoutInfo */)) {
+            if (e.hasChanged(107 /* layoutInfo */)) {
                 _this._tryUpdateWidgetWidth();
             }
             if (e.hasChanged(2 /* accessibilitySupport */)) {
                 _this.updateAccessibilitySupport();
             }
-            if (e.hasChanged(27 /* find */)) {
-                var addExtraSpaceOnTop = _this._codeEditor.getOption(27 /* find */).addExtraSpaceOnTop;
+            if (e.hasChanged(28 /* find */)) {
+                var addExtraSpaceOnTop = _this._codeEditor.getOption(28 /* find */).addExtraSpaceOnTop;
                 if (addExtraSpaceOnTop && !_this._viewZone) {
                     _this._viewZone = new FindWidgetViewZone(0);
                     _this._showViewZone();
@@ -162,7 +162,7 @@ var FindWidget = /** @class */ (function (_super) {
             _this._replaceInputFocused.set(false);
         }));
         _this._codeEditor.addOverlayWidget(_this);
-        if (_this._codeEditor.getOption(27 /* find */).addExtraSpaceOnTop) {
+        if (_this._codeEditor.getOption(28 /* find */).addExtraSpaceOnTop) {
             _this._viewZone = new FindWidgetViewZone(0); // Put it before the first line then users can scroll beyond the first line.
         }
         _this._applyTheme(themeService.getTheme());
@@ -225,7 +225,7 @@ var FindWidget = /** @class */ (function (_super) {
         }
         if (e.isReplaceRevealed) {
             if (this._state.isReplaceRevealed) {
-                if (!this._codeEditor.getOption(65 /* readOnly */) && !this._isReplaceVisible) {
+                if (!this._codeEditor.getOption(68 /* readOnly */) && !this._isReplaceVisible) {
                     this._isReplaceVisible = true;
                     this._replaceInput.width = dom.getTotalWidth(this._findInput.domNode);
                     this._updateButtons();
@@ -358,7 +358,7 @@ var FindWidget = /** @class */ (function (_super) {
         this._toggleReplaceBtn.toggleClass('codicon-chevron-right', !this._isReplaceVisible);
         this._toggleReplaceBtn.toggleClass('codicon-chevron-down', this._isReplaceVisible);
         this._toggleReplaceBtn.setExpanded(this._isReplaceVisible);
-        var canReplace = !this._codeEditor.getOption(65 /* readOnly */);
+        var canReplace = !this._codeEditor.getOption(68 /* readOnly */);
         this._toggleReplaceBtn.setEnabled(this._isVisible && canReplace);
     };
     FindWidget.prototype._reveal = function () {
@@ -366,7 +366,7 @@ var FindWidget = /** @class */ (function (_super) {
         if (!this._isVisible) {
             this._isVisible = true;
             var selection = this._codeEditor.getSelection();
-            switch (this._codeEditor.getOption(27 /* find */).autoFindInSelection) {
+            switch (this._codeEditor.getOption(28 /* find */).autoFindInSelection) {
                 case 'always':
                     this._toggleSelectionFind.checked = true;
                     break;
@@ -392,7 +392,7 @@ var FindWidget = /** @class */ (function (_super) {
             }, 200);
             this._codeEditor.layoutOverlayWidget(this);
             var adjustEditorScrollTop = true;
-            if (this._codeEditor.getOption(27 /* find */).seedSearchStringFromSelection && selection) {
+            if (this._codeEditor.getOption(28 /* find */).seedSearchStringFromSelection && selection) {
                 var domNode = this._codeEditor.getDomNode();
                 if (domNode) {
                     var editorCoords = dom.getDomNodePagePosition(domNode);
@@ -434,7 +434,7 @@ var FindWidget = /** @class */ (function (_super) {
     };
     FindWidget.prototype._layoutViewZone = function () {
         var _this = this;
-        var addExtraSpaceOnTop = this._codeEditor.getOption(27 /* find */).addExtraSpaceOnTop;
+        var addExtraSpaceOnTop = this._codeEditor.getOption(28 /* find */).addExtraSpaceOnTop;
         if (!addExtraSpaceOnTop) {
             this._removeViewZone();
             return;
@@ -459,7 +459,7 @@ var FindWidget = /** @class */ (function (_super) {
         if (!this._isVisible) {
             return;
         }
-        var addExtraSpaceOnTop = this._codeEditor.getOption(27 /* find */).addExtraSpaceOnTop;
+        var addExtraSpaceOnTop = this._codeEditor.getOption(28 /* find */).addExtraSpaceOnTop;
         if (!addExtraSpaceOnTop) {
             return;
         }
@@ -744,7 +744,6 @@ var FindWidget = /** @class */ (function (_super) {
                     return null;
                 }
                 try {
-                    /* tslint:disable-next-line:no-unused-expression */
                     new RegExp(value);
                     return null;
                 }
@@ -1132,6 +1131,6 @@ registerThemingParticipant(function (theme, collector) {
     // This rule is used to override the outline color for synthetic-focus find input.
     var focusOutline = theme.getColor(focusBorder);
     if (focusOutline) {
-        collector.addRule(".monaco-workbench .monaco-editor .find-widget .monaco-inputbox.synthetic-focus { outline-color: " + focusOutline + "; }");
+        collector.addRule(".monaco-editor .find-widget .monaco-inputbox.synthetic-focus { outline-color: " + focusOutline + "; }");
     }
 });

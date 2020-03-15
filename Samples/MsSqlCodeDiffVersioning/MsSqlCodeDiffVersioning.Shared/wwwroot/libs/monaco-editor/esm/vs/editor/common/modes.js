@@ -290,9 +290,29 @@ export { FoldingRangeKind };
 /**
  * @internal
  */
-export function isResourceTextEdit(thing) {
-    return isObject(thing) && thing.resource && Array.isArray(thing.edits);
-}
+export var WorkspaceFileEdit;
+(function (WorkspaceFileEdit) {
+    /**
+     * @internal
+     */
+    function is(thing) {
+        return isObject(thing) && (Boolean(thing.newUri) || Boolean(thing.oldUri));
+    }
+    WorkspaceFileEdit.is = is;
+})(WorkspaceFileEdit || (WorkspaceFileEdit = {}));
+/**
+ * @internal
+ */
+export var WorkspaceTextEdit;
+(function (WorkspaceTextEdit) {
+    /**
+     * @internal
+     */
+    function is(thing) {
+        return isObject(thing) && URI.isUri(thing.resource) && isObject(thing.edit);
+    }
+    WorkspaceTextEdit.is = is;
+})(WorkspaceTextEdit || (WorkspaceTextEdit = {}));
 // --- feature registries ------
 /**
  * @internal
@@ -377,7 +397,11 @@ export var FoldingRangeProviderRegistry = new LanguageFeatureRegistry();
 /**
  * @internal
  */
-export var SemanticTokensProviderRegistry = new LanguageFeatureRegistry();
+export var DocumentSemanticTokensProviderRegistry = new LanguageFeatureRegistry();
+/**
+ * @internal
+ */
+export var DocumentRangeSemanticTokensProviderRegistry = new LanguageFeatureRegistry();
 /**
  * @internal
  */

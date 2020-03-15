@@ -119,11 +119,10 @@ var EditorOpener = /** @class */ (function () {
         this._editorService = _editorService;
     }
     EditorOpener.prototype.open = function (target, options) {
-        var _a, _b;
         return __awaiter(this, void 0, void 0, function () {
             var selection, match;
-            return __generator(this, function (_c) {
-                switch (_c.label) {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
                         if (typeof target === 'string') {
                             target = URI.parse(target);
@@ -143,9 +142,9 @@ var EditorOpener = /** @class */ (function () {
                         if (target.scheme === Schemas.file) {
                             target = normalizePath(target); // workaround for non-normalized paths (https://github.com/Microsoft/vscode/issues/12954)
                         }
-                        return [4 /*yield*/, this._editorService.openCodeEditor({ resource: target, options: { selection: selection, context: ((_a = options) === null || _a === void 0 ? void 0 : _a.fromUserGesture) ? EditorOpenContext.USER : EditorOpenContext.API } }, this._editorService.getFocusedCodeEditor(), (_b = options) === null || _b === void 0 ? void 0 : _b.openToSide)];
+                        return [4 /*yield*/, this._editorService.openCodeEditor({ resource: target, options: { selection: selection, context: (options === null || options === void 0 ? void 0 : options.fromUserGesture) ? EditorOpenContext.USER : EditorOpenContext.API } }, this._editorService.getFocusedCodeEditor(), options === null || options === void 0 ? void 0 : options.openToSide)];
                     case 1:
-                        _c.sent();
+                        _a.sent();
                         return [2 /*return*/, true];
                 }
             });
@@ -172,16 +171,15 @@ var OpenerService = /** @class */ (function () {
         // Default opener: maito, http(s), command, and catch-all-editors
         this._openers.push({
             open: function (target, options) { return __awaiter(_this, void 0, void 0, function () {
-                var _a;
-                return __generator(this, function (_b) {
-                    switch (_b.label) {
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
                         case 0:
-                            if (!(((_a = options) === null || _a === void 0 ? void 0 : _a.openExternal) || matchesScheme(target, Schemas.mailto) || matchesScheme(target, Schemas.http) || matchesScheme(target, Schemas.https))) return [3 /*break*/, 2];
+                            if (!((options === null || options === void 0 ? void 0 : options.openExternal) || matchesScheme(target, Schemas.mailto) || matchesScheme(target, Schemas.http) || matchesScheme(target, Schemas.https))) return [3 /*break*/, 2];
                             // open externally
                             return [4 /*yield*/, this._doOpenExternal(target, options)];
                         case 1:
                             // open externally
-                            _b.sent();
+                            _a.sent();
                             return [2 /*return*/, true];
                         case 2: return [2 /*return*/, false];
                     }

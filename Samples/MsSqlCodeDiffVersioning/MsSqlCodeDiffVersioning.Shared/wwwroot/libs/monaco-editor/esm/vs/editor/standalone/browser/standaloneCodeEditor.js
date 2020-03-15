@@ -24,6 +24,13 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 import * as browser from '../../../base/browser/browser.js';
 import * as aria from '../../../base/browser/ui/aria/aria.js';
 import { Disposable, toDisposable, DisposableStore } from '../../../base/common/lifecycle.js';
@@ -109,8 +116,12 @@ var StandaloneCodeEditor = /** @class */ (function (_super) {
         var keybindingsWhen = ContextKeyExpr.and(precondition, ContextKeyExpr.deserialize(_descriptor.keybindingContext));
         var contextMenuGroupId = _descriptor.contextMenuGroupId || null;
         var contextMenuOrder = _descriptor.contextMenuOrder || 0;
-        var run = function () {
-            return Promise.resolve(_descriptor.run(_this));
+        var run = function (accessor) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+            return Promise.resolve(_descriptor.run.apply(_descriptor, __spreadArrays([_this], args)));
         };
         var toDispose = new DisposableStore();
         // Generate a unique id to allow the same descriptor.id across multiple editor instances
@@ -164,6 +175,7 @@ var StandaloneEditor = /** @class */ (function (_super) {
     function StandaloneEditor(domElement, options, toDispose, instantiationService, codeEditorService, commandService, contextKeyService, keybindingService, contextViewService, themeService, notificationService, configurationService, accessibilityService) {
         var _this = this;
         applyConfigurationValues(configurationService, options, false);
+        var themeDomRegistration = themeService.registerEditorContainer(domElement);
         options = options || {};
         if (typeof options.theme === 'string') {
             themeService.setTheme(options.theme);
@@ -174,6 +186,7 @@ var StandaloneEditor = /** @class */ (function (_super) {
         _this._contextViewService = contextViewService;
         _this._configurationService = configurationService;
         _this._register(toDispose);
+        _this._register(themeDomRegistration);
         var model;
         if (typeof _model === 'undefined') {
             model = self.monaco.editor.createModel(options.value || '', options.language || 'text/plain');
@@ -233,6 +246,7 @@ var StandaloneDiffEditor = /** @class */ (function (_super) {
     function StandaloneDiffEditor(domElement, options, toDispose, instantiationService, contextKeyService, keybindingService, contextViewService, editorWorkerService, codeEditorService, themeService, notificationService, configurationService, contextMenuService, editorProgressService, clipboardService) {
         var _this = this;
         applyConfigurationValues(configurationService, options, true);
+        var themeDomRegistration = themeService.registerEditorContainer(domElement);
         options = options || {};
         if (typeof options.theme === 'string') {
             options.theme = themeService.setTheme(options.theme);
@@ -241,6 +255,7 @@ var StandaloneDiffEditor = /** @class */ (function (_super) {
         _this._contextViewService = contextViewService;
         _this._configurationService = configurationService;
         _this._register(toDispose);
+        _this._register(themeDomRegistration);
         _this._contextViewService.setContainer(_this._containerDomElement);
         return _this;
     }

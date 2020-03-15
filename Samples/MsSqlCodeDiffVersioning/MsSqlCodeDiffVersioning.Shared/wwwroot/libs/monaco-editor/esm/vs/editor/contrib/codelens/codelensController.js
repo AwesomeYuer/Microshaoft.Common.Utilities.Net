@@ -29,7 +29,7 @@ import { CodeLensWidget, CodeLensHelper } from './codelensWidget.js';
 import { ICommandService } from '../../../platform/commands/common/commands.js';
 import { INotificationService } from '../../../platform/notification/common/notification.js';
 import { ICodeLensCache } from './codeLensCache.js';
-import { createStyleSheet } from '../../../base/browser/dom.js';
+import * as dom from '../../../base/browser/dom.js';
 import { hash } from '../../../base/common/hash.js';
 var CodeLensContribution = /** @class */ (function () {
     function CodeLensContribution(_editor, _commandService, _notificationService, _codeLensCache) {
@@ -55,13 +55,15 @@ var CodeLensContribution = /** @class */ (function () {
         }));
         this._globalToDispose.add(CodeLensProviderRegistry.onDidChange(this._onModelChange, this));
         this._globalToDispose.add(this._editor.onDidChangeConfiguration(function (e) {
-            if (e.hasChanged(32 /* fontInfo */)) {
+            if (e.hasChanged(34 /* fontInfo */)) {
                 _this._updateLensStyle();
             }
         }));
         this._onModelChange();
         this._styleClassName = hash(this._editor.getId()).toString(16);
-        this._styleElement = createStyleSheet();
+        this._styleElement = dom.createStyleSheet(dom.isInShadowDOM(this._editor.getContainerDomNode())
+            ? this._editor.getContainerDomNode()
+            : undefined);
         this._updateLensStyle();
     }
     CodeLensContribution.prototype.dispose = function () {
@@ -72,9 +74,11 @@ var CodeLensContribution = /** @class */ (function () {
     };
     CodeLensContribution.prototype._updateLensStyle = function () {
         var options = this._editor.getOptions();
-        var fontInfo = options.get(32 /* fontInfo */);
-        var lineHeight = options.get(47 /* lineHeight */);
-        var newStyle = ".monaco-editor .codelens-decoration." + this._styleClassName + " { height: " + Math.round(lineHeight * 1.1) + "px; line-height: " + lineHeight + "px; font-size: " + Math.round(fontInfo.fontSize * 0.9) + "px; padding-right: " + Math.round(fontInfo.fontSize * 0.45) + "px;}";
+        var fontInfo = options.get(34 /* fontInfo */);
+        var lineHeight = options.get(49 /* lineHeight */);
+        var height = Math.round(lineHeight * 1.1);
+        var fontSize = Math.round(fontInfo.fontSize * 0.9);
+        var newStyle = "\n\t\t.monaco-editor .codelens-decoration." + this._styleClassName + " { height: " + height + "px; line-height: " + lineHeight + "px; font-size: " + fontSize + "px; padding-right: " + Math.round(fontInfo.fontSize * 0.45) + "px;}\n\t\t.monaco-editor .codelens-decoration." + this._styleClassName + " > a > .codicon { line-height: " + lineHeight + "px; font-size: " + fontSize + "px; }\n\t\t";
         this._styleElement.innerHTML = newStyle;
     };
     CodeLensContribution.prototype._localDispose = function () {
@@ -203,17 +207,16 @@ var CodeLensContribution = /** @class */ (function () {
         }));
         this._localToDispose.add(this._editor.onMouseUp(function (e) {
             var _a;
-            var _b, _c;
             if (e.target.type !== 9 /* CONTENT_WIDGET */) {
                 return;
             }
             var target = e.target.element;
-            if (((_b = target) === null || _b === void 0 ? void 0 : _b.tagName) === 'SPAN') {
+            if ((target === null || target === void 0 ? void 0 : target.tagName) === 'SPAN') {
                 target = target.parentElement;
             }
-            if (((_c = target) === null || _c === void 0 ? void 0 : _c.tagName) === 'A') {
-                for (var _i = 0, _d = _this._lenses; _i < _d.length; _i++) {
-                    var lens = _d[_i];
+            if ((target === null || target === void 0 ? void 0 : target.tagName) === 'A') {
+                for (var _i = 0, _b = _this._lenses; _i < _b.length; _i++) {
+                    var lens = _b[_i];
                     var command = lens.getCommand(target);
                     if (command) {
                         (_a = _this._commandService).executeCommand.apply(_a, __spreadArrays([command.id], (command.arguments || []))).catch(function (err) { return _this._notificationService.error(err); });

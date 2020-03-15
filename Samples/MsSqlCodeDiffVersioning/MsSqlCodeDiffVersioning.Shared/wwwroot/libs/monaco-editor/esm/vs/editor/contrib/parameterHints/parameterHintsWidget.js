@@ -73,9 +73,9 @@ var ParameterHintsWidget = /** @class */ (function (_super) {
         var wrapper = dom.append(element, $('.wrapper'));
         wrapper.tabIndex = -1;
         var controls = dom.append(wrapper, $('.controls'));
-        var previous = dom.append(controls, $('.button.previous'));
+        var previous = dom.append(controls, $('.button.codicon.codicon-chevron-up'));
         var overloads = dom.append(controls, $('.overloads'));
-        var next = dom.append(controls, $('.button.next'));
+        var next = dom.append(controls, $('.button.codicon.codicon-chevron-down'));
         var onPreviousClick = stop(domEvent(previous, 'click'));
         this._register(onPreviousClick(this.previous, this));
         var onNextClick = stop(domEvent(next, 'click'));
@@ -105,12 +105,12 @@ var ParameterHintsWidget = /** @class */ (function (_super) {
             if (!_this.domNodes) {
                 return;
             }
-            var fontInfo = _this.editor.getOption(32 /* fontInfo */);
+            var fontInfo = _this.editor.getOption(34 /* fontInfo */);
             _this.domNodes.element.style.fontSize = fontInfo.fontSize + "px";
         };
         updateFont();
         this._register(Event.chain(this.editor.onDidChangeConfiguration.bind(this.editor))
-            .filter(function (e) { return e.hasChanged(32 /* fontInfo */); })
+            .filter(function (e) { return e.hasChanged(34 /* fontInfo */); })
             .on(updateFont, null));
         this._register(this.editor.onDidLayoutChange(function (e) { return _this.updateMaxHeight(); }));
         this.updateMaxHeight();
@@ -168,7 +168,7 @@ var ParameterHintsWidget = /** @class */ (function (_super) {
         }
         var code = dom.append(this.domNodes.signature, $('.code'));
         var hasParameters = signature.parameters.length > 0;
-        var fontInfo = this.editor.getOption(32 /* fontInfo */);
+        var fontInfo = this.editor.getOption(34 /* fontInfo */);
         code.style.fontSize = fontInfo.fontSize + "px";
         code.style.fontFamily = fontInfo.fontFamily;
         if (!hasParameters) {

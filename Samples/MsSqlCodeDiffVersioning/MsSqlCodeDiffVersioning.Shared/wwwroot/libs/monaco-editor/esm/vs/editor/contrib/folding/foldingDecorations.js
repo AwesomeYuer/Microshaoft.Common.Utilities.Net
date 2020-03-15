@@ -7,10 +7,11 @@ var FoldingDecorationProvider = /** @class */ (function () {
     function FoldingDecorationProvider(editor) {
         this.editor = editor;
         this.autoHideFoldingControls = true;
+        this.showFoldingHighlights = true;
     }
     FoldingDecorationProvider.prototype.getDecorationOption = function (isCollapsed) {
         if (isCollapsed) {
-            return FoldingDecorationProvider.COLLAPSED_VISUAL_DECORATION;
+            return this.showFoldingHighlights ? FoldingDecorationProvider.COLLAPSED_HIGHLIGHTED_VISUAL_DECORATION : FoldingDecorationProvider.COLLAPSED_VISUAL_DECORATION;
         }
         else if (this.autoHideFoldingControls) {
             return FoldingDecorationProvider.EXPANDED_AUTO_HIDE_VISUAL_DECORATION;
@@ -28,6 +29,13 @@ var FoldingDecorationProvider = /** @class */ (function () {
     FoldingDecorationProvider.COLLAPSED_VISUAL_DECORATION = ModelDecorationOptions.register({
         stickiness: 1 /* NeverGrowsWhenTypingAtEdges */,
         afterContentClassName: 'inline-folded',
+        linesDecorationsClassName: 'codicon codicon-chevron-right'
+    });
+    FoldingDecorationProvider.COLLAPSED_HIGHLIGHTED_VISUAL_DECORATION = ModelDecorationOptions.register({
+        stickiness: 1 /* NeverGrowsWhenTypingAtEdges */,
+        afterContentClassName: 'inline-folded',
+        className: 'folded-background',
+        isWholeLine: true,
         linesDecorationsClassName: 'codicon codicon-chevron-right'
     });
     FoldingDecorationProvider.EXPANDED_AUTO_HIDE_VISUAL_DECORATION = ModelDecorationOptions.register({

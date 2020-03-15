@@ -30,7 +30,7 @@ import { createCancelablePromise, first, timeout } from '../../../base/common/as
 import { CancellationToken } from '../../../base/common/cancellation.js';
 import { onUnexpectedError, onUnexpectedExternalError } from '../../../base/common/errors.js';
 import { Disposable, DisposableStore } from '../../../base/common/lifecycle.js';
-import { EditorAction, registerDefaultLanguageCommand, registerEditorAction, registerEditorContribution } from '../../browser/editorExtensions.js';
+import { EditorAction, registerEditorAction, registerEditorContribution, registerModelAndPositionCommand } from '../../browser/editorExtensions.js';
 import { Range } from '../../common/core/range.js';
 import { EditorContextKeys } from '../../common/editorContextKeys.js';
 import { OverviewRulerLane } from '../../common/model.js';
@@ -142,7 +142,7 @@ function computeOccurencesAtPosition(model, selection, wordSeparators) {
     }
     return new TextualOccurenceAtPositionRequest(model, selection, wordSeparators);
 }
-registerDefaultLanguageCommand('_executeDocumentHighlights', function (model, position) { return getOccurrencesAtPosition(model, position, CancellationToken.None); });
+registerModelAndPositionCommand('_executeDocumentHighlights', function (model, position) { return getOccurrencesAtPosition(model, position, CancellationToken.None); });
 var WordHighlighter = /** @class */ (function () {
     function WordHighlighter(editor, contextKeyService) {
         var _this = this;
@@ -155,7 +155,7 @@ var WordHighlighter = /** @class */ (function () {
         this.editor = editor;
         this._hasWordHighlights = ctxHasWordHighlights.bindTo(contextKeyService);
         this._ignorePositionChangeEvent = false;
-        this.occurrencesHighlight = this.editor.getOption(59 /* occurrencesHighlight */);
+        this.occurrencesHighlight = this.editor.getOption(61 /* occurrencesHighlight */);
         this.model = this.editor.getModel();
         this.toUnhook.add(editor.onDidChangeCursorPosition(function (e) {
             if (_this._ignorePositionChangeEvent) {
@@ -173,7 +173,7 @@ var WordHighlighter = /** @class */ (function () {
             _this._stopAll();
         }));
         this.toUnhook.add(editor.onDidChangeConfiguration(function (e) {
-            var newValue = _this.editor.getOption(59 /* occurrencesHighlight */);
+            var newValue = _this.editor.getOption(61 /* occurrencesHighlight */);
             if (_this.occurrencesHighlight !== newValue) {
                 _this.occurrencesHighlight = newValue;
                 _this._stopAll();
@@ -318,7 +318,7 @@ var WordHighlighter = /** @class */ (function () {
             this._stopAll();
             var myRequestId_1 = ++this.workerRequestTokenId;
             this.workerRequestCompleted = false;
-            this.workerRequest = computeOccurencesAtPosition(this.model, this.editor.getSelection(), this.editor.getOption(92 /* wordSeparators */));
+            this.workerRequest = computeOccurencesAtPosition(this.model, this.editor.getSelection(), this.editor.getOption(96 /* wordSeparators */));
             this.workerRequest.result.then(function (data) {
                 if (myRequestId_1 === _this.workerRequestTokenId) {
                     _this.workerRequestCompleted = true;

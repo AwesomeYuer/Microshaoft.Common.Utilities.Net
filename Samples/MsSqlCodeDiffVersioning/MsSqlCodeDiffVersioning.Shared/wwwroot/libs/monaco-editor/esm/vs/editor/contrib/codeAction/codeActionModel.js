@@ -50,14 +50,14 @@ var CodeActionOracle = /** @class */ (function (_super) {
         }
         if (resources.some(function (resource) { return isEqual(resource, model.uri); })) {
             this._autoTriggerTimer.cancelAndSet(function () {
-                _this.trigger({ type: 'auto' });
+                _this.trigger({ type: 1 /* Auto */ });
             }, this._delay);
         }
     };
     CodeActionOracle.prototype._onCursorChange = function () {
         var _this = this;
         this._autoTriggerTimer.cancelAndSet(function () {
-            _this.trigger({ type: 'auto' });
+            _this.trigger({ type: 1 /* Auto */ });
         }, this._delay);
     };
     CodeActionOracle.prototype._getRangeOfMarker = function (selection) {
@@ -80,7 +80,7 @@ var CodeActionOracle = /** @class */ (function (_super) {
         }
         var model = this._editor.getModel();
         var selection = this._editor.getSelection();
-        if (selection.isEmpty() && trigger.type === 'auto') {
+        if (selection.isEmpty() && trigger.type === 1 /* Auto */) {
             var _a = selection.getPosition(), lineNumber = _a.lineNumber, column = _a.column;
             var line = model.getLineContent(lineNumber);
             if (line.length === 0) {
@@ -171,7 +171,7 @@ var CodeActionModel = /** @class */ (function (_super) {
         var model = this._editor.getModel();
         if (model
             && CodeActionProviderRegistry.has(model)
-            && !this._editor.getOption(65 /* readOnly */)) {
+            && !this._editor.getOption(68 /* readOnly */)) {
             var supportedActions = [];
             for (var _i = 0, _a = CodeActionProviderRegistry.all(model); _i < _a.length; _i++) {
                 var provider = _a[_i];
@@ -186,12 +186,12 @@ var CodeActionModel = /** @class */ (function (_super) {
                     return;
                 }
                 var actions = createCancelablePromise(function (token) { return getCodeActions(model, trigger.selection, trigger.trigger, token); });
-                if (_this._progressService && trigger.trigger.type === 'manual') {
+                if (_this._progressService && trigger.trigger.type === 2 /* Manual */) {
                     _this._progressService.showWhile(actions, 250);
                 }
                 _this.setState(new CodeActionsState.Triggered(trigger.trigger, trigger.selection, trigger.position, actions));
             }, undefined);
-            this._codeActionOracle.value.trigger({ type: 'auto' });
+            this._codeActionOracle.value.trigger({ type: 1 /* Auto */ });
         }
         else {
             this._supportedCodeActions.reset();

@@ -1,6 +1,6 @@
 /*!-----------------------------------------------------------
  * Copyright (c) Microsoft Corporation. All rights reserved.
- * Version: 0.19.3(4bbae4b7d81ecff78ba65ddc8227b542e734257e)
+ * Version: 0.20.0(6363745c0a33c27b149b89342a7b96d354fb554c)
  * Released under the MIT license
  * https://github.com/Microsoft/vscode/blob/master/LICENSE.txt
  *-----------------------------------------------------------*/
@@ -124,6 +124,7 @@ define("vs/editor/editor.main.nls.zh-cn", {
 		"删除自动插入的尾随空白符号。",
 		"对大型文件进行特殊处理，禁用某些内存密集型功能。",
 		"控制是否根据文档中的文字计算自动完成列表。",
+		"Controls whether the semanticHighlighting is shown for the languages that support it.",
 		"在速览编辑器中，即使双击其中的内容或者按 `Esc` 键，也保持其打开状态。",
 		"由于性能原因，超过这个长度的行将不会被标记",
 		"超时（以毫秒为单位），之后将取消差异计算。使用0表示没有超时。",
@@ -136,6 +137,7 @@ define("vs/editor/editor.main.nls.zh-cn", {
 		"编辑器将对屏幕阅读器的使用进行永久优化。",
 		"编辑器将不再对屏幕阅读器的使用进行优化。",
 		"控制编辑器是否应运行在对屏幕阅读器进行优化的模式。",
+		"控制在注释时是否插入空格字符。",
 		"控制在没有选择内容时进行复制是否复制当前行。",
 		"控制是否将编辑器选中内容作为搜索词填入到查找小组件中。",
 		"切勿自动打开“选择中查找”(默认)",
@@ -222,6 +224,7 @@ define("vs/editor/editor.main.nls.zh-cn", {
 		"启用后，IntelliSense 将显示“文件夹”建议。",
 		"启用后，IntelliSense 将显示 \"typeParameter\" 建议。",
 		"启用后，IntelliSense 将显示“片段”建议。",
+		"控制建议小部件底部的状态栏的可见性。",
 		"控制是否应在遇到提交字符时接受建议。例如，在 JavaScript 中，半角分号 (`;`) 可以为提交字符，能够在接受建议的同时键入该字符。",
 		"仅当建议包含文本改动时才可使用 `Enter` 键进行接受。",
 		"控制除了 `Tab` 键以外， `Enter` 键是否同样可以接受建议。这能减少“插入新行”和“接受建议”命令之间的歧义。",
@@ -260,6 +263,7 @@ define("vs/editor/editor.main.nls.zh-cn", {
 		"按下\"Alt\"时滚动速度倍增。",
 		"控制编辑器是否启用了代码折叠。",
 		"控制计算折叠范围的策略。`auto` 将使用语言特定的折叠策略 (若可用)。`indentation` 将使用基于缩进的折叠策略。",
+		"控制编辑器是否应突出显示折叠范围。",
 		"控制字体系列。",
 		"控制字体粗细。",
 		"控制编辑器是否自动格式化粘贴的内容。格式化程序必须可用，并且能针对文档中的某一范围进行格式化。",
@@ -281,6 +285,9 @@ define("vs/editor/editor.main.nls.zh-cn", {
 		"控制粘贴时粘贴文本的行计数与光标计数相匹配。",
 		"控制编辑器是否突出显示语义符号的匹配项。",
 		"控制是否在概览标尺周围绘制边框。",
+		"打开速览时将焦点放在树上",
+		"打开预览时将焦点放在编辑器上",
+		"控制是将焦点放在内联编辑器上还是放在预览小部件中的树上。",
 		"控制显示快速建议前的等待时间 (毫秒)。",
 		"控制编辑器是否显示控制字符。",
 		"控制编辑器是否显示缩进参考线。",
@@ -327,6 +334,9 @@ define("vs/editor/editor.main.nls.zh-cn", {
 		"折行的缩进量比其父级多 1。",
 		"折行的缩进量比其父级多 2。",
 		"控制折行的缩进。",
+		"假定所有字符的宽度相同。这是一种快速算法，适用于等宽字体和某些字形宽度相等的文字(如拉丁字符)。",
+		"将包装点计算委托给浏览器。这是一个缓慢算法，可能会导致大型文件被冻结，但它在所有情况下都正常工作。",
+		"控制计算包裹点的算法。",
 	],
 	"vs/editor/common/modes/modesRegistry": [
 		"纯文本",
@@ -554,7 +564,7 @@ define("vs/editor/editor.main.nls.zh-cn", {
 		"找到 {0}",
 		"为{1}找到了{0}",
 		"{0} 在 {2} 处找到 {1}",
-		"{0} 已找到 {1}",
+		"为 {1} 找到了 {0}",
 		"Ctrl+Enter 现在由全部替换改为插入换行。你可以修改editor.action.replaceAll 的按键绑定以覆盖此行为。",
 	],
 	"vs/editor/contrib/folding/folding": [
@@ -569,6 +579,7 @@ define("vs/editor/editor.main.nls.zh-cn", {
 		"全部折叠",
 		"全部展开",
 		"折叠级别 {0}",
+		"编辑器所选内容的颜色。",
 	],
 	"vs/editor/contrib/fontZoom/fontZoom": [
 		"放大编辑器字体",
@@ -595,7 +606,7 @@ define("vs/editor/editor.main.nls.zh-cn", {
 	],
 	"vs/editor/contrib/gotoError/gotoErrorWidget": [
 		"{0} 个问题(共 {1} 个)",
-		"{0} 个问题(共 {1} 个})",
+		"{0} 个问题(共 {1} 个)",
 		"编辑器标记导航小组件错误颜色。",
 		"编辑器标记导航小组件警告颜色。",
 		"编辑器标记导航小组件信息颜色。",
@@ -633,7 +644,7 @@ define("vs/editor/editor.main.nls.zh-cn", {
 		"未找到\"{0}\"的引用",
 		"未找到引用",
 		"转到引用",
-		"转到引用",
+		"转到引用(&&R)",
 		"引用",
 		"查看引用",
 		"引用",
@@ -694,7 +705,7 @@ define("vs/editor/editor.main.nls.zh-cn", {
 		"向下复制行",
 		"向下复制一行(&&P)",
 		"重复选择",
-		"重复选择",
+		"重复选择(&&D)",
 		"向上移动行",
 		"向上移动一行(&&V)",
 		"向下移动行",
@@ -717,7 +728,7 @@ define("vs/editor/editor.main.nls.zh-cn", {
 	],
 	"vs/editor/contrib/links/links": [
 		"执行命令",
-		"转到链接",
+		"关注链接",
 		"cmd + 单击",
 		"ctrl + 单击",
 		"option + 单击",
@@ -774,12 +785,16 @@ define("vs/editor/editor.main.nls.zh-cn", {
 	"vs/editor/contrib/rename/rename": [
 		"无结果。",
 		"解析重命名位置时发生未知错误",
+		"重命名\"{0}\"",
 		"成功将“{0}”重命名为“{1}”。摘要: {2}",
-		"无法进行重命名。",
+		"重命名无法应用修改",
+		"重命名无法计算修改",
 		"重命名符号",
+		"启用/禁用重命名之前预览更改的功能",
 	],
 	"vs/editor/contrib/rename/renameInputField": [
 		"重命名输入。键入新名称并按 \"Enter\" 提交。",
+		"{0}重命名，{1}预览",
 	],
 	"vs/editor/contrib/smartSelect/smartSelect": [
 		"展开选择",
@@ -816,13 +831,13 @@ define("vs/editor/editor.main.nls.zh-cn", {
 		"十二月",
 		"1月",
 		"2月",
-		"三月",
+		"3月",
 		"4月",
 		"5月",
 		"6月",
-		"七月",
-		"八月",
-		"九月",
+		"7月",
+		"8月",
+		"9月",
 		"10月",
 		"11 月",
 		"12月",
@@ -842,7 +857,12 @@ define("vs/editor/editor.main.nls.zh-cn", {
 		"正在加载...",
 		"正在加载...",
 		"无建议。",
+		"{0} 更少…",
+		"{0} 更多…",
 		"项目 {0}，文档: {1}",
+		"{0}进行插入，{1}进行替换",
+		"{0}进行替换，{1}进行插入",
+		"{0}以接受",
 	],
 	"vs/editor/contrib/toggleTabFocusMode/toggleTabFocusMode": [
 		"切换 Tab 键移动焦点",
@@ -850,7 +870,7 @@ define("vs/editor/editor.main.nls.zh-cn", {
 		"Tab 键将插入制表符",
 	],
 	"vs/editor/contrib/tokenization/tokenization": [
-		"开发者: 强制重新进行标记",
+		"开发人员: 强制重新进行标记",
 	],
 	"vs/editor/contrib/wordHighlighter/wordHighlighter": [
 		"读取访问期间符号的背景色，例如读取变量时。颜色必须透明，以免隐藏下面的修饰效果。",
@@ -866,6 +886,7 @@ define("vs/editor/editor.main.nls.zh-cn", {
 	"vs/platform/configuration/common/configurationRegistry": [
 		"默认配置替代",
 		"针对某种语言，配置替代编辑器设置。",
+		"此设置不支持按语言配置。",
 		"无法注册“{0}”。其符合描述特定语言编辑器设置的表达式 \"\\\\[.*\\\\]$\"。请使用 \"configurationDefaults\"。",
 		"无法注册“{0}”。此属性已注册。",
 	],

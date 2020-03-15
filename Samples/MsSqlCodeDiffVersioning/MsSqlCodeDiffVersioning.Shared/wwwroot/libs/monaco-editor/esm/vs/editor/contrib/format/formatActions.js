@@ -99,7 +99,7 @@ var FormatOnType = /** @class */ (function () {
         // clean up
         this._callOnModel.clear();
         // we are disabled
-        if (!this._editor.getOption(37 /* formatOnType */)) {
+        if (!this._editor.getOption(39 /* formatOnType */)) {
             return;
         }
         // no model
@@ -198,7 +198,7 @@ var FormatOnPaste = /** @class */ (function () {
         // clean up
         this._callOnModel.clear();
         // we are disabled
-        if (!this.editor.getOption(36 /* formatOnPaste */)) {
+        if (!this.editor.getOption(38 /* formatOnPaste */)) {
             return;
         }
         // no model
@@ -209,7 +209,10 @@ var FormatOnPaste = /** @class */ (function () {
         if (!DocumentRangeFormattingEditProviderRegistry.has(this.editor.getModel())) {
             return;
         }
-        this._callOnModel.add(this.editor.onDidPaste(function (range) { return _this._trigger(range); }));
+        this._callOnModel.add(this.editor.onDidPaste(function (_a) {
+            var range = _a.range;
+            return _this._trigger(range);
+        }));
     };
     FormatOnPaste.prototype._trigger = function (range) {
         if (!this.editor.hasModel()) {

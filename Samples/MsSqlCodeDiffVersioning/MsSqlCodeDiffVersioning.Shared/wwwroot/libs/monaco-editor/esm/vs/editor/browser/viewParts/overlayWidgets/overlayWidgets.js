@@ -23,7 +23,7 @@ var ViewOverlayWidgets = /** @class */ (function (_super) {
     function ViewOverlayWidgets(context) {
         var _this = _super.call(this, context) || this;
         var options = _this._context.configuration.options;
-        var layoutInfo = options.get(103 /* layoutInfo */);
+        var layoutInfo = options.get(107 /* layoutInfo */);
         _this._widgets = {};
         _this._verticalScrollbarWidth = layoutInfo.verticalScrollbarWidth;
         _this._minimapWidth = layoutInfo.minimapWidth;
@@ -45,7 +45,7 @@ var ViewOverlayWidgets = /** @class */ (function (_super) {
     // ---- begin view event handlers
     ViewOverlayWidgets.prototype.onConfigurationChanged = function (e) {
         var options = this._context.configuration.options;
-        var layoutInfo = options.get(103 /* layoutInfo */);
+        var layoutInfo = options.get(107 /* layoutInfo */);
         this._verticalScrollbarWidth = layoutInfo.verticalScrollbarWidth;
         this._minimapWidth = layoutInfo.minimapWidth;
         this._horizontalScrollbarHeight = layoutInfo.horizontalScrollbarHeight;

@@ -89,19 +89,18 @@ var FastLabelNode = /** @class */ (function () {
 var IconLabel = /** @class */ (function (_super) {
     __extends(IconLabel, _super);
     function IconLabel(container, options) {
-        var _a, _b;
         var _this = _super.call(this) || this;
         _this.domNode = _this._register(new FastLabelNode(dom.append(container, dom.$('.monaco-icon-label'))));
         var labelContainer = dom.append(_this.domNode.element, dom.$('.monaco-icon-label-container'));
         var nameContainer = dom.append(labelContainer, dom.$('span.monaco-icon-name-container'));
         _this.descriptionContainer = _this._register(new FastLabelNode(dom.append(labelContainer, dom.$('span.monaco-icon-description-container'))));
-        if ((_a = options) === null || _a === void 0 ? void 0 : _a.supportHighlights) {
+        if (options === null || options === void 0 ? void 0 : options.supportHighlights) {
             _this.nameNode = new LabelWithHighlights(nameContainer, !!options.supportCodicons);
         }
         else {
             _this.nameNode = new Label(nameContainer);
         }
-        if ((_b = options) === null || _b === void 0 ? void 0 : _b.supportDescriptionHighlights) {
+        if (options === null || options === void 0 ? void 0 : options.supportDescriptionHighlights) {
             _this.descriptionNodeFactory = function () { return new HighlightedLabel(dom.append(_this.descriptionContainer.element, dom.$('span.label-description')), !!options.supportCodicons); };
         }
         else {
@@ -110,7 +109,6 @@ var IconLabel = /** @class */ (function (_super) {
         return _this;
     }
     IconLabel.prototype.setLabel = function (label, description, options) {
-        var _a, _b, _c;
         var classes = ['monaco-icon-label'];
         if (options) {
             if (options.extraClasses) {
@@ -121,7 +119,7 @@ var IconLabel = /** @class */ (function (_super) {
             }
         }
         this.domNode.className = classes.join(' ');
-        this.domNode.title = ((_a = options) === null || _a === void 0 ? void 0 : _a.title) || '';
+        this.domNode.title = (options === null || options === void 0 ? void 0 : options.title) || '';
         this.nameNode.setLabel(label, options);
         if (description || this.descriptionNode) {
             if (!this.descriptionNode) {
@@ -129,7 +127,7 @@ var IconLabel = /** @class */ (function (_super) {
             }
             if (this.descriptionNode instanceof HighlightedLabel) {
                 this.descriptionNode.set(description || '', options ? options.descriptionMatches : undefined);
-                if ((_b = options) === null || _b === void 0 ? void 0 : _b.descriptionTitle) {
+                if (options === null || options === void 0 ? void 0 : options.descriptionTitle) {
                     this.descriptionNode.element.title = options.descriptionTitle;
                 }
                 else {
@@ -138,7 +136,7 @@ var IconLabel = /** @class */ (function (_super) {
             }
             else {
                 this.descriptionNode.textContent = description || '';
-                this.descriptionNode.title = ((_c = options) === null || _c === void 0 ? void 0 : _c.descriptionTitle) || '';
+                this.descriptionNode.title = (options === null || options === void 0 ? void 0 : options.descriptionTitle) || '';
                 this.descriptionNode.empty = !description;
             }
         }
@@ -153,7 +151,6 @@ var Label = /** @class */ (function () {
         this.singleLabel = undefined;
     }
     Label.prototype.setLabel = function (label, options) {
-        var _a, _b, _c, _d;
         if (this.label === label && equals(this.options, options)) {
             return;
         }
@@ -163,7 +160,7 @@ var Label = /** @class */ (function () {
             if (!this.singleLabel) {
                 this.container.innerHTML = '';
                 dom.removeClass(this.container, 'multiple');
-                this.singleLabel = dom.append(this.container, dom.$('a.label-name', { id: (_a = options) === null || _a === void 0 ? void 0 : _a.domId }));
+                this.singleLabel = dom.append(this.container, dom.$('a.label-name', { id: options === null || options === void 0 ? void 0 : options.domId }));
             }
             this.singleLabel.textContent = label;
         }
@@ -173,10 +170,10 @@ var Label = /** @class */ (function () {
             this.singleLabel = undefined;
             for (var i = 0; i < label.length; i++) {
                 var l = label[i];
-                var id = ((_b = options) === null || _b === void 0 ? void 0 : _b.domId) && ((_c = options) === null || _c === void 0 ? void 0 : _c.domId) + "_" + i;
+                var id = (options === null || options === void 0 ? void 0 : options.domId) && (options === null || options === void 0 ? void 0 : options.domId) + "_" + i;
                 dom.append(this.container, dom.$('a.label-name', { id: id, 'data-icon-label-count': label.length, 'data-icon-label-index': i }, l));
                 if (i < label.length - 1) {
-                    dom.append(this.container, dom.$('span.label-separator', undefined, ((_d = options) === null || _d === void 0 ? void 0 : _d.separator) || '/'));
+                    dom.append(this.container, dom.$('span.label-separator', undefined, (options === null || options === void 0 ? void 0 : options.separator) || '/'));
                 }
             }
         }
@@ -209,7 +206,6 @@ var LabelWithHighlights = /** @class */ (function () {
         this.singleLabel = undefined;
     }
     LabelWithHighlights.prototype.setLabel = function (label, options) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
         if (this.label === label && equals(this.options, options)) {
             return;
         }
@@ -219,23 +215,23 @@ var LabelWithHighlights = /** @class */ (function () {
             if (!this.singleLabel) {
                 this.container.innerHTML = '';
                 dom.removeClass(this.container, 'multiple');
-                this.singleLabel = new HighlightedLabel(dom.append(this.container, dom.$('a.label-name', { id: (_a = options) === null || _a === void 0 ? void 0 : _a.domId })), this.supportCodicons);
+                this.singleLabel = new HighlightedLabel(dom.append(this.container, dom.$('a.label-name', { id: options === null || options === void 0 ? void 0 : options.domId })), this.supportCodicons);
             }
-            this.singleLabel.set(label, (_b = options) === null || _b === void 0 ? void 0 : _b.matches, (_c = options) === null || _c === void 0 ? void 0 : _c.title, (_d = options) === null || _d === void 0 ? void 0 : _d.labelEscapeNewLines);
+            this.singleLabel.set(label, options === null || options === void 0 ? void 0 : options.matches, options === null || options === void 0 ? void 0 : options.title, options === null || options === void 0 ? void 0 : options.labelEscapeNewLines);
         }
         else {
             this.container.innerHTML = '';
             dom.addClass(this.container, 'multiple');
             this.singleLabel = undefined;
-            var separator = ((_e = options) === null || _e === void 0 ? void 0 : _e.separator) || '/';
-            var matches = splitMatches(label, separator, (_f = options) === null || _f === void 0 ? void 0 : _f.matches);
+            var separator = (options === null || options === void 0 ? void 0 : options.separator) || '/';
+            var matches = splitMatches(label, separator, options === null || options === void 0 ? void 0 : options.matches);
             for (var i = 0; i < label.length; i++) {
                 var l = label[i];
                 var m = matches ? matches[i] : undefined;
-                var id = ((_g = options) === null || _g === void 0 ? void 0 : _g.domId) && ((_h = options) === null || _h === void 0 ? void 0 : _h.domId) + "_" + i;
+                var id = (options === null || options === void 0 ? void 0 : options.domId) && (options === null || options === void 0 ? void 0 : options.domId) + "_" + i;
                 var name_1 = dom.$('a.label-name', { id: id, 'data-icon-label-count': label.length, 'data-icon-label-index': i });
                 var highlightedLabel = new HighlightedLabel(dom.append(this.container, name_1), this.supportCodicons);
-                highlightedLabel.set(l, m, (_j = options) === null || _j === void 0 ? void 0 : _j.title, (_k = options) === null || _k === void 0 ? void 0 : _k.labelEscapeNewLines);
+                highlightedLabel.set(l, m, options === null || options === void 0 ? void 0 : options.title, options === null || options === void 0 ? void 0 : options.labelEscapeNewLines);
                 if (i < label.length - 1) {
                     dom.append(name_1, dom.$('span.label-separator', undefined, separator));
                 }

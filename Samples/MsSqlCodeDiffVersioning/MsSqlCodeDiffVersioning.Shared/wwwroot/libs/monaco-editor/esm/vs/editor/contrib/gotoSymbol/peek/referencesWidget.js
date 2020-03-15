@@ -261,8 +261,14 @@ var ReferenceWidget = /** @class */ (function (_super) {
         this.editor.revealRangeInCenterIfOutsideViewport(where, 0 /* Smooth */);
         _super.prototype.show.call(this, where, this.layoutData.heightInLines || 18);
     };
-    ReferenceWidget.prototype.focus = function () {
+    ReferenceWidget.prototype.focusOnReferenceTree = function () {
         this._tree.domFocus();
+    };
+    ReferenceWidget.prototype.focusOnPreviewEditor = function () {
+        this._preview.focus();
+    };
+    ReferenceWidget.prototype.isPreviewEditorFocused = function () {
+        return this._preview.hasTextFocus();
     };
     ReferenceWidget.prototype._onTitleClick = function (e) {
         if (this._preview && this._preview.getModel()) {
@@ -444,7 +450,7 @@ var ReferenceWidget = /** @class */ (function (_super) {
         dom.show(this._treeContainer);
         dom.show(this._previewContainer);
         this._splitView.layout(this._dim.width);
-        this.focus();
+        this.focusOnReferenceTree();
         // pick input and a reference to begin with
         return this._tree.setInput(this._model.groups.length === 1 ? this._model.groups[0] : this._model);
     };

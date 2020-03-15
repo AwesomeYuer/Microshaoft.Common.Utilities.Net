@@ -57,6 +57,9 @@ var ObjectTree = /** @class */ (function (_super) {
         }
         this.model.rerender(element);
     };
+    ObjectTree.prototype.hasElement = function (element) {
+        return this.model.has(element);
+    };
     ObjectTree.prototype.createModel = function (user, view, options) {
         return new ObjectTreeModel(user, view, options);
     };

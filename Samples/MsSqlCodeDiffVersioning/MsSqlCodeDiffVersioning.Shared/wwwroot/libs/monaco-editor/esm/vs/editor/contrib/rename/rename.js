@@ -62,12 +62,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 import * as nls from '../../../nls.js';
 import { illegalArgument, onUnexpectedError } from '../../../base/common/errors.js';
-import { IContextKeyService, ContextKeyExpr } from '../../../platform/contextkey/common/contextkey.js';
+import { ContextKeyExpr } from '../../../platform/contextkey/common/contextkey.js';
 import { IEditorProgressService } from '../../../platform/progress/common/progress.js';
 import { registerEditorAction, registerEditorContribution, EditorAction, EditorCommand, registerEditorCommand, registerDefaultLanguageCommand } from '../../browser/editorExtensions.js';
 import { EditorContextKeys } from '../../common/editorContextKeys.js';
 import { RenameInputField, CONTEXT_RENAME_INPUT_VISIBLE } from './renameInputField.js';
-import { IThemeService } from '../../../platform/theme/common/themeService.js';
 import { RenameProviderRegistry } from '../../common/modes.js';
 import { Position } from '../../common/core/position.js';
 import { alert } from '../../../base/browser/ui/aria/aria.js';
@@ -82,6 +81,11 @@ import { CancellationToken, CancellationTokenSource } from '../../../base/common
 import { DisposableStore } from '../../../base/common/lifecycle.js';
 import { IdleValue, raceCancellation } from '../../../base/common/async.js';
 import { withNullAsUndefined } from '../../../base/common/types.js';
+import { ILogService } from '../../../platform/log/common/log.js';
+import { IInstantiationService } from '../../../platform/instantiation/common/instantiation.js';
+import { Registry } from '../../../platform/registry/common/platform.js';
+import { Extensions } from '../../../platform/configuration/common/configurationRegistry.js';
+import { ITextResourceConfigurationService } from '../../common/services/textResourceConfigurationService.js';
 var RenameSkeleton = /** @class */ (function () {
     function RenameSkeleton(model, position) {
         this.model = model;
@@ -160,17 +164,18 @@ export function rename(model, position, newName) {
 }
 // ---  register actions and commands
 var RenameController = /** @class */ (function () {
-    function RenameController(editor, _notificationService, _bulkEditService, _progressService, _contextKeyService, _themeService) {
+    function RenameController(editor, _instaService, _notificationService, _bulkEditService, _progressService, _logService, _configService) {
         var _this = this;
         this.editor = editor;
+        this._instaService = _instaService;
         this._notificationService = _notificationService;
         this._bulkEditService = _bulkEditService;
         this._progressService = _progressService;
-        this._contextKeyService = _contextKeyService;
-        this._themeService = _themeService;
+        this._logService = _logService;
+        this._configService = _configService;
         this._dispoableStore = new DisposableStore();
         this._cts = new CancellationTokenSource();
-        this._renameInputField = new IdleValue(function () { return _this._dispoableStore.add(new RenameInputField(_this.editor, _this._themeService, _this._contextKeyService)); });
+        this._renameInputField = this._dispoableStore.add(new IdleValue(function () { return _this._dispoableStore.add(_this._instaService.createInstance(RenameInputField, _this.editor, ['acceptRenameInput', 'acceptRenameInputWithPreview'])); }));
     }
     RenameController.get = function (editor) {
         return editor.getContribution(RenameController.ID);
@@ -181,7 +186,7 @@ var RenameController = /** @class */ (function () {
     };
     RenameController.prototype.run = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var position, skeleton, loc, resolveLocationOperation, e_1, selection, selectionStart, selectionEnd, newNameOrFocusFlag, renameOperation;
+            var position, skeleton, loc, resolveLocationOperation, e_1, selection, selectionStart, selectionEnd, supportPreview, inputFieldResult, renameOperation;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -227,41 +232,45 @@ var RenameController = /** @class */ (function () {
                             selectionStart = Math.max(0, selection.startColumn - loc.range.startColumn);
                             selectionEnd = Math.min(loc.range.endColumn, selection.endColumn) - loc.range.startColumn;
                         }
-                        return [4 /*yield*/, this._renameInputField.getValue().getInput(loc.range, loc.text, selectionStart, selectionEnd)];
+                        supportPreview = this._bulkEditService.hasPreviewHandler() && this._configService.getValue(this.editor.getModel().uri, 'editor.rename.enablePreview');
+                        return [4 /*yield*/, this._renameInputField.getValue().getInput(loc.range, loc.text, selectionStart, selectionEnd, supportPreview)];
                     case 5:
-                        newNameOrFocusFlag = _a.sent();
-                        if (typeof newNameOrFocusFlag === 'boolean') {
-                            if (newNameOrFocusFlag) {
+                        inputFieldResult = _a.sent();
+                        // no result, only hint to focus the editor or not
+                        if (typeof inputFieldResult === 'boolean') {
+                            if (inputFieldResult) {
                                 this.editor.focus();
                             }
                             return [2 /*return*/, undefined];
                         }
                         this.editor.focus();
-                        renameOperation = raceCancellation(skeleton.provideRenameEdits(newNameOrFocusFlag, 0, [], this._cts.token), this._cts.token).then(function (renameResult) { return __awaiter(_this, void 0, void 0, function () {
-                            var editResult;
+                        renameOperation = raceCancellation(skeleton.provideRenameEdits(inputFieldResult.newName, 0, [], this._cts.token), this._cts.token).then(function (renameResult) { return __awaiter(_this, void 0, void 0, function () {
+                            var _this = this;
                             return __generator(this, function (_a) {
-                                switch (_a.label) {
-                                    case 0:
-                                        if (!renameResult || !this.editor.hasModel()) {
-                                            return [2 /*return*/];
-                                        }
-                                        if (renameResult.rejectReason) {
-                                            this._notificationService.info(renameResult.rejectReason);
-                                            return [2 /*return*/];
-                                        }
-                                        return [4 /*yield*/, this._bulkEditService.apply(renameResult, { editor: this.editor })];
-                                    case 1:
-                                        editResult = _a.sent();
-                                        // alert
-                                        if (editResult.ariaSummary) {
-                                            alert(nls.localize('aria', "Successfully renamed '{0}' to '{1}'. Summary: {2}", loc.text, newNameOrFocusFlag, editResult.ariaSummary));
-                                        }
-                                        return [2 /*return*/];
+                                if (!renameResult || !this.editor.hasModel()) {
+                                    return [2 /*return*/];
                                 }
+                                if (renameResult.rejectReason) {
+                                    this._notificationService.info(renameResult.rejectReason);
+                                    return [2 /*return*/];
+                                }
+                                this._bulkEditService.apply(renameResult, {
+                                    editor: this.editor,
+                                    showPreview: inputFieldResult.wantsPreview,
+                                    label: nls.localize('label', "Renaming '{0}'", loc === null || loc === void 0 ? void 0 : loc.text)
+                                }).then(function (result) {
+                                    if (result.ariaSummary) {
+                                        alert(nls.localize('aria', "Successfully renamed '{0}' to '{1}'. Summary: {2}", loc.text, inputFieldResult.newName, result.ariaSummary));
+                                    }
+                                }).catch(function (err) {
+                                    _this._notificationService.error(nls.localize('rename.failedApply', "Rename failed to apply edits"));
+                                    _this._logService.error(err);
+                                });
+                                return [2 /*return*/];
                             });
                         }); }, function (err) {
-                            _this._notificationService.error(nls.localize('rename.failed', "Rename failed to execute."));
-                            return Promise.reject(err);
+                            _this._notificationService.error(nls.localize('rename.failed', "Rename failed to compute edits"));
+                            _this._logService.error(err);
                         });
                         this._progressService.showWhile(renameOperation, 250);
                         return [2 /*return*/, renameOperation];
@@ -269,19 +278,20 @@ var RenameController = /** @class */ (function () {
             });
         });
     };
-    RenameController.prototype.acceptRenameInput = function () {
-        this._renameInputField.getValue().acceptInput();
+    RenameController.prototype.acceptRenameInput = function (wantsPreview) {
+        this._renameInputField.getValue().acceptInput(wantsPreview);
     };
     RenameController.prototype.cancelRenameInput = function () {
         this._renameInputField.getValue().cancelInput(true);
     };
     RenameController.ID = 'editor.contrib.renameController';
     RenameController = __decorate([
-        __param(1, INotificationService),
-        __param(2, IBulkEditService),
-        __param(3, IEditorProgressService),
-        __param(4, IContextKeyService),
-        __param(5, IThemeService)
+        __param(1, IInstantiationService),
+        __param(2, INotificationService),
+        __param(3, IBulkEditService),
+        __param(4, IEditorProgressService),
+        __param(5, ILogService),
+        __param(6, ITextResourceConfigurationService)
     ], RenameController);
     return RenameController;
 }());
@@ -339,11 +349,21 @@ var RenameCommand = EditorCommand.bindToContribution(RenameController.get);
 registerEditorCommand(new RenameCommand({
     id: 'acceptRenameInput',
     precondition: CONTEXT_RENAME_INPUT_VISIBLE,
-    handler: function (x) { return x.acceptRenameInput(); },
+    handler: function (x) { return x.acceptRenameInput(false); },
     kbOpts: {
         weight: 100 /* EditorContrib */ + 99,
         kbExpr: EditorContextKeys.focus,
         primary: 3 /* Enter */
+    }
+}));
+registerEditorCommand(new RenameCommand({
+    id: 'acceptRenameInputWithPreview',
+    precondition: ContextKeyExpr.and(CONTEXT_RENAME_INPUT_VISIBLE, ContextKeyExpr.has('config.editor.rename.enablePreview')),
+    handler: function (x) { return x.acceptRenameInput(true); },
+    kbOpts: {
+        weight: 100 /* EditorContrib */ + 99,
+        kbExpr: EditorContextKeys.focus,
+        primary: 1024 /* Shift */ + 3 /* Enter */
     }
 }));
 registerEditorCommand(new RenameCommand({
@@ -364,4 +384,16 @@ registerDefaultLanguageCommand('_executeDocumentRenameProvider', function (model
         throw illegalArgument('newName');
     }
     return rename(model, position, newName);
+});
+//todo@joh use editor options world
+Registry.as(Extensions.Configuration).registerConfiguration({
+    id: 'editor',
+    properties: {
+        'editor.rename.enablePreview': {
+            scope: 5 /* LANGUAGE_OVERRIDABLE */,
+            description: nls.localize('enablePreview', "Enable/disable the ability to preview changes before renaming"),
+            default: true,
+            type: 'boolean'
+        }
+    }
 });

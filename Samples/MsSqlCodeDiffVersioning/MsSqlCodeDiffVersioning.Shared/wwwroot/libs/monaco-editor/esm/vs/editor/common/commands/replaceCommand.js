@@ -76,14 +76,16 @@ var ReplaceCommandWithOffsetCursorState = /** @class */ (function () {
 }());
 export { ReplaceCommandWithOffsetCursorState };
 var ReplaceCommandThatPreservesSelection = /** @class */ (function () {
-    function ReplaceCommandThatPreservesSelection(editRange, text, initialSelection) {
+    function ReplaceCommandThatPreservesSelection(editRange, text, initialSelection, forceMoveMarkers) {
+        if (forceMoveMarkers === void 0) { forceMoveMarkers = false; }
         this._range = editRange;
         this._text = text;
         this._initialSelection = initialSelection;
+        this._forceMoveMarkers = forceMoveMarkers;
         this._selectionId = null;
     }
     ReplaceCommandThatPreservesSelection.prototype.getEditOperations = function (model, builder) {
-        builder.addEditOperation(this._range, this._text);
+        builder.addTrackedEditOperation(this._range, this._text, this._forceMoveMarkers);
         this._selectionId = builder.trackSelection(this._initialSelection);
     };
     ReplaceCommandThatPreservesSelection.prototype.computeCursorState = function (model, helper) {

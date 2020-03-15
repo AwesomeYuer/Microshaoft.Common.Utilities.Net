@@ -56,7 +56,7 @@ var ModesHoverController = /** @class */ (function () {
         this._hoverClicked = false;
         this._hookEvents();
         this._didChangeConfigurationHandler = this._editor.onDidChangeConfiguration(function (e) {
-            if (e.hasChanged(42 /* hover */)) {
+            if (e.hasChanged(44 /* hover */)) {
                 _this._hideWidgets();
                 _this._unhookEvents();
                 _this._hookEvents();
@@ -89,7 +89,7 @@ var ModesHoverController = /** @class */ (function () {
     ModesHoverController.prototype._hookEvents = function () {
         var _this = this;
         var hideWidgetsEventHandler = function () { return _this._hideWidgets(); };
-        var hoverOpts = this._editor.getOption(42 /* hover */);
+        var hoverOpts = this._editor.getOption(44 /* hover */);
         this._isHoverEnabled = hoverOpts.enabled;
         this._isHoverSticky = hoverOpts.sticky;
         if (this._isHoverEnabled) {
@@ -152,7 +152,7 @@ var ModesHoverController = /** @class */ (function () {
             return;
         }
         if (targetType === 7 /* CONTENT_EMPTY */) {
-            var epsilon = this._editor.getOption(32 /* fontInfo */).typicalHalfwidthCharacterWidth / 2;
+            var epsilon = this._editor.getOption(34 /* fontInfo */).typicalHalfwidthCharacterWidth / 2;
             var data = mouseEvent.target.detail;
             if (data && !data.isAfterLines && typeof data.horizontalDistanceToText === 'number' && data.horizontalDistanceToText < epsilon) {
                 // Let hover kick in even when the mouse is technically in the empty area after a line, given the distance is small enough

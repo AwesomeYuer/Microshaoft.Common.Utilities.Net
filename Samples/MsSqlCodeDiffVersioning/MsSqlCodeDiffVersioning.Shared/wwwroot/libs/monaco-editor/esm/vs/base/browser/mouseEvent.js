@@ -25,6 +25,7 @@ var StandardMouseEvent = /** @class */ (function () {
         this.leftButton = e.button === 0;
         this.middleButton = e.button === 1;
         this.rightButton = e.button === 2;
+        this.buttons = e.buttons;
         this.target = e.target;
         this.detail = e.detail || 1;
         if (e.type === 'dblclick') {

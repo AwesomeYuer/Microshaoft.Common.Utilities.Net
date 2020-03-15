@@ -29,7 +29,7 @@ import * as viewEvents from '../view/viewEvents.js';
 import { dispose } from '../../../base/common/lifecycle.js';
 function containsLineMappingChanged(events) {
     for (var i = 0, len = events.length; i < len; i++) {
-        if (events[i].type === 6 /* ViewLineMappingChanged */) {
+        if (events[i].type === 8 /* ViewLineMappingChanged */) {
             return true;
         }
     }
@@ -426,7 +426,7 @@ var Cursor = /** @class */ (function (_super) {
         // Let the view get the event first.
         try {
             var eventsCollector = this._beginEmit();
-            eventsCollector.emit(new viewEvents.ViewCursorStateChangedEvent(viewSelections));
+            eventsCollector.emit(new viewEvents.ViewCursorStateChangedEvent(viewSelections, selections));
         }
         finally {
             this._endEmit();
@@ -556,7 +556,7 @@ var Cursor = /** @class */ (function (_super) {
         if (handlerId === H.CompositionEnd) {
             this._isDoingComposition = false;
         }
-        if (this._configuration.options.get(65 /* readOnly */)) {
+        if (this._configuration.options.get(68 /* readOnly */)) {
             // All the remaining handlers will try to edit the model,
             // but we cannot edit when read only...
             this._onDidAttemptReadOnlyEdit.fire(undefined);
@@ -582,7 +582,7 @@ var Cursor = /** @class */ (function (_super) {
                     break;
                 case H.Paste:
                     cursorChangeReason = 4 /* Paste */;
-                    this._paste(payload.text, payload.pasteOnNewLine, payload.multicursorText);
+                    this._paste(payload.text, payload.pasteOnNewLine, payload.multicursorText || []);
                     break;
                 case H.Cut:
                     this._cut();
@@ -806,7 +806,8 @@ var CommandExecutor = /** @class */ (function () {
         // everything it has done is ignored
         var operations = [];
         var operationMinor = 0;
-        var addEditOperation = function (selection, text) {
+        var addEditOperation = function (selection, text, forceMoveMarkers) {
+            if (forceMoveMarkers === void 0) { forceMoveMarkers = false; }
             if (selection.isEmpty() && text === '') {
                 // This command wants to add a no-op => no thank you
                 return;
@@ -818,14 +819,14 @@ var CommandExecutor = /** @class */ (function () {
                 },
                 range: selection,
                 text: text,
-                forceMoveMarkers: false,
+                forceMoveMarkers: forceMoveMarkers,
                 isAutoWhitespaceEdit: command.insertsAutoWhitespace
             });
         };
         var hadTrackedEditOperation = false;
-        var addTrackedEditOperation = function (selection, text) {
+        var addTrackedEditOperation = function (selection, text, forceMoveMarkers) {
             hadTrackedEditOperation = true;
-            addEditOperation(selection, text);
+            addEditOperation(selection, text, forceMoveMarkers);
         };
         var trackSelection = function (selection, trackPreviousOnEmpty) {
             var stickiness;

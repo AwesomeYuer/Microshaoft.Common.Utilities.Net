@@ -5,7 +5,7 @@ namespace Microshaoft.Web
     using System.IO;
     using System.Threading.Tasks;
     using System.Web;
-    using Microshaoft.Linq.Dynamic;
+    //using Microshaoft.Linq.Dynamic;
     using Microshaoft.WebApi;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
@@ -304,8 +304,6 @@ namespace Microshaoft.Web
                                , out jwtToken
                             );
             }
-            requestQueryStringHeaderProcess();
-            extractJwtToken();
             if
                 (
                     string.Compare(target.Method, "get", true) != 0
@@ -314,12 +312,12 @@ namespace Microshaoft.Web
                 )
             {
                 requestFormBodyProcess();
-                extractJwtToken();
-                //if (jToken == null)
-                //{
-                //    RequestHeaderProcess();
-                //}
             }
+            else
+            {
+                requestQueryStringHeaderProcess();
+            }
+            extractJwtToken();
             parameters = jToken;
             secretJwtToken = jwtToken;
             r = true;

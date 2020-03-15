@@ -104,6 +104,9 @@ var ObjectTreeModel = /** @class */ (function () {
         var location = this.getElementLocation(element);
         this.model.rerender(location);
     };
+    ObjectTreeModel.prototype.has = function (element) {
+        return this.nodes.has(element);
+    };
     ObjectTreeModel.prototype.getListIndex = function (element) {
         var location = this.getElementLocation(element);
         return this.model.getListIndex(location);
@@ -111,6 +114,10 @@ var ObjectTreeModel = /** @class */ (function () {
     ObjectTreeModel.prototype.getListRenderCount = function (element) {
         var location = this.getElementLocation(element);
         return this.model.getListRenderCount(location);
+    };
+    ObjectTreeModel.prototype.isCollapsible = function (element) {
+        var location = this.getElementLocation(element);
+        return this.model.isCollapsible(location);
     };
     ObjectTreeModel.prototype.setCollapsible = function (element, collapsible) {
         var location = this.getElementLocation(element);

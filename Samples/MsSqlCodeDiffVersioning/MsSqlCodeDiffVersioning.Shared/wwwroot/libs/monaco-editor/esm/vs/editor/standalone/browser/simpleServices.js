@@ -45,7 +45,7 @@ import { isDiffEditorConfigurationKey, isEditorConfigurationKey } from '../../co
 import { EditOperation } from '../../common/core/editOperation.js';
 import { Position as Pos } from '../../common/core/position.js';
 import { Range } from '../../common/core/range.js';
-import { isResourceTextEdit } from '../../common/modes.js';
+import { WorkspaceTextEdit } from '../../common/modes.js';
 import { CommandsRegistry } from '../../../platform/commands/common/commands.js';
 import { IConfigurationService } from '../../../platform/configuration/common/configuration.js';
 import { Configuration, ConfigurationModel, DefaultConfigurationModel } from '../../../platform/configuration/common/configurationModels.js';
@@ -340,7 +340,7 @@ var SimpleResourceConfigurationService = /** @class */ (function () {
         this.configurationService = configurationService;
         this._onDidChangeConfiguration = new Emitter();
         this.configurationService.onDidChangeConfiguration(function (e) {
-            _this._onDidChangeConfiguration.fire(e);
+            _this._onDidChangeConfiguration.fire({ affectedKeys: e.affectedKeys, affectsConfiguration: function (resource, configuration) { return e.affectsConfiguration(configuration); } });
         });
     }
     SimpleResourceConfigurationService.prototype.getValue = function (resource, arg2, arg3) {
@@ -419,12 +419,15 @@ var SimpleBulkEditService = /** @class */ (function () {
         this._modelService = _modelService;
         //
     }
+    SimpleBulkEditService.prototype.hasPreviewHandler = function () {
+        return false;
+    };
     SimpleBulkEditService.prototype.apply = function (workspaceEdit, options) {
         var edits = new Map();
         if (workspaceEdit.edits) {
             for (var _i = 0, _a = workspaceEdit.edits; _i < _a.length; _i++) {
                 var edit = _a[_i];
-                if (!isResourceTextEdit(edit)) {
+                if (!WorkspaceTextEdit.is(edit)) {
                     return Promise.reject(new Error('bad edit - only text edits are supported'));
                 }
                 var model = this._modelService.getModel(edit.resource);
@@ -434,8 +437,9 @@ var SimpleBulkEditService = /** @class */ (function () {
                 var array = edits.get(model);
                 if (!array) {
                     array = [];
+                    edits.set(model, array);
                 }
-                edits.set(model, array.concat(edit.edits));
+                array.push(edit.edit);
             }
         }
         var totalEdits = 0;

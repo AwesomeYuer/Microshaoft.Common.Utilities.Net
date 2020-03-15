@@ -59,6 +59,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 import './media/suggest.css';
+import './media/suggestStatusBar.css';
 import '../../../base/browser/ui/codiconLabel/codiconLabel.js'; // The codicon symbol styles are defined here and must be loaded
 import '../documentSymbols/outlineTree.js'; // The codicon symbol colors are defined here and must be loaded
 import * as nls from '../../../nls.js';
@@ -73,7 +74,6 @@ import { DomScrollableElement } from '../../../base/browser/ui/scrollbar/scrolla
 import { IKeybindingService } from '../../../platform/keybinding/common/keybinding.js';
 import { IContextKeyService } from '../../../platform/contextkey/common/contextkey.js';
 import { Context as SuggestContext } from './suggest.js';
-import { alert } from '../../../base/browser/ui/aria/aria.js';
 import { ITelemetryService } from '../../../platform/telemetry/common/telemetry.js';
 import { attachListStyler } from '../../../platform/theme/common/styler.js';
 import { IThemeService, registerThemingParticipant } from '../../../platform/theme/common/themeService.js';
@@ -92,6 +92,7 @@ import { IInstantiationService } from '../../../platform/instantiation/common/in
 import { FileKind } from '../../../platform/files/common/files.js';
 import { MarkdownString } from '../../../base/common/htmlContent.js';
 import { flatten } from '../../../base/common/arrays.js';
+import { Position } from '../../common/core/position.js';
 var expandSuggestionDocsByDefault = false;
 /**
  * Suggest widget colors
@@ -103,8 +104,11 @@ export var editorSuggestWidgetSelectedBackground = registerColor('editorSuggestW
 export var editorSuggestWidgetHighlightForeground = registerColor('editorSuggestWidget.highlightForeground', { dark: listHighlightForeground, light: listHighlightForeground, hc: listHighlightForeground }, nls.localize('editorSuggestWidgetHighlightForeground', 'Color of the match highlights in the suggest widget.'));
 var colorRegExp = /^(#([\da-f]{3}){1,2}|(rgb|hsl)a\(\s*(\d{1,3}%?\s*,\s*){3}(1|0?\.\d+)\)|(rgb|hsl)\(\s*\d{1,3}%?(\s*,\s*\d{1,3}%?){2}\s*\))$/i;
 function extractColor(item, out) {
-    if (item.completion.label.match(colorRegExp)) {
-        out[0] = item.completion.label;
+    var label = typeof item.completion.label === 'string'
+        ? item.completion.label
+        : item.completion.label.name;
+    if (label.match(colorRegExp)) {
+        out[0] = label;
         return true;
     }
     if (typeof item.completion.documentation === 'string' && item.completion.documentation.match(colorRegExp)) {
@@ -123,8 +127,11 @@ function canExpandCompletionItem(item) {
     }
     return (suggestion.detail && suggestion.detail !== suggestion.label);
 }
-var Renderer = /** @class */ (function () {
-    function Renderer(widget, editor, triggerKeybindingLabel, _modelService, _modeService, _themeService) {
+function getAriaId(index) {
+    return "suggest-aria-id:" + index;
+}
+var ItemRenderer = /** @class */ (function () {
+    function ItemRenderer(widget, editor, triggerKeybindingLabel, _modelService, _modeService, _themeService) {
         this.widget = widget;
         this.editor = editor;
         this.triggerKeybindingLabel = triggerKeybindingLabel;
@@ -132,14 +139,14 @@ var Renderer = /** @class */ (function () {
         this._modeService = _modeService;
         this._themeService = _themeService;
     }
-    Object.defineProperty(Renderer.prototype, "templateId", {
+    Object.defineProperty(ItemRenderer.prototype, "templateId", {
         get: function () {
             return 'suggestion';
         },
         enumerable: true,
         configurable: true
     });
-    Renderer.prototype.renderTemplate = function (container) {
+    ItemRenderer.prototype.renderTemplate = function (container) {
         var _this = this;
         var data = Object.create(null);
         data.disposables = new DisposableStore();
@@ -149,24 +156,30 @@ var Renderer = /** @class */ (function () {
         data.colorspan = append(data.icon, $('span.colorspan'));
         var text = append(container, $('.contents'));
         var main = append(text, $('.main'));
-        data.iconContainer = append(main, $('.icon-label.codicon'));
-        data.iconLabel = new IconLabel(main, { supportHighlights: true, supportCodicons: true });
+        data.left = append(main, $('span.left'));
+        data.right = append(main, $('span.right'));
+        data.iconContainer = append(data.left, $('.icon-label.codicon'));
+        data.iconLabel = new IconLabel(data.left, { supportHighlights: true, supportCodicons: true });
         data.disposables.add(data.iconLabel);
-        data.typeLabel = append(main, $('span.type-label'));
-        data.readMore = append(main, $('span.readMore.codicon.codicon-info'));
+        data.signatureLabel = append(data.left, $('span.signature-label'));
+        data.qualifierLabel = append(data.left, $('span.qualifier-label'));
+        data.detailsLabel = append(data.right, $('span.details-label'));
+        data.readMore = append(data.right, $('span.readMore.codicon.codicon-info'));
         data.readMore.title = nls.localize('readMore', "Read More...{0}", this.triggerKeybindingLabel);
         var configureFont = function () {
             var options = _this.editor.getOptions();
-            var fontInfo = options.get(32 /* fontInfo */);
+            var fontInfo = options.get(34 /* fontInfo */);
             var fontFamily = fontInfo.fontFamily;
-            var fontSize = options.get(86 /* suggestFontSize */) || fontInfo.fontSize;
-            var lineHeight = options.get(87 /* suggestLineHeight */) || fontInfo.lineHeight;
+            var fontFeatureSettings = fontInfo.fontFeatureSettings;
+            var fontSize = options.get(90 /* suggestFontSize */) || fontInfo.fontSize;
+            var lineHeight = options.get(91 /* suggestLineHeight */) || fontInfo.lineHeight;
             var fontWeight = fontInfo.fontWeight;
             var fontSizePx = fontSize + "px";
             var lineHeightPx = lineHeight + "px";
             data.root.style.fontSize = fontSizePx;
             data.root.style.fontWeight = fontWeight;
             main.style.fontFamily = fontFamily;
+            main.style.fontFeatureSettings = fontFeatureSettings;
             main.style.lineHeight = lineHeightPx;
             data.icon.style.height = lineHeightPx;
             data.icon.style.width = lineHeightPx;
@@ -175,14 +188,16 @@ var Renderer = /** @class */ (function () {
         };
         configureFont();
         data.disposables.add(Event.chain(this.editor.onDidChangeConfiguration.bind(this.editor))
-            .filter(function (e) { return e.hasChanged(32 /* fontInfo */) || e.hasChanged(86 /* suggestFontSize */) || e.hasChanged(87 /* suggestLineHeight */); })
+            .filter(function (e) { return e.hasChanged(34 /* fontInfo */) || e.hasChanged(90 /* suggestFontSize */) || e.hasChanged(91 /* suggestLineHeight */); })
             .on(configureFont, null));
         return data;
     };
-    Renderer.prototype.renderElement = function (element, _index, templateData) {
+    ItemRenderer.prototype.renderElement = function (element, index, templateData) {
         var _this = this;
         var data = templateData;
         var suggestion = element.completion;
+        var textLabel = typeof suggestion.label === 'string' ? suggestion.label : suggestion.label.name;
+        data.root.id = getAriaId(index);
         data.icon.className = 'icon ' + completionKindToCssClass(suggestion.kind);
         data.colorspan.style.backgroundColor = '';
         var labelOptions = {
@@ -200,7 +215,7 @@ var Renderer = /** @class */ (function () {
             // special logic for 'file' completion items
             data.icon.className = 'icon hide';
             data.iconContainer.className = 'icon hide';
-            var labelClasses = getIconClasses(this._modelService, this._modeService, URI.from({ scheme: 'fake', path: suggestion.label }), FileKind.FILE);
+            var labelClasses = getIconClasses(this._modelService, this._modeService, URI.from({ scheme: 'fake', path: textLabel }), FileKind.FILE);
             var detailClasses = getIconClasses(this._modelService, this._modeService, URI.from({ scheme: 'fake', path: suggestion.detail }), FileKind.FILE);
             labelOptions.extraClasses = labelClasses.length > detailClasses.length ? labelClasses : detailClasses;
         }
@@ -209,7 +224,7 @@ var Renderer = /** @class */ (function () {
             data.icon.className = 'icon hide';
             data.iconContainer.className = 'icon hide';
             labelOptions.extraClasses = flatten([
-                getIconClasses(this._modelService, this._modeService, URI.from({ scheme: 'fake', path: suggestion.label }), FileKind.FOLDER),
+                getIconClasses(this._modelService, this._modeService, URI.from({ scheme: 'fake', path: textLabel }), FileKind.FOLDER),
                 getIconClasses(this._modelService, this._modeService, URI.from({ scheme: 'fake', path: suggestion.detail }), FileKind.FOLDER)
             ]);
         }
@@ -223,9 +238,21 @@ var Renderer = /** @class */ (function () {
             labelOptions.extraClasses = (labelOptions.extraClasses || []).concat(['deprecated']);
             labelOptions.matches = [];
         }
-        data.iconLabel.setLabel(suggestion.label, undefined, labelOptions);
-        data.typeLabel.textContent = (suggestion.detail || '').replace(/\n.*$/m, '');
+        data.iconLabel.setLabel(textLabel, undefined, labelOptions);
+        if (typeof suggestion.label === 'string') {
+            data.signatureLabel.textContent = '';
+            data.qualifierLabel.textContent = '';
+            data.detailsLabel.textContent = (suggestion.detail || '').replace(/\n.*$/m, '');
+            removeClass(data.right, 'always-show-details');
+        }
+        else {
+            data.signatureLabel.textContent = (suggestion.label.signature || '').replace(/\n.*$/m, '');
+            data.qualifierLabel.textContent = (suggestion.label.qualifier || '').replace(/\n.*$/m, '');
+            data.detailsLabel.textContent = (suggestion.label.type || '').replace(/\n.*$/m, '');
+            addClass(data.right, 'always-show-details');
+        }
         if (canExpandCompletionItem(element)) {
+            addClass(data.right, 'can-expand-details');
             show(data.readMore);
             data.readMore.onmousedown = function (e) {
                 e.stopPropagation();
@@ -238,28 +265,29 @@ var Renderer = /** @class */ (function () {
             };
         }
         else {
+            removeClass(data.right, 'can-expand-details');
             hide(data.readMore);
             data.readMore.onmousedown = null;
             data.readMore.onclick = null;
         }
     };
-    Renderer.prototype.disposeTemplate = function (templateData) {
+    ItemRenderer.prototype.disposeTemplate = function (templateData) {
         templateData.disposables.dispose();
     };
-    Renderer = __decorate([
+    ItemRenderer = __decorate([
         __param(3, IModelService),
         __param(4, IModeService),
         __param(5, IThemeService)
-    ], Renderer);
-    return Renderer;
+    ], ItemRenderer);
+    return ItemRenderer;
 }());
 var SuggestionDetails = /** @class */ (function () {
-    function SuggestionDetails(container, widget, editor, markdownRenderer, triggerKeybindingLabel) {
+    function SuggestionDetails(container, widget, editor, markdownRenderer, kbToggleDetails) {
         var _this = this;
         this.widget = widget;
         this.editor = editor;
         this.markdownRenderer = markdownRenderer;
-        this.triggerKeybindingLabel = triggerKeybindingLabel;
+        this.kbToggleDetails = kbToggleDetails;
         this.borderWidth = 1;
         this.disposables = new DisposableStore();
         this.el = append(container, $('.details'));
@@ -270,13 +298,12 @@ var SuggestionDetails = /** @class */ (function () {
         this.disposables.add(this.scrollbar);
         this.header = append(this.body, $('.header'));
         this.close = append(this.header, $('span.codicon.codicon-close'));
-        this.close.title = nls.localize('readLess', "Read less...{0}", this.triggerKeybindingLabel);
+        this.close.title = nls.localize('readLess', "Read less...{0}", this.kbToggleDetails);
         this.type = append(this.header, $('p.type'));
         this.docs = append(this.body, $('p.docs'));
-        this.ariaLabel = null;
         this.configureFont();
         Event.chain(this.editor.onDidChangeConfiguration.bind(this.editor))
-            .filter(function (e) { return e.hasChanged(32 /* fontInfo */); })
+            .filter(function (e) { return e.hasChanged(34 /* fontInfo */); })
             .on(this.configureFont, this, this.disposables);
         markdownRenderer.onDidRenderCodeBlock(function () { return _this.scrollbar.scanDomNode(); }, this, this.disposables);
     }
@@ -308,7 +335,6 @@ var SuggestionDetails = /** @class */ (function () {
             this.type.textContent = '';
             this.docs.textContent = '';
             addClass(this.el, 'no-docs');
-            this.ariaLabel = null;
             return;
         }
         removeClass(this.el, 'no-docs');
@@ -346,10 +372,6 @@ var SuggestionDetails = /** @class */ (function () {
         };
         this.body.scrollTop = 0;
         this.scrollbar.scanDomNode();
-        this.ariaLabel = strings.format('{0}{1}', detail || '', documentation ? (typeof documentation === 'string' ? documentation : documentation.value) : '');
-    };
-    SuggestionDetails.prototype.getAriaLabel = function () {
-        return this.ariaLabel;
     };
     SuggestionDetails.prototype.scrollDown = function (much) {
         if (much === void 0) { much = 8; }
@@ -376,15 +398,16 @@ var SuggestionDetails = /** @class */ (function () {
     };
     SuggestionDetails.prototype.configureFont = function () {
         var options = this.editor.getOptions();
-        var fontInfo = options.get(32 /* fontInfo */);
+        var fontInfo = options.get(34 /* fontInfo */);
         var fontFamily = fontInfo.fontFamily;
-        var fontSize = options.get(86 /* suggestFontSize */) || fontInfo.fontSize;
-        var lineHeight = options.get(87 /* suggestLineHeight */) || fontInfo.lineHeight;
+        var fontSize = options.get(90 /* suggestFontSize */) || fontInfo.fontSize;
+        var lineHeight = options.get(91 /* suggestLineHeight */) || fontInfo.lineHeight;
         var fontWeight = fontInfo.fontWeight;
         var fontSizePx = fontSize + "px";
         var lineHeightPx = lineHeight + "px";
         this.el.style.fontSize = fontSizePx;
         this.el.style.fontWeight = fontWeight;
+        this.el.style.fontFeatureSettings = fontInfo.fontFeatureSettings;
         this.type.style.fontFamily = fontFamily;
         this.close.style.height = lineHeightPx;
         this.close.style.width = lineHeightPx;
@@ -396,10 +419,12 @@ var SuggestionDetails = /** @class */ (function () {
     return SuggestionDetails;
 }());
 var SuggestWidget = /** @class */ (function () {
-    function SuggestWidget(editor, telemetryService, contextKeyService, themeService, storageService, keybindingService, modeService, openerService, instantiationService) {
+    function SuggestWidget(editor, telemetryService, keybindingService, contextKeyService, themeService, storageService, modeService, openerService, instantiationService) {
         var _this = this;
+        var _a, _b;
         this.editor = editor;
         this.telemetryService = telemetryService;
+        this.keybindingService = keybindingService;
         // Editor.IContentWidget.allowEditorOverflow
         this.allowEditorOverflow = true;
         this.suppressMouseDown = false;
@@ -427,10 +452,10 @@ var SuggestWidget = /** @class */ (function () {
         this.explainMode = false;
         this._onDetailsKeydown = new Emitter();
         this.onDetailsKeyDown = this._onDetailsKeydown.event;
-        this._lastAriaAlertLabel = null;
-        var kb = keybindingService.lookupKeybinding('editor.action.triggerSuggest');
-        var triggerKeybindingLabel = !kb ? '' : " (" + kb.getLabel() + ")";
         var markdownRenderer = this.toDispose.add(new MarkdownRenderer(editor, modeService, openerService));
+        var kbToggleDetails = (_b = (_a = keybindingService.lookupKeybinding('toggleSuggestionDetails')) === null || _a === void 0 ? void 0 : _a.getLabel()) !== null && _b !== void 0 ? _b : '';
+        this.msgDetailsLess = nls.localize('detail.less', "{0} for less...", kbToggleDetails);
+        this.msgDetailMore = nls.localize('detail.more', "{0} for more...", kbToggleDetails);
         this.isAuto = false;
         this.focusedItem = null;
         this.storageService = storageService;
@@ -442,14 +467,34 @@ var SuggestWidget = /** @class */ (function () {
         }));
         this.messageElement = append(this.element, $('.message'));
         this.listElement = append(this.element, $('.tree'));
-        this.details = instantiationService.createInstance(SuggestionDetails, this.element, this, this.editor, markdownRenderer, triggerKeybindingLabel);
-        var applyIconStyle = function () { return toggleClass(_this.element, 'no-icons', !_this.editor.getOption(85 /* suggest */).showIcons); };
+        var applyStatusBarStyle = function () { return toggleClass(_this.element, 'with-status-bar', !_this.editor.getOption(89 /* suggest */).hideStatusBar); };
+        applyStatusBarStyle();
+        this.statusBarElement = append(this.element, $('.suggest-status-bar'));
+        this.statusBarLeftSpan = append(this.statusBarElement, $('span'));
+        this.statusBarRightSpan = append(this.statusBarElement, $('span'));
+        this.setStatusBarLeftText('');
+        this.setStatusBarRightText('');
+        this.details = instantiationService.createInstance(SuggestionDetails, this.element, this, this.editor, markdownRenderer, kbToggleDetails);
+        var applyIconStyle = function () { return toggleClass(_this.element, 'no-icons', !_this.editor.getOption(89 /* suggest */).showIcons); };
         applyIconStyle();
-        var renderer = instantiationService.createInstance(Renderer, this, this.editor, triggerKeybindingLabel);
+        var renderer = instantiationService.createInstance(ItemRenderer, this, this.editor, kbToggleDetails);
         this.list = new List('SuggestWidget', this.listElement, this, [renderer], {
             useShadows: false,
             openController: { shouldOpen: function () { return false; } },
-            mouseSupport: false
+            mouseSupport: false,
+            accessibilityProvider: {
+                getAriaLabel: function (item) {
+                    var textLabel = typeof item.completion.label === 'string' ? item.completion.label : item.completion.label.name;
+                    if (item.isResolved && _this.expandDocsSettingFromStorage()) {
+                        var _a = item.completion, documentation = _a.documentation, detail = _a.detail;
+                        var docs = strings.format('{0}{1}', detail || '', documentation ? (typeof documentation === 'string' ? documentation : documentation.value) : '');
+                        return nls.localize('ariaCurrenttSuggestionReadDetails', "Item {0}, docs: {1}", textLabel, docs);
+                    }
+                    else {
+                        return textLabel;
+                    }
+                }
+            }
         });
         this.toDispose.add(attachListStyler(this.list, themeService, {
             listInactiveFocusBackground: editorSuggestWidgetSelectedBackground,
@@ -462,7 +507,12 @@ var SuggestWidget = /** @class */ (function () {
         this.toDispose.add(this.list.onSelectionChange(function (e) { return _this.onListSelection(e); }));
         this.toDispose.add(this.list.onFocusChange(function (e) { return _this.onListFocus(e); }));
         this.toDispose.add(this.editor.onDidChangeCursorSelection(function () { return _this.onCursorSelectionChanged(); }));
-        this.toDispose.add(this.editor.onDidChangeConfiguration(function (e) { return e.hasChanged(85 /* suggest */) && applyIconStyle(); }));
+        this.toDispose.add(this.editor.onDidChangeConfiguration(function (e) {
+            if (e.hasChanged(89 /* suggest */)) {
+                applyStatusBarStyle();
+                applyIconStyle();
+            }
+        }));
         this.suggestWidgetVisible = SuggestContext.Visible.bindTo(contextKeyService);
         this.suggestWidgetMultipleSuggestions = SuggestContext.MultipleSuggestions.bindTo(contextKeyService);
         this.editor.addContentWidget(this);
@@ -519,33 +569,18 @@ var SuggestWidget = /** @class */ (function () {
         this.onDidSelectEmitter.fire({ item: item, index: index, model: completionModel });
         this.editor.focus();
     };
-    SuggestWidget.prototype._getSuggestionAriaAlertLabel = function (item) {
-        if (this.expandDocsSettingFromStorage()) {
-            return nls.localize('ariaCurrenttSuggestionReadDetails', "Item {0}, docs: {1}", item.completion.label, this.details.getAriaLabel());
-        }
-        else {
-            return item.completion.label;
-        }
-    };
-    SuggestWidget.prototype._ariaAlert = function (newAriaAlertLabel) {
-        if (this._lastAriaAlertLabel === newAriaAlertLabel) {
-            return;
-        }
-        this._lastAriaAlertLabel = newAriaAlertLabel;
-        if (this._lastAriaAlertLabel) {
-            alert(this._lastAriaAlertLabel, true);
-        }
-    };
     SuggestWidget.prototype.onThemeChange = function (theme) {
         var backgroundColor = theme.getColor(editorSuggestWidgetBackground);
         if (backgroundColor) {
             this.listElement.style.backgroundColor = backgroundColor.toString();
+            this.statusBarElement.style.backgroundColor = backgroundColor.toString();
             this.details.element.style.backgroundColor = backgroundColor.toString();
             this.messageElement.style.backgroundColor = backgroundColor.toString();
         }
         var borderColor = theme.getColor(editorSuggestWidgetBorder);
         if (borderColor) {
             this.listElement.style.borderColor = borderColor.toString();
+            this.statusBarElement.style.borderColor = borderColor.toString();
             this.details.element.style.borderColor = borderColor.toString();
             this.messageElement.style.borderColor = borderColor.toString();
             this.detailsBorderColor = borderColor.toString();
@@ -558,6 +593,7 @@ var SuggestWidget = /** @class */ (function () {
     };
     SuggestWidget.prototype.onListFocus = function (e) {
         var _this = this;
+        var _a, _b;
         if (this.ignoreFocusEvents) {
             return;
         }
@@ -567,7 +603,7 @@ var SuggestWidget = /** @class */ (function () {
                 this.currentSuggestionDetails = null;
                 this.focusedItem = null;
             }
-            this._ariaAlert(null);
+            this.editor.setAriaOptions({ activeDescendant: undefined });
             return;
         }
         if (!this.completionModel) {
@@ -577,6 +613,24 @@ var SuggestWidget = /** @class */ (function () {
         var index = e.indexes[0];
         this.firstFocusInCurrentList = !this.focusedItem;
         if (item !== this.focusedItem) {
+            // update statusbar
+            // todo@joh,pine -> this should a toolbar with actions so that these things become
+            // mouse clickable and fit for accessibility...
+            var wantsInsert = this.editor.getOption(89 /* suggest */).insertMode === 'insert';
+            var kbAccept = (_a = this.keybindingService.lookupKeybinding('acceptSelectedSuggestion')) === null || _a === void 0 ? void 0 : _a.getLabel();
+            var kbAcceptAlt = (_b = this.keybindingService.lookupKeybinding('acceptAlternativeSelectedSuggestion')) === null || _b === void 0 ? void 0 : _b.getLabel();
+            if (!Position.equals(item.editInsertEnd, item.editReplaceEnd)) {
+                // insert AND replace
+                if (wantsInsert) {
+                    this.setStatusBarLeftText(nls.localize('insert', "{0} to insert, {1} to replace", kbAccept, kbAcceptAlt));
+                }
+                else {
+                    this.setStatusBarLeftText(nls.localize('replace', "{0} to replace, {1} to insert", kbAccept, kbAcceptAlt));
+                }
+            }
+            else {
+                this.setStatusBarLeftText(nls.localize('accept', "{0} to accept", kbAccept));
+            }
             if (this.currentSuggestionDetails) {
                 this.currentSuggestionDetails.cancel();
                 this.currentSuggestionDetails = null;
@@ -614,7 +668,18 @@ var SuggestWidget = /** @class */ (function () {
                 else {
                     removeClass(_this.element, 'docs-side');
                 }
-                _this._ariaAlert(_this._getSuggestionAriaAlertLabel(item));
+                if (canExpandCompletionItem(_this.focusedItem)) {
+                    if (_this.expandDocsSettingFromStorage()) {
+                        _this.setStatusBarRightText(_this.msgDetailsLess);
+                    }
+                    else {
+                        _this.setStatusBarRightText(_this.msgDetailMore);
+                    }
+                }
+                else {
+                    _this.statusBarRightSpan.innerText = '';
+                }
+                _this.editor.setAriaOptions({ activeDescendant: getAriaId(index) });
             }).catch(onUnexpectedError);
         }
         // emit an event
@@ -629,7 +694,7 @@ var SuggestWidget = /** @class */ (function () {
         toggleClass(this.element, 'frozen', state === 4 /* Frozen */);
         switch (state) {
             case 0 /* Hidden */:
-                hide(this.messageElement, this.details.element, this.listElement);
+                hide(this.messageElement, this.details.element, this.listElement, this.statusBarElement);
                 this.hide();
                 this.listHeight = 0;
                 if (stateChanged) {
@@ -639,7 +704,7 @@ var SuggestWidget = /** @class */ (function () {
                 break;
             case 1 /* Loading */:
                 this.messageElement.textContent = SuggestWidget.LOADING_MESSAGE;
-                hide(this.listElement, this.details.element);
+                hide(this.listElement, this.details.element, this.statusBarElement);
                 show(this.messageElement);
                 removeClass(this.element, 'docs-side');
                 this.show();
@@ -647,7 +712,7 @@ var SuggestWidget = /** @class */ (function () {
                 break;
             case 2 /* Empty */:
                 this.messageElement.textContent = SuggestWidget.NO_SUGGESTIONS_MESSAGE;
-                hide(this.listElement, this.details.element);
+                hide(this.listElement, this.details.element, this.statusBarElement);
                 show(this.messageElement);
                 removeClass(this.element, 'docs-side');
                 this.show();
@@ -655,7 +720,7 @@ var SuggestWidget = /** @class */ (function () {
                 break;
             case 3 /* Open */:
                 hide(this.messageElement);
-                show(this.listElement);
+                show(this.listElement, this.statusBarElement);
                 this.show();
                 break;
             case 4 /* Frozen */:
@@ -665,9 +730,8 @@ var SuggestWidget = /** @class */ (function () {
                 break;
             case 5 /* Details */:
                 hide(this.messageElement);
-                show(this.details.element, this.listElement);
+                show(this.details.element, this.listElement, this.statusBarElement);
                 this.show();
-                this._ariaAlert(this.details.getAriaLabel());
                 break;
         }
     };
@@ -854,6 +918,7 @@ var SuggestWidget = /** @class */ (function () {
             removeClass(this.element, 'docs-side');
             removeClass(this.element, 'docs-below');
             this.editor.layoutContentWidget(this);
+            this.setStatusBarRightText(this.msgDetailMore);
             this.telemetryService.publicLog2('suggestWidget:collapseDetails');
         }
         else {
@@ -862,12 +927,15 @@ var SuggestWidget = /** @class */ (function () {
             }
             this.updateExpandDocsSetting(true);
             this.showDetails(false);
-            this._ariaAlert(this.details.getAriaLabel());
+            this.setStatusBarRightText(this.msgDetailsLess);
             this.telemetryService.publicLog2('suggestWidget:expandDetails');
         }
     };
     SuggestWidget.prototype.showDetails = function (loading) {
-        this.expandSideOrBelow();
+        if (!loading) {
+            // When loading, don't re-layout docs, as item is not resolved yet #88731
+            this.expandSideOrBelow();
+        }
         show(this.details.element);
         this.details.element.style.maxHeight = this.maxWidgetHeight + 'px';
         if (loading) {
@@ -941,11 +1009,12 @@ var SuggestWidget = /** @class */ (function () {
         }
         else {
             var suggestionCount = this.list.contentHeight / this.unfocusedHeight;
-            var maxVisibleSuggestions = this.editor.getOption(85 /* suggest */).maxVisibleSuggestions;
+            var maxVisibleSuggestions = this.editor.getOption(89 /* suggest */).maxVisibleSuggestions;
             height = Math.min(suggestionCount, maxVisibleSuggestions) * this.unfocusedHeight;
         }
         this.element.style.lineHeight = this.unfocusedHeight + "px";
         this.listElement.style.height = height + "px";
+        this.statusBarElement.style.top = height + "px";
         this.list.layout(height);
         return height;
     };
@@ -956,7 +1025,7 @@ var SuggestWidget = /** @class */ (function () {
         if (!this.editor.hasModel()) {
             return;
         }
-        var lineHeight = this.editor.getOption(47 /* lineHeight */);
+        var lineHeight = this.editor.getOption(49 /* lineHeight */);
         var cursorCoords = this.editor.getScrolledVisiblePosition(this.editor.getPosition());
         var editorCoords = getDomNodePagePosition(this.editor.getDomNode());
         var cursorX = editorCoords.left + cursorCoords.left;
@@ -993,7 +1062,7 @@ var SuggestWidget = /** @class */ (function () {
         }
     };
     /**
-     * Adds the proper classes for positioning the docs to the side or below
+     * Adds the proper classes for positioning the docs to the side or below depending on item
      */
     SuggestWidget.prototype.expandSideOrBelow = function () {
         if (!canExpandCompletionItem(this.focusedItem) && this.firstFocusInCurrentList) {
@@ -1014,7 +1083,7 @@ var SuggestWidget = /** @class */ (function () {
     Object.defineProperty(SuggestWidget.prototype, "maxWidgetHeight", {
         // Heights
         get: function () {
-            return this.unfocusedHeight * this.editor.getOption(85 /* suggest */).maxVisibleSuggestions;
+            return this.unfocusedHeight * this.editor.getOption(89 /* suggest */).maxVisibleSuggestions;
         },
         enumerable: true,
         configurable: true
@@ -1022,7 +1091,7 @@ var SuggestWidget = /** @class */ (function () {
     Object.defineProperty(SuggestWidget.prototype, "unfocusedHeight", {
         get: function () {
             var options = this.editor.getOptions();
-            return options.get(87 /* suggestLineHeight */) || options.get(32 /* fontInfo */).lineHeight;
+            return options.get(91 /* suggestLineHeight */) || options.get(34 /* fontInfo */).lineHeight;
         },
         enumerable: true,
         configurable: true
@@ -1040,6 +1109,12 @@ var SuggestWidget = /** @class */ (function () {
     SuggestWidget.prototype.updateExpandDocsSetting = function (value) {
         this.storageService.store('expandSuggestionDocs', value, 0 /* GLOBAL */);
     };
+    SuggestWidget.prototype.setStatusBarLeftText = function (s) {
+        this.statusBarLeftSpan.innerText = s;
+    };
+    SuggestWidget.prototype.setStatusBarRightText = function (s) {
+        this.statusBarRightSpan.innerText = s;
+    };
     SuggestWidget.prototype.dispose = function () {
         this.details.dispose();
         this.list.dispose();
@@ -1052,10 +1127,10 @@ var SuggestWidget = /** @class */ (function () {
     SuggestWidget.NO_SUGGESTIONS_MESSAGE = nls.localize('suggestWidget.noSuggestions', "No suggestions.");
     SuggestWidget = __decorate([
         __param(1, ITelemetryService),
-        __param(2, IContextKeyService),
-        __param(3, IThemeService),
-        __param(4, IStorageService),
-        __param(5, IKeybindingService),
+        __param(2, IKeybindingService),
+        __param(3, IContextKeyService),
+        __param(4, IThemeService),
+        __param(5, IStorageService),
         __param(6, IModeService),
         __param(7, IOpenerService),
         __param(8, IInstantiationService)

@@ -40,6 +40,7 @@ import { getHover } from './getHover.js';
 import { HoverOperation } from './hoverOperation.js';
 import { ContentHoverWidget } from './hoverWidgets.js';
 import { MarkdownRenderer } from '../markdown/markdownRenderer.js';
+import { registerThemingParticipant } from '../../../platform/theme/common/themeService.js';
 import { coalesce, isNonEmptyArray, asArray } from '../../../base/common/arrays.js';
 import { IMarkerData, MarkerSeverity } from '../../../platform/markers/common/markers.js';
 import { basename } from '../../../base/common/resources.js';
@@ -50,6 +51,7 @@ import { createCancelablePromise } from '../../../base/common/async.js';
 import { getCodeActions } from '../codeAction/codeAction.js';
 import { QuickFixAction, QuickFixController } from '../codeAction/codeActionCommands.js';
 import { CodeActionKind } from '../codeAction/types.js';
+import { textLinkForeground } from '../../../platform/theme/common/colorRegistry.js';
 var $ = dom.$;
 var ColorHover = /** @class */ (function () {
     function ColorHover(range, color, provider) {
@@ -163,6 +165,10 @@ var ModesContentComputer = /** @class */ (function () {
     };
     return ModesContentComputer;
 }());
+var markerCodeActionTrigger = {
+    type: 2 /* Manual */,
+    filter: { include: CodeActionKind.QuickFix }
+};
 var ModesContentHoverWidget = /** @class */ (function (_super) {
     __extends(ModesContentHoverWidget, _super);
     function ModesContentHoverWidget(editor, markerDecorationsService, _themeService, _keybindingService, _modeService, _openerService) {
@@ -180,7 +186,7 @@ var ModesContentHoverWidget = /** @class */ (function (_super) {
         _this._isChangingDecorations = false;
         _this._shouldFocus = false;
         _this._colorPicker = null;
-        _this._hoverOperation = new HoverOperation(_this._computer, function (result) { return _this._withResult(result, true); }, null, function (result) { return _this._withResult(result, false); }, _this._editor.getOption(42 /* hover */).delay);
+        _this._hoverOperation = new HoverOperation(_this._computer, function (result) { return _this._withResult(result, true); }, null, function (result) { return _this._withResult(result, false); }, _this._editor.getOption(44 /* hover */).delay);
         _this._register(dom.addStandardDisposableListener(_this.getDomNode(), dom.EventType.FOCUS, function () {
             if (_this._colorPicker) {
                 dom.addClass(_this.getDomNode(), 'colorpicker-hover');
@@ -190,7 +196,7 @@ var ModesContentHoverWidget = /** @class */ (function (_super) {
             dom.removeClass(_this.getDomNode(), 'colorpicker-hover');
         }));
         _this._register(editor.onDidChangeConfiguration(function (e) {
-            _this._hoverOperation.setHoverTime(_this._editor.getOption(42 /* hover */).delay);
+            _this._hoverOperation.setHoverTime(_this._editor.getOption(44 /* hover */).delay);
         }));
         _this._register(TokenizationRegistry.onDidChange(function (e) {
             if (_this.isVisible && _this._lastRange && _this._messages.length > 0) {
@@ -312,7 +318,7 @@ var ModesContentHoverWidget = /** @class */ (function (_super) {
                 var colorInfo = { range: msg.range, color: msg.color };
                 // create blank olor picker model and widget first to ensure it's positioned correctly.
                 var model_1 = new ColorPickerModel(color_1, [], 0);
-                var widget_1 = new ColorPickerWidget(fragment, model_1, _this._editor.getOption(101 /* pixelRatio */), _this._themeService);
+                var widget_1 = new ColorPickerWidget(fragment, model_1, _this._editor.getOption(105 /* pixelRatio */), _this._themeService);
                 getColorPresentations(editorModel_1, colorInfo, msg.provider, CancellationToken.None).then(function (colorPresentations) {
                     model_1.colorPresentations = colorPresentations || [];
                     if (!_this._editor.hasModel()) {
@@ -418,10 +424,33 @@ var ModesContentHoverWidget = /** @class */ (function (_super) {
         messageElement.style.whiteSpace = 'pre-wrap';
         messageElement.innerText = message;
         if (source || code) {
-            var detailsElement = dom.append(markerElement, $('span'));
-            detailsElement.style.opacity = '0.6';
-            detailsElement.style.paddingLeft = '6px';
-            detailsElement.innerText = source && code ? source + "(" + code + ")" : source ? source : "(" + code + ")";
+            if (typeof code === 'string') {
+                var detailsElement = dom.append(markerElement, $('span'));
+                detailsElement.style.opacity = '0.6';
+                detailsElement.style.paddingLeft = '6px';
+                detailsElement.innerText = source && code ? source + "(" + code + ")" : source ? source : "(" + code + ")";
+            }
+            else {
+                if (code) {
+                    var sourceAndCodeElement = $('span');
+                    if (source) {
+                        var sourceElement = dom.append(sourceAndCodeElement, $('span'));
+                        sourceElement.innerText = source;
+                    }
+                    this._codeLink = dom.append(sourceAndCodeElement, $('a.code-link'));
+                    this._codeLink.setAttribute('href', code.link.toString());
+                    this._codeLink.onclick = function (e) {
+                        _this._openerService.open(code.link);
+                        e.preventDefault();
+                        e.stopPropagation();
+                    };
+                    var codeElement = dom.append(this._codeLink, $('span'));
+                    codeElement.innerText = code.value;
+                    var detailsElement = dom.append(markerElement, sourceAndCodeElement);
+                    detailsElement.style.opacity = '0.6';
+                    detailsElement.style.paddingLeft = '6px';
+                }
+            }
         }
         if (isNonEmptyArray(relatedInformation)) {
             var _loop_1 = function (message_1, resource, startLineNumber, startColumn) {
@@ -495,7 +524,7 @@ var ModesContentHoverWidget = /** @class */ (function (_super) {
                     showing = true;
                     var controller = QuickFixController.get(_this._editor);
                     var elementPosition = dom.getDomNodePagePosition(target);
-                    controller.showCodeActions(actions, {
+                    controller.showCodeActions(markerCodeActionTrigger, actions, {
                         x: elementPosition.left + 6,
                         y: elementPosition.top + elementPosition.height + 6
                     });
@@ -508,7 +537,7 @@ var ModesContentHoverWidget = /** @class */ (function (_super) {
     ModesContentHoverWidget.prototype.getCodeActions = function (marker) {
         var _this = this;
         return createCancelablePromise(function (cancellationToken) {
-            return getCodeActions(_this._editor.getModel(), new Range(marker.startLineNumber, marker.startColumn, marker.endLineNumber, marker.endColumn), { type: 'manual', filter: { include: CodeActionKind.QuickFix } }, cancellationToken);
+            return getCodeActions(_this._editor.getModel(), new Range(marker.startLineNumber, marker.startColumn, marker.endLineNumber, marker.endColumn), markerCodeActionTrigger, cancellationToken);
         });
     };
     ModesContentHoverWidget.prototype.renderAction = function (parent, actionOptions) {
@@ -558,3 +587,9 @@ function hoverContentsEquals(first, second) {
     }
     return true;
 }
+registerThemingParticipant(function (theme, collector) {
+    var linkFg = theme.getColor(textLinkForeground);
+    if (linkFg) {
+        collector.addRule(".monaco-editor-hover .hover-contents a.code-link span:hover { color: " + linkFg + "; }");
+    }
+});
