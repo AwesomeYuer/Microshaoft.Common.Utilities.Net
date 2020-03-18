@@ -148,17 +148,33 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Swagger.WebApplication", "S
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		SharedSources\CommonUtilities.Shared.projitems*{0066db51-3fc3-4fd5-a3fd-c39ee9f6ffb8}*SharedItemsImports = 5
+		Plugins\JsonParametersValidators\SamplePlugin\SamplePlugin.Shared\JTokenModelParameterValidatorSamplePlugin.Shared.projitems*{016c7778-b0e5-4995-be87-d44e267371a9}*SharedItemsImports = 5
+		SharedSources\Microshaoft.Json.Shared.projitems*{01efc8d5-9b20-40b9-922f-5583bbc33ca2}*SharedItemsImports = 5
 		Plugins\StoreProceduresExecutors\MsSQL\MsSQL.Plugin.Shared\MsSQL.StoreProcedureExecutor.Plugin.Shared.projitems*{0579c429-5e45-494c-b0f0-2b46dc1c8a77}*SharedItemsImports = 13
 		SharedSources\WebApiUtilities.Shared.projitems*{1fbd68b8-839e-4c54-a00c-beac21119371}*SharedItemsImports = 13
+		SharedSources\Microshaoft.StoreProcedureExecutors.Shared.projitems*{1ff88452-428e-444b-89d4-09f2437aea09}*SharedItemsImports = 5
+		Samples\SocketAsyncArgs.TCP.Echo.Server\ServerConsoleApp\ServerSharedProject\ServerSharedProject.projitems*{2cfbe4b2-3473-4ca0-8734-092d326814a6}*SharedItemsImports = 5
 		SharedSources\Microshaoft.StoreProcedureExecutors.Shared.projitems*{378a4dc6-0e35-49ba-b142-9a9b01d6ce65}*SharedItemsImports = 13
 		SharedSources\Microshaoft.Json.Shared.projitems*{378a4dc6-0e35-49ba-b242-9a9b01d6ce65}*SharedItemsImports = 13
 		Samples\SocketAsyncArgs.TCP.Echo.Server\ServerConsoleApp\ServerSharedProject\ServerSharedProject.projitems*{3f6feee0-0473-441f-a073-889503ec7710}*SharedItemsImports = 13
 		Plugins\StoreProceduresExecutors\MySQL\MySQL.Plugin.Shared\MySQL.StoreProcedureExecutor.Plugin.Shared.projitems*{4ee26e3a-b23b-4760-a8d7-1eb0ef7a24dd}*SharedItemsImports = 13
 		Samples\MsSqlCodeDiffVersioning\MsSqlCodeDiffVersioning.Shared\MsSqlCodeDiffVersioning.Shared.projitems*{50cf6564-2c15-48ba-87ba-b83169f2a214}*SharedItemsImports = 13
+		Samples\SocketAsyncArgs.TCP.Echo.Server\ClientConsoleApp\ClientSharedProject\ClientSharedProject.projitems*{54db1b57-dbd1-4286-9be8-96251e43973b}*SharedItemsImports = 5
+		SharedSources\Microshaoft.Json.Shared.projitems*{5b391a09-790c-4422-958f-fc8895e6fa3e}*SharedItemsImports = 5
+		SharedSources\Microshaoft.StoreProcedureExecutors.Shared.projitems*{5c3bb279-2e9f-42e4-bf45-c1a588ca634f}*SharedItemsImports = 5
+		Plugins\StoreProceduresExecutors\MsSQL\MsSQL.Plugin.Shared\MsSQL.StoreProcedureExecutor.Plugin.Shared.projitems*{5eb5dc20-4930-4d0a-9d41-2928abafac00}*SharedItemsImports = 5
 		SharedSources\CommonUtilities.Shared.projitems*{7878df3a-8418-4aca-b415-300b81afd792}*SharedItemsImports = 13
+		SharedSources\WebApiUtilities.Shared.projitems*{94e4a943-9b48-4a5e-96be-9171ea7a87ec}*SharedItemsImports = 5
+		SharedSources\CommonUtilities.Lite.Shared.projitems*{9a62d412-1587-4c3d-bcc8-9734c4a22a81}*SharedItemsImports = 5
 		Plugins\JsonParametersValidators\SamplePlugin\SamplePlugin.Shared\JTokenModelParameterValidatorSamplePlugin.Shared.projitems*{a85efe1e-6a82-40fb-92ac-08acbc50dc52}*SharedItemsImports = 13
+		SharedSources\CommonUtilities.Shared.projitems*{a9a81303-87a4-4802-8c6c-14578593364f}*SharedItemsImports = 5
 		SharedSources\EasyPerformanceCountersHelper.Shared.projitems*{b1913205-1d01-4a59-b0ca-b5c7460fb644}*SharedItemsImports = 13
+		Plugins\StoreProceduresExecutors\MySQL\MySQL.Plugin.Shared\MySQL.StoreProcedureExecutor.Plugin.Shared.projitems*{be9efe7c-2f7a-45d2-aad7-8d6e6b173beb}*SharedItemsImports = 5
+		SharedSources\CommonUtilities.Shared.projitems*{cb039db5-abd7-4b44-b729-a1c7a24abe4e}*SharedItemsImports = 5
+		Samples\MsSqlCodeDiffVersioning\MsSqlCodeDiffVersioning.Shared\MsSqlCodeDiffVersioning.Shared.projitems*{cda249b4-a4bf-4c44-a5a4-bad08255de20}*SharedItemsImports = 5
 		Samples\SocketAsyncArgs.TCP.Echo.Server\ClientConsoleApp\ClientSharedProject\ClientSharedProject.projitems*{e2a49f80-5e62-414d-bf57-8e1802b144a8}*SharedItemsImports = 13
+		SharedSources\CommonUtilities.Lite.Shared.projitems*{eb5183ad-194c-4276-8f8f-90e9e8baf816}*SharedItemsImports = 5
 		SharedSources\ConcurrentAsyncQueue.Shared.projitems*{f27798f3-0529-4852-9e9c-819699a772cb}*SharedItemsImports = 13
 		SharedSources\CommonUtilities.Lite.Shared.projitems*{f9418680-7641-49aa-a72a-32408f111947}*SharedItemsImports = 13
 	EndGlobalSection
