@@ -5,10 +5,10 @@
     using System.IO;
     public static partial class JsonHelper
     {
-        public static JsonTextReader CreateJsonTextReader(this TextReader target)
+        public static JsonTextReader CreateJsonTextReader(this TextReader @this)
         {
             return
-                new JsonTextReader(target)
+                new JsonTextReader(@this)
                     {
                         ArrayPool = JsonArrayPool<char>.Shared,
                         // Don't close the input, leave closing to the caller
@@ -17,10 +17,10 @@
 
         }
 
-        public static JsonTextWriter CreateJsonTextWriter(this TextWriter target)
+        public static JsonTextWriter CreateJsonTextWriter(this TextWriter @this)
         {
             return
-                new JsonTextWriter(target)
+                new JsonTextWriter(@this)
                     {
                         ArrayPool = JsonArrayPool<char>.Shared,
                         // Don't close the output, leave closing to the caller

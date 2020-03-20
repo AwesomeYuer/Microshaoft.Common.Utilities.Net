@@ -12,30 +12,30 @@
     }
     public static partial class TypeHelper
     {
-        public static bool IsAnonymousType(this Type target)
+        public static bool IsAnonymousType(this Type @this)
         {
             return
                 Attribute
                     .IsDefined
                         (
-                            target
+                            @this
                             , typeof(CompilerGeneratedAttribute)
                             , false
                         )
                 &&
-                    target
+                    @this
                         .Name
                         .Contains
                             ("AnonymousType")
                 &&
                     (
-                        target.Name.StartsWith("<>")
+                        @this.Name.StartsWith("<>")
                         ||
-                        target.Name.StartsWith("VB$")
+                        @this.Name.StartsWith("VB$")
                     )
                 &&
                     (
-                        target.Attributes
+                        @this.Attributes
                         &
                         TypeAttributes.NotPublic
                     )
@@ -44,39 +44,39 @@
         }
 
 
-        public static List<Type> GetTypeAndBaseTypes(this Type target)
+        public static List<Type> GetTypeAndBaseTypes(this Type @this)
         {
             List<Type> r = new List<Type>();
-            if (target != null)
+            if (@this != null)
             {
-                r.Add(target);
-                r.AddRange(GetBaseTypes(target));
+                r.Add(@this);
+                r.AddRange(GetBaseTypes(@this));
             }
             return r;
         }
 
-        public static List<Type> GetBaseTypes(this Type target)
+        public static List<Type> GetBaseTypes(this Type @this)
         {
             List<Type> r = new List<Type>();
-            if (target != null)
+            if (@this != null)
             {
-                if (target.BaseType != null && target.BaseType != typeof(object))
+                if (@this.BaseType != null && @this.BaseType != typeof(object))
                 {
-                    r.Add(target.BaseType);
-                    r.AddRange(GetBaseTypes(target.BaseType));
+                    r.Add(@this.BaseType);
+                    r.AddRange(GetBaseTypes(@this.BaseType));
                 }
             }
             return r;
         }
 
-        public static List<MemberInfo> GetAllInterfaceMembers(this Type target)
+        public static List<MemberInfo> GetAllInterfaceMembers(this Type @this)
         {
-            if (!target.IsInterface)
+            if (!@this.IsInterface)
             {
-                throw new Exception("Expected interface, found: " + target);
+                throw new Exception("Expected interface, found: " + @this);
             }
             var pending = new Stack<Type>();
-            pending.Push(target);
+            pending.Push(@this);
             var r = new List<MemberInfo>();
             while (pending.Count > 0)
             {
@@ -101,11 +101,11 @@
 
         public static ConstructorInfo GetCtorByParameterInterfaceType
                                 (
-                                    this Type target
+                                    this Type @this
                                     , params Type[] ctorParaTypes
                                 )
         {
-            foreach (var ctor in target.GetConstructors())
+            foreach (var ctor in @this.GetConstructors())
             {
                 var ctorParas = ctor.GetParameters();
                 if (ctorParas.Length == ctorParaTypes.Length)
@@ -129,11 +129,11 @@
 
         public static ConstructorInfo GetDefaultNoArgCtorOrAppointTypeCtor
                                 (
-                                    this Type target
+                                    this Type @this
                                     , Type ctorParaTypes = null
                                 )
         {
-            foreach (var ctor in target.GetConstructors())
+            foreach (var ctor in @this.GetConstructors())
             {
                 var ctorParas = ctor.GetParameters();
                 if (ctorParas.Length == 0)
@@ -147,9 +147,9 @@
             return null;
         }
 
-        public static ConstructorInfo GetAppointTypeCtor(this Type target, Type ctorParaTypes)
+        public static ConstructorInfo GetAppointTypeCtor(this Type @this, Type ctorParaTypes)
         {
-            foreach (var ctor in target.GetConstructors())
+            foreach (var ctor in @this.GetConstructors())
             {
                 var ctorParas = ctor.GetParameters();
                 if (ctorParas.Length == 1 && ctorParas[0].ParameterType == ctorParaTypes)
@@ -160,11 +160,11 @@
             return null;
         }
 
-        public static bool HasEmptyCtor(this Type target)
+        public static bool HasEmptyCtor(this Type @this)
         {
-            if (target.IsInterface)
+            if (@this.IsInterface)
                 return false;
-            foreach (var ctor in target.GetConstructors())
+            foreach (var ctor in @this.GetConstructors())
             {
                 var ctorParas = ctor.GetParameters();
                 if (ctorParas.Length == 0)
@@ -173,18 +173,18 @@
             return false;
         }
 
-        public static bool IsWrongKey(this Type target)
+        public static bool IsWrongKey(this Type @this)
         {
-            if (!target.IsPrimitive && !target.IsEnum && target != typeof(string) && target != typeof(Guid) && target != typeof(DateTime))
+            if (!@this.IsPrimitive && !@this.IsEnum && @this != typeof(string) && @this != typeof(Guid) && @this != typeof(DateTime))
                 return true;
             return false;
         }
 
 
-        public static object GetDefaultValue(this Type target)
+        public static object GetDefaultValue(this Type @this)
         {
-            if (target.IsValueType)
-                return Activator.CreateInstance(target);
+            if (@this.IsValueType)
+                return Activator.CreateInstance(@this);
             return null;
         }
     }

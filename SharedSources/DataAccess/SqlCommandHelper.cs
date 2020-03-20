@@ -9,11 +9,11 @@ namespace Microshaoft
     {
         public static IEnumerable<TEntry> ExecuteRead<TEntry>
                 (
-                    this SqlCommand target
+                    this SqlCommand @this
                     , Func<int, IDataReader, TEntry> onReadProcessFunc
                 )
         {
-            SqlConnection sqlConnection = target.Connection;
+            SqlConnection sqlConnection = @this.Connection;
             if (sqlConnection.State == ConnectionState.Closed)
             {
                 sqlConnection.Open();
@@ -21,7 +21,7 @@ namespace Microshaoft
             //using
             //    (
             IDataReader dataReader
-                            = target
+                            = @this
                                     .ExecuteReader
                                             (
                                                 CommandBehavior.CloseConnection
@@ -40,7 +40,7 @@ namespace Microshaoft
 
         public static void ExecuteDataReader
                (
-                   this SqlCommand target
+                   this SqlCommand @this
                    , Func<int, IDataReader, bool> onReadProcessFunc
                )
         {
@@ -48,7 +48,7 @@ namespace Microshaoft
             SqlConnection sqlConnection = null;
             try
             {
-                sqlConnection = target.Connection;
+                sqlConnection = @this.Connection;
                 if (sqlConnection.State == ConnectionState.Closed)
                 {
                     sqlConnection.Open();
@@ -57,7 +57,7 @@ namespace Microshaoft
                 using
                     (
                         IDataReader dataReader
-                                        = target
+                                        = @this
                                                 .ExecuteReader
                                                         (
                                                             CommandBehavior.CloseConnection
@@ -89,7 +89,7 @@ namespace Microshaoft
         }
         public static void ExecuteDataReaderPager
                 (
-                    this SqlCommand target
+                    this SqlCommand @this
                     , int pageFetchRows
                     , string idColumnName
                     , Func<int, int, int, IDataReader, bool>
@@ -103,14 +103,14 @@ namespace Microshaoft
             var needBreak = false;
             var isLast = false;
             var id = 0L;
-            target.Parameters["@Top"].Value = pageFetchRows;
+            @this.Parameters["@Top"].Value = pageFetchRows;
             do
             {
                 //页码
                 page++;
-                var sqlConnection = target.Connection;
+                var sqlConnection = @this.Connection;
                 sqlConnection.Open();
-                using (IDataReader dataReader = target.ExecuteReader(CommandBehavior.CloseConnection))
+                using (IDataReader dataReader = @this.ExecuteReader(CommandBehavior.CloseConnection))
                 {
                     int ii = 0; //本页序号
                     while (dataReader.Read())
@@ -131,7 +131,7 @@ namespace Microshaoft
                 {
                     break;
                 }
-                var parameterIsLast = target.Parameters["@IsLast"];
+                var parameterIsLast = @this.Parameters["@IsLast"];
                 if
                     (
                         parameterIsLast.Value != null
@@ -139,7 +139,7 @@ namespace Microshaoft
                         parameterIsLast.Value != DBNull.Value
                     )
                 {
-                    target.Parameters["@LeftID"].Value = id;
+                    @this.Parameters["@LeftID"].Value = id;
                     isLast = (bool)parameterIsLast.Value;
                 }
                 else
@@ -153,7 +153,7 @@ namespace Microshaoft
 
         public static void ExecuteDataTablePager
         (
-            this SqlCommand target
+            this SqlCommand @this
             , int pageFetchRows
             , Func<int, DataTable, bool> onPageProcessFunc
         )
@@ -161,12 +161,12 @@ namespace Microshaoft
             SqlConnection connection = null;
             try
             {
-                connection = target.Connection;
-                var parameterOffsetRows = target.Parameters.Add("@OffsetRows", SqlDbType.Int);
-                var parameterFetchRows = target.Parameters.Add("@FetchRows", SqlDbType.Int);
-                var parameterTotalRows = target.Parameters.Add("@TotalRows", SqlDbType.Int);
+                connection = @this.Connection;
+                var parameterOffsetRows = @this.Parameters.Add("@OffsetRows", SqlDbType.Int);
+                var parameterFetchRows = @this.Parameters.Add("@FetchRows", SqlDbType.Int);
+                var parameterTotalRows = @this.Parameters.Add("@TotalRows", SqlDbType.Int);
                 parameterTotalRows.Direction = ParameterDirection.InputOutput;
-                var parameterIsLastPage = target.Parameters.Add("@IsLastPage", SqlDbType.Bit);
+                var parameterIsLastPage = @this.Parameters.Add("@IsLastPage", SqlDbType.Bit);
                 parameterIsLastPage.Direction = ParameterDirection.Output;
                 int p_OffsetRows = 0;
                 bool p_IsLast = false;
@@ -178,7 +178,7 @@ namespace Microshaoft
                 {
                     parameterOffsetRows.Value = p_OffsetRows;
                     parameterFetchRows.Value = pageFetchRows;
-                    using (var sqlDataAdapter = new SqlDataAdapter(target))
+                    using (var sqlDataAdapter = new SqlDataAdapter(@this))
                     {
                         using (var dataSet = new DataSet())
                         {

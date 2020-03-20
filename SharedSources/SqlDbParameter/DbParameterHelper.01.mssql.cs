@@ -8,17 +8,17 @@
     {
         public static object SetGetValueAsObject
                                     (
-                                        this SqlParameter target
+                                        this SqlParameter @this
                                         , JToken jValue 
                                     )
         {
             object @return = null;
             if
                 (
-                    target.SqlDbType == SqlDbType.Structured
+                    @this.SqlDbType == SqlDbType.Structured
                 )
             {
-                var parameterValue = target.Value;
+                var parameterValue = @this.Value;
                 if
                     (
                         parameterValue != DBNull.Value
@@ -109,32 +109,32 @@
                 var jValueText = jValue.ToString();
                 if
                     (
-                        target.SqlDbType == SqlDbType.VarChar
+                        @this.SqlDbType == SqlDbType.VarChar
                         ||
-                        target.SqlDbType == SqlDbType.NVarChar
+                        @this.SqlDbType == SqlDbType.NVarChar
                         ||
-                        target.SqlDbType == SqlDbType.Char
+                        @this.SqlDbType == SqlDbType.Char
                         ||
-                        target.SqlDbType == SqlDbType.NChar
+                        @this.SqlDbType == SqlDbType.NChar
                         ||
-                        target.SqlDbType == SqlDbType.Text
+                        @this.SqlDbType == SqlDbType.Text
                         ||
-                        target.SqlDbType == SqlDbType.NText
+                        @this.SqlDbType == SqlDbType.NText
                     )
                 {
                     @return = jValueText;
                 }
                 else if
                     (
-                        target.SqlDbType == SqlDbType.DateTime
+                        @this.SqlDbType == SqlDbType.DateTime
                         ||
-                        target.SqlDbType == SqlDbType.DateTime2
+                        @this.SqlDbType == SqlDbType.DateTime2
                         ||
-                        target.SqlDbType == SqlDbType.SmallDateTime
+                        @this.SqlDbType == SqlDbType.SmallDateTime
                         ||
-                        target.SqlDbType == SqlDbType.Date
+                        @this.SqlDbType == SqlDbType.Date
                         ||
-                        target.SqlDbType == SqlDbType.DateTime
+                        @this.SqlDbType == SqlDbType.DateTime
                     )
                 {
                     if
@@ -152,7 +152,7 @@
                 }
                 else if
                     (
-                        target.SqlDbType == SqlDbType.DateTimeOffset
+                        @this.SqlDbType == SqlDbType.DateTimeOffset
                     )
                 {
                     if
@@ -170,7 +170,7 @@
                 }
                 else if
                     (
-                        target.SqlDbType == SqlDbType.Bit
+                        @this.SqlDbType == SqlDbType.Bit
                     )
                 {
                     if
@@ -188,7 +188,7 @@
                 }
                 else if
                     (
-                        target.SqlDbType == SqlDbType.Decimal
+                        @this.SqlDbType == SqlDbType.Decimal
                     )
                 {
                     if
@@ -206,7 +206,7 @@
                 }
                 else if
                     (
-                        target.SqlDbType == SqlDbType.Float
+                        @this.SqlDbType == SqlDbType.Float
                     )
                 {
                     if
@@ -224,7 +224,7 @@
                 }
                 else if
                     (
-                        target.SqlDbType == SqlDbType.Real
+                        @this.SqlDbType == SqlDbType.Real
                     )
                 {
                     if
@@ -242,7 +242,7 @@
                 }
                 else if
                     (
-                        target.SqlDbType == SqlDbType.UniqueIdentifier
+                        @this.SqlDbType == SqlDbType.UniqueIdentifier
                     )
                 {
                     if
@@ -260,7 +260,7 @@
                 }
                 else if
                     (
-                        target.SqlDbType == SqlDbType.BigInt
+                        @this.SqlDbType == SqlDbType.BigInt
                     )
                 {
                     if
@@ -278,7 +278,7 @@
                 }
                 else if
                     (
-                        target.SqlDbType == SqlDbType.Int
+                        @this.SqlDbType == SqlDbType.Int
                     )
                 {
                     if
@@ -296,7 +296,7 @@
                 }
                 else if
                     (
-                        target.SqlDbType == SqlDbType.SmallInt
+                        @this.SqlDbType == SqlDbType.SmallInt
                     )
                 {
                     if
@@ -314,7 +314,7 @@
                 }
                 else if
                     (
-                        target.SqlDbType == SqlDbType.TinyInt
+                        @this.SqlDbType == SqlDbType.TinyInt
                     )
                 {
                     if

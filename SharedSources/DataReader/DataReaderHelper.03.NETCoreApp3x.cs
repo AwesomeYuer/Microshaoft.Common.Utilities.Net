@@ -20,10 +20,10 @@ namespace Microshaoft
                                 >
                                     AsOneResultIAsyncEnumerable
             (
-                    this DbDataReader target
+                    this DbDataReader @this
             )
         {
-            var entries = target
+            var entries = @this
                                 .AsOneResultIAsyncEnumerable<IDataRecord>
                                     (
                                         (rowIndex, columns, dataRecord) =>
@@ -54,10 +54,10 @@ namespace Microshaoft
                                 >
                                     AsMultipleResultsIAsyncEnumerable
             (
-                    this DbDataReader target
+                    this DbDataReader @this
             )
         {
-            var entries = target
+            var entries = @this
                                 .AsMultipleResultsIAsyncEnumerable<IDataRecord>
                                     (
                                         (resultSetIndex, rowIndex, columns, dataRecord) =>
@@ -100,7 +100,7 @@ namespace Microshaoft
                                 >
                                     AsOneResultIAsyncEnumerable<TEntry>
             (
-                    this DbDataReader target
+                    this DbDataReader @this
                     , Func
                         <
                             int
@@ -116,19 +116,19 @@ namespace Microshaoft
             while 
                 (
                     await
-                        target
+                        @this
                             .ReadAsync()
                 )
             {
                 TEntry entry = default;
                 if (jColumns == null)
                 {
-                    jColumns = target
+                    jColumns = @this
                                     .GetColumnsJArray();
                 }
                 if (onEntryFactoryProcessFunc != null)
                 {
-                    entry = onEntryFactoryProcessFunc(rowIndex, jColumns, target);
+                    entry = onEntryFactoryProcessFunc(rowIndex, jColumns, @this);
                 }
                 yield
                     return
@@ -147,7 +147,7 @@ namespace Microshaoft
                             >
                                 AsMultipleResultsIAsyncEnumerable<TEntry>
             (
-                    this DbDataReader target
+                    this DbDataReader @this
                     , Func
                             <
                                 int
@@ -162,7 +162,7 @@ namespace Microshaoft
             int resultSetIndex = 0;
             do
             {
-                var entries = target
+                var entries = @this
                                 .AsOneResultIAsyncEnumerable //<TEntry>
                                     (
                                         (rowIndex, columns, dataRecord) =>
@@ -208,7 +208,7 @@ namespace Microshaoft
             while
                 (
                     await
-                        target
+                        @this
                             .NextResultAsync()
                 );
         }

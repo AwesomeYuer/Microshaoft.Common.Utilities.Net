@@ -10,19 +10,19 @@
     {
         public static bool FreezeValueProperty
                                     (
-                                        this JObject target
+                                        this JObject @this
                                         , string propertyName
                                         , int afterChangedTimes = 0
                                     )
         {
             var r = false;
-            //var property = target[propertyName];
+            //var property = @this[propertyName];
             //if (property != null)
             //{
             //  if (property is JValue)
             //  {
             int changed = 0;
-            target
+            @this
                 .PropertyChanged +=
                             (
                                 (x, y) =>
@@ -33,7 +33,7 @@
                                     }
                                 }
                             );
-            target
+            @this
                 .PropertyChanging +=
                         (
                             (x, y) =>
@@ -151,7 +151,7 @@
         }
         public static void Travel
                                 (
-                                    this JObject target
+                                    this JObject @this
                                     , Action<JObject, string, string, JObject, JProperty>
                                             onTraveledJValuePropertyProcessAction = null
                                     , Action<JObject, string, string, JObject>
@@ -160,17 +160,17 @@
         {
             Travel
                 (
-                    target
+                    @this
                     , string.Empty
                     , string.Empty
-                    , target
+                    , @this
                     , onTraveledJValuePropertyProcessAction
                     , onTraveledJObjectPropertyProcessAction
                 );
         }
         public static void SetPropertyValue
                             (
-                                this JObject target
+                                this JObject @this
                                 , string path
                                 , JValue value
                                 , Action
@@ -181,20 +181,20 @@
                             )
         {
             var a = path.Split('.');
-            JToken jToken = target[a[0]];
+            JToken jToken = @this[a[0]];
             for (var i = 1; i < a.Length - 1; i++)
             {
                 jToken = jToken[a[i]];
             }
 
             JObject j = jToken as JObject;
-            j[a[a.Length - 1]] = value;
+            j[a[^1]] = value;
 
-            onPropertyChangedProcessAction?.Invoke(target);
+            onPropertyChangedProcessAction?.Invoke(@this);
         }
         public static void Observe
                                 (
-                                    this JObject target
+                                    this JObject @this
                                     , Action
                                         <
                                             JObject
@@ -208,19 +208,19 @@
                                 )
         {
 
-            //target.Annotation<Action<string>>().
+            //@this.Annotation<Action<string>>().
             // HashSet --> Dictionary
-            target
+            @this
                 .AddAnnotation
                     (
                         new Dictionary<string, JObject>()
                     );
-            target
+            @this
                 .PropertyChanged +=
                     (
                         (sender, args) =>
                         {
-                            if (!target.Annotation<Dictionary<string, JObject>>().ContainsKey(args.PropertyName))
+                            if (!@this.Annotation<Dictionary<string, JObject>>().ContainsKey(args.PropertyName))
                             {
                                 JObject jDelegate = new JObject
                                 (
@@ -246,7 +246,7 @@
                                                     )
                                             )
                                 );
-                                target
+                                @this
                                     .Annotation
                                         <
                                             Dictionary<string, JObject>
@@ -263,7 +263,7 @@
 
             Travel
                 (
-                    target
+                    @this
                     , null
                     , (root, path, paropertyName, current) =>
                     {

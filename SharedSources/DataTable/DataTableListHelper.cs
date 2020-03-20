@@ -9,12 +9,12 @@ namespace Microshaoft
 #if !NETCOREAPP2_X || NETFRAMEWORK
         public static DataRow[] FullTextSearch
                                     (
-                                        this DataTable target
+                                        this DataTable @this
                                         , string[] keyWords
                                     )
         {
             return
-                target
+                @this
                     .AsEnumerable()
                     .Where<DataRow>
                         (
@@ -49,7 +49,7 @@ namespace Microshaoft
                         ).ToArray();
         }
 #endif
-        public static DataTable ToDataTable<TEntry>(this IEnumerable<TEntry> target, bool needDefinitionAttributeProcess = false)
+        public static DataTable ToDataTable<TEntry>(this IEnumerable<TEntry> @this, bool needDefinitionAttributeProcess = false)
         {
             var type = typeof(TEntry);
             var accessors = TypeHelper.GenerateTypeKeyedCachedMembersAccessors(type, needDefinitionAttributeProcess);
@@ -59,7 +59,7 @@ namespace Microshaoft
             var dataColumns = dataTable.Columns;
             if (dataTable != null)
             {
-                foreach (var entry in target)
+                foreach (var entry in @this)
                 {
                     var row = dataTable.NewRow();
                     foreach (DataColumn dataColumn in dataColumns)
@@ -93,11 +93,11 @@ namespace Microshaoft
             }
             return dataTable;
         }
-        public static List<TEntry> ToList<TEntry>(this DataTable target)
+        public static List<TEntry> ToList<TEntry>(this DataTable @this)
                                             where TEntry : new()
         {
             var type = typeof(TEntry);
-            var columns = target.Columns;
+            var columns = @this.Columns;
             var actions = new Dictionary<string, Action<object, object>>();
             foreach (DataColumn c in columns)
             {
@@ -111,7 +111,7 @@ namespace Microshaoft
                 actions[columnName] = action;
             }
             List<TEntry> list = null;
-            var rows = target.Rows;
+            var rows = @this.Rows;
             foreach (DataRow r in rows)
             {
                 var entry = new TEntry();

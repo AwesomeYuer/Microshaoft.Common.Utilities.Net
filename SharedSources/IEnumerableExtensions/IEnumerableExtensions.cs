@@ -10,14 +10,14 @@ namespace Microshaoft
     public static class IEnumerableExtensions
     {
         public static IEnumerable<ExpandoObject> ShapeData<TSource>
-            (this IEnumerable<TSource> source, string fields)
+            (this IEnumerable<TSource> @this, string fields)
         {
-            if (source == null)
+            if (@this == null)
             {
-                throw new ArgumentNullException(nameof(source));
+                throw new ArgumentNullException(nameof(@this));
             }
 
-            var expandoObjectList = new List<ExpandoObject>(source.Count());
+            var expandoObjectList = new List<ExpandoObject>(@this.Count());
 
             var propertyInfoList = new List<PropertyInfo>();
 
@@ -45,7 +45,7 @@ namespace Microshaoft
                 }
             }
 
-            foreach (TSource obj in source)
+            foreach (TSource obj in @this)
             {
                 var shapedObj = new ExpandoObject();
 

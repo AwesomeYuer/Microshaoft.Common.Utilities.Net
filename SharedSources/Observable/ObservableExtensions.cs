@@ -11,7 +11,7 @@ namespace Microshaoft
     {
         public static ChannelReader<T> AsChannelReader<T>
                             (
-                                this IObservable<T> observable
+                                this IObservable<T> @this
                                 , CancellationToken connectionAborted
                                 , int? maxBufferSize = null
                             )
@@ -34,7 +34,7 @@ namespace Microshaoft
                             Channel.CreateUnbounded<T>()
                         );
 
-            var disposable = observable
+            var disposable = @this
                                     .Subscribe
                                         (
                                             (value) =>

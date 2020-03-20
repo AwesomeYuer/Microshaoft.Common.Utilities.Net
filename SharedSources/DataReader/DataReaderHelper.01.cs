@@ -11,41 +11,41 @@ namespace Microshaoft
     {
         public static IEnumerable<T> ExecuteRead<T>
                         (
-                            this IDataReader target
+                            this IDataReader @this
                             , Func<int, IDataReader, T> onReadProcessFunc
                         )
         {
             try
             {
                 int i = 0;
-                while (target.Read())
+                while (@this.Read())
                 {
                     if (onReadProcessFunc != null)
                     {
                         yield
                             return
-                                onReadProcessFunc(++i, target);
+                                onReadProcessFunc(++i, @this);
                     }
                 }
             }
             finally
             {
                 //可能有错 由于 yield 延迟
-                target.Close();
-                target.Dispose();
+                @this.Close();
+                @this.Dispose();
             }
         }
         public static IEnumerable<TEntry> GetEnumerable<TEntry>
                 (
-                    this IDataReader target
+                    this IDataReader @this
                     , Func<IDataReader, TEntry> onReadProcessFunc
                     , bool skipNull = true
                 )
                     where TEntry : new()
         {
-            while (target.Read())
+            while (@this.Read())
             {
-                var x = onReadProcessFunc(target);
+                var x = onReadProcessFunc(@this);
                 if (!skipNull)
                 {
                     yield
@@ -65,10 +65,10 @@ namespace Microshaoft
         }
         public static JArray GetColumnsJArray
                      (
-                        this IDataReader target
+                        this IDataReader @this
                      )
         {
-            var fieldsCount = target.FieldCount;
+            var fieldsCount = @this.FieldCount;
             HashSet<string> hashSet = null;
             JArray r = null;
             for (var i = 0; i < fieldsCount; i++)
@@ -78,8 +78,8 @@ namespace Microshaoft
                     r = new JArray();
                     hashSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
                 }
-                var fieldType = target.GetFieldType(i);
-                var fieldName = target.GetName(i);
+                var fieldType = @this.GetFieldType(i);
+                var fieldName = @this.GetName(i);
                 if (fieldName.IsNullOrEmptyOrWhiteSpace())
                 {
                     fieldName = $"Column-{i + 1}";
@@ -131,7 +131,7 @@ namespace Microshaoft
         }
         public static void ReadRows
                              (
-                                 this IDataReader target
+                                 this IDataReader @this
                                  , JArray columns = null
                                  , Action
                                         <
@@ -142,7 +142,7 @@ namespace Microshaoft
                                             onReadRowProcessAction = null
                              )
         {
-            var dbDataReader = (DbDataReader) target;
+            var dbDataReader = (DbDataReader) @this;
             ReadRows
                 (
                     dbDataReader
@@ -153,7 +153,7 @@ namespace Microshaoft
 
         public static void ReadRows
                              (
-                                 this DbDataReader target
+                                 this DbDataReader @this
                                  , JArray columns = null
                                  , Action
                                         <
@@ -164,18 +164,18 @@ namespace Microshaoft
                                             onReadRowProcessAction = null
                              )
         {
-            //var fieldsCount = target.FieldCount;
+            //var fieldsCount = @this.FieldCount;
             int rowIndex = 0;
             if (columns == null)
             {
-                columns = target.GetColumnsJArray();
+                columns = @this.GetColumnsJArray();
             }
-            while (target.Read())
+            while (@this.Read())
             {
                 onReadRowProcessAction?
                             .Invoke
                                 (
-                                    target
+                                    @this
                                     , columns
                                     , rowIndex
                                 );
@@ -185,7 +185,7 @@ namespace Microshaoft
 
         public static async Task ReadRowsAsync
                              (
-                                 this DbDataReader target
+                                 this DbDataReader @this
                                  , JArray columns = null
                                  , Func
                                         <
@@ -200,11 +200,11 @@ namespace Microshaoft
             int rowIndex = 0;
             if (columns == null)
             {
-                columns = target.GetColumnsJArray();
+                columns = @this.GetColumnsJArray();
             }
             while
                 (
-                    await target.ReadAsync()
+                    await @this.ReadAsync()
                 )
             {
                 if (onReadRowProcessActionAsync != null)
@@ -212,7 +212,7 @@ namespace Microshaoft
                     await
                         onReadRowProcessActionAsync
                                 (
-                                    target
+                                    @this
                                     , columns
                                     , rowIndex
                                 );
@@ -223,7 +223,7 @@ namespace Microshaoft
 
         public static IEnumerable<JToken> AsRowsJTokensEnumerable
                              (
-                                 this IDataReader target
+                                 this IDataReader @this
                                  , JArray columns = null
                                  , Func
                                         <
@@ -242,7 +242,7 @@ namespace Microshaoft
                                             onReadRowColumnProcessFunc = null
                              )
         {
-            var dbDataReader = (DbDataReader) target;
+            var dbDataReader = (DbDataReader) @this;
             return
                 AsRowsJTokensEnumerable
                     (
@@ -253,7 +253,7 @@ namespace Microshaoft
         }
         public static IEnumerable<JToken> AsRowsJTokensEnumerable
                              (
-                                 this DbDataReader target
+                                 this DbDataReader @this
                                  , JArray columns = null
                                  , Func
                                         <
@@ -272,14 +272,14 @@ namespace Microshaoft
                                             onReadRowColumnProcessFunc = null
                              )
         {
-            var fieldsCount = target.FieldCount;
+            var fieldsCount = @this.FieldCount;
             int rowIndex = 0;
-            while (target.Read())
+            while (@this.Read())
             {
                 JObject row = new JObject();
                 for (var fieldIndex = 0; fieldIndex < fieldsCount; fieldIndex++)
                 {
-                    var fieldType = target.GetFieldType(fieldIndex);
+                    var fieldType = @this.GetFieldType(fieldIndex);
                     var fieldName = string.Empty;
                     if (columns != null)
                     {
@@ -287,7 +287,7 @@ namespace Microshaoft
                     }
                     else
                     {
-                        target.GetName(fieldIndex);
+                        @this.GetName(fieldIndex);
                         if (fieldName.IsNullOrEmptyOrWhiteSpace())
                         {
                             fieldName = $"Column-{fieldIndex + 1}";
@@ -299,7 +299,7 @@ namespace Microshaoft
                     {
                         var r = onReadRowColumnProcessFunc
                                     (
-                                        target
+                                        @this
                                         , rowIndex
                                         , fieldIndex
                                         , fieldType
@@ -315,7 +315,7 @@ namespace Microshaoft
                     {
                         field = GetFieldJProperty
                                     (
-                                        target
+                                        @this
                                         , fieldIndex
                                         , fieldType
                                         , fieldName
@@ -335,102 +335,102 @@ namespace Microshaoft
 
         public static JProperty GetFieldJProperty
                             (
-                                this IDataReader target
+                                this IDataReader @this
                                 , int i
                                 , Type fieldType
                                 , string fieldName
                             )
         {
             JValue fieldValue = null;
-            if (!target.IsDBNull(i))
+            if (!@this.IsDBNull(i))
             {
                 if
                     (
                         fieldType == typeof(bool)
                     )
                 {
-                    fieldValue = new JValue(target.GetBoolean(i));
+                    fieldValue = new JValue(@this.GetBoolean(i));
                 }
                 else if
                     (
                         fieldType == typeof(byte)
                     )
                 {
-                    fieldValue = new JValue(target.GetByte(i));
+                    fieldValue = new JValue(@this.GetByte(i));
                 }
                 else if
                     (
                         fieldType == typeof(char)
                     )
                 {
-                    fieldValue = new JValue(target.GetChar(i));
+                    fieldValue = new JValue(@this.GetChar(i));
                 }
                 else if
                     (
                         fieldType == typeof(DateTime)
                     )
                 {
-                    fieldValue = new JValue(target.GetDateTime(i));
+                    fieldValue = new JValue(@this.GetDateTime(i));
                 }
                 else if
                     (
                         fieldType == typeof(decimal)
                     )
                 {
-                    fieldValue = new JValue(target.GetDecimal(i));
+                    fieldValue = new JValue(@this.GetDecimal(i));
                 }
                 else if
                     (
                         fieldType == typeof(double)
                     )
                 {
-                    fieldValue = new JValue(target.GetDouble(i));
+                    fieldValue = new JValue(@this.GetDouble(i));
                 }
                 else if
                     (
                         fieldType == typeof(float)
                     )
                 {
-                    fieldValue = new JValue(target.GetFloat(i));
+                    fieldValue = new JValue(@this.GetFloat(i));
                 }
                 else if
                     (
                         fieldType == typeof(Guid)
                     )
                 {
-                    fieldValue = new JValue(target.GetGuid(i));
+                    fieldValue = new JValue(@this.GetGuid(i));
                 }
                 else if
                     (
                         fieldType == typeof(short)
                     )
                 {
-                    fieldValue = new JValue(target.GetInt16(i));
+                    fieldValue = new JValue(@this.GetInt16(i));
                 }
                 else if
                     (
                         fieldType == typeof(int)
                     )
                 {
-                    fieldValue = new JValue(target.GetInt32(i));
+                    fieldValue = new JValue(@this.GetInt32(i));
                 }
                 else if
                     (
                         fieldType == typeof(long)
                     )
                 {
-                    fieldValue = new JValue(target.GetInt64(i));
+                    fieldValue = new JValue(@this.GetInt64(i));
                 }
                 else if
                     (
                         fieldType == typeof(string)
                     )
                 {
-                    fieldValue = new JValue(target.GetString(i));
+                    fieldValue = new JValue(@this.GetString(i));
                 }
                 else
                 {
-                    fieldValue = new JValue(target[i]);
+                    fieldValue = new JValue(@this[i]);
                 }
             }
             var r = new JProperty(fieldName, fieldValue);

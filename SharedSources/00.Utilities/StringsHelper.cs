@@ -5,19 +5,19 @@
     using System.Text;
     public static class StringHelper
     {
-        public static string RemoveStarts(this string target, string remove)
+        public static string RemoveStarts(this string @this, string remove)
         {
-            var r = target;
-            if (target.StartsWith(remove, StringComparison.OrdinalIgnoreCase))
+            var r = @this;
+            if (@this.StartsWith(remove, StringComparison.OrdinalIgnoreCase))
             {
-                var l = target.Length;
+                var l = @this.Length;
                 var ll = remove.Length;
-                r = target.Substring(l - ll);
+                r = @this.Substring(l - ll);
             }
             return
                 r;
         }
-        public static IEnumerable<string> SplitToCharacters(this string target)
+        public static IEnumerable<string> SplitToCharacters(this string @this)
         {
             //原来有一个"零宽度连接符"(Zero - width joiner / ZWJ)的概念，
             //值为0x200D。如果发现char为该值，则说明它是一个零宽度连接符，
@@ -25,10 +25,10 @@
             /*
              * https://www.cnblogs.com/sdflysha/archive/2019/10/28/20191026-split-string-to-character-list.html
              */
-            var l = target.Length;
+            var l = @this.Length;
             for (var i = 0; i < l; ++i)
             {
-                if (char.IsHighSurrogate(target[i]))
+                if (char.IsHighSurrogate(@this[i]))
                 {
                     int length = 0;
                     while (true)
@@ -36,9 +36,9 @@
                         length += 2;
                         if 
                             (
-                                i + length < target.Length
+                                i + length < @this.Length
                                 &&
-                                target[i + length] == 0x200D
+                                @this[i + length] == 0x200D
                             )
                         {
                             length += 1;
@@ -50,7 +50,7 @@
                     }
                     yield
                         return
-                            target
+                            @this
                                 .Substring
                                     (
                                         i
@@ -62,7 +62,7 @@
                 {
                     yield
                         return
-                            target[i]
+                            @this[i]
                                 .ToString();
                 }
             }
@@ -72,41 +72,41 @@
         /// <summary>
         /// Returns first non whitespace character
         /// </summary>
-        /// <param name="target">Text to search in</param>
+        /// <param name="@this">Text to search in</param>
         /// <returns>Non whitespace or default char</returns>
-        public static char FirstNonWhitespaceCharacter(this string target)
+        public static char FirstNonWhitespaceCharacter(this string @this)
         {
-            if (string.IsNullOrWhiteSpace(target))
+            if (string.IsNullOrWhiteSpace(@this))
             {
                 return '\0';
             }
-            for (int i = 0; i < target.Length; i++)
+            for (int i = 0; i < @this.Length; i++)
             {
-                if (!char.IsWhiteSpace(target[i]))
+                if (!char.IsWhiteSpace(@this[i]))
                 {
-                    return target[i];
+                    return @this[i];
                 }
             }
             return '\0';
         }
         public static int FindIndex
                                 (
-                                    this string target
+                                    this string @this
                                     , string search
                                     , int hits
                                     , bool ignoreCase = true
                                 )
         {
             int p = 0;
-            var s = target;
+            var s = @this;
             var ss = search;
             if (ignoreCase)
             {
-                s = target.ToUpper();
+                s = @this.ToUpper();
                 ss = search.ToUpper();
             }
             var i = 0;
-            var l = target.Length;
+            var l = @this.Length;
             var ll = search.Length;
             do
             {
@@ -127,12 +127,12 @@
                 );
             return p;
         }
-        public static bool IsNullOrEmptyOrWhiteSpace(this string target)
+        public static bool IsNullOrEmptyOrWhiteSpace(this string @this)
         {
             return 
-                    string.IsNullOrEmpty(target)
+                    string.IsNullOrEmpty(@this)
                     ||
-                    string.IsNullOrWhiteSpace(target);
+                    string.IsNullOrWhiteSpace(@this);
         }
         public static bool IsValidString(string text)
         {

@@ -12,17 +12,17 @@ namespace Microshaoft
     {
         public static ContainerConfiguration WithAssembliesByPath
                         (
-                            this ContainerConfiguration configuration
+                            this ContainerConfiguration @this
                             , string path
                             , string searchPattern = "*.dll"
                             , SearchOption searchOption = SearchOption.TopDirectoryOnly
                         )
         {
-            return WithAssembliesByPath(configuration, path, searchPattern, searchOption);
+            return WithAssembliesByPath(@this, path, searchPattern, searchOption);
         }
         public static ContainerConfiguration WithAssembliesByPath
             (
-                this ContainerConfiguration configuration
+                this ContainerConfiguration @this
                 , string path
                 , AttributedModelProvider conventions
                 , string searchPattern = "*.dll"
@@ -57,13 +57,13 @@ namespace Microshaoft
                             )
                         .ToList();
 
-            configuration = configuration
-                                .WithAssemblies
-                                    (
-                                        assemblies
-                                        , conventions
-                                    );
-            return configuration;
+            @this = @this
+                        .WithAssemblies
+                            (
+                                assemblies
+                                , conventions
+                            );
+            return @this;
         }
     }
     public static class CompositionHelper

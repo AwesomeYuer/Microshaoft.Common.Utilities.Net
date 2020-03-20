@@ -8,16 +8,16 @@
     {
         public static object SetGetValueAsObject
                                     (
-                                        this DbParameter target
+                                        this DbParameter @this
                                         , JToken jValue
                                     )
         {
-            var type = target
+            var type = @this
                             .GetType();
             return
                 SetGetValueAsObject
                     (
-                        target
+                        @this
                         , type
                         , jValue
                     );

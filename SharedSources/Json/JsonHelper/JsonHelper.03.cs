@@ -8,25 +8,30 @@ namespace Microshaoft
     public static partial class JsonHelper
     {
       
-        public static JObject GetObject(this JToken target)
+        public static JObject GetObject(this JToken @this)
         {
-            if (target == null || target.Type != JTokenType.Object)
+            if 
+                (
+                    @this == null
+                    ||
+                    @this.Type != JTokenType.Object
+                )
             {
-                throw new InvalidDataException($"Unexpected JSON Token Type '{target?.Type}'. Expected a JSON Object.");
+                throw new InvalidDataException($"Unexpected JSON Token Type '{@this?.Type}'. Expected a JSON Object.");
             }
 
-            return (JObject) target;
+            return (JObject) @this;
         }
 
         public static T GetOptionalProperty<T>
                     (
-                        this JObject target
+                        this JObject @this
                         , string propertyName
                         , JTokenType expectedType = JTokenType.None
                         , T defaultValue = default
                     )
         {
-            var property = target[propertyName];
+            var property = @this[propertyName];
 
             if (property == null)
             {
@@ -44,12 +49,12 @@ namespace Microshaoft
 
         public static T GetRequiredProperty<T>
                         (
-                            this JObject target
+                            this JObject @this
                             , string propertyName
                             , JTokenType expectedType = JTokenType.None
                         )
         {
-            var prop = target[propertyName];
+            var prop = @this[propertyName];
 
             if (prop == null)
             {
@@ -67,7 +72,7 @@ namespace Microshaoft
 
         public static T GetValue<T>
                                 (
-                                    this JToken target
+                                    this JToken @this
                                     , string propertyName
                                     , JTokenType expectedType
                                 )
@@ -76,12 +81,12 @@ namespace Microshaoft
                 (
                     expectedType != JTokenType.None
                     &&
-                    target.Type != expectedType
+                    @this.Type != expectedType
                 )
             {
                 throw new InvalidDataException($"Expected '{propertyName}' to be of type {expectedType}.");
             }
-            return target.Value<T>();
+            return @this.Value<T>();
         }
     }
 }
