@@ -12,24 +12,24 @@
         public const int TimeSpanTicksPerSecond = 10000000;
         private static readonly double _timestampToTicks = TimeSpan.TicksPerSecond / (double)Stopwatch.Frequency;
 
-        public static long PerformanceCounterTicks(this TimeSpan target)
+        public static long PerformanceCounterTicks(this TimeSpan @this)
         {
-            return target.Ticks * Stopwatch.Frequency / TimeSpanTicksPerSecond;
+            return @this.Ticks * Stopwatch.Frequency / TimeSpanTicksPerSecond;
         }
 
-        public static double ToWellFormatSeconds(this TimeSpan target)
+        public static double ToWellFormatSeconds(this TimeSpan @this)
         {
-            return Math.Round(target.TotalMilliseconds / 1000, 7, MidpointRounding.ToEven);
+            return Math.Round(@this.TotalMilliseconds / 1000, 7, MidpointRounding.ToEven);
         }
-        public static TimeSpan GetElapsedTimeToNow(this long target)
+        public static TimeSpan GetElapsedTimeToNow(this long @this)
         {
             var endTimestamp = Stopwatch.GetTimestamp();
             return
-                GetElapsedTime(target, endTimestamp);
+                GetElapsedTime(@this, endTimestamp);
         }
-        public static TimeSpan GetElapsedTime(this long target, long endTimestamp)
+        public static TimeSpan GetElapsedTime(this long @this, long endTimestamp)
         {
-            var timestampDelta = endTimestamp - target;
+            var timestampDelta = endTimestamp - @this;
             var ticks = (long) (_timestampToTicks * timestampDelta);
             return new TimeSpan(ticks);
         }
@@ -53,117 +53,117 @@
         /// </summary>
         public const string TimeIso8601Format = @"o";
 
-        public static string ToFormatString(this DateTime? target)
+        public static string ToFormatString(this DateTime? @this)
         {
-            return target.HasValue ? target.Value.ToFormatString() : string.Empty;
+            return @this.HasValue ? @this.Value.ToFormatString() : string.Empty;
         }
 
-        public static string ToFormatShortString(this DateTime? target)
+        public static string ToFormatShortString(this DateTime? @this)
         {
-            return target.HasValue ? target.Value.ToFormatShortString() : string.Empty;
+            return @this.HasValue ? @this.Value.ToFormatShortString() : string.Empty;
         }
 
-        public static string ToFormatString(this DateTime target)
+        public static string ToFormatString(this DateTime @this)
         {
-            return target.ToString(TimeLongFormat, CultureInfo.InvariantCulture);
+            return @this.ToString(TimeLongFormat, CultureInfo.InvariantCulture);
         }
 
-        public static string ToFormatShortString(this DateTime target)
+        public static string ToFormatShortString(this DateTime @this)
         {
-            return target.ToString(TimeShortFormat, CultureInfo.InvariantCulture);
+            return @this.ToString(TimeShortFormat, CultureInfo.InvariantCulture);
         }
 
-        public static string ToIso8601FormatString(this DateTimeOffset? target)
+        public static string ToIso8601FormatString(this DateTimeOffset? @this)
         {
-            return target.HasValue ? target.Value.ToIso8601FormatString() : string.Empty;
+            return @this.HasValue ? @this.Value.ToIso8601FormatString() : string.Empty;
         }
 
-        public static string ToIso8601FormatString(this DateTimeOffset target)
+        public static string ToIso8601FormatString(this DateTimeOffset @this)
         {
-            return target.ToString(TimeIso8601Format, CultureInfo.InvariantCulture);
+            return @this.ToString(TimeIso8601Format, CultureInfo.InvariantCulture);
         }
 
-        public static long TotalSecondsSinceEpoch(this DateTime target)
+        public static long TotalSecondsSinceEpoch(this DateTime @this)
         {
-            return target < TimeUtcEpoch ? 0 : (long)(target - TimeUtcEpoch).TotalSeconds;
+            return @this < TimeUtcEpoch ? 0 : (long)(@this - TimeUtcEpoch).TotalSeconds;
         }
 
-        public static long TotalMillisecondsSinceEpoch(this DateTime target)
+        public static long TotalMillisecondsSinceEpoch(this DateTime @this)
         {
-            return target < TimeUtcEpoch ? 0 : (long)(target - TimeUtcEpoch).TotalMilliseconds;
+            return @this < TimeUtcEpoch ? 0 : (long)(@this - TimeUtcEpoch).TotalMilliseconds;
         }
 
-        public static long TotalTicksSinceEpoch(this DateTime target)
+        public static long TotalTicksSinceEpoch(this DateTime @this)
         {
-            return target < TimeUtcEpoch ? 0 : (target - TimeUtcEpoch).Ticks;
+            return @this < TimeUtcEpoch ? 0 : (@this - TimeUtcEpoch).Ticks;
         }
 
-        public static long TotalSecondsSinceEpoch(this DateTimeOffset target)
+        public static long TotalSecondsSinceEpoch(this DateTimeOffset @this)
         {
-            if (target < TimeUtcEpoch)
+            if (@this < TimeUtcEpoch)
             {
                 return 0;
             }
-            return (long)(target - TimeUtcEpoch).TotalSeconds;
+            return (long)(@this - TimeUtcEpoch).TotalSeconds;
         }
 
-        public static long TotalMillisecondsSinceEpoch(this DateTimeOffset target)
+        public static long TotalMillisecondsSinceEpoch(this DateTimeOffset @this)
         {
-            if (target < TimeUtcEpoch)
+            if (@this < TimeUtcEpoch)
             {
                 return 0;
             }
-            return (long)(target - TimeUtcEpoch).TotalMilliseconds;
+            return (long)(@this - TimeUtcEpoch).TotalMilliseconds;
         }
 
-        public static long TotalTicksSinceEpoch(this DateTimeOffset target)
+        public static long TotalTicksSinceEpoch(this DateTimeOffset @this)
         {
-            if (target < TimeUtcEpoch)
+            if (@this < TimeUtcEpoch)
             {
                 return 0;
             }
 
-            return (target - TimeUtcEpoch).Ticks;
+            return (@this - TimeUtcEpoch).Ticks;
         }
 
-        public static DateTime Truncate(this DateTime target, TimeSpan timeSpan)
+        public static DateTime Truncate(this DateTime @this, TimeSpan timeSpan)
         {
             if (timeSpan == TimeSpan.Zero)
             {
-                return target;
+                return @this;
             }
 
-            return target.AddTicks(-(target.Ticks % timeSpan.Ticks));
+            return @this.AddTicks(-(@this.Ticks % timeSpan.Ticks));
         }
 
-        public static DateTimeOffset Truncate(this DateTimeOffset target, TimeSpan timeSpan)
+        public static DateTimeOffset Truncate(this DateTimeOffset @this, TimeSpan timeSpan)
         {
             if (timeSpan == TimeSpan.Zero)
             {
-                return target;
+                return @this;
             }
 
-            return target.AddTicks(-(target.Ticks % timeSpan.Ticks));
+            return @this.AddTicks(-(@this.Ticks % timeSpan.Ticks));
         }
 
-        public static DateTime TruncateToWholeMilliseconds(this DateTime target)
+        public static DateTime TruncateToWholeMilliseconds(this DateTime @this)
         {
-            return target.Truncate(TimeSpan.FromMilliseconds(1));
+            return @this.Truncate(TimeSpan.FromMilliseconds(1));
         }
 
-        public static DateTimeOffset TruncateToWholeMilliseconds(this DateTimeOffset target)
+        public static DateTimeOffset TruncateToWholeMilliseconds(this DateTimeOffset @this)
         {
-            return target.Truncate(TimeSpan.FromMilliseconds(1));
+            return @this.Truncate(TimeSpan.FromMilliseconds(1));
         }
 
-        public static DateTime TruncateToWholeSeconds(this DateTime target)
+        public static DateTime TruncateToWholeSeconds(this DateTime @this)
         {
-            return target.Truncate(TimeSpan.FromSeconds(1));
+            return @this.Truncate(TimeSpan.FromSeconds(1));
         }
 
-        public static DateTimeOffset TruncateToWholeSeconds(this DateTimeOffset target)
+        public static DateTimeOffset TruncateToWholeSeconds(this DateTimeOffset @this)
         {
-            return target.Truncate(TimeSpan.FromSeconds(1));
+            return @this.Truncate(TimeSpan.FromSeconds(1));
         }
 
         public static bool Within(this DayOfWeek dayOfWeek, List<DayOfWeek> daysOfWeek)
@@ -188,85 +188,85 @@
 
         #region DateTimeOffset Extensions
 
-        public static DateTimeOffset ConvertTime(this DateTimeOffset target, TimeZoneInfo timeZone)
+        public static DateTimeOffset ConvertTime(this DateTimeOffset @this, TimeZoneInfo timeZone)
         {
-            return TimeZoneInfo.ConvertTime(target, timeZone);
+            return TimeZoneInfo.ConvertTime(@this, timeZone);
         }
 
-        public static bool IsWeekendDay(this DateTimeOffset target)
+        public static bool IsWeekendDay(this DateTimeOffset @this)
         {
-            return target.DayOfWeek == DayOfWeek.Saturday || target.DayOfWeek == DayOfWeek.Sunday;
+            return @this.DayOfWeek == DayOfWeek.Saturday || @this.DayOfWeek == DayOfWeek.Sunday;
         }
 
-        public static bool IsWeekday(this DateTimeOffset target)
+        public static bool IsWeekday(this DateTimeOffset @this)
         {
-            return !IsWeekendDay(target);
+            return !IsWeekendDay(@this);
         }
 
-        public static bool IsFirstDayOfWeek(this DateTimeOffset target, DayOfWeek firstDayOfWeek)
+        public static bool IsFirstDayOfWeek(this DateTimeOffset @this, DayOfWeek firstDayOfWeek)
         {
-            return target.DayOfWeek == firstDayOfWeek;
+            return @this.DayOfWeek == firstDayOfWeek;
         }
 
-        public static bool IsLastDayOfWeek(this DateTimeOffset target, DayOfWeek firstDayOfWeek)
+        public static bool IsLastDayOfWeek(this DateTimeOffset @this, DayOfWeek firstDayOfWeek)
         {
-            return target.DayOfWeek == LastDayOfWeek(firstDayOfWeek);
+            return @this.DayOfWeek == LastDayOfWeek(firstDayOfWeek);
         }
 
-        public static DateTimeOffset GetFirstDayOfWeek(this DateTimeOffset target, DayOfWeek firstDayOfWeek)
+        public static DateTimeOffset GetFirstDayOfWeek(this DateTimeOffset @this, DayOfWeek firstDayOfWeek)
         {
-            int delta = firstDayOfWeek - target.DayOfWeek;
+            int delta = firstDayOfWeek - @this.DayOfWeek;
             if (delta > 0)
             {
                 delta -= 7;
             }
 
-            return target.AddDays(delta);
+            return @this.AddDays(delta);
         }
 
-        public static DateTimeOffset GetLastDayOfWeek(this DateTimeOffset target, DayOfWeek firstDayOfWeek)
+        public static DateTimeOffset GetLastDayOfWeek(this DateTimeOffset @this, DayOfWeek firstDayOfWeek)
         {
-            return target.GetFirstDayOfWeek(firstDayOfWeek).AddDays(7);
+            return @this.GetFirstDayOfWeek(firstDayOfWeek).AddDays(7);
         }
 
-        public static DateTimeOffset GetFirstDayOfMonth(this DateTimeOffset target)
+        public static DateTimeOffset GetFirstDayOfMonth(this DateTimeOffset @this)
         {
-            return target.AddDays((-1 * target.Day) + 1);
+            return @this.AddDays((-1 * @this.Day) + 1);
         }
 
-        public static DateTimeOffset GetSecondDayOfMonth(this DateTimeOffset target)
+        public static DateTimeOffset GetSecondDayOfMonth(this DateTimeOffset @this)
         {
-            return target.GetFirstDayOfMonth().AddDays(1);
+            return @this.GetFirstDayOfMonth().AddDays(1);
         }
 
-        public static DateTimeOffset GetThirdDayOfMonth(this DateTimeOffset target)
+        public static DateTimeOffset GetThirdDayOfMonth(this DateTimeOffset @this)
         {
-            return target.GetFirstDayOfMonth().AddDays(2);
+            return @this.GetFirstDayOfMonth().AddDays(2);
         }
 
-        public static DateTimeOffset GetFourthDayOfMonth(this DateTimeOffset target)
+        public static DateTimeOffset GetFourthDayOfMonth(this DateTimeOffset @this)
         {
-            return target.GetFirstDayOfMonth().AddDays(3);
+            return @this.GetFirstDayOfMonth().AddDays(3);
         }
 
-        public static DateTimeOffset GetLastDayOfMonth(this DateTimeOffset target)
+        public static DateTimeOffset GetLastDayOfMonth(this DateTimeOffset @this)
         {
-            return target.GetFirstDayOfNextMonth().AddDays(-1);
+            return @this.GetFirstDayOfNextMonth().AddDays(-1);
         }
 
-        public static DateTimeOffset GetFirstDayOfNextMonth(this DateTimeOffset target)
+        public static DateTimeOffset GetFirstDayOfNextMonth(this DateTimeOffset @this)
         {
-            return target.GetFirstDayOfNextSeveralMonths(1);
+            return @this.GetFirstDayOfNextSeveralMonths(1);
         }
 
-        public static DateTimeOffset GetFirstDayOfNextSeveralMonths(this DateTimeOffset target, int nextSeveralMonths)
+        public static DateTimeOffset GetFirstDayOfNextSeveralMonths(this DateTimeOffset @this, int nextSeveralMonths)
         {
-            return target.AddMonths(nextSeveralMonths).GetFirstDayOfMonth();
+            return @this.AddMonths(nextSeveralMonths).GetFirstDayOfMonth();
         }
 
-        public static DateTimeOffset GetNextWeekday(this DateTimeOffset target)
+        public static DateTimeOffset GetNextWeekday(this DateTimeOffset @this)
         {
-            var nextDay = target.AddDays(1);
+            var nextDay = @this.AddDays(1);
             while (!nextDay.IsWeekday())
             {
                 nextDay = nextDay.AddDays(1);
@@ -275,9 +275,9 @@
             return nextDay;
         }
 
-        public static DateTimeOffset GetNextWeekendDay(this DateTimeOffset target)
+        public static DateTimeOffset GetNextWeekendDay(this DateTimeOffset @this)
         {
-            var nextDay = target.AddDays(1);
+            var nextDay = @this.AddDays(1);
             while (!nextDay.IsWeekendDay())
             {
                 nextDay = nextDay.AddDays(1);
@@ -286,9 +286,9 @@
             return nextDay;
         }
 
-        public static DateTimeOffset GetFirstWeekdayOfMonth(this DateTimeOffset target)
+        public static DateTimeOffset GetFirstWeekdayOfMonth(this DateTimeOffset @this)
         {
-            var nextDay = GetFirstDayOfMonth(target);
+            var nextDay = GetFirstDayOfMonth(@this);
             while (!nextDay.IsWeekday())
             {
                 nextDay = nextDay.AddDays(1);
@@ -297,24 +297,24 @@
             return nextDay;
         }
 
-        public static DateTimeOffset GetSecondWeekdayOfMonth(this DateTimeOffset target)
+        public static DateTimeOffset GetSecondWeekdayOfMonth(this DateTimeOffset @this)
         {
-            return target.GetFirstWeekdayOfMonth().GetNextWeekday();
+            return @this.GetFirstWeekdayOfMonth().GetNextWeekday();
         }
 
-        public static DateTimeOffset GetThirdWeekdayOfMonth(this DateTimeOffset target)
+        public static DateTimeOffset GetThirdWeekdayOfMonth(this DateTimeOffset @this)
         {
-            return target.GetSecondWeekdayOfMonth().GetNextWeekday();
+            return @this.GetSecondWeekdayOfMonth().GetNextWeekday();
         }
 
-        public static DateTimeOffset GetFourthWeekdayOfMonth(this DateTimeOffset target)
+        public static DateTimeOffset GetFourthWeekdayOfMonth(this DateTimeOffset @this)
         {
-            return target.GetThirdWeekdayOfMonth().GetNextWeekday();
+            return @this.GetThirdWeekdayOfMonth().GetNextWeekday();
         }
 
-        public static DateTimeOffset GetLastWeekdayOfMonth(this DateTimeOffset target)
+        public static DateTimeOffset GetLastWeekdayOfMonth(this DateTimeOffset @this)
         {
-            var previousDay = GetLastDayOfMonth(target);
+            var previousDay = GetLastDayOfMonth(@this);
             while (!previousDay.IsWeekday())
             {
                 previousDay = previousDay.AddDays(-1);
@@ -323,9 +323,9 @@
             return previousDay;
         }
 
-        public static DateTimeOffset GetFirstWeekendDayOfMonth(this DateTimeOffset target)
+        public static DateTimeOffset GetFirstWeekendDayOfMonth(this DateTimeOffset @this)
         {
-            var nextDay = GetFirstDayOfMonth(target);
+            var nextDay = GetFirstDayOfMonth(@this);
             while (!nextDay.IsWeekendDay())
             {
                 nextDay = nextDay.AddDays(1);
@@ -334,24 +334,24 @@
             return nextDay;
         }
 
-        public static DateTimeOffset GetSecondWeekendDayOfMonth(this DateTimeOffset target)
+        public static DateTimeOffset GetSecondWeekendDayOfMonth(this DateTimeOffset @this)
         {
-            return target.GetFirstWeekendDayOfMonth().GetNextWeekendDay();
+            return @this.GetFirstWeekendDayOfMonth().GetNextWeekendDay();
         }
 
-        public static DateTimeOffset GetThirdWeekendDayOfMonth(this DateTimeOffset target)
+        public static DateTimeOffset GetThirdWeekendDayOfMonth(this DateTimeOffset @this)
         {
-            return target.GetSecondWeekendDayOfMonth().GetNextWeekendDay();
+            return @this.GetSecondWeekendDayOfMonth().GetNextWeekendDay();
         }
 
-        public static DateTimeOffset GetFourthWeekendDayOfMonth(this DateTimeOffset target)
+        public static DateTimeOffset GetFourthWeekendDayOfMonth(this DateTimeOffset @this)
         {
-            return target.GetThirdWeekendDayOfMonth().GetNextWeekendDay();
+            return @this.GetThirdWeekendDayOfMonth().GetNextWeekendDay();
         }
 
-        public static DateTimeOffset GetLastWeekendDayOfMonth(this DateTimeOffset target)
+        public static DateTimeOffset GetLastWeekendDayOfMonth(this DateTimeOffset @this)
         {
-            var previousDay = GetLastDayOfMonth(target);
+            var previousDay = GetLastDayOfMonth(@this);
             while (!previousDay.IsWeekendDay())
             {
                 previousDay = previousDay.AddDays(-1);
@@ -360,9 +360,9 @@
             return previousDay;
         }
 
-        public static DateTimeOffset GetFirstDayOfWeekOfMonth(this DateTimeOffset target, DayOfWeek dayOfWeek)
+        public static DateTimeOffset GetFirstDayOfWeekOfMonth(this DateTimeOffset @this, DayOfWeek dayOfWeek)
         {
-            var nextDay = GetFirstDayOfMonth(target);
+            var nextDay = GetFirstDayOfMonth(@this);
             while (nextDay.DayOfWeek != dayOfWeek)
             {
                 nextDay = nextDay.AddDays(1);
@@ -371,33 +371,33 @@
             return nextDay;
         }
 
-        public static DateTimeOffset GetSecondDayOfWeekOfMonth(this DateTimeOffset target, DayOfWeek dayOfWeek)
+        public static DateTimeOffset GetSecondDayOfWeekOfMonth(this DateTimeOffset @this, DayOfWeek dayOfWeek)
         {
-            var nextDay = GetFirstDayOfWeekOfMonth(target, dayOfWeek);
+            var nextDay = GetFirstDayOfWeekOfMonth(@this, dayOfWeek);
             nextDay = nextDay.AddDays(7);
 
             return nextDay;
         }
 
-        public static DateTimeOffset GetThirdDayOfWeekOfMonth(this DateTimeOffset target, DayOfWeek dayOfWeek)
+        public static DateTimeOffset GetThirdDayOfWeekOfMonth(this DateTimeOffset @this, DayOfWeek dayOfWeek)
         {
-            var nextDay = GetFirstDayOfWeekOfMonth(target, dayOfWeek);
+            var nextDay = GetFirstDayOfWeekOfMonth(@this, dayOfWeek);
             nextDay = nextDay.AddDays(7 * 2);
 
             return nextDay;
         }
 
-        public static DateTimeOffset GetFourthDayOfWeekOfMonth(this DateTimeOffset target, DayOfWeek dayOfWeek)
+        public static DateTimeOffset GetFourthDayOfWeekOfMonth(this DateTimeOffset @this, DayOfWeek dayOfWeek)
         {
-            var nextDay = GetFirstDayOfWeekOfMonth(target, dayOfWeek);
+            var nextDay = GetFirstDayOfWeekOfMonth(@this, dayOfWeek);
             nextDay = nextDay.AddDays(7 * 3);
 
             return nextDay;
         }
 
-        public static DateTimeOffset GetLastDayOfWeekOfMonth(this DateTimeOffset target, DayOfWeek dayOfWeek)
+        public static DateTimeOffset GetLastDayOfWeekOfMonth(this DateTimeOffset @this, DayOfWeek dayOfWeek)
         {
-            var previousDay = GetLastDayOfMonth(target);
+            var previousDay = GetLastDayOfMonth(@this);
             while (previousDay.DayOfWeek != dayOfWeek)
             {
                 previousDay = previousDay.AddDays(-1);
@@ -406,7 +406,7 @@
             return previousDay;
         }
 
-        public static bool IsFirstKindDayOfMonth(this DateTimeOffset target, DayOfKind dayOfKind)
+        public static bool IsFirstKindDayOfMonth(this DateTimeOffset @this, DayOfKind dayOfKind)
         {
             switch (dayOfKind)
             {
@@ -417,13 +417,13 @@
                 case DayOfKind.Thursday:
                 case DayOfKind.Friday:
                 case DayOfKind.Saturday:
-                    return target.Day == target.GetFirstDayOfWeekOfMonth((DayOfWeek)((int)dayOfKind)).Day;
+                    return @this.Day == @this.GetFirstDayOfWeekOfMonth((DayOfWeek)((int)dayOfKind)).Day;
                 case DayOfKind.Day:
-                    return target.Day == target.GetFirstDayOfMonth().Day;
+                    return @this.Day == @this.GetFirstDayOfMonth().Day;
                 case DayOfKind.Weekday:
-                    return target.Day == target.GetFirstWeekdayOfMonth().Day;
+                    return @this.Day == @this.GetFirstWeekdayOfMonth().Day;
                 case DayOfKind.WeekendDay:
-                    return target.Day == target.GetFirstWeekendDayOfMonth().Day;
+                    return @this.Day == @this.GetFirstWeekendDayOfMonth().Day;
                 default:
                     break;
             }
@@ -431,7 +431,7 @@
             return false;
         }
 
-        public static bool IsSecondKindDayOfMonth(this DateTimeOffset target, DayOfKind dayOfKind)
+        public static bool IsSecondKindDayOfMonth(this DateTimeOffset @this, DayOfKind dayOfKind)
         {
             switch (dayOfKind)
             {
@@ -442,13 +442,13 @@
                 case DayOfKind.Thursday:
                 case DayOfKind.Friday:
                 case DayOfKind.Saturday:
-                    return target.Day == target.GetSecondDayOfWeekOfMonth((DayOfWeek)((int)dayOfKind)).Day;
+                    return @this.Day == @this.GetSecondDayOfWeekOfMonth((DayOfWeek)((int)dayOfKind)).Day;
                 case DayOfKind.Day:
-                    return target.Day == target.GetSecondDayOfMonth().Day;
+                    return @this.Day == @this.GetSecondDayOfMonth().Day;
                 case DayOfKind.Weekday:
-                    return target.Day == target.GetSecondWeekdayOfMonth().Day;
+                    return @this.Day == @this.GetSecondWeekdayOfMonth().Day;
                 case DayOfKind.WeekendDay:
-                    return target.Day == target.GetSecondWeekendDayOfMonth().Day;
+                    return @this.Day == @this.GetSecondWeekendDayOfMonth().Day;
                 default:
                     break;
             }
@@ -456,7 +456,7 @@
             return false;
         }
 
-        public static bool IsThirdKindDayOfMonth(this DateTimeOffset target, DayOfKind dayOfKind)
+        public static bool IsThirdKindDayOfMonth(this DateTimeOffset @this, DayOfKind dayOfKind)
         {
             switch (dayOfKind)
             {
@@ -467,13 +467,13 @@
                 case DayOfKind.Thursday:
                 case DayOfKind.Friday:
                 case DayOfKind.Saturday:
-                    return target.Day == target.GetThirdDayOfWeekOfMonth((DayOfWeek)((int)dayOfKind)).Day;
+                    return @this.Day == @this.GetThirdDayOfWeekOfMonth((DayOfWeek)((int)dayOfKind)).Day;
                 case DayOfKind.Day:
-                    return target.Day == target.GetThirdDayOfMonth().Day;
+                    return @this.Day == @this.GetThirdDayOfMonth().Day;
                 case DayOfKind.Weekday:
-                    return target.Day == target.GetThirdWeekdayOfMonth().Day;
+                    return @this.Day == @this.GetThirdWeekdayOfMonth().Day;
                 case DayOfKind.WeekendDay:
-                    return target.Day == target.GetThirdWeekendDayOfMonth().Day;
+                    return @this.Day == @this.GetThirdWeekendDayOfMonth().Day;
                 default:
                     break;
             }
@@ -481,7 +481,7 @@
             return false;
         }
 
-        public static bool IsFourthKindDayOfMonth(this DateTimeOffset target, DayOfKind dayOfKind)
+        public static bool IsFourthKindDayOfMonth(this DateTimeOffset @this, DayOfKind dayOfKind)
         {
             switch (dayOfKind)
             {
@@ -492,13 +492,13 @@
                 case DayOfKind.Thursday:
                 case DayOfKind.Friday:
                 case DayOfKind.Saturday:
-                    return target.Day == target.GetFourthDayOfWeekOfMonth((DayOfWeek)((int)dayOfKind)).Day;
+                    return @this.Day == @this.GetFourthDayOfWeekOfMonth((DayOfWeek)((int)dayOfKind)).Day;
                 case DayOfKind.Day:
-                    return target.Day == target.GetFourthDayOfMonth().Day;
+                    return @this.Day == @this.GetFourthDayOfMonth().Day;
                 case DayOfKind.Weekday:
-                    return target.Day == target.GetFourthWeekdayOfMonth().Day;
+                    return @this.Day == @this.GetFourthWeekdayOfMonth().Day;
                 case DayOfKind.WeekendDay:
-                    return target.Day == target.GetFourthWeekendDayOfMonth().Day;
+                    return @this.Day == @this.GetFourthWeekendDayOfMonth().Day;
                 default:
                     break;
             }
@@ -506,7 +506,7 @@
             return false;
         }
 
-        public static bool IsLastKindDayOfMonth(this DateTimeOffset target, DayOfKind dayOfKind)
+        public static bool IsLastKindDayOfMonth(this DateTimeOffset @this, DayOfKind dayOfKind)
         {
             switch (dayOfKind)
             {
@@ -517,13 +517,13 @@
                 case DayOfKind.Thursday:
                 case DayOfKind.Friday:
                 case DayOfKind.Saturday:
-                    return target.Day == target.GetLastDayOfWeekOfMonth((DayOfWeek)((int)dayOfKind)).Day;
+                    return @this.Day == @this.GetLastDayOfWeekOfMonth((DayOfWeek)((int)dayOfKind)).Day;
                 case DayOfKind.Day:
-                    return target.Day == target.GetLastDayOfMonth().Day;
+                    return @this.Day == @this.GetLastDayOfMonth().Day;
                 case DayOfKind.Weekday:
-                    return target.Day == target.GetLastWeekdayOfMonth().Day;
+                    return @this.Day == @this.GetLastWeekdayOfMonth().Day;
                 case DayOfKind.WeekendDay:
-                    return target.Day == target.GetLastWeekendDayOfMonth().Day;
+                    return @this.Day == @this.GetLastWeekendDayOfMonth().Day;
                 default:
                     break;
             }
@@ -531,18 +531,18 @@
             return false;
         }
 
-        public static bool IsKindDayOfMonth(this DateTimeOffset target, DayOfMonth dayOfMonth, DayOfKind dayOfKind)
+        public static bool IsKindDayOfMonth(this DateTimeOffset @this, DayOfMonth dayOfMonth, DayOfKind dayOfKind)
         {
             switch (dayOfMonth)
             {
                 case DayOfMonth.First:
-                    return IsFirstKindDayOfMonth(target, dayOfKind);
+                    return IsFirstKindDayOfMonth(@this, dayOfKind);
                 case DayOfMonth.Second:
-                    return IsSecondKindDayOfMonth(target, dayOfKind);
+                    return IsSecondKindDayOfMonth(@this, dayOfKind);
                 case DayOfMonth.Third:
-                    return IsThirdKindDayOfMonth(target, dayOfKind);
+                    return IsThirdKindDayOfMonth(@this, dayOfKind);
                 case DayOfMonth.Fourth:
-                    return IsFourthKindDayOfMonth(target, dayOfKind);
+                    return IsFourthKindDayOfMonth(@this, dayOfKind);
                 case DayOfMonth.Fifth:
                 case DayOfMonth.Sixth:
                 case DayOfMonth.Seventh:
@@ -575,10 +575,10 @@
                             throw new InvalidProgramException("Does not support given kind of day.");
 
                         int day = (int)dayOfMonth;
-                        return target.Day == day;
+                        return @this.Day == day;
                     }
                 case DayOfMonth.Last:
-                    return IsLastKindDayOfMonth(target, dayOfKind);
+                    return IsLastKindDayOfMonth(@this, dayOfKind);
                 default:
                     break;
             }
@@ -586,7 +586,7 @@
             throw new InvalidProgramException("Cannot parse the given month and day.");
         }
 
-        public static bool IsMonthOfYear(this DateTimeOffset target, MonthOfYear monthOfYear)
+        public static bool IsMonthOfYear(this DateTimeOffset @this, MonthOfYear monthOfYear)
         {
             switch (monthOfYear)
             {
@@ -602,7 +602,7 @@
                 case MonthOfYear.October:
                 case MonthOfYear.November:
                 case MonthOfYear.December:
-                    return target.Month == (int)monthOfYear;
+                    return @this.Month == (int)monthOfYear;
                 default:
                     break;
             }
@@ -614,81 +614,81 @@
 
         #region DateTime Extensions
 
-        public static DateTime ConvertTime(this DateTime target, TimeZoneInfo timeZone)
+        public static DateTime ConvertTime(this DateTime @this, TimeZoneInfo timeZone)
         {
-            return TimeZoneInfo.ConvertTime(target, timeZone);
+            return TimeZoneInfo.ConvertTime(@this, timeZone);
         }
 
-        public static bool IsWeekendDay(this DateTime target)
+        public static bool IsWeekendDay(this DateTime @this)
         {
-            return target.DayOfWeek == DayOfWeek.Saturday || target.DayOfWeek == DayOfWeek.Sunday;
+            return @this.DayOfWeek == DayOfWeek.Saturday || @this.DayOfWeek == DayOfWeek.Sunday;
         }
 
-        public static bool IsWeekday(this DateTime target)
+        public static bool IsWeekday(this DateTime @this)
         {
-            return !IsWeekendDay(target);
+            return !IsWeekendDay(@this);
         }
 
-        public static bool IsFirstDayOfWeek(this DateTime target, DayOfWeek firstDayOfWeek)
+        public static bool IsFirstDayOfWeek(this DateTime @this, DayOfWeek firstDayOfWeek)
         {
-            return target.DayOfWeek == firstDayOfWeek;
+            return @this.DayOfWeek == firstDayOfWeek;
         }
 
-        public static bool IsLastDayOfWeek(this DateTime target, DayOfWeek firstDayOfWeek)
+        public static bool IsLastDayOfWeek(this DateTime @this, DayOfWeek firstDayOfWeek)
         {
-            return target.DayOfWeek == LastDayOfWeek(firstDayOfWeek);
+            return @this.DayOfWeek == LastDayOfWeek(firstDayOfWeek);
         }
 
-        public static DateTime GetFirstDayOfWeek(this DateTime target, DayOfWeek firstDayOfWeek)
+        public static DateTime GetFirstDayOfWeek(this DateTime @this, DayOfWeek firstDayOfWeek)
         {
-            int delta = firstDayOfWeek - target.DayOfWeek;
+            int delta = firstDayOfWeek - @this.DayOfWeek;
             if (delta > 0) delta -= 7;
-            return target.AddDays(delta);
+            return @this.AddDays(delta);
         }
 
-        public static DateTime GetLastDayOfWeek(this DateTime target, DayOfWeek firstDayOfWeek)
+        public static DateTime GetLastDayOfWeek(this DateTime @this, DayOfWeek firstDayOfWeek)
         {
-            return target.GetFirstDayOfWeek(firstDayOfWeek).AddDays(7);
+            return @this.GetFirstDayOfWeek(firstDayOfWeek).AddDays(7);
         }
 
-        public static DateTime GetFirstDayOfMonth(this DateTime target)
+        public static DateTime GetFirstDayOfMonth(this DateTime @this)
         {
-            return target.AddDays((-1 * target.Day) + 1);
+            return @this.AddDays((-1 * @this.Day) + 1);
         }
 
-        public static DateTime GetSecondDayOfMonth(this DateTime target)
+        public static DateTime GetSecondDayOfMonth(this DateTime @this)
         {
-            return target.GetFirstDayOfMonth().AddDays(1);
+            return @this.GetFirstDayOfMonth().AddDays(1);
         }
 
-        public static DateTime GetThirdDayOfMonth(this DateTime target)
+        public static DateTime GetThirdDayOfMonth(this DateTime @this)
         {
-            return target.GetFirstDayOfMonth().AddDays(2);
+            return @this.GetFirstDayOfMonth().AddDays(2);
         }
 
-        public static DateTime GetFourthDayOfMonth(this DateTime target)
+        public static DateTime GetFourthDayOfMonth(this DateTime @this)
         {
-            return target.GetFirstDayOfMonth().AddDays(3);
+            return @this.GetFirstDayOfMonth().AddDays(3);
         }
 
-        public static DateTime GetLastDayOfMonth(this DateTime target)
+        public static DateTime GetLastDayOfMonth(this DateTime @this)
         {
-            return target.GetFirstDayOfNextMonth().AddDays(-1);
+            return @this.GetFirstDayOfNextMonth().AddDays(-1);
         }
 
-        public static DateTime GetFirstDayOfNextMonth(this DateTime target)
+        public static DateTime GetFirstDayOfNextMonth(this DateTime @this)
         {
-            return target.GetFirstDayOfNextSeveralMonths(1);
+            return @this.GetFirstDayOfNextSeveralMonths(1);
         }
 
-        public static DateTime GetFirstDayOfNextSeveralMonths(this DateTime target, int nextSeveralMonths)
+        public static DateTime GetFirstDayOfNextSeveralMonths(this DateTime @this, int nextSeveralMonths)
         {
-            return target.AddMonths(nextSeveralMonths).GetFirstDayOfMonth();
+            return @this.AddMonths(nextSeveralMonths).GetFirstDayOfMonth();
         }
 
-        public static DateTime GetNextWeekday(this DateTime target)
+        public static DateTime GetNextWeekday(this DateTime @this)
         {
-            var nextDay = target.AddDays(1);
+            var nextDay = @this.AddDays(1);
             while (!nextDay.IsWeekday())
             {
                 nextDay = nextDay.AddDays(1);
@@ -697,9 +697,9 @@
             return nextDay;
         }
 
-        public static DateTime GetNextWeekendDay(this DateTime target)
+        public static DateTime GetNextWeekendDay(this DateTime @this)
         {
-            var nextDay = target.AddDays(1);
+            var nextDay = @this.AddDays(1);
             while (!nextDay.IsWeekendDay())
             {
                 nextDay = nextDay.AddDays(1);
@@ -708,9 +708,9 @@
             return nextDay;
         }
 
-        public static DateTime GetFirstWeekdayOfMonth(this DateTime target)
+        public static DateTime GetFirstWeekdayOfMonth(this DateTime @this)
         {
-            var nextDay = GetFirstDayOfMonth(target);
+            var nextDay = GetFirstDayOfMonth(@this);
             while (!nextDay.IsWeekday())
             {
                 nextDay = nextDay.AddDays(1);
@@ -719,24 +719,24 @@
             return nextDay;
         }
 
-        public static DateTime GetSecondWeekdayOfMonth(this DateTime target)
+        public static DateTime GetSecondWeekdayOfMonth(this DateTime @this)
         {
-            return target.GetFirstWeekdayOfMonth().GetNextWeekday();
+            return @this.GetFirstWeekdayOfMonth().GetNextWeekday();
         }
 
-        public static DateTime GetThirdWeekdayOfMonth(this DateTime target)
+        public static DateTime GetThirdWeekdayOfMonth(this DateTime @this)
         {
-            return target.GetSecondWeekdayOfMonth().GetNextWeekday();
+            return @this.GetSecondWeekdayOfMonth().GetNextWeekday();
         }
 
-        public static DateTime GetFourthWeekdayOfMonth(this DateTime target)
+        public static DateTime GetFourthWeekdayOfMonth(this DateTime @this)
         {
-            return target.GetThirdWeekdayOfMonth().GetNextWeekday();
+            return @this.GetThirdWeekdayOfMonth().GetNextWeekday();
         }
 
-        public static DateTime GetLastWeekdayOfMonth(this DateTime target)
+        public static DateTime GetLastWeekdayOfMonth(this DateTime @this)
         {
-            var previousDay = GetLastDayOfMonth(target);
+            var previousDay = GetLastDayOfMonth(@this);
             while (!previousDay.IsWeekday())
             {
                 previousDay = previousDay.AddDays(-1);
@@ -745,9 +745,9 @@
             return previousDay;
         }
 
-        public static DateTime GetFirstWeekendDayOfMonth(this DateTime target)
+        public static DateTime GetFirstWeekendDayOfMonth(this DateTime @this)
         {
-            var nextDay = GetFirstDayOfMonth(target);
+            var nextDay = GetFirstDayOfMonth(@this);
             while (!nextDay.IsWeekendDay())
             {
                 nextDay = nextDay.AddDays(1);
@@ -756,24 +756,24 @@
             return nextDay;
         }
 
-        public static DateTime GetSecondWeekendDayOfMonth(this DateTime target)
+        public static DateTime GetSecondWeekendDayOfMonth(this DateTime @this)
         {
-            return target.GetFirstWeekendDayOfMonth().GetNextWeekendDay();
+            return @this.GetFirstWeekendDayOfMonth().GetNextWeekendDay();
         }
 
-        public static DateTime GetThirdWeekendDayOfMonth(this DateTime target)
+        public static DateTime GetThirdWeekendDayOfMonth(this DateTime @this)
         {
-            return target.GetSecondWeekendDayOfMonth().GetNextWeekendDay();
+            return @this.GetSecondWeekendDayOfMonth().GetNextWeekendDay();
         }
 
-        public static DateTime GetFourthWeekendDayOfMonth(this DateTime target)
+        public static DateTime GetFourthWeekendDayOfMonth(this DateTime @this)
         {
-            return target.GetThirdWeekendDayOfMonth().GetNextWeekendDay();
+            return @this.GetThirdWeekendDayOfMonth().GetNextWeekendDay();
         }
 
-        public static DateTime GetLastWeekendDayOfMonth(this DateTime target)
+        public static DateTime GetLastWeekendDayOfMonth(this DateTime @this)
         {
-            var previousDay = GetLastDayOfMonth(target);
+            var previousDay = GetLastDayOfMonth(@this);
             while (!previousDay.IsWeekendDay())
             {
                 previousDay = previousDay.AddDays(-1);
@@ -782,9 +782,9 @@
             return previousDay;
         }
 
-        public static DateTime GetFirstDayOfWeekOfMonth(this DateTime target, DayOfWeek dayOfWeek)
+        public static DateTime GetFirstDayOfWeekOfMonth(this DateTime @this, DayOfWeek dayOfWeek)
         {
-            var nextDay = GetFirstDayOfMonth(target);
+            var nextDay = GetFirstDayOfMonth(@this);
             while (nextDay.DayOfWeek != dayOfWeek)
             {
                 nextDay = nextDay.AddDays(1);
@@ -793,33 +793,33 @@
             return nextDay;
         }
 
-        public static DateTime GetSecondDayOfWeekOfMonth(this DateTime target, DayOfWeek dayOfWeek)
+        public static DateTime GetSecondDayOfWeekOfMonth(this DateTime @this, DayOfWeek dayOfWeek)
         {
-            var nextDay = GetFirstDayOfWeekOfMonth(target, dayOfWeek);
+            var nextDay = GetFirstDayOfWeekOfMonth(@this, dayOfWeek);
             nextDay = nextDay.AddDays(7);
 
             return nextDay;
         }
 
-        public static DateTime GetThirdDayOfWeekOfMonth(this DateTime target, DayOfWeek dayOfWeek)
+        public static DateTime GetThirdDayOfWeekOfMonth(this DateTime @this, DayOfWeek dayOfWeek)
         {
-            var nextDay = GetFirstDayOfWeekOfMonth(target, dayOfWeek);
+            var nextDay = GetFirstDayOfWeekOfMonth(@this, dayOfWeek);
             nextDay = nextDay.AddDays(7 * 2);
 
             return nextDay;
         }
 
-        public static DateTime GetFourthDayOfWeekOfMonth(this DateTime target, DayOfWeek dayOfWeek)
+        public static DateTime GetFourthDayOfWeekOfMonth(this DateTime @this, DayOfWeek dayOfWeek)
         {
-            var nextDay = GetFirstDayOfWeekOfMonth(target, dayOfWeek);
+            var nextDay = GetFirstDayOfWeekOfMonth(@this, dayOfWeek);
             nextDay = nextDay.AddDays(7 * 3);
 
             return nextDay;
         }
 
-        public static DateTime GetLastDayOfWeekOfMonth(this DateTime target, DayOfWeek dayOfWeek)
+        public static DateTime GetLastDayOfWeekOfMonth(this DateTime @this, DayOfWeek dayOfWeek)
         {
-            var previousDay = GetLastDayOfMonth(target);
+            var previousDay = GetLastDayOfMonth(@this);
             while (previousDay.DayOfWeek != dayOfWeek)
             {
                 previousDay = previousDay.AddDays(-1);
@@ -828,7 +828,7 @@
             return previousDay;
         }
 
-        public static bool IsFirstKindDayOfMonth(this DateTime target, DayOfKind dayOfKind)
+        public static bool IsFirstKindDayOfMonth(this DateTime @this, DayOfKind dayOfKind)
         {
             switch (dayOfKind)
             {
@@ -839,13 +839,13 @@
                 case DayOfKind.Thursday:
                 case DayOfKind.Friday:
                 case DayOfKind.Saturday:
-                    return target.Day == target.GetFirstDayOfWeekOfMonth((DayOfWeek)((int)dayOfKind)).Day;
+                    return @this.Day == @this.GetFirstDayOfWeekOfMonth((DayOfWeek)((int)dayOfKind)).Day;
                 case DayOfKind.Day:
-                    return target.Day == target.GetFirstDayOfMonth().Day;
+                    return @this.Day == @this.GetFirstDayOfMonth().Day;
                 case DayOfKind.Weekday:
-                    return target.Day == target.GetFirstWeekdayOfMonth().Day;
+                    return @this.Day == @this.GetFirstWeekdayOfMonth().Day;
                 case DayOfKind.WeekendDay:
-                    return target.Day == target.GetFirstWeekendDayOfMonth().Day;
+                    return @this.Day == @this.GetFirstWeekendDayOfMonth().Day;
                 default:
                     break;
             }
@@ -853,7 +853,7 @@
             return false;
         }
 
-        public static bool IsSecondKindDayOfMonth(this DateTime target, DayOfKind dayOfKind)
+        public static bool IsSecondKindDayOfMonth(this DateTime @this, DayOfKind dayOfKind)
         {
             switch (dayOfKind)
             {
@@ -864,13 +864,13 @@
                 case DayOfKind.Thursday:
                 case DayOfKind.Friday:
                 case DayOfKind.Saturday:
-                    return target.Day == target.GetSecondDayOfWeekOfMonth((DayOfWeek)((int)dayOfKind)).Day;
+                    return @this.Day == @this.GetSecondDayOfWeekOfMonth((DayOfWeek)((int)dayOfKind)).Day;
                 case DayOfKind.Day:
-                    return target.Day == target.GetSecondDayOfMonth().Day;
+                    return @this.Day == @this.GetSecondDayOfMonth().Day;
                 case DayOfKind.Weekday:
-                    return target.Day == target.GetSecondWeekdayOfMonth().Day;
+                    return @this.Day == @this.GetSecondWeekdayOfMonth().Day;
                 case DayOfKind.WeekendDay:
-                    return target.Day == target.GetSecondWeekendDayOfMonth().Day;
+                    return @this.Day == @this.GetSecondWeekendDayOfMonth().Day;
                 default:
                     break;
             }
@@ -878,7 +878,7 @@
             return false;
         }
 
-        public static bool IsThirdKindDayOfMonth(this DateTime target, DayOfKind dayOfKind)
+        public static bool IsThirdKindDayOfMonth(this DateTime @this, DayOfKind dayOfKind)
         {
             switch (dayOfKind)
             {
@@ -889,13 +889,13 @@
                 case DayOfKind.Thursday:
                 case DayOfKind.Friday:
                 case DayOfKind.Saturday:
-                    return target.Day == target.GetThirdDayOfWeekOfMonth((DayOfWeek)((int)dayOfKind)).Day;
+                    return @this.Day == @this.GetThirdDayOfWeekOfMonth((DayOfWeek)((int)dayOfKind)).Day;
                 case DayOfKind.Day:
-                    return target.Day == target.GetThirdDayOfMonth().Day;
+                    return @this.Day == @this.GetThirdDayOfMonth().Day;
                 case DayOfKind.Weekday:
-                    return target.Day == target.GetThirdWeekdayOfMonth().Day;
+                    return @this.Day == @this.GetThirdWeekdayOfMonth().Day;
                 case DayOfKind.WeekendDay:
-                    return target.Day == target.GetThirdWeekendDayOfMonth().Day;
+                    return @this.Day == @this.GetThirdWeekendDayOfMonth().Day;
                 default:
                     break;
             }
@@ -903,7 +903,7 @@
             return false;
         }
 
-        public static bool IsFourthKindDayOfMonth(this DateTime target, DayOfKind dayOfKind)
+        public static bool IsFourthKindDayOfMonth(this DateTime @this, DayOfKind dayOfKind)
         {
             switch (dayOfKind)
             {
@@ -914,13 +914,13 @@
                 case DayOfKind.Thursday:
                 case DayOfKind.Friday:
                 case DayOfKind.Saturday:
-                    return target.Day == target.GetFourthDayOfWeekOfMonth((DayOfWeek)((int)dayOfKind)).Day;
+                    return @this.Day == @this.GetFourthDayOfWeekOfMonth((DayOfWeek)((int)dayOfKind)).Day;
                 case DayOfKind.Day:
-                    return target.Day == target.GetFourthDayOfMonth().Day;
+                    return @this.Day == @this.GetFourthDayOfMonth().Day;
                 case DayOfKind.Weekday:
-                    return target.Day == target.GetFourthWeekdayOfMonth().Day;
+                    return @this.Day == @this.GetFourthWeekdayOfMonth().Day;
                 case DayOfKind.WeekendDay:
-                    return target.Day == target.GetFourthWeekendDayOfMonth().Day;
+                    return @this.Day == @this.GetFourthWeekendDayOfMonth().Day;
                 default:
                     break;
             }
@@ -928,7 +928,7 @@
             return false;
         }
 
-        public static bool IsLastKindDayOfMonth(this DateTime target, DayOfKind dayOfKind)
+        public static bool IsLastKindDayOfMonth(this DateTime @this, DayOfKind dayOfKind)
         {
             switch (dayOfKind)
             {
@@ -939,13 +939,13 @@
                 case DayOfKind.Thursday:
                 case DayOfKind.Friday:
                 case DayOfKind.Saturday:
-                    return target.Day == target.GetLastDayOfWeekOfMonth((DayOfWeek)((int)dayOfKind)).Day;
+                    return @this.Day == @this.GetLastDayOfWeekOfMonth((DayOfWeek)((int)dayOfKind)).Day;
                 case DayOfKind.Day:
-                    return target.Day == target.GetLastDayOfMonth().Day;
+                    return @this.Day == @this.GetLastDayOfMonth().Day;
                 case DayOfKind.Weekday:
-                    return target.Day == target.GetLastWeekdayOfMonth().Day;
+                    return @this.Day == @this.GetLastWeekdayOfMonth().Day;
                 case DayOfKind.WeekendDay:
-                    return target.Day == target.GetLastWeekendDayOfMonth().Day;
+                    return @this.Day == @this.GetLastWeekendDayOfMonth().Day;
                 default:
                     break;
             }
@@ -953,18 +953,18 @@
             return false;
         }
 
-        public static bool IsKindDayOfMonth(this DateTime target, DayOfMonth dayOfMonth, DayOfKind dayOfKind)
+        public static bool IsKindDayOfMonth(this DateTime @this, DayOfMonth dayOfMonth, DayOfKind dayOfKind)
         {
             switch (dayOfMonth)
             {
                 case DayOfMonth.First:
-                    return IsFirstKindDayOfMonth(target, dayOfKind);
+                    return IsFirstKindDayOfMonth(@this, dayOfKind);
                 case DayOfMonth.Second:
-                    return IsSecondKindDayOfMonth(target, dayOfKind);
+                    return IsSecondKindDayOfMonth(@this, dayOfKind);
                 case DayOfMonth.Third:
-                    return IsThirdKindDayOfMonth(target, dayOfKind);
+                    return IsThirdKindDayOfMonth(@this, dayOfKind);
                 case DayOfMonth.Fourth:
-                    return IsFourthKindDayOfMonth(target, dayOfKind);
+                    return IsFourthKindDayOfMonth(@this, dayOfKind);
                 case DayOfMonth.Fifth:
                 case DayOfMonth.Sixth:
                 case DayOfMonth.Seventh:
@@ -997,10 +997,10 @@
                             throw new InvalidProgramException("Does not support given kind of day.");
 
                         int day = (int)dayOfMonth;
-                        return target.Day == day;
+                        return @this.Day == day;
                     }
                 case DayOfMonth.Last:
-                    return IsLastKindDayOfMonth(target, dayOfKind);
+                    return IsLastKindDayOfMonth(@this, dayOfKind);
                 default:
                     break;
             }
@@ -1008,7 +1008,7 @@
             throw new InvalidProgramException("Cannot parse the given month and day.");
         }
 
-        public static bool IsMonthOfYear(this DateTime target, MonthOfYear monthOfYear)
+        public static bool IsMonthOfYear(this DateTime @this, MonthOfYear monthOfYear)
         {
             switch (monthOfYear)
             {
@@ -1024,7 +1024,7 @@
                 case MonthOfYear.October:
                 case MonthOfYear.November:
                 case MonthOfYear.December:
-                    return target.Month == (int)monthOfYear;
+                    return @this.Month == (int)monthOfYear;
                 default:
                     break;
             }
@@ -1036,7 +1036,7 @@
     
         public static void GetAlignSecondsDateTimes<T>
                                 (
-                                    this DateTime target
+                                    this DateTime @this
                                     , params Tuple<long, Func<DateTime, long, DateTime, T, T>>[] processAlignSecondsDateTimesFuncs
                                 )
         {
@@ -1044,10 +1044,10 @@
             foreach (var x in processAlignSecondsDateTimesFuncs)
             {
                 var alignSeconds = x.Item1;
-                var alignTime = target.GetAlignSecondsDateTime(alignSeconds);
+                var alignTime = @this.GetAlignSecondsDateTime(alignSeconds);
                 if (x.Item2 != null)
                 {
-                    r = x.Item2(target, alignSeconds, alignTime, r);
+                    r = x.Item2(@this, alignSeconds, alignTime, r);
                 }
             }
         }
@@ -1058,38 +1058,38 @@
             return r;
         }
 
-        public static long MillisecondsDiff(this DateTime target, DateTime diffTime)
+        public static long MillisecondsDiff(this DateTime @this, DateTime diffTime)
         {
             //long t1 = time1.Ticks;
             //long t2 = time2.Ticks;
             //var r = (t2 - t1) / 10000;
             //return r;
-            return (long) (diffTime - target).TotalMilliseconds;
+            return (long) (diffTime - @this).TotalMilliseconds;
             
         }
-        public static long SecondsDiff(this DateTime target, DateTime diffTime)
+        public static long SecondsDiff(this DateTime @this, DateTime diffTime)
         {
-            return target.MillisecondsDiff(diffTime) / 1000;
+            return @this.MillisecondsDiff(diffTime) / 1000;
         }
-        public static long MillisecondsDiffNow(this DateTime target)
+        public static long MillisecondsDiffNow(this DateTime @this)
         {
-            return target.MillisecondsDiff(DateTime.Now);
+            return @this.MillisecondsDiff(DateTime.Now);
         }
-        public static long SecondsDiffNow(this DateTime target)
+        public static long SecondsDiffNow(this DateTime @this)
         {
-            return target.MillisecondsDiffNow() / 1000;
+            return @this.MillisecondsDiffNow() / 1000;
         }
-        public static DateTime GetAlignSecondsDateTime(this DateTime target, long alignSeconds)
+        public static DateTime GetAlignSecondsDateTime(this DateTime @this, long alignSeconds)
         {
-            var ticks = target.Ticks;
+            var ticks = @this.Ticks;
             ticks -= ticks % (10000 * 1000 * alignSeconds);
             var r = new DateTime(ticks);
             return r;
         }
 
-        public static string GetformattedDateTimeString(this DateTime target, string format)
+        public static string GetformattedDateTimeString(this DateTime @this, string format)
         {
-            return target.ToString(format);
+            return @this.ToString(format);
         }
         public static DateTime? ParseExactNullableDateTime(string text, string format)
         {

@@ -5,18 +5,18 @@
     {
       public static bool TryGetSection
                     (
-                        this IConfiguration target
+                        this IConfiguration @this
                         , string sectionKey
                         , out IConfigurationSection section
                     )
         {
             if (sectionKey == null)
             {
-                section = (IConfigurationSection) target;
+                section = (IConfigurationSection) @this;
             }
             else
             {
-                section = target
+                section = @this
                                 .GetSection
                                     (
                                         sectionKey
@@ -32,7 +32,7 @@
         // only for Array Value
         public static T GetOrDefault<T>
                             (
-                                this IConfiguration target
+                                this IConfiguration @this
                                 , string sectionKey
                                 , T defaultValue = default
                             )
@@ -40,7 +40,7 @@
             T r = defaultValue;
             var b = TryGet
                         (
-                            target
+                            @this
                             , sectionKey
                             , out T @value
                         );
@@ -54,14 +54,14 @@
 
         public static bool TryGet<T>
                         (
-                            this IConfiguration target
+                            this IConfiguration @this
                             , string sectionKey
                             , out T sectionValue
                         )
         {
             var r = TryGetSection
                         (
-                            target
+                            @this
                             , sectionKey
                             , out var configuration
                         );

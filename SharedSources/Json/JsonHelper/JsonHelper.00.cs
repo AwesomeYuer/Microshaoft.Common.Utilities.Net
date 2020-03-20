@@ -75,7 +75,7 @@
     {
         public static JTokenType TryParseJson
                                     (
-                                        this string target
+                                        this string @this
                                         , out JToken jToken
                                     )
         {
@@ -83,7 +83,7 @@
             jToken = null;
             try
             {
-                jToken = JToken.Parse(target);
+                jToken = JToken.Parse(@this);
                 if (jToken is JArray)
                 {
                     r = JTokenType.Array;
@@ -102,20 +102,20 @@
 
         public static bool IsJson
                             (
-                                this string target
+                                this string @this
                                 , out JToken jToken
                                 , bool validate = false
                             )
         {
             jToken = null;
-            char c = target.FirstNonWhitespaceCharacter();
+            char c = @this.FirstNonWhitespaceCharacter();
             //IL_0018: Unknown result type (might be due to invalid IL or missing references)
             bool r = (c == '{' || c == '[');
             if (r && validate)
             {
                 try
                 {
-                    jToken = JToken.Parse(target);
+                    jToken = JToken.Parse(@this);
                     r = true;
                 }
                 catch
@@ -126,9 +126,9 @@
             return r;
         }
 
-        public static bool IsJArray(this string target, bool validate = false)
+        public static bool IsJArray(this string @this, bool validate = false)
         {
-            char c = target.FirstNonWhitespaceCharacter();
+            char c = @this.FirstNonWhitespaceCharacter();
             //IL_0018: Unknown result type (might be due to invalid IL or missing references)
             bool r = (c == '[');
             if (r && validate)
@@ -137,7 +137,7 @@
                 {
                     r = 
                         (
-                            TryParseJson(target, out _)
+                            TryParseJson(@this, out _)
                             ==
                             JTokenType.Array
                         );
@@ -152,7 +152,7 @@
 
         public static bool TryParseJArray
                                 (
-                                    this string target
+                                    this string @this
                                     , out JArray jArray
                                 )
         {
@@ -167,7 +167,7 @@
                         (
                             TryParseJson
                                 (
-                                    target
+                                    @this
                                     , out JToken jToken
                                 ) 
                             ==
@@ -188,7 +188,7 @@
 
         public static bool TryParseJObject
                                 (
-                                    this string target
+                                    this string @this
                                     , out JObject jObject
                                 )
         {
@@ -201,7 +201,7 @@
                 {
                     r = 
                         (
-                            TryParseJson(target, out JToken jToken)
+                            TryParseJson(@this, out JToken jToken)
                             ==
                             JTokenType.Object
                         );
@@ -218,10 +218,10 @@
             return r;
         }
 
-        public static bool IsJObject(this string target, bool validate = false)
+        public static bool IsJObject(this string @this, bool validate = false)
         {
             char c = StringHelper
-                            .FirstNonWhitespaceCharacter(target);
+                            .FirstNonWhitespaceCharacter(@this);
             //IL_0018: Unknown result type (might be due to invalid IL or missing references)
             var r = (c == '{');
             if (r && validate)
@@ -230,7 +230,7 @@
                 {
                     r = 
                         (
-                            TryParseJson(target, out _)
+                            TryParseJson(@this, out _)
                             ==
                             JTokenType.Object
                         );
@@ -245,18 +245,18 @@
 
         public static object GetPrimtiveTypeJValueAsObject
                                     (
-                                        this JToken target
+                                        this JToken @this
                                         , Type underlyingType
                                     )
         {
             object r = null;
             if 
                 (
-                    target.Type == JTokenType.Null 
+                    @this.Type == JTokenType.Null 
                     ||
-                    target.Type == JTokenType.Undefined
+                    @this.Type == JTokenType.Undefined
                     ||
-                    target.Type == JTokenType.None
+                    @this.Type == JTokenType.None
                 )
             {
                 r = null;
@@ -265,134 +265,134 @@
             else if (underlyingType == typeof(string))
             {
                 string jValueString;
-                if (target.Type != JTokenType.String)
+                if (@this.Type != JTokenType.String)
                 {
-                    jValueString = target.ToString();
+                    jValueString = @this.ToString();
                 }
                 else
                 {
-                    jValueString = target.Value<string>();
+                    jValueString = @this.Value<string>();
                 }
                 r = jValueString;
             }
             else if (underlyingType == typeof(Guid))
             {
-                r = target.Value<Guid>();
+                r = @this.Value<Guid>();
                 //r = Guid.Parse(jValueString);
             }
             else if (underlyingType == typeof(DateTime))
             {
-                var jValueString = target.Value<string>();
+                var jValueString = @this.Value<string>();
                 r = DateTime.Parse(jValueString);
             }
             //===============================================
             // without ""
             else if (underlyingType == typeof(bool))
             {
-                r = target.Value<bool>();
+                r = @this.Value<bool>();
             }
             else if (underlyingType == typeof(short))
             {
-                r = target.Value<short>();
+                r = @this.Value<short>();
             }
             else if (underlyingType == typeof(ushort))
             {
-                r = target.Value<ushort>();
+                r = @this.Value<ushort>();
             }
             else if (underlyingType == typeof(int))
             {
-                r = target.Value<int>();
+                r = @this.Value<int>();
             }
             else if (underlyingType == typeof(uint))
             {
-                r = target.Value<uint>();
+                r = @this.Value<uint>();
             }
             else if (underlyingType == typeof(long))
             {
-                r = target.Value<long>();
+                r = @this.Value<long>();
             }
             else if (underlyingType == typeof(ulong))
             {
-                r = target.Value<ulong>();
+                r = @this.Value<ulong>();
             }
             else if (underlyingType == typeof(double))
             {
-                r = target.Value<double>();
+                r = @this.Value<double>();
             }
             else if (underlyingType == typeof(float))
             {
-                r = target.Value<float>();
+                r = @this.Value<float>();
             }
             else if (underlyingType == typeof(decimal))
             {
-                r = target.Value<decimal>();
+                r = @this.Value<decimal>();
             }
             return r;
         }
-        public static JTokenType GetJTokenType(this Type target)
+        public static JTokenType GetJTokenType(this Type @this)
         {
             JTokenType r;
             if
                 (
-                    typeof(bool) == target
+                    typeof(bool) == @this
                 )
             {
                 r = JTokenType.Boolean;
             }
             else if
                 (
-                    typeof(byte[]) == target
+                    typeof(byte[]) == @this
                 )
             {
                 r = JTokenType.Bytes;
             }
             else if
                 (
-                    typeof(DateTime) == target
+                    typeof(DateTime) == @this
                 )
             {
                 r = JTokenType.Date;
             }
             else if
                 (
-                    typeof(float) == target
+                    typeof(float) == @this
                     ||
-                    typeof(double) == target
+                    typeof(double) == @this
                     ||
-                    typeof(decimal) == target
-                    ||
-                    typeof(Single) == target
+                    typeof(decimal) == @this
+                    //||
+                    //typeof(Single) == @this
                 )
             {
                 r = JTokenType.Float;
             }
             else if
                 (
-                    typeof(Guid) == target
+                    typeof(Guid) == @this
                 )
             {
                 r = JTokenType.Guid;
             }
             else if
                 (
-                    typeof(int) == target
+                    typeof(int) == @this
                     ||
-                    typeof(long) == target
+                    typeof(long) == @this
                     ||
-                    typeof(short) == target
+                    typeof(short) == @this
                     ||
-                    typeof(uint) == target
+                    typeof(uint) == @this
                     ||
-                    typeof(ushort) == target
+                    typeof(ushort) == @this
                     ||
-                    typeof(byte) == target
+                    typeof(byte) == @this
                 )
             {
                 r = JTokenType.Integer;
             }
             else if
                 (
-                    typeof(TimeSpan) == target
+                    typeof(TimeSpan) == @this
                 )
             {
                 r = JTokenType.TimeSpan;
@@ -486,7 +486,7 @@
         }
         public static string Serialize
                                 (
-                                    object target
+                                    this object @this
                                     , bool formattingIndented = false
                                     , bool keyQuoteName = false
                                 )
@@ -499,7 +499,7 @@
                     jsonTextWriter.QuoteName = keyQuoteName;
                     jsonTextWriter.Formatting = (formattingIndented ? Formatting.Indented : Formatting.None);
                     var jsonSerializer = new JsonSerializer();
-                    jsonSerializer.Serialize(jsonTextWriter, target);
+                    jsonSerializer.Serialize(jsonTextWriter, @this);
                     json = stringWriter.ToString();
                 }
             }

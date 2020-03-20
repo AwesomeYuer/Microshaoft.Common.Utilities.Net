@@ -11,98 +11,98 @@ namespace Microshaoft
         public static DataTable GenerateEmptyDataTable
                                     <T1>
                 (
-                    this ValueTuple<T1> target
+                    this ValueTuple<T1> @this
                     , string[] dataColumnsNames
                 )
         {
             return
                 GenerateEmptyDataTable
                         (
-                            target.GetType()
+                            @this.GetType()
                             , dataColumnsNames
                         );
         }
         public static DataTable GenerateEmptyDataTable
                                     <T1, T2>
             (
-                this ValueTuple<T1, T2> target
+                this ValueTuple<T1, T2> @this
                 , params string[] dataColumnsNames
             )
         {
             return
                 GenerateEmptyDataTable
                         (
-                            target.GetType()
+                            @this.GetType()
                             , dataColumnsNames
                         );
         }
         public static DataTable GenerateEmptyDataTable
                                     <T1, T2, T3>
                 (
-                    this ValueTuple<T1, T2, T3> target
+                    this ValueTuple<T1, T2, T3> @this
                     , params string[] dataColumnsNames
                 )
         {
             return
                 GenerateEmptyDataTable
                         (
-                            target.GetType()
+                            @this.GetType()
                             , dataColumnsNames
                         );
         }
         public static DataTable GenerateEmptyDataTable
                                     <T1, T2, T3, T4>
                 (
-                    this ValueTuple<T1, T2, T3, T4> target
+                    this ValueTuple<T1, T2, T3, T4> @this
                     , params string[] dataColumnsNames
                 )
         {
             return
                 GenerateEmptyDataTable
                         (
-                            target.GetType()
+                            @this.GetType()
                             , dataColumnsNames
                         );
         }
         public static DataTable GenerateEmptyDataTable
                                     <T1, T2, T3, T4, T5>
                 (
-                    this ValueTuple<T1, T2, T3, T4, T5> target
+                    this ValueTuple<T1, T2, T3, T4, T5> @this
                     , params string[] dataColumnsNames
                 )
         {
             return
                 GenerateEmptyDataTable
                         (
-                            target.GetType()
+                            @this.GetType()
                             , dataColumnsNames
                         );
         }
         public static DataTable GenerateEmptyDataTable
                                     <T1, T2, T3, T4, T5, T6>
                 (
-                    this ValueTuple<T1, T2, T3, T4, T5, T6> target
+                    this ValueTuple<T1, T2, T3, T4, T5, T6> @this
                     , params string[] dataColumnsNames
                 )
         {
             return
                 GenerateEmptyDataTable
                         (
-                            target.GetType()
+                            @this.GetType()
                             , dataColumnsNames
                         );
         }
         public static DataTable GenerateEmptyDataTable
                                     <T1, T2, T3, T4, T5, T6, T7>
                 (
-                    this ValueTuple<T1, T2, T3, T4, T5, T6, T7> target
+                    this ValueTuple<T1, T2, T3, T4, T5, T6, T7> @this
                     , params string[] dataColumnsNames
                 )
         {
             return
                 GenerateEmptyDataTable
                         (
-                            target.GetType()
+                            @this.GetType()
                             , dataColumnsNames
                         );
         }
@@ -286,19 +286,19 @@ namespace Microshaoft
                         );
 
         public static bool
-                IsValueTuple(this object target) => IsValueTupleType(target.GetType());
-        public static bool IsValueTupleType(this Type target)
+                IsValueTuple(this object @this) => IsValueTupleType(@this.GetType());
+        public static bool IsValueTupleType(this Type @this)
         {
             return
                 (
-                    target
+                    @this
                         .GetTypeInfo()
                         .IsGenericType
                     &&
                     _valueTupleTypes
                         .Contains
                             (
-                                target
+                                @this
                                     .GetGenericTypeDefinition()
                             )
                 );
@@ -307,20 +307,20 @@ namespace Microshaoft
         public static
                 List<object>
                         GetValueTupleItemObjects
-                            (this object target)
+                            (this object @this)
                             =>
                             GetValueTupleItemFields
-                                            (target.GetType())
-                                    .Select(f => f.GetValue(target))
+                                            (@this.GetType())
+                                    .Select(f => f.GetValue(@this))
                                     .ToList();
         public static
                 List<Type>
-                        GetValueTupleItemTypes(this Type target)
+                        GetValueTupleItemTypes(this Type @this)
                             =>
-                            GetValueTupleItemFields(target)
+                            GetValueTupleItemFields(@this)
                                 .Select(f => f.FieldType)
                                 .ToList();
-        public static List<FieldInfo> GetValueTupleItemFields(this Type target)
+        public static List<FieldInfo> GetValueTupleItemFields(this Type @this)
         {
             var runtimeFields = new List<FieldInfo>();
 
@@ -328,7 +328,7 @@ namespace Microshaoft
             int nth = 1;
             while
                 (
-                    (runtimeField = target.GetRuntimeField($"Item{nth}"))
+                    (runtimeField = @this.GetRuntimeField($"Item{nth}"))
                     !=
                     null
                 )
@@ -350,7 +350,7 @@ namespace Microshaoft
                             //, T7
                         >
                     (
-                        this DataRowCollection target
+                        this DataRowCollection @this
                         , ValueTuple
                                     <
                                           T1
@@ -365,7 +365,7 @@ namespace Microshaoft
                     )
         {
             return
-                target
+                @this
                     .Add
                         (
                               rowData.Item1
@@ -387,7 +387,7 @@ namespace Microshaoft
                                     //, T7
                                 >
                             (
-                                this DataRowCollection target
+                                this DataRowCollection @this
                                 , ValueTuple
                                             <
                                                   T1
@@ -402,7 +402,7 @@ namespace Microshaoft
                             )
         {
             return
-                target
+                @this
                     .Add
                         (
                               rowData.Item1
@@ -425,7 +425,7 @@ namespace Microshaoft
                             //, T7
                         >
                     (
-                        this DataRowCollection target
+                        this DataRowCollection @this
                         , ValueTuple
                                     <
                                           T1
@@ -440,7 +440,7 @@ namespace Microshaoft
                     )
         {
             return
-                target
+                @this
                     .Add
                         (
                               rowData.Item1
@@ -463,7 +463,7 @@ namespace Microshaoft
                     //, T7
                 >
             (
-                this DataRowCollection target
+                this DataRowCollection @this
                 , ValueTuple
                             <
                                   T1
@@ -478,7 +478,7 @@ namespace Microshaoft
             )
         {
             return
-                target
+                @this
                     .Add
                         (
                               rowData.Item1
@@ -500,7 +500,7 @@ namespace Microshaoft
                     //, T7
                 >
             (
-                this DataRowCollection target
+                this DataRowCollection @this
                 , ValueTuple
                             <
                                   T1
@@ -515,7 +515,7 @@ namespace Microshaoft
             )
         {
             return
-                target
+                @this
                     .Add
                         (
                               rowData.Item1
@@ -537,7 +537,7 @@ namespace Microshaoft
                     //, T7
                 >
             (
-                this DataRowCollection target
+                this DataRowCollection @this
                 , ValueTuple
                             <
                                   T1
@@ -552,7 +552,7 @@ namespace Microshaoft
             )
         {
             return
-                target
+                @this
                     .Add
                         (
                               rowData.Item1

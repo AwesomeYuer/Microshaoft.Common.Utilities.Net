@@ -6,11 +6,11 @@
     using System.Reflection;
     public static class ObjectExtensions
     {
-        public static ExpandoObject ShapeData<TSource>(this TSource source, string fields)
+        public static ExpandoObject ShapeData<TSource>(this TSource @this, string fields)
         {
-            if (source == null)
+            if (@this == null)
             {
-                throw new ArgumentNullException(nameof(source));
+                throw new ArgumentNullException(nameof(@this));
             }
 
             var expandoObj = new ExpandoObject();
@@ -22,7 +22,7 @@
                                                   BindingFlags.Instance);
                 foreach (var propertyInfo in propertyInfos)
                 {
-                    var propertyValue = propertyInfo.GetValue(source);
+                    var propertyValue = propertyInfo.GetValue(@this);
                     ((IDictionary<string, object>)expandoObj).Add(propertyInfo.Name, propertyValue);
                 }
             }
@@ -42,7 +42,7 @@
                         throw new Exception($"在{typeof(TSource)}上没有找到{propertyName}这个属性");
                     }
 
-                    var propertyValue = propertyInfo.GetValue(source);
+                    var propertyValue = propertyInfo.GetValue(@this);
                     ((IDictionary<string, object>)expandoObj).Add(propertyInfo.Name, propertyValue);
                 }
             }
@@ -55,11 +55,11 @@
         /// 支持object to object
         /// </summary>
         /// <typeparam name="T">要转换的结果类型</typeparam>
-        /// <param name="source">原对象实例</param>
+        /// <param name="this">原对象实例</param>
         /// <returns>返回转换后的结果</returns>
-        public static T To<T>(this object source)
+        public static T To<T>(this object @this)
         {
-            return (T)source.To(typeof(T));
+            return (T) @this.To(typeof(T));
         }
         /// <summary>
         /// 类型转换
@@ -67,42 +67,42 @@
         /// 支持object to object
         /// </summary>
         /// <typeparam name="T">要转换的结果类型</typeparam>
-        /// <param name="source">原对象实例</param>
+        /// <param name="this">原对象实例</param>
         /// <param name="t">要转换的结果类型，这个参数主要为了支持匿名类型</param>
         /// <returns>返回转换后的结果</returns>
-        public static T To<T>(this object source, T t)
+        public static T To<T>(this object @this, T t)
         {
-            return (T)source.To(typeof(T));
+            return (T)@this.To(typeof(T));
         }
         /// <summary>
         /// 类型转换
         /// 支持值类型之间的转换
         /// 支持object to object
         /// </summary>
-        /// <param name="source">原对象实例</param>
+        /// <param name="this">原对象实例</param>
         /// <param name="targetType">要转换的结果类型</param>
         /// <returns>返回转换后的结果</returns>
-        public static object To(this object source, Type targetType)
+        public static object To(this object @this, Type targetType)
         {
-            return source.InternalTo(targetType, targetType);
+            return @this.InternalTo(targetType, targetType);
         }
 
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="source"></param>
+        /// <param name="this"></param>
         /// <param name="targetType"></param>
         /// <param name="rootType">根类型</param>
         /// <param name="deep">记录object引用类型深度，不能超过2（防止循环引用导致的死循环）</param>
         /// <returns></returns>
-        static object InternalTo(this object source, Type targetType, Type rootType, int deep = 0)
+        static object InternalTo(this object @this, Type targetType, Type rootType, int deep = 0)
         {
-            if (source == null)
+            if (@this == null)
             {
                 return DefaultInstance(targetType);
             }
-            var sourceType = source.GetType();
+            var sourceType = @this.GetType();
             if (sourceType.IsValueType)
             {
                 if (targetType.IsValueType)
@@ -110,16 +110,16 @@
                     //ValueType to ValueType
                     if (sourceType == targetType)
                     {
-                        return source;
+                        return @this;
                     }
 
-                    return ChangeType(source, targetType);
+                    return ChangeType(@this, targetType);
 
                 }
                 else if (IsString(targetType))
                 {
                     //ValueType to string
-                    return source.ToString();
+                    return @this.ToString();
                 }
                 else
                 {
@@ -133,13 +133,13 @@
                 if (targetType.IsValueType)
                 {
                     //string to ValueType
-                    return ChangeType(source, targetType);
+                    return ChangeType(@this, targetType);
                 }
 
                 if (IsString(targetType))
                 {
                     //string to string
-                    return source;
+                    return @this;
                 }
                 //string to object
                 return null;
@@ -155,7 +155,7 @@
                 if (IsString(targetType))
                 {
                     //object to string
-                    return source.ToString();
+                    return @this.ToString();
                 }
 
                 //值为2时  支持 a.b   不支持a.b.c
@@ -165,7 +165,7 @@
                 }
 
                 //object to object
-                var targetObj = CreateInstance(targetType, source, sourceType);
+                var targetObj = CreateInstance(targetType, @this, sourceType);
                 foreach (var sourceProperty in sourceType.GetProperties())
                 {
                     var targetProperty = targetType.GetProperty(sourceProperty.Name, BindingFlags.Public | BindingFlags.Instance);
@@ -173,7 +173,7 @@
                     {
                         //if (targetProperty.PropertyType != rootType)
                         //{
-                        targetProperty.SetValue(targetObj, sourceProperty.GetValue(source).InternalTo(targetProperty.PropertyType, rootType, deep + 1));
+                        targetProperty.SetValue(targetObj, sourceProperty.GetValue(@this).InternalTo(targetProperty.PropertyType, rootType, deep + 1));
                         //}
                     }
                     else
@@ -183,7 +183,7 @@
                         {
                             //if (targetField.FieldType != rootType)
                             //{
-                            targetField.SetValue(targetObj, sourceProperty.GetValue(source).InternalTo(targetField.FieldType, rootType, deep + 1));
+                            targetField.SetValue(targetObj, sourceProperty.GetValue(@this).InternalTo(targetField.FieldType, rootType, deep + 1));
                             //}
                         }
                     }
@@ -196,7 +196,7 @@
                     {
                         //if (targetField.FieldType != rootType)
                         //{
-                        targetField.SetValue(targetObj, sourceField.GetValue(source).InternalTo(targetField.FieldType, rootType, deep + 1));
+                        targetField.SetValue(targetObj, sourceField.GetValue(@this).InternalTo(targetField.FieldType, rootType, deep + 1));
                         //}
                     }
                     else
@@ -206,7 +206,7 @@
                         {
                             //if (targetProperty.PropertyType != rootType)
                             //{
-                            targetProperty.SetValue(targetObj, sourceField.GetValue(source).InternalTo(targetProperty.PropertyType, rootType, deep + 1));
+                            targetProperty.SetValue(targetObj, sourceField.GetValue(@this).InternalTo(targetProperty.PropertyType, rootType, deep + 1));
                             //}
                         }
                     }

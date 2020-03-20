@@ -9,7 +9,7 @@
     {
         public static JToken MapToNew
                             (
-                                this JToken source
+                                this JToken @this
                                 , params
                                     (
                                         string TargetJPath
@@ -22,14 +22,14 @@
             return
                 MapToNew
                     (
-                        source
+                        @this
                         , mappings
                         , false
                     );
         }
         public static JToken MapToNew
                             (
-                                this JToken source
+                                this JToken @this
                                 , bool orderedTargetPaths = false
                                 , params
                                     (
@@ -42,7 +42,7 @@
             return
                 MapToNew
                     (
-                        source
+                        @this
                         ,
                             //(
                             //    IEnumerable
@@ -60,7 +60,7 @@
         //TargetJPath such as: SomeField[1] unsupported JArray 
         public static JToken MapToNew
                             (
-                                this JToken source
+                                this JToken @this
                                 , IEnumerable
                                     <
                                         (
@@ -89,7 +89,7 @@
             }
             foreach (var (TargetJPath, SourceJPath) in c)
             {
-                var jToken = source
+                var jToken = @this
                                 .SelectToken(SourceJPath);
                 if (TargetJPath != "$")
                 {
@@ -133,16 +133,16 @@
         }
         public static IEnumerable<JValue> GetAllJValues
                         (
-                            this JToken target
+                            this JToken @this
                         )
         {
-            if (target is JValue jValue)
+            if (@this is JValue jValue)
             {
                 yield
                     return
                         jValue;
             }
-            else if (target is JArray jArray)
+            else if (@this is JArray jArray)
             {
                 var c = GetAllJValuesFromJArray(jArray);
                 foreach (var result in c)
@@ -152,7 +152,7 @@
                             result;
                 }
             }
-            else if (target is JProperty jProperty)
+            else if (@this is JProperty jProperty)
             {
                 var c = GetAllJValuesFromJProperty(jProperty);
                 foreach (var result in c)
@@ -160,7 +160,7 @@
                     yield return result;
                 }
             }
-            else if (target is JObject jObject)
+            else if (@this is JObject jObject)
             {
                 var c = GetAllValuesFromJObject(jObject);
                 foreach (var result in c)
@@ -172,12 +172,12 @@
 
         #region Private helpers
 
-        public static IEnumerable<JValue> GetAllJValuesFromJArray(this JArray target)
+        public static IEnumerable<JValue> GetAllJValuesFromJArray(this JArray @this)
         {
-            int count = target.Count;
+            int count = @this.Count;
             for (var i = 0; i < count; i++)
             {
-                var c = GetAllJValues(target[i]);
+                var c = GetAllJValues(@this[i]);
                 foreach (var result in c)
                 {
                     yield
@@ -187,9 +187,9 @@
             }
         }
 
-        public static IEnumerable<JValue> GetAllJValuesFromJProperty(this JProperty target)
+        public static IEnumerable<JValue> GetAllJValuesFromJProperty(this JProperty @this)
         {
-            var c = GetAllJValues(target.Value);
+            var c = GetAllJValues(@this.Value);
             foreach (var result in c)
             {
                 yield
@@ -198,9 +198,9 @@
             }
         }
 
-        public static IEnumerable<JValue> GetAllValuesFromJObject(this JObject target)
+        public static IEnumerable<JValue> GetAllValuesFromJObject(this JObject @this)
         {
-            var c = target.Children();
+            var c = @this.Children();
             foreach (var jToken in c)
             {
                 var cc = GetAllJValues(jToken);
@@ -216,12 +216,12 @@
         #endregion
         public static JToken GetDescendantByPathKeys
                         (
-                            this JToken target
+                            this JToken @this
                             , params string[] pathKeys
                         )
         {
             return
-                target
+                @this
                     .GetDescendantByPathKeys
                         (
                             true
@@ -230,12 +230,12 @@
         }
         public static JToken GetDescendantByPathKeys
                                 (
-                                    this JToken target
+                                    this JToken @this
                                     , bool ignoreCase = true
                                     , params string[] pathKeys
                                 )
         {
-            JToken jToken = target;
+            JToken jToken = @this;
             foreach (var key in pathKeys)
             {
                 if (key.IsNullOrEmptyOrWhiteSpace())
@@ -303,7 +303,7 @@
         }
         public static bool TryGetNullableValue<T>
                             (
-                                this JToken target
+                                this JToken @this
                                 , ref T jTokenValue
                             )
                         where T : struct
@@ -311,9 +311,9 @@
             var r = false;
             //jTokenValue = default(T);
             //jTokenValue = jTokenValue;
-            if (target != null)
+            if (@this != null)
             {
-                T? output = target.Value<T?>();
+                T? output = @this.Value<T?>();
                 if (output.HasValue)
                 {
                     jTokenValue = output.Value;
@@ -324,16 +324,16 @@
         }
         public static bool TryGetNonNullValue<T>
                             (
-                                this JToken target
+                                this JToken @this
                                 , ref T jTokenValue
                             )
         {
             var r = false;
             //jTokenValue = default(T);
             //jTokenValue = jTokenValue;
-            if (target != null)
+            if (@this != null)
             {
-                jTokenValue = target.Value<T>();
+                jTokenValue = @this.Value<T>();
                 if (jTokenValue != null)
                 {
                     r = true;

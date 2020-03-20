@@ -70,23 +70,23 @@ namespace Microshaoft
                         );
         }
 
-        public static IEnumerable<MemberInfo> GetMembersByMemberType<TMember>(this Type target, bool includeIndexer = false)
+        public static IEnumerable<MemberInfo> GetMembersByMemberType<TMember>(this Type @this, bool includeIndexer = false)
         {
             //var type = target.GetType();
             var memberType = typeof(TMember);
             return
                 GetMembersByMemberType
                             (
-                                target
+                                @this
                                 , memberType
                                 , includeIndexer
                             );
         }
 
-        public static IEnumerable<MemberInfo> GetMembersByMemberType(this Type target, Type memberType, bool includeIndexer = false)
+        public static IEnumerable<MemberInfo> GetMembersByMemberType(this Type @this, Type memberType, bool includeIndexer = false)
         {
             return
-                target
+                @this
                     .GetMembers()
                     .Where
                         (
@@ -142,11 +142,11 @@ namespace Microshaoft
         public static IEnumerable<MemberInfo>
                        GetModelMembers
                                (
-                                   this Type target
+                                   this Type @this
                                 )
         {
             return
-                target
+                @this
                     .GetMembers()
                     .Where
                         (
@@ -193,7 +193,7 @@ namespace Microshaoft
         public static IEnumerable<MemberInfo>
                        GetCustomAttributedMembers<TAttribute>
                                (
-                                   this Type target
+                                   this Type @this
                                    , Func<MemberTypes, MemberInfo, TAttribute, bool> onAttributeProcessFunc = null
                                    //, BindingFlags bindingFlags = BindingFlags.
                                )
@@ -201,7 +201,7 @@ namespace Microshaoft
 
         {
             return
-                target
+                @this
                     .GetFields()
                     .Where
                         (
@@ -234,7 +234,7 @@ namespace Microshaoft
                         )
                     .Concat
                         (
-                            target
+                            @this
                                 .GetProperties()
                                 .Where
                                     (
@@ -271,12 +271,12 @@ namespace Microshaoft
         public static IEnumerable<MemberAccessor>
                         GetModelMembersAccessors
                                 (
-                                    this Type target
+                                    this Type @this
                                     , bool needDefinitionAttributeProcess = false
                                 )
                                 
         {
-            var members = target
+            var members = @this
                                 .GetModelMembers();
             foreach (var member in members)
             {
@@ -298,10 +298,10 @@ namespace Microshaoft
                 var accessor = new MemberAccessor()
                 {
                     Getter = DynamicExpressionTreeHelper
-                                .CreateMemberGetter(target, memberName)
+                                .CreateMemberGetter(@this, memberName)
                     ,
                     Setter = DynamicExpressionTreeHelper
-                                .CreateMemberSetter(target, memberName)
+                                .CreateMemberSetter(@this, memberName)
                     ,
                     Member = member
                     ,
@@ -465,12 +465,12 @@ namespace Microshaoft
         public static Dictionary<string, MemberAccessor>
                                 GenerateTypeKeyedCachedMembersAccessors
                                         (
-                                            this Type target
+                                            this Type @this
                                             , bool needDefinitionAttributeProcess = false
                                         )
         {
             Dictionary<string, MemberAccessor> dictionary = null;
-            var result = GetModelMembersAccessors(target, needDefinitionAttributeProcess);
+            var result = GetModelMembersAccessors(@this, needDefinitionAttributeProcess);
             foreach (var x in result)
             {
                 if (dictionary == null)
@@ -486,37 +486,37 @@ namespace Microshaoft
             }
             return dictionary;
         }
-        public static bool IsNullableType(this Type target)
+        public static bool IsNullableType(this Type @this)
         {
             return
                 (
                     (
-                        target.IsGenericType
+                        @this.IsGenericType
                         &&
-                        target.GetGenericTypeDefinition() == typeof(Nullable<>)
+                        @this.GetGenericTypeDefinition() == typeof(Nullable<>)
                     )
                 );
         }
-        public static Type GetNullableUnderlyingType(this Type target)
+        public static Type GetNullableUnderlyingType(this Type @this)
         {
             //Type r = null;
-            if (IsNullableType(target))
+            if (IsNullableType(@this))
             {
-                target = Nullable.GetUnderlyingType(target); 
+                @this = Nullable.GetUnderlyingType(@this); 
             }
-            return target;
+            return @this;
         }
-        public static bool IsNumericType(this Type target)
+        public static bool IsNumericType(this Type @this)
         {
-            var typeCode = Type.GetTypeCode(target);
+            var typeCode = Type.GetTypeCode(@this);
             return
                 (
                     (
-                        target.IsPrimitive
+                        @this.IsPrimitive
                         &&
-                        target.IsValueType
+                        @this.IsValueType
                         &&
-                        !target.IsEnum
+                        !@this.IsEnum
                         &&
                         typeCode != TypeCode.Char
                         &&
@@ -526,19 +526,19 @@ namespace Microshaoft
                     typeCode == TypeCode.Decimal
                 );
         }
-        public static bool IsNumericOrNullableNumericType(this Type target)
+        public static bool IsNumericOrNullableNumericType(this Type @this)
         {
             return
                 (
-                    IsNumericType(target)
+                    IsNumericType(@this)
                     ||
                     (
-                        IsNullableType(target)
+                        IsNullableType(@this)
                         && 
                         IsNumericType
                                 (
                                     //type.GetGenericArguments()[0]
-                                    Nullable.GetUnderlyingType(target)
+                                    Nullable.GetUnderlyingType(@this)
                                 )
                     )
                 );
@@ -547,105 +547,105 @@ namespace Microshaoft
 
         
 
-        public static Type GetTaskInnerTypeOrNull(this Type target)
+        public static Type GetTaskInnerTypeOrNull(this Type @this)
         {
             //Contract.Assert(type != null);
-            if (target.IsGenericType && !target.IsGenericTypeDefinition)
+            if (@this.IsGenericType && !@this.IsGenericTypeDefinition)
             {
-                Type genericTypeDefinition = target.GetGenericTypeDefinition();
+                Type genericTypeDefinition = @this.GetGenericTypeDefinition();
 
                 if (TaskGenericType == genericTypeDefinition)
                 {
-                    return target.GetGenericArguments()[0];
+                    return @this.GetGenericArguments()[0];
                 }
             }
 
             return null;
         }
 
-        public static Type[] GetTypeArgumentsIfMatch(this Type target, Type matchingOpenType)
+        public static Type[] GetTypeArgumentsIfMatch(this Type @this, Type matchingOpenType)
         {
-            if (!target.IsGenericType)
+            if (!@this.IsGenericType)
             {
                 return null;
             }
-            Type openType = target.GetGenericTypeDefinition();
+            Type openType = @this.GetGenericTypeDefinition();
             return
                 (matchingOpenType == openType)
                 ?
-                target.GetGenericArguments()
+                @this.GetGenericArguments()
                 :
                 null;
         }
 
-        public static bool IsCompatibleObject(this Type target, object value)
+        public static bool IsCompatibleObject(this Type @this, object value)
         {
             return
                 (
                     value == null
                     &&
-                    TypeAllowsNullValue(target)
+                    TypeAllowsNullValue(@this)
                 )
                 ||
-                target.IsInstanceOfType(value);
+                @this.IsInstanceOfType(value);
         }
 
-        public static bool IsNullableValueType(this Type target)
+        public static bool IsNullableValueType(this Type @this)
         {
-            return Nullable.GetUnderlyingType(target) != null;
+            return Nullable.GetUnderlyingType(@this) != null;
         }
 
-        public static bool TypeAllowsNullValue(this Type target)
-        {
-            return
-                !target.IsValueType
-                ||
-                IsNullableValueType(target);
-        }
-
-        public static bool IsSimpleType(this Type target)
+        public static bool TypeAllowsNullValue(this Type @this)
         {
             return
-                target.IsPrimitive
+                !@this.IsValueType
                 ||
-                target.Equals(typeof(string))
-                ||
-                target.Equals(typeof(DateTime))
-                ||
-                target.Equals(typeof(Decimal))
-                ||
-                target.Equals(typeof(Guid))
-                ||
-                target.Equals(typeof(DateTimeOffset))
-                ||
-                target.Equals(typeof(TimeSpan));
+                IsNullableValueType(@this);
         }
 
-        public static bool IsSimpleUnderlyingType(this Type target)
+        public static bool IsSimpleType(this Type @this)
         {
-            Type underlyingType = Nullable.GetUnderlyingType(target);
+            return
+                @this.IsPrimitive
+                ||
+                @this.Equals(typeof(string))
+                ||
+                @this.Equals(typeof(DateTime))
+                ||
+                @this.Equals(typeof(Decimal))
+                ||
+                @this.Equals(typeof(Guid))
+                ||
+                @this.Equals(typeof(DateTimeOffset))
+                ||
+                @this.Equals(typeof(TimeSpan));
+        }
+
+        public static bool IsSimpleUnderlyingType(this Type @this)
+        {
+            Type underlyingType = Nullable.GetUnderlyingType(@this);
             if (underlyingType != null)
             {
-                target = underlyingType;
+                @this = underlyingType;
             }
 
             return
-                target.IsSimpleType();
+                @this.IsSimpleType();
         }
 
-        public static bool CanConvertFromString(this Type target)
+        public static bool CanConvertFromString(this Type @this)
         {
             return
-                target.IsSimpleUnderlyingType()
+                @this.IsSimpleUnderlyingType()
                 ||
-                target.HasStringConverter();
+                @this.HasStringConverter();
         }
 
-        public static bool HasStringConverter(this Type target)
+        public static bool HasStringConverter(this Type @this)
         {
             return
                 TypeDescriptor
-                    .GetConverter(target)
+                    .GetConverter(@this)
                     .CanConvertFrom(typeof(string));
         }
 

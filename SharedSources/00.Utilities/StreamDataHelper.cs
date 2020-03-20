@@ -6,14 +6,14 @@
     public static class StreamDataHelper
     {
 
-        public static IEnumerable<byte[]> ReadDataToBuffers(this Stream target, int bufferSize)
+        public static IEnumerable<byte[]> ReadDataToBuffers(this Stream @this, int bufferSize)
         {
             int l = bufferSize;
             int r = 1;
             while (r > 0)
             {
                 var buffer = new byte[l];
-                r = target
+                r = @this
                             .Read
                                 (
                                     buffer
@@ -34,7 +34,7 @@
 
         public static byte[] ReadDataToFixedLengthBytes
                             (
-                                this Stream target,
+                                this Stream @this,
                                 int length
                             )
         {
@@ -42,7 +42,7 @@
             byte[] data = new byte[length];
             while (p < length)
             {
-                int r = target.Read
+                int r = @this.Read
                                     (
                                         data
                                         , p
@@ -52,20 +52,20 @@
             }
             return data;
         }
-        public static byte[] ReadDataToBytes(this Stream target)
+        public static byte[] ReadDataToBytes(this Stream @this)
         {
             byte[] buffer = new byte[64 * 1024];
             using MemoryStream ms = new MemoryStream();
             int l = 0;
             long position = -1;
-            if (target.CanSeek)
+            if (@this.CanSeek)
             {
-                position = target.Position;
-                target.Position = 0;
+                position = @this.Position;
+                @this.Position = 0;
             }
             while (true)
             {
-                int r = target.Read(buffer, 0, buffer.Length);
+                int r = @this.Read(buffer, 0, buffer.Length);
                 if (r > 0)
                 {
                     l += r;
@@ -85,7 +85,7 @@
             //ms = null;
             if (position >= 0)
             {
-                target.Position = position;
+                @this.Position = position;
             }
             return bytes;
         }

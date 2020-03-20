@@ -77,9 +77,9 @@ namespace Microshaoft
             }
         }
 
-        public static Type GetImplementedInterface(this Type target, Type interfaceDefinition, params Type[] interfaceGenericArguments)
+        public static Type GetImplementedInterface(this Type @this, Type interfaceDefinition, params Type[] interfaceGenericArguments)
         {
-            return target.GetTypeInfo().ImplementedInterfaces.Single(implementedInterface =>
+            return @this.GetTypeInfo().ImplementedInterfaces.Single(implementedInterface =>
             {
                 if (implementedInterface.GetGenericTypeDefinition() != interfaceDefinition)
                 {
@@ -99,39 +99,39 @@ namespace Microshaoft
             });
         }
 
-        public static Type GetGenericTypeDefinitionIfGeneric(this Type target)
+        public static Type GetGenericTypeDefinitionIfGeneric(this Type @this)
         {
-            return target.IsGenericType() ? target.GetGenericTypeDefinition() : target;
+            return @this.IsGenericType() ? @this.GetGenericTypeDefinition() : @this;
         }
 
-        public static Type[] GetGenericParameters(this Type target)
+        public static Type[] GetGenericParameters(this Type @this)
         {
-            return target.GetGenericTypeDefinition().GetTypeInfo().GenericTypeParameters;
+            return @this.GetGenericTypeDefinition().GetTypeInfo().GenericTypeParameters;
         }
 
-        public static IEnumerable<ConstructorInfo> GetDeclaredConstructors(this Type target)
+        public static IEnumerable<ConstructorInfo> GetDeclaredConstructors(this Type @this)
         {
-            return target.GetTypeInfo().DeclaredConstructors;
+            return @this.GetTypeInfo().DeclaredConstructors;
         }
 
 #if !PORTABLE && !NETSTANDARD2_X
-        public static Type CreateType(this TypeBuilder target)
+        public static Type CreateType(this TypeBuilder @this)
         {
-            return target.CreateTypeInfo().AsType();
+            return @this.CreateTypeInfo().AsType();
         }
 #endif
 
-        public static IEnumerable<MemberInfo> GetDeclaredMembers(this Type target)
+        public static IEnumerable<MemberInfo> GetDeclaredMembers(this Type @this)
         {
-            return target.GetTypeInfo().DeclaredMembers;
+            return @this.GetTypeInfo().DeclaredMembers;
         }
 
 //#if PORTABLE
-        public static IEnumerable<MemberInfo> GetAllMembers(this Type target)
+        public static IEnumerable<MemberInfo> GetAllMembers(this Type @this)
         {
             while (true)
             {
-                IEnumerable<MemberInfo> declaredMembers = target
+                IEnumerable<MemberInfo> declaredMembers = @this
                                                             .GetTypeInfo()
                                                             .DeclaredMembers;
                 foreach (var memberInfo in declaredMembers)
@@ -142,35 +142,35 @@ namespace Microshaoft
                         memberInfo;
                 }
 
-                target = target.BaseType();
+                @this = @this.BaseType();
 
-                if (target == null)
+                if (@this == null)
                 {
                     yield break;
                 }
             }
         }
 
-        public static MemberInfo[] GetMember(this Type target, string name)
+        public static MemberInfo[] GetMember(this Type @this, string name)
         {
-            return target.GetAllMembers().Where(mi => mi.Name == name).ToArray();
+            return @this.GetAllMembers().Where(mi => mi.Name == name).ToArray();
         }
 //#endif
 
-        public static IEnumerable<MethodInfo> GetDeclaredMethods(this Type target)
+        public static IEnumerable<MethodInfo> GetDeclaredMethods(this Type @this)
         {
-            return target.GetTypeInfo().DeclaredMethods;
+            return @this.GetTypeInfo().DeclaredMethods;
         }
 
 //#if PORTABLE
-        public static MethodInfo GetMethod(this Type target, string name)
+        public static MethodInfo GetMethod(this Type @this, string name)
         {
-            return target.GetAllMethods().FirstOrDefault(mi => mi.Name == name);
+            return @this.GetAllMethods().FirstOrDefault(mi => mi.Name == name);
         }
 
-        public static MethodInfo GetMethod(this Type target, string name, Type[] parameters)
+        public static MethodInfo GetMethod(this Type @this, string name, Type[] parameters)
         {
-            return target
+            return @this
                     .GetAllMethods()
                     .Where(mi => mi.Name == name)
                     .Where(mi => mi.GetParameters().Length == parameters.Length)
@@ -178,138 +178,138 @@ namespace Microshaoft
         }
 //#endif
 
-        public static IEnumerable<MethodInfo> GetAllMethods(this Type target)
+        public static IEnumerable<MethodInfo> GetAllMethods(this Type @this)
         {
-            return target.GetRuntimeMethods();
+            return @this.GetRuntimeMethods();
         }
 
-        public static IEnumerable<PropertyInfo> GetDeclaredProperties(this Type target)
+        public static IEnumerable<PropertyInfo> GetDeclaredProperties(this Type @this)
         {
-            return target.GetTypeInfo().DeclaredProperties;
+            return @this.GetTypeInfo().DeclaredProperties;
         }
 
 //#if PORTABLE
-        public static PropertyInfo GetProperty(this Type target, string name)
+        public static PropertyInfo GetProperty(this Type @this, string name)
         {
-            return target.GetTypeInfo().DeclaredProperties.FirstOrDefault(mi => mi.Name == name);
+            return @this.GetTypeInfo().DeclaredProperties.FirstOrDefault(mi => mi.Name == name);
         }
 //#endif
 
-        public static object[] GetCustomAttributes(this Type target, Type attributeType, bool inherit)
+        public static object[] GetCustomAttributes(this Type @this, Type attributeType, bool inherit)
         {
-            return target.GetTypeInfo().GetCustomAttributes(attributeType, inherit).ToArray();
+            return @this.GetTypeInfo().GetCustomAttributes(attributeType, inherit).ToArray();
         }
 
-        public static bool IsStatic(this FieldInfo target)
+        public static bool IsStatic(this FieldInfo @this)
         {
-            return target?.IsStatic ?? false;
+            return @this?.IsStatic ?? false;
         }
 
-        public static bool IsStatic(this PropertyInfo target)
+        public static bool IsStatic(this PropertyInfo @this)
         {
             return
-                target?.GetGetMethod(true)?.IsStatic
-                ?? target?.GetSetMethod(true)?.IsStatic
+                @this?.GetGetMethod(true)?.IsStatic
+                ?? @this?.GetSetMethod(true)?.IsStatic
                 ?? false;
         }
 
-        public static bool IsStatic(this MemberInfo target)
+        public static bool IsStatic(this MemberInfo @this)
         {
             return
                 (
-                    target as FieldInfo).IsStatic()
-                    || (target as PropertyInfo).IsStatic()
-                    || ((target as MethodInfo)?.IsStatic
+                    @this as FieldInfo).IsStatic()
+                    || (@this as PropertyInfo).IsStatic()
+                    || ((@this as MethodInfo)?.IsStatic
                     ?? false
                 );
         }
 
-        public static bool IsPublic(this PropertyInfo target)
+        public static bool IsPublic(this PropertyInfo @this)
         {
             return
-                (target?.GetGetMethod(true)?.IsPublic ?? false)
+                (@this?.GetGetMethod(true)?.IsPublic ?? false)
                 ||
-                (target?.GetSetMethod(true)?.IsPublic ?? false);
+                (@this?.GetSetMethod(true)?.IsPublic ?? false);
         }
 
-        public static bool HasAnInaccessibleSetter(this PropertyInfo target)
+        public static bool HasAnInaccessibleSetter(this PropertyInfo @this)
         {
-            var setMethod = target.GetSetMethod(true);
+            var setMethod = @this.GetSetMethod(true);
             return setMethod == null || setMethod.IsPrivate || setMethod.IsFamily;
         }
 
-        public static bool IsPublic(this MemberInfo target)
+        public static bool IsPublic(this MemberInfo @this)
         {
-            return (target as FieldInfo)?.IsPublic ?? (target as PropertyInfo).IsPublic();
+            return (@this as FieldInfo)?.IsPublic ?? (@this as PropertyInfo).IsPublic();
         }
 
-        public static bool IsAsync(this MethodInfo target)
+        public static bool IsAsync(this MethodInfo @this)
         {
             Type attributeType = typeof(AsyncStateMachineAttribute);
             var attribute = (AsyncStateMachineAttribute)
-                                    target
+                                    @this
                                         .GetCustomAttribute(attributeType);
             var r = (attribute != null);
             return r;
         }
 
-        public static bool IsNotPublic(this ConstructorInfo target)
+        public static bool IsNotPublic(this ConstructorInfo @this)
         {
             return
-                    target.IsPrivate
+                    @this.IsPrivate
                     ||
-                    target.IsFamilyAndAssembly
+                    @this.IsFamilyAndAssembly
                     ||
-                    target.IsFamilyOrAssembly
+                    @this.IsFamilyOrAssembly
                     ||
-                    target.IsFamily;
+                    @this.IsFamily;
         }
 
-        public static Assembly Assembly(this Type target)
+        public static Assembly Assembly(this Type @this)
         {
-            return target.GetTypeInfo().Assembly;
+            return @this.GetTypeInfo().Assembly;
         }
 
-        public static Type BaseType(this Type target)
+        public static Type BaseType(this Type @this)
         {
-            return target.GetTypeInfo().BaseType;
+            return @this.GetTypeInfo().BaseType;
         }
 
 //#if PORTABLE
-        public static bool IsAssignableFrom(this Type target, Type other)
+        public static bool IsAssignableFrom(this Type @this, Type other)
         {
-            return target.GetTypeInfo().IsAssignableFrom(other.GetTypeInfo());
+            return @this.GetTypeInfo().IsAssignableFrom(other.GetTypeInfo());
         }
 //#endif
 
-        public static bool IsAbstract(this Type target)
+        public static bool IsAbstract(this Type @this)
         {
-            return target.GetTypeInfo().IsAbstract;
+            return @this.GetTypeInfo().IsAbstract;
         }
 
-        public static bool IsClass(this Type target)
+        public static bool IsClass(this Type @this)
         {
-            return target.GetTypeInfo().IsClass;
+            return @this.GetTypeInfo().IsClass;
         }
 
-        public static bool IsEnum(this Type target)
+        public static bool IsEnum(this Type @this)
         {
-            return target.GetTypeInfo().IsEnum;
+            return @this.GetTypeInfo().IsEnum;
         }
 
-        public static bool IsGenericType(this Type target)
+        public static bool IsGenericType(this Type @this)
         {
-            return target.GetTypeInfo().IsGenericType;
+            return @this.GetTypeInfo().IsGenericType;
         }
 
-        public static bool IsGenericTypeDefinition(this Type target)
+        public static bool IsGenericTypeDefinition(this Type @this)
         {
-            return target.GetTypeInfo().IsGenericTypeDefinition;
+            return @this.GetTypeInfo().IsGenericTypeDefinition;
         }
 
-        public static bool IsInterface(this Type target)
+        public static bool IsInterface(this Type @this)
         {
-            return target.GetTypeInfo().IsInterface;
+            return @this.GetTypeInfo().IsInterface;
         }
 
         public static bool IsPrimitive(this Type type)
@@ -317,39 +317,39 @@ namespace Microshaoft
             return type.GetTypeInfo().IsPrimitive;
         }
 
-        public static bool IsSealed(this Type target)
+        public static bool IsSealed(this Type @this)
         {
-            return target.GetTypeInfo().IsSealed;
+            return @this.GetTypeInfo().IsSealed;
         }
 
-        public static bool IsValueType(this Type target)
+        public static bool IsValueType(this Type @this)
         {
-            return target.GetTypeInfo().IsValueType;
+            return @this.GetTypeInfo().IsValueType;
         }
 
-        public static bool IsInstanceOfType(this Type target, object o)
+        public static bool IsInstanceOfType(this Type @this, object o)
         {
-            return o != null && target.IsAssignableFrom(o.GetType());
+            return o != null && @this.IsAssignableFrom(o.GetType());
         }
 
-        public static ConstructorInfo[] GetConstructors(this Type target)
+        public static ConstructorInfo[] GetConstructors(this Type @this)
         {
-            return target.GetTypeInfo().DeclaredConstructors.ToArray();
+            return @this.GetTypeInfo().DeclaredConstructors.ToArray();
         }
 
-        public static MethodInfo GetGetMethod(this PropertyInfo target, bool ignored)
+        public static MethodInfo GetGetMethod(this PropertyInfo @this, bool ignored)
         {
-            return target.GetMethod;
+            return @this.GetMethod;
         }
 
-        public static MethodInfo GetSetMethod(this PropertyInfo target, bool ignored)
+        public static MethodInfo GetSetMethod(this PropertyInfo @this, bool ignored)
         {
-            return target.SetMethod;
+            return @this.SetMethod;
         }
 
-        public static FieldInfo GetField(this Type target, string name)
+        public static FieldInfo GetField(this Type @this, string name)
         {
-            return target.GetRuntimeField(name);
+            return @this.GetRuntimeField(name);
         }
     }
 }

@@ -202,43 +202,43 @@ namespace Microshaoft
         }
         public static void ReadAllMultipleContents
                                         (
-                                            this JsonReader target
+                                            this JsonReader @this
                                         )
         {
-            if (!target.SupportMultipleContent)
+            if (!@this.SupportMultipleContent)
             {
-                target.SupportMultipleContent = true;
+                @this.SupportMultipleContent = true;
             }
             var serializer = new JsonSerializer();
             //serializer.CheckAdditionalContent
-            while (target.Read())
+            while (@this.Read())
             {
-                Console.WriteLine(target.TokenType);
-                var r = serializer.Deserialize(target);
+                Console.WriteLine(@this.TokenType);
+                var r = serializer.Deserialize(@this);
                 Console.WriteLine(r.GetType());
                 Console.WriteLine(r.ToString());
             }
         }
         public static IEnumerable<JToken> ReadMultipleContents
                                                 (
-                                                    this JsonReader target
+                                                    this JsonReader @this
                                                 )
         {
-            if (!target.SupportMultipleContent)
+            if (!@this.SupportMultipleContent)
             {
-                target.SupportMultipleContent = true;
+                @this.SupportMultipleContent = true;
             }
             var serializer = new JsonSerializer();
-            while (target.Read())
+            while (@this.Read())
             {
-                if (target.TokenType == JsonToken.StartObject)
+                if (@this.TokenType == JsonToken.StartObject)
                 {
-                    JToken entry = serializer.Deserialize<JToken>(target);
+                    JToken entry = serializer.Deserialize<JToken>(@this);
                     yield return entry;
                 }
-                else if (target.TokenType == JsonToken.StartArray)
+                else if (@this.TokenType == JsonToken.StartArray)
                 {
-                    JArray entries = serializer.Deserialize<JArray>(target);
+                    JArray entries = serializer.Deserialize<JArray>(@this);
                     foreach (var entry in entries)
                     {
                         if (entry is JArray)
@@ -252,22 +252,22 @@ namespace Microshaoft
         }
         public static IEnumerable<IEnumerable<T>> ReadMultipleContentsAsEnumerable<T>
                         (
-                            this JsonReader target
+                            this JsonReader @this
                             , int pageSize = 10
                         )
         {
-            if (!target.SupportMultipleContent)
+            if (!@this.SupportMultipleContent)
             {
-                target.SupportMultipleContent = true;
+                @this.SupportMultipleContent = true;
             }
             var serializer = new JsonSerializer();
             var list = new List<T>();
             var i = 0;
-            while (target.Read())
+            while (@this.Read())
             {
-                if (target.TokenType == JsonToken.StartArray)
+                if (@this.TokenType == JsonToken.StartArray)
                 {
-                    var entries = serializer.Deserialize<T[]>(target);
+                    var entries = serializer.Deserialize<T[]>(@this);
                     foreach (var entry in entries)
                     {
                         if (i < pageSize)
@@ -285,7 +285,7 @@ namespace Microshaoft
                 }
                 else
                 {
-                    var entry = serializer.Deserialize<T>(target);
+                    var entry = serializer.Deserialize<T>(@this);
                     if (i < pageSize)
                     {
                         i++;
@@ -308,18 +308,18 @@ namespace Microshaoft
             }
         }
 
-        public static IEnumerable<T> ReadAllMultipleContentsAsEnumerable<T>(this JsonReader target)
+        public static IEnumerable<T> ReadAllMultipleContentsAsEnumerable<T>(this JsonReader @this)
         {
-            if (!target.SupportMultipleContent)
+            if (!@this.SupportMultipleContent)
             {
-                target.SupportMultipleContent = true;
+                @this.SupportMultipleContent = true;
             }
             var serializer = new JsonSerializer();
-            while (target.Read())
+            while (@this.Read())
             {
-                if (target.TokenType == JsonToken.StartArray)
+                if (@this.TokenType == JsonToken.StartArray)
                 {
-                    var entries = serializer.Deserialize<T[]>(target);
+                    var entries = serializer.Deserialize<T[]>(@this);
                     foreach (var entry in entries)
                     {
                         yield return entry;
@@ -327,60 +327,60 @@ namespace Microshaoft
                 }
                 else
                 {
-                    var entry = serializer.Deserialize<T>(target);
+                    var entry = serializer.Deserialize<T>(@this);
                     yield return entry;
                 }
             }
         }
 
-        public static void EnsureObjectStart(this JsonTextReader target)
+        public static void EnsureObjectStart(this JsonTextReader @this)
         {
-            if (target.TokenType != JsonToken.StartObject)
+            if (@this.TokenType != JsonToken.StartObject)
             {
-                throw new InvalidDataException($"Unexpected JSON Token Type '{GetTokenString(target.TokenType)}'. Expected a JSON Object.");
+                throw new InvalidDataException($"Unexpected JSON Token Type '{GetTokenString(@this.TokenType)}'. Expected a JSON Object.");
             }
         }
 
-        public static void EnsureArrayStart(this JsonTextReader target)
+        public static void EnsureArrayStart(this JsonTextReader @this)
         {
-            if (target.TokenType != JsonToken.StartArray)
+            if (@this.TokenType != JsonToken.StartArray)
             {
-                throw new InvalidDataException($"Unexpected JSON Token Type '{GetTokenString(target.TokenType)}'. Expected a JSON Array.");
+                throw new InvalidDataException($"Unexpected JSON Token Type '{GetTokenString(@this.TokenType)}'. Expected a JSON Array.");
             }
         }
 
-        public static int? ReadAsInt32(this JsonTextReader target, string propertyName)
+        public static int? ReadAsInt32(this JsonTextReader @this, string propertyName)
         {
-            target.Read();
+            @this.Read();
 
-            if (target.TokenType != JsonToken.Integer)
+            if (@this.TokenType != JsonToken.Integer)
             {
                 throw new InvalidDataException($"Expected '{propertyName}' to be of type {JTokenType.Integer}.");
             }
 
-            if (target.Value == null)
+            if (@this.Value == null)
             {
                 return null;
             }
 
-            return Convert.ToInt32(target.Value, CultureInfo.InvariantCulture);
+            return Convert.ToInt32(@this.Value, CultureInfo.InvariantCulture);
         }
 
-        public static string ReadAsString(this JsonTextReader target, string propertyName)
+        public static string ReadAsString(this JsonTextReader @this, string propertyName)
         {
-            target.Read();
+            @this.Read();
 
-            if (target.TokenType != JsonToken.String)
+            if (@this.TokenType != JsonToken.String)
             {
                 throw new InvalidDataException($"Expected '{propertyName}' to be of type {JTokenType.String}.");
             }
 
-            return target.Value?.ToString();
+            return @this.Value?.ToString();
         }
 
-        public static bool CheckRead(this JsonTextReader target)
+        public static bool CheckRead(this JsonTextReader @this)
         {
-            if (!target.Read())
+            if (!@this.Read())
             {
                 throw new InvalidDataException("Unexpected end when reading JSON.");
             }
@@ -388,7 +388,7 @@ namespace Microshaoft
             return true;
         }
 
-        public static bool ReadForType(this JsonTextReader target, Type type)
+        public static bool ReadForType(this JsonTextReader @this, Type type)
         {
             // Explicitly read values as dates from JSON with reader.
             // We do this because otherwise dates are read as strings
@@ -396,23 +396,23 @@ namespace Microshaoft
             // preserve UTC in DateTime.Kind for UTC ISO8601 dates
             if (type == typeof(DateTime) || type == typeof(DateTime?))
             {
-                target.ReadAsDateTime();
+                @this.ReadAsDateTime();
             }
             else if (type == typeof(DateTimeOffset) || type == typeof(DateTimeOffset?))
             {
-                target.ReadAsDateTimeOffset();
+                @this.ReadAsDateTimeOffset();
             }
             else
             {
-                target.Read();
+                @this.Read();
             }
 
             // TokenType will be None if there is no more content
-            return target.TokenType != JsonToken.None;
+            return @this.TokenType != JsonToken.None;
         }
-        public static string GetTokenString(this JsonToken target)
+        public static string GetTokenString(this JsonToken @this)
         {
-            switch (target)
+            switch (@this)
             {
                 case JsonToken.None:
                     break;
@@ -425,7 +425,7 @@ namespace Microshaoft
                 default:
                     break;
             }
-            return target.ToString();
+            return @this.ToString();
         }
     }
 }

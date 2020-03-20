@@ -58,9 +58,9 @@
                             }
                         )();
 
-        public static IEnumerable<Claim> AsClaims(this JToken target)
+        public static IEnumerable<Claim> AsClaims(this JToken @this)
         {
-               var jValues = target
+               var jValues = @this
                                 .GetAllJValues();
                return
                     jValues
@@ -89,13 +89,13 @@
         }
         public static bool TryGetClaimTypeJTokenValue
                                 (
-                                    this ClaimsPrincipal target
+                                    this ClaimsPrincipal @this
                                     , string claimType
                                     , out JToken claimValue
                                 )
         {
             claimValue = null;
-            var r = target
+            var r = @this
                         .TryGetClaimTypeValue
                             (
                                 claimType
@@ -110,21 +110,21 @@
         }
         public static JToken GetClaimTypeJTokenValue
                                 (
-                                    this ClaimsPrincipal target
+                                    this ClaimsPrincipal @this
                                     , string claimType
                                 )
         {
-            var json = GetClaimTypeValue(target, claimType);
+            var json = GetClaimTypeValue(@this, claimType);
             return
                 JToken.Parse(json);
         }
         public static string GetClaimTypeValue
                                 (
-                                    this ClaimsPrincipal target
+                                    this ClaimsPrincipal @this
                                     , string claimType
                                 )
         {
-            var r = target
+            var r = @this
                         .Claims
                         .FirstOrDefault
                             (
@@ -138,7 +138,7 @@
         }
         public static string GetClaimTypeValueOrDefault
                                 (
-                                    this ClaimsPrincipal target
+                                    this ClaimsPrincipal @this
                                     , string claimType
                                     , string defaultValue = null
                                 )
@@ -149,7 +149,7 @@
                 (
                     TryGetClaimTypeValue
                         (
-                            target
+                            @this
                             , claimType
                             , out var @value
                         )
@@ -162,13 +162,13 @@
 
         public static bool TryGetClaimTypeValue
                                 (
-                                    this ClaimsPrincipal target
+                                    this ClaimsPrincipal @this
                                     , string claimType
                                     , out string claimValue
                                 )
         {
             claimValue = string.Empty;
-            var r = target
+            var r = @this
                         .HasClaim
                             (
                                 (x) =>
@@ -189,7 +189,7 @@
             if (r)
             {
                 claimValue =
-                        target
+                        @this
                             .Claims
                             .FirstOrDefault
                                 (
@@ -208,10 +208,10 @@
             }
             return r;
         }
-        public static DateTime? GetIssuedAtLocalTime(this ClaimsPrincipal target)
+        public static DateTime? GetIssuedAtLocalTime(this ClaimsPrincipal @this)
         {
             DateTime? r = null;
-            var b = target
+            var b = @this
                         .TryGetClaimTypeValue
                             (
                                 "iat"
@@ -239,14 +239,14 @@
 
         public static IPAddress GetClientIP
                                     (
-                                        this ClaimsPrincipal target
+                                        this ClaimsPrincipal @this
                                         , string claimType = "ip"
                                     )
         {
             IPAddress r = null;
             if 
                 (
-                    target
+                    @this
                         .TryGetClaimTypeValue
                             (
                                 claimType

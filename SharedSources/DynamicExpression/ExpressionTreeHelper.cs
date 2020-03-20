@@ -8,9 +8,9 @@
 
     public static partial class DynamicExpressionTreeHelper
     {
-        public static Expression ToObject(this Expression expression)
+        public static Expression ToObject(this Expression @this)
         {
-            return expression.Type == typeof(object) ? expression : Expression.Convert(expression, typeof(object));
+            return @this.Type == typeof(object) ? @this : Expression.Convert(@this, typeof(object));
         }
 
         public static Expression<Func<TTarget, bool>> CreateMemberEqualsToExpression<TTarget>

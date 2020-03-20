@@ -8,7 +8,7 @@ namespace Microshaoft
     {
         public static IEnumerable<TEntry> AsEnumerable<TEntry>
                 (
-                    this IDataReader target
+                    this IDataReader @this
                     , bool needDefinitionAttributeProcess = false
                 )
                     where TEntry : new()
@@ -16,13 +16,13 @@ namespace Microshaoft
             return
                 GetEnumerable<TEntry>
                     (
-                        target
+                        @this
                         , needDefinitionAttributeProcess
                     );
         }
         public static IEnumerable<TEntry> GetEnumerable<TEntry>
                 (
-                    this IDataReader target
+                    this IDataReader @this
                     , bool needDefinitionAttributeProcess = false
                 )
                     where TEntry : new()
@@ -43,7 +43,7 @@ namespace Microshaoft
                                             return x;
                                         }
                                     );
-            while (target.Read())
+            while (@this.Read())
             {
                 var entry = new TEntry();
                 foreach (var x in members)
@@ -72,7 +72,7 @@ namespace Microshaoft
                     setter
                             (
                                 entry
-                                , target[dataColumnName]
+                                , @this[dataColumnName]
                             );
                 }
                 yield
