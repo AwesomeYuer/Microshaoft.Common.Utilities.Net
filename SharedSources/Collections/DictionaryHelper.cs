@@ -17,7 +17,11 @@ namespace Microshaoft
         /// <summary>
         /// Remove entries from dictionary that match the removeCondition.
         /// </summary>
-        public static void RemoveFromDictionary<TKey, TValue>(this IDictionary<TKey, TValue> @this, Func<KeyValuePair<TKey, TValue>, bool> removeCondition)
+        public static void RemoveFromDictionary<TKey, TValue>
+                            (
+                                this IDictionary<TKey, TValue> @this
+                                , Func<KeyValuePair<TKey, TValue>, bool> removeCondition
+                            )
         {
             // Pass the delegate as the state to avoid a delegate and closure
             @this.RemoveFromDictionary((entry, innerCondition) =>
