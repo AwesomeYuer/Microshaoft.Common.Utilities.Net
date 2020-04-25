@@ -7,7 +7,7 @@
     {
         public static bool TryEnterWriterLockSlimWrite<T>
                                                 (
-                                                    this ReaderWriterLockSlim instance
+                                                    this ReaderWriterLockSlim @this
                                                     , ref T target
                                                     , T newTarget
                                                     , int enterTimeOutInSeconds
@@ -23,7 +23,7 @@
             }
             try
             {
-                r = (instance.TryEnterWriteLock(timeOut));
+                r = (@this.TryEnterWriteLock(timeOut));
                 if (r)
                 {
                     Interlocked.Exchange<T>(ref target, newTarget);
@@ -34,7 +34,7 @@
             {
                 if (r)
                 {
-                    instance.ExitWriteLock();
+                    @this.ExitWriteLock();
                 }
             }
             return r;
@@ -42,7 +42,7 @@
 
         public static T TryEnterReadLockSlimRead<T>
                                 (
-                                    this ReaderWriterLockSlim target
+                                    this ReaderWriterLockSlim @this
                                     , Func<ReaderWriterLockSlim, T> onReadedProcessFunc
                                     , int enterTimeOutInSeconds
                                 )
@@ -57,10 +57,10 @@
             }
             try
             {
-                rr = (target.TryEnterReadLock(timeOut));
+                rr = (@this.TryEnterReadLock(timeOut));
                 if (rr)
                 {
-                    r = onReadedProcessFunc(target);
+                    r = onReadedProcessFunc(@this);
                     rr = true;
                 }
             }
@@ -68,14 +68,14 @@
             {
                 if (rr)
                 {
-                    target.ExitReadLock();
+                    @this.ExitReadLock();
                 }
             }
             return r;
         }
         public static bool TryEnterLockSlim
                                 (
-                                    this ReaderWriterLockSlim target
+                                    this ReaderWriterLockSlim @this
                                     , Func<ReaderWriterLockSlim, bool> onEnterProcessFunc
                                     , Action action
                                     , Action<ReaderWriterLockSlim> onExitProcessAction
@@ -86,7 +86,7 @@
             {
                 try
                 {
-                    r = onEnterProcessFunc(target);
+                    r = onEnterProcessFunc(@this);
                     if (r)
                     {
                         action();
@@ -97,7 +97,7 @@
                 {
                     if (r)
                     {
-                        onExitProcessAction(target);
+                        onExitProcessAction(@this);
                     }
                 }
             }
