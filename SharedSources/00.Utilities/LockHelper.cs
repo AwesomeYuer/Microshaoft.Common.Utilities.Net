@@ -5,14 +5,14 @@
     {
         public static void LockIf<T>
                             (
-                                this T lockerObject
+                                this T @this
                                 , Func<bool> onEnterLockPredictProcessFunc
                                 , Action onLockingProcessAction
                             )
         {
             if (onEnterLockPredictProcessFunc())
             {
-                lock (lockerObject)
+                lock (@this)
                 {
                     if (onEnterLockPredictProcessFunc())
                     {
@@ -24,14 +24,14 @@
     
         public static void LockIf
                             (
-                                this object target
+                                this object @this
                                 , Func<bool> onEnterLockPredictProcessFunc
                                 , Action onLockingProcessAction
                             )
         {
             LockIf<object>
                         (
-                            target
+                            @this
                             , onEnterLockPredictProcessFunc
                             , onLockingProcessAction
                         );

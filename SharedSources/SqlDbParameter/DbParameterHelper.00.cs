@@ -24,7 +24,7 @@
         }
         public static object SetGetValueAsObject<TDbParameter>
                             (
-                                this DbParameter target
+                                this DbParameter @this
                                 , JToken jValue
                             )
         {
@@ -32,14 +32,14 @@
             return
                 SetGetValueAsObject
                     (
-                        target
+                        @this
                         , type
                         , jValue
                     );
         }
         public static object SetGetValueAsObject
                                     (
-                                        this DbParameter target
+                                        this DbParameter @this
                                         , Type targetDbParameterType
                                         , JToken jValue 
                                     )
@@ -47,7 +47,7 @@
             object @return = null;
             if (targetDbParameterType == typeof(SqlParameter))
             {
-                var parameter = (SqlParameter) target;
+                var parameter = (SqlParameter) @this;
                 @return = parameter
                             .SetGetValueAsObject(jValue);
             }

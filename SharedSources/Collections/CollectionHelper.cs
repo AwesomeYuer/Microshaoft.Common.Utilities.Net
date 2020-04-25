@@ -140,7 +140,14 @@ namespace Microshaoft
         /// Returns a single value in list matching type TMatch if there is only one, null if there are none of type TMatch or calls the
         /// errorAction with errorArg1 if there is more than one.
         /// </summary>
-        public static TMatch SingleOfTypeDefaultOrError<TInput, TMatch, TArg1>(this IList<TInput> @this, Action<TArg1> errorAction, TArg1 errorArg1) where TMatch : class
+        public static TMatch SingleOfTypeDefaultOrError<TInput, TMatch, TArg1>
+                    (
+                        this IList<TInput> @this
+                        , Action<TArg1> errorAction
+                        , TArg1 errorArg1
+                    )
+                        where
+                            TMatch : class
         {
             Contract.Assert(@this != null);
             Contract.Assert(errorAction != null);
