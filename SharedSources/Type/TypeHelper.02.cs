@@ -43,14 +43,15 @@
                     TypeAttributes.NotPublic;
         }
 
-
         public static List<Type> GetTypeAndBaseTypes(this Type @this)
         {
             List<Type> r = new List<Type>();
             if (@this != null)
             {
-                r.Add(@this);
-                r.AddRange(GetBaseTypes(@this));
+                r
+                    .Add(@this);
+                r
+                    .AddRange(GetBaseTypes(@this));
             }
             return r;
         }
@@ -60,10 +61,17 @@
             List<Type> r = new List<Type>();
             if (@this != null)
             {
-                if (@this.BaseType != null && @this.BaseType != typeof(object))
+                if 
+                    (
+                        @this.BaseType != null
+                        &&
+                        @this.BaseType != typeof(object)
+                    )
                 {
-                    r.Add(@this.BaseType);
-                    r.AddRange(GetBaseTypes(@this.BaseType));
+                    r
+                        .Add(@this.BaseType);
+                    r
+                        .AddRange(GetBaseTypes(@this.BaseType));
                 }
             }
             return r;
@@ -81,14 +89,11 @@
             while (pending.Count > 0)
             {
                 var current = pending.Pop();
-
                 r.AddRange(current.GetMembers());
-
                 if (current.BaseType != null)
                 {
                     pending.Push(current.BaseType);
                 }
-
                 foreach (var x in current.GetInterfaces())
                 {
                     pending.Push(x);
@@ -96,8 +101,6 @@
             }
             return r;
         }
-
-
 
         public static ConstructorInfo GetCtorByParameterInterfaceType
                                 (
@@ -152,7 +155,12 @@
             foreach (var ctor in @this.GetConstructors())
             {
                 var ctorParas = ctor.GetParameters();
-                if (ctorParas.Length == 1 && ctorParas[0].ParameterType == ctorParaTypes)
+                if 
+                    (
+                        ctorParas.Length == 1
+                        &&
+                        ctorParas[0].ParameterType == ctorParaTypes
+                    )
                 {
                     return ctor;
                 }
@@ -163,28 +171,50 @@
         public static bool HasEmptyCtor(this Type @this)
         {
             if (@this.IsInterface)
+            {
                 return false;
+            }
             foreach (var ctor in @this.GetConstructors())
             {
                 var ctorParas = ctor.GetParameters();
                 if (ctorParas.Length == 0)
+                {
                     return true;
+                }
             }
             return false;
         }
 
         public static bool IsWrongKey(this Type @this)
         {
-            if (!@this.IsPrimitive && !@this.IsEnum && @this != typeof(string) && @this != typeof(Guid) && @this != typeof(DateTime))
+            if
+                (
+                    !@this.IsPrimitive
+                    &&
+                    !@this.IsEnum
+                    &&
+                    @this != typeof(string)
+                    &&
+                    @this != typeof(Guid)
+                    &&
+                    @this != typeof(DateTime)
+                )
+            {
                 return true;
+            }
             return false;
         }
-
-
         public static object GetDefaultValue(this Type @this)
         {
             if (@this.IsValueType)
-                return Activator.CreateInstance(@this);
+            {
+                return
+                    Activator
+                        .CreateInstance
+                            (
+                                @this
+                            );
+            }
             return null;
         }
     }
@@ -236,11 +266,19 @@
             CharTries charTries = this;
             foreach (var c in text)
             {
-                var @case = charTries.Childrens.Find(e => e.Val == c);
+                var @case = charTries
+                                .Childrens
+                                .Find(e => e.Val == c);
                 if (@case == null)
                 {
-                    @case = new CharTries() { Val = c, Parent = charTries };
-                    charTries.Childrens.Add(@case);
+                    @case = new CharTries()
+                    {
+                        Val = c
+                        , Parent = charTries
+                    };
+                    charTries
+                        .Childrens
+                        .Add(@case);
                 }
                 charTries = @case;
             }

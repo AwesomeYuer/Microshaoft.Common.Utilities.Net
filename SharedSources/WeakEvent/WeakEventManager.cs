@@ -14,10 +14,14 @@
 			where TEventArgs : EventArgs
 		{
 			if (IsNullOrEmpty(eventName))
+			{
 				throw new ArgumentNullException(nameof(eventName));
+			}
 
 			if (handler == null)
+			{
 				throw new ArgumentNullException(nameof(handler));
+			}
 
 			AddEventHandler(eventName, handler.Target, handler.GetMethodInfo());
 		}
@@ -25,10 +29,14 @@
 		public void AddEventHandler(EventHandler handler, [CallerMemberName]string eventName = null)
 		{
 			if (IsNullOrEmpty(eventName))
+			{
 				throw new ArgumentNullException(nameof(eventName));
+			}
 
 			if (handler == null)
+			{
 				throw new ArgumentNullException(nameof(handler));
+			}
 
 			AddEventHandler(eventName, handler.Target, handler.GetMethodInfo());
 		}
@@ -54,10 +62,14 @@
 					object subscriber = subscription.Subscriber.Target;
 
 					if (subscriber == null)
+					{
 						// The subscriber was collected, so there's no need to keep this subscription around
 						toRemove.Add(subscription);
+					}
 					else
+					{
 						toRaise.Add((subscriber, subscription.Handler));
+					}
 				}
 
 				for (int i = 0; i < toRemove.Count; i++)
@@ -78,10 +90,14 @@
 			where TEventArgs : EventArgs
 		{
 			if (IsNullOrEmpty(eventName))
+			{
 				throw new ArgumentNullException(nameof(eventName));
+			}
 
 			if (handler == null)
+			{
 				throw new ArgumentNullException(nameof(handler));
+			}
 
 			RemoveEventHandler(eventName, handler.Target, handler.GetMethodInfo());
 		}
@@ -89,10 +105,14 @@
 		public void RemoveEventHandler(EventHandler handler, [CallerMemberName]string eventName = null)
 		{
 			if (IsNullOrEmpty(eventName))
+			{
 				throw new ArgumentNullException(nameof(eventName));
+			}
 
 			if (handler == null)
+			{
 				throw new ArgumentNullException(nameof(handler));
+			}
 
 			RemoveEventHandler(eventName, handler.Target, handler.GetMethodInfo());
 		}
@@ -118,15 +138,21 @@
 		public void RemoveEventHandler(string eventName, object handlerTarget, MemberInfo methodInfo)
 		{
 			if (!_eventHandlers.TryGetValue(eventName, out List<Subscription> subscriptions))
+			{
 				return;
-
+			}
 			for (int n = subscriptions.Count; n > 0; n--)
 			{
 				Subscription current = subscriptions[n - 1];
-
-				if (current.Subscriber?.Target != handlerTarget || current.Handler.Name != methodInfo.Name)
+				if
+					(
+						current.Subscriber?.Target != handlerTarget
+						||
+						current.Handler.Name != methodInfo.Name
+					)
+				{
 					continue;
-
+				}
 				subscriptions.Remove(current);
 				break;
 			}
