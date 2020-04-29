@@ -76,6 +76,8 @@
             needUseMiddleware = configuration.GetValue("useRequestResponseExceptionGuard", false);
             if (needUseMiddleware)
             {
+                var errorDetails = true;
+
                 #region UseRequestResponseExceptionGuard
                 app
                     .UseRequestResponseExceptionGuard<string>
@@ -103,7 +105,7 @@
                                             =>
                                         {
                                             var reThrow = false;
-                                            var errorDetails = true;
+                                            
                                             var errorStatusCode = HttpStatusCode
                                                                             .InternalServerError;
                                             var errorResultCode = -1 * (int) errorStatusCode;

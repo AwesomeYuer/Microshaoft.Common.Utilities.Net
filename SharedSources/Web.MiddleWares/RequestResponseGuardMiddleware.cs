@@ -5,6 +5,7 @@ namespace Microshaoft.Web
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Http.Features;
+    using Microsoft.AspNetCore.Routing;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json.Linq;
     //using Microsoft.Extensions.Logging;
@@ -12,8 +13,8 @@ namespace Microshaoft.Web
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
+    using System.Linq;
     using System.Threading.Tasks;
-    using SystemJsonSerializer = System.Text.Json.JsonSerializer;
     using SingleThreadAsyncDequeueLoggingProcessor
             = Microshaoft
                     .SingleThreadAsyncDequeueProcessorSlim
@@ -68,7 +69,7 @@ namespace Microshaoft.Web
 
                             )
                         >;
-
+    using SystemJsonSerializer = System.Text.Json.JsonSerializer;
 
     public class RequestResponseGuardMiddleware<TInjector1, TInjector2, TInjector3, TInjector4>
     //竟然没有接口?
@@ -632,6 +633,13 @@ namespace Microshaoft.Web
                                     .Headers["X-Request-Response-Timing-In-Milliseconds"]
                                                 = requestResponseTimingInMilliseconds
                                                         .ToString();
+
+                                var routeData = httpContext.GetRouteData();
+                                if (null != routeData && routeData.Values.Count > 0)
+                                {
+                                    var jRouteData = SystemJsonSerializer.Serialize(routeData.Values);
+                                    httpContext.Response.Headers["X-Request-Route"] = jRouteData;
+                                }
                             } 
                             #endregion
 
@@ -906,6 +914,11 @@ namespace Microshaoft.Web
             #endregion
 
         }
+
+
+
+
+
     }
     public static partial class RequestResponseGuardMiddlewareApplicationBuilderExtensions
     {

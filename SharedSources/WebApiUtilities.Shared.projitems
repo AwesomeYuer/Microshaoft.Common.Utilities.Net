@@ -37,6 +37,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Web.MiddleWares\ExceptionOnDemandHandlerMiddleware.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.MiddleWares\RequestResponseExceptionGuardMiddleware.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web.MiddleWares\RequestResponseGuardMiddleware.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Web.MiddleWares\RouteDebuggerMiddleware.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\CommonController\AbstractActionCommonProcessingService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\CommonController\AbstractCommonControllerBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.Common.Controllers\Constraint\ConfigurableActionConstraint.cs" />

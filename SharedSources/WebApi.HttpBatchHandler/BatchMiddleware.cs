@@ -86,21 +86,43 @@ namespace Microshaoft.HttpBatchHandler
                 try
                 {
                     HttpApplicationRequestSection section;
-                    while ((section = await reader
-                               .ReadNextHttpApplicationRequestSectionAsync(pathBase, httpContext.Request.IsHttps, cancellationToken)
-                               .ConfigureAwait(false)) != null)
+                    while 
+                        (
+                            (
+                                section = await
+                                            reader
+                                                .ReadNextHttpApplicationRequestSectionAsync
+                                                        (
+                                                            pathBase
+                                                            , httpContext
+                                                                    .Request
+                                                                    .IsHttps
+                                                            , cancellationToken
+                                                        )
+                                                .ConfigureAwait(false)
+                            )
+                            !=
+                            null
+                        )
                     {
-                        httpContext.RequestAborted.ThrowIfCancellationRequested();
+                        httpContext
+                                .RequestAborted
+                                .ThrowIfCancellationRequested();
                         var preparationContext = new BatchRequestPreparationContext
                         {
                             RequestFeature = section.RequestFeature,
                             Features = CreateDefaultFeatures(httpContext.Features),
                             State = startContext.State
                         };
-                        await _options.Events.BatchRequestPreparationAsync(preparationContext, cancellationToken)
-                            .ConfigureAwait(false);
-                        using (var state =
-                            new RequestState(section.RequestFeature, _factory, preparationContext.Features))
+                        await
+                            _options
+                                .Events
+                                .BatchRequestPreparationAsync(preparationContext, cancellationToken)
+                                .ConfigureAwait(false);
+                        using 
+                            (
+                                var state = new RequestState(section.RequestFeature, _factory, preparationContext.Features)
+                            )
                         {
                             using (httpContext.RequestAborted.Register(state.AbortRequest))
                             {
@@ -116,11 +138,19 @@ namespace Microshaoft.HttpBatchHandler
                                         Request = state.Context.Request,
                                         State = startContext.State
                                     };
-                                    await _options.Events
-                                        .BatchRequestExecutingAsync(executingContext, cancellationToken)
-                                        .ConfigureAwait(false);
-                                    await _next.Invoke(state.Context).ConfigureAwait(false);
-                                    var response = await state.ResponseTaskAsync().ConfigureAwait(false);
+                                    await
+                                        _options
+                                            .Events
+                                            .BatchRequestExecutingAsync(executingContext, cancellationToken)
+                                            .ConfigureAwait(false);
+                                    await
+                                        _next
+                                            .Invoke(state.Context)
+                                            .ConfigureAwait(false);
+                                    var response = await
+                                                        state
+                                                            .ResponseTaskAsync()
+                                                            .ConfigureAwait(false);
                                     executedContext.Response = state.Context.Response;
                                     writer.Add(new HttpApplicationMultipart(response));
                                 }
@@ -131,8 +161,11 @@ namespace Microshaoft.HttpBatchHandler
                                 }
                                 finally
                                 {
-                                    await _options.Events.BatchRequestExecutedAsync(executedContext, cancellationToken)
-                                        .ConfigureAwait(false);
+                                    await
+                                        _options
+                                            .Events
+                                            .BatchRequestExecutedAsync(executedContext, cancellationToken)
+                                            .ConfigureAwait(false);
                                     abort = executedContext.Abort;
                                 }
 
@@ -162,11 +195,21 @@ namespace Microshaoft.HttpBatchHandler
                         endContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
                     }
 
-                    await _options.Events.BatchEndAsync(endContext, cancellationToken).ConfigureAwait(false);
+                    await
+                        _options
+                            .Events
+                            .BatchEndAsync(endContext, cancellationToken)
+                            .ConfigureAwait(false);
                     if (!endContext.IsHandled)
                     {
-                        httpContext.Response.Headers.Add(HeaderNames.ContentType, writer.ContentType);
-                        await writer.CopyToAsync(httpContext.Response.Body, cancellationToken).ConfigureAwait(false);
+                        httpContext
+                                .Response
+                                .Headers
+                                .Add(HeaderNames.ContentType, writer.ContentType);
+                        await
+                            writer
+                            .CopyToAsync(httpContext.Response.Body, cancellationToken)
+                            .ConfigureAwait(false);
                     }
                 }
             }
