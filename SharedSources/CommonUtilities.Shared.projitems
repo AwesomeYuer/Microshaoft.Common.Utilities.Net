@@ -135,6 +135,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)WeakEvent\WeakEventHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WeakEvent\WeakEventListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WeakEvent\WeakEventManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Web.MiddleWares\RouteDebuggerMiddleware.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.HttpBatchHandler\BatchMiddleware.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.HttpBatchHandler\BatchMiddlewareExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApi.HttpBatchHandler\Events\BatchEndContext.cs" />
