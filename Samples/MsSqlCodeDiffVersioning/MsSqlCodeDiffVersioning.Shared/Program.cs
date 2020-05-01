@@ -52,11 +52,11 @@
                                 );
             var s = $"{nameof(RuntimeInformation.FrameworkDescription)}:{RuntimeInformation.FrameworkDescription}";
             s += "\n";
-            s += $"{nameof(RuntimeInformation.OSArchitecture)}:{RuntimeInformation.OSArchitecture.ToString()}";
+            s += $"{nameof(RuntimeInformation.OSArchitecture)}:{RuntimeInformation.OSArchitecture}";
             s += "\n";
             s += $"{nameof(RuntimeInformation.OSDescription)}:{RuntimeInformation.OSDescription}";
             s += "\n";
-            s += $"{nameof(RuntimeInformation.ProcessArchitecture)}:{RuntimeInformation.ProcessArchitecture.ToString()}";
+            s += $"{nameof(RuntimeInformation.ProcessArchitecture)}:{RuntimeInformation.ProcessArchitecture}";
             s += "\n";
             s += $"{nameof(OSPlatform)}:{OSPlatform}";
             
