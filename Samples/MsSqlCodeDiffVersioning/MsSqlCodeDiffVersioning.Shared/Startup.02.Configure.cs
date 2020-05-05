@@ -28,18 +28,18 @@
                                         app
                             ,
 #if NETCOREAPP2_X
-                                IHostingEnvironment
+                               IHostingEnvironment
 #else
-                                IWebHostEnvironment
+                               IWebHostEnvironment
 #endif
                                         environment
-                            , IConfiguration
-                                        configuration
-                            , ILoggerFactory
-                                        loggerFactory
-                            , ConcurrentDictionary<string, ExecutingInfo>
-                                        executingCachingStore
-                            , ILogger
+                            ,  IConfiguration
+                                         configuration
+                            ,  ILoggerFactory
+                                         loggerFactory
+                            ,  ConcurrentDictionary<string, ExecutingInfo>
+                                         executingCachingStore
+                            ,  ILogger
                                         logger
                         )
         {
@@ -48,7 +48,8 @@
 
             string requestResponseTimingItemKey = nameof(requestResponseTimingItemKey);
             //timingKey = string.Empty;
-            var needUseMiddleware = configuration.GetValue("useRequestResponseGuard", false);
+            var needUseMiddleware = configuration
+                                            .GetValue("useRequestResponseGuard", false);
             if (needUseMiddleware)
             {
                 #region RequestResponseGuard
@@ -95,17 +96,15 @@
                                             , xException
                                             , xLoggerFactory
                                             , xLogger
-
                                             , xErrorTime
                                             , xErrorSource
                                             , xTraceID
-
                                             , xTInjector
                                         )
-                                            =>
+                                        =>
                                         {
                                             var reThrow = false;
-                                            
+
                                             var errorStatusCode = HttpStatusCode
                                                                             .InternalServerError;
                                             var errorResultCode = -1 * (int) errorStatusCode;
@@ -122,7 +121,6 @@
                                                                         , xException
                                                                         , xException
                                                                         , $"event: exception @ middleware : {middlewareTypeName}"
-
                                                                         , xErrorTime
                                                                         , xErrorSource
                                                                         , xTraceID
@@ -140,7 +138,12 @@
                         );
                 #endregion
             }
-            needUseMiddleware = configuration.GetValue("useExceptionHandler", false);
+            needUseMiddleware = configuration
+                                            .GetValue
+                                                (
+                                                    "useExceptionHandler"
+                                                    , false
+                                                );
             if (needUseMiddleware)
             {
                 #region ExceptionHandler
@@ -156,36 +159,44 @@
                                                             )
                                     {
                                         OnCaughtExceptionHandleProcess =
-                                         (xHttpContext, xConfiguration, xCaughtException, xExceptionTime, xExceptionSource, xTraceID) =>
-                                         {
-                                             var middlewareTypeName = typeof(ExceptionOnDemandHandlerMiddleware).Name;
-                                             var errorMessage = nameof(HttpStatusCode.InternalServerError);
-                                             var errorDetails = true;
-                                             if (errorDetails)
-                                             {
-                                                 errorMessage = xCaughtException.ToString();
-                                             }
-                                             var reThrow = GlobalManager
-                                                                .OnCaughtExceptionProcessFunc
-                                                                    (
-                                                                        logger
-                                                                        , xCaughtException
-                                                                        , xCaughtException
-                                                                        , $"event: exception @ middleware : {middlewareTypeName}"
-                                                                        , xExceptionTime
-                                                                        , xExceptionSource
-                                                                        , xTraceID
-                                                                    );
-                                             return
-                                                 (
+                                            (
+                                                 xHttpContext
+                                                 , xConfiguration
+                                                 , xCaughtException
+                                                 , xExceptionTime
+                                                 , xExceptionSource
+                                                 , xTraceID
+                                            )
+                                        =>
+                                        {
+                                            var middlewareTypeName = typeof(ExceptionOnDemandHandlerMiddleware).Name;
+                                            var errorMessage = nameof(HttpStatusCode.InternalServerError);
+                                            var errorDetails = true;
+                                            if (errorDetails)
+                                            {
+                                                errorMessage = xCaughtException.ToString();
+                                            }
+                                            var reThrow = GlobalManager
+                                                            .OnCaughtExceptionProcessFunc
+                                                                (
+                                                                    logger
+                                                                    , xCaughtException
+                                                                    , xCaughtException
+                                                                    , $"event: exception @ middleware : {middlewareTypeName}"
+                                                                    , xExceptionTime
+                                                                    , xExceptionSource
+                                                                    , xTraceID
+                                                                );
+                                            return
+                                                (
                                                     errorDetails
                                                     , HttpStatusCode
                                                                 .InternalServerError
                                                     , -1 * (int) HttpStatusCode
                                                                         .InternalServerError
                                                     , errorMessage
-                                                 );
-                                         }
+                                                );
+                                        }
                                     }.Invoke
                                 }
                             ) ; 

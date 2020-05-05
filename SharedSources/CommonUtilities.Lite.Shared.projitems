@@ -213,6 +213,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)WorkFlow\WorkFlowHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Xml\XmlCDATA.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Xml\XmlValidationHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Xml\XslCompiledTransformHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Zip\ZipFileHelper.cs" />
   </ItemGroup>
   <ItemGroup>

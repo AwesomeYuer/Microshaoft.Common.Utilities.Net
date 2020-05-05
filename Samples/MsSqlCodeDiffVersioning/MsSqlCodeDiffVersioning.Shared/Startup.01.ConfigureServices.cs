@@ -106,8 +106,9 @@
                                 (x) =>
                                 {
                                     return
-                                        new ConfigurableActionConstrainedRouteApplicationModelProvider
-                                                                                <ConstrainedRouteAttribute>
+                                        new
+                                            ConfigurableActionConstrainedRouteApplicationModelProvider
+                                                    <ConstrainedRouteAttribute>
                                                 (
                                                     Configuration
                                                     , (attribute) =>
@@ -307,7 +308,7 @@
                                                     , { $"{serverHost}ProcessId"                                                    , GlobalManager.CurrentProcess.Id               }
                                                     , { $"{serverHost}{nameof(GlobalManager.CurrentProcess.ProcessName)}"           , GlobalManager.CurrentProcess.ProcessName      }
                                                     , { $"{serverHost}ProcessStartTime"                                             , GlobalManager.CurrentProcess.StartTime        }
-                                                    , { "data"                                                                      , requestResponseLoggingData                                    }
+                                                    , { "data"                                                                      , requestResponseLoggingData                    }
                                                 }
                                         );
                             }
@@ -377,7 +378,8 @@
                         (dequeued, batch, indexInBatch, queueElement) =>
                         {
                             //Console.WriteLine($"Dequeue Once: {nameof(Thread.CurrentThread.ManagedThreadId)}:{Thread.CurrentThread.ManagedThreadId}");
-                            var (
+                            var
+                                (
                                     errorExceptionTime
                                     , errorExceptionSource
                                     , errorExceptionTraceID
