@@ -11,18 +11,25 @@
 			var xslt = new XslCompiledTransform();
 			using var xslStringReader = new StringReader(xsl);
 			using var xslXmlReader = XmlReader.Create(xslStringReader);
-			xslt.Load(xslXmlReader);
+			xslt
+				.Load(xslXmlReader);
 			using var xmlStringReader = new StringReader(xml);
 			using var xmlReader = XmlReader.Create(xmlStringReader);
 			var xmlWriterSettings = new XmlWriterSettings
 			{
 				//xmlWriterSettings.Encoding = Encoding.UTF8;
-				Indent = true,
-				OmitXmlDeclaration = true
+				Indent = true
+				, OmitXmlDeclaration = true
 			};
 			using var stream = new MemoryStream();
-			using var xmlWriter = XmlWriter.Create(stream, xmlWriterSettings);
-			xslt.Transform
+			using var xmlWriter = XmlWriter
+										.Create
+											(
+												stream
+												, xmlWriterSettings
+											);
+			xslt
+				.Transform
 						(
 							xmlReader
 							, xmlWriter
@@ -34,7 +41,6 @@
 			return s;
 		}
 	}
-
 }
 namespace Test
 {
