@@ -191,6 +191,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Socket\SocketHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Span\ValueStringBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System.Buffers.ArrayPool\ArrayPool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Task\TaskExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Tcp\BufferExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Throttler\RateGate\RateGate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Throttler\RateLimiters\FixedTokenBucket.cs" />
