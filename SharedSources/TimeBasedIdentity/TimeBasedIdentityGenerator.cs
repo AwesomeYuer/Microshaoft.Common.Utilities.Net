@@ -252,7 +252,7 @@ namespace Microshaoft
                         , int periodsMaxCount = 10000
                         , int initializeMinPeriodsBucketsCount = 2
                         , Action<TimeBasedIdentityGenerator> onAfterDataInitializedProcessAction = null
-                        , DateTime basedDateTime = default(DateTime)
+                        , DateTime basedDateTime = default
                         , int checkTimes = 2
                     )
         {

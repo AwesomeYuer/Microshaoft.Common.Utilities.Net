@@ -8,8 +8,8 @@ namespace Microshaoft
     using Newtonsoft.Json.Serialization;
     public class ValueTupleJsonConverter : JsonConverter
     {
-        private string[] _tupleNames = null;
-        private NamingStrategy _strategy = null;
+        private readonly string[] _tupleNames = null;
+        private readonly NamingStrategy _strategy = null;
 
         //也可以直接在这里传入特性
         public ValueTupleJsonConverter(TupleElementNamesAttribute tupleNames, NamingStrategy strategy = null)

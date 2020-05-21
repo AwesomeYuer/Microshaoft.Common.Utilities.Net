@@ -74,12 +74,12 @@
                                                     long ID
                                                     ,
                                                         (
-                                                            long? EnqueueTimestamp
-                                                            , DateTime? EnqueueTime
-                                                            , DateTime? DequeueTime
-                                                            , long? DequeueTimestamp
-                                                            , DateTime? DequeueProcessedTime
-                                                            , long? DequeueProcessedTimestamp
+                                                            long?           EnqueueTimestamp
+                                                            , DateTime?     EnqueueTime
+                                                            , DateTime?     DequeueTime
+                                                            , long?         DequeueTimestamp
+                                                            , DateTime?     DequeueProcessedTime
+                                                            , long?         DequeueProcessedTimestamp
                                                         ) Timing
                                                     , TElement Element
                                                 )
@@ -156,12 +156,12 @@
                                     long ID
                                     ,
                                         (
-                                            long? EnqueueTimestamp
-                                            , DateTime? EnqueueTime
-                                            , DateTime? DequeueTime
-                                            , long? DequeueTimestamp
-                                            , DateTime? DequeueProcessedTime
-                                            , long? DequeueProcessedTimestamp
+                                            long?           EnqueueTimestamp
+                                            , DateTime?     EnqueueTime
+                                            , DateTime?     DequeueTime
+                                            , long?         DequeueTimestamp
+                                            , DateTime?     DequeueProcessedTime
+                                            , long?         DequeueProcessedTimestamp
                                         ) Timing
                                     , TElement Element
                                 )
@@ -213,12 +213,12 @@
                                     long ID
                                     ,
                                         (
-                                            long? EnqueueTimestamp
-                                            , DateTime? EnqueueTime
-                                            , DateTime? DequeueTime
-                                            , long? DequeueTimestamp
-                                            , DateTime? DequeueProcessedTime
-                                            , long? DequeueProcessedTimestamp
+                                            long?           EnqueueTimestamp
+                                            , DateTime?     EnqueueTime
+                                            , DateTime?     DequeueTime
+                                            , long?         DequeueTimestamp
+                                            , DateTime?     DequeueProcessedTime
+                                            , long?         DequeueProcessedTimestamp
                                         ) Timing
                                     , TElement Element
                                 )
