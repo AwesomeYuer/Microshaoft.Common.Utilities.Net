@@ -15,7 +15,7 @@
         public AbstractStoreProceduresExecutor
                     <SqlConnection, SqlCommand, SqlParameter>
                         _executor;
-        private object _locker = new object(); 
+        private readonly object _locker = new object(); 
         public override void InitializeInvokingCachingStore
                                 (
                                     ConcurrentDictionary<string, ExecutingInfo>
