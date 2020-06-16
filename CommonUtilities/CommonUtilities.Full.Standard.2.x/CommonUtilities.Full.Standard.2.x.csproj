@@ -14,22 +14,22 @@
   </PropertyGroup>
   <Import Project="..\..\SharedSources\CommonUtilities.Shared.projitems" Label="Shared" />
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Connections.Abstractions" Version="3.1.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Connections.Abstractions" Version="3.1.5" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.4" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="3.1.4" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.5" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="3.1.5" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="System.Collections.Specialized" Version="4.3.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.5.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.6.0" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
     <PackageReference Include="System.Reflection" Version="4.3.0" />
     <PackageReference Include="System.Reflection.TypeExtensions" Version="4.7.0" />
     <PackageReference Include="System.Security.Cryptography.Csp" Version="4.3.0" />
     <PackageReference Include="System.Text.Json" Version="4.7.2" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
-    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.1.1" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.1.2" />
     <PackageReference Include="System.IO.Pipelines" Version="4.7.2" />
   </ItemGroup>
 </Project>

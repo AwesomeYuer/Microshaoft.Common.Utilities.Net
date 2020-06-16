@@ -131,6 +131,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)IEnumerableExtensions\IEnumerableExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IQueryable\IQueryableHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Object\ObjectExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Task\TaskExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ValueTuple\ValueTupleJsonConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WeakEvent\WeakEventHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WeakEvent\WeakEventListener.cs" />
