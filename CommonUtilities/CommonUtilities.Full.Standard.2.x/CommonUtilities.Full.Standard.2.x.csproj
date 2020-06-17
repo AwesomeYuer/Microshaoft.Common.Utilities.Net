@@ -29,7 +29,7 @@
     <PackageReference Include="System.Security.Cryptography.Csp" Version="4.3.0" />
     <PackageReference Include="System.Text.Json" Version="4.7.2" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
-    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.1.2" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.1.5" />
     <PackageReference Include="System.IO.Pipelines" Version="4.7.2" />
   </ItemGroup>
 </Project>
