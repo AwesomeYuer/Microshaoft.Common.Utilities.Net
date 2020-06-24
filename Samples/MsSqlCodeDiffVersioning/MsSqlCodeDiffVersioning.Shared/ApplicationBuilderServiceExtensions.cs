@@ -1,6 +1,5 @@
 ﻿namespace WebApplication.ASPNetCore
 {
-    using Microshaoft.WebApi.ModelBinders;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.OpenApi.Models;
@@ -9,7 +8,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Swashbuckle.AspNetCore.Filters;
     public static class ApplicationBuilderServiceExtensions
     {
         private const string swaggerVersion = "v3.1.101";
@@ -29,30 +27,20 @@
                                         swaggerVersion
                                         , new OpenApiInfo
                                         {
-                                            Version = swaggerVersion
-                                                ,
-                                            Title = swaggerTitle
-                                                ,
-                                            Description = swaggerDescription
-                                                ,
-                                            TermsOfService = new Uri("https://github.com/Microshaoft/Microshaoft.Common.Utilities.Net/blob/master/README.md")
-                                                ,
+                                            Version = swaggerVersion ,
+                                            Title = swaggerTitle ,
+                                            Description = swaggerDescription ,
+                                            TermsOfService = new Uri("https://github.com/Microshaoft/Microshaoft.Common.Utilities.Net/blob/master/README.md") ,
                                             Contact = new OpenApiContact
                                             {
-                                                Name = "Microshaoft"
-                                                        ,
-                                                Email = "Microshaoft@gmail.com"
-                                                        ,
-                                                Url = new Uri("https://github.com/Microshaoft")
-                                                        ,
-                                            }
-                                                ,
+                                                Name = "Microshaoft" ,
+                                                Email = "Microshaoft@gmail.com" ,
+                                                Url = new Uri("https://github.com/Microshaoft") ,
+                                            } ,
                                             License = new OpenApiLicense
                                             {
-                                                Name = "Use under License"
-                                                        ,
-                                                Url = new Uri("https://github.com/Microshaoft/Microshaoft.Common.Utilities.Net/blob/master/License.txt")
-                                                        ,
+                                                Name = "Use under License" ,
+                                                Url = new Uri("https://github.com/Microshaoft/Microshaoft.Common.Utilities.Net/blob/master/License.txt") ,
                                             }
                                         }
                                     );
@@ -65,12 +53,12 @@
                                         "Bearer"
                                         , new OpenApiSecurityScheme
                                         {
-                                            Name = "Authorization",
-                                            Type = SecuritySchemeType.ApiKey,
-                                            Scheme = "Bearer",
-                                            BearerFormat = "JWT",
-                                            In = ParameterLocation.Header,
-                                            Description = "JWT Authorization header using the Bearer scheme.",
+                                            Name = "Authorization" ,
+                                            Type = SecuritySchemeType.ApiKey ,
+                                            Scheme = "Bearer" ,
+                                            BearerFormat = "JWT" ,
+                                            In = ParameterLocation.Header ,
+                                            Description = "JWT Authorization header using the Bearer scheme." ,
                                         }
                                     );
 
@@ -84,8 +72,8 @@
                                                     {
                                                         Reference = new OpenApiReference
                                                         {
-                                                            Type = ReferenceType.SecurityScheme,
-                                                            Id = "Bearer",
+                                                            Type = ReferenceType.SecurityScheme ,
+                                                            Id = "Bearer" ,
                                                         }
                                                     },
                                                     new string[] {}
@@ -101,33 +89,30 @@
                                     (
                                         (xApiDescriptions) =>
                                         {
-
                                             foreach (var apiDescription in xApiDescriptions)
                                             {
                                                 Console.WriteLine(apiDescription);
-                                            
                                             }
-
-
                                             return
                                                 xApiDescriptions
                                                             .First();
                                         }
                                     );
                             //c.UseInlineDefinitionsForEnums();
-                            
                             c.MapType<JToken>
                                 (
                                     () =>
                                     {
                                         return
-                                            new OpenApiSchema { Type = "object", AdditionalPropertiesAllowed = true };
+                                            new OpenApiSchema
+                                            {
+                                                Type = "object" ,
+                                                AdditionalPropertiesAllowed = true 
+                                            };
                                     }
                                 );
-
                         }
                     );
-
         }
 
         public static IApplicationBuilder UseSwaggerDefault(this IApplicationBuilder target)
@@ -160,7 +145,6 @@
         {
             var apiDescription = context.ApiDescription;
             //var parameters = operation.Parameters;
-        
 
             //if (apiDescription.HttpMethod == "POST")
             //{
@@ -176,11 +160,7 @@
             //        }
             //    }
             //}
-
             //operation.
-
-
-
 
             operation
                 .Parameters
@@ -218,6 +198,4 @@
             return this.Aggregate("", (a, s) => $"{a},{s}").Trim(',');
         }
     }
-
-
 }

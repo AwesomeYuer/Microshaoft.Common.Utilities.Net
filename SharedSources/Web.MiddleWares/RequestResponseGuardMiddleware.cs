@@ -80,7 +80,6 @@ namespace Microshaoft.Web
         private readonly TInjector3 _injector3;
         private readonly TInjector4 _injector4;
 
-
         //private readonly ILogger _logger;
 
         public RequestResponseGuardMiddleware
@@ -138,7 +137,6 @@ namespace Microshaoft.Web
         public
             Func<HttpContext, string, TInjector1, TInjector2, TInjector3, TInjector4, bool>
                                         OnPredicateResponseBodyWorkingStreamProcessFunc;
-
 
         public readonly
             Func
@@ -914,11 +912,6 @@ namespace Microshaoft.Web
             #endregion
 
         }
-
-
-
-
-
     }
     public static partial class RequestResponseGuardMiddlewareApplicationBuilderExtensions
     {
