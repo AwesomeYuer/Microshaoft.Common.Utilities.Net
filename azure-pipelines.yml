@@ -9,9 +9,9 @@ pool:
 
 steps:
 - task: DotNetCoreInstaller@0
-  displayName: 'Use .NET Core sdk 3.1.200'
+  displayName: 'Use .NET Core sdk 3.1.301'
   inputs:
-    version: 3.1.200
+    version: 3.1.301
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet restore'
