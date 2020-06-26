@@ -104,31 +104,10 @@ namespace Microshaoft
                                    (
                                        (sender, e) =>
                                        {
-                                           var logMessage = string
-                                                                .Format
-                                                                    (
-                                                                        "{1} On Type Of Sender: [{2}], Value Of Sender: [{3}]"
-                                                                        , "\r\n"
-                                                                        , Enum
-                                                                            .GetName
-                                                                                (
-                                                                                    typeof(AppDomainExceptionsHandlerType)
-                                                                                    , AppDomainExceptionsHandlerType
-                                                                                            .FirstChanceException
-                                                                                )
-                                                                        , sender.GetType()
-                                                                        , sender
-                                                                    );
-                                           logMessage = string
-                                                            .Format
-                                                                (
-                                                                    "{1}{0}{2}"
-                                                                    , ":\r\n"
-                                                                    , logMessage
-                                                                    , e
-                                                                        .Exception
-                                                                        .ToString()
-                                                                );
+                                           var logMessage = $"{nameof(AppDomainExceptionsHandlerType.FirstChanceException)} On Type Of Sender: [{sender.GetType()}], Value Of Sender: [{sender}]";
+
+                                           logMessage = $"{logMessage}:\r\n{e.Exception}";
+
                                            WriteEventLogEntry
                                                (
                                                    //string logName,
@@ -143,21 +122,14 @@ namespace Microshaoft
                 }
             }
         }
-        private static string _processNameID
+        private static readonly string _processNameIdAtMachine
                                 = new Func<string>
                                         (
                                             () =>
                                             {
                                                 var process = Process.GetCurrentProcess();
                                                 return
-                                                    string
-                                                        .Format
-                                                            (
-                                                                "{1}{0}({2})"
-                                                                , ""
-                                                                , process.ProcessName
-                                                                , process.Id
-                                                            );
+                                                    $"{process.ProcessName}({process.Id})@[{process.MachineName}]";
                                             }
                                         )();
         public static EventLog[] GetEventLogs()
@@ -304,8 +276,10 @@ namespace Microshaoft
         {
             if (logEntryType <= _enabledMaxEventLogEntryTypeLevel)
             {
-                EventLog eventLog = new EventLog();
-                eventLog.Source = sourceName;
+                var eventLog = new EventLog
+                {
+                    Source = sourceName
+                };
                 logMessage = string
                                 .Format
                                     (
@@ -313,18 +287,17 @@ namespace Microshaoft
                                         , "\r\n"
                                         , "begin ========="
                                         , "end ==========="
-                                        , _processNameID
+                                        , _processNameIdAtMachine
                                         , DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffff")
                                         , logMessage
                                     );
-                EventLogEntryType? eventLogEntryType = null;
                 if
                     (
                         TryGetLevelBySourceEventID
                             (
                                 sourceName
                                 , eventID
-                                , out eventLogEntryType
+                                , out EventLogEntryType? eventLogEntryType
                             )
                     )
                 {
@@ -511,7 +484,6 @@ namespace Microshaoft
         {
             var r = false;
             eventLogEntryType = null;
-            EventLogEntryType eventLogEntryTypeValue;
             var dictionary = _sourceEventIDLevels;
             if (dictionary != null)
             {
@@ -522,7 +494,7 @@ namespace Microshaoft
                             .TryGetValue
                                 (
                                     string.Format("[{1}]-[{2}]", source, eventID).Trim().ToLower()
-                                    , out eventLogEntryTypeValue
+                                    , out EventLogEntryType eventLogEntryTypeValue
                                 )
                     )
                 {
@@ -532,7 +504,7 @@ namespace Microshaoft
             }
             return r;
         }
-        private static bool TryGetLevelBySourceEventIDKeyWords
+        public static bool TryGetLevelBySourceEventIDKeyWords
                                     (
                                         string source
                                         , int eventID
@@ -572,7 +544,6 @@ namespace Microshaoft
                                                 return x.Length;
                                             }
                                         );
-                EventLogEntryType eventLogEntryTypeValue;
                 foreach (var x in keyWordsSequence)
                 {
                     if
@@ -581,7 +552,7 @@ namespace Microshaoft
                                 .TryGetValue
                                     (
                                         x.ToLower()
-                                        , out eventLogEntryTypeValue
+                                        , out EventLogEntryType eventLogEntryTypeValue
                                     )
                         )
                     {
@@ -746,13 +717,27 @@ namespace Microshaoft
             return r;
         }
 
-        public static void Query<TEventLogRecordWrapper>
+        public static void Query
                     (
                         string path
-                        , Func<EventLogRecord, TEventLogRecordWrapper> onFactoryProcessFunc
+                        , Func
+                            <
+                                int             // record id
+                                , int           // record id in page
+                                , int           // page id
+                                , EventLogRecord
+                                , bool
+                            >
+                                onFetchOnceProcessFunc
                         , string queryString = null
-                        , Func<int, List<TEventLogRecordWrapper>, bool>
-                                onPagedProcessFunc = null
+                        , Func
+                            <
+                                int             // record id
+                                , int           // record id in page
+                                , int           // page id
+                                , bool
+                            >
+                                onFetchPagedProcessFunc = null
                         , int pageSize = 100
                         , string machine = "."
                         , PathType pathType = PathType.LogName
@@ -763,7 +748,7 @@ namespace Microshaoft
                                             = SessionAuthentication.Default
                     )
         {
-            EventLogQuery query = null;
+            EventLogQuery query;
             if (!IsNullOrEmptyOrWhiteSpace(queryString))
             {
                 query = new EventLogQuery(path, pathType, queryString);
@@ -789,51 +774,54 @@ namespace Microshaoft
                     )
                 {
                     query.Session = eventLogSession;
-                    using (var reader = new EventLogReader(query))
+                    using var reader = new EventLogReader(query);
+                    EventRecord eventRecord = null;
+                    int i = 1;
+                    int page = 1;
+                    var ii = 1;
+                    while (null != (eventRecord = reader.ReadEvent()))
                     {
-                        EventRecord eventRecord = null;
-                        int i = 1;
-                        int page = 1;
-                        List<TEventLogRecordWrapper> entries = null;
+                        var eventLogRecord = (EventLogRecord) eventRecord;
+                        var r = onFetchOnceProcessFunc(i, ii, page, eventLogRecord);
+                        if (r)
+                        {
+                            break;
+                        }
                         if (pageSize > 0)
                         {
-                            entries = new List<TEventLogRecordWrapper>();
-                        }
-                        while (null != (eventRecord = reader.ReadEvent()))
-                        {
-                            if (pageSize >= 0)
+                            //entries.Add(entry);
+                            if (i % pageSize == 0)
                             {
-                                var eventLogRecord = (EventLogRecord)eventRecord;
-                                var entry = onFactoryProcessFunc(eventLogRecord);
-                                entries.Add(entry);
-                                if (i % pageSize == 0)
+                                if (onFetchPagedProcessFunc != null)
                                 {
-                                    if (onPagedProcessFunc != null)
+                                    r = onFetchPagedProcessFunc
+                                                        (
+                                                            i
+                                                            , ii
+                                                            , page
+                                                        );
+                                    if (r)
                                     {
-                                        var r = onPagedProcessFunc
-                                                    (
-                                                        page
-                                                        , entries
-                                                    );
-                                        entries.Clear();
-                                        if (r)
-                                        {
-                                            break;
-                                        }
-                                        page++;
+                                        break;
                                     }
+                                    page++;
+                                    ii = 0;
                                 }
-                                i++;
                             }
                         }
-                        if (entries.Count > 0)
+                        i++;
+                        ii++;
+                    }
+                    if (ii > 0)
+                    {
+                        if (onFetchPagedProcessFunc != null)
                         {
-                            if (onPagedProcessFunc != null)
-                            {
-                                var r = onPagedProcessFunc(page, entries);
-                                entries.Clear();
-                                entries = null;
-                            }
+                            _ = onFetchPagedProcessFunc
+                                            (
+                                                i
+                                                , ii
+                                                , page
+                                            );
                         }
                     }
                 }
@@ -843,46 +831,10 @@ namespace Microshaoft
                 if (eventLogSession != null)
                 {
                     eventLogSession.Dispose();
-                    eventLogSession = null;
                 }
             }
         }
-
-        public static void Query
-                            (
-                                string path
-                                , string queryString = null
-                                , Func<int, List<EventLogRecord>, bool>
-                                        onPagedProcessFunc = null
-                                , int pageSize = 100
-                                , string machine = "."
-                                , PathType pathType = PathType.LogName
-                                , string domain = "."
-                                , string user = null
-                                , string password = null
-                                , SessionAuthentication logOnType = SessionAuthentication.Default
-                            )
-        {
-            Query<EventLogRecord>
-                (
-                    path
-                    , (eventLogRecord) =>
-                    {
-                        return eventLogRecord;
-                    }
-                    , queryString
-                    , onPagedProcessFunc
-                    , pageSize
-                    , machine
-                    , pathType
-                    , domain
-                    , user
-                    , password
-                    , logOnType
-                );
-        }
-
-        public static bool IsNullOrEmptyOrWhiteSpace(string target)
+        private static bool IsNullOrEmptyOrWhiteSpace(string target)
         {
             return
                 (
