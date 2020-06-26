@@ -1,4 +1,4 @@
-#if NETFRAMEWORK4_X
+//#if NETFRAMEWORK4_X
 namespace Microshaoft
 {
     using Newtonsoft.Json;
@@ -348,8 +348,8 @@ namespace Microshaoft
         }
         private class KeyValueEntry
         {
-            public string Key;
-            public EventLogEntryType Value;
+            public string Key = null;
+            public EventLogEntryType Value = EventLogEntryType.Information;
         }
 
         private static EventLogEntryType _enabledMaxEventLogEntryTypeLevel = EventLogEntryType.Error;
@@ -885,4 +885,4 @@ namespace Microshaoft
     }
 }
 
-#endif
+//#endif
