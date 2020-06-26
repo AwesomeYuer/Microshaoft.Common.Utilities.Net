@@ -1,3 +1,12 @@
+/*
+    new-eventlog -LogName MicroshaoftLog -Source MicroshaoftSource
+    write-eventlog -LogName MicroshaoftLog -Message "This is a test message" -Source MicroshaoftSource -id 1001 -EntryType error
+    write-eventlog -LogName MicroshaoftLog -Message "This is a test message" -Source MicroshaoftSource -id 1001 -EntryType err
+    write-eventlog -LogName MicroshaoftLog -Message "This is a test message" -Source MicroshaoftSource -id 1001 -EntryType e
+    remove-eventlog -Source MicroshaoftSource
+    remove-eventlog -LogName MicroshaoftLog
+*/
+
 //#if NETFRAMEWORK4_X
 namespace Microshaoft
 {
