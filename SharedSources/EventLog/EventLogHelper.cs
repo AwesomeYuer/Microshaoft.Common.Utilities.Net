@@ -415,13 +415,13 @@ namespace Microshaoft
                     HttpClient httpClient = new HttpClient();
                     var json = httpClient.GetStringAsync(addressUrl).Result;
                     var a = JsonConvert.DeserializeObject<KeyValueEntry[]>(json);
-                    dictionary = new ConcurrentDictionary<string, EventLogEntryType>();
+                    dictionary = new ConcurrentDictionary<string, EventLogEntryType>(StringComparer.OrdinalIgnoreCase);
                     foreach (var x in a)
                     {
                         dictionary
                             .AddOrUpdate
                                 (
-                                    x.Key.Trim().ToLower()
+                                    x.Key
                                     , x.Value
                                     , (xx, yy) =>
                                     {
@@ -452,13 +452,13 @@ namespace Microshaoft
                     HttpClient httpClient = new HttpClient();
                     var json = httpClient.GetStringAsync(addressUrl).Result;
                     var a = JsonConvert.DeserializeObject<KeyValueEntry[]>(json);
-                    dictionary = new ConcurrentDictionary<string, EventLogEntryType>();
+                    dictionary = new ConcurrentDictionary<string, EventLogEntryType>(StringComparer.OrdinalIgnoreCase);
                     foreach (var x in a)
                     {
                         dictionary
                             .AddOrUpdate
                                 (
-                                    x.Key.Trim().ToLower()
+                                    x.Key
                                     , x.Value
                                     , (xx, yy) =>
                                     {
@@ -493,7 +493,7 @@ namespace Microshaoft
                         dictionary
                             .TryGetValue
                                 (
-                                    string.Format("[{1}]-[{2}]", source, eventID).Trim().ToLower()
+                                    $"[{source}]-[{eventID}]"
                                     , out EventLogEntryType eventLogEntryTypeValue
                                 )
                     )
@@ -551,7 +551,7 @@ namespace Microshaoft
                             _sourceEventIDKeyWordsLevels
                                 .TryGetValue
                                     (
-                                        x.ToLower()
+                                        x
                                         , out EventLogEntryType eventLogEntryTypeValue
                                     )
                         )
