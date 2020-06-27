@@ -2,6 +2,7 @@
   "wwwroot": [
     "..\\..\\..\\..\\MsSqlCodeDiffVersioning.Shared\\wwwroot", //Windows
     "../../../../MsSqlCodeDiffVersioning.Shared/wwwroot", //Linux
+    "../../../wwwroot"  //docker
 
     //"..//MsSqlCodeDiffVersioning.Shared//wwwroot" //Linux
 
