@@ -5,7 +5,7 @@ namespace Test
     using Newtonsoft.Json.Linq;
     using System;
     using System.Diagnostics;
-    class Program1111
+    internal class Program1111
     {
         static void Main115(string[] args)
         {

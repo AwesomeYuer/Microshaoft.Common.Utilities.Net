@@ -207,10 +207,10 @@ namespace Test
 {
 	using System;
     using System.ServiceModel.Channels;
-		/// <summary>
-		/// Class1 的摘要说明。
-		/// </summary>
-	public class Program111
+    /// <summary>
+    /// Class1 的摘要说明。
+    /// </summary>
+    internal class Program111
 	{
 		/// <summary>
 		/// 应用程序的主入口点。

@@ -5,7 +5,7 @@ namespace Test3
     using System;
     using System.Xml;
     using System.Xml.Linq;
-    class Program
+    internal class Program
     {
         public static void Main()
         {

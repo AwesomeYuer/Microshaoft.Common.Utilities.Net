@@ -4,7 +4,7 @@
     using System;
     using System.Diagnostics;
     using System.IO;
-    public class Program
+    internal class Program
     {
         public static void Main111()
         {

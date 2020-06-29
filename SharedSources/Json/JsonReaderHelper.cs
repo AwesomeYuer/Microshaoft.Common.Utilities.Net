@@ -7,7 +7,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    class Program123
+    internal class Program123
     {
         static void Main114(string[] args)
         {

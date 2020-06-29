@@ -168,7 +168,7 @@ namespace Microshaoft.Tests
     using System.Net.Http;
 
 
-    class Program
+    internal class Program
     {
         const string serviceBaseAddress = "http://localhost:9000/";
         static async System.Threading.Tasks.Task Main(string[] args)

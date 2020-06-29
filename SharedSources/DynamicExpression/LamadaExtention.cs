@@ -309,7 +309,7 @@ namespace ConsoleApplication
     /// <summary>
     /// Class1 的摘要说明。
     /// </summary>
-    public class ProgramTest
+    internal class ProgramTest
 
     {
         /// <summary>

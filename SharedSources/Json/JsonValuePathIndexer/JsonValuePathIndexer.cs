@@ -3,7 +3,7 @@
     using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Concurrent;
-    class Program
+    internal class Program
     {
         static void Main(string[] args)
         {
