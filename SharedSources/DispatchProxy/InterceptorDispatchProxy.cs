@@ -36,12 +36,14 @@
     }
 }
 
-namespace Test
+
+
+namespace ConsoleApp71
 {
     using Microshaoft;
     using System;
     using System.Reflection;
-    internal class Program11122
+    class Program
     {
         static void Main(string[] args)
         {
@@ -49,11 +51,19 @@ namespace Test
             InterceptorDispatchProxy<IProcessAble> commonDispatchProxy = (InterceptorDispatchProxy<IProcessAble>)proxy;
 
             commonDispatchProxy.Sender = new Processor();
-            commonDispatchProxy.OnInvokingProcessFunc = (x, y, z) => { Console.WriteLine($"{nameof(commonDispatchProxy.OnInvokingProcessFunc)}:{y.Name}"); return true; };
-            commonDispatchProxy.OnInvokedProcessAction = (x, y, z) => { Console.WriteLine($"{nameof(commonDispatchProxy.OnInvokedProcessAction)}:{y.Name}"); };
+            commonDispatchProxy.OnInvokingProcessFunc = (x, y, z) =>
+            {
+                Console.WriteLine($"{nameof(commonDispatchProxy.OnInvokingProcessFunc)}:{y.Name}");
+                return false;
+            };
+            commonDispatchProxy.OnInvokedProcessAction = (x, y, z) =>
+            {
+                Console.WriteLine($"{nameof(commonDispatchProxy.OnInvokedProcessAction)}:{y.Name}");
+            };
 
             proxy.Process();
             proxy.Process("asdasdas");
+            proxy.Process2();
             Console.WriteLine();
 
             Console.ReadLine();
@@ -73,6 +83,12 @@ namespace Test
             Console.WriteLine($"Process {x}");
             return 1;
         }
+
+        void IProcessAble.Process2()
+        {
+            Console.WriteLine("process2 in impl class");
+        }
+
     }
 
 
@@ -81,6 +97,12 @@ namespace Test
         void Process();
         int Process(string x);
 
+        void Process2()
+        {
+            Console.WriteLine("process2 in interface");
+        }
+
     }
 }
+
 
