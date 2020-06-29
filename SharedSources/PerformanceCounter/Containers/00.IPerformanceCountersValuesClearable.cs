@@ -1,4 +1,4 @@
-#if NETFRAMEWORK4_X
+//#if NETFRAMEWORK4_X
 
 namespace Microshaoft
 {
@@ -11,4 +11,4 @@ namespace Microshaoft
         IEnumerable<PerformanceCounter> GetPerformanceCountersByLevel(int level);
     }
 }
-#endif
+//#endif

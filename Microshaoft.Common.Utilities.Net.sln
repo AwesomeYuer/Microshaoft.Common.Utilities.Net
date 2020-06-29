@@ -146,18 +146,29 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "30.Swagger", "30.Swagger", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Swagger.WebApplication", "Samples\Swagger.WebApplication\Swagger.WebApplication.csproj", "{3DCA8530-241A-40B9-A338-2CFBD4A60015}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyPerformanceCountersHelper.NET.Core.3.x", "EasyPerformanceCountersHelper.NET\EasyPerformanceCountersHelper.NET.Core.3.x\EasyPerformanceCountersHelper.NET.Core.3.x.csproj", "{05EDEA2C-13D8-4468-8F5A-EB3B4B6229EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyPerformanceCountersHelper.NET.Standard.2.x", "EasyPerformanceCountersHelper.NET\EasyPerformanceCountersHelper.NET.Standard.2.x\EasyPerformanceCountersHelper.NET.Standard.2.x.csproj", "{46B4AB04-C3E7-4C87-82B3-E0F5909DEBD7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcurrentAsyncQueue.NET.Core.3.x", "ConcurrentAsyncQueue.NET\ConcurrentAsyncQueue.NET.Core.3.x\ConcurrentAsyncQueue.NET.Core.3.x.csproj", "{0B54E4CC-797F-48AA-9AE2-F6E4468859D5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcurrentAsyncQueue.NET.Standard.2.x", "ConcurrentAsyncQueue.NET\ConcurrentAsyncQueue.NET.Standard.2.x\ConcurrentAsyncQueue.NET.Standard.2.x.csproj", "{129D4521-D6A5-4949-90FD-2647AD70FD52}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		SharedSources\CommonUtilities.Shared.projitems*{0066db51-3fc3-4fd5-a3fd-c39ee9f6ffb8}*SharedItemsImports = 5
 		Plugins\JsonParametersValidators\SamplePlugin\SamplePlugin.Shared\JTokenModelParameterValidatorSamplePlugin.Shared.projitems*{016c7778-b0e5-4995-be87-d44e267371a9}*SharedItemsImports = 5
 		SharedSources\Microshaoft.Json.Shared.projitems*{01efc8d5-9b20-40b9-922f-5583bbc33ca2}*SharedItemsImports = 5
 		Plugins\StoreProceduresExecutors\MsSQL\MsSQL.Plugin.Shared\MsSQL.StoreProcedureExecutor.Plugin.Shared.projitems*{0579c429-5e45-494c-b0f0-2b46dc1c8a77}*SharedItemsImports = 13
+		SharedSources\EasyPerformanceCountersHelper.Shared.projitems*{05edea2c-13d8-4468-8f5a-eb3b4b6229eb}*SharedItemsImports = 5
+		SharedSources\ConcurrentAsyncQueue.Shared.projitems*{0b54e4cc-797f-48aa-9ae2-f6e4468859d5}*SharedItemsImports = 5
 		SharedSources\WebApiUtilities.Shared.projitems*{1fbd68b8-839e-4c54-a00c-beac21119371}*SharedItemsImports = 13
 		SharedSources\Microshaoft.StoreProcedureExecutors.Shared.projitems*{1ff88452-428e-444b-89d4-09f2437aea09}*SharedItemsImports = 5
 		Samples\SocketAsyncArgs.TCP.Echo.Server\ServerConsoleApp\ServerSharedProject\ServerSharedProject.projitems*{2cfbe4b2-3473-4ca0-8734-092d326814a6}*SharedItemsImports = 5
 		SharedSources\Microshaoft.StoreProcedureExecutors.Shared.projitems*{378a4dc6-0e35-49ba-b142-9a9b01d6ce65}*SharedItemsImports = 13
 		SharedSources\Microshaoft.Json.Shared.projitems*{378a4dc6-0e35-49ba-b242-9a9b01d6ce65}*SharedItemsImports = 13
 		Samples\SocketAsyncArgs.TCP.Echo.Server\ServerConsoleApp\ServerSharedProject\ServerSharedProject.projitems*{3f6feee0-0473-441f-a073-889503ec7710}*SharedItemsImports = 13
+		SharedSources\EasyPerformanceCountersHelper.Shared.projitems*{46b4ab04-c3e7-4c87-82b3-e0f5909debd7}*SharedItemsImports = 5
 		Plugins\StoreProceduresExecutors\MySQL\MySQL.Plugin.Shared\MySQL.StoreProcedureExecutor.Plugin.Shared.projitems*{4ee26e3a-b23b-4760-a8d7-1eb0ef7a24dd}*SharedItemsImports = 13
 		Samples\MsSqlCodeDiffVersioning\MsSqlCodeDiffVersioning.Shared\MsSqlCodeDiffVersioning.Shared.projitems*{50cf6564-2c15-48ba-87ba-b83169f2a214}*SharedItemsImports = 13
 		Samples\SocketAsyncArgs.TCP.Echo.Server\ClientConsoleApp\ClientSharedProject\ClientSharedProject.projitems*{54db1b57-dbd1-4286-9be8-96251e43973b}*SharedItemsImports = 5
@@ -255,6 +266,22 @@ Global
 		{3DCA8530-241A-40B9-A338-2CFBD4A60015}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DCA8530-241A-40B9-A338-2CFBD4A60015}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DCA8530-241A-40B9-A338-2CFBD4A60015}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05EDEA2C-13D8-4468-8F5A-EB3B4B6229EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05EDEA2C-13D8-4468-8F5A-EB3B4B6229EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05EDEA2C-13D8-4468-8F5A-EB3B4B6229EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05EDEA2C-13D8-4468-8F5A-EB3B4B6229EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46B4AB04-C3E7-4C87-82B3-E0F5909DEBD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46B4AB04-C3E7-4C87-82B3-E0F5909DEBD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46B4AB04-C3E7-4C87-82B3-E0F5909DEBD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46B4AB04-C3E7-4C87-82B3-E0F5909DEBD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B54E4CC-797F-48AA-9AE2-F6E4468859D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B54E4CC-797F-48AA-9AE2-F6E4468859D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B54E4CC-797F-48AA-9AE2-F6E4468859D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B54E4CC-797F-48AA-9AE2-F6E4468859D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{129D4521-D6A5-4949-90FD-2647AD70FD52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{129D4521-D6A5-4949-90FD-2647AD70FD52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{129D4521-D6A5-4949-90FD-2647AD70FD52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{129D4521-D6A5-4949-90FD-2647AD70FD52}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -318,6 +345,10 @@ Global
 		{016C7778-B0E5-4995-BE87-D44E267371A9} = {7562606B-4C6F-45EB-99F6-8CA3BD8EFC2C}
 		{702A189B-E5AC-4343-8B52-3A614C5B36B0} = {E3B1E8C0-D370-4099-9377-8B567A0B7485}
 		{3DCA8530-241A-40B9-A338-2CFBD4A60015} = {702A189B-E5AC-4343-8B52-3A614C5B36B0}
+		{05EDEA2C-13D8-4468-8F5A-EB3B4B6229EB} = {E97C82F8-629C-4F5B-ABFF-5060A5396666}
+		{46B4AB04-C3E7-4C87-82B3-E0F5909DEBD7} = {E97C82F8-629C-4F5B-ABFF-5060A5396666}
+		{0B54E4CC-797F-48AA-9AE2-F6E4468859D5} = {CF989F5A-C42C-4265-B281-2607C14AEE7A}
+		{129D4521-D6A5-4949-90FD-2647AD70FD52} = {CF989F5A-C42C-4265-B281-2607C14AEE7A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3A79E5CD-0524-4DA6-B26C-17C43FF8E9FB}
