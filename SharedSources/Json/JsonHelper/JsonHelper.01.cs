@@ -312,7 +312,7 @@ namespace Test
     using System.Dynamic;
     using System.Linq.Expressions;
     using Microshaoft;
-    class Program12
+    internal class Program12
     {
         static void Main11111(string[] args)
         {
@@ -392,7 +392,7 @@ namespace TestConsoleApp6
     using Microshaoft;
     using Newtonsoft.Json.Linq;
     using System;
-    class Program
+    internal class Program
     {
         static void Main1(string[] args1)
         {

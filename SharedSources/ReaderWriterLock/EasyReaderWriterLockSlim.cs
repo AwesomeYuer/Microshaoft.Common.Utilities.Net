@@ -103,7 +103,7 @@ namespace ConsoleApplication
     /// <summary>
     /// Class1 的摘要说明。
     /// </summary>
-    public class Program1111
+    internal class Program1111
     {
         /// <summary>
         /// 应用程序的主入口点。

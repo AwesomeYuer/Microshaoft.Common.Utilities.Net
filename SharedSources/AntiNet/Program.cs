@@ -7,7 +7,7 @@ using Microshaoft.AntiNet;
 
 namespace Test
 {
-	public class AntiNetTest
+	internal class AntiNetTest
 	{
 		const string sep = "\n\n\n";
 		const string seperr = "********************************************************";

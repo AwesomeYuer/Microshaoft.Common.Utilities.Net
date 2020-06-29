@@ -46,7 +46,7 @@ namespace Test
 {
 	using Microshaoft;
 	using System;
-	class Program11111
+	internal class Program11111
 	{
 		static void Main(string[] args)
 		{

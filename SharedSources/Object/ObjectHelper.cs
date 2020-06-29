@@ -1,10 +1,12 @@
 ﻿namespace Microshaoft
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Dynamic;
     using System.Reflection;
-    public static class ObjectExtensions
+
+    public static class ObjectHelper
     {
         public static ExpandoObject ShapeData<TSource>(this TSource @this, string fields)
         {

@@ -574,7 +574,7 @@ namespace ConsoleApp57
     using System.Data;
     using System.Data.SqlClient;
     using Microshaoft;
-    public static class Program
+    internal static class Program
     {
         static void Main(string[] args)
         {

@@ -537,7 +537,7 @@ namespace ConsoleApplication1
 {
     using Microshaoft;
     using System;
-    class Program
+    internal class Program
     {
         static void Main113(string[] args)
         {
