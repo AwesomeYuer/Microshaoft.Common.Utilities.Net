@@ -1,4 +1,4 @@
-﻿#if NETFRAMEWORK4_X
+﻿//#if NETFRAMEWORK4_X
 namespace Microshaoft
 {
     using System;
@@ -641,14 +641,14 @@ namespace Microshaoft
                             if
                                 (
                                     _waitingDequeueThreadsProcessorsStack != null
-                                    && _waitingDequeueThreadsProcessorsStack.Count > 0
+                                    &&
+                                    _waitingDequeueThreadsProcessorsStack.Count > 0
                                 )
                             {
-                                ThreadProcessor processor = null;
-                                if 
+                                if
                                     (
                                         _waitingDequeueThreadsProcessorsStack
-                                                .TryPop(out processor)
+                                                .TryPop(out ThreadProcessor processor)
                                     )
                                 {
                                     processor.Waiter.Set();
@@ -662,4 +662,4 @@ namespace Microshaoft
         }
     }
 }
-#endif
+//#endif

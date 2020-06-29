@@ -1,4 +1,4 @@
-#if NETFRAMEWORK4_X
+//#if NETFRAMEWORK4_X
 
 namespace Microshaoft
 {
@@ -507,4 +507,4 @@ namespace Microshaoft
         }
     }
 }
-#endif
+//#endif
