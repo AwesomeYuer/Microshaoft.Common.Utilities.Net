@@ -72,7 +72,7 @@ namespace Microshaoft
                     (
                         string path
                         , string searchPattern = "*.dll"
-                        , SearchOption searchOption = SearchOption.AllDirectories
+                        , SearchOption searchOption = SearchOption.TopDirectoryOnly
                     )
         {
             IEnumerable<T> result = null;

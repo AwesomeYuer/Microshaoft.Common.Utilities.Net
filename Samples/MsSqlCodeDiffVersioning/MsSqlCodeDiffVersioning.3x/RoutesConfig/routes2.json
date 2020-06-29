@@ -1,6 +1,6 @@
 {
   "Routes": {
-    "mssql/objEcts": {
+    "mssql/aaa/bbb/objEcts": {
       "HttPGet": {
         "connectionID": "c1",
         "storeProcedureName": "zsp_zObjectsChangesLogsHistory_Get",
