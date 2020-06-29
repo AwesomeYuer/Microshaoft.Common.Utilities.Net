@@ -46,6 +46,30 @@ namespace Microshaoft.WebApi.Controllers
     public partial class StoreProcedureExecutorController
                     : AbstractStoreProceduresExecutorControllerBase
     {
+
+        /// <summary>
+        /// 重写某 WebAPI 
+        /// </summary>
+        /// <returns></returns>
+        [HttpDelete]
+        [HttpGet]
+        [HttpHead]
+        [HttpOptions]
+        [HttpPatch]
+        [HttpPost]
+        [HttpPut]
+        // 该 Route URL Path 优先级高于 Routes.json Config
+        [Route("result/mssql/aaa/bbb/objects1")]
+        public ActionResult<JToken> Test
+                        (
+            
+                        )
+        {
+            return
+                new JsonResult(new { a = 1 });
+        }
+
+
         /// <summary>
         /// JToken parameters Sample Web API
         /// </summary>
