@@ -121,7 +121,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Etw\TraceEventsTrackerHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EventLog\EventLogHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EventLog\EventLogRecordEntry.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ExceptionStackTrace\StackTraceHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Exception\ExceptionHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Exception\StackTraceHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConcurrentDictionary\ConcurrentDictionaryHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FasterUtilities\Native32.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FasterUtilities\NativeBufferPool.cs" />
