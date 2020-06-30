@@ -38,7 +38,9 @@ namespace Microshaoft
                 if 
                     (
                         (
-                            exception is OutOfMemoryException && !(exception is InsufficientMemoryException)
+                            exception is OutOfMemoryException
+                            &&
+                            !(exception is InsufficientMemoryException)
                         ) 
                         ||
                         (exception is ThreadAbortException)
@@ -62,7 +64,8 @@ namespace Microshaoft
                         exception is TypeInitializationException
                         ||
                         // TODO: May be considered fatal in itself, as cctor didn't run
-                        exception is TargetInvocationException)
+                        exception is TargetInvocationException
+                    )
                 {
                     exception = exception.InnerException;
                 }
@@ -95,7 +98,6 @@ namespace Microshaoft
                             }
                         }
                     }
-
                     exception = exception.InnerException;
                 }
                 else
@@ -103,7 +105,6 @@ namespace Microshaoft
                     break;
                 }
             }
-
             return false;
         }
     }
