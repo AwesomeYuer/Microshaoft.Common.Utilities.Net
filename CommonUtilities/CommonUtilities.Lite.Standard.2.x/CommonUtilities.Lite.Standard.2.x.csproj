@@ -27,9 +27,10 @@
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
     <PackageReference Include="System.Reactive.Core" Version="4.4.1" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.7.1" />
     <PackageReference Include="System.Threading.Channels" Version="4.7.1" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
-    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.1.8" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.0" />
   </ItemGroup>
 
 </Project>
