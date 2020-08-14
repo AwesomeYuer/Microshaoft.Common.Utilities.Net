@@ -51,7 +51,12 @@
             //first 主线程
             if (!skipFirstTimerProcessAction)
             {
-                TimerProcessAction(times, timerProcessAction, onCaughtExceptionProcessFunc);
+                TimerProcessAction
+                    (
+                        times
+                        , timerProcessAction
+                        , onCaughtExceptionProcessFunc
+                    );
             }
             
             _timer.Elapsed += new ElapsedEventHandler
@@ -118,7 +123,15 @@
                                 }
                                 , null
                             );
-                } while (Math.Abs(DateTimeHelper.SecondsDiffNow(begin)) > times * _intervalInSeconds);
+                } while
+                    (
+                        Math.Abs
+                                (
+                                    DateTimeHelper.SecondsDiffNow(begin)
+                                )
+                        >
+                        times * _intervalInSeconds
+                    );
             }
             finally
             {
