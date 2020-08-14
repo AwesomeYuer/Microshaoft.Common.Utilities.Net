@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.ConcurrencyLimiter" Version="3.1.6" />
+    <PackageReference Include="Microsoft.AspNetCore.ConcurrencyLimiter" Version="3.1.7" />
     <PackageReference Include="Microsoft.AspNetCore.ResponseCaching" Version="2.2.0" />
     <PackageReference Include="System.IO.Pipelines" Version="4.7.2" />
   </ItemGroup>

@@ -240,6 +240,8 @@
     <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\datatables\DataTables\1.10.18\Select-1.2.6\js\select.semanticui.min.js" />
     <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\datatables\DataTables\1.10.19\js\jquery.dataTables.js" />
     <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\datatables\FixedHeader\3.1.5\js\dataTables.fixedHeader.js" />
+    <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\driver.js\driver.min.js" />
+    <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\driver.js\driver.min.js.map" />
     <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\jquery-ui\jquery-ui-1.12.1.js" />
     <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\jquery\jquery-3.4.1.js" />
     <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\jquery\jquery-3.4.1.min.js" />
@@ -1251,6 +1253,7 @@
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\1.jpg" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\a.txt" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\DataTable.html" />
+    <Content Include="$(MSBuildThisFileDirectory)wwwroot\driverjs.html" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\index.html" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\libs\datatables\Buttons\1.5.6\css\buttons.dataTables.css" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\libs\datatables\DataTables\1.10.18\AutoFill-2.3.0\css\autoFill.bootstrap.css" />
@@ -1406,6 +1409,7 @@
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\libs\datatables\DataTables\1.10.18\Select-1.2.6\css\select.semanticui.min.css" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\libs\datatables\DataTables\1.10.19\css\jquery.dataTables.css" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\libs\datatables\FixedHeader\3.1.5\css\fixedHeader.dataTables.css" />
+    <Content Include="$(MSBuildThisFileDirectory)wwwroot\libs\driver.js\driver.min.css" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\libs\jquery-ui\jquery-ui-1.12.1.css" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\libs\jsdifflib\diffview.css" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\libs\monaco-editor\dev\bundleInfo.json" />
