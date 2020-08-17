@@ -79,13 +79,7 @@
                                 .Build()
                                 .Run();
         }
-        public static
-#if NETCOREAPP3_X
-                IHostBuilder
-#elif NETCOREAPP2_X
-                IWebHostBuilder
-#endif
-                        CreateWebHostBuilder(string[] args)
+        public static IHostBuilder CreateWebHostBuilder(string[] args)
         {
             var executingDirectory = Path
                                         .GetDirectoryName
@@ -103,15 +97,8 @@
                                 .FirstOrDefault();
 
             return
-#if NETCOREAPP2_X
-                WebHost
-#elif NETCOREAPP3_X
                 Host
-#endif
                     .CreateDefaultBuilder(args)
-#if NETCOREAPP2_X
-                    .UseConfiguration(hostingsConfiguration)
-#elif NETCOREAPP3_X
                     .ConfigureWebHostDefaults
                         (
                             (webHostBuilder) =>
@@ -122,7 +109,6 @@
                                         .UseWebRoot(wwwroot);
                             }
                         )
-#endif
                     //.ConfigureLogging
                     //    (
                     //        (loggingBuilder) =>
