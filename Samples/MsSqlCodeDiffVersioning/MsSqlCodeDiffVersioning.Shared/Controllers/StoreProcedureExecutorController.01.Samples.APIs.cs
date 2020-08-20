@@ -242,6 +242,49 @@ namespace Microshaoft.WebApi.Controllers
                 _service
                     .IndexedExecutors;
         }
+
+
+
+        [HttpDelete]
+        [HttpGet]
+        [HttpHead]
+        [HttpOptions]
+        [HttpPatch]
+        [HttpPost]
+        [HttpPut]
+        [Route("EchoWebApiJTokenParams")]
+        
+        
+        public ActionResult<JToken> EchoWebApiJTokenParams
+                (
+                    /*
+                        services.AddNewtonsoftJson();
+                        // only support post
+                        // the request content-type header should be application/json
+                    */
+                    [FromBody]
+                    JToken @params = null
+                )
+        {
+
+            if
+                (
+                    //@params.Type == JTokenType.Object
+                    //&&
+                    @params is JObject jObject
+                )
+            {
+                return jObject;
+            }
+            else if (@params is JArray jArray)
+            {
+                return jArray;
+            }
+            else
+            {
+                return @params;
+            }
+        }
     }
 }
 #endif
