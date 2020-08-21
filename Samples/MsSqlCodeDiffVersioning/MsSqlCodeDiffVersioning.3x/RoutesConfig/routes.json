@@ -51,7 +51,7 @@
           "needCheckOperations": true,
           "operations": [ "a1", "a2" ],
           "downloadFileName": "测试下载.csv",
-          "outputColumns": [
+          "outputColumns11111": [
             [
               {
                 "ColumnName": "f1",
@@ -151,7 +151,7 @@
           }
 
         },
-        "exporting": {
+        "exporting111": {
           "allow": true,
           "needCheckOperations": true,
           "operations": [ "a1", "a2" ],

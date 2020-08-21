@@ -32,6 +32,9 @@ namespace Microshaoft.WebApi.Controllers
                                                             , 0xBF
                                                         };
 
+
+        private readonly Type _utf8Type = Encoding.UTF8.GetType();
+
         private readonly CsvFormatterOptions _csvFormatterOptions;
  
         private string GetFieldValue
@@ -69,7 +72,7 @@ namespace Microshaoft.WebApi.Controllers
                 }
                 else
                 {
-                    @value = $@"""{date.ToString()}""";
+                    @value = $@"""{date}""";
                 }
             }
             else if
@@ -103,7 +106,7 @@ namespace Microshaoft.WebApi.Controllers
                     }
                     else
                     {
-                        @value = $@"""{timeSpan.Value.ToString()}""";
+                        @value = $@"""{timeSpan.Value}""";
                     }
                 }
             }
@@ -260,103 +263,99 @@ namespace Microshaoft.WebApi.Controllers
                             "Content-Disposition"
                             , $@"attachment; filename=""{downloadFileName}"""
                         );
-            using
-                (
-                    var streamWriter = new StreamWriter
+            using var streamWriter = new StreamWriter
                                                 (
                                                     response.Body
                                                     , e
-                                                )
+                                                );
+            if (e.GetType() == _utf8Type)
+            {
+                await
+                    response
+                            .Body
+                            .WriteAsync
+                                (
+                                    _utf8BomBytes
+                                );
+            }
+            if (_csvFormatterOptions.IncludeExcelDelimiterHeader)
+            {
+                //导致中文乱码
+                await
+                    streamWriter
+                        .WriteLineAsync
+                            (
+                                $"sep ={_csvFormatterOptions.CsvColumnsDelimiter}"
+                            );
+            }
+
+            (
+                string ColumnName
+                , string ColumnTitle
+                , string DataFormat
+                , string DigitsTextSuffix
+            )
+                [][] allOutputColumns = null;
+            if
+                (
+                    _configuration
+                                .TryGetSection
+                                    (
+                                        $"Routes:{actionRoutePath}:{httpMethod}:Exporting:OutputColumns"
+                                        , out var allOutputColumnsConfiguration
+                                    )
                 )
             {
-                if (e.GetType() == Encoding.UTF8.GetType())
-                {
-                    await
-                        response
-                                .Body
-                                .WriteAsync
-                                    (
-                                        _utf8BomBytes
-                                    );
-                }
-                if (_csvFormatterOptions.IncludeExcelDelimiterHeader)
-                {
-                    //导致中文乱码
-                    await
-                        streamWriter
-                            .WriteLineAsync
-                                (
-                                    $"sep ={_csvFormatterOptions.CsvColumnsDelimiter}"
-                                );
-                }
+                allOutputColumns = allOutputColumnsConfiguration
+                                        .GetChildren()
+                                        .Select
+                                            (
+                                                (x) =>
+                                                {
+                                                    return
+                                                    x
+                                                        .GetChildren()
+                                                        .Select
+                                                            (
+                                                                (xx) =>
+                                                                {
+                                                                    var columnName = xx
+                                                                                        .GetValue<string>
+                                                                                                ("ColumnName");
+                                                                    var columnTitle = xx
+                                                                                        .GetValue
+                                                                                                (
+                                                                                                    "ColumnTitle"
+                                                                                                    , columnName
+                                                                                                );
+                                                                    var dataFormat = xx
+                                                                                        .GetValue
+                                                                                                (
+                                                                                                    "DataFormat"
+                                                                                                    , string.Empty
+                                                                                                );
+                                                                    var digitsTextSuffix = xx
+                                                                                        .GetValue<string>
+                                                                                                (
+                                                                                                    "DigitsTextSuffix"
+                                                                                                    , null
+                                                                                                );
+                                                                    return
+                                                                        (
+                                                                            ColumnName: columnName
+                                                                            , ColumnTitle: columnTitle
+                                                                            , DataFormat: dataFormat
+                                                                            , DigitsTextSuffix: digitsTextSuffix
+                                                                        );
 
-                (
-                    string ColumnName
-                    , string ColumnTitle
-                    , string DataFormat
-                    , string DigitsTextSuffix
-                )
-                    [][] allOutputColumns = null;
-                if 
-                    (
-                        _configuration
-                                    .TryGetSection
-                                        (
-                                            $"Routes:{actionRoutePath}:{httpMethod}:Exporting:OutputColumns"
-                                            , out var allOutputColumnsConfiguration
-                                        )
-                    )
-                {
-                    allOutputColumns = allOutputColumnsConfiguration
-                                            .GetChildren()
-                                            .Select
-                                                (
-                                                    (x) =>
-                                                    {
-                                                        return
-                                                        x
-                                                            .GetChildren()
-                                                            .Select
-                                                                (
-                                                                    (xx) =>
-                                                                    {
-                                                                        var columnName = xx
-                                                                                            .GetValue<string>
-                                                                                                    ("ColumnName");
-                                                                        var columnTitle = xx
-                                                                                            .GetValue
-                                                                                                    (
-                                                                                                        "ColumnTitle"
-                                                                                                        , columnName
-                                                                                                    );
-                                                                        var dataFormat = xx
-                                                                                            .GetValue
-                                                                                                    (
-                                                                                                        "DataFormat"
-                                                                                                        , string.Empty
-                                                                                                    );
-                                                                        var digitsTextSuffix = xx
-                                                                                            .GetValue<string>
-                                                                                                    (
-                                                                                                        "DigitsTextSuffix"
-                                                                                                        , null
-                                                                                                    );
-                                                                        return
-                                                                            (
-                                                                                ColumnName: columnName
-                                                                                , ColumnTitle: columnTitle
-                                                                                , DataFormat: dataFormat
-                                                                                , DigitsTextSuffix: digitsTextSuffix
-                                                                            );
+                                                                }
 
-                                                                    }
-
-                                                                )
-                                                            .ToArray();
-                                                    }
-                                                )
-                                            .ToArray();
-                }
+                                                            )
+                                                        .ToArray();
+                                                }
+                                            )
+                                        .ToArray();
+            }
 
 
 
@@ -385,47 +384,46 @@ namespace Microshaoft.WebApi.Controllers
                                 //, 102
                             );
 #elif NETCOREAPP3_X
-                var entries = _service
-                                    .ProcessReaderAsAsyncEnumerable
-                                        (
-                                            actionRoutePath
-                                            , parameters
-                                            , Request
-                                                    .Method
-                                        );
+            var entries = _service
+                                .ProcessReaderAsAsyncEnumerable
+                                    (
+                                        actionRoutePath
+                                        , parameters
+                                        , Request
+                                                .Method
+                                    );
+            await
+                foreach
+                    (
+                        var
+                            (
+                                resultSetIndex
+                                , rowIndex
+                                , columns
+                                , dataRecord
+                            )
+                        in
+                        entries
+                    )
+            {
                 await
-                    foreach
-                        (
-                            var
-                                (
-                                    resultSetIndex
-                                    , rowIndex
-                                    , columns
-                                    , dataRecord
-                                )
-                            in
-                            entries
-                        )
-                {
-                    await
-                        dataRecordProcessAsync
-                                (
-                                     resultSetIndex
-                                    , rowIndex
-                                    , columns
-                                    , dataRecord
-                                    , allOutputColumns
-                                    , streamWriter
-                                );
-                }
-#endif
-                await
-                    streamWriter
-                            .FlushAsync();
-                streamWriter
-                            .Close();
+                    dataRecordProcessAsync
+                            (
+                                 resultSetIndex
+                                , rowIndex
+                                , columns
+                                , dataRecord
+                                , allOutputColumns
+                                , streamWriter
+                            );
             }
-            
+#endif
+            await
+                streamWriter
+                        .FlushAsync();
+            streamWriter
+                        .Close();
+
         }
         private async Task dataRecordProcessAsync
                         (
