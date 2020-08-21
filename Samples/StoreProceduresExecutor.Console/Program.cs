@@ -15,7 +15,6 @@
     {
         async static Task Main(string[] args)
         {
-
             ValueTupleDataTableTest();
 
             Console.WriteLine("press any key to continue ...");
@@ -23,11 +22,8 @@
             Console.ReadLine();
             SingleThreadAsyncDequeueProcessorSlimTest();
 
-
             Console.WriteLine("press any key to continue ...");
-
             Console.ReadLine();
-
             Console.WriteLine("use MSSQL ...");
             var json =
             @"
@@ -65,7 +61,7 @@
                         executingCachingStore
                                 = new ConcurrentDictionary<string, ExecutingInfo>();
 
-            var x = new MsSqlStoreProceduresExecutor(executingCachingStore);
+            var executor = new MsSqlStoreProceduresExecutor(executingCachingStore);
 
             SqlConnection sqlConnection = new SqlConnection
                 (
@@ -75,16 +71,17 @@
                 StatisticsEnabled = true
             };
 
-            x.CachedParametersDefinitionExpiredInSeconds = 10;
+            executor.CachedParametersDefinitionExpiredInSeconds = 10;
 
-            var entries = x
-                    .ExecuteResultsAsAsyncEnumerable
-                        (
-                            sqlConnection
-                            , spName
-                            , jTokenParameters
-                        );
-            await foreach
+            var entries = executor
+                                .ExecuteResultsAsAsyncEnumerable
+                                    (
+                                        sqlConnection
+                                        , spName
+                                        , jTokenParameters
+                                    );
+            await
+                foreach
                     (
                         var (
                                 resultSetIndex
@@ -96,25 +93,25 @@
                         entries
                     )
             {
-                Console.WriteLine
+                Console
+                    .WriteLine
                             (
                                 $"{nameof(resultSetIndex)}:{resultSetIndex}{{0}}{nameof(rowIndex)}:{rowIndex}{{0}}{nameof(dataRecord)}:{dataRecord[1]}"
                                 , "\t"
                             );
-
             }
 
             Console.WriteLine("press any key to continue ...");
             Console.ReadLine();
 
             var result = await
-                        x
-                            .ExecuteJsonResultsAsync
-                                (
-                                    sqlConnection
-                                    , spName
-                                    , jTokenParameters
-                                );
+                                executor
+                                    .ExecuteJsonResultsAsync
+                                        (
+                                            sqlConnection
+                                            , spName
+                                            , jTokenParameters
+                                        );
 
             Console.WriteLine(result);
 
@@ -138,7 +135,8 @@
 
             await foreach
                     (
-                        var (
+                        var 
+                            (
                                 resultSetIndex
                                 , rowIndex
                                 , columns
@@ -173,14 +171,14 @@
                     (
                         (dequeued, batch, indexInBatch, queueElement) =>
                         {
-                            var element = queueElement.Element;
+                            var (id, text, time) = queueElement.Element;
                             dataTable
                                     .Rows
                                     .Add
                                         (
-                                            element.id
-                                            , element.text
-                                            , element.time
+                                            id
+                                            , text
+                                            , time
                                             , queueElement
                                                         .Timing
                                                         .EnqueueTimestamp
@@ -194,9 +192,9 @@
                                     (
                                         new JObject
                                         {
-                                            { "id" , element.id }
-                                            , { "text" , element.text }
-                                            , { "time" , element.time }
+                                              { "id" , id }
+                                            , { "text" , text }
+                                            , { "time" , time }
                                             , { "EnqueueTimestamp", queueElement.Timing.EnqueueTimestamp }
                                             , { "DequeueTimestamp", queueElement.Timing.DequeueTimestamp }
                                         }
@@ -210,23 +208,23 @@
                                 #region use DataTable
                                 var dataRows = dataTable.AsEnumerable();
                                 var enqueueTimestamp = dataRows
-                                                            .Min
-                                                                (
-                                                                    (x) =>
-                                                                    {
-                                                                        return
-                                                                            x.Field<long>("EnqueueTimestamp");
-                                                                    }
-                                                                );
+                                                                .Min
+                                                                    (
+                                                                        (x) =>
+                                                                        {
+                                                                            return
+                                                                                x.Field<long>("EnqueueTimestamp");
+                                                                        }
+                                                                    );
                                 var dequeueTimestamp = dataRows
-                                                            .Max
-                                                                (
-                                                                    (x) =>
-                                                                    {
-                                                                        return
-                                                                            x.Field<long>("DequeueTimestamp");
-                                                                    }
-                                                                );
+                                                                .Max
+                                                                    (
+                                                                        (x) =>
+                                                                        {
+                                                                            return
+                                                                                x.Field<long>("DequeueTimestamp");
+                                                                        }
+                                                                    );
                                 var durationInQueue = enqueueTimestamp.GetElapsedTime(dequeueTimestamp).TotalMilliseconds;
                                 Console.WriteLine($"{nameof(durationInQueue)}:{durationInQueue};{nameof(dequeued)}:{dequeued};{nameof(batch)}:{batch};{nameof(indexInBatch)}:{indexInBatch};{nameof(dataTable.Rows.Count)}:{dataTable.Rows.Count}");
                                 var dataColumns = dataTable.Columns;
@@ -243,14 +241,14 @@
 
                                 #region use JArray
                                 enqueueTimestamp = jArray
-                                                                                .Min
-                                                                                    (
-                                                                                        (x) =>
-                                                                                        {
-                                                                                            return
-                                                                                                x["EnqueueTimestamp"].Value<long>();
-                                                                                        }
-                                                                                    );
+                                                        .Min
+                                                            (
+                                                                (x) =>
+                                                                {
+                                                                    return
+                                                                        x["EnqueueTimestamp"].Value<long>();
+                                                                }
+                                                            );
                                 dequeueTimestamp = jArray
                                                         .Max
                                                             (
@@ -329,12 +327,7 @@
                 Console.WriteLine(dataReader.FieldCount);
             }
             dataReader.Close();
-
-
-
             sqlConnection.Close();
-
-            
             sqlConnection.Open();
             dataReader = sqlCommand.ExecuteReader(CommandBehavior.CloseConnection);
             while (dataReader.Read())
@@ -342,9 +335,6 @@
                 Console.WriteLine(dataReader.FieldCount);
             }
             dataReader.Close();
-
-
-
             sqlConnection.Close();
         }
     }
