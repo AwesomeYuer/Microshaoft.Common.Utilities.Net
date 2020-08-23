@@ -73,8 +73,6 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "MsSqlCodeDiffVersioning.Sha
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00.Shared", "00.Shared", "{B04980EF-FFDB-4B1F-8A8A-798FACB1D9E3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MsSqlCodeDiffVersioning.3x", "Samples\MsSqlCodeDiffVersioning\MsSqlCodeDiffVersioning.3x\MsSqlCodeDiffVersioning.3x.csproj", "{CDA249B4-A4BF-4C44-A5A4-BAD08255DE20}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00.Solution Items", "00.Solution Items", "{2A44CC1D-80FD-42DD-A789-33B1D8DC5764}"
 	ProjectSection(SolutionItems) = preProject
 		.gitattributes = .gitattributes
@@ -144,8 +142,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MsSQL.StoreProcedureExecuto
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microshaoft.WebUtilities.NET.Core.3.x", "Microshaoft.WebUtilities.NET\Microshaoft.WebUtilities.NET.Core.3.x\Microshaoft.WebUtilities.NET.Core.3.x.csproj", "{39C0ACC3-6316-446A-A939-DFFA5F22C7B2}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MsSqlCodeDiffVersioning.3x", "Samples\MsSqlCodeDiffVersioning\ASPNETCore.3x\MsSqlCodeDiffVersioning.3x.csproj", "{002D987E-BB18-4A55-AD26-35320B71142A}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Samples\MsSqlCodeDiffVersioning\MsSqlCodeDiffVersioning.Shared\MsSqlCodeDiffVersioning.Shared.projitems*{002d987e-bb18-4a55-ad26-35320b71142a}*SharedItemsImports = 5
 		SharedSources\CommonUtilities.Shared.projitems*{0066db51-3fc3-4fd5-a3fd-c39ee9f6ffb8}*SharedItemsImports = 5
 		Plugins\JsonParametersValidators\SamplePlugin\SamplePlugin.Shared\JTokenModelParameterValidatorSamplePlugin.Shared.projitems*{016c7778-b0e5-4995-be87-d44e267371a9}*SharedItemsImports = 5
 		Plugins\StoreProceduresExecutors\MsSQL\MsSQL.Plugin.Shared\MsSQL.StoreProcedureExecutor.Plugin.Shared.projitems*{0579c429-5e45-494c-b0f0-2b46dc1c8a77}*SharedItemsImports = 13
@@ -168,7 +169,6 @@ Global
 		SharedSources\EasyPerformanceCountersHelper.Shared.projitems*{b1913205-1d01-4a59-b0ca-b5c7460fb644}*SharedItemsImports = 13
 		SharedSources\CommonUtilities.Lite.Shared.projitems*{b38ff329-0b60-4584-a166-1b3683dc462f}*SharedItemsImports = 5
 		Plugins\StoreProceduresExecutors\MySQL\MySQL.Plugin.Shared\MySQL.StoreProcedureExecutor.Plugin.Shared.projitems*{be9efe7c-2f7a-45d2-aad7-8d6e6b173beb}*SharedItemsImports = 5
-		Samples\MsSqlCodeDiffVersioning\MsSqlCodeDiffVersioning.Shared\MsSqlCodeDiffVersioning.Shared.projitems*{cda249b4-a4bf-4c44-a5a4-bad08255de20}*SharedItemsImports = 5
 		Samples\SocketAsyncArgs.TCP.Echo.Server\Client\ClientSharedProject\ClientSharedProject.projitems*{e2a49f80-5e62-414d-bf57-8e1802b144a8}*SharedItemsImports = 13
 		Plugins\StoreProceduresExecutors\MsSQL\MsSQL.Plugin.Shared\MsSQL.StoreProcedureExecutor.Plugin.Shared.projitems*{e412c10f-f53b-47e0-8eca-ae0c302091f6}*SharedItemsImports = 5
 		SharedSources\ConcurrentAsyncQueue.Shared.projitems*{f27798f3-0529-4852-9e9c-819699a772cb}*SharedItemsImports = 13
@@ -183,10 +183,6 @@ Global
 		{0066DB51-3FC3-4FD5-A3FD-C39EE9F6FFB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0066DB51-3FC3-4FD5-A3FD-C39EE9F6FFB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0066DB51-3FC3-4FD5-A3FD-C39EE9F6FFB8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CDA249B4-A4BF-4C44-A5A4-BAD08255DE20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CDA249B4-A4BF-4C44-A5A4-BAD08255DE20}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CDA249B4-A4BF-4C44-A5A4-BAD08255DE20}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CDA249B4-A4BF-4C44-A5A4-BAD08255DE20}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D2CE8953-4E0D-4FE8-AC3A-241FB9E429FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D2CE8953-4E0D-4FE8-AC3A-241FB9E429FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D2CE8953-4E0D-4FE8-AC3A-241FB9E429FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -247,6 +243,10 @@ Global
 		{39C0ACC3-6316-446A-A939-DFFA5F22C7B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39C0ACC3-6316-446A-A939-DFFA5F22C7B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39C0ACC3-6316-446A-A939-DFFA5F22C7B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{002D987E-BB18-4A55-AD26-35320B71142A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{002D987E-BB18-4A55-AD26-35320B71142A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{002D987E-BB18-4A55-AD26-35320B71142A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{002D987E-BB18-4A55-AD26-35320B71142A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -281,7 +281,6 @@ Global
 		{4ED6A214-33E0-4F82-97D3-8825FC660EFB} = {E3B1E8C0-D370-4099-9377-8B567A0B7485}
 		{50CF6564-2C15-48BA-87BA-B83169F2A214} = {B04980EF-FFDB-4B1F-8A8A-798FACB1D9E3}
 		{B04980EF-FFDB-4B1F-8A8A-798FACB1D9E3} = {4ED6A214-33E0-4F82-97D3-8825FC660EFB}
-		{CDA249B4-A4BF-4C44-A5A4-BAD08255DE20} = {4ED6A214-33E0-4F82-97D3-8825FC660EFB}
 		{D2CE8953-4E0D-4FE8-AC3A-241FB9E429FB} = {47712056-CD7C-4022-9438-374865B42375}
 		{47712056-CD7C-4022-9438-374865B42375} = {E3B1E8C0-D370-4099-9377-8B567A0B7485}
 		{02DD287F-777B-43B1-B1A5-B97D38D7CFBB} = {E3B1E8C0-D370-4099-9377-8B567A0B7485}
@@ -309,6 +308,7 @@ Global
 		{3CA35DCA-D1D3-4FC4-A7EE-59A0A5B428D3} = {302CE03A-9D8B-491F-B590-01AFC658ED9E}
 		{E412C10F-F53B-47E0-8ECA-AE0C302091F6} = {3B230557-B533-4870-831E-6A6FD075D90B}
 		{39C0ACC3-6316-446A-A939-DFFA5F22C7B2} = {956F09A3-793B-47BA-A689-A307BA0DBCC9}
+		{002D987E-BB18-4A55-AD26-35320B71142A} = {4ED6A214-33E0-4F82-97D3-8825FC660EFB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3A79E5CD-0524-4DA6-B26C-17C43FF8E9FB}
