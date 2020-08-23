@@ -29,7 +29,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Microshaoft.Json.NET\Microshaoft.Json.NET.Std.2.x\Microshaoft.Json.NET.Std.2.x.csproj" />
-    <ProjectReference Include="..\..\Microshaoft.StoreProceduresExecutors.NET\Microshaoft.StoreProceduresExecutors.NET.Std.2.x\Microshaoft.StoreProceduresExecutors.NET.Std.2.x.csproj" />
+    <ProjectReference Include="..\..\Microshaoft.StoreProceduresExecutors.NET\Microshaoft.StoreProceduresExecutors.NET.Std.2.x\Microshaoft.SPE.NET.Std.2.x.csproj" />
   </ItemGroup>
 </Project>

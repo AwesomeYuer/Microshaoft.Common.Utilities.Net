@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Microshaoft.WebUtilities.NET\Microshaoft.WebUtilities.NET.Core.3.x\Microshaoft.WebUtilities.NET.Core.3.x.csproj" />
+    <ProjectReference Include="..\..\..\..\Microshaoft.WebUtils\Microshaoft.WebUtils.NET.Core.3.x\Microshaoft.WebUtils.NET.Core.3.x.csproj" />
   </ItemGroup>
 
   <Import Project="..\SamplePlugin.Shared\JTokenModelParameterValidatorSamplePlugin.Shared.projitems" Label="Shared" />

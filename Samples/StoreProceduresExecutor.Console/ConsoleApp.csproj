@@ -8,9 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\CommonUtilities\CommonUtilities.Lite.Std.2.x\CommonUtilities.Lite.Std.2.x.csproj" />
-    <ProjectReference Include="..\..\Microshaoft.StoreProceduresExecutors.NET\Microshaoft.StoreProceduresExecutors.NET.Std.2.x\Microshaoft.StoreProceduresExecutors.NET.Std.2.x.csproj" />
-    <ProjectReference Include="..\..\Plugins\StoreProceduresExecutors\MySQL\MySQL.Plugin.NET.Core.3.x\MySQL.StoreProcedureExecutor.Plugin.NET.Core.3.x.csproj" />
+    <ProjectReference Include="..\..\CommonUtilities\CommonUtilities.Lite.Std.2.x\CommonUtils.Lite.Std.2.x.csproj" />
+    <ProjectReference Include="..\..\Microshaoft.StoreProceduresExecutors.NET\Microshaoft.StoreProceduresExecutors.NET.Std.2.x\Microshaoft.SPE.NET.Std.2.x.csproj" />
+    <ProjectReference Include="..\..\Plugins\StoreProceduresExecutors\MySQL\MySQL.Plugin.NET.Core.3.x\MySQL.SPE.Plugin.NET.Core.3.x.csproj" />
   </ItemGroup>
 
   <!--<PropertyGroup>
