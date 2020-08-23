@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <RootNamespace>Microshaoft.StoreProceduresExecutors.NET.Standard._2.x</RootNamespace>
-    <AssemblyName>Microshaoft.SPE.NET.Standard.2.x</AssemblyName>
+    <AssemblyName>Microshaoft.SPE.NET.Std.2.x</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -20,10 +20,10 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
   </ItemGroup>
-  
+
   <ItemGroup>
-    <ProjectReference Include="..\..\CommonUtilities\CommonUtilities.Lite.Standard.2.x\CommonUtilities.Lite.Standard.2.x.csproj" />
-    <ProjectReference Include="..\..\Microshaoft.Json.NET\Microshaoft.Json.NET.Standard.2.x\Microshaoft.Json.NET.Standard.2.x.csproj" />
+    <ProjectReference Include="..\..\CommonUtilities\CommonUtilities.Lite.Std.2.x\CommonUtilities.Lite.Std.2.x.csproj" />
+    <ProjectReference Include="..\..\Microshaoft.Json.NET\Microshaoft.Json.NET.Std.2.x\Microshaoft.Json.NET.Std.2.x.csproj" />
   </ItemGroup>
 
   <Import Project="..\..\SharedSources\Microshaoft.StoreProcedureExecutors.Shared.projitems" Label="Shared" />

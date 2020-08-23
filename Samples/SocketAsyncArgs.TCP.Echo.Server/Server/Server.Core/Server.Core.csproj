@@ -17,7 +17,7 @@
   <Import Project="..\ServerSharedProject\ServerSharedProject.projitems" Label="Shared" />
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\CommonUtilities\CommonUtilities.Lite.Standard.2.x\CommonUtilities.Lite.Standard.2.x.csproj" />
+    <ProjectReference Include="..\..\..\..\CommonUtilities\CommonUtilities.Lite.Std.2.x\CommonUtilities.Lite.Std.2.x.csproj" />
   </ItemGroup>
 
 </Project>
