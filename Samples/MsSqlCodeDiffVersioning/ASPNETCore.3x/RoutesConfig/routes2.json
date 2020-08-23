@@ -98,6 +98,104 @@
         }
       }
     },
+    "mssql/aaa/ccc/objEcts": {
+      "HttPGet": {
+        "connectionID": "c1",
+        "storeProcedureName": "zsp_zObjectsChangesLogsHistory_Get",
+        "EnableStatistics": true,
+        "defaultAccessing": {
+          "isAsyncExecuting": true,
+          "allow": true,
+          "commandtimeoutInSeconds": 109,
+          "requestvAlidator": "simpleValidator1",
+          "operations": [ "a1", "a2" ],
+          "InputsParameters": [
+            {
+              "Name": "A",
+              "Value": 1,
+              "AllowOverride": true
+            },
+            {
+              "Name": "B",
+              "Value": true,
+              "AllowOverride": true
+            },
+            {
+              "Name": "c",
+              "Value": "asdsadsad",
+              "AllowOverride": true
+            }
+
+          ]
+
+        },
+        "exporting": {
+          "downloadFileName": "你好测试.csv",
+          "allow": true,
+          "commandtimeoutInSeconds": 109,
+          "requestvAlidator": "simpleValidator1",
+          "operations": [ "a1", "a2" ],
+          "InputsParameters": [
+            {
+              "Name": "A",
+              "Value": 1,
+              "AllowOverride": true
+            },
+            {
+              "Name": "B",
+              "Value": true,
+              "AllowOverride": true
+            },
+            {
+              "Name": "c",
+              "Value": "asdsadsad",
+              "AllowOverride": true
+            }
+
+          ],
+          "outputColumns": [
+            {
+              "ColumnName": "DatabaseName",
+              "ColumnTitle": "字段1"
+            },
+            {
+              "ColumnName": "f2",
+              "ColumnTitle111": "字段2"
+            },
+            {
+              "ColumnName": "f3",
+              "ColumnTitle": "字段3"
+            }
+          ]
+        }
+      },
+      "HttpPost": {
+        "ConnectionID": "c1",
+        "StoreProcedureName": "zsp_zObjectsChangesLogsHistory_Get",
+        //"EnableStatistics": true,
+        "defaultaccessing": {
+          "allow": true,
+          "InputsParameters": [
+            {
+              "Name": "A",
+              "Value": 1,
+              "AllowOverride": true
+            },
+            {
+              "Name": "B",
+              "Value": true,
+              "AllowOverride": true
+            },
+            {
+              "Name": "c",
+              "Value": "asdsadsad",
+              "AllowOverride": true
+            }
+
+          ]
+        }
+      }
+    },
     "masterdetails": {
       "HttPGet": {
         "connectionID": "c1",
