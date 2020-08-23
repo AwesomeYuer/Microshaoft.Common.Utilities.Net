@@ -7,7 +7,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\CommonUtilities\CommonUtilities.Lite.Core.3.x\CommonUtilities.Lite.Core.3.x.csproj" />
-    <ProjectReference Include="..\..\EasyPerformanceCountersHelper.NET\EasyPerformanceCountersHelper.NET.Core.3.x\EasyPerformanceCountersHelper.NET.Core.3.x.csproj" />
+	<ProjectReference Include="..\..\EasyPerformanceCountersHelper.NET\EasyPerformanceCountersHelper.NET.Standard.2.x\EasyPerformanceCountersHelper.NET.Standard.2.x.csproj" />
+
+	  
   </ItemGroup>
 
   <Import Project="..\..\SharedSources\ConcurrentAsyncQueue.Shared.projitems" Label="Shared" />

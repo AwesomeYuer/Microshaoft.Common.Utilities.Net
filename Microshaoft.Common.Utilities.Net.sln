@@ -21,8 +21,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "10.Lite", "10.Lite", "{0552
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00.Shared", "00.Shared", "{3C51363E-D01C-48E2-B6EF-508E1B6D5391}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonUtilities.Lite.Core.3.x", "CommonUtilities\CommonUtilities.Lite.Core.3.x\CommonUtilities.Lite.Core.3.x.csproj", "{EB5183AD-194C-4276-8F8F-90E9E8BAF816}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonUtilities.Xamarin.Standard.2.x", "CommonUtilities\CommonUtilities.Xamarin.Standard.2.x\CommonUtilities.Xamarin.Standard.2.x.csproj", "{CB039DB5-ABD7-4B44-B729-A1C7A24ABE4E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonUtilities.Lite.Standard.2.x", "CommonUtilities\CommonUtilities.Lite.Standard.2.x\CommonUtilities.Lite.Standard.2.x.csproj", "{9A62D412-1587-4C3D-BCC8-9734C4A22A81}"
@@ -47,15 +45,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00.Shared", "00.Shared", "{
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Microshaoft.Json.Shared", "SharedSources\Microshaoft.Json.Shared.shproj", "{378A4DC6-0E35-49BA-B242-9A9B01D6CE65}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microshaoft.Json.NET.Core.3.x", "Microshaoft.Json.NET\Microshaoft.Json.NET.Core.3.x\Microshaoft.Json.NET.Core.3.x.csproj", "{5B391A09-790C-4422-958F-FC8895E6FA3E}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "25.Microshaoft.StoreProceduresExecutors.NET", "25.Microshaoft.StoreProceduresExecutors.NET", "{302CE03A-9D8B-491F-B590-01AFC658ED9E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00.Shared", "00.Shared", "{31B96838-DC29-41FD-B412-E7E9C9AD8006}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Microshaoft.StoreProcedureExecutors.Shared", "SharedSources\Microshaoft.StoreProcedureExecutors.Shared.shproj", "{378A4DC6-0E35-49BA-B142-9A9B01D6CE65}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microshaoft.StoreProceduresExecutors.NET.Core.3.x", "Microshaoft.StoreProceduresExecutors.NET\Microshaoft.StoreProceduresExecutors.NET.Core.3.x\Microshaoft.StoreProceduresExecutors.NET.Core.3.x.csproj", "{5C3BB279-2E9F-42E4-BF45-C1A588CA634F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microshaoft.StoreProceduresExecutors.NET.Standard.2.x", "Microshaoft.StoreProceduresExecutors.NET\Microshaoft.StoreProceduresExecutors.NET.Standard.2.x\Microshaoft.StoreProceduresExecutors.NET.Standard.2.x.csproj", "{1FF88452-428E-444B-89D4-09F2437AEA09}"
 EndProject
@@ -146,13 +140,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "30.Swagger", "30.Swagger", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Swagger.WebApplication", "Samples\Swagger.WebApplication\Swagger.WebApplication.csproj", "{3DCA8530-241A-40B9-A338-2CFBD4A60015}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyPerformanceCountersHelper.NET.Core.3.x", "EasyPerformanceCountersHelper.NET\EasyPerformanceCountersHelper.NET.Core.3.x\EasyPerformanceCountersHelper.NET.Core.3.x.csproj", "{05EDEA2C-13D8-4468-8F5A-EB3B4B6229EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyPerformanceCountersHelper.NET.Standard.2.x", "EasyPerformanceCountersHelper.NET\EasyPerformanceCountersHelper.NET.Standard.2.x\EasyPerformanceCountersHelper.NET.Standard.2.x.csproj", "{46B4AB04-C3E7-4C87-82B3-E0F5909DEBD7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyPerformanceCountersHelper.NET.Standard.2.x", "EasyPerformanceCountersHelper.NET\EasyPerformanceCountersHelper.NET.Standard.2.x\EasyPerformanceCountersHelper.NET.Standard.2.x.csproj", "{46B4AB04-C3E7-4C87-82B3-E0F5909DEBD7}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcurrentAsyncQueue.NET.Core.3.x", "ConcurrentAsyncQueue.NET\ConcurrentAsyncQueue.NET.Core.3.x\ConcurrentAsyncQueue.NET.Core.3.x.csproj", "{0B54E4CC-797F-48AA-9AE2-F6E4468859D5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcurrentAsyncQueue.NET.Standard.2.x", "ConcurrentAsyncQueue.NET\ConcurrentAsyncQueue.NET.Standard.2.x\ConcurrentAsyncQueue.NET.Standard.2.x.csproj", "{129D4521-D6A5-4949-90FD-2647AD70FD52}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcurrentAsyncQueue.NET.Standard.2.x", "ConcurrentAsyncQueue.NET\ConcurrentAsyncQueue.NET.Standard.2.x\ConcurrentAsyncQueue.NET.Standard.2.x.csproj", "{129D4521-D6A5-4949-90FD-2647AD70FD52}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -160,8 +150,6 @@ Global
 		Plugins\JsonParametersValidators\SamplePlugin\SamplePlugin.Shared\JTokenModelParameterValidatorSamplePlugin.Shared.projitems*{016c7778-b0e5-4995-be87-d44e267371a9}*SharedItemsImports = 5
 		SharedSources\Microshaoft.Json.Shared.projitems*{01efc8d5-9b20-40b9-922f-5583bbc33ca2}*SharedItemsImports = 5
 		Plugins\StoreProceduresExecutors\MsSQL\MsSQL.Plugin.Shared\MsSQL.StoreProcedureExecutor.Plugin.Shared.projitems*{0579c429-5e45-494c-b0f0-2b46dc1c8a77}*SharedItemsImports = 13
-		SharedSources\EasyPerformanceCountersHelper.Shared.projitems*{05edea2c-13d8-4468-8f5a-eb3b4b6229eb}*SharedItemsImports = 5
-		SharedSources\ConcurrentAsyncQueue.Shared.projitems*{0b54e4cc-797f-48aa-9ae2-f6e4468859d5}*SharedItemsImports = 5
 		SharedSources\WebApiUtilities.Shared.projitems*{1fbd68b8-839e-4c54-a00c-beac21119371}*SharedItemsImports = 13
 		SharedSources\Microshaoft.StoreProcedureExecutors.Shared.projitems*{1ff88452-428e-444b-89d4-09f2437aea09}*SharedItemsImports = 5
 		Samples\SocketAsyncArgs.TCP.Echo.Server\ServerConsoleApp\ServerSharedProject\ServerSharedProject.projitems*{2cfbe4b2-3473-4ca0-8734-092d326814a6}*SharedItemsImports = 5
@@ -172,8 +160,6 @@ Global
 		Plugins\StoreProceduresExecutors\MySQL\MySQL.Plugin.Shared\MySQL.StoreProcedureExecutor.Plugin.Shared.projitems*{4ee26e3a-b23b-4760-a8d7-1eb0ef7a24dd}*SharedItemsImports = 13
 		Samples\MsSqlCodeDiffVersioning\MsSqlCodeDiffVersioning.Shared\MsSqlCodeDiffVersioning.Shared.projitems*{50cf6564-2c15-48ba-87ba-b83169f2a214}*SharedItemsImports = 13
 		Samples\SocketAsyncArgs.TCP.Echo.Server\ClientConsoleApp\ClientSharedProject\ClientSharedProject.projitems*{54db1b57-dbd1-4286-9be8-96251e43973b}*SharedItemsImports = 5
-		SharedSources\Microshaoft.Json.Shared.projitems*{5b391a09-790c-4422-958f-fc8895e6fa3e}*SharedItemsImports = 5
-		SharedSources\Microshaoft.StoreProcedureExecutors.Shared.projitems*{5c3bb279-2e9f-42e4-bf45-c1a588ca634f}*SharedItemsImports = 5
 		Plugins\StoreProceduresExecutors\MsSQL\MsSQL.Plugin.Shared\MsSQL.StoreProcedureExecutor.Plugin.Shared.projitems*{5eb5dc20-4930-4d0a-9d41-2928abafac00}*SharedItemsImports = 5
 		SharedSources\CommonUtilities.Shared.projitems*{7878df3a-8418-4aca-b415-300b81afd792}*SharedItemsImports = 13
 		SharedSources\WebApiUtilities.Shared.projitems*{94e4a943-9b48-4a5e-96be-9171ea7a87ec}*SharedItemsImports = 5
@@ -185,7 +171,6 @@ Global
 		SharedSources\CommonUtilities.Shared.projitems*{cb039db5-abd7-4b44-b729-a1c7a24abe4e}*SharedItemsImports = 5
 		Samples\MsSqlCodeDiffVersioning\MsSqlCodeDiffVersioning.Shared\MsSqlCodeDiffVersioning.Shared.projitems*{cda249b4-a4bf-4c44-a5a4-bad08255de20}*SharedItemsImports = 5
 		Samples\SocketAsyncArgs.TCP.Echo.Server\ClientConsoleApp\ClientSharedProject\ClientSharedProject.projitems*{e2a49f80-5e62-414d-bf57-8e1802b144a8}*SharedItemsImports = 13
-		SharedSources\CommonUtilities.Lite.Shared.projitems*{eb5183ad-194c-4276-8f8f-90e9e8baf816}*SharedItemsImports = 5
 		SharedSources\ConcurrentAsyncQueue.Shared.projitems*{f27798f3-0529-4852-9e9c-819699a772cb}*SharedItemsImports = 13
 		SharedSources\CommonUtilities.Lite.Shared.projitems*{f9418680-7641-49aa-a72a-32408f111947}*SharedItemsImports = 13
 	EndGlobalSection
@@ -202,10 +187,6 @@ Global
 		{A9A81303-87A4-4802-8C6C-14578593364F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9A81303-87A4-4802-8C6C-14578593364F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9A81303-87A4-4802-8C6C-14578593364F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EB5183AD-194C-4276-8F8F-90E9E8BAF816}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EB5183AD-194C-4276-8F8F-90E9E8BAF816}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EB5183AD-194C-4276-8F8F-90E9E8BAF816}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EB5183AD-194C-4276-8F8F-90E9E8BAF816}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CB039DB5-ABD7-4B44-B729-A1C7A24ABE4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CB039DB5-ABD7-4B44-B729-A1C7A24ABE4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CB039DB5-ABD7-4B44-B729-A1C7A24ABE4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -214,14 +195,6 @@ Global
 		{9A62D412-1587-4C3D-BCC8-9734C4A22A81}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A62D412-1587-4C3D-BCC8-9734C4A22A81}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A62D412-1587-4C3D-BCC8-9734C4A22A81}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5B391A09-790C-4422-958F-FC8895E6FA3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5B391A09-790C-4422-958F-FC8895E6FA3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5B391A09-790C-4422-958F-FC8895E6FA3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5B391A09-790C-4422-958F-FC8895E6FA3E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5C3BB279-2E9F-42E4-BF45-C1A588CA634F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5C3BB279-2E9F-42E4-BF45-C1A588CA634F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5C3BB279-2E9F-42E4-BF45-C1A588CA634F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5C3BB279-2E9F-42E4-BF45-C1A588CA634F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1FF88452-428E-444B-89D4-09F2437AEA09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1FF88452-428E-444B-89D4-09F2437AEA09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1FF88452-428E-444B-89D4-09F2437AEA09}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -266,18 +239,10 @@ Global
 		{3DCA8530-241A-40B9-A338-2CFBD4A60015}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DCA8530-241A-40B9-A338-2CFBD4A60015}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DCA8530-241A-40B9-A338-2CFBD4A60015}.Release|Any CPU.Build.0 = Release|Any CPU
-		{05EDEA2C-13D8-4468-8F5A-EB3B4B6229EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{05EDEA2C-13D8-4468-8F5A-EB3B4B6229EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{05EDEA2C-13D8-4468-8F5A-EB3B4B6229EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{05EDEA2C-13D8-4468-8F5A-EB3B4B6229EB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{46B4AB04-C3E7-4C87-82B3-E0F5909DEBD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{46B4AB04-C3E7-4C87-82B3-E0F5909DEBD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46B4AB04-C3E7-4C87-82B3-E0F5909DEBD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{46B4AB04-C3E7-4C87-82B3-E0F5909DEBD7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0B54E4CC-797F-48AA-9AE2-F6E4468859D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0B54E4CC-797F-48AA-9AE2-F6E4468859D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0B54E4CC-797F-48AA-9AE2-F6E4468859D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0B54E4CC-797F-48AA-9AE2-F6E4468859D5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{129D4521-D6A5-4949-90FD-2647AD70FD52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{129D4521-D6A5-4949-90FD-2647AD70FD52}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{129D4521-D6A5-4949-90FD-2647AD70FD52}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -295,7 +260,6 @@ Global
 		{D5A45603-B970-4C65-922B-AAF6B637BA14} = {21589612-7E06-4488-ADD6-EBE8A1E066DF}
 		{05522BC3-1430-4282-9A45-86D4A59D3FE9} = {21589612-7E06-4488-ADD6-EBE8A1E066DF}
 		{3C51363E-D01C-48E2-B6EF-508E1B6D5391} = {05522BC3-1430-4282-9A45-86D4A59D3FE9}
-		{EB5183AD-194C-4276-8F8F-90E9E8BAF816} = {05522BC3-1430-4282-9A45-86D4A59D3FE9}
 		{CB039DB5-ABD7-4B44-B729-A1C7A24ABE4E} = {D5A45603-B970-4C65-922B-AAF6B637BA14}
 		{9A62D412-1587-4C3D-BCC8-9734C4A22A81} = {05522BC3-1430-4282-9A45-86D4A59D3FE9}
 		{E97C82F8-629C-4F5B-ABFF-5060A5396666} = {91D8D645-61FE-47A6-9CA5-C457DB374E01}
@@ -307,11 +271,9 @@ Global
 		{43E9E38B-FD80-4206-825C-752DDE7911B2} = {91D8D645-61FE-47A6-9CA5-C457DB374E01}
 		{A4460654-BB83-4E32-A09F-EB6EC211824B} = {43E9E38B-FD80-4206-825C-752DDE7911B2}
 		{378A4DC6-0E35-49BA-B242-9A9B01D6CE65} = {A4460654-BB83-4E32-A09F-EB6EC211824B}
-		{5B391A09-790C-4422-958F-FC8895E6FA3E} = {43E9E38B-FD80-4206-825C-752DDE7911B2}
 		{302CE03A-9D8B-491F-B590-01AFC658ED9E} = {91D8D645-61FE-47A6-9CA5-C457DB374E01}
 		{31B96838-DC29-41FD-B412-E7E9C9AD8006} = {302CE03A-9D8B-491F-B590-01AFC658ED9E}
 		{378A4DC6-0E35-49BA-B142-9A9B01D6CE65} = {31B96838-DC29-41FD-B412-E7E9C9AD8006}
-		{5C3BB279-2E9F-42E4-BF45-C1A588CA634F} = {302CE03A-9D8B-491F-B590-01AFC658ED9E}
 		{1FF88452-428E-444B-89D4-09F2437AEA09} = {302CE03A-9D8B-491F-B590-01AFC658ED9E}
 		{956F09A3-793B-47BA-A689-A307BA0DBCC9} = {91D8D645-61FE-47A6-9CA5-C457DB374E01}
 		{AC6870A0-3939-47E0-8A04-91DD2DC2F99F} = {956F09A3-793B-47BA-A689-A307BA0DBCC9}
@@ -345,9 +307,7 @@ Global
 		{016C7778-B0E5-4995-BE87-D44E267371A9} = {7562606B-4C6F-45EB-99F6-8CA3BD8EFC2C}
 		{702A189B-E5AC-4343-8B52-3A614C5B36B0} = {E3B1E8C0-D370-4099-9377-8B567A0B7485}
 		{3DCA8530-241A-40B9-A338-2CFBD4A60015} = {702A189B-E5AC-4343-8B52-3A614C5B36B0}
-		{05EDEA2C-13D8-4468-8F5A-EB3B4B6229EB} = {E97C82F8-629C-4F5B-ABFF-5060A5396666}
 		{46B4AB04-C3E7-4C87-82B3-E0F5909DEBD7} = {E97C82F8-629C-4F5B-ABFF-5060A5396666}
-		{0B54E4CC-797F-48AA-9AE2-F6E4468859D5} = {CF989F5A-C42C-4265-B281-2607C14AEE7A}
 		{129D4521-D6A5-4949-90FD-2647AD70FD52} = {CF989F5A-C42C-4265-B281-2607C14AEE7A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
