@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <!--<TargetFramework>netstandard2.1</TargetFramework>-->
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <AssemblyName>Microshaoft.JValidatorSamplePlugin.3.x</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Composition" Version="1.0.31" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Microshaoft.WebApiUtilities.NET\Microshaoft.WebApiUtilities.NET.Core.3.x\Microshaoft.WebApiUtilities.NET.Core.3.x.csproj" />
+  </ItemGroup>
+
+  <Import Project="..\SamplePlugin.Shared\JTokenModelParameterValidatorSamplePlugin.Shared.projitems" Label="Shared" />
+
+
+
+
+</Project>
