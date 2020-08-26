@@ -40,10 +40,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Microshaoft.WebUtils\Microshaoft.WebUtils.NET.Core.3.x\Microshaoft.WebUtils.NET.Core.3.x.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Update="usersSecretsID.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -78,6 +74,10 @@
     <Content Update="hostings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Microshaoft.WebUtilities.NET\Microshaoft.WebUtilities.NET.Core.3.x\Microshaoft.WebUtilities.NET.Core.3.x.csproj" />
   </ItemGroup>
 
   <Import Project="..\MsSqlCodeDiffVersioning.Shared\MsSqlCodeDiffVersioning.Shared.projitems" Label="Shared" />

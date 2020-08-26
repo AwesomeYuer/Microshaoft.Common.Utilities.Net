@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "10.CommonUtilities", "10.Co
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00.Shared", "00.Shared", "{D7F4E285-EFAD-4F67-AAF5-C62C4406C59E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonUtils.Full.Core.3.x", "CommonUtilities\CommonUtilities.Full.Core.3.x\CommonUtils.Full.Core.3.x.csproj", "{0066DB51-3FC3-4FD5-A3FD-C39EE9F6FFB8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonUtilities.Full.Core.3.x", "CommonUtilities\CommonUtilities.Full.Core.3.x\CommonUtilities.Full.Core.3.x.csproj", "{0066DB51-3FC3-4FD5-A3FD-C39EE9F6FFB8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00.Full", "00.Full", "{D5A45603-B970-4C65-922B-AAF6B637BA14}"
 EndProject
@@ -106,11 +106,11 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "MsSQL.StoreProcedureExecuto
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "MySQL.StoreProcedureExecutor.Plugin.Shared", "Plugins\StoreProceduresExecutors\MySQL\MySQL.Plugin.Shared\MySQL.StoreProcedureExecutor.Plugin.Shared.shproj", "{4EE26E3A-B23B-4760-A8D7-1EB0EF7A24DD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MySQL.SPE.Plugin.NET.Core.3.x", "Plugins\StoreProceduresExecutors\MySQL\MySQL.Plugin.NET.Core.3.x\MySQL.SPE.Plugin.NET.Core.3.x.csproj", "{BE9EFE7C-2F7A-45D2-AAD7-8D6E6B173BEB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MySQL.StoreProcedureExecutor.Plugin.NET.Core.3.x", "Plugins\StoreProceduresExecutors\MySQL\MySQL.Plugin.NET.Core.3.x\MySQL.StoreProcedureExecutor.Plugin.NET.Core.3.x.csproj", "{BE9EFE7C-2F7A-45D2-AAD7-8D6E6B173BEB}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "JTokenModelParameterValidatorSamplePlugin.Shared", "Plugins\JsonParametersValidators\SamplePlugin\SamplePlugin.Shared\JTokenModelParameterValidatorSamplePlugin.Shared.shproj", "{A85EFE1E-6A82-40FB-92AC-08ACBC50DC52}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JValidatorSamplePlugin.NET.Core.3.x", "Plugins\JsonParametersValidators\SamplePlugin\SamplePlugin.NET.Core.3.x\JValidatorSamplePlugin.NET.Core.3.x.csproj", "{016C7778-B0E5-4995-BE87-D44E267371A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JTokenValidatorSamplePlugin.NET.Core.3.x", "Plugins\JsonParametersValidators\SamplePlugin\SamplePlugin.NET.Core.3.x\JTokenValidatorSamplePlugin.NET.Core.3.x.csproj", "{016C7778-B0E5-4995-BE87-D44E267371A9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "30.Swagger", "30.Swagger", "{702A189B-E5AC-4343-8B52-3A614C5B36B0}"
 EndProject
@@ -124,25 +124,25 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client.Core", "Samples\Sock
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ClientSharedProject", "Samples\SocketAsyncArgs.TCP.Echo.Server\Client\ClientSharedProject\ClientSharedProject.shproj", "{E2A49F80-5E62-414D-BF57-8E1802B144A8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonUtils.Full.Std.2.x", "CommonUtilities\CommonUtilities.Full.Std.2.x\CommonUtils.Full.Std.2.x.csproj", "{62F74CE3-EF26-429D-8E23-AA258FAA54FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonUtilities.Full.Std.2.x", "CommonUtilities\CommonUtilities.Full.Std.2.x\CommonUtilities.Full.Std.2.x.csproj", "{62F74CE3-EF26-429D-8E23-AA258FAA54FE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonUtils.Xamarin.Std.2.x", "CommonUtilities\CommonUtilities.Xamarin.Std.2.x\CommonUtils.Xamarin.Std.2.x.csproj", "{3386E017-799F-46E7-B609-1E4A2046BBA3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonUtilities.Xamarin.Standard.2.x", "CommonUtilities\CommonUtilities.Xamarin.Std.2.x\CommonUtilities.Xamarin.Standard.2.x.csproj", "{3386E017-799F-46E7-B609-1E4A2046BBA3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonUtils.Lite.Std.2.x", "CommonUtilities\CommonUtilities.Lite.Std.2.x\CommonUtils.Lite.Std.2.x.csproj", "{B38FF329-0B60-4584-A166-1B3683DC462F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonUtilities.Lite.Std.2.x", "CommonUtilities\CommonUtilities.Lite.Std.2.x\CommonUtilities.Lite.Std.2.x.csproj", "{B38FF329-0B60-4584-A166-1B3683DC462F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EzPerfCountersHelper.NET.Std.2.x", "EasyPerformanceCountersHelper.NET\EasyPerformanceCountersHelper.NET.Std.2.x\EzPerfCountersHelper.NET.Std.2.x.csproj", "{725BBEDB-F0AF-4276-B03F-ACAB11B8097E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyPerformanceCountersHelper.NET.Std.2.x", "EasyPerformanceCountersHelper.NET\EasyPerformanceCountersHelper.NET.Std.2.x\EasyPerformanceCountersHelper.NET.Std.2.x.csproj", "{725BBEDB-F0AF-4276-B03F-ACAB11B8097E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microshaoft.Json.NET.Std.2.x", "Microshaoft.Json.NET\Microshaoft.Json.NET.Std.2.x\Microshaoft.Json.NET.Std.2.x.csproj", "{1AF18383-99A1-4DD0-BD72-BD17BC01E991}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcurrentAsyncQueue.NET.Std.2.x", "ConcurrentAsyncQueue.NET\ConcurrentAsyncQueue.NET.Std.2.x\ConcurrentAsyncQueue.NET.Std.2.x.csproj", "{3E72EA03-89B4-4A44-8F5E-B49224CC70F9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microshaoft.SPE.NET.Std.2.x", "Microshaoft.StoreProceduresExecutors.NET\Microshaoft.StoreProceduresExecutors.NET.Std.2.x\Microshaoft.SPE.NET.Std.2.x.csproj", "{3CA35DCA-D1D3-4FC4-A7EE-59A0A5B428D3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microshaoft.StoreProceduresExecutors.NET.Std.2.x", "Microshaoft.StoreProceduresExecutors.NET\Microshaoft.StoreProceduresExecutors.NET.Std.2.x\Microshaoft.StoreProceduresExecutors.NET.Std.2.x.csproj", "{3CA35DCA-D1D3-4FC4-A7EE-59A0A5B428D3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MsSQL.SPE.Plugin.NET.Std.2.x", "Plugins\StoreProceduresExecutors\MsSQL\MsSQL.Plugin.NET.Std.2.x\MsSQL.SPE.Plugin.NET.Std.2.x.csproj", "{E412C10F-F53B-47E0-8ECA-AE0C302091F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MsSQL.StoreProcedureExecutor.Plugin.NET.Std.2.x", "Plugins\StoreProceduresExecutors\MsSQL\MsSQL.Plugin.NET.Std.2.x\MsSQL.StoreProcedureExecutor.Plugin.NET.Std.2.x.csproj", "{E412C10F-F53B-47E0-8ECA-AE0C302091F6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microshaoft.WebUtilities.NET.Core.3.x", "Microshaoft.WebUtilities.NET\Microshaoft.WebUtilities.NET.Core.3.x\Microshaoft.WebUtilities.NET.Core.3.x.csproj", "{39C0ACC3-6316-446A-A939-DFFA5F22C7B2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MsSqlCodeDiffVersioning.3x", "Samples\MsSqlCodeDiffVersioning\ASPNETCore.3x\MsSqlCodeDiffVersioning.3x.csproj", "{002D987E-BB18-4A55-AD26-35320B71142A}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microshaoft.WebUtils.NET.Core.3.x", "Microshaoft.WebUtils\Microshaoft.WebUtils.NET.Core.3.x\Microshaoft.WebUtils.NET.Core.3.x.csproj", "{254DDE8E-ECFD-46BC-8CFE-C36664C61BA0}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microshaoft.Json.NET.Std.2.x", "Microshaoft.Json\Microshaoft.Json.Std.2.x\Microshaoft.Json.NET.Std.2.x.csproj", "{514EFDA9-F862-445C-BE7B-72232CB93409}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -151,16 +151,16 @@ Global
 		Plugins\JsonParametersValidators\SamplePlugin\SamplePlugin.Shared\JTokenModelParameterValidatorSamplePlugin.Shared.projitems*{016c7778-b0e5-4995-be87-d44e267371a9}*SharedItemsImports = 5
 		Plugins\StoreProceduresExecutors\MsSQL\MsSQL.Plugin.Shared\MsSQL.StoreProcedureExecutor.Plugin.Shared.projitems*{0579c429-5e45-494c-b0f0-2b46dc1c8a77}*SharedItemsImports = 13
 		Samples\SocketAsyncArgs.TCP.Echo.Server\Client\ClientSharedProject\ClientSharedProject.projitems*{12c62e1b-1199-4ae3-8e11-bc901a0ef374}*SharedItemsImports = 5
+		SharedSources\Microshaoft.Json.Shared.projitems*{1af18383-99a1-4dd0-bd72-bd17bc01e991}*SharedItemsImports = 5
 		SharedSources\WebApiUtilities.Shared.projitems*{1fbd68b8-839e-4c54-a00c-beac21119371}*SharedItemsImports = 13
-		SharedSources\WebApiUtilities.Shared.projitems*{254dde8e-ecfd-46bc-8cfe-c36664c61ba0}*SharedItemsImports = 5
 		SharedSources\CommonUtilities.Shared.projitems*{3386e017-799f-46e7-b609-1e4a2046bba3}*SharedItemsImports = 5
 		SharedSources\Microshaoft.StoreProcedureExecutors.Shared.projitems*{378a4dc6-0e35-49ba-b142-9a9b01d6ce65}*SharedItemsImports = 13
 		SharedSources\Microshaoft.Json.Shared.projitems*{378a4dc6-0e35-49ba-b242-9a9b01d6ce65}*SharedItemsImports = 13
+		SharedSources\WebApiUtilities.Shared.projitems*{39c0acc3-6316-446a-a939-dffa5f22c7b2}*SharedItemsImports = 5
 		SharedSources\Microshaoft.StoreProcedureExecutors.Shared.projitems*{3ca35dca-d1d3-4fc4-a7ee-59a0a5b428d3}*SharedItemsImports = 5
 		Samples\SocketAsyncArgs.TCP.Echo.Server\Server\ServerSharedProject\ServerSharedProject.projitems*{3f6feee0-0473-441f-a073-889503ec7710}*SharedItemsImports = 13
 		Plugins\StoreProceduresExecutors\MySQL\MySQL.Plugin.Shared\MySQL.StoreProcedureExecutor.Plugin.Shared.projitems*{4ee26e3a-b23b-4760-a8d7-1eb0ef7a24dd}*SharedItemsImports = 13
 		Samples\MsSqlCodeDiffVersioning\MsSqlCodeDiffVersioning.Shared\MsSqlCodeDiffVersioning.Shared.projitems*{50cf6564-2c15-48ba-87ba-b83169f2a214}*SharedItemsImports = 13
-		SharedSources\Microshaoft.Json.Shared.projitems*{514efda9-f862-445c-be7b-72232cb93409}*SharedItemsImports = 5
 		SharedSources\CommonUtilities.Shared.projitems*{62f74ce3-ef26-429d-8e23-aa258faa54fe}*SharedItemsImports = 5
 		SharedSources\EasyPerformanceCountersHelper.Shared.projitems*{725bbedb-f0af-4276-b03f-acab11b8097e}*SharedItemsImports = 5
 		SharedSources\CommonUtilities.Shared.projitems*{7878df3a-8418-4aca-b415-300b81afd792}*SharedItemsImports = 13
@@ -223,6 +223,10 @@ Global
 		{725BBEDB-F0AF-4276-B03F-ACAB11B8097E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{725BBEDB-F0AF-4276-B03F-ACAB11B8097E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{725BBEDB-F0AF-4276-B03F-ACAB11B8097E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1AF18383-99A1-4DD0-BD72-BD17BC01E991}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AF18383-99A1-4DD0-BD72-BD17BC01E991}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AF18383-99A1-4DD0-BD72-BD17BC01E991}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AF18383-99A1-4DD0-BD72-BD17BC01E991}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3E72EA03-89B4-4A44-8F5E-B49224CC70F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3E72EA03-89B4-4A44-8F5E-B49224CC70F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E72EA03-89B4-4A44-8F5E-B49224CC70F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -235,18 +239,14 @@ Global
 		{E412C10F-F53B-47E0-8ECA-AE0C302091F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E412C10F-F53B-47E0-8ECA-AE0C302091F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E412C10F-F53B-47E0-8ECA-AE0C302091F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39C0ACC3-6316-446A-A939-DFFA5F22C7B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39C0ACC3-6316-446A-A939-DFFA5F22C7B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39C0ACC3-6316-446A-A939-DFFA5F22C7B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39C0ACC3-6316-446A-A939-DFFA5F22C7B2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{002D987E-BB18-4A55-AD26-35320B71142A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{002D987E-BB18-4A55-AD26-35320B71142A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{002D987E-BB18-4A55-AD26-35320B71142A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{002D987E-BB18-4A55-AD26-35320B71142A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{254DDE8E-ECFD-46BC-8CFE-C36664C61BA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{254DDE8E-ECFD-46BC-8CFE-C36664C61BA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{254DDE8E-ECFD-46BC-8CFE-C36664C61BA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{254DDE8E-ECFD-46BC-8CFE-C36664C61BA0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{514EFDA9-F862-445C-BE7B-72232CB93409}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{514EFDA9-F862-445C-BE7B-72232CB93409}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{514EFDA9-F862-445C-BE7B-72232CB93409}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{514EFDA9-F862-445C-BE7B-72232CB93409}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -303,12 +303,12 @@ Global
 		{3386E017-799F-46E7-B609-1E4A2046BBA3} = {D5A45603-B970-4C65-922B-AAF6B637BA14}
 		{B38FF329-0B60-4584-A166-1B3683DC462F} = {05522BC3-1430-4282-9A45-86D4A59D3FE9}
 		{725BBEDB-F0AF-4276-B03F-ACAB11B8097E} = {E97C82F8-629C-4F5B-ABFF-5060A5396666}
+		{1AF18383-99A1-4DD0-BD72-BD17BC01E991} = {43E9E38B-FD80-4206-825C-752DDE7911B2}
 		{3E72EA03-89B4-4A44-8F5E-B49224CC70F9} = {CF989F5A-C42C-4265-B281-2607C14AEE7A}
 		{3CA35DCA-D1D3-4FC4-A7EE-59A0A5B428D3} = {302CE03A-9D8B-491F-B590-01AFC658ED9E}
 		{E412C10F-F53B-47E0-8ECA-AE0C302091F6} = {3B230557-B533-4870-831E-6A6FD075D90B}
+		{39C0ACC3-6316-446A-A939-DFFA5F22C7B2} = {956F09A3-793B-47BA-A689-A307BA0DBCC9}
 		{002D987E-BB18-4A55-AD26-35320B71142A} = {4ED6A214-33E0-4F82-97D3-8825FC660EFB}
-		{254DDE8E-ECFD-46BC-8CFE-C36664C61BA0} = {956F09A3-793B-47BA-A689-A307BA0DBCC9}
-		{514EFDA9-F862-445C-BE7B-72232CB93409} = {43E9E38B-FD80-4206-825C-752DDE7911B2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3A79E5CD-0524-4DA6-B26C-17C43FF8E9FB}
