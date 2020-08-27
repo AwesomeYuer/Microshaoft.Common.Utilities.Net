@@ -40,56 +40,53 @@
               "AllowOverride": true
             }
           ],
+          "outputColumns1111": [
+            [
+              {
+                "ColumnName": "F",
+                "ColumnTitle": "字段1",
+                "ColumnType": "String"
+              },
+              {
+                "ColumnName": "object_id",
+                "ColumnTitle": "字段2",
+                "ColumnType": "Integer"
+              },
+              {
+                "ColumnName": "f3",
+                "ColumnTitle": "字段3",
+                "ColumnType": "String"
+              }
+            ],
+            [
+              {
+                "ColumnName": "F",
+                "ColumnTitle": "字段1",
+                "ColumnType": "String"
+              },
+              {
+                "ColumnName": "object_id",
+                "ColumnTitle": "字段2",
+                "ColumnType": "Integer"
+              },
+              {
+                "ColumnName": "f3",
+                "ColumnTitle": "字段3",
+                "ColumnType": "String"
+              }
+            ]
+          ],
           "Outputs1111": {
             "aaa.bbb.ddd": "Outputs.ResultSets[0].Rows",
             "aaa.bbb.eee": "Outputs.Parameters.HttpResponseMessage"
           }
-
         },
         "exporting": {
           "allow": true,
           "needCheckOperations": true,
           "operations": [ "a1", "a2" ],
           "downloadFileName": "测试下载.csv",
-          "outputColumns11111": [
-            [
-              {
-                "ColumnName": "f1",
-                "ColumnTitle": "字段1",
-                "dataformat": "yy-MM-dd"
-              },
-              {
-                "ColumnName": "f2",
-                "ColumnTitle111": "字段2",
-                "dataformat": "yy-MM-dd HH:mm:ss"
-              },
-              {
-                "ColumnName": "f3",
-                "ColumnTitle": "字段3",
-                "dataformat": "g"
-              }
 
-            ],
-            [
-              {
-                "ColumnName": "f1",
-                "ColumnTitle": "字段1",
-                "dataformat": "yy-MM-dd"
-              },
-              {
-                "ColumnName": "f2",
-                "ColumnTitle111": "字段2",
-                "dataformat": "yy-MM-dd HH:mm:ss"
-              },
-              {
-                "ColumnName": "f3",
-                "ColumnTitle": "字段3",
-                "dataformat": "g"
-              }
-
-            ]
-
-          ],
           "isAsyncExecuting": true,
           "EnableStatistics": true,
           "commandtimeoutInSeconds": 103,

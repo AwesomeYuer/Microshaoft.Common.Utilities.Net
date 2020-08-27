@@ -16,6 +16,7 @@ namespace Microshaoft.WebApi.Controllers
     using System.Linq;
     using System.Reflection;
     using System.Runtime.InteropServices;
+    using System.Runtime.InteropServices.WindowsRuntime;
     using System.Threading.Tasks;
 
     internal static class InternalApplicationManager
@@ -58,6 +59,8 @@ namespace Microshaoft.WebApi.Controllers
             _service = service;
             _configuration = configuration;
         }
+
+
         private JToken MapByConfiguration
                     (
                         string actionRoutePath
@@ -81,6 +84,140 @@ namespace Microshaoft.WebApi.Controllers
             {
                 accessingConfigurationKey = "exporting";
             }
+
+            #region Support custom json output columns in route.json
+            // 2020-08-27 Support custom json output columns 
+            if
+                (
+                    _configuration
+                                .TryGetSection
+                                    (
+                                        $"Routes:{actionRoutePath}:{httpMethod}:{accessingConfigurationKey}:OutputColumns"
+                                        , out var allOutputColumnsConfiguration
+                                    )
+                )
+            {
+                var allOutputColumns = allOutputColumnsConfiguration
+                                            .GetChildren()
+                                            .Select
+                                                (
+                                                    (x) =>
+                                                    {
+                                                        return
+                                                        x
+                                                            .GetChildren()
+                                                            .Select
+                                                                (
+                                                                    (xx) =>
+                                                                    {
+                                                                        var columnName = xx
+                                                                                            .GetValue<string>
+                                                                                                    ("ColumnName");
+                                                                        var columnTitle = xx
+                                                                                            .GetValue
+                                                                                                    (
+                                                                                                        "ColumnTitle"
+                                                                                                        , columnName
+                                                                                                    );
+                                                                        var columnType = xx
+                                                                                    .GetValue
+                                                                                            (
+                                                                                                "ColumnType"
+                                                                                                , string.Empty
+                                                                                            );
+                                                                        return
+                                                                            (
+                                                                                ColumnName: columnName
+                                                                                , Title: columnTitle
+                                                                                , title: columnTitle
+                                                                                , data: columnName
+                                                                                , ColumnType: columnType
+                                                                            );
+                                                                    }
+                                                                )
+                                                            .ToArray();
+                                                    }
+                                                );
+
+                var i = 0;
+                var resultSetsJArray = result["Outputs"]["ResultSets"];
+                var count = resultSetsJArray.Count();
+                foreach (var outputColumns in allOutputColumns)
+                {
+                    if (i >= count)
+                    {
+                        break;
+                    }
+                    var jArrayResultColumns = JArray
+                                                    .FromObject
+                                                        (
+                                                            outputColumns
+                                                                    .Select
+                                                                        (
+                                                                            (x) =>
+                                                                            {
+                                                                                return
+                                                                                    new
+                                                                                    {
+                                                                                        x.ColumnName
+                                                                                        , x.Title
+                                                                                        , x.title
+                                                                                        , x.data      // data should be lower case
+                                                                                        , x.ColumnType
+                                                                                    };
+                                                                            }
+                                                                        )
+                                                        );
+                    resultSetsJArray[i]["Columns"] = jArrayResultColumns;
+                    var jArrayResultRows = resultSetsJArray[i]["Rows"] as JArray;
+                    var j = 0;
+                    JArray jArrayNewResult = null;
+                    foreach (JObject jObjectRow in jArrayResultRows)
+                    {
+                        JObject jObjectNewRow = null;
+                        foreach (var column in outputColumns)
+                        {
+                            if (jObjectNewRow == null)
+                            {
+                                jObjectNewRow = new JObject();
+                            }
+                            if
+                                (
+                                    jObjectRow
+                                        .TryGetValue
+                                            (
+                                                column.ColumnName
+                                                , StringComparison.OrdinalIgnoreCase
+                                                , out var hv
+                                            )
+                                )
+                            {
+                                jObjectNewRow.Add(new JProperty(column.ColumnName, hv));
+                            }
+                            else
+                            {
+                                jObjectNewRow.Add(new JProperty(column.ColumnName, null));
+                            }
+                            j ++;
+                        }
+                        if (jObjectNewRow != null)
+                        {
+                            if (jArrayNewResult == null)
+                            {
+                                jArrayNewResult = new JArray();
+                            }
+                            jArrayNewResult.Add(jObjectNewRow);
+                        }
+                    }
+                    if (jArrayNewResult != null)
+                    {
+                        resultSetsJArray[i]["Rows"] = jArrayNewResult;
+                    }
+                    i ++;
+                }
+            } 
+            #endregion
+
             if 
                 (
                     _configuration
@@ -111,6 +248,11 @@ namespace Microshaoft.WebApi.Controllers
                                     mappings
                                 );
             }
+
+
+
+
+
             return
                 result;
         }

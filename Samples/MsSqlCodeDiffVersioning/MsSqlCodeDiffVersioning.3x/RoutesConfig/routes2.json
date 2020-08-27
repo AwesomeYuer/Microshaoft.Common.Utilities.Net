@@ -27,8 +27,48 @@
               "Value": "asdsadsad",
               "AllowOverride": true
             }
+          ],
+          "outputColumns": [
+            [
+
+              {
+                "ColumnName": "f1",
+                "ColumnTitle": "字段1",
+                "dataformat": "yy-MM-dd"
+              },
+              {
+                "ColumnName": "f2",
+                "ColumnTitle111": "字段2",
+                "dataformat": "yy-MM-dd HH:mm:ss"
+              },
+              {
+                "ColumnName": "f3",
+                "ColumnTitle": "字段3",
+                "dataformat": "g"
+              }
+
+            ],
+            [
+              {
+                "ColumnName": "f1",
+                "ColumnTitle": "字段1",
+                "dataformat": "yy-MM-dd"
+              },
+              {
+                "ColumnName": "f2",
+                "ColumnTitle111": "字段2",
+                "dataformat": "yy-MM-dd HH:mm:ss"
+              },
+              {
+                "ColumnName": "f3",
+                "ColumnTitle": "字段3",
+                "dataformat": "g"
+              }
+
+            ]
 
           ]
+
 
         },
         "exporting": {
@@ -52,21 +92,6 @@
               "Name": "c",
               "Value": "asdsadsad",
               "AllowOverride": true
-            }
-
-          ],
-          "outputColumns": [
-            {
-              "ColumnName": "DatabaseName",
-              "ColumnTitle": "字段1"
-            },
-            {
-              "ColumnName": "f2",
-              "ColumnTitle111": "字段2"
-            },
-            {
-              "ColumnName": "f3",
-              "ColumnTitle": "字段3"
             }
           ]
         }
@@ -152,21 +177,8 @@
               "AllowOverride": true
             }
 
-          ],
-          "outputColumns": [
-            {
-              "ColumnName": "DatabaseName",
-              "ColumnTitle": "字段1"
-            },
-            {
-              "ColumnName": "f2",
-              "ColumnTitle111": "字段2"
-            },
-            {
-              "ColumnName": "f3",
-              "ColumnTitle": "字段3"
-            }
           ]
+
         }
       },
       "HttpPost": {
