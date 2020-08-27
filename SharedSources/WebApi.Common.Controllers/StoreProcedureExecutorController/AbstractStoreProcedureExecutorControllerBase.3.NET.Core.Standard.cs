@@ -104,38 +104,38 @@ namespace Microshaoft.WebApi.Controllers
                                                     (x) =>
                                                     {
                                                         return
-                                                        x
-                                                            .GetChildren()
-                                                            .Select
-                                                                (
-                                                                    (xx) =>
-                                                                    {
-                                                                        var columnName = xx
-                                                                                            .GetValue<string>
-                                                                                                    ("ColumnName");
-                                                                        var columnTitle = xx
-                                                                                            .GetValue
-                                                                                                    (
-                                                                                                        "ColumnTitle"
-                                                                                                        , columnName
-                                                                                                    );
-                                                                        var columnType = xx
-                                                                                    .GetValue
-                                                                                            (
-                                                                                                "ColumnType"
-                                                                                                , string.Empty
-                                                                                            );
-                                                                        return
-                                                                            (
-                                                                                ColumnName: columnName
-                                                                                , Title: columnTitle
-                                                                                , title: columnTitle
-                                                                                , data: columnName
-                                                                                , ColumnType: columnType
-                                                                            );
-                                                                    }
-                                                                )
-                                                            .ToArray();
+                                                            x
+                                                                .GetChildren()
+                                                                .Select
+                                                                    (
+                                                                        (xx) =>
+                                                                        {
+                                                                            var columnName = xx
+                                                                                                .GetValue<string>
+                                                                                                        ("ColumnName");
+                                                                            var columnTitle = xx
+                                                                                                .GetValue
+                                                                                                        (
+                                                                                                            "ColumnTitle"
+                                                                                                            , columnName
+                                                                                                        );
+                                                                            var columnType = xx
+                                                                                                .GetValue
+                                                                                                        (
+                                                                                                            "ColumnType"
+                                                                                                            , string.Empty
+                                                                                                        );
+                                                                            return
+                                                                                (
+                                                                                    ColumnName: columnName
+                                                                                    , Title: columnTitle
+                                                                                    , title: columnTitle
+                                                                                    , data: columnName
+                                                                                    , ColumnType: columnType
+                                                                                );
+                                                                        }
+                                                                    )
+                                                                .ToArray();
                                                     }
                                                 );
 
