@@ -1,7 +1,6 @@
 ﻿#if NETCOREAPP
 namespace Microshaoft
 {
-    using Microshaoft.Web;
     using Microshaoft.WebApi.Controllers;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.ActionConstraints;
@@ -75,19 +74,14 @@ namespace Microshaoft
                     (
                         typeof(TControllerType)
                                 .IsAssignableFrom(currentControllerType)
-                        //&&
-                        //routeData
-                        //        .Values
-                        //        .ContainsKey
-                        //            (nameof(actionRoutePath))
                         &&
                         !actionRoutePath
                                 .IsNullOrEmptyOrWhiteSpace()
                     )
                 {
                     var isAsyncExecuting = currentControllerActionDescriptor
-                                                        .MethodInfo
-                                                        .IsAsync();
+                                                                        .MethodInfo
+                                                                        .IsAsync();
                     var httpMethod = $"Http{request.Method}";
                     var accessingConfigurationKey = "DefaultAccessing";
                     if (request.Path.ToString().Contains("/export/", StringComparison.OrdinalIgnoreCase))
@@ -96,12 +90,12 @@ namespace Microshaoft
                     }
                     var isAsyncExecutingInConfiguration =
                             _routeAttribute
-                                            .Configuration
-                                            .GetOrDefault
-                                                (
-                                                    $"Routes:{actionRoutePath}:{httpMethod}:{accessingConfigurationKey}:isAsyncExecuting"
-                                                    , false
-                                                );
+                                        .Configuration
+                                        .GetOrDefault
+                                            (
+                                                $"Routes:{actionRoutePath}:{httpMethod}:{accessingConfigurationKey}:isAsyncExecuting"
+                                                , false
+                                            );
                     r =
                         (
                             isAsyncExecutingInConfiguration
@@ -113,7 +107,6 @@ namespace Microshaoft
             return
                 r;
         }
-
 
         private readonly
                         Func
