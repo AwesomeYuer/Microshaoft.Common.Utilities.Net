@@ -9,14 +9,12 @@ namespace Microshaoft.WebApi.Controllers
     using Microsoft.Extensions.Options;
     using Newtonsoft.Json.Linq;
     using System;
-    //using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Data;
     using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
     using System.Runtime.InteropServices;
-    using System.Runtime.InteropServices.WindowsRuntime;
     using System.Threading.Tasks;
 
     internal static class InternalApplicationManager
@@ -256,11 +254,6 @@ namespace Microshaoft.WebApi.Controllers
                                     mappings
                                 );
             }
-
-
-
-
-
             return
                 result;
         }
