@@ -104,38 +104,38 @@ namespace Microshaoft.WebApi.Controllers
                                                     (x) =>
                                                     {
                                                         return
-                                                        x
-                                                            .GetChildren()
-                                                            .Select
-                                                                (
-                                                                    (xx) =>
-                                                                    {
-                                                                        var columnName = xx
-                                                                                            .GetValue<string>
-                                                                                                    ("ColumnName");
-                                                                        var columnTitle = xx
-                                                                                            .GetValue
-                                                                                                    (
-                                                                                                        "ColumnTitle"
-                                                                                                        , columnName
-                                                                                                    );
-                                                                        var columnType = xx
-                                                                                    .GetValue
-                                                                                            (
-                                                                                                "ColumnType"
-                                                                                                , string.Empty
-                                                                                            );
-                                                                        return
-                                                                            (
-                                                                                ColumnName: columnName
-                                                                                , Title: columnTitle
-                                                                                , title: columnTitle
-                                                                                , data: columnName
-                                                                                , ColumnType: columnType
-                                                                            );
-                                                                    }
-                                                                )
-                                                            .ToArray();
+                                                            x
+                                                                .GetChildren()
+                                                                .Select
+                                                                    (
+                                                                        (xx) =>
+                                                                        {
+                                                                            var columnName = xx
+                                                                                                .GetValue<string>
+                                                                                                        ("ColumnName");
+                                                                            var columnTitle = xx
+                                                                                                .GetValue
+                                                                                                        (
+                                                                                                            "ColumnTitle"
+                                                                                                            , columnName
+                                                                                                        );
+                                                                            var columnType = xx
+                                                                                                .GetValue
+                                                                                                        (
+                                                                                                            "ColumnType"
+                                                                                                            , string.Empty
+                                                                                                        );
+                                                                            return
+                                                                                (
+                                                                                    ColumnName: columnName
+                                                                                    , Title: columnTitle
+                                                                                    , title: columnTitle
+                                                                                    , data: columnName
+                                                                                    , ColumnType: columnType
+                                                                                );
+                                                                        }
+                                                                    )
+                                                                .ToArray();
                                                     }
                                                 );
 
@@ -175,7 +175,7 @@ namespace Microshaoft.WebApi.Controllers
                     foreach (JObject jObjectRow in jArrayResultRows)
                     {
                         JObject jObjectNewRow = null;
-                        foreach (var column in outputColumns)
+                        foreach (var (ColumnName, Title, title, data, ColumnType) in outputColumns)
                         {
                             if (jObjectNewRow == null)
                             {
@@ -186,17 +186,25 @@ namespace Microshaoft.WebApi.Controllers
                                     jObjectRow
                                         .TryGetValue
                                             (
-                                                column.ColumnName
+                                                ColumnName
                                                 , StringComparison.OrdinalIgnoreCase
-                                                , out var hv
+                                                , out var jTokenValue
                                             )
                                 )
                             {
-                                jObjectNewRow.Add(new JProperty(column.ColumnName, hv));
+                                jObjectNewRow
+                                            .Add
+                                                (
+                                                    new JProperty(ColumnName, jTokenValue)
+                                                );
                             }
                             else
                             {
-                                jObjectNewRow.Add(new JProperty(column.ColumnName, null));
+                                jObjectNewRow
+                                            .Add
+                                                (
+                                                    new JProperty(ColumnName, null)
+                                                );
                             }
                             j ++;
                         }
