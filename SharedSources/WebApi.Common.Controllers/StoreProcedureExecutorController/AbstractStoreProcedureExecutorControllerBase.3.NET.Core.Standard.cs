@@ -127,11 +127,11 @@ namespace Microshaoft.WebApi.Controllers
                                                                                                         );
                                                                             return
                                                                                 (
-                                                                                    ColumnName: columnName
-                                                                                    , Title: columnTitle
-                                                                                    , title: columnTitle
-                                                                                    , data: columnName
-                                                                                    , ColumnType: columnType
+                                                                                    ColumnName      : columnName
+                                                                                    , Title         : columnTitle
+                                                                                    , title         : columnTitle
+                                                                                    , data          : columnName
+                                                                                    , ColumnType    : columnType
                                                                                 );
                                                                         }
                                                                     )
@@ -141,10 +141,10 @@ namespace Microshaoft.WebApi.Controllers
 
                 var i = 0;
                 var resultSetsJArray = result["Outputs"]["ResultSets"];
-                var count = resultSetsJArray.Count();
+                var resultSetsCount = resultSetsJArray.Count();
                 foreach (var outputColumns in allOutputColumns)
                 {
-                    if (i >= count)
+                    if (i >= resultSetsCount)
                     {
                         break;
                     }
@@ -184,12 +184,12 @@ namespace Microshaoft.WebApi.Controllers
                             if
                                 (
                                     jObjectRow
-                                        .TryGetValue
-                                            (
-                                                ColumnName
-                                                , StringComparison.OrdinalIgnoreCase
-                                                , out var jTokenValue
-                                            )
+                                            .TryGetValue
+                                                (
+                                                    ColumnName
+                                                    , StringComparison.OrdinalIgnoreCase
+                                                    , out var jTokenValue
+                                                )
                                 )
                             {
                                 jObjectNewRow
