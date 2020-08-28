@@ -40,39 +40,39 @@
               "AllowOverride": true
             }
           ],
-          "outputColumns": [
+          "outputColumns1111": [
             [
               {
                 "ColumnName": "F",
                 "ColumnTitle": "字段1",
-                "ColumnType": "String"
+                "ColumnType": "String1111"
               },
               {
                 "ColumnName": "object_id",
                 "ColumnTitle": "字段2",
-                "ColumnType": "Integer"
+                "ColumnType": "Integer1111"
               },
               {
-                "ColumnName": "f3",
+                "ColumnName": "jsonf1",
                 "ColumnTitle": "字段3",
-                "ColumnType": "String"
+                "ColumnType": "String1111"
               }
             ],
             [
               {
-                "ColumnName": "F",
+                "ColumnName": "rows",
                 "ColumnTitle": "字段1",
-                "ColumnType": "String"
+                "ColumnType": "String111111"
               },
               {
-                "ColumnName": "object_id",
+                "ColumnName": "stmttext",
                 "ColumnTitle": "字段2",
-                "ColumnType": "Integer"
+                "ColumnType": "Integer111111"
               },
               {
                 "ColumnName": "f3",
                 "ColumnTitle": "字段3",
-                "ColumnType": "String"
+                "ColumnType": "String1111111"
               }
             ]
           ],
