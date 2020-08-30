@@ -1,0 +1,109 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="Generator" content="EditPlus®,Microshaoft">
+    <meta name="Author" content="EditPlus®,Microshaoft">
+    <meta name="Keywords" content="EditPlus®,Microshaoft">
+    <meta name="Description" content="EditPlus®,Microshaoft">
+    <title>Document</title>
+    <script src="libs/splitjs/split.js"></script>
+    <style>
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            padding: 8px;
+            background-color: #F6F6F6;
+            box-sizing: border-box;
+        }
+
+        .split {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .content {
+            border: 1px solid #C0C0C0;
+            box-shadow: inset 0 1px 2px #e4e4e4;
+            background-color: #fff;
+        }
+
+        .gutter {
+            background-color: transparent;
+            background-repeat: no-repeat;
+            background-position: 50%;
+        }
+
+            .gutter.gutter-horizontal {
+                cursor: col-resize;
+                background-image: url('../grips/vertical.png');
+            }
+
+            .gutter.gutter-vertical {
+                cursor: row-resize;
+                background-image: url('../grips/horizontal.png');
+            }
+
+            .split.split-horizontal,
+            .gutter.gutter-horizontal {
+                height: 100%;
+                float: left;
+            }
+
+    </style>
+</head>
+<body>
+
+    asddddddddddd
+    <div id="up" class="split">
+        <div id="left" class="split content split-horizontal">
+            <select multiple="multiple" style="box-sizing: border-box">
+                <option value="option1">Option 1</option>
+                <option value="option2">Option2</option>
+                <option value="Option3">Option3</option>
+                <option value="option1">Option 1</option>
+                <option value="option2">Option2</option>
+                <option value="Option3">Option3</option>
+                <option value="option1">Option 1</option>
+                <option value="option2">Option2</option>
+                <option value="Option3">Option3</option>
+
+            </select>
+
+        </div>
+            <select id="right" class="split content split-horizontal" multiple="multiple">
+                <option value="option1">Option 1</option>
+                <option value="option2">Option2</option>
+                <option value="Option3">Option3</option>
+            </select>
+
+    </div>
+    <div id="down" class="split content">
+    </div>
+
+
+    <script>
+        // https://jsfiddle.net/fmy1c7p2/15/
+        Split(['#up', '#down'], {
+            gutterSize: 10,
+            cursor: 'row-resize',
+            direction: 'vertical',
+            sizes: [20, 80],
+        });
+        Split(['#left', '#right'], {
+            sizes: [50, 50],
+            gutterSize: 10,
+            cursor: 'col-resize',
+        });
+
+    </script>
+
+</body>
+</html>

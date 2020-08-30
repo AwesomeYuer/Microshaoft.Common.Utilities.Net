@@ -5,19 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
     <title>MS SQL Code Diff Verioning</title>
     <script src="libs/knockout/knockout-3.5.1.debug.js" type="text/javascript"></script>
-    <script src="libs/jquery/jquery-3.4.1.js" type="text/javascript"></script>
+    <script src="libs/jquery/jquery-3.5.1.js" type="text/javascript"></script>
     <link rel="stylesheet" href="libs/jquery-ui/jquery-ui-1.12.1.css">
     <script src="libs/jquery-ui/jquery-ui-1.12.1.js"></script>
 
     <link href="libs/driver.js/driver.min.css" rel="stylesheet" />
     <script src="libs/driver.js/driver.min.js"></script>
 
-
-
+    <script src="libs/splitjs/split.js"></script>
     <script src="libs/monaco-editor/min/vs/loader.js"></script>
-
-
-
 
     <style type="text/css">
         body {
@@ -64,6 +60,56 @@
         #diffoutput {
             width: 100%;
         }
+    </style>
+    <!--split.js css-->
+    <style>
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            padding: 8px;
+            background-color: #F6F6F6;
+            box-sizing: border-box;
+        }
+
+        .split {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .content {
+            border: 1px solid #C0C0C0;
+            box-shadow: inset 0 1px 2px #e4e4e4;
+            background-color: #fff;
+        }
+
+        .gutter {
+            background-color: transparent;
+            background-repeat: no-repeat;
+            background-position: 50%;
+        }
+
+            .gutter.gutter-horizontal {
+                cursor: col-resize;
+               /* background-image: url('../grips/vertical.png');*/
+            }
+
+            .gutter.gutter-vertical {
+                cursor: row-resize;
+                /*background-image: url('../grips/horizontal.png');*/
+            }
+
+            .split.split-horizontal,
+            .gutter.gutter-horizontal {
+                height: 100%;
+                float: left;
+            }
     </style>
 
     <style type="text/css">
@@ -169,75 +215,73 @@
         <div class="box-taiji">
         </div>
     </div>
-    <div>
-        <a href="#" class="btn__run-demo">Show Demo</a>
-    </div>
-    <div>
-
-
-
-
-        Search Object's Name Contains Text:<input id="search" type="text" />
-        Search Host Name Contains Text:<input id="searchHostName" type="text" />
-        Search DataBase Name Contains Text:<input id="searchDatabaseName" type="text" />
-        Post Time Before:<input id="datepicker1" type="text" />
-        <button id="searching" onclick="GetMasterList()">Search and Append</button>
-    </div>
-    <div class="container">
-        <div class="form-group">
-            <table width="100%">
-                <tr>
-                    <td width="50%">
-                        <label>Master Search Result:</label>
-                        <button onclick="vm.Items.removeAll();vm.Counter = 0;">clear</button>
-                        <button data-bind="text: SortByObjectNameDirection"
-                                onclick="vm.SortByObjectName()">
-                            SortByObjectName
-                        </button>
-                        <button data-bind="text: SortByAddSequenceDirection"
-                                onclick="vm.SortByAddSequence()">
-                            SortByAddSequence
-                        </button>
-                    </td>
-                    <td width="50%">
-                        <label>Master Selected Detail :</label>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <select size="10"
-                                style="width:100%;"
-                                data-bind="options: Items,
+        <div>
+            <a href="#" class="btn__run-demo">Show Demo</a>
+        </div>
+        <div>
+            Search Object's Name Contains Text:<input id="search" type="text" />
+            Search Host Name Contains Text:<input id="searchHostName" type="text" />
+            Search DataBase Name Contains Text:<input id="searchDatabaseName" type="text" />
+            Post Time Before:<input id="datepicker1" type="text" />
+            <button id="searching" onclick="GetMasterList()">Search and Append</button>
+            <br />
+            <button onclick="vm.Items.removeAll();vm.Counter = 0;">clear</button>
+            <button data-bind="text: SortByObjectNameDirection"
+                    onclick="vm.SortByObjectName()">
+                SortByObjectName
+            </button>
+            <button data-bind="text: SortByAddSequenceDirection"
+                    onclick="vm.SortByAddSequence()">
+                SortByAddSequence
+            </button>
+            <br />
+        </div>
+                                
+        <div id="up" class="split" style="border: 1px solid black">
+            <!--<label>Master Search Result:</label> <br />-->
+            <select multiple="multiple"
+                    id="left"
+                    class="split content split-horizontal"
+                    data-bind="options: Items,
                                             optionsText: 'OptionText',
                                             selectedOptions: SelectedItems">
-                        </select>
-                    </td>
-                    <td>
-                        <select size="10"
-                                style="width:100%;"
-                                data-bind="options: DetailItems,
+            </select>
+            <!--<label>Master Selected Detail :</label>-->
+            <select multiple="multiple"
+                    id="right"
+                    class="split content split-horizontal"
+                    data-bind="options: DetailItems,
                                                 optionsText: 'OptionText',
                                                 selectedOptions: SelectedDetailItems,
                                                 optionsAfterRender: SetDetailItemOptionDisable">
-                        </select>
-                    </td>
-                </tr>
-            </table>
+            </select>
+        </div>
+    
+    <div id="down" class="split content">
+        <div class="viewType">
+            Diff View Type:
+            <br />
+            <input type="radio" id="diffViewType0" value="0" data-bind="checked:SelectedDiffViewType" />
+            <label for="diffViewType0" onclick="GetObjectsTexts();">Side</label>
+            <input type="radio" id="diffViewType1" value="1" data-bind="checked:SelectedDiffViewType" />
+            <label for="diffViewType1" onclick="GetObjectsTexts();">Inline</label>
+        </div>
+        <div id="diffoutput">
+            <div id="container" style="width:100%;height:600px;border:1px solid grey"></div>
         </div>
     </div>
-    <div class="viewType">
-        Diff View Type:
-        <br />
-        <input type="radio" id="diffViewType0" value="0" data-bind="checked:SelectedDiffViewType" />
-        <label for="diffViewType0" onclick="GetObjectsTexts();">Side</label>
-        <input type="radio" id="diffViewType1" value="1" data-bind="checked:SelectedDiffViewType" />
-        <label for="diffViewType1" onclick="GetObjectsTexts();">Inline</label>
-    </div>
-    <div id="diffoutput">
-        <div id="container" style="width:100%;height:600px;border:1px solid grey"></div>
-    </div>
-    <script>
 
+    <script>
+        Split(['#up', '#down'], {
+            gutterSize: 10,
+            cursor: 'pointer',
+            direction: 'vertical',
+        });
+        Split(['#left', '#right'], {
+            sizes: [50, 50],
+            gutterSize: 10,
+            cursor: 'col-resize',
+        });
 
         var driver = new Driver();
         // Define the steps for introduction
@@ -283,13 +327,9 @@
                     position: 'bottom'
                 }
             },
-
-            
         ]);
-
         // Start the introduction
         driver.start();
-
 
         require.config({ paths: { 'vs': 'libs/monaco-editor/min/vs' } });
         var diffEditor;
