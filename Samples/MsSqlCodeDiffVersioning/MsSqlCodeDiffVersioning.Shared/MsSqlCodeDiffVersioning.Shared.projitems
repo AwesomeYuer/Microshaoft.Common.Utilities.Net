@@ -257,6 +257,8 @@
     <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\jquery-ui\jquery-ui-1.12.1.js" />
     <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\jquery\jquery-3.4.1.js" />
     <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\jquery\jquery-3.4.1.min.js" />
+    <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\jquery\jquery-3.5.1.js" />
+    <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\jquery\jquery-3.5.1.min.js" />
     <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\jsdifflib\difflib.js" />
     <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\jsdifflib\diffview.js" />
     <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\knockout\knockout-3.5.1.debug.js" />
@@ -1189,10 +1191,7 @@
     <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\monaco-editor\min\vs\loader.js" />
     <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\monaco-editor\monaco.d.ts" />
     <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\monaco-editor\README.md" />
-    <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\splitjs\split.es.js" />
     <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\splitjs\split.js" />
-    <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\splitjs\split.min.js" />
-    <None Include="$(MSBuildThisFileDirectory)wwwroot\libs\splitjs\split.min.js.map" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)ApplicationBuilderServiceExtensions.cs" />
@@ -1266,6 +1265,7 @@
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\a.txt" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\datatable.html" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\driverjs.html" />
+    <Content Include="$(MSBuildThisFileDirectory)wwwroot\splitjs.html" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\index.html" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\libs\datatables\1.10.21\AutoFill-2.3.5\css\autoFill.bootstrap.css" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\libs\datatables\1.10.21\AutoFill-2.3.5\css\autoFill.bootstrap.min.css" />
