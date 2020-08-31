@@ -1265,6 +1265,8 @@
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\a.txt" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\datatable.html" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\driverjs.html" />
+    <Content Include="$(MSBuildThisFileDirectory)wwwroot\knockoutjs.html" />
+    <Content Include="$(MSBuildThisFileDirectory)wwwroot\index.old.html" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\splitjs.html" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\index.html" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\libs\datatables\1.10.21\AutoFill-2.3.5\css\autoFill.bootstrap.css" />

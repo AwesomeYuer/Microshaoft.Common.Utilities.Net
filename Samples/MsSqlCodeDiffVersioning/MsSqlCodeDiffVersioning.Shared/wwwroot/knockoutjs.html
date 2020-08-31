@@ -1,0 +1,134 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="Generator" content="EditPlus®,Microshaoft">
+    <meta name="Author" content="EditPlus®,Microshaoft">
+    <meta name="Keywords" content="EditPlus®,Microshaoft">
+    <meta name="Description" content="EditPlus®,Microshaoft">
+    <title>Document</title>
+    <script src="libs/knockout/knockout-3.5.1.debug.js" type="text/javascript"></script>
+</head>
+<body>
+    <select multiple="multiple"
+            data-bind="options: Items,
+                        optionsCaption:'Manufacturer',
+                        optionsText: 'text',
+                        optionsValue: 'ID',
+                        value: selectedItem">
+    </select>
+    <select multiple="multiple"
+            data-bind="options: DetailItems,
+                        optionsCaption:'Model',
+                        optionsText: 'text',
+                        optionsValue: 'ID',
+                        value: selectedDetailItem,
+                        enable: DetailItems().length">
+    </select>
+
+
+
+
+
+    <button onclick="aaa()">asdasd</button>
+
+
+
+
+    <p>
+        Choose some countries you'd like to visit:
+        <select data-bind="options: availableCountries, selectedOptions: chosenCountries" size="5" multiple="true"></select>
+    </p>
+
+    <script type="text/javascript">
+        var viewModel = {
+            availableCountries: ko.observableArray(['France', 'Germany', 'Spain']),
+            chosenCountries: ko.observableArray(['Germany']) // Initially, only Germany is selected
+        };
+
+        // ... then later ...
+        viewModel.chosenCountries.push('France'); // Now France is selected too
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+    <script>
+        function aaa() {
+
+            alert(module.viewModel.selectedDetailItem());
+
+
+
+        }
+
+
+        function ViewModel(data) {
+            this.Items = ko.observableArray(data);
+
+            this.selectedItem = ko.observable();
+            this.selectedDetailItem = ko.observable();
+            this.selectedEngine = ko.observable();
+
+            function getById(items, id) {
+                if (!id) {
+                    return [];
+                }
+
+                var result = ko.utils.arrayFirst(items, function (item) {
+                    return item.ID === id;
+                });
+
+                return result && result.childItems || [];
+            }
+
+            this.DetailItems = ko.computed(function () {
+                var items = this.Items();
+                var id = this.selectedItem()
+                return getById(items, id);
+            }, this);
+
+
+        }
+
+        var items = [
+            {
+                text: 'Ford', ID: 1, childItems:
+                    [
+                        {
+                            text: 'F-150', ID: 1
+                        },
+                        {
+                            text: 'F-250', ID: 22
+                        }
+                    ]
+            },
+            {
+                text: 'Honda', ID: 42, childItems:
+                    [
+                        {
+                            text: 'Civic', ID: 15
+                        },
+                        {
+                            text: 'Accord', ID: 316
+                        }
+                    ]
+            }
+        ];
+
+        var module = {};
+
+        module.viewModel = new ViewModel(items);
+
+        ko.applyBindings(module.viewModel);
+    </script>
+
+</body>
+</html>

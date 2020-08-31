@@ -260,7 +260,8 @@
         }
         //debugger;
 
-        /**/</script>
+        /**/
+    </script>
     <style>
         html,
         body {
@@ -378,27 +379,27 @@
         require(['vs/editor/editor.main'], function () {
             editor = monaco.editor.create(document.getElementById('up'), {
                 value: [
-                    'set statistics io on',
-                    'set statistics time on',
-                    'set statistics profile on',
-                    'select \'"111"\' as F, *',
-                    'from',
-                    'sys.objects',
-                    '',
-                    'select \'"222"\' as F, *',
-                    'from',
-                    'sys.objects',
-                ].join('\n'),
-                language: 'sql',
+                    'set statistics io on'              ,
+                    'set statistics time on'            ,
+                    'set statistics profile on'         ,
+                    'select \'"111"\' as F, *'          ,
+                    'from'                              ,
+                    'sys.objects'                       ,
+                    ''                                  ,
+                    'select \'"222"\' as F, *'          ,
+                    'from'                              ,
+                    'sys.objects'                       ,
+                ].join('\n')        ,
+                language: 'sql'     ,
                 automaticLayout: true
             });
         });
     </script>
     <script>
         Split(['#up', '#down'], {
-            gutterSize: 10,
-            cursor: 'row-resize',
-            direction: 'vertical',
+            gutterSize: 10              ,
+            cursor: 'row-resize'        ,
+            direction: 'vertical'       ,
             sizes: [20, 80]
         });
         $(document).ready(function () {
