@@ -17,6 +17,7 @@
     <Folder Include="$(MSBuildThisFileDirectory)MetricsRegistry\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)00.DataBase\MsSql.DataBase.20200316.sql" />
     <None Include="$(MSBuildThisFileDirectory)curl\curl-ca-bundle.crt" />
     <None Include="$(MSBuildThisFileDirectory)curl\curl.exe" />
     <None Include="$(MSBuildThisFileDirectory)curl\libcurl-x64.dll" />
@@ -1265,6 +1266,8 @@
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\a.txt" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\datatable.html" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\driverjs.html" />
+    <Content Include="$(MSBuildThisFileDirectory)wwwroot\knockoutjs.html" />
+    <Content Include="$(MSBuildThisFileDirectory)wwwroot\index.old.html" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\splitjs.html" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\index.html" />
     <Content Include="$(MSBuildThisFileDirectory)wwwroot\libs\datatables\1.10.21\AutoFill-2.3.5\css\autoFill.bootstrap.css" />

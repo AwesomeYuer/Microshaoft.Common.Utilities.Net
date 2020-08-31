@@ -158,24 +158,18 @@
             $('#loading').fadeIn();
             //debugger;
             var left = -1;
-            var right = -1;
-            var a = vm.selectedDetailItems();
-            if (a.length == 1) {
-                left = right = a[0];
-            } else if (a.length > 1) {
-                left = a[0];
-                right = a[1];
+            if (vm.SelectedItem() != undefined) {
+                left = vm.SelectedItem().ID;
             } else {
-                if (vm.selectedItem() == undefined) {
-                    $('#loading').fadeOut();
-                    return;
-                }
-                left = right = vm.selectedItem();
-                
+                $('#loading').fadeOut();
+                return;
             }
-            
-       
-
+            var right = -1;
+            if (vm.SelectedDetailItem() != undefined) {
+                right = vm.SelectedDetailItem().ID;
+            } else {
+                right = left;
+            }
             if (left > right) {
                 left += right;
                 right = left - right;
@@ -227,15 +221,11 @@
             <a href="#" class="btn__run-demo">Show Demo</a>
         </div>
         <div>
-            Top Limit:<input id="topLimit" type="number" value="100" />
-            <br />
-            <br />
             Search Object's Name Contains Text:<input id="search" type="text" />
             Search Host Name Contains Text:<input id="searchHostName" type="text" />
             Search DataBase Name Contains Text:<input id="searchDatabaseName" type="text" />
-            Post Time After:<input id="datepicker1" type="text" />
+            Post Time Before:<input id="datepicker1" type="text" />
             <button id="searching" onclick="GetMasterList()">Search and Append</button>
-            <br />
             <br />
             <button onclick="vm.Items.removeAll();vm.Counter = 0;">clear</button>
             <button data-bind="text: SortByObjectNameDirection"
@@ -246,29 +236,28 @@
                     onclick="vm.SortByAddSequence()">
                 SortByAddSequence
             </button>
+            <br />
         </div>
-        <br />            
+                                
         <div id="up" class="split" style="border: 1px solid black">
+            <!--<label>Master Search Result:</label> <br />-->
             <select
-                    multiple
+                    multiple="multiple"
                     id="left"
                     class="split content split-horizontal"
-                    data-bind="options: Items,
-                                optionsCaption:'Master',
-                                optionsText: 'OptionText',
-                                optionsValue: 'ID',
-                                value: selectedItem">
+                    data-bind="options: Items
+                                , optionsText: 'OptionText'
+                                , selectedOptions: SelectedItems">
             </select>
+            <!--<label>Master Selected Detail :</label>-->
             <select
-                    multiple
+                    multiple="multiple"
                     id="right"
                     class="split content split-horizontal"
-                    data-bind="options: DetailItems,
-                                optionsCaption:'Detail',
-                                optionsText: 'OptionText',
-                                optionsValue: 'ID',
-                                selectedOptions: selectedDetailItems,
-                                enable: DetailItems().length">
+                    data-bind="options: DetailItems
+                                , optionsText: 'OptionText'
+                                , selectedOptions: SelectedDetailItems
+                                , optionsAfterRender: SetDetailItemOptionDisable">
             </select>
         </div>
     
@@ -285,12 +274,12 @@
             <div id="container" style="width:100%;height:600px;border:1px solid grey"></div>
         </div>
     </div>
+
     <script>
         Split(['#up', '#down'], {
             gutterSize: 10,
             cursor: 'row-resize',
             direction: 'vertical',
-            sizes: [20, 80]
         });
         Split(['#left', '#right'], {
             sizes: [50, 50],
@@ -355,30 +344,30 @@
             var self = this;
             this.Counter = 0;
             this.SelectedDiffViewType = ko.observable("0");
-
             this.Items = ko.observableArray(data);
-
-            this.selectedItem = ko.observable();
-            this.selectedDetailItems = ko.observableArray([]);
-
-            function getById(items, id) {
-                if (!id) {
-                    return [];
-                }
-
-                var result = ko.utils.arrayFirst(items, function (item) {
-                    return item.ID === id;
-                });
-
-                return result && result.childItems || [];
-            }
-
-            this.DetailItems = ko.computed(function () {
-                var items = this.Items();
-                var id = this.selectedItem()
-                return getById(items, id);
+            this.SelectedItems = ko.observableArray([]);
+            this.SelectedItem = ko.computed(function () {
+                return this.SelectedItems()[0];
             }, this);
-
+            this.DetailItems = ko.computed(function () {
+                return this.Items().filter(function (x) {
+                    var r = false;
+                    r = self.SelectedItem() != undefined;
+                    if (r) {
+                        var xx = self.SelectedItem();
+                        x.DisableInDetail(x.ID == xx.ID);
+                        r = (x.ObjectName == xx.ObjectName);
+                    }
+                    return r;
+                });
+            }, this);
+            this.SelectedDetailItems = ko.observableArray([]);
+            this.SelectedDetailItem = ko.computed(function () {
+                return this.SelectedDetailItems()[0];
+            }, this);
+            this.SetDetailItemOptionDisable = function (option, item) {
+                ko.applyBindingsToNode(option, { disable: item.DisableInDetail }, item);
+            };
             this.SortByAddSequenceState = ko.observable(false);
             this.SortByAddSequenceDirection = ko.computed(function () {
                 var r = "SortByAddSequence ";
@@ -456,11 +445,10 @@
             $('#loading').fadeIn();
             //jsonp cross domain
             var search = document.getElementById("search").value;
-            var afterTime = document.getElementById("datepicker1").value;
+            var beforeTime = document.getElementById("datepicker1").value;
             var searchHostName = document.getElementById("searchHostName").value;
             var searchDatabaseName = document.getElementById("searchDatabaseName").value;
-            var topLimit = document.getElementById("topLimit").value;
-            var url = baseUrl + "/api/StoreProcedureExecutor/result/mssql/aaa/bbb/objects?top=" + topLimit + "&searchobjectname=" + search + "&searchhostname=" + searchHostName + "&searchdatabasename=" + searchDatabaseName + "&searchaftertime=" + afterTime;
+            var url = baseUrl + "/api/StoreProcedureExecutor/result/mssql/aaa/bbb/objects?searchobjectname=" + search + "&searchhostname=" + searchHostName + "&searchdatabasename=" + searchDatabaseName + "&beforetime=" + beforeTime;
             $.getJSON(
                 url,
                 function (data) {
@@ -470,12 +458,9 @@
                             return x.ID == item.ID;
                         });
                         if (found == undefined) {
+                            item.OptionText = item.ObjectName + '(' + item.ID + ')' + ' @ ' + item.DatabaseName + ' @ ' + item.DatabaseServerName + ' @ ' + item.PostTime + ' By ' + item.HostName;
                             item.DisableInDetail = ko.observable(false);
                             item.AddSequence = (++vm.Counter);
-                            item.OptionText = '[' + item.AddSequence + '].' + item.ObjectName + '(' + item.ID + ')' + ' @ ' + item.DatabaseName + ' @ ' + item.DatabaseServerName + ' @ ' + item.PostTime + ' By ' + item.HostName;
-                            $.each(item.childItems, function (ii, childItem) {
-                                childItem.OptionText = '[' + (ii + 1) + '].'+ childItem.ObjectName + '(' + childItem.ID + ')' + ' @ ' + childItem.DatabaseName + ' @ ' + childItem.DatabaseServerName + ' @ ' + childItem.PostTime + ' By ' + childItem.HostName;
-                            });
                             vm.Items.push(item);
                         }
                     });
