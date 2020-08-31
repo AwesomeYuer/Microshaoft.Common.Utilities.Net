@@ -17,6 +17,7 @@
     <Folder Include="$(MSBuildThisFileDirectory)MetricsRegistry\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)00.DataBase\MsSql.DataBase.20200316.sql" />
     <None Include="$(MSBuildThisFileDirectory)curl\curl-ca-bundle.crt" />
     <None Include="$(MSBuildThisFileDirectory)curl\curl.exe" />
     <None Include="$(MSBuildThisFileDirectory)curl\libcurl-x64.dll" />

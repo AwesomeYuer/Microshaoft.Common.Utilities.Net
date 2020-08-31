@@ -1,12 +1,12 @@
 USE [master]
 GO
-/****** Object:  Database [Test]    Script Date: 8/31/2020 11:10:02 PM ******/
+/****** Object:  Database [Test]    Script Date: 3/16/2020 2:08:36 AM ******/
 CREATE DATABASE [Test]
  CONTAINMENT = NONE
  ON  PRIMARY 
-( NAME = N'Test', FILENAME = N'D:\MSSQL\Data\Test\Test.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 8192KB )
+( NAME = N'Test', FILENAME = N'D:\MSSQL\Data\Test\Test.mdf' , SIZE = 12671616KB , MAXSIZE = UNLIMITED, FILEGROWTH = 1024KB )
  LOG ON 
-( NAME = N'Test_log', FILENAME = N'D:\MSSQL\Data\Test\Test_log.ldf' , SIZE = 8192KB , MAXSIZE = UNLIMITED , FILEGROWTH = 8192KB)
+( NAME = N'Test_log', FILENAME = N'D:\MSSQL\Data\Test\Test_log.ldf' , SIZE = 1785856KB , MAXSIZE = 2048GB , FILEGROWTH = 10%)
  WITH CATALOG_COLLATION = DATABASE_DEFAULT
 GO
 ALTER DATABASE [Test] SET COMPATIBILITY_LEVEL = 140
@@ -80,7 +80,7 @@ ALTER DATABASE [Test] SET QUERY_STORE = OFF
 GO
 USE [Test]
 GO
-/****** Object:  UserDefinedTableType [dbo].[udt_ErrorExceptionLoggingEntry]    Script Date: 8/31/2020 11:10:02 PM ******/
+/****** Object:  UserDefinedTableType [dbo].[udt_ErrorExceptionLoggingEntry]    Script Date: 3/16/2020 2:08:36 AM ******/
 CREATE TYPE [dbo].[udt_ErrorExceptionLoggingEntry] AS TABLE(
 	[ID] [bigint] NULL,
 	[EnqueueTime] [datetime] NULL,
@@ -92,12 +92,12 @@ CREATE TYPE [dbo].[udt_ErrorExceptionLoggingEntry] AS TABLE(
 	[ErrorException] [varchar](max) NULL
 )
 GO
-/****** Object:  UserDefinedTableType [dbo].[udt_int]    Script Date: 8/31/2020 11:10:02 PM ******/
+/****** Object:  UserDefinedTableType [dbo].[udt_int]    Script Date: 3/16/2020 2:08:36 AM ******/
 CREATE TYPE [dbo].[udt_int] AS TABLE(
 	[F1] [int] NULL
 )
 GO
-/****** Object:  UserDefinedTableType [dbo].[udt_RequestResponseLoggingEntry]    Script Date: 8/31/2020 11:10:02 PM ******/
+/****** Object:  UserDefinedTableType [dbo].[udt_RequestResponseLoggingEntry]    Script Date: 3/16/2020 2:08:36 AM ******/
 CREATE TYPE [dbo].[udt_RequestResponseLoggingEntry] AS TABLE(
 	[ID] [bigint] NULL,
 	[EnqueueTime] [datetime] NULL,
@@ -132,19 +132,19 @@ CREATE TYPE [dbo].[udt_RequestResponseLoggingEntry] AS TABLE(
 	[deviceInfo] [varchar](64) NULL
 )
 GO
-/****** Object:  UserDefinedTableType [dbo].[udt_varchar]    Script Date: 8/31/2020 11:10:02 PM ******/
+/****** Object:  UserDefinedTableType [dbo].[udt_varchar]    Script Date: 3/16/2020 2:08:36 AM ******/
 CREATE TYPE [dbo].[udt_varchar] AS TABLE(
 	[F1] [varchar](16) NULL
 )
 GO
-/****** Object:  UserDefinedTableType [dbo].[udt_vcidt]    Script Date: 8/31/2020 11:10:02 PM ******/
+/****** Object:  UserDefinedTableType [dbo].[udt_vcidt]    Script Date: 3/16/2020 2:08:36 AM ******/
 CREATE TYPE [dbo].[udt_vcidt] AS TABLE(
 	[varchar] [varchar](16) NULL,
 	[int] [int] NULL,
 	[date] [date] NULL
 )
 GO
-/****** Object:  UserDefinedFunction [dbo].[zTVF_SplitStringToTable]    Script Date: 8/31/2020 11:10:02 PM ******/
+/****** Object:  UserDefinedFunction [dbo].[zTVF_SplitStringToTable]    Script Date: 3/16/2020 2:08:36 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -231,7 +231,7 @@ BEGIN
 	return
 end
 GO
-/****** Object:  View [dbo].[zv_all_PARAMETERS]    Script Date: 8/31/2020 11:10:02 PM ******/
+/****** Object:  View [dbo].[zv_all_PARAMETERS]    Script Date: 3/16/2020 2:08:36 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -422,7 +422,7 @@ FROM
 WHERE
 	o.type IN ('P','FN','TF', 'IF', 'IS', 'AF','PC', 'FS', 'FT')  
 GO
-/****** Object:  Table [dbo].[AppCenters]    Script Date: 8/31/2020 11:10:02 PM ******/
+/****** Object:  Table [dbo].[AppCenters]    Script Date: 3/16/2020 2:08:36 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -434,7 +434,7 @@ CREATE TABLE [dbo].[AppCenters](
 	[Type] [varchar](32) NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ErrorExceptionLogging]    Script Date: 8/31/2020 11:10:02 PM ******/
+/****** Object:  Table [dbo].[ErrorExceptionLogging]    Script Date: 3/16/2020 2:08:36 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -463,7 +463,7 @@ CREATE TABLE [dbo].[ErrorExceptionLogging](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[RequestResponseLogging]    Script Date: 8/31/2020 11:10:02 PM ******/
+/****** Object:  Table [dbo].[RequestResponseLogging]    Script Date: 3/16/2020 2:08:36 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -516,14 +516,13 @@ CREATE TABLE [dbo].[RequestResponseLogging](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[zObjectsChangesLogsHistory]    Script Date: 8/31/2020 11:10:02 PM ******/
+/****** Object:  Table [dbo].[zObjectsChangesLogsHistory]    Script Date: 3/16/2020 2:08:36 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[zObjectsChangesLogsHistory](
-	[HistoryID] [bigint] IDENTITY(1,1) NOT NULL,
-	[ID] [bigint] NOT NULL,
+	[ID] [bigint] IDENTITY(1,1) NOT NULL,
 	[DatabaseServerName] [varchar](64) NULL,
 	[DatabaseName] [sysname] NULL,
 	[EventType] [varchar](64) NULL,
@@ -536,36 +535,13 @@ CREATE TABLE [dbo].[zObjectsChangesLogsHistory](
 	[Version] [int] NOT NULL,
  CONSTRAINT [PK_zObjectsChangesLogsHistory] PRIMARY KEY CLUSTERED 
 (
-	[HistoryID] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[zObjectsChangesLogsLatest]    Script Date: 8/31/2020 11:10:02 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[zObjectsChangesLogsLatest](
-	[ID] [bigint] IDENTITY(1,1) NOT NULL,
-	[DatabaseServerName] [varchar](64) NOT NULL,
-	[DatabaseName] [sysname] NOT NULL,
-	[EventType] [varchar](64) NULL,
-	[ObjectName] [varchar](256) NULL,
-	[ObjectType] [varchar](25) NULL,
-	[TSQLCommand] [nvarchar](max) NULL,
-	[LoginName] [varchar](256) NULL,
-	[HostName] [varchar](256) NULL,
-	[PostTime] [datetime] NULL,
-	[Version] [int] NOT NULL,
- CONSTRAINT [PK_zObjectsChangesLogs] PRIMARY KEY CLUSTERED 
-(
 	[ID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [Idx_stat]    Script Date: 8/31/2020 11:10:02 PM ******/
+/****** Object:  Index [Idx_stat]    Script Date: 3/16/2020 2:08:36 AM ******/
 CREATE NONCLUSTERED INDEX [Idx_stat] ON [dbo].[RequestResponseLogging]
 (
 	[serverHostProcessStartTime] ASC,
@@ -575,46 +551,13 @@ CREATE NONCLUSTERED INDEX [Idx_stat] ON [dbo].[RequestResponseLogging]
 )
 INCLUDE([requestBeginTime],[responseStartingTime],[requestResponseTimingInMilliseconds]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-SET ANSI_PADDING ON
-GO
-/****** Object:  Index [nci-unique]    Script Date: 8/31/2020 11:10:02 PM ******/
-CREATE UNIQUE NONCLUSTERED INDEX [nci-unique] ON [dbo].[zObjectsChangesLogsLatest]
-(
-	[DatabaseServerName] ASC,
-	[DatabaseName] ASC,
-	[ObjectName] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-GO
 ALTER TABLE [dbo].[ErrorExceptionLogging] ADD  CONSTRAINT [DF_ErrorExceptionLogging_CreateTime]  DEFAULT (getdate()) FOR [CreateTime]
 GO
 ALTER TABLE [dbo].[RequestResponseLogging] ADD  CONSTRAINT [DF_RequestResponseLogging_CreateTime]  DEFAULT (getdate()) FOR [CreateTime]
 GO
 ALTER TABLE [dbo].[zObjectsChangesLogsHistory] ADD  CONSTRAINT [DF_zObjectsChangesLogsHistory_PostTime]  DEFAULT (getdate()) FOR [PostTime]
 GO
-ALTER TABLE [dbo].[zObjectsChangesLogsLatest] ADD  CONSTRAINT [DF_zObjectsChangesLogs_PostTime]  DEFAULT (getdate()) FOR [PostTime]
-GO
-/****** Object:  StoredProcedure [dbo].[cc]    Script Date: 8/31/2020 11:10:02 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE proc [dbo].[cc]
-as
-begin
-
-set statistics io on
-set statistics time on
-set statistics profile on
-select '"111"' as F,222 as F, *
-from
-sys.objects
-
-select '"222"' as F, *
-from
-sys.objects
-end
-GO
-/****** Object:  StoredProcedure [dbo].[usp_executesql]    Script Date: 8/31/2020 11:10:02 PM ******/
+/****** Object:  StoredProcedure [dbo].[usp_executesql]    Script Date: 3/16/2020 2:08:36 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -645,7 +588,7 @@ exec sp_executesql
 @sql
 end
 GO
-/****** Object:  StoredProcedure [dbo].[usp_TestUdt]    Script Date: 8/31/2020 11:10:02 PM ******/
+/****** Object:  StoredProcedure [dbo].[usp_TestUdt]    Script Date: 3/16/2020 2:08:36 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -665,75 +608,7 @@ from
 	@a
 end
 GO
-/****** Object:  StoredProcedure [dbo].[zsp_DynamicSqlPrepareCompiledTest]    Script Date: 8/31/2020 11:10:02 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-
-CREATE proc [dbo].[zsp_DynamicSqlPrepareCompiledTest]
-as
-begin
-declare @sql nvarchar(max)
-declare @ int = 1
-declare @P1 int = 1
-set @sql = N'
---yxy µÄ²âÊÔ
-select
-	1
-from
-	sys.objects a
-where
-	@ is null
-	or
-	a.object_id = @
-'
-
-if (@ is null)
-begin
-	set @sql += N'
-	--@ is null'
-end
-else
-begin
-	set @sql += N'
-	--@ is not null'
-end
-
-if (@P1 is null)
-begin
-	set @sql += N'
-	--@P1 is null'
-end
-else
-begin
-	set @sql += N'
-	--@P1 is not null'
-end
-
-
-print @sql
-exec sp_executesql @sql, N'@ int', @
-
-
-SELECT
-	--distinct a.plan_handle
-	*
-FROM
-	sys.dm_exec_cached_plans a
-		CROSS APPLY
-			sys.dm_exec_sql_text(a.plan_handle) b
-		CROSS APPLY
-			sys.dm_exec_query_plan(a.plan_handle) c
-		--cross APPLY
-		--	sys.dm_exec_plan_attributes(a.plan_handle) d
-where
-	b.text like '%--yxy%' 
-	and
-	a.objtype = 'Prepared'
-end
-GO
-/****** Object:  StoredProcedure [dbo].[zsp_ErrorExceptionLogging]    Script Date: 8/31/2020 11:10:02 PM ******/
+/****** Object:  StoredProcedure [dbo].[zsp_ErrorExceptionLogging]    Script Date: 3/16/2020 2:08:36 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -809,7 +684,7 @@ from
 
 end
 GO
-/****** Object:  StoredProcedure [dbo].[zsp_Logging_Query]    Script Date: 8/31/2020 11:10:02 PM ******/
+/****** Object:  StoredProcedure [dbo].[zsp_Logging_Query]    Script Date: 3/16/2020 2:08:36 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -837,7 +712,7 @@ SELECT TOP (@top)
 	--truncate table [RequestResponseLogging]
 end
 GO
-/****** Object:  StoredProcedure [dbo].[zsp_Logging_Stat1]    Script Date: 8/31/2020 11:10:02 PM ******/
+/****** Object:  StoredProcedure [dbo].[zsp_Logging_Stat1]    Script Date: 3/16/2020 2:08:36 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1143,7 +1018,7 @@ order by
 --	--truncate table [RequestResponseLogging]
 end
 GO
-/****** Object:  StoredProcedure [dbo].[zsp_Logging_Stat2]    Script Date: 8/31/2020 11:10:02 PM ******/
+/****** Object:  StoredProcedure [dbo].[zsp_Logging_Stat2]    Script Date: 3/16/2020 2:08:36 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1534,7 +1409,7 @@ order by
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[zsp_Logging_Stats]    Script Date: 8/31/2020 11:10:02 PM ******/
+/****** Object:  StoredProcedure [dbo].[zsp_Logging_Stats]    Script Date: 3/16/2020 2:08:36 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1551,7 +1426,7 @@ exec [zsp_Logging_Stat2] 1, @p1
 
 end
 GO
-/****** Object:  StoredProcedure [dbo].[zsp_RequestResponseLogging]    Script Date: 8/31/2020 11:10:02 PM ******/
+/****** Object:  StoredProcedure [dbo].[zsp_RequestResponseLogging]    Script Date: 3/16/2020 2:08:36 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1676,221 +1551,13 @@ from
 
 end
 GO
-/****** Object:  StoredProcedure [dbo].[zsp_zObjectsChangesLogsHistory_Get]    Script Date: 8/31/2020 11:10:02 PM ******/
+/****** Object:  StoredProcedure [dbo].[zsp_zObjectsChangesLogsHistory_Get]    Script Date: 3/16/2020 2:08:36 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE procedure [dbo].[zsp_zObjectsChangesLogsHistory_Get]
-(
-	@SearchObjectName			varchar(256)	= null
-	, @SearchHostName			varchar(64)		= null
-	, @SearchDatabaseName			varchar(64)		= null
-
-	, @SearchAfterTime			datetime		= null
-	, @SearchIdsList			varchar(64)		= null
-	--, @SearchIdsList			udt_int readonly
-	, @Top						int				= 100
-	, @HttpResponseStatusCode	int				= 200 out
-	, @HttpResponseMessage		nvarchar(512)	= N'' out
-)
-as
-/*
-
-
-declare @p5 int
---set @p5=default
-declare @p6 nvarchar(512)
---set @p6=default
-exec zsp_zObjectsChangesLogsHistory_Get @SearchObjectName=NULL,@SearchHostName=NULL,@SearchDatabaseName=NULL,@SearchAfterTime='8/1/2000',@HttpResponseStatusCode=@p5 output,@HttpResponseMessage=@p6 output
-select @p5, @p6
-
-*/
-
-begin
-
-
-if (@SearchIdsList is  null)
-begin
-	if (@SearchObjectName is null or LTRIM(rtrim(@SearchObjectName)) = '')
-	begin
-		select
-			Top (@Top)
-			--'{a:1}' as Json_F1
-			  --,
-			  a.[ID]
-			  , a.[DatabaseServerName]
-			  , a.[DatabaseName]
-			  , a.[EventType]
-			  , a.[ObjectName]
-			  , a.[ObjectType]
-			  --, a.[TSQLCommand]
-			  , a.[LoginName]
-			  , a.[HostName]
-			  , a.[PostTime]
-			  , a.[Version]
-			  , a.PostTime as MaxPostTime
-
-			  , 
-				(
-					select
-						top (@Top)
-						*
-					from
-						[zObjectsChangesLogsHistory] aa
-					where
-						aa.DatabaseServerName = a.DatabaseServerName
-						and
-						aa.DatabaseName = a.DatabaseName
-						and
-						aa.ObjectName = a.ObjectName
-					order by
-						aa.id desc
-					for json PATH
-				) as childItems
-		from
-			[dbo].[zObjectsChangesLogsLatest] a with(nolock)
-		where
-			
-			(
-				@SearchAfterTime is null
-				or
-				a.PostTime >= @SearchAfterTime
-			)
-			and
-			(
-				@SearchHostName is null
-				or
-				a.HostName like '%' + @SearchHostName + '%'
-			)
-			and
-			(
-				@SearchDataBaseName is null
-				or
-				a.DatabaseName like '%' + @SearchDataBaseName + '%'
-			)
-
-		order by
-			a.ID desc
-	end
-	else
-	begin
-		select
-			Top (@Top)
-			--'{a:1}' as Json_F1
-			  --,
-			  a.[ID]
-			  , a.[DatabaseServerName]
-			  , a.[DatabaseName]
-			  , a.[EventType]
-			  , a.[ObjectName]
-			  , a.[ObjectType]
-			  --, a.[TSQLCommand]
-			  , a.[LoginName]
-			  , a.[HostName]
-			  , a.[PostTime]
-			  , a.[Version]
-			  , a.PostTime as MaxPostTime
-
-			  , 
-				(
-					select
-						top (@Top)
-						*
-					from
-						[zObjectsChangesLogsHistory] aa
-					where
-						aa.DatabaseServerName = a.DatabaseServerName
-						and
-						aa.DatabaseName = a.DatabaseName
-						and
-						aa.ObjectName = a.ObjectName
-					order by
-						aa.id desc
-					for json PATH
-				) as childItems
-		from
-			[dbo].[zObjectsChangesLogsLatest] a with(nolock)
-		where
-			a.ObjectName like '%' + @SearchObjectName + '%'
-			and
-			(
-				@SearchAfterTime is null
-				or
-				a.PostTime >= @SearchAfterTime
-			)
-			and
-			(
-				@SearchHostName is null
-				or
-				a.HostName like '%' + @SearchHostName + '%'
-			)
-			and
-			(
-				@SearchDataBaseName is null
-				or
-				a.DatabaseName like '%' + @SearchDataBaseName + '%'
-			)
-
-		order by
-			--MaxPostTime desc
-			--, a.ObjectName
-			--,
-			a.ID desc
-
-	end
-	
-end
-else if (@SearchIdsList is not null and @SearchObjectName is null)
-begin
-
-	;with T
-	as
-	(
-		select
-			cast(a.F as int) as F
-			, a.id
-		from
-			dbo.[zTVF_SplitStringToTable]
-				(
-					@SearchIdsList
-					, ','
-				) a
-	)
-	select
-	 --'{a:1}' as Json_F1
-	    a.[ID]
-	  , a.[DatabaseServerName]
-      , a.[DatabaseName]
-      , a.[EventType]
-      , a.[ObjectName]
-      , a.[ObjectType]
-      , a.[TSQLCommand]
-      , a.[LoginName]
-      , a.[HostName]
-      , a.[PostTime]
-      , a.[Version]
-	 
-	from
-		[zObjectsChangesLogsHistory] a with(nolock)
-			inner join
-				T b
-					on
-						a.ID = b.F
-	order by
-		b.id
-end
-	
-end
-GO
-/****** Object:  StoredProcedure [dbo].[zsp_zObjectsChangesLogsHistory_Get_bak]    Script Date: 8/31/2020 11:10:02 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-
-create procedure [dbo].[zsp_zObjectsChangesLogsHistory_Get_bak]
 (
 	@SearchObjectName			varchar(256)	= null
 	, @SearchHostName			varchar(64)		= null
@@ -1924,6 +1591,7 @@ begin
 			  a.[ID]
 			  , a.[DatabaseServerName]
 			  , a.[DatabaseName]
+			  
 			  ,a.[EventType]
 			  ,a.[ObjectName]
 			  ,a.[ObjectType]
@@ -1966,7 +1634,6 @@ begin
 			Top (@Top)
 			--'{a:1}' as Json_F1
 			  a.[ID]
-
 			  ,a.[DatabaseServerName]
 			  ,a.[DatabaseName]
 			  ,a.[EventType]
@@ -1977,7 +1644,7 @@ begin
 			  ,a.[HostName]
 			  ,a.[PostTime]
 			  ,a.[Version]
-			  , Max(a.PostTime) over(partition by a.[DatabaseServerName], a.[DatabaseName] , a.[ObjectName])	as MaxPostTime
+			  , Max(a.PostTime) over(partition by a.[DatabaseName] , a.[ObjectName])	as MaxPostTime
 		from
 			[dbo].[zObjectsChangesLogsHistory] a with(nolock)
 		where
@@ -2052,14 +1719,11 @@ end
 	
 end
 GO
-/****** Object:  DdlTrigger [ztrigger_ddl]    Script Date: 8/31/2020 11:10:02 PM ******/
+/****** Object:  DdlTrigger [ztrigger_ddl]    Script Date: 3/16/2020 2:08:36 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-
-
-
 
 
 
@@ -2091,8 +1755,6 @@ CREATE TRIGGER [ztrigger_ddl]
 AS
 begin
 --SET NOCOUNT ON
-set xact_abort on
-begin transaction
 DECLARE
 		@DatabaseName varchar(256)
 		, @EventType varchar(50)
@@ -2110,21 +1772,10 @@ set @ObjectName = @data.value('(/EVENT_INSTANCE/ObjectName)[1]', 'varchar(256)')
 			--,@TSQLCommand = @data.value('(/EVENT_INSTANCE/TSQLCommand)[1]', 'nvarchar(max)') 
 			--,@LoginName = @data.value('(/EVENT_INSTANCE/LoginName)[1]', 'varchar(256)')
 			--,@SPID = @data.value('(/EVENT_INSTANCE/SPID)[1]', 'int')
-
-delete
-	[zObjectsChangesLogsLatest]
-where
-	[ObjectName] = @ObjectName
-	and
-	[DataBaseName] = @DatabaseName
-	and
-	DatabaseServerName = @@SERVERNAME
-
-declare @id bigint
 INSERT INTO
-		[zObjectsChangesLogsLatest]
+		[zObjectsChangesLogsHistory]
 		(
-			DatabaseServerName
+			[DatabaseServerName]
 			, [DatabaseName]
 			, [EventType]
 			, [ObjectName]
@@ -2160,38 +1811,7 @@ values
 						a.[ObjectName] = @ObjectName
 				)
 		)
-set @id = SCOPE_IDENTITY()
-insert into [zObjectsChangesLogsHistory]
-	(
-		[ID]
-      , [DatabaseServerName]
-      , [DatabaseName]
-      , [EventType]
-      , [ObjectName]
-      , [ObjectType]
-      , [TSQLCommand]
-      , [LoginName]
-      , [HostName]
-      , [PostTime]
-      , [Version]
-	)
-select
-	[ID]
-      ,[DatabaseServerName]
-      ,[DatabaseName]
-      ,[EventType]
-      ,[ObjectName]
-      ,[ObjectType]
-      ,[TSQLCommand]
-      ,[LoginName]
-      ,[HostName]
-      ,[PostTime]
-      ,[Version]
-from
-	[zObjectsChangesLogsLatest] a
-where
-	a.ID = @id
-commit transaction
+		
 END
 
 
