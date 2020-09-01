@@ -146,26 +146,27 @@ namespace Microshaoft.WebApi.Controllers
                     {
                         break;
                     }
-                    var jArrayResultColumns = JArray
-                                                    .FromObject
+                    var jArrayResultColumns =
+                                JArray
+                                    .FromObject
+                                        (
+                                            outputColumns
+                                                    .Select
                                                         (
-                                                            outputColumns
-                                                                    .Select
-                                                                        (
-                                                                            (x) =>
-                                                                            {
-                                                                                return
-                                                                                    new
-                                                                                    {
-                                                                                        x.ColumnName
-                                                                                        , x.Title
-                                                                                        , x.title
-                                                                                        , x.data      // data should be lower case
-                                                                                        , x.ColumnType
-                                                                                    };
-                                                                            }
-                                                                        )
-                                                        );
+                                                            (x) =>
+                                                            {
+                                                                return
+                                                                    new
+                                                                    {
+                                                                        x.ColumnName
+                                                                        , x.Title
+                                                                        , x.title
+                                                                        , x.data      // data should be lower case
+                                                                        , x.ColumnType
+                                                                    };
+                                                            }
+                                                        )
+                                        );
                     resultSetsJArray[i]["Columns"] = jArrayResultColumns;
                     var jArrayResultRows = resultSetsJArray[i]["Rows"] as JArray;
                     var j = 0;
@@ -179,31 +180,18 @@ namespace Microshaoft.WebApi.Controllers
                             {
                                 jObjectNewRow = new JObject();
                             }
-                            if
-                                (
-                                    jObjectRow
-                                            .TryGetValue
-                                                (
-                                                    ColumnName
-                                                    , StringComparison.OrdinalIgnoreCase
-                                                    , out var jTokenValue
-                                                )
-                                )
-                            {
-                                jObjectNewRow
-                                            .Add
-                                                (
-                                                    new JProperty(ColumnName, jTokenValue)
-                                                );
-                            }
-                            else
-                            {
-                                jObjectNewRow
-                                            .Add
-                                                (
-                                                    new JProperty(ColumnName, null)
-                                                );
-                            }
+                            jObjectRow
+                                    .TryGetValue
+                                        (
+                                            ColumnName
+                                            , StringComparison.OrdinalIgnoreCase
+                                            , out JToken jTokenValue
+                                        );
+                            jObjectNewRow
+                                        .Add
+                                            (
+                                                new JProperty(ColumnName, jTokenValue)
+                                            );
                             j ++;
                         }
                         if (jObjectNewRow != null)
