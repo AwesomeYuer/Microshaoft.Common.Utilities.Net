@@ -416,10 +416,12 @@
                 $('#loading').fadeIn();
                 this.Items.sort(
                     function (x, y) {
+                        var xx = x.ObjectName.toLowerCase();
+                        var yy = y.ObjectName.toLowerCase();
                         var r = (
-                            x.ObjectName == y.ObjectName ?
+                            xx == yy ?
                                 (x.ID < y.ID ? -1 : 1) :
-                                (x.ObjectName < y.ObjectName ? -1 : 1)
+                                (xx < yy ? -1 : 1)
                         );
                         if (self.SortByObjectNameState()) {
                             r = -1 * r;

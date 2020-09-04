@@ -406,9 +406,9 @@ namespace Microshaoft.Web
                                             requestResponseTimingItemKey
                                             ,
                                                 (
-                                                    BeginTime: DateTime.Now
-                                                    , BeginTimestamp: Stopwatch.GetTimestamp()
-                                                    , TraceID: Guid.NewGuid()
+                                                    BeginTime               : DateTime.Now
+                                                    , BeginTimestamp        : Stopwatch.GetTimestamp()
+                                                    , TraceID               : Guid.NewGuid()
                                                 )
                                         );
                         }

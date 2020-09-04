@@ -301,14 +301,16 @@
                                             , "zsp_RequestResponseLogging"
                                             , new JObject
                                                 {
-                                                      { $"{serverHost}{nameof(GlobalManager.OsPlatformName)}"                       , GlobalManager.OsPlatformName                  }
-                                                    , { $"{serverHost}{nameof(GlobalManager.OsVersion)}"                            , GlobalManager.OsVersion                       }
-                                                    , { $"{serverHost}{nameof(GlobalManager.FrameworkDescription)}"                 , GlobalManager.FrameworkDescription            }
-                                                    , { $"{serverHost}{nameof(Environment.MachineName)}"                            , Environment.MachineName                       }
-                                                    , { $"{serverHost}ProcessId"                                                    , GlobalManager.CurrentProcess.Id               }
-                                                    , { $"{serverHost}{nameof(GlobalManager.CurrentProcess.ProcessName)}"           , GlobalManager.CurrentProcess.ProcessName      }
-                                                    , { $"{serverHost}ProcessStartTime"                                             , GlobalManager.CurrentProcess.StartTime        }
-                                                    , { "data"                                                                      , requestResponseLoggingData                    }
+                                                      { $"{serverHost}{nameof(GlobalManager.OsPlatformName)}"                               , GlobalManager.OsPlatformName                  }
+                                                    , { $"{serverHost}{nameof(GlobalManager.OsVersion)}"                                    , GlobalManager.OsVersion                       }
+                                                    , { $"{serverHost}{nameof(GlobalManager.FrameworkDescription)}"                         , GlobalManager.FrameworkDescription            }
+                                                    , { $"{serverHost}{nameof(Environment.MachineName)}"                                    , Environment.MachineName                       }
+                                                    , { $"{serverHost}ProcessId"                                                            , GlobalManager.CurrentProcess.Id               }
+                                                    , { $"{serverHost}{nameof(GlobalManager.CurrentProcess.ProcessName)}"                   , GlobalManager.CurrentProcess.ProcessName      }
+                                                    , { $"{serverHost}ProcessStartTime"                                                     , GlobalManager.CurrentProcess.StartTime        }
+                                                    , { $"{serverHost}Process{nameof(GlobalManager.CurrentProcess.WorkingSet64)}"           , GlobalManager.CurrentProcess.WorkingSet64     }
+                                                    , { $"{serverHost}Process{nameof(GlobalManager.CurrentProcess.PeakWorkingSet64)}"       , GlobalManager.CurrentProcess.PeakWorkingSet64 }
+                                                    , { "data"                                                                              , requestResponseLoggingData                    }
                                                 }
                                         );
                             }
