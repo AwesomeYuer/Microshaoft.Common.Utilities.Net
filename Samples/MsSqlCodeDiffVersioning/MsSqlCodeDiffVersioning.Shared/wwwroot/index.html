@@ -184,13 +184,26 @@
                 url
                 , function (data) {
                     data = data["Outputs"]["ResultSets"][0]["Rows"];
-                    var x1 = { Name: data[0].ObjectName, Text: data[0].TSQLCommand, TimeStamp: data[0].PostTime };
+                    var x = data[0];
+                    var x1 = {
+                        Name: x.ObjectName,
+                        TextHeader: '/*\n' + x.ObjectName + '(' + x.ID + ')' + '\n@ ' + x.DatabaseName + ' @ ' + x.DatabaseServerName + '\n@ ' + x.PostTime + '\nBy ' + x.HostName + '\n*/\n\n',
+                        TextBody: x.TSQLCommand,
+                        TimeStamp: x.PostTime
+                    };
+
                     var x2;
                     if (data.length <= 1) {
                         x2 = x1;
                     }
                     else {
-                        x2 = { Name: data[1].ObjectName, Text: data[1].TSQLCommand, TimeStamp: data[1].PostTime }
+                        x = data[1];
+                        x2 = {
+                            Name: x.ObjectName,
+                            TextHeader: '/*\n' + x.ObjectName + '(' + x.ID + ')' + '\n@ ' + x.DatabaseName + ' @ ' + x.DatabaseServerName + '\n@ ' + x.PostTime + '\nBy ' + x.HostName + '\n*/\n\n',
+                            TextBody: data[1].TSQLCommand,
+                            TimeStamp: data[1].PostTime
+                        }
                     }
                     diffUsingJS(parseInt(vm.SelectedDiffViewType()),
                         x1, x2
@@ -247,7 +260,7 @@
         <br />            
         <div id="up" class="split" style="border: 1px solid black">
             <select
-                    multiple
+                    size="2"
                     id="left"
                     class="split content split-horizontal"
                     data-bind="options: Items,
@@ -357,7 +370,6 @@
 
             this.selectedItem = ko.observable();
             this.selectedDetailItems = ko.observableArray([]);
-
             function getById(items, id) {
                 if (!id) {
                     return [];
@@ -435,8 +447,8 @@
         var vm = new viewModel([]);
         ko.applyBindings(vm);
         function diffUsingJS(viewType, baseObject, newObject) {
-            var originalTxt = baseObject.Text;
-            var modifiedTxt = newObject.Text;
+            var originalTxt = baseObject.TextHeader + baseObject.TextBody;
+            var modifiedTxt = newObject.TextHeader + newObject.TextBody;
             diffEditor.updateOptions({
                 renderSideBySide: !viewType,
                 readOnly: true
