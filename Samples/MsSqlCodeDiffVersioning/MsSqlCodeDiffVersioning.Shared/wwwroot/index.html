@@ -201,8 +201,8 @@
                         x2 = {
                             Name: x.ObjectName,
                             TextHeader: '/*\n' + x.ObjectName + '(' + x.ID + ')' + '\n@ ' + x.DatabaseName + ' @ ' + x.DatabaseServerName + '\n@ ' + x.PostTime + '\nBy ' + x.LoginName + ' @ ' + x.HostName + '\n*/\n\n',
-                            TextBody: data[1].TSQLCommand,
-                            TimeStamp: data[1].PostTime
+                            TextBody: x.TSQLCommand,
+                            TimeStamp: x.PostTime
                         }
                     }
                     diffUsingJS(parseInt(vm.SelectedDiffViewType()),
