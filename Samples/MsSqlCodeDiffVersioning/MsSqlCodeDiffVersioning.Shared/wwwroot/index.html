@@ -237,6 +237,7 @@
             <a href="#" class="btn__run-demo">Show Demo</a>
         </div>
         <div>
+
             Top Limit:<input id="topLimit" type="number" value="100" />
             <br />
             <br />
@@ -256,6 +257,14 @@
                     onclick="vm.SortByAddSequence()">
                 SortByAddSequence
             </button>
+            Filter Keyword in Object Name:
+            <input id="filterKeyword"
+                   type="text"
+                   data-bind="value: FilterKeyword, 
+                                valueUpdate: 'afterkeydown'" />
+            (Filtered: <span data-bind="text: FilteredItems().length"></span> /
+            Total: <span data-bind="text: Items().length"></span>)&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;
+            Details: <span data-bind="text: DetailItems().length"></span>)
         </div>
         <br />            
         <div id="up" class="split" style="border: 1px solid black">
@@ -263,7 +272,7 @@
                     size="2"
                     id="left"
                     class="split content split-horizontal"
-                    data-bind="options: Items,
+                    data-bind="options: FilteredItems,
                                 optionsCaption:'Master',
                                 optionsText: 'OptionText',
                                 optionsValue: 'ID',
@@ -367,6 +376,20 @@
             this.SelectedDiffViewType = ko.observable("0");
 
             this.Items = ko.observableArray(data);
+            this.FilterKeyword = ko.observable('');
+            this.FilteredItems = ko.computed(function () {
+                return this.Items().filter(function (x) {
+                    var r = true;
+                    var keyword = self.FilterKeyword().toLowerCase(); 
+                    if (keyword != null && keyword != '') {
+                        var xx = x.ObjectName.toLowerCase();
+                        r = (xx.indexOf(keyword) >= 0);
+                    }
+                    return r;
+                });
+            }, this);
+
+
 
             this.selectedItem = ko.observable();
             this.selectedDetailItems = ko.observableArray([]);
