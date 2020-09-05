@@ -187,7 +187,7 @@
                     var x = data[0];
                     var x1 = {
                         Name: x.ObjectName,
-                        TextHeader: '/*\n' + x.ObjectName + '(' + x.ID + ')' + '\n@ ' + x.DatabaseName + ' @ ' + x.DatabaseServerName + '\n@ ' + x.PostTime + '\nBy ' + x.HostName + '\n*/\n\n',
+                        TextHeader: '/*\n' + x.ObjectName + '(' + x.ID + ')' + '\n@ ' + x.DatabaseName + ' @ ' + x.DatabaseServerName + '\n@ ' + x.PostTime + '\nBy ' + x.LoginName + ' @ ' + x.HostName + '\n*/\n\n',
                         TextBody: x.TSQLCommand,
                         TimeStamp: x.PostTime
                     };
@@ -200,9 +200,9 @@
                         x = data[1];
                         x2 = {
                             Name: x.ObjectName,
-                            TextHeader: '/*\n' + x.ObjectName + '(' + x.ID + ')' + '\n@ ' + x.DatabaseName + ' @ ' + x.DatabaseServerName + '\n@ ' + x.PostTime + '\nBy ' + x.HostName + '\n*/\n\n',
-                            TextBody: data[1].TSQLCommand,
-                            TimeStamp: data[1].PostTime
+                            TextHeader: '/*\n' + x.ObjectName + '(' + x.ID + ')' + '\n@ ' + x.DatabaseName + ' @ ' + x.DatabaseServerName + '\n@ ' + x.PostTime + '\nBy ' + x.LoginName + ' @ ' + x.HostName + '\n*/\n\n',
+                            TextBody: x.TSQLCommand,
+                            TimeStamp: x.PostTime
                         }
                     }
                     diffUsingJS(parseInt(vm.SelectedDiffViewType()),
@@ -292,7 +292,7 @@
             <label for="diffViewType1" onclick="GetObjectsTexts();">Inline</label>
         </div>
         <div id="diffoutput">
-            <div id="container" style="width:100%;height:600px;border:1px solid grey"></div>
+            <div id="container" style="width:100%;height:400px;border:1px solid grey"></div>
         </div>
     </div>
     <script>
@@ -483,9 +483,9 @@
                         if (found == undefined) {
                             item.DisableInDetail = ko.observable(false);
                             item.AddSequence = (++vm.Counter);
-                            item.OptionText = '[' + item.AddSequence + '].' + item.ObjectName + '(' + item.ID + ')' + ' @ ' + item.DatabaseName + ' @ ' + item.DatabaseServerName + ' @ ' + item.PostTime + ' By ' + item.HostName;
+                            item.OptionText = '[' + item.AddSequence + '].' + item.ObjectName + '(' + item.ID + ')' + ' @ ' + item.DatabaseName + ' @ ' + item.DatabaseServerName + ' @ ' + item.PostTime + ' By ' + item.LoginName + ' @ ' + item.HostName;
                             $.each(item.childItems, function (ii, childItem) {
-                                childItem.OptionText = '[' + (ii + 1) + '].'+ childItem.ObjectName + '(' + childItem.ID + ')' + ' @ ' + childItem.DatabaseName + ' @ ' + childItem.DatabaseServerName + ' @ ' + childItem.PostTime + ' By ' + childItem.HostName;
+                                childItem.OptionText = '[' + (ii + 1) + '].' + childItem.ObjectName + '(' + childItem.ID + ')' + ' @ ' + childItem.DatabaseName + ' @ ' + childItem.DatabaseServerName + ' @ ' + childItem.PostTime + ' By ' + item.LoginName + ' @ ' + childItem.HostName;
                             });
                             vm.Items.push(item);
                         }
