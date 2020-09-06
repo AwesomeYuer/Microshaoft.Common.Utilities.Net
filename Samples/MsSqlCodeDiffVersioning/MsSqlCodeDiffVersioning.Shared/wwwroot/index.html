@@ -2,12 +2,16 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <meta name="Generator" content="EditPlus®,Microshaoft">
+    <meta name="Author" content="EditPlus®,Microshaoft">
+    <meta name="Keywords" content="EditPlus®,Microshaoft">
+    <meta name="Description" content="EditPlus®,Microshaoft">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
     <title>MS SQL Code Diff Verioning</title>
 
     <script src="libs/knockout/knockout-3.5.1.debug.js" type="text/javascript"></script>
     <script src="libs/jquery/jquery-3.5.1.js" type="text/javascript"></script>
-    
+
     <link rel="stylesheet" href="libs/jquery-ui/jquery-ui-1.12.1.css">
     <script src="libs/jquery-ui/jquery-ui-1.12.1.js"></script>
 
@@ -15,7 +19,7 @@
     <script src="libs/driver.js/driver.min.js"></script>
 
     <script src="libs/splitjs/split.js"></script>
-    
+
     <script src="libs/monaco-editor/min/vs/loader.js"></script>
 
     <style type="text/css">
@@ -98,21 +102,21 @@
             background-position: 50%;
         }
 
-        .gutter.gutter-horizontal {
-            cursor: col-resize;
-            /* background-image: url('../grips/vertical.png');*/
-        }
+            .gutter.gutter-horizontal {
+                cursor: col-resize;
+                /* background-image: url('../grips/vertical.png');*/
+            }
 
-        .gutter.gutter-vertical {
-            cursor: row-resize;
-            /*background-image: url('../grips/horizontal.png');*/
-        }
+            .gutter.gutter-vertical {
+                cursor: row-resize;
+                /*background-image: url('../grips/horizontal.png');*/
+            }
 
-        .split.split-horizontal,
-        .gutter.gutter-horizontal {
-            height: 100%;
-            float: left;
-        }
+            .split.split-horizontal,
+            .gutter.gutter-horizontal {
+                height: 100%;
+                float: left;
+            }
     </style>
 
     <style type="text/css">
@@ -183,6 +187,10 @@
             $.getJSON(
                 url
                 , function (data) {
+                        //alert("none");
+                    }
+                ).done(function (data) {
+                    //alert("done");
                     data = data["Outputs"]["ResultSets"][0]["Rows"];
                     var x = data[0];
                     var x1 = {
@@ -208,9 +216,11 @@
                     diffUsingJS(parseInt(vm.SelectedDiffViewType()),
                         x1, x2
                     );
+                }).fail(function (d, textStatus, error) {
+                    alert("getJSON failed, status: " + textStatus + ", error: " + error);
+                }).always(function () {
                     $('#loading').fadeOut();
-                }
-            );
+                });
         }
     </script>
 </head>
@@ -237,6 +247,7 @@
             <a href="#" class="btn__run-demo">Show Demo</a>
         </div>
         <div>
+
             Top Limit:<input id="topLimit" type="number" value="100" />
             <br />
             <br />
@@ -256,6 +267,14 @@
                     onclick="vm.SortByAddSequence()">
                 SortByAddSequence
             </button>
+            Filter Keyword in Object Name:
+            <input id="filterKeyword"
+                   type="text"
+                   data-bind="value: FilterKeyword, 
+                                valueUpdate: 'afterkeydown'" />
+            [(Filtered: <span data-bind="text: FilteredItems().length"></span> /
+            Total: <span data-bind="text: Items().length"></span>)&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;
+            Details: <span data-bind="text: DetailItems().length"></span>]
         </div>
         <br />            
         <div id="up" class="split" style="border: 1px solid black">
@@ -263,7 +282,7 @@
                     size="2"
                     id="left"
                     class="split content split-horizontal"
-                    data-bind="options: Items,
+                    data-bind="options: FilteredItems,
                                 optionsCaption:'Master',
                                 optionsText: 'OptionText',
                                 optionsValue: 'ID',
@@ -367,6 +386,18 @@
             this.SelectedDiffViewType = ko.observable("0");
 
             this.Items = ko.observableArray(data);
+            this.FilterKeyword = ko.observable('');
+            this.FilteredItems = ko.computed(function () {
+                return this.Items().filter(function (x) {
+                    var r = true;
+                    var keyword = self.FilterKeyword().toLowerCase(); 
+                    if (keyword != null && keyword != '') {
+                        var xx = x.ObjectName.toLowerCase();
+                        r = (xx.indexOf(keyword) >= 0);
+                    }
+                    return r;
+                });
+            }, this);
 
             this.selectedItem = ko.observable();
             this.selectedDetailItems = ko.observableArray([]);
@@ -475,6 +506,8 @@
             $.getJSON(
                 url,
                 function (data) {
+                    //alert(data);
+                }).done(function (data) {
                     $.each(data.Outputs.ResultSets[0].Rows, function (i, item) {
                         var items = vm.Items();
                         var found = items.find(function (x) {
@@ -490,6 +523,9 @@
                             vm.Items.push(item);
                         }
                     });
+                }).fail(function (data, textStatus, error) {
+                    alert("getJSON failed,\nstatus: " + textStatus + ",\nerror: " + error + ",\ndata: " + JSON.stringify(data));
+                }).always(function () {
                     $('#loading').fadeOut();
                 });
         }
