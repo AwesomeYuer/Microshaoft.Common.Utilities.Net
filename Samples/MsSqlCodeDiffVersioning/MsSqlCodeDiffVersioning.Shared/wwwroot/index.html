@@ -187,6 +187,10 @@
             $.getJSON(
                 url
                 , function (data) {
+                        //alert("none");
+                    }
+                ).done(function (data) {
+                    //alert("done");
                     data = data["Outputs"]["ResultSets"][0]["Rows"];
                     var x = data[0];
                     var x1 = {
@@ -212,9 +216,11 @@
                     diffUsingJS(parseInt(vm.SelectedDiffViewType()),
                         x1, x2
                     );
+                }).fail(function (d, textStatus, error) {
+                    alert("getJSON failed, status: " + textStatus + ", error: " + error);
+                }).always(function () {
                     $('#loading').fadeOut();
-                }
-            );
+                });
         }
     </script>
 </head>
@@ -266,9 +272,9 @@
                    type="text"
                    data-bind="value: FilterKeyword, 
                                 valueUpdate: 'afterkeydown'" />
-            (Filtered: <span data-bind="text: FilteredItems().length"></span> /
+            [(Filtered: <span data-bind="text: FilteredItems().length"></span> /
             Total: <span data-bind="text: Items().length"></span>)&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;
-            Details: <span data-bind="text: DetailItems().length"></span>)
+            Details: <span data-bind="text: DetailItems().length"></span>]
         </div>
         <br />            
         <div id="up" class="split" style="border: 1px solid black">
@@ -500,6 +506,8 @@
             $.getJSON(
                 url,
                 function (data) {
+                    //alert(data);
+                }).done(function (data) {
                     $.each(data.Outputs.ResultSets[0].Rows, function (i, item) {
                         var items = vm.Items();
                         var found = items.find(function (x) {
@@ -515,6 +523,9 @@
                             vm.Items.push(item);
                         }
                     });
+                }).fail(function (data, textStatus, error) {
+                    alert("getJSON failed,\nstatus: " + textStatus + ",\nerror: " + error + ",\ndata: " + JSON.stringify(data));
+                }).always(function () {
                     $('#loading').fadeOut();
                 });
         }
