@@ -4,9 +4,9 @@ GO
 CREATE DATABASE [Test]
  CONTAINMENT = NONE
  ON  PRIMARY 
-( NAME = N'Test', FILENAME = N'D:\MSSQL\Data\Test\Test.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 1024KB )
+( NAME = N'Test', FILENAME = N'D:\MSSQL\Data\Test\Test.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 8192KB )
  LOG ON 
-( NAME = N'Test_log', FILENAME = N'D:\MSSQL\Data\Test\Test_log.ldf' , SIZE = 8192KB , MAXSIZE = UNLIMITED , FILEGROWTH = 8192KB)
+( NAME = N'Test_log', FILENAME = N'D:\MSSQL\Data\Test\Test_log.ldf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 8192KB)
  WITH CATALOG_COLLATION = DATABASE_DEFAULT
 GO
 ALTER DATABASE [Test] SET COMPATIBILITY_LEVEL = 140
@@ -2141,7 +2141,7 @@ DECLARE
 		, @ObjectType			varchar(32)			= @data.value('(/EVENT_INSTANCE/ObjectType)[1]'		, 'varchar(32)'		) 
 		, @TSQLCommand			nvarchar(max)		= @data.value('(/EVENT_INSTANCE/TSQLCommand)[1]'	, 'nvarchar(max)'	) 
 		, @LoginName			varchar(256)		= @data.value('(/EVENT_INSTANCE/LoginName)[1]'		, 'varchar(256)'	)
-		, @UserName				varchar(256)		= @data.value('(/EVENT_INSTANCE/UserName)[1]'		, 'varchar(256)'				)
+		, @UserName				varchar(256)		= @data.value('(/EVENT_INSTANCE/UserName)[1]'		, 'varchar(256)'	)
 		, @PostTime				datetime			= @data.value('(/EVENT_INSTANCE/PostTime)[1]'		, 'datetime'		)
 		, @SPID					int					= @data.value('(/EVENT_INSTANCE/SPID)[1]'			, 'int'				)
 				
