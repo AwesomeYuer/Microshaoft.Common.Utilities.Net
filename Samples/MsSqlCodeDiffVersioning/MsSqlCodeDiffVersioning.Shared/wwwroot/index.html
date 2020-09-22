@@ -159,7 +159,7 @@
         var baseUrl = "http://localhost:5000";
         baseUrl = "";
         function GetObjectsTexts() {
-            $('#loading').fadeIn();
+            
             //debugger;
             var left = -1;
             var right = -1;
@@ -171,12 +171,12 @@
                 right = a[1];
             } else {
                 if (vm.selectedItem() == undefined) {
-                    $('#loading').fadeOut();
+                    //$('#loading').fadeOut();
                     return;
                 }
                 left = right = vm.selectedItem();
             }
-
+            $('#loading').fadeIn();
             if (left > right) {
                 left += right;
                 right = left - right;
