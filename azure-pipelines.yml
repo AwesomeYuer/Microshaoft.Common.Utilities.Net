@@ -35,7 +35,7 @@ steps:
   displayName: Test
   inputs:
     command: test
-    projects: '$(Parameters.TestProjects)'
+    projects: '**/*Tests/*.csproj'
     arguments: '--configuration $(BuildConfiguration)'
   enabled: false
 
