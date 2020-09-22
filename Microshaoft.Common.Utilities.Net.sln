@@ -144,6 +144,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyPerformanceCountersHelp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcurrentAsyncQueue.NET.Standard.2.x", "ConcurrentAsyncQueue.NET\ConcurrentAsyncQueue.NET.Standard.2.x\ConcurrentAsyncQueue.NET.Standard.2.x.csproj", "{129D4521-D6A5-4949-90FD-2647AD70FD52}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "99.Test", "99.Test", "{0657A545-F091-4D83-9B3B-B9F7F4C036B0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MsTestUnit.Test", "Samples\MsSqlCodeDiffVersioning\Tests\MsTestUnit.Test\MsTestUnit.Test.csproj", "{13B81496-9BEC-4D59-B303-35904AE7F8B1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XUnit.Test", "Samples\MsSqlCodeDiffVersioning\Tests\XUnit.Test\XUnit.Test.csproj", "{7CFAFD28-5CCA-45DF-869E-33A50C031B4F}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		SharedSources\CommonUtilities.Shared.projitems*{0066db51-3fc3-4fd5-a3fd-c39ee9f6ffb8}*SharedItemsImports = 5
@@ -247,6 +253,14 @@ Global
 		{129D4521-D6A5-4949-90FD-2647AD70FD52}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{129D4521-D6A5-4949-90FD-2647AD70FD52}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{129D4521-D6A5-4949-90FD-2647AD70FD52}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13B81496-9BEC-4D59-B303-35904AE7F8B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13B81496-9BEC-4D59-B303-35904AE7F8B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13B81496-9BEC-4D59-B303-35904AE7F8B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13B81496-9BEC-4D59-B303-35904AE7F8B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CFAFD28-5CCA-45DF-869E-33A50C031B4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CFAFD28-5CCA-45DF-869E-33A50C031B4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CFAFD28-5CCA-45DF-869E-33A50C031B4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CFAFD28-5CCA-45DF-869E-33A50C031B4F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -309,6 +323,9 @@ Global
 		{3DCA8530-241A-40B9-A338-2CFBD4A60015} = {702A189B-E5AC-4343-8B52-3A614C5B36B0}
 		{46B4AB04-C3E7-4C87-82B3-E0F5909DEBD7} = {E97C82F8-629C-4F5B-ABFF-5060A5396666}
 		{129D4521-D6A5-4949-90FD-2647AD70FD52} = {CF989F5A-C42C-4265-B281-2607C14AEE7A}
+		{0657A545-F091-4D83-9B3B-B9F7F4C036B0} = {4ED6A214-33E0-4F82-97D3-8825FC660EFB}
+		{13B81496-9BEC-4D59-B303-35904AE7F8B1} = {0657A545-F091-4D83-9B3B-B9F7F4C036B0}
+		{7CFAFD28-5CCA-45DF-869E-33A50C031B4F} = {0657A545-F091-4D83-9B3B-B9F7F4C036B0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3A79E5CD-0524-4DA6-B26C-17C43FF8E9FB}
