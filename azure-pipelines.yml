@@ -37,7 +37,7 @@ steps:
     command: test
     projects: '**/*Tests/*.csproj'
     arguments: '--configuration $(BuildConfiguration)'
-  enabled: false
+  enabled: true
 
 - task: DotNetCoreCLI@2
   displayName: Publish
