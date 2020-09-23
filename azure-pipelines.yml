@@ -39,6 +39,7 @@ steps:
     arguments: '--configuration $(BuildConfiguration)'
   enabled: true
 
+
 - task: DotNetCoreCLI@2
   displayName: Publish
   inputs:
