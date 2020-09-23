@@ -11,7 +11,7 @@ steps:
 - task: DotNetCoreInstaller@0
   displayName: 'Use .NET Core sdk 3.1.401'
   inputs:
-    version: 3.1.401
+    version: 3.1.402
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet restore'
