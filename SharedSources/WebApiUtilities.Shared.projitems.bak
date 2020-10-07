@@ -132,7 +132,7 @@
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)WebApi.HttpBatchHandler\LICENSE" />
     <None Include="$(MSBuildThisFileDirectory)WebApi.HttpBatchHandler\README.md" />
-    <None Include="$(MSBuildThisFileDirectory)WebReverseProxyKit\ProxyKit.csproj" />
-    <None Include="$(MSBuildThisFileDirectory)WebReverseProxyKit\ProxyKit.v3.ncrunchproject" />
+    <!-- <None Include="$(MSBuildThisFileDirectory)WebReverseProxyKit\ProxyKit.csproj" />
+    <None Include="$(MSBuildThisFileDirectory)WebReverseProxyKit\ProxyKit.v3.ncrunchproject" /> -->
   </ItemGroup>
 </Project>

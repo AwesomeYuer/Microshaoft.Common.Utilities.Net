@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <RootNamespace>EasyPerformanceCountersHelper.NET.Standard._2.x</RootNamespace>
+  </PropertyGroup>
+
+  <Import Project="..\..\SharedSources\EasyPerfCountersHelper.Shared.projitems" Label="Shared" />
+
+  <ItemGroup>
+    <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="4.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\CommonUtils\CommonUtils.Lite.Std.2.x\CommonUtils.Lite.Std.2.x.csproj" />
+  </ItemGroup>
+
+</Project>

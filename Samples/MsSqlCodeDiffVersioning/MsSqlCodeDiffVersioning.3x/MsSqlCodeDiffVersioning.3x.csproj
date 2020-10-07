@@ -16,11 +16,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DefineConstants>NETCOREAPP;NETCOREAPP3_X</DefineConstants>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="Properties\PublishProfiles\FolderProfile.pubxml.user" />
-  </ItemGroup>
-
+  
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.8" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.8" />
@@ -37,6 +33,10 @@
     <PackageReference Include="Npgsql" Version="4.1.5" />
     <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="2.19.90" />
     <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3.linux" Version="1.1.14" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Microshaoft.WebUtils\Microshaoft.WebUtils.NET.Core.3.x\Microshaoft.WebUtils.NET.Core.3.x.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -76,14 +76,15 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Microshaoft.WebApiUtilities.NET\Microshaoft.WebApiUtilities.NET.Core.3.x\Microshaoft.WebApiUtilities.NET.Core.3.x.csproj" />
-  </ItemGroup>
-
   <Import Project="..\MsSqlCodeDiffVersioning.Shared\MsSqlCodeDiffVersioning.Shared.projitems" Label="Shared" />
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(OS)'=='Windows_NT'">
-    <Exec Command="rem only for Windows/dos cmd&#xD;&#xA;   &#xD;&#xA;xcopy ..\..\..\Plugins\StoreProceduresExecutors\MsSQL\MsSQL.Plugin.NET.Standard.2.x\bin\$(Configuration)\netstandard2.1\Microshaoft*.dll $(TargetDir)Plugins\ /Y&#xD;&#xA;xcopy ..\..\..\Plugins\StoreProceduresExecutors\MySQL\MySQL.Plugin.NET.Core.3.x\bin\$(Configuration)\netcoreapp3.1\Microshaoft*.dll $(TargetDir)Plugins\ /Y&#xD;&#xA;xcopy ..\..\..\Plugins\JsonParametersValidators\SamplePlugin\SamplePlugin.NET.Core.3.x\bin\$(Configuration)\netcoreapp3.1\Microshaoft*.dll $(TargetDir)Plugins\ /Y&#xD;&#xA;&#xD;&#xA;xcopy ..\..\..\Plugins\StoreProceduresExecutors\MsSQL\MsSQL.Plugin.NET.Standard.2.x\bin\$(Configuration)\netstandard2.1\Microshaoft*.pdb $(TargetDir)Plugins\ /Y&#xD;&#xA;xcopy ..\..\..\Plugins\StoreProceduresExecutors\MySQL\MySQL.Plugin.NET.Core.3.x\bin\$(Configuration)\netcoreapp3.1\Microshaoft*.pdb $(TargetDir)Plugins\ /Y&#xD;&#xA;xcopy ..\..\..\Plugins\JsonParametersValidators\SamplePlugin\SamplePlugin.NET.Core.3.x\bin\$(Configuration)\netcoreapp3.1\Microshaoft*.pdb $(TargetDir)Plugins\ /Y&#xD;&#xA;&#xD;&#xA;xcopy ..\..\..\Plugins\StoreProceduresExecutors\MySQL\MySQL.Plugin.NET.Core.3.x\bin\$(Configuration)\netcoreapp3.1\*mysql.data* $(TargetDir)Plugins\ /Y&#xD;&#xA;xcopy ..\..\..\Plugins\StoreProceduresExecutors\MySQL\MySQL.Plugin.NET.Core.3.x\bin\$(Configuration)\netcoreapp3.1\*npgsql* $(TargetDir)Plugins\ /Y&#xD;&#xA;xcopy ..\..\..\Plugins\StoreProceduresExecutors\MySQL\MySQL.Plugin.NET.Core.3.x\bin\$(Configuration)\netcoreapp3.1\*sqlite* $(TargetDir)Plugins\ /Y&#xD;&#xA;xcopy ..\..\..\Plugins\StoreProceduresExecutors\MySQL\MySQL.Plugin.NET.Core.3.x\bin\$(Configuration)\netcoreapp3.1\*oracle* $(TargetDir)Plugins\ /Y&#xD;&#xA;xcopy ..\..\..\Plugins\StoreProceduresExecutors\MySQL\MySQL.Plugin.NET.Core.3.x\bin\$(Configuration)\netcoreapp3.1\*db2* $(TargetDir)Plugins\ /Y&#xD;&#xA;&#xD;&#xA;xcopy ..\..\..\Plugins\StoreProceduresExecutors\MySQL\MySQL.Plugin.NET.Core.3.x\bin\$(Configuration)\netcoreapp3.1\*mysql.data* $(TargetDir) /Y&#xD;&#xA;xcopy ..\..\..\Plugins\StoreProceduresExecutors\MySQL\MySQL.Plugin.NET.Core.3.x\bin\$(Configuration)\netcoreapp3.1\*npgsql* $(TargetDir) /Y&#xD;&#xA;xcopy ..\..\..\Plugins\StoreProceduresExecutors\MySQL\MySQL.Plugin.NET.Core.3.x\bin\$(Configuration)\netcoreapp3.1\*sqlite* $(TargetDir) /Y&#xD;&#xA;xcopy ..\..\..\Plugins\StoreProceduresExecutors\MySQL\MySQL.Plugin.NET.Core.3.x\bin\$(Configuration)\netcoreapp3.1\*oracle* $(TargetDir) /Y&#xD;&#xA;xcopy ..\..\..\Plugins\StoreProceduresExecutors\MySQL\MySQL.Plugin.NET.Core.3.x\bin\$(Configuration)\netcoreapp3.1\*db2* $(TargetDir) /Y&#xD;&#xA;" />
+    <Exec Command="rem only for Windows/dos cmd&#xD;&#xA;   &#xD;&#xA;xcopy ..\..\..\Plugins\SqlExecutors\MsSQL\MsSQL.Plugin.NET.Std.2.x\bin\$(Configuration)\netstandard2.1\Microshaoft*.dll $(TargetDir)Plugins\ /Y&#xD;&#xA;xcopy ..\..\..\Plugins\SqlExecutors\MySQL\MySQL.Plugin.NET.Core.3.x\bin\$(Configuration)\netcoreapp3.1\Microshaoft*.dll $(TargetDir)Plugins\ /Y&#xD;&#xA;xcopy ..\..\..\Plugins\JsonReqValidators\SamplePlugin\SamplePlugin.NET.Core.3.x\bin\$(Configuration)\netcoreapp3.1\Microshaoft*.dll $(TargetDir)Plugins\ /Y&#xD;&#xA;&#xD;&#xA;xcopy ..\..\..\Plugins\SqlExecutors\MsSQL\MsSQL.Plugin.NET.Std.2.x\bin\$(Configuration)\netstandard2.1\Microshaoft*.pdb $(TargetDir)Plugins\ /Y&#xD;&#xA;xcopy ..\..\..\Plugins\SqlExecutors\MySQL\MySQL.Plugin.NET.Core.3.x\bin\$(Configuration)\netcoreapp3.1\Microshaoft*.pdb $(TargetDir)Plugins\ /Y&#xD;&#xA;xcopy ..\..\..\Plugins\JsonReqValidators\SamplePlugin\SamplePlugin.NET.Core.3.x\bin\$(Configuration)\netcoreapp3.1\Microshaoft*.pdb $(TargetDir)Plugins\ /Y&#xD;&#xA;&#xD;&#xA;xcopy ..\..\..\Plugins\SqlExecutors\MySQL\MySQL.Plugin.NET.Core.3.x\bin\$(Configuration)\netcoreapp3.1\*mysql.data* $(TargetDir)Plugins\ /Y&#xD;&#xA;xcopy ..\..\..\Plugins\SqlExecutors\MySQL\MySQL.Plugin.NET.Core.3.x\bin\$(Configuration)\netcoreapp3.1\*npgsql* $(TargetDir)Plugins\ /Y&#xD;&#xA;xcopy ..\..\..\Plugins\SqlExecutors\MySQL\MySQL.Plugin.NET.Core.3.x\bin\$(Configuration)\netcoreapp3.1\*sqlite* $(TargetDir)Plugins\ /Y&#xD;&#xA;xcopy ..\..\..\Plugins\SqlExecutors\MySQL\MySQL.Plugin.NET.Core.3.x\bin\$(Configuration)\netcoreapp3.1\*oracle* $(TargetDir)Plugins\ /Y&#xD;&#xA;xcopy ..\..\..\Plugins\SqlExecutors\MySQL\MySQL.Plugin.NET.Core.3.x\bin\$(Configuration)\netcoreapp3.1\*db2* $(TargetDir)Plugins\ /Y&#xD;&#xA;&#xD;&#xA;xcopy ..\..\..\Plugins\SqlExecutors\MySQL\MySQL.Plugin.NET.Core.3.x\bin\$(Configuration)\netcoreapp3.1\*mysql.data* $(TargetDir) /Y&#xD;&#xA;xcopy ..\..\..\Plugins\SqlExecutors\MySQL\MySQL.Plugin.NET.Core.3.x\bin\$(Configuration)\netcoreapp3.1\*npgsql* $(TargetDir) /Y&#xD;&#xA;xcopy ..\..\..\Plugins\SqlExecutors\MySQL\MySQL.Plugin.NET.Core.3.x\bin\$(Configuration)\netcoreapp3.1\*sqlite* $(TargetDir) /Y&#xD;&#xA;xcopy ..\..\..\Plugins\SqlExecutors\MySQL\MySQL.Plugin.NET.Core.3.x\bin\$(Configuration)\netcoreapp3.1\*oracle* $(TargetDir) /Y&#xD;&#xA;xcopy ..\..\..\Plugins\SqlExecutors\MySQL\MySQL.Plugin.NET.Core.3.x\bin\$(Configuration)\netcoreapp3.1\*db2* $(TargetDir) /Y&#xD;&#xA;" />
   </Target>
+
+	
+  <!--<Target Name="PostBuildNonWindows" AfterTargets="PostBuildEvent" Condition="'$(OS)'!='Windows_NT'">
+    <Exec Command="echo `pwd`" />
+  </Target>-->
   
 </Project>

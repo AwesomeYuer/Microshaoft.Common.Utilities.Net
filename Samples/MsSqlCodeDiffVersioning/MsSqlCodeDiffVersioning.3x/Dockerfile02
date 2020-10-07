@@ -2,21 +2,25 @@
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
 WORKDIR /app
+
+# COPY ["Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.Shared/wwwroot/", "/app/wwwroot/"]
 COPY ["Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.Shared/wwwroot/", "/usr/local/wwwroot/"]
 EXPOSE 5000
-EXPOSE 5001
+EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
 COPY ["Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.3x/MsSqlCodeDiffVersioning.3x.csproj", "Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.3x/"]
-COPY ["Microshaoft.WebUtils/Microshaoft.WebUtils.NET.Core.3.x/Microshaoft.WebUtils.NET.Core.3.x.csproj", "Microshaoft.WebUtils/Microshaoft.WebUtils.NET.Core.3.x/"]
-COPY ["Microshaoft.SqlExecutors/Microshaoft.SqlExecutors.NET.Std.2.x/Microshaoft.SqlExecutors.NET.Std.2.x.csproj", "Microshaoft.SqlExecutors/Microshaoft.SqlExecutors.NET.Std.2.x/"]
-COPY ["Microshaoft.Json/Microshaoft.Json.NET.Std.2.x/Microshaoft.Json.NET.Std.2.x.csproj", "Microshaoft.Json/Microshaoft.Json.NET.Std.2.x/"]
-COPY ["CommonUtils/CommonUtils.Lite.Std.2.x/CommonUtils.Lite.Std.2.x.csproj", "CommonUtils/CommonUtils.Lite.Std.2.x/"]
+COPY ["Microshaoft.WebUtils.NET/Microshaoft.WebUtils.NET.Core.3.x/Microshaoft.WebUtils.NET.Core.3.x.csproj", "Microshaoft.WebApiUtilities.NET/Microshaoft.WebApiUtilities.NET.Core.3.x/"]
+COPY ["CommonUtilities/CommonUtils.Lite.Std.2.x/CommonUtils.Lite.Std.2.x.csproj", "CommonUtils/CommonUtils.Lite.Std.2.x/"]
+COPY ["Microshaoft.StoreProceduresExecutors.NET/Microshaoft.StoreProceduresExecutors.NET.Standard.2.x/Microshaoft.StoreProceduresExecutors.NET.Standard.2.x.csproj", "Microshaoft.StoreProceduresExecutors.NET/Microshaoft.StoreProceduresExecutors.NET.Standard.2.x/"]
+COPY ["Microshaoft.Json.NET/Microshaoft.Json.NET.Standard.2.x/Microshaoft.Json.NET.Standard.2.x.csproj", "Microshaoft.Json.NET/Microshaoft.Json.NET.Standard.2.x/"]
+# COPY ["Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.Shared/wwwroot/", "/app/wwwroot/"]
 RUN dotnet restore "Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.3x/MsSqlCodeDiffVersioning.3x.csproj"
 COPY . .
 WORKDIR "/src/Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.3x"
 RUN dotnet build "MsSqlCodeDiffVersioning.3x.csproj" -c Release -o /app/build
+
 
 FROM build AS publish
 RUN dotnet publish "MsSqlCodeDiffVersioning.3x.csproj" -c Release -o /app/publish

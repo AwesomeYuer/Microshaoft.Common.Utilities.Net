@@ -12,6 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Microshaoft.WebApiUtilities.NET\Microshaoft.WebApiUtilities.NET.Core.3.x\Microshaoft.WebApiUtilities.NET.Core.3.x.csproj" />
+    <ProjectReference Include="..\..\Microshaoft.WebUtils\Microshaoft.WebUtils.NET.Core.3.x\Microshaoft.WebUtils.NET.Core.3.x.csproj" />
   </ItemGroup>
 </Project>
