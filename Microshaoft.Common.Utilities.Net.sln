@@ -169,7 +169,6 @@ Global
 		Plugins\SqlExecutors\MySQL\MySQL.Plugin.Shared\MySQL.SqlExecutor.Plugin.Shared.projitems*{4ee26e3a-b23b-4760-a8d7-1eb0ef7a24dd}*SharedItemsImports = 13
 		Samples\MsSqlCodeDiffVersioning\MsSqlCodeDiffVersioning.Shared\MsSqlCodeDiffVersioning.Shared.projitems*{50cf6564-2c15-48ba-87ba-b83169f2a214}*SharedItemsImports = 13
 		Samples\SocketAsyncArgs.TCP.Echo.Server\ClientConsoleApp\ClientSharedProject\ClientSharedProject.projitems*{54db1b57-dbd1-4286-9be8-96251e43973b}*SharedItemsImports = 5
-		SharedSources\CommonUtilities.Shared.projitems*{7878df3a-8418-4aca-b415-300b81afd792}*SharedItemsImports = 13
 		SharedSources\Microshaoft.Json.Shared.projitems*{7c5005f0-477a-42e5-86d8-7abef15cffc5}*SharedItemsImports = 5
 		Plugins\SqlExecutors\MsSQL\MsSQL.Plugin.Shared\MsSQL.SqlExecutor.Plugin.Shared.projitems*{7ea0ce4e-1118-4c24-9df4-5b3c4a260f63}*SharedItemsImports = 5
 		SharedSources\CommonUtils.Lite.Shared.projitems*{82173d47-0204-4b68-aa78-48c54bf7d498}*SharedItemsImports = 5

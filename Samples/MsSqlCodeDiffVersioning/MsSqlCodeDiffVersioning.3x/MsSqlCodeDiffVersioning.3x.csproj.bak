@@ -101,7 +101,7 @@
 	
   <Target Name="PostBuildNonWindows" AfterTargets="PostBuildEvent" Condition="'$(OS)'!='Windows_NT'">
 	<!-- <Exec Command="cp `pwd`/../../../Plugins/SqlExecutors/MsSQL/MsSQL.Plugin.NET.Std.2.x/bin/Debug/netstandard2.1/Microshaoft*.dll /mnt/d/MyGitHub/Microshaoft.Common.Utilities.Net/Samples/MsSqlCodeDiffVersioning/MsSqlCodeDiffVersioning.3x/bin/Debug/netcoreapp3.1/Plugins/" /> -->
-	<Exec Command="echo cp ing $(OS)=================================&#xD;&#xA;
+	<Exec Command="echo cp ing=================================&#xD;&#xA;
 					cp ../../../Plugins/SqlExecutors/MsSQL/MsSQL.Plugin.NET.Std.2.x/bin/$(Configuration)/netstandard2.1/Microshaoft*.dll $(TargetDir)Plugins/&#xD;&#xA;
 					cp ../../../Plugins/SqlExecutors/MySQL/MySQL.Plugin.NET.Core.3.x/bin/$(Configuration)/netcoreapp3.1/Microshaoft*.dll $(TargetDir)Plugins/&#xD;&#xA;
 					cp ../../../Plugins/JsonReqValidators/SamplePlugin/SamplePlugin.NET.Core.3.x/bin/$(Configuration)/netcoreapp3.1/Microshaoft*.dll $(TargetDir)Plugins/&#xD;&#xA;
