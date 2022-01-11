@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29709.97
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "CommonUtilities.Lite.Shared", "SharedSources\CommonUtilities.Lite.Shared.shproj", "{F9418680-7641-49AA-A72A-32408F111947}"
 EndProject
@@ -150,6 +150,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MsTestUnit.Test", "Samples\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XUnit.Test", "Samples\MsSqlCodeDiffVersioning\Tests\XUnit.Test\XUnit.Test.csproj", "{7CFAFD28-5CCA-45DF-869E-33A50C031B4F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CEADBFA6-A59E-41CA-BC60-535F0D44A1E2}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		SharedSources\CommonUtilities.Shared.projitems*{0066db51-3fc3-4fd5-a3fd-c39ee9f6ffb8}*SharedItemsImports = 5
@@ -171,10 +176,8 @@ Global
 		SharedSources\WebApiUtilities.Shared.projitems*{94e4a943-9b48-4a5e-96be-9171ea7a87ec}*SharedItemsImports = 5
 		SharedSources\CommonUtilities.Lite.Shared.projitems*{9a62d412-1587-4c3d-bcc8-9734c4a22a81}*SharedItemsImports = 5
 		Plugins\JsonParametersValidators\SamplePlugin\SamplePlugin.Shared\JTokenModelParameterValidatorSamplePlugin.Shared.projitems*{a85efe1e-6a82-40fb-92ac-08acbc50dc52}*SharedItemsImports = 13
-		SharedSources\CommonUtilities.Shared.projitems*{a9a81303-87a4-4802-8c6c-14578593364f}*SharedItemsImports = 5
 		SharedSources\EasyPerformanceCountersHelper.Shared.projitems*{b1913205-1d01-4a59-b0ca-b5c7460fb644}*SharedItemsImports = 13
 		Plugins\StoreProceduresExecutors\MySQL\MySQL.Plugin.Shared\MySQL.StoreProcedureExecutor.Plugin.Shared.projitems*{be9efe7c-2f7a-45d2-aad7-8d6e6b173beb}*SharedItemsImports = 5
-		SharedSources\CommonUtilities.Shared.projitems*{cb039db5-abd7-4b44-b729-a1c7a24abe4e}*SharedItemsImports = 5
 		Samples\MsSqlCodeDiffVersioning\MsSqlCodeDiffVersioning.Shared\MsSqlCodeDiffVersioning.Shared.projitems*{cda249b4-a4bf-4c44-a5a4-bad08255de20}*SharedItemsImports = 5
 		Samples\SocketAsyncArgs.TCP.Echo.Server\ClientConsoleApp\ClientSharedProject\ClientSharedProject.projitems*{e2a49f80-5e62-414d-bf57-8e1802b144a8}*SharedItemsImports = 13
 		SharedSources\ConcurrentAsyncQueue.Shared.projitems*{f27798f3-0529-4852-9e9c-819699a772cb}*SharedItemsImports = 13
